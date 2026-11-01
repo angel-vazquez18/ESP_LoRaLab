@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/CMakeFiles/bootloader
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/CMakeFiles/bootloader.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/CMakeFiles/bootloader-complete.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/Users/anken18/Documents/ESP_LoRaLab/lora_node/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
