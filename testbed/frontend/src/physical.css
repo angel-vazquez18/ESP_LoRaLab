@@ -1,0 +1,85 @@
+.physical-experiments {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.6fr);
+  gap: 24px;
+  align-items: start;
+}
+.physical-check {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.physical-check p,
+.physical-check li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.physical-controls {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.physical-controls label,
+.physical-search {
+  display: grid;
+  gap: 8px;
+}
+.physical-search {
+  margin-bottom: 24px;
+  max-width: 440px;
+}
+.physical-controls input,
+.physical-controls select,
+.physical-search input {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: inherit;
+}
+.physical-catalog {
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+}
+.physical-catalog button {
+  text-align: left;
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: inherit;
+  cursor: pointer;
+}
+.physical-catalog button.selected {
+  border-color: var(--border);
+  background: var(--surface);
+}
+.physical-catalog span,
+.physical-catalog small {
+  color: var(--muted);
+}
+.physical-history {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.physical-history > div {
+  display: grid;
+  gap: 6px;
+  margin-right: auto;
+}
+.physical-history a {
+  color: inherit;
+}
+@media (max-width: 900px) {
+  .physical-experiments {
+    grid-template-columns: 1fr;
+  }
+}
