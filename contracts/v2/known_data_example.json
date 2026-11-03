@@ -1,0 +1,20 @@
+{
+  "radio": {
+    "frequency_hz": 915000000,
+    "bandwidth_hz": 125000,
+    "spreading_factor": 7,
+    "coding_rate_denominator": 5,
+    "tx_power_dbm": 14
+  },
+  "link": {"fragment_payload_bytes": 160, "ack_mode": "none", "max_retries": 0},
+  "spec": {
+    "catalog_id": "IF-02",
+    "source": "known_data",
+    "direction": "A_TO_B",
+    "message_count": 100,
+    "message_bytes": 64,
+    "source_seed": 743,
+    "security": "none",
+    "max_duration_ms": 120000
+  }
+}

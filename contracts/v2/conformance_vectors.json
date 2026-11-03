@@ -1,0 +1,53 @@
+{
+  "contract_version": "2.0.0",
+  "status": "reference_fixtures_not_firmware_validation",
+  "warning": "The fixed key below is public test data only. Never provision it for ordinary runs; generate fresh random keys.",
+  "hello": {
+    "v": 2,
+    "kind": "command",
+    "command_id": "11111111-1111-4111-8111-111111111111",
+    "client_id": "22222222-2222-4222-8222-222222222222",
+    "command_seq": 1,
+    "target_boot_id": null,
+    "run_id": null,
+    "name": "hello",
+    "args": {}
+  },
+  "rf_protected": {
+    "key_hex": "000102030405060708090a0b0c0d0e0f",
+    "nonce_hex": "010203040506070800000001",
+    "header_aad_hex": "4c5402010101020001020304050607080000000100000001000000010000000a000a000000000000",
+    "plaintext_hex": "746573746265642d7632",
+    "ciphertext_hex": "fd2ad49bf8378996f754",
+    "tag_hex": "a09e394dd80d63dfc182e8cb16f19175",
+    "frame_hex": "4c5402010101020001020304050607080000000100000001000000010000000a000a000000000000fd2ad49bf8378996f754a09e394dd80d63dfc182e8cb16f19175",
+    "frame_bytes": 66
+  },
+  "rf_unprotected": {
+    "header_hex": "4c5402010001020001020304050607080000000100000001000000010000000a000a000000000000",
+    "payload_hex": "746573746265642d7632",
+    "frame_hex": "4c5402010001020001020304050607080000000100000001000000010000000a000a000000000000746573746265642d7632",
+    "frame_bytes": 50
+  },
+  "known_data": {
+    "seed": 743,
+    "message_id": 1,
+    "message_bytes": 64,
+    "payload_hex": "2258d863a516fd2bbf56448f965124994ddd86f588008feb69f5262987ccc4b724fb095109e5a50e783f1195e8089373898f2878c488156611503d15a936bcbd",
+    "sha256": "23ba5aff34305fd81aea721044b5f208bbd49b1f6b87f4a73598046d8672de82"
+  },
+  "artifact_chunk": {
+    "offset": 0,
+    "data_b64": "MTIzNDU2Nzg5",
+    "length_bytes": 9,
+    "crc32": "cbf43926",
+    "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+  },
+  "audio": {
+    "sample_count": 24000,
+    "pcm_bytes": 48000,
+    "codec_frames": 150,
+    "encoded_bytes": 1200,
+    "default_fragment_count": 8
+  }
+}

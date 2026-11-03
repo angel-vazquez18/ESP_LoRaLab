@@ -1,0 +1,131 @@
+{
+  "contract_version": "2.0.0",
+  "wire_version": 2,
+  "status": "provisional_implementation_baseline",
+  "decision_date": "2026-10-18",
+  "idf_version": "v6.0.2",
+  "transport": {
+    "preference": ["usb_serial_jtag", "usb_uart"],
+    "baud": 115200,
+    "data_bits": 8,
+    "parity": "none",
+    "stop_bits": 1,
+    "flow_control": "none",
+    "max_record_bytes_including_lf": 4096,
+    "max_json_depth": 8,
+    "io_poll_timeout_ms": 100,
+    "command_timeout_ms": 2000,
+    "command_retries": 2,
+    "mutating_reply_cache_entries": 16,
+    "max_cached_reply_bytes": 1024,
+    "host_keepalive_ms": 1000,
+    "host_lease_ms": 5000,
+    "health_interval_ms": 1000,
+    "stale_after_ms": 3000,
+    "unresponsive_after_ms": 5000
+  },
+  "radio": {
+    "frequency_hz": 915000000,
+    "bandwidth_hz": 125000,
+    "spreading_factor": 7,
+    "coding_rate_denominator": 5,
+    "tx_power_dbm": 14,
+    "preamble_symbols": 8,
+    "header_mode": "explicit",
+    "crc_enabled": true,
+    "iq_inverted": false,
+    "sync_word": 5156,
+    "ldro_mode": "auto"
+  },
+  "link": {
+    "fragment_payload_bytes": 160,
+    "ack_mode": "none",
+    "max_retries": 0,
+    "guard_us": 50000,
+    "ack_turnaround_us": 20000,
+    "ack_margin_us": 80000
+  },
+  "reliable_link_override": {
+    "ack_mode": "stop_wait",
+    "max_retries": 2
+  },
+  "security": {
+    "default_profile": "aes128_gcm",
+    "bringup_profile": "none",
+    "key_bytes": 16,
+    "key_scope": "fresh_per_source_per_run",
+    "nonce_bytes": 12,
+    "nonce_layout": "BE64(session_id)||BE32(frame_seq)",
+    "tag_bytes": 16,
+    "replay_window_packets": 128,
+    "duplicate_ack_cache_entries": 16,
+    "persist_keys": false
+  },
+  "framing": {
+    "magic_hex": "4c54",
+    "header_bytes": 40,
+    "max_radio_payload_bytes": 255,
+    "max_protected_fragment_bytes": 199,
+    "max_unprotected_fragment_bytes": 215,
+    "binary_endianness": "big",
+    "frame_types": {"data": 1, "ack": 2, "echo_request": 3, "echo_reply": 4}
+  },
+  "run": {
+    "airtime_model": "sx126x_lora_v1",
+    "message_count": 100,
+    "message_bytes": 64,
+    "source_seed": 743,
+    "max_duration_ms": 120000,
+    "repetitions": 3,
+    "minimum_drain_us": 2000000,
+    "reassembly_margin_us": 2000000
+  },
+  "audio": {
+    "codec_profile": "codec2_3200_v1",
+    "codec_release": "1.2.0",
+    "sample_rate_hz": 8000,
+    "pcm_bits": 16,
+    "channels": 1,
+    "pcm_endianness": "little",
+    "baseline_sample_count": 24000,
+    "samples_per_codec_frame": 160,
+    "encoded_bytes_per_codec_frame": 8,
+    "encoded_bitrate_bps": 3200,
+    "sustained_source_duration_ms": 60000,
+    "sustained_warmup_ms": 3000,
+    "encoded_queue_bytes": 4800
+  },
+  "resources": {
+    "max_message_bytes": 65536,
+    "max_fragments": 4096,
+    "max_messages_per_run": 10000,
+    "max_run_duration_ms": 3600000,
+    "artifact_chunk_bytes": 1024,
+    "max_artifact_bytes": 131072,
+    "node_artifact_slots": 4,
+    "node_total_artifact_bytes": 262144,
+    "max_injections": 32,
+    "max_injections_per_command": 8,
+    "retained_injection_frames": 16,
+    "max_reorder_block_fragments": 32,
+    "chunk_checksum": "crc32_iso_hdlc",
+    "artifact_digest": "sha256"
+  },
+  "timing": {
+    "one_way_method": "shared_wired_pulse",
+    "reference_node_role": "A",
+    "calibration_pulse_count": 32,
+    "calibration_pulse_interval_us": 100000,
+    "calibration_expires_ms": 2000,
+    "max_one_way_uncertainty_us": 1000,
+    "rtt_start_phase": "tx_command",
+    "rtt_end_phase": "echo_reply_accepted"
+  },
+  "telemetry": {
+    "memory_normal_hz": 1,
+    "memory_experiment_hz": 10,
+    "ui_max_updates_hz": 5,
+    "packet_events": true,
+    "crypto_samples_default": false
+  }
+}
