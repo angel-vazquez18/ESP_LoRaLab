@@ -27,6 +27,35 @@ Example task prompts:
 
 ## Context maintenance
 
+Reading project context is also an opportunity to improve it. Agents should
+preserve relevant, durable context they have when it is absent from the repository,
+even when the current task is only to understand or summarize the project. This
+is authorized by root AGENTS.md; an explicit user instruction not to edit files
+takes precedence. Do not make unrelated implementation changes under this rule.
+
+1. Compare available conversation context and inspected evidence with the current
+   authoritative documents. Check whether the information is already present
+   under another name or in a scoped file before adding it.
+2. Add or refine the smallest relevant entry in the document that owns the topic,
+   using the placement rules below. Keep agent instructions concise; do not paste
+   conversations, duplicate whole documents or use the glossary as a general log.
+3. Identify the source and date where useful: a user decision, source path,
+   recorded check or evidence artifact. Record only checks actually performed.
+   Clearly label proposals, assumptions and unverified observations; do not
+   promote them to requirements, implementation claims or hardware evidence.
+4. If new context conflicts with existing material, follow current user decisions
+   and verified evidence. Mark superseded guidance explicitly while preserving
+   historical provenance. Record unresolved conflicts as open questions rather
+   than silently choosing an unsupported answer.
+5. Exclude credentials, run keys, private data and transient tool output. Refer
+   to appropriate evidence locations instead of copying sensitive or bulky data.
+6. Mention the context added and its location in the handoff. If nothing durable
+   is missing, leave the files unchanged; no ceremonial entry is needed.
+
+Placement rules:
+
+- Durable agent behavior goes in root or scoped `AGENTS.md`; shared maintenance
+  guidance belongs here rather than in separate agent-vendor copies.
 - Requirements and user decisions go in `project_brief.md` or the hardware profile.
 - Existing behavior, blocked work and actual verification go in `status.md`.
 - Detailed experiment readiness stays in the implementation checklist and saved

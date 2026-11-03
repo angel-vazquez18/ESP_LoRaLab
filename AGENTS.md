@@ -46,6 +46,22 @@
   speaker; audio modules powered from Heltec 3.3 V. PTT uses GPIO 47, not GPIO 7.
   Read `hardware/README.md` before editing pins or audio configuration.
 
+## Preserve missing project context
+
+Whenever an agent reads general project context (`AGENTS.md`, scoped instructions,
+`CONTEXT.md` or related docs), compare it with relevant context available from the
+current conversation, prior authorized work and inspected evidence. Proactively
+add useful, durable information that is missing, unless the user explicitly
+requires a read-only task. Context maintenance is authorized without a separate
+permission request; it does not authorize unrelated implementation changes.
+
+Update the existing authoritative document rather than duplicating context across
+agent files. Keep glossary terms in `CONTEXT.md`, durable instructions in the
+appropriate `AGENTS.md`, and requirements, architecture, status and task evidence
+in their designated docs. Follow [context maintenance](docs/agent_workflow.md#context-maintenance)
+for placement, provenance, uncertainty and conflicting information. Do not store
+secrets, invent facts or turn a proposal into a confirmed decision.
+
 ## Working discipline
 
 - Inspect existing code and status before designing a replacement. Preserve user
