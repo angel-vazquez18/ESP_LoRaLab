@@ -1,0 +1,271 @@
+{
+  "$defs": {
+    "Instrumentation": {
+      "additionalProperties": false,
+      "properties": {
+        "packet_events": {
+          "const": true,
+          "default": true,
+          "title": "Packet Events",
+          "type": "boolean"
+        },
+        "crypto_samples": {
+          "default": false,
+          "title": "Crypto Samples",
+          "type": "boolean"
+        },
+        "memory_10hz": {
+          "default": false,
+          "title": "Memory 10Hz",
+          "type": "boolean"
+        },
+        "clock_samples": {
+          "default": false,
+          "title": "Clock Samples",
+          "type": "boolean"
+        }
+      },
+      "title": "Instrumentation",
+      "type": "object"
+    },
+    "KnownDataSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_id": {
+          "const": "IF-02",
+          "default": "IF-02",
+          "title": "Catalog Id",
+          "type": "string"
+        },
+        "direction": {
+          "default": "A_TO_B",
+          "enum": [
+            "A_TO_B",
+            "B_TO_A"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "source": {
+          "const": "known_data",
+          "default": "known_data",
+          "title": "Source",
+          "type": "string"
+        },
+        "message_count": {
+          "default": 100,
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Message Count",
+          "type": "integer"
+        },
+        "message_bytes": {
+          "default": 64,
+          "maximum": 65536,
+          "minimum": 1,
+          "title": "Message Bytes",
+          "type": "integer"
+        },
+        "source_seed": {
+          "default": 743,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Source Seed",
+          "type": "integer"
+        },
+        "source_artifact_id": {
+          "default": null,
+          "title": "Source Artifact Id",
+          "type": "null"
+        },
+        "sample_count": {
+          "default": null,
+          "title": "Sample Count",
+          "type": "null"
+        },
+        "security": {
+          "default": "none",
+          "enum": [
+            "none",
+            "aes128_gcm"
+          ],
+          "title": "Security",
+          "type": "string"
+        },
+        "max_duration_ms": {
+          "default": 120000,
+          "maximum": 3600000,
+          "minimum": 1000,
+          "title": "Max Duration Ms",
+          "type": "integer"
+        },
+        "source_duration_ms": {
+          "default": null,
+          "title": "Source Duration Ms",
+          "type": "null"
+        },
+        "instrumentation": {
+          "$ref": "#/$defs/Instrumentation"
+        },
+        "expected_sha256": {
+          "default": null,
+          "title": "Expected Sha256",
+          "type": "null"
+        },
+        "playback": {
+          "const": false,
+          "default": false,
+          "title": "Playback",
+          "type": "boolean"
+        }
+      },
+      "title": "KnownDataSpec",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "properties": {
+        "fragment_payload_bytes": {
+          "default": 160,
+          "maximum": 215,
+          "minimum": 16,
+          "title": "Fragment Payload Bytes",
+          "type": "integer"
+        },
+        "ack_mode": {
+          "default": "none",
+          "enum": [
+            "none",
+            "stop_wait"
+          ],
+          "title": "Ack Mode",
+          "type": "string"
+        },
+        "max_retries": {
+          "default": 0,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "guard_us": {
+          "default": 50000,
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Guard Us",
+          "type": "integer"
+        },
+        "ack_turnaround_us": {
+          "const": 20000,
+          "default": 20000,
+          "title": "Ack Turnaround Us",
+          "type": "integer"
+        },
+        "ack_margin_us": {
+          "const": 80000,
+          "default": 80000,
+          "title": "Ack Margin Us",
+          "type": "integer"
+        }
+      },
+      "title": "Link",
+      "type": "object"
+    },
+    "Radio": {
+      "additionalProperties": false,
+      "properties": {
+        "frequency_hz": {
+          "default": 915000000,
+          "maximum": 928000000,
+          "minimum": 902000000,
+          "title": "Frequency Hz",
+          "type": "integer"
+        },
+        "bandwidth_hz": {
+          "default": 125000,
+          "enum": [
+            125000,
+            250000,
+            500000
+          ],
+          "title": "Bandwidth Hz",
+          "type": "integer"
+        },
+        "spreading_factor": {
+          "default": 7,
+          "maximum": 12,
+          "minimum": 7,
+          "title": "Spreading Factor",
+          "type": "integer"
+        },
+        "coding_rate_denominator": {
+          "default": 5,
+          "maximum": 8,
+          "minimum": 5,
+          "title": "Coding Rate Denominator",
+          "type": "integer"
+        },
+        "tx_power_dbm": {
+          "default": 14,
+          "maximum": 20,
+          "minimum": 2,
+          "title": "Tx Power Dbm",
+          "type": "integer"
+        },
+        "preamble_symbols": {
+          "default": 8,
+          "maximum": 32,
+          "minimum": 8,
+          "title": "Preamble Symbols",
+          "type": "integer"
+        },
+        "header_mode": {
+          "const": "explicit",
+          "default": "explicit",
+          "title": "Header Mode",
+          "type": "string"
+        },
+        "crc_enabled": {
+          "const": true,
+          "default": true,
+          "title": "Crc Enabled",
+          "type": "boolean"
+        },
+        "iq_inverted": {
+          "const": false,
+          "default": false,
+          "title": "Iq Inverted",
+          "type": "boolean"
+        },
+        "sync_word": {
+          "const": 5156,
+          "default": 5156,
+          "title": "Sync Word",
+          "type": "integer"
+        },
+        "ldro_mode": {
+          "const": "auto",
+          "default": "auto",
+          "title": "Ldro Mode",
+          "type": "string"
+        }
+      },
+      "title": "Radio",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "radio": {
+      "$ref": "#/$defs/Radio"
+    },
+    "link": {
+      "$ref": "#/$defs/Link"
+    },
+    "spec": {
+      "$ref": "#/$defs/KnownDataSpec"
+    }
+  },
+  "title": "KnownDataPlan",
+  "type": "object"
+}
