@@ -1,0 +1,94 @@
+{
+  "profile_version": 1,
+  "profile_id": "heltec_wifi_lora32_v4_audio_plan",
+  "status": "planned_not_hardware_validated",
+  "target": "esp32s3",
+  "idf_version": "6.0.2",
+  "board": {
+    "family": "Heltec WiFi LoRa 32 V4",
+    "printed_revision": "unverified",
+    "flash_bytes": 16777216,
+    "psram_bytes": 2097152,
+    "radio": "SX1262",
+    "frequency_hz": 915000000
+  },
+  "external_peripherals_connected": false,
+  "gnss": {
+    "enabled": false,
+    "connection": "leave_disconnected"
+  },
+  "microphone": {
+    "model": "INMP441",
+    "supply": "heltec_3v3",
+    "ground": "heltec_gnd",
+    "gpio": {
+      "sck": 4,
+      "ws": 5,
+      "sd": 6
+    },
+    "proposed_straps": {
+      "lr": "gnd_left_channel"
+    }
+  },
+  "amplifier": {
+    "model": "SATUY MAX98357A",
+    "supply": "heltec_3v3",
+    "supply_voltage_v": 3.3,
+    "ground": "heltec_gnd",
+    "gpio": {
+      "bclk": 38,
+      "lrc": 39,
+      "din": 40
+    },
+    "proposed_straps": {
+      "sd_mode": "vin_left_channel",
+      "gain": "externally_open_default_9db"
+    }
+  },
+  "speaker": {
+    "model": "Alrhso enclosed speaker",
+    "impedance_ohm": 8,
+    "rated_power_w": 1,
+    "positive": "amplifier_out_p",
+    "negative": "amplifier_out_n",
+    "ground_connection": false
+  },
+  "ptt": {
+    "gpio": 47,
+    "switch": "normally_open_to_ground",
+    "active_level": 0,
+    "internal_pullup": true
+  },
+  "onboard": {
+    "radio_gpio": {
+      "nss": 8,
+      "sck": 9,
+      "mosi": 10,
+      "miso": 11,
+      "reset": 12,
+      "busy": 13,
+      "dio1": 14
+    },
+    "rf_frontend_gpio": {
+      "vfem_ctrl": 7,
+      "fem_en": 2,
+      "fem_pa": 46
+    },
+    "oled_gpio": {
+      "sda": 17,
+      "scl": 18,
+      "reset": 21
+    },
+    "native_usb_gpio": {
+      "d_minus": 19,
+      "d_plus": 20
+    }
+  },
+  "remaining_checks": [
+    "Printed revision and matching schematic",
+    "Breakout resistor and enable configuration",
+    "Adoption and verification of proposed straps",
+    "3.3 V current headroom under radio/audio load",
+    "Physical peripheral bring-up and evidence"
+  ]
+}

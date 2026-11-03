@@ -1,0 +1,19 @@
+flowchart TB
+    HOST["Mac / host testbed"]
+    ESP["Heltec WiFi LoRa 32 V4<br/>ESP32-S3<br/>3V3 / GND supply all audio modules"]
+    MIC["INMP441 microphone<br/>VDD → Heltec 3V3<br/>GND → Heltec GND<br/>Proposed: L/R → GND (left channel)"]
+    AMP["SATUY MAX98357A amplifier<br/>VIN → Heltec 3V3<br/>GND → Heltec GND<br/>Proposed: SD/MODE → VIN (left)<br/>Proposed: GAIN open (9 dB)"]
+    SPK["Alrhso speaker<br/>8 Ω · 1 W<br/>Neither terminal connects to GND"]
+    BTN["Normally open<br/>push-to-talk button<br/>Pressed = LOW"]
+    GND["Heltec GND"]
+    RADIO["Onboard SX1262 / RF front end<br/>NSS 8 · SCK 9<br/>MOSI 10 · MISO 11<br/>RESET 12 · BUSY 13 · DIO1 14<br/>GPIO 7 reserved: VFEM_Ctrl"]
+    OLED["Onboard OLED<br/>SDA 17 · SCL 18 · RESET 21"]
+    HOST <-->|"USB: power + serial"| ESP
+    ESP -->|"GPIO 4 → SCK / BCLK<br/>GPIO 5 → WS / LRCLK"| MIC
+    MIC -->|"SD → GPIO 6"| ESP
+    ESP -->|"GPIO 38 → BCLK<br/>GPIO 39 → LRC<br/>GPIO 40 → DIN"| AMP
+    AMP -->|"OUT+ → speaker +<br/>OUT− → speaker −"| SPK
+    ESP ---|"GPIO 47 — corrected PTT pin<br/>Enable internal pull-up"| BTN
+    BTN --- GND
+    ESP ---|"Already connected onboard"| RADIO
+    ESP ---|"Already connected onboard"| OLED

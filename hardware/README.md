@@ -1,0 +1,61 @@
+# Planned single-node wiring
+
+User-confirmed hardware direction: Meshnology Heltec WiFi LoRa 32 V4 kit,
+ESP32-S3, SX1262 / 915 MHz, 16 MiB flash and 2 MiB PSRAM. Exact printed board
+revision still needs observation. The GNSS module will not be used; leave it
+physically disconnected. No external audio/button hardware is connected yet.
+
+All audio modules receive power from the Heltec board; amplifier VIN is 3.3 V.
+The speaker is Alrhso, 8 ohm / 1 W. Amplifier: SATUY MAX98357A. Microphone: INMP441.
+See `boards/heltec_wifi_lora32_v4.json` for machine-readable planning data.
+
+| Module | Signal | Connection |
+| --- | --- | --- |
+| INMP441 | VDD / GND | Heltec 3V3 / GND |
+| INMP441 | SCK / WS / SD | GPIO 4 / 5 / 6 |
+| INMP441 | L/R | Proposed GND: left channel |
+| MAX98357A | VIN / GND | Heltec 3V3 / GND |
+| MAX98357A | BCLK / LRC / DIN | GPIO 38 / 39 / 40 |
+| MAX98357A | SD/MODE | Proposed VIN: enabled, left channel |
+| MAX98357A | GAIN | Proposed externally unconnected: advertised default 9 dB |
+| Speaker | Positive / negative | Amplifier OUT+ / OUT-; neither goes to GND |
+| Normally open PTT | Signal / second terminal | GPIO 47 with internal pull-up / GND |
+| Onboard SX1262 | NSS / SCK / MOSI / MISO | GPIO 8 / 9 / 10 / 11 |
+| Onboard SX1262 | RESET / BUSY / DIO1 | GPIO 12 / 13 / 14 |
+| Onboard RF front end | VFEM_Ctrl | GPIO 7 reserved; never use for PTT |
+| Onboard OLED | SDA / SCL / RESET | GPIO 17 / 18 / 21 |
+
+The board also has RF-front-end controls shown in the manufacturer's pin map
+(GPIO 2 FEM_EN and GPIO 46 FEM_PA); preserve these when writing the board/radio
+module and check the printed revision's schematic. Native USB uses GPIO 19/20.
+The optional GNSS interface shares GPIO 38/39/40 used by the amplifier plan.
+
+![Corrected planned wiring](reference/node-wiring.png)
+
+`reference/node-wiring.mmd` is the matching Mermaid source. It records planned
+wiring; GPIO labels are not physical header positions. Audio straps are proposals.
+The board profile is not yet consumed by firmware or host capability detection.
+
+## Open hardware checks
+
+- Observe the printed board revision and verify its matching schematic.
+- Confirm the delivered amplifier and microphone breakout resistor/enable wiring.
+- Adopt and check the proposed L/R, SD/MODE and GAIN straps before audio bring-up.
+- Validate 3.3 V rail current headroom and voltage stability with radio/audio loads.
+  The published V4 table lists 500 mA maximum 3.3 V output; it does not constitute
+  measured headroom for this complete node. Speaker 1 W is a rating, not output proof.
+- Verify actual peripherals, memory use and audio capture/playback, then retain
+  hardware evidence separately from simulator results.
+
+## Sources
+
+- [Heltec V4 pin map](https://heltec.org/wp-content/uploads/2025/09/V4_pinmap-scaled.png)
+- [Heltec V4 datasheet](https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.2.0.pdf)
+- [Heltec V4.2 schematic](https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/WiFi_LoRa_32_V4.2.pdf)
+- [MAX98357A datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf)
+- [Amplifier listing](https://www.amazon.com/dp/B0GF67KXC3)
+- [Microphone listing](https://www.amazon.com/dp/B0GFFFMDBW)
+- [Speaker listing](https://www.amazon.com/dp/B0GX6GZFJ2)
+- [Node kit listing](https://www.amazon.com/dp/B0FRS7H1FT)
+
+Seller descriptions identify planned parts; they are not verified board schematics.
