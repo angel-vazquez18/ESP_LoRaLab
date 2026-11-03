@@ -1,0 +1,1775 @@
+{
+  "contract_version": "2.0.0",
+  "scope": "staged_known_data_events",
+  "$defs": {
+    "Accepted": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "rx.accepted",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/AcceptedData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Accepted",
+      "type": "object"
+    },
+    "AcceptedData": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "not": {
+            "const": "0000000000000000"
+          },
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "frame_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Frame Seq",
+          "type": "integer"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "source_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Source Role",
+          "type": "string"
+        },
+        "payload_bytes": {
+          "maximum": 215,
+          "minimum": 1,
+          "title": "Payload Bytes",
+          "type": "integer"
+        },
+        "accepted_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Accepted Us",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "session_id",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "source_role",
+        "payload_bytes",
+        "accepted_us"
+      ],
+      "title": "AcceptedData",
+      "type": "object"
+    },
+    "Attempt": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "tx.attempt",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/AttemptData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Attempt",
+      "type": "object"
+    },
+    "AttemptData": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "not": {
+            "const": "0000000000000000"
+          },
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "frame_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Frame Seq",
+          "type": "integer"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "attempt_index": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Attempt Index",
+          "type": "integer"
+        },
+        "frame_type": {
+          "enum": [
+            "data",
+            "ack",
+            "echo_request",
+            "echo_reply"
+          ],
+          "title": "Frame Type",
+          "type": "string"
+        },
+        "frame_bytes": {
+          "maximum": 255,
+          "minimum": 40,
+          "title": "Frame Bytes",
+          "type": "integer"
+        },
+        "tx_command_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Command Us"
+        },
+        "tx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Done Us"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "attempt_index",
+        "frame_type",
+        "frame_bytes",
+        "tx_command_us",
+        "tx_done_us",
+        "status"
+      ],
+      "title": "AttemptData",
+      "type": "object"
+    },
+    "Budget": {
+      "additionalProperties": false,
+      "properties": {
+        "ack_timeout_us": {
+          "minimum": 0,
+          "title": "Ack Timeout Us",
+          "type": "integer"
+        },
+        "reassembly_timeout_us": {
+          "minimum": 0,
+          "title": "Reassembly Timeout Us",
+          "type": "integer"
+        },
+        "drain_us": {
+          "minimum": 0,
+          "title": "Drain Us",
+          "type": "integer"
+        },
+        "capture_budget_us": {
+          "const": 0,
+          "default": 0,
+          "title": "Capture Budget Us",
+          "type": "integer"
+        },
+        "processing_budget_us": {
+          "minimum": 0,
+          "title": "Processing Budget Us",
+          "type": "integer"
+        },
+        "playback_budget_us": {
+          "const": 0,
+          "default": 0,
+          "title": "Playback Budget Us",
+          "type": "integer"
+        },
+        "fault_budget_us": {
+          "const": 0,
+          "default": 0,
+          "title": "Fault Budget Us",
+          "type": "integer"
+        },
+        "model_version": {
+          "const": "sx126x_lora_v1",
+          "default": "sx126x_lora_v1",
+          "title": "Model Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ack_timeout_us",
+        "reassembly_timeout_us",
+        "drain_us",
+        "processing_budget_us"
+      ],
+      "title": "Budget",
+      "type": "object"
+    },
+    "MessageData": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "delivered",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "message_bytes": {
+          "maximum": 65536,
+          "minimum": 1,
+          "title": "Message Bytes",
+          "type": "integer"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sha256"
+        },
+        "fragment_count": {
+          "maximum": 4096,
+          "minimum": 1,
+          "title": "Fragment Count",
+          "type": "integer"
+        },
+        "missing_count": {
+          "maximum": 4096,
+          "minimum": 0,
+          "title": "Missing Count",
+          "type": "integer"
+        },
+        "missing_parts": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Missing Parts",
+          "type": "integer"
+        },
+        "first_fragment_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "First Fragment Us"
+        },
+        "complete_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Complete Us"
+        }
+      },
+      "required": [
+        "message_id",
+        "status",
+        "message_bytes",
+        "sha256",
+        "fragment_count",
+        "missing_count",
+        "missing_parts",
+        "first_fragment_us",
+        "complete_us"
+      ],
+      "title": "MessageData",
+      "type": "object"
+    },
+    "MessageResult": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "message.result",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/MessageData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "MessageResult",
+      "type": "object"
+    },
+    "Missing": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "message.missing",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/MissingData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Missing",
+      "type": "object"
+    },
+    "MissingData": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "part_index": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Part Index",
+          "type": "integer"
+        },
+        "part_count": {
+          "minimum": 1,
+          "title": "Part Count",
+          "type": "integer"
+        },
+        "ranges": {
+          "items": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Ranges",
+          "type": "array"
+        }
+      },
+      "required": [
+        "message_id",
+        "part_index",
+        "part_count",
+        "ranges"
+      ],
+      "title": "MissingData",
+      "type": "object"
+    },
+    "NodeError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 160,
+          "title": "Message",
+          "type": "string"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "NodeError",
+      "type": "object"
+    },
+    "OperationData": {
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Result"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NodeError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation_id",
+        "status",
+        "result",
+        "error"
+      ],
+      "title": "OperationData",
+      "type": "object"
+    },
+    "OperationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "operation.result",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/OperationData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "OperationResult",
+      "type": "object"
+    },
+    "PreparedData": {
+      "additionalProperties": false,
+      "properties": {
+        "config_revision": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Config Revision",
+          "type": "integer"
+        },
+        "budget": {
+          "$ref": "#/$defs/Budget"
+        },
+        "source_length_bytes": {
+          "anyOf": [
+            {
+              "maximum": 65536,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Length Bytes"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Sha256"
+        }
+      },
+      "required": [
+        "config_revision",
+        "budget",
+        "source_length_bytes",
+        "source_sha256"
+      ],
+      "title": "PreparedData",
+      "type": "object"
+    },
+    "Received": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "rx.frame",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ReceivedData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Received",
+      "type": "object"
+    },
+    "ReceivedData": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "anyOf": [
+            {
+              "not": {
+                "const": "0000000000000000"
+              },
+              "pattern": "^[0-9a-f]{16}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Id"
+        },
+        "source_role": {
+          "anyOf": [
+            {
+              "enum": [
+                "A",
+                "B"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Role"
+        },
+        "frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Seq"
+        },
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Message Id"
+        },
+        "fragment_index": {
+          "anyOf": [
+            {
+              "maximum": 4095,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Fragment Index"
+        },
+        "frame_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "data",
+                "ack",
+                "echo_request",
+                "echo_reply"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Type"
+        },
+        "frame_bytes": {
+          "maximum": 255,
+          "minimum": 0,
+          "title": "Frame Bytes",
+          "type": "integer"
+        },
+        "rx_done_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Rx Done Us",
+          "type": "integer"
+        },
+        "rssi_dbm": {
+          "title": "Rssi Dbm",
+          "type": "number"
+        },
+        "snr_db": {
+          "title": "Snr Db",
+          "type": "number"
+        },
+        "crc_ok": {
+          "title": "Crc Ok",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "session_id",
+        "source_role",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "frame_type",
+        "frame_bytes",
+        "rx_done_us",
+        "rssi_dbm",
+        "snr_db",
+        "crc_ok"
+      ],
+      "title": "ReceivedData",
+      "type": "object"
+    },
+    "Rejected": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "rx.rejected",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/RejectedData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Rejected",
+      "type": "object"
+    },
+    "RejectedData": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "anyOf": [
+            {
+              "not": {
+                "const": "0000000000000000"
+              },
+              "pattern": "^[0-9a-f]{16}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Id"
+        },
+        "source_role": {
+          "anyOf": [
+            {
+              "enum": [
+                "A",
+                "B"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Role"
+        },
+        "frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Seq"
+        },
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Message Id"
+        },
+        "fragment_index": {
+          "anyOf": [
+            {
+              "maximum": 4095,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Fragment Index"
+        },
+        "stage": {
+          "enum": [
+            "framing",
+            "session",
+            "authentication",
+            "replay",
+            "reassembly"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "related_injection_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Related Injection Id"
+        }
+      },
+      "required": [
+        "session_id",
+        "source_role",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "stage",
+        "reason",
+        "related_injection_id"
+      ],
+      "title": "RejectedData",
+      "type": "object"
+    },
+    "RunPrepared": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "run.prepared",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/PreparedData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "RunPrepared",
+      "type": "object"
+    },
+    "RunState": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "run.state",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/StateData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "RunState",
+      "type": "object"
+    },
+    "StateData": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "idle",
+            "preparing",
+            "prepared",
+            "armed",
+            "running",
+            "draining",
+            "stopping",
+            "faulted"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "config_revision": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Config Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state",
+        "reason",
+        "config_revision"
+      ],
+      "title": "StateData",
+      "type": "object"
+    },
+    "Summary": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "run.summary",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/SummaryData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Summary",
+      "type": "object"
+    },
+    "SummaryData": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "sender",
+            "receiver"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "session_id": {
+          "not": {
+            "const": "0000000000000000"
+          },
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "config_revision": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Config Revision",
+          "type": "integer"
+        },
+        "intended_messages": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Intended Messages",
+          "type": "integer"
+        },
+        "started_messages": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Started Messages",
+          "type": "integer"
+        },
+        "finished_messages": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Finished Messages",
+          "type": "integer"
+        },
+        "original_packets": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Original Packets",
+          "type": "integer"
+        },
+        "tx_attempts": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Tx Attempts",
+          "type": "integer"
+        },
+        "radio_observations": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Radio Observations",
+          "type": "integer"
+        },
+        "accepted_fragments": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Accepted Fragments",
+          "type": "integer"
+        },
+        "duplicates": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Duplicates",
+          "type": "integer"
+        },
+        "delivered_messages": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Delivered Messages",
+          "type": "integer"
+        },
+        "failed_messages": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Failed Messages",
+          "type": "integer"
+        },
+        "useful_source_bytes": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Useful Source Bytes",
+          "type": "integer"
+        },
+        "useful_delivered_bytes": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Useful Delivered Bytes",
+          "type": "integer"
+        },
+        "first_tx_command_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "First Tx Command Us"
+        },
+        "last_tx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Tx Done Us"
+        },
+        "first_rx_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "First Rx Us"
+        },
+        "last_rx_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Rx Us"
+        },
+        "stop_reason": {
+          "enum": [
+            "completed",
+            "operator",
+            "host_shutdown",
+            "peer_failure",
+            "timeout",
+            "error"
+          ],
+          "title": "Stop Reason",
+          "type": "string"
+        },
+        "telemetry_drops": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Telemetry Drops",
+          "type": "integer"
+        },
+        "validity_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Validity Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "session_id",
+        "config_revision",
+        "intended_messages",
+        "started_messages",
+        "finished_messages",
+        "original_packets",
+        "tx_attempts",
+        "radio_observations",
+        "accepted_fragments",
+        "duplicates",
+        "delivered_messages",
+        "failed_messages",
+        "useful_source_bytes",
+        "useful_delivered_bytes",
+        "first_tx_command_us",
+        "last_tx_done_us",
+        "first_rx_us",
+        "last_rx_us",
+        "stop_reason",
+        "telemetry_drops",
+        "validity_reasons"
+      ],
+      "title": "SummaryData",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "message.missing": "#/$defs/Missing",
+      "message.result": "#/$defs/MessageResult",
+      "operation.result": "#/$defs/OperationResult",
+      "run.prepared": "#/$defs/RunPrepared",
+      "run.state": "#/$defs/RunState",
+      "run.summary": "#/$defs/Summary",
+      "rx.accepted": "#/$defs/Accepted",
+      "rx.frame": "#/$defs/Received",
+      "rx.rejected": "#/$defs/Rejected",
+      "tx.attempt": "#/$defs/Attempt"
+    },
+    "propertyName": "name"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RunState"
+    },
+    {
+      "$ref": "#/$defs/RunPrepared"
+    },
+    {
+      "$ref": "#/$defs/Attempt"
+    },
+    {
+      "$ref": "#/$defs/Received"
+    },
+    {
+      "$ref": "#/$defs/Accepted"
+    },
+    {
+      "$ref": "#/$defs/Rejected"
+    },
+    {
+      "$ref": "#/$defs/Missing"
+    },
+    {
+      "$ref": "#/$defs/MessageResult"
+    },
+    {
+      "$ref": "#/$defs/Summary"
+    },
+    {
+      "$ref": "#/$defs/OperationResult"
+    }
+  ]
+}
