@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "ESP-IDF",
+            "compilerPath": "",
+            "compileCommands": "${workspaceFolder}/firmware/lora_node/build/compile_commands.json",
+            "includePath": [
+                "${workspaceFolder}/firmware/lora_node/main",
+                "${workspaceFolder}/firmware/lora_node/build/config"
+            ]
+        }
+    ],
+    "version": 4
+}

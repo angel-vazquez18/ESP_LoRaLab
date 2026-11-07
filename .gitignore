@@ -24,3 +24,4 @@
 .env
 .env.*
 !.env.example
+/firmware/lora_node/.cache/
