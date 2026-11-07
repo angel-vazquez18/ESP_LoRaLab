@@ -17,6 +17,10 @@ Both work against shared versioned interfaces in this repository.
   Require two distinct nodes only for tests/cases that need a link. Keep all 23
   procedures; missing physical firmware/runner capabilities remain blocked.
   Automated software tests may use isolated serial fixtures, not an operator simulator.
+- November 4: organize node firmware development around reusable capabilities and
+  useful end-to-end node workflows. Use experiments as a coverage/validation
+  reference, not the definitive initial implementation order. See
+  `node_development_plan.md`; the earlier five-experiment firmware draft was not installed.
 - The selected October 18 provisional contract decisions may be implemented now;
   review with Homar can revise them through a versioned update. Do not block on it.
 - October 31: firmware and the existing working testbed belong together in
@@ -32,12 +36,13 @@ Both work against shared versioned interfaces in this repository.
 - All peripherals powered by the Heltec board; amplifier uses its 3.3 V rail.
 - Microphone GPIOs 4/5/6; amplifier GPIOs 38/39/40. The corrected wiring reference
   uses PTT GPIO 47; GPIO 7 is reserved for onboard RF-front-end supply control.
-- No external microphone, amplifier, speaker or button is connected yet. These are
-  planned assignments, not verified physical operation. Second-node availability
-  is not established by the parts listing.
-- Microphone L/R-to-GND, amplifier SD/MODE-to-VIN and open GAIN/9 dB are suggested
-  starting straps. They have not been confirmed as physical wiring. Rail current
-  headroom and actual board/breakout details require validation.
+- November 4 user report: one ESP is connected to this laptop; the microphone and
+  amplifier are wired to the assigned GPIOs. Microphone L/R is tied to GND;
+  amplifier SD/MODE and GAIN are tied to the Heltec 3.3 V rail. The gain setting is
+  6 dB. These are reported physical connections, not independently verified operation.
+- Speaker and PTT connection/operation have not been explicitly confirmed.
+  Second-node availability, measured rail headroom, exact printed revision and
+  actual audio performance remain to be established.
 
 ## Selected implementation baseline
 

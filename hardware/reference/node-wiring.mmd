@@ -1,8 +1,8 @@
 flowchart TB
     HOST["Mac / host testbed"]
     ESP["Heltec WiFi LoRa 32 V4<br/>ESP32-S3<br/>3V3 / GND supply all audio modules"]
-    MIC["INMP441 microphone<br/>VDD → Heltec 3V3<br/>GND → Heltec GND<br/>Proposed: L/R → GND (left channel)"]
-    AMP["SATUY MAX98357A amplifier<br/>VIN → Heltec 3V3<br/>GND → Heltec GND<br/>Proposed: SD/MODE → VIN (left)<br/>Proposed: GAIN open (9 dB)"]
+    MIC["INMP441 microphone<br/>VDD → Heltec 3V3<br/>GND → Heltec GND<br/>L/R → GND (left channel)"]
+    AMP["SATUY MAX98357A amplifier<br/>VIN → Heltec 3V3<br/>GND → Heltec GND<br/>SD/MODE → 3V3 (left)<br/>GAIN → 3V3 (6 dB)"]
     SPK["Alrhso speaker<br/>8 Ω · 1 W<br/>Neither terminal connects to GND"]
     BTN["Normally open<br/>push-to-talk button<br/>Pressed = LOW"]
     GND["Heltec GND"]

@@ -1,14 +1,17 @@
 # ESP-IDF firmware instructions
 
 Read root `AGENTS.md`, `hardware/README.md`, the selected v2 contract and the
-relevant procedure before implementing command or measurement behavior.
+relevant procedure before implementing command or measurement behavior. Use root
+`docs/node_development_plan.md` to choose capability slices; experiments are the
+coverage/qualification cross-check, not a requirement to organize firmware by test ID.
 
 - ESP-IDF v6.0.2, ESP32-S3, C/C++. `lora_node/` is the main development scaffold;
   `diagnostic/` is a separate working diagnostic target. Do not confuse them.
 - One image supports roles A/B assigned by the host. Physical identity persists
   independently of role; session keys and active runs do not survive reset.
-- Hardware profile: root `hardware/boards/heltec_wifi_lora32_v4.json`. It is a
-  planning manifest, not connected-peripheral detection or tested driver support.
+- Hardware profile: root `hardware/boards/heltec_wifi_lora32_v4.json`. User-reported
+  microphone/amplifier wiring and 6 dB gain are recorded; independent driver/audio
+  validation is still pending. Do not confuse reported wiring with capability proof.
 - PTT is GPIO 47. GPIO 7 controls the onboard RF front-end supply. GNSS is unused
   and disconnected so GPIOs 38/39/40 are available to the audio output plan.
   Preserve all onboard RF control pins; radio SPI alone is not full board support.

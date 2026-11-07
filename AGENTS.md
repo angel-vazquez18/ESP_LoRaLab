@@ -6,8 +6,9 @@
 2. Read `docs/architecture.md` before changing module responsibilities or layout.
 3. Follow the scoped `AGENTS.md` in each directory you change. Instructions here
    apply everywhere; scoped files add details for that area.
-4. Read the relevant procedure and `docs/experiment_implementation_checklist.md`
-   before implementing or claiming an experiment complete.
+4. For node feature work, read `docs/node_development_plan.md`: build reusable
+   capabilities and workflows, with experiments as a coverage reference. Read the
+   relevant procedure/checklist before implementing or claiming experiment qualification.
 
 ## Routing
 
@@ -42,8 +43,9 @@
   errors and hashed artifacts needed for repeatable assessments.
 - Keys are fresh per source/run, RAM-only and excluded from traces, records and
   exports. Public conformance-vector keys are test fixtures only.
-- Hardware planning: Heltec V4, no GNSS, INMP441, SATUY MAX98357A, 8-ohm/1-W
-  speaker; audio modules powered from Heltec 3.3 V. PTT uses GPIO 47, not GPIO 7.
+- Hardware baseline: Heltec V4, no GNSS, INMP441, SATUY MAX98357A, 8-ohm/1-W
+  speaker; audio modules powered from Heltec 3.3 V. User reports microphone/amplifier
+  wired; L/R is GND, SD/MODE and GAIN are 3.3 V (6 dB). PTT uses GPIO 47, not GPIO 7.
   Read `hardware/README.md` before editing pins or audio configuration.
 
 ## Preserve missing project context

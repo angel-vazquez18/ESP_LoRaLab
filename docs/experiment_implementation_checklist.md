@@ -5,6 +5,13 @@ physical-only host. All 23 procedures in `test_procedures.md` remain required.
 Old simulated procedure completion is historical and does not count as current
 implementation or physical qualification. Simulator engines/runners were removed.
 
+## Relationship to node development
+
+The November 4 [node development plan](node_development_plan.md) orders firmware
+work by reusable capabilities and end-to-end workflows. Use the experiments below
+to check coverage and complete qualification; do not create one firmware engine
+per experiment. All 23 procedures and their evidence requirements remain intact.
+
 ## Current shared support
 
 - [x] macOS dashboard, CLI, persistent appearance and one local backend.

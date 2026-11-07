@@ -2,8 +2,9 @@
 
 Read root instructions, `README.md` and `boards/heltec_wifi_lora32_v4.json`.
 
-- These records describe planned wiring. No external microphone, amplifier,
-  speaker or button has been connected or validated in this session.
+- November 4 user report: one ESP is connected to the laptop and microphone/
+  amplifier wiring is complete. Independent electrical/audio validation is pending;
+  speaker/PTT connection and operation are not explicitly confirmed.
 - User decisions: all peripherals powered from Heltec; amplifier 3.3 V; speaker
   8 ohm / 1 W; GNSS unused. GPIO 47 replaces the earlier PTT GPIO 7 assignment.
 - GPIO 7 is reserved for RF-front-end supply control. Follow the actual board
@@ -11,8 +12,8 @@ Read root instructions, `README.md` and `boards/heltec_wifi_lora32_v4.json`.
   sufficient to enable the full front end.
 - GPIO 38/39/40 are audio output pins with GNSS disconnected. Do not enable GNSS
   silently or assign another device to those signals.
-- Microphone L/R-to-GND, amplifier SD/MODE-to-VIN and open GAIN/9 dB remain proposed
-  starting straps, not user-confirmed physical connections.
+- User confirmed microphone L/R-to-GND, amplifier SD/MODE-to-3.3 V and
+  GAIN-to-3.3 V. Hardware gain is 6 dB. Earlier open-GAIN/9 dB suggestions are superseded.
 - Verify actual breakout parts/resistors, board revision and power headroom before
   treating the manifest as a validated board support package. Speaker rating is
   not measured delivered power. Neither speaker terminal connects to ground.

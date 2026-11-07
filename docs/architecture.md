@@ -20,7 +20,10 @@ flowchart LR
 ```
 
 Dotted full-execution integration is planned. Diagnostic firmware cannot execute
-full RF/audio commands. The main node target currently has an empty app_main.
+full RF/audio commands. The main node target currently provides startup identity,
+reset-reason and internal/PSRAM memory logging. Its capability-based build order
+and completion gates are in [node development plan](node_development_plan.md);
+module implementations are not organized by experiment IDs.
 
 ## Source placement
 

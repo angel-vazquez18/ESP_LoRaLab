@@ -11,7 +11,7 @@ ESP_LoraLab/
 ├── CONTEXT.md                 Shared domain vocabulary
 ├── contracts/v2/              Shared defaults, vectors and generated wire schemas
 ├── firmware/
-│   ├── lora_node/             Existing node scaffold; app_main is currently empty
+│   ├── lora_node/             Main node startup and internal/PSRAM bring-up
 │   ├── diagnostic/            Working serial/health diagnostic target
 │   └── components/            Planned shared firmware module locations
 ├── testbed/
@@ -81,6 +81,7 @@ checks. See [development workflow](docs/development.md) for exact commands.
 
 - [Agent instructions](AGENTS.md) and [task routing](docs/agent_workflow.md)
 - [Architecture](docs/architecture.md) and [shared vocabulary](CONTEXT.md)
+- [Node development plan](docs/node_development_plan.md): capabilities, milestones and completion evidence
 - [Project brief and confirmed decisions](docs/project_brief.md)
 - [Current status](docs/status.md) and [23-experiment implementation checklist](docs/experiment_implementation_checklist.md)
 - [Hardware wiring](hardware/README.md)

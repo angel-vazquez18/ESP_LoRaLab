@@ -1,5 +1,5 @@
 {
-  "profile_version": 1,
+  "profile_version": 2,
   "profile_id": "heltec_wifi_lora32_v4_audio_plan",
   "status": "planned_not_hardware_validated",
   "target": "esp32s3",
@@ -12,7 +12,7 @@
     "radio": "SX1262",
     "frequency_hz": 915000000
   },
-  "external_peripherals_connected": false,
+  "external_peripherals_connected": true,
   "gnss": {
     "enabled": false,
     "connection": "leave_disconnected"
@@ -26,7 +26,7 @@
       "ws": 5,
       "sd": 6
     },
-    "proposed_straps": {
+    "straps": {
       "lr": "gnd_left_channel"
     }
   },
@@ -40,10 +40,11 @@
       "lrc": 39,
       "din": 40
     },
-    "proposed_straps": {
-      "sd_mode": "vin_left_channel",
-      "gain": "externally_open_default_9db"
-    }
+    "straps": {
+      "sd_mode": "heltec_3v3_left_channel",
+      "gain": "heltec_3v3_6db"
+    },
+    "hardware_gain_db": 6
   },
   "speaker": {
     "model": "Alrhso enclosed speaker",
@@ -86,9 +87,18 @@
   },
   "remaining_checks": [
     "Printed revision and matching schematic",
-    "Breakout resistor and enable configuration",
-    "Adoption and verification of proposed straps",
+    "Delivered breakout resistor/enable verification",
+    "Speaker and PTT connection/operation confirmation",
     "3.3 V current headroom under radio/audio load",
-    "Physical peripheral bring-up and evidence"
-  ]
+    "Physical peripheral bring-up, sample rate and playback evidence"
+  ],
+  "connection_evidence": {
+    "source": "user_report",
+    "date": "2026-11-04",
+    "microphone": "connected",
+    "amplifier": "connected",
+    "speaker": "not_explicitly_confirmed",
+    "ptt": "not_explicitly_confirmed",
+    "independently_verified": false
+  }
 }
