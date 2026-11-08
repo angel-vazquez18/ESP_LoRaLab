@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from lora_testbed import rf_events_v2, run_protocol_v2
+from lora_testbed import control_v2, rf_events_v2, run_protocol_v2
 from lora_testbed.experiments_v2 import KnownDataPlan
 from lora_testbed.v2 import schema, schema_digest
 
@@ -15,6 +15,10 @@ def outputs(root: Path) -> dict[Path, str]:
 
     return {
         root / "contracts/v2/diagnostic.schema.json": document(schema()),
+        root / "contracts/v2/control.schema.json": document(control_v2.schema()),
+        root / "firmware/lora_node/main/generated/contract_schema.h": (
+            f'#pragma once\n#define CONTRACT_SCHEMA_SHA256 "{control_v2.schema_digest()}"\n'
+        ),
         root / "firmware/diagnostic/main/contract_schema.h": (
             f'#pragma once\n#define CONTRACT_SCHEMA_SHA256 "{schema_digest()}"\n'
         ),

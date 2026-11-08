@@ -1,0 +1,321 @@
+{
+  "contract_version": "2.0.0",
+  "scope": "node_control",
+  "$defs": {
+    "Command": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "command",
+          "title": "Kind",
+          "type": "string"
+        },
+        "command_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "client_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Client Id",
+          "type": "string"
+        },
+        "command_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Command Seq",
+          "type": "integer"
+        },
+        "target_boot_id": {
+          "anyOf": [
+            {
+              "pattern": "^esp-[0-9a-f]{12}:[1-9][0-9]{0,9}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Boot Id"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        },
+        "name": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "args": {
+          "additionalProperties": true,
+          "title": "Args",
+          "type": "object"
+        }
+      },
+      "required": [
+        "v",
+        "kind",
+        "command_id",
+        "client_id",
+        "command_seq",
+        "target_boot_id",
+        "run_id",
+        "name",
+        "args"
+      ],
+      "title": "Command",
+      "type": "object"
+    },
+    "Event": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "anyOf": [
+            {
+              "enum": [
+                "A",
+                "B"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Node Role"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        },
+        "name": {
+          "enum": [
+            "health",
+            "diagnostic",
+            "operation.result"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "Event",
+      "type": "object"
+    },
+    "NodeError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 160,
+          "title": "Message",
+          "type": "string"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "NodeError",
+      "type": "object"
+    },
+    "Reply": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "reply",
+          "default": "reply",
+          "title": "Kind",
+          "type": "string"
+        },
+        "command_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Command Id",
+          "type": "string"
+        },
+        "command_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Command Seq",
+          "type": "integer"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Result"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NodeError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "command_id",
+        "command_seq",
+        "device_id",
+        "boot_id",
+        "uptime_us",
+        "ok",
+        "result",
+        "error"
+      ],
+      "title": "Reply",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "command": "#/$defs/Command",
+      "event": "#/$defs/Event",
+      "reply": "#/$defs/Reply"
+    },
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Command"
+    },
+    {
+      "$ref": "#/$defs/Reply"
+    },
+    {
+      "$ref": "#/$defs/Event"
+    }
+  ]
+}
