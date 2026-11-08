@@ -544,3 +544,24 @@
     font-size: 28px;
   }
 }
+
+.hw-memory-probe {
+  margin: 24px 0;
+}
+.hw-memory-probe label {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 12px 12px 0;
+}
+.hw-memory-probe input {
+  width: 120px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: inherit;
+  background: transparent;
+}
+.hw-memory-probe button {
+  margin-right: 8px;
+}

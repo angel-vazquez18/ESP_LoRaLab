@@ -21,6 +21,14 @@ type Heap = {
 type Capability = Record<string, boolean | number | object>;
 export type HardwareNode = {
   id: "A" | "B";
+  wire_profile: "diagnostic" | "node_control" | null;
+  active_operation: { operation_id: string; deadline_us: number } | null;
+  operation_results: {
+    operation_id: string;
+    status: string;
+    result: { iterations_completed?: number; verified_bytes?: number } | null;
+    error: { message: string } | null;
+  }[];
   connected: boolean;
   connection_state: string;
   port: string | null;
@@ -34,6 +42,9 @@ export type HardwareNode = {
     boot_id: string;
     chip_model: string;
     board_model: string | null;
+    board_revision: string | null;
+    board_manifest_hash: string | null;
+    schema_sha256: string;
     firmware_version: string;
     firmware_build_id: string;
     idf_version: string;
@@ -44,8 +55,11 @@ export type HardwareNode = {
     uptime_us: number;
     reset_cause: string;
     state: string;
+    operation_id: string | null;
+    traffic: Record<string, number>;
     memory: { internal: Heap; psram: Heap | null; allocation_failures: number };
     telemetry_drops: number;
+    last_error: { code: string; message: string } | null;
   };
   samples: (Heap & { uptime_us: number })[];
   diagnostics: { at: number; code: string; message: string }[];
@@ -152,13 +166,38 @@ function HeapChart({ node }: { node: HardwareNode | undefined }) {
   );
 }
 
-function Details({ node, close }: { node: HardwareNode; close: () => void }) {
+function Details({
+  node,
+  close,
+  request,
+  pending,
+  error: hostError,
+}: {
+  node: HardwareNode;
+  close: () => void;
+  request: Request;
+  pending: boolean;
+  error: string;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const [iterations, setIterations] = useState(10);
+  const [payloadBytes, setPayloadBytes] = useState(4096);
+  const [operationError, setOperationError] = useState<string | null>(null);
+  const runAction = async (path: string, body: unknown) => {
+    setOperationError(null);
+    try {
+      await request(path, post(body));
+    } catch (error) {
+      setOperationError(String(error));
+    }
+  };
   useEffect(() => {
     dialog.current?.showModal();
   }, []);
   const identity = node.identity,
     health = node.health;
+  const resourceLimits = identity?.capabilities.resource_limits as
+    { diag_kinds?: string[] } | undefined;
   const fields = [
     ["Device identity", identity?.device_id ?? "No device connected"],
     ["USB port", node.port ?? "—"],
@@ -166,10 +205,18 @@ function Details({ node, close }: { node: HardwareNode; close: () => void }) {
       "Chip / board",
       `${identity?.chip_model ?? "—"} / ${identity?.board_model ?? "Board model unverified"}`,
     ],
+    [
+      "Printed board revision",
+      identity?.board_revision ?? "Awaiting physical verification",
+    ],
+    ["Board profile fingerprint", identity?.board_manifest_hash ?? "—"],
     ["Firmware", identity?.firmware_version ?? "—"],
     ["Build identity", identity?.firmware_build_id ?? "—"],
     ["ESP-IDF", identity?.idf_version ?? "—"],
     ["Contract", identity?.contract_version ?? "—"],
+    ["Control profile", node.wire_profile ?? "—"],
+    ["Schema fingerprint", identity?.schema_sha256 ?? "—"],
+    ["Activity", health?.state ?? "—"],
     ["Boot identity", identity?.boot_id ?? "—"],
     ["Uptime", uptime(health?.uptime_us)],
     ["Reset cause", resetCause(health?.reset_cause)],
@@ -185,6 +232,21 @@ function Details({ node, close }: { node: HardwareNode; close: () => void }) {
     ],
     ["Protocol framing faults", String(node.framing_errors)],
     ["Startup text records", String(node.startup_records)],
+    [
+      "Node rejected JSON / envelopes",
+      `${health?.traffic.rx_json_rejected ?? "—"} / ${health?.traffic.rx_envelope_rejected ?? "—"}`,
+    ],
+    ["Node oversized records", String(health?.traffic.rx_oversized ?? "—")],
+    [
+      "Node input backpressure / reply drops",
+      `${health?.traffic.rx_backpressure ?? "—"} / ${health?.traffic.reply_drops ?? "—"}`,
+    ],
+    [
+      "Last node error",
+      health?.last_error
+        ? `${health.last_error.code}: ${health.last_error.message}`
+        : "None reported",
+    ],
   ];
   return (
     <dialog
@@ -227,6 +289,94 @@ function Details({ node, close }: { node: HardwareNode; close: () => void }) {
             </span>
           ))}
       </div>
+      {node.wire_profile === "node_control" &&
+        resourceLimits?.diag_kinds?.includes("memory_probe") && (
+          <section className="hw-memory-probe">
+            <h3>Local memory probe</h3>
+            <p>
+              Writes and verifies a temporary buffer. One operation at a time,
+              with a 30-second deadline.
+            </p>
+            <label>
+              Iterations
+              <input
+                aria-label="Memory probe iterations"
+                type="number"
+                min={1}
+                max={10000}
+                value={iterations}
+                onChange={(e) => setIterations(Number(e.target.value))}
+                disabled={pending || !!node.active_operation}
+              />
+            </label>
+            <label>
+              Buffer bytes
+              <input
+                aria-label="Memory probe buffer bytes"
+                type="number"
+                min={1}
+                max={65536}
+                value={payloadBytes}
+                onChange={(e) => setPayloadBytes(Number(e.target.value))}
+                disabled={pending || !!node.active_operation}
+              />
+            </label>
+            <button
+              className="button primary"
+              disabled={
+                pending ||
+                !node.connected ||
+                !!node.active_operation ||
+                health?.state !== "idle" ||
+                !Number.isInteger(iterations) ||
+                !Number.isInteger(payloadBytes) ||
+                iterations < 1 ||
+                iterations > 10000 ||
+                payloadBytes < 1 ||
+                payloadBytes > 65536
+              }
+              onClick={() =>
+                runAction(`/api/nodes/${node.id}/memory-probe`, {
+                  iterations,
+                  payload_bytes: payloadBytes,
+                })
+              }
+            >
+              Start memory probe
+            </button>
+            {node.active_operation && (
+              <>
+                <p role="status">
+                  Running · {health?.traffic.operation_iterations ?? 0}{" "}
+                  iterations verified
+                </p>
+                <button
+                  className="button secondary"
+                  disabled={pending || !node.connected}
+                  onClick={() =>
+                    runAction(`/api/nodes/${node.id}/operation/stop`, {
+                      operation_id: node.active_operation!.operation_id,
+                    })
+                  }
+                >
+                  Stop operation
+                </button>
+              </>
+            )}
+            {node.operation_results.at(-1) && (
+              <p role="status">
+                Last operation: {node.operation_results.at(-1)!.status}
+                {node.operation_results.at(-1)!.result &&
+                  ` · ${node.operation_results.at(-1)!.result!.verified_bytes ?? 0} bytes verified`}
+                {node.operation_results.at(-1)!.error &&
+                  ` · ${node.operation_results.at(-1)!.error!.message}`}
+              </p>
+            )}
+            {(operationError || hostError) && (
+              <p role="alert">{operationError || hostError}</p>
+            )}
+          </section>
+        )}
       <h3>Session diagnostics</h3>
       <div className="hw-diagnostics">
         {node.diagnostics.length ? (
@@ -248,10 +398,12 @@ export default function HardwareBench({
   nodes,
   pending,
   request,
+  error,
 }: {
   nodes: HardwareNode[];
   pending: boolean;
   request: Request;
+  error: string;
 }) {
   const [ports, setPorts] = useState<Port[]>([]);
   const [selected, setSelected] = useState<Record<string, string>>({});
@@ -513,7 +665,15 @@ export default function HardwareBench({
           </p>
         </section>
       </div>
-      {focused && <Details node={focused} close={() => setDetail(null)} />}
+      {focused && (
+        <Details
+          node={focused}
+          close={() => setDetail(null)}
+          request={request}
+          pending={pending}
+          error={error}
+        />
+      )}
     </div>
   );
 }

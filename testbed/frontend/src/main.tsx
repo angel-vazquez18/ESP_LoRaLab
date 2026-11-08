@@ -842,6 +842,7 @@ function App() {
                 nodes={host.state.hardware_nodes}
                 pending={host.pending || !!active}
                 request={host.request}
+                error={host.error}
               />
               <DiagnosticCheck host={host} />
             </>
