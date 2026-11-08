@@ -2,12 +2,13 @@
 
 This directory is an architecture map, not implemented drivers. Add an ESP-IDF
 component only when implementing its first behavior and caller. Until then the
-main scaffold remains buildable without fake module implementations.
+main target implements its concrete modules under `lora_node/main/` without
+fake future drivers. See root `docs/architecture.md` for the implemented layout.
 
 | Planned module | Responsibility | Interface / evidence |
 | --- | --- | --- |
 | `board` | Pins, USB, power controls, button/display and memory bring-up | Board initialization and observed availability |
-| `serial_control` | Bounded NDJSON, identity, ownership and command routing | Command/reply and event interface; malformed input checks |
+| `serial_control` | Future shared extraction of the main target's existing bounded control | Command/reply and event interface; malformed input checks |
 | `radio` | SX1262 and board RF-front-end control | Configure/read back, transmit, receive, stop; real IRQ/timestamp evidence |
 | `packet_link` | RF header, fragmentation, reassembly and ACK/retry | Byte messages in/out with bounded outcomes; shared vectors |
 | `security` | GCM, source/run key lifecycle and replay checks | Protect/accept/reject; known-answer and negative vectors |

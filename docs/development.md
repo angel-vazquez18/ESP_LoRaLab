@@ -62,3 +62,22 @@ runtime stores and local evidence are ignored. Keep dependency locks and sdkconf
 defaults in source control. The original tracked scaffold build was relocated to
 ignored local migration storage, so its old tracked paths appear deleted until
 this restructuring is committed. No history rewriting or automatic commit occurs.
+
+## Main-node control checks
+
+The generated main-control profile is `contracts/v2/control.schema.json`, with its
+C digest in `firmware/lora_node/main/generated/contract_schema.h`. It extends the implemented
+control subset with operation results while leaving diagnostic/execution outputs
+unchanged. Run `make contracts` after changing its typed host model.
+
+`uv run --project testbed pytest testbed/tests/test_node_control_native.py` compiles
+the actual portable firmware control/parser and locked cJSON for native checks.
+It requires a host C compiler and the firmware's managed cJSON source; otherwise
+those tests explicitly skip. Its serial transport, clock and heap are isolated
+fixtures, never operator simulations or hardware qualification.
+See [Milestone 1 review](milestone_1_review.md) for limits and physical acceptance.
+
+The main target explicitly registers sources under `main/platform`, `main/transport`,
+`main/control` and `main/protocol`; `main/generated` holds its generated schema
+header. Cross-module includes start at the main include root. Keep the native
+fixture's source paths and root contract generator synchronized when moving files.

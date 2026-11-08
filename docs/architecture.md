@@ -13,15 +13,17 @@ flowchart LR
     HOST --> CHECK[Physical diagnostic procedure lifecycle]
     CHECK --> SERIAL[Physical diagnostic serial sessions]
     SERIAL --> DIAG[ESP-IDF diagnostic target]
-    ADAPTER -. planned full execution adapter .-> NODE[ESP-IDF main node target]
+    SERIAL --> NODE[ESP-IDF main control target]
+    ADAPTER -. planned full execution adapter .-> NODE
     HOST --> EVIDENCE[SQLite / raw events / artifacts / assessments]
     CONTRACT[Shared contracts / vectors / procedures] -. governs .-> HOST
     CONTRACT -. governs .-> NODE
 ```
 
 Dotted full-execution integration is planned. Diagnostic firmware cannot execute
-full RF/audio commands. The main node target currently provides startup identity,
-reset-reason and internal/PSRAM memory logging. Its capability-based build order
+full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
+strict serial control, identity/health, ownership, duplicate protection and a finite
+memory operation. The new image still needs physical acceptance. Its capability-based build order
 and completion gates are in [node development plan](node_development_plan.md);
 module implementations are not organized by experiment IDs.
 
@@ -31,7 +33,7 @@ module implementations are not organized by experiment IDs.
 | --- | --- | --- |
 | `testbed/src/lora_testbed` | Host orchestration, physical sessions, persistence, assessments, CLI and HTTP/event interface | Board driver implementation or browser-local run ownership |
 | `testbed/frontend` | Operator controls and evidence visualization | Serial ports or independent passing criteria |
-| `firmware/lora_node` | Main firmware entry and eventual target composition | Host experiment scheduling and analysis |
+| `firmware/lora_node` | Main composition, platform/USB modules and portable control | Host experiment scheduling and analysis |
 | `firmware/diagnostic` | Existing limited physical diagnostic image | Full RF/security/audio implementation |
 | `firmware/components` | Future reusable board, serial, radio, packet, security, audio and run-control modules | Implemented functionality merely because a directory is documented |
 | `contracts/v2` | Shared baseline defaults, generated schemas and public vectors | Measured capability claims |
@@ -45,12 +47,52 @@ satisfy the execution interface in `adapters.py` with compatibility and capabili
 checks before enabling runs or campaigns. No virtual devices or simulator runners
 are instantiated or retained as operator features.
 
+## Main firmware layout
+
+`firmware/lora_node/main` has concrete modules for the current control foundation:
+
+```text
+main/
+├── CMakeLists.txt
+├── idf_component.yml
+├── lora_node.c                 app_main composition
+├── platform/
+│   ├── esp32_platform.c        ESP-IDF identity, NVS, heap, timer and crypto callbacks
+│   └── esp32_platform.h
+├── transport/
+│   ├── usb_transport.c         USB read/tick loop and the single protocol writer
+│   └── usb_transport.h
+├── control/
+│   ├── node_control.c          Portable commands, ownership, queues and operation state
+│   └── node_control.h
+├── protocol/
+│   ├── strict_json.c           Bounded UTF-8/JSON validation and integer-token checks
+│   └── strict_json.h
+└── generated/
+    └── contract_schema.h       Root contract-generator output
+```
+
+The platform fills the existing `node_platform` interface; metadata strings remain
+valid for the firmware lifetime. The USB module owns the hardware loop and calls
+the portable control interface. The control module uses JSON validation, but neither
+portable module imports ESP-IDF or FreeRTOS. Its internal ownership/queue/operation
+state stays private, so callers and native tests use the same small interface.
+
+CMake lists each compiled source explicitly, with `main/` as the include root;
+qualified includes identify cross-directory dependencies. The generator and native
+compiler fixture use these same paths. This is directory organization within one
+ESP-IDF main component, not a collection of premature shared components. Radio,
+audio and other future modules are added only when implementing real behavior.
+
 ## Important existing host modules
 
 - `app.py` and `cli.py`: entry interfaces; use the same Host and procedure paths.
 - `host.py`: bench ownership and lifecycle coordination.
 - `adapters.py`: node interface, request/reply/event handling and failures.
-- `nodes.py`: existing physical diagnostic serial connections.
+- `nodes.py`: physical serial sessions for the exact diagnostic or main-control
+  schema; operation results and health share the existing observation store.
+- `control_v2.py`: separately generated main-control schema; the original
+  diagnostic and full execution schema surfaces remain distinct.
 - `catalog.py`: all 23 procedures, local/pair node requirements and capability blockers.
 - `procedure_runs.py`, `serial_validation.py`: bounded physical diagnostic checks,
   cancellation, partial qualification scope and durable procedure evidence.
@@ -82,8 +124,8 @@ Either A or B alone is sufficient for serial/local checks. RF procedures require
 two distinct devices. MEM-01 and OPS-01 declare local versus RF case requirements;
 future campaign preflight must derive requirements from its selected cases.
 Catalog visibility never implies physical runner or firmware support.
-Boot, device, run and session identity remain distinct. The main firmware's future
-run-control module owns real-time device operations; the host orchestrates and
+Boot, device, run and session identity remain distinct. The main firmware's control engine
+owns its finite local operation; future RF run control will extend that boundary; the host orchestrates and
 assesses their evidence. The UI and CLI are callers, not competing owners.
 
 `make serve` runs from `testbed/`, placing local state in ignored `testbed/data/`.
