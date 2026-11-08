@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Capability roadmap and current status
+    url: https://github.com/angel-vazquez18/ESP_LoRaLab/blob/main/docs/node_development_plan.md
+    about: Inspect implemented behavior and dependencies before opening duplicate work.

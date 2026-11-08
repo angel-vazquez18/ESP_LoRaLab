@@ -1,0 +1,48 @@
+name: Physical validation case group
+description: Observe one defined physical outcome and preserve reproducible evidence.
+title: "Validate [capability or procedure case group] on physical hardware"
+labels: ["status:todo", "type:test", "area:hardware", "needs-hardware"]
+body:
+  - type: markdown
+    attributes:
+      value: "Software fixtures and build success do not qualify hardware. Follow documented identity, exclusive port ownership and backup procedures. A validation issue is To do until started; implementation ready for validation may be Testing."
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome, owner, reviewer and milestone
+      value: "Outcome:\nOwner: @\nReviewer: @\nMilestone: M\nProcedure revision/case IDs:"
+    validations:
+      required: true
+  - type: textarea
+    id: prerequisites
+    attributes:
+      label: Blocking issues and physical prerequisites
+      value: "Blocked by:\nDevice IDs and printed board revisions:\nRequired firmware build/schema/profile:\nWiring, power, radio placement and peripherals:\nInstrument IDs and resolution (or explicit limitation):"
+    validations:
+      required: true
+  - type: textarea
+    id: cases
+    attributes:
+      label: Steps, cases and observable acceptance
+      description: Include exact workload, repetitions, directions and predeclared stop/resource bounds. Preserve the complete required ledger for qualification.
+      value: "Positive control:\nInvalid/fault case and proof it reached the intended stage:\nBoundary case:\nRecovery and following valid control:\nExpected observations and acceptance:\nOut of scope:"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and reproduction commands
+      value: "Commands and expected results:\nDevice/boot IDs and firmware/host hashes:\nRequested/applied configuration and source hashes:\nRaw serial/RF/audio records and timestamps/clock domain:\nArtifact manifest and independent SHA-256 checks:\nPhysical observations and instrument traces:\nMissing evidence, limitations and required reruns:"
+    validations:
+      required: true
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Completion requirements
+      options:
+        - label: Review all required case results and raw evidence; a smoke test or fixture result cannot close full physical qualification.
+          required: true
+        - label: Preserve failures, blocked cases and inconclusive measurements; do not invent performance thresholds or persist run keys.
+          required: true
+        - label: Record cleanup, idle recovery, documentation updates and a linked evidence commit or PR before closing as completed.
+          required: true

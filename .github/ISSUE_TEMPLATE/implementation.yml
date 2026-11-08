@@ -1,0 +1,60 @@
+name: Implementation slice
+description: One observable outcome and one reviewable change.
+title: "[area] Specific behavior to implement"
+labels: ["status:todo", "type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: "Read docs/github_workflow.md. Keep this issue small; link other slices as dependencies. Add an area label and repository milestone during triage."
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome and purpose
+      description: What concrete behavior will change, and why is it needed?
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Ownership and milestone
+      value: "Owner: @\nReviewer: @\nMilestone: M\nArea labels: area:\nProcedure coverage, if applicable:"
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and prerequisites
+      description: Link blocking issues. State existing capabilities, contract/profile and physical equipment requirements. Write none where applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: work
+    attributes:
+      label: Implementation checklist and exclusions
+      value: "- [ ] Implement the named outcome.\n- [ ] Update affected producer/consumer/schema paths together.\n\nOut of scope:"
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Test cases and acceptance
+      description: Give observable expected outcomes. Explain any non-applicable category.
+      value: "Positive:\nInvalid input:\nBoundary:\nRecovery/cancel:\nValidation commands and expected results:"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence requirements
+      description: Specify raw records, identities/build/configuration hashes and artifact checks. Fixtures never establish physical qualification. Exclude ordinary session keys.
+    validations:
+      required: true
+  - type: checkboxes
+    id: closure
+    attributes:
+      label: Scope agreement
+      options:
+        - label: This issue has one reviewable outcome; broader work is split into linked issues.
+          required: true
+        - label: Completion requires reviewed acceptance results, evidence, documentation and a linked PR or evidence commit.
+          required: true
