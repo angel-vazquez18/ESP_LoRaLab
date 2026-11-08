@@ -34,11 +34,16 @@ No operator simulator is added to fill a missing firmware or hardware capability
 
 ## Current starting point
 
-- Updated November 6: `firmware/lora_node/main/lora_node.c` logs startup, ESP-IDF
-  version, eFuse-derived device ID and numeric reset reason. The user is coding
-  manually in small explained steps. November 7 internal-memory and 2 MiB PSRAM
-  startup readings were observed; persistent boot identity and serial commands
-  remain open. See status.md for readings and remaining validation scope.
+- Updated November 8: Milestone 1 software now includes bounded strict control,
+  ownership/duplicate protection, structured health and a cancellable memory probe,
+  with host GUI/API/CLI integration and native C checks. It is not flashed or
+  hardware-accepted. See [Milestone 1 review](milestone_1_review.md).
+- Earlier November 7 bring-up: `firmware/lora_node/main/lora_node.c` reports startup/build
+  metadata, full ELF fingerprint, eFuse device identity, reset reason, internal/PSRAM
+  statistics, uptime, NVS boot count and per-boot identity. Periodic human-readable
+  health logs were observed. The user is coding manually in small explained steps.
+  The build also supplies a board-profile reference fingerprint through CMake;
+  printed revision and structured serial control remain open. See status.md for readings and remaining validation scope.
 - `firmware/diagnostic` already supplies useful serial/identity/ownership/health
   behavior. Reuse verified behavior deliberately; do not confuse it with full-node firmware.
 - The Python host already connects to physical diagnostic nodes and retains evidence.
@@ -311,7 +316,8 @@ does not automatically pass every mapped experiment or replace its evidence matr
 
 ## Immediate next development work
 
-Implement milestone 1 first as three reviewable slices: (1) observed board identity,
+Milestone 1 software implements the three slices below; review it and complete
+the physical acceptance checklist before closing the milestone: (1) observed board identity,
 boot and memory; (2) diagnostic-compatible bounded serial control; (3) asynchronous
 operation/cancel/lease cleanup. Then use a quiet known reference to bring up speaker
 output and microphone capture separately. Begin radio work alongside local audio
