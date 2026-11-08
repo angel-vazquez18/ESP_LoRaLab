@@ -1,31 +1,27 @@
-# Host testbed instructions
+# Host and test instructions
 
-Read root `AGENTS.md`, `docs/status.md` and the applicable experiment procedure.
-Paths below are relative to this directory unless identified as root paths.
+Paths below are relative to `testbed/`, unless marked as repository-root paths.
+Follow root instructions and the relevant experiment procedure.
 
-- Existing Python project: `pyproject.toml` / `uv.lock`; package `src/lora_testbed`.
-- UI and CLI drive one backend. Do not implement experiment state in browser code.
-- `nodes.py` owns physical diagnostic serial sessions; `adapters.py` contains
-  compatibility checks and the future execution interface. Full RF execution is
-  still planned. Never instantiate virtual devices or add a simulation bench mode.
-- `procedure_runs.py` owns physical diagnostic lifecycle and saved procedure
-  evidence; `serial_validation.py` defines its bounded request/partial scope.
-  `analysis_v2.py` / `run_records_v2.py` / `reports_v2.py` preserve evidence and assess it.
-- `paths.py` is the single source-checkout layout seam. Shared docs/contracts are
-  at the repository root; dashboard files are under this directory. Source-checkout
-  execution is supported; standalone wheel resource bundling is not yet established.
-- Procedure readiness depends on source/schema/profile hashes. Layout or source
-  changes can invalidate prior readiness; do not copy or rewrite a passing ledger
-  to bypass this. Repeat full procedures with the new profile.
-- One owner holds the bench. Cancellation, leases, reset, shutdown and restart
-  must end work safely and retain evidence. Never auto-resume transmission.
-- Keep legacy v1 code explicit. New procedures use the shared v2 execution path.
-- Local tests accept A or B independently; only RF cases require both nodes.
-  Unit tests use isolated serial peers and never open physical ports. Historical
-  simulated evidence remains readable under its original provenance.
-- Preserve Python compatibility declared in pyproject and lock dependency changes.
+- Use the existing Python package `src/lora_testbed`, pyproject and lockfile.
+  Preserve the declared Python compatibility; lock intentional dependency changes.
+- `nodes.py` owns physical serial sessions and operation observations;
+  `adapters.py` owns compatibility and the execution interface. Keep blocking serial
+  I/O outside the event loop. Never add an operator simulation mode.
+- `procedure_runs.py` owns procedure lifecycle/evidence; `serial_validation.py`
+  defines the partial serial check. Keep GUI and CLI on the same backend path.
+- `paths.py` owns checkout resource locations. Resolve shared contracts/firmware
+  from the repository root, including in tests, rather than the current directory.
+- Preserve one bench owner, bounded cancellation and safe shutdown/reconnect.
+  Never automatically resume transmission or invent a missing operation result.
+- Readiness depends on source/schema/profile hashes. Do not rewrite old passing
+  records to bypass changed prerequisites. Preserve historical provenance.
+- Keep diagnostic, main-control, full execution and legacy v1 handling explicit.
+  Local checks accept A or B; RF cases require two distinct devices.
+- Test public interfaces with isolated serial/native fixtures and temporary stores.
+  Never open physical ports in the normal suite. Keep fixture clocks/data explicit.
+- Cover relevant timeout, cancellation, reset, ownership, framing and cleanup
+  failures. Verify contents/hashes independently; counters alone are not evidence.
 
-From this directory: `uv run pytest`, `uv run ruff check src tests`, and
-`npm --prefix frontend run build`. From repository root: `make check`.
-Host data defaults to the invocation's `data/`; `make serve` selects `testbed/data/`
-by starting here. Use explicit temporary directories in tests.
+From repository root use `make check`; focused commands are in `docs/development.md`.
+`make serve` selects ignored `testbed/data/`. Tests must use isolated data directories.
