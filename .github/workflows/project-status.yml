@@ -1,0 +1,28 @@
+name: Reconcile Project status labels
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: project-status-reconciliation
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_PROJECT_TOKEN: ${{ secrets.PROJECT_AUTOMATION_TOKEN }}
+    steps:
+      - name: Explain optional credential setup
+        if: env.GH_PROJECT_TOKEN == ''
+        run: echo 'Project sync is inactive. Configure PROJECT_AUTOMATION_TOKEN as documented in docs/github_workflow.md.'
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        if: env.GH_PROJECT_TOKEN != ''
+        with:
+          persist-credentials: false
+      - name: Mirror board status and reconcile issue dependencies
+        if: env.GH_PROJECT_TOKEN != ''
+        run: python3 scripts/github_project.py sync --apply
