@@ -27,6 +27,7 @@ without fabricating measurements. Exclude secrets and bulky/transient tool outpu
 | Wire rules and shared fixtures | `testbed_contract_v2.md`, repository-root `contracts/v2/` |
 | Hardware decisions, pins and wiring evidence | Repository-root `hardware/README.md` and board profile |
 | Significant design trade-offs | Short `adr/` record |
+| GitHub issues, milestones, board and acceptance workflow | `github_workflow.md` |
 | Work spanning sessions | `task_template.md` and a concrete `tasks/` handoff |
 | Historical context | `history/`; never current agent instructions |
 

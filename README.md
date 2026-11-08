@@ -83,6 +83,7 @@ checks. See [development workflow](docs/development.md) for exact commands.
 
 - [Agent instructions and task routing](AGENTS.md) and [document ownership](docs/agent_workflow.md)
 - [Architecture](docs/architecture.md) and [shared vocabulary](CONTEXT.md)
+- [GitHub board, issues and acceptance workflow](docs/github_workflow.md)
 - [Node development plan](docs/node_development_plan.md): capabilities, milestones and completion evidence
 - [Project brief and confirmed decisions](docs/project_brief.md)
 - [Current status](docs/status.md) and [23-experiment implementation checklist](docs/experiment_implementation_checklist.md)
