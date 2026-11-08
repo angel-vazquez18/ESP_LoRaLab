@@ -6,6 +6,16 @@ remain required. See the [checklist](experiment_implementation_checklist.md).
 
 ## Current source capabilities
 
+- November 8 GitHub planning setup: repository labels, eight capability milestones
+  and a private development/validation Project organize remaining work. The setup
+  branch adds issue/PR forms, the scoped backlog snapshot and an optional status
+  reconciliation tool/workflow. See [GitHub workflow](github_workflow.md). These
+  are planning resources; no new firmware behavior or physical qualification is
+  established. Seven focused status-sync tests, Ruff/format checks, form/workflow
+  YAML parsing, all-23 coverage/dependency checks, local documentation links and
+  repository/GPIO checks passed. Automation needs a dedicated Project credential
+  after merge. No board access, firmware build or experiment execution occurred.
+
 - November 8 commit checkpoint: at the user's request, the Milestone 1 software,
   native checks, host/dashboard integration, agent cleanup and modular firmware
   layout are recorded in separate Conventional Commits. Earlier "uncommitted"

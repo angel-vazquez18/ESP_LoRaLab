@@ -81,3 +81,18 @@ The main target explicitly registers sources under `main/platform`, `main/transp
 `main/control` and `main/protocol`; `main/generated` holds its generated schema
 header. Cross-module includes start at the main include root. Keep the native
 fixture's source paths and root contract generator synchronized when moving files.
+
+## GitHub planning tools
+
+Project tracking does not change firmware or open physical ports. See
+[GitHub workflow](github_workflow.md) for credentials and acceptance rules.
+
+```sh
+uv run --project testbed pytest scripts/tests/test_github_project.py
+uv run --project testbed ruff check scripts
+python3 scripts/github_project.py sync
+```
+
+Sync previews changes by default. Add `--apply` only when intentionally writing
+the Project/status labels. Scheduled reconciliation needs its dedicated Project
+credential and a merged workflow; it is inactive without that secret.
