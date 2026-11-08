@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import rf_events_v2, run_protocol_v2, v2
+from . import control_v2, rf_events_v2, run_protocol_v2, v2
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .catalog import catalog
 from .comparison import campaign_summary, compare
@@ -43,6 +43,15 @@ class PhysicalRunRequest(PreflightRequest):
 
 class HardwareConnectionRequest(StrictModel):
     port: str | None = None
+
+
+class MemoryProbeRequest(StrictModel):
+    iterations: int = Field(default=10, ge=1, le=10000)
+    payload_bytes: int = Field(default=4096, ge=1, le=65536)
+
+
+class StopOperationRequest(StrictModel):
+    operation_id: str = Field(pattern=r"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$")
 
 
 class ComparisonRequest(StrictModel):
@@ -107,6 +116,22 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             "schema_sha256": v2.schema_digest(),
             "schema": v2.schema(),
         }
+
+    @app.get("/api/protocol/v2/control")
+    async def control_protocol():
+        return {
+            "schema": control_v2.schema(),
+            "schema_sha256": control_v2.schema_digest(),
+            "hardware_validated": False,
+        }
+
+    @app.post("/api/nodes/{role}/memory-probe")
+    async def memory_probe(role: Literal["A", "B"], body: MemoryProbeRequest):
+        return await app.state.host.memory_probe(role, body.iterations, body.payload_bytes)
+
+    @app.post("/api/nodes/{role}/operation/stop")
+    async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):
+        return await app.state.host.stop_node_operation(role, body.operation_id)
 
     @app.get("/api/protocol/v2/known-data")
     async def known_data_protocol():

@@ -115,3 +115,26 @@ def preflight(experiment: str, role: str | None = None, workload: str = "default
     request(
         f"/api/experiments/{experiment.upper()}/preflight", {"roles": roles, "workload": workload}
     )
+
+
+@app.command()
+def memory_probe(
+    role: str,
+    iterations: Annotated[int, typer.Option(min=1, max=10000)] = 10,
+    payload_bytes: Annotated[int, typer.Option(min=1, max=65536)] = 4096,
+):
+    """Start a bounded local memory operation on main-node control firmware."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(
+        f"/api/nodes/{role.upper()}/memory-probe",
+        {"iterations": iterations, "payload_bytes": payload_bytes},
+    )
+
+
+@app.command()
+def operation_stop(role: str, operation_id: str):
+    """Cancel the selected node operation without disconnecting the node."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(f"/api/nodes/{role.upper()}/operation/stop", {"operation_id": operation_id})

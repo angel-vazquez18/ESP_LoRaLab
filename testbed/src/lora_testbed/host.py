@@ -22,7 +22,9 @@ class Host:
 
     @property
     def busy(self) -> bool:
-        return self.procedures.busy
+        return self.procedures.busy or any(
+            n.active_operation is not None for n in self.physical.values()
+        )
 
     def snapshot(self) -> dict:
         nodes = [node.snapshot() for node in self.physical.values()]
@@ -134,6 +136,44 @@ class Host:
                     await node.close()
                     raise ValueError("This physical device is already assigned to the other role")
             return node.snapshot()
+
+    async def memory_probe(self, role, iterations, payload_bytes):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation already owns the bench")
+            node = self.physical[role]
+            if not node.connected or node.identity is None:
+                raise ValueError("Connect the physical node first")
+            limits = node.identity.capabilities.resource_limits
+            if node.wire_profile != "node_control" or "memory_probe" not in limits.get(
+                "diag_kinds", []
+            ):
+                raise ValueError("Matching main-node memory_probe firmware is required")
+            status = await node.request("status.get")
+            if status["state"] != "idle" or status["node_role"] != role:
+                raise ValueError("Node must be owned and idle")
+            if not 1 <= iterations <= limits.get("diag_max_iterations", 0):
+                raise ValueError("Iterations exceed the node's negotiated limit")
+            if not 1 <= payload_bytes <= limits.get("diag_max_payload_bytes", 0):
+                raise ValueError("Payload exceeds the node's negotiated limit")
+            return await node.request(
+                "diag.run",
+                {"kind": "memory_probe", "iterations": iterations, "payload_bytes": payload_bytes},
+                on_record=lambda record: self.store.append_node_event(role, record),
+            )
+
+    async def stop_node_operation(self, role, operation_id):
+        async with self.lock:
+            if self.procedures.busy:
+                raise RuntimeError("Stop the procedure through its own controls")
+            node = self.physical[role]
+            if node.wire_profile != "node_control":
+                raise ValueError("Matching main-node control firmware is required")
+            return await node.request(
+                "operation.stop",
+                {"operation_id": operation_id},
+                on_record=lambda record: self.store.append_node_event(role, record),
+            )
 
     async def start_serial(self, request):
         async with self.lock:
