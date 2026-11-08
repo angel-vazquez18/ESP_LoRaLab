@@ -11,7 +11,7 @@ ESP_LoraLab/
 ├── CONTEXT.md                 Shared domain vocabulary
 ├── contracts/v2/              Shared defaults, vectors and generated wire schemas
 ├── firmware/
-│   ├── lora_node/             Main node startup and internal/PSRAM bring-up
+│   ├── lora_node/             Main node control, health and finite memory diagnostics
 │   ├── diagnostic/            Working serial/health diagnostic target
 │   └── components/            Planned shared firmware module locations
 ├── testbed/
@@ -64,8 +64,10 @@ make firmware-build
 ```
 
 `make diagnostic-build` builds the existing diagnostic target. These targets only
-build; flashing is a separate operator action. The node scaffold has no radio,
-security or audio implementation yet. See [firmware guide](firmware/README.md).
+build; flashing is a separate operator action. The main node has strict serial control and finite memory diagnostics; radio,
+security and audio remain unavailable. The new control image requires physical
+acceptance; see [Milestone 1 review](docs/milestone_1_review.md) and the
+[firmware guide](firmware/README.md).
 
 ## Verify
 
@@ -79,7 +81,7 @@ checks. See [development workflow](docs/development.md) for exact commands.
 
 ## Read next
 
-- [Agent instructions](AGENTS.md) and [task routing](docs/agent_workflow.md)
+- [Agent instructions and task routing](AGENTS.md) and [document ownership](docs/agent_workflow.md)
 - [Architecture](docs/architecture.md) and [shared vocabulary](CONTEXT.md)
 - [Node development plan](docs/node_development_plan.md): capabilities, milestones and completion evidence
 - [Project brief and confirmed decisions](docs/project_brief.md)
