@@ -9,8 +9,8 @@ import zipfile
 from copy import deepcopy
 from uuid import uuid4
 
-from . import v2
-from .adapters import require_compatible
+from . import control_v2, v2
+from .adapters import require_control_compatible
 from .paths import REPOSITORY_ROOT
 from .serial_validation import serial_plan
 from .storage import utc_now
@@ -31,6 +31,8 @@ class ProcedureService:
             "testbed/src/lora_testbed/host.py",
             "testbed/src/lora_testbed/catalog.py",
             "testbed/src/lora_testbed/v2.py",
+            "testbed/src/lora_testbed/control_v2.py",
+            "testbed/src/lora_testbed/adapters.py",
             "testbed/uv.lock",
         )
         self.source_sha256 = {
@@ -38,7 +40,12 @@ class ProcedureService:
         }
         self.profile_sha256 = hashlib.sha256(
             json.dumps(
-                {"sources": self.source_sha256, "schema": v2.schema_digest()}, sort_keys=True
+                {
+                    "sources": self.source_sha256,
+                    "schema": v2.schema_digest(),
+                    "control_schema": control_v2.schema_digest(),
+                },
+                sort_keys=True,
             ).encode()
         ).hexdigest()
         self.db.executescript("""
@@ -157,6 +164,7 @@ class ProcedureService:
             "source_sha256": self.source_sha256,
             "profile_sha256": self.profile_sha256,
             "schema_sha256": v2.schema_digest(),
+            "control_schema_sha256": control_v2.schema_digest(),
             "transport": "physical USB serial",
             "timing_basis": "device-local uptime; host timestamps record receipt only",
             "identities": {r: self.nodes[r].identity.model_dump() for r in roles},
@@ -196,8 +204,10 @@ class ProcedureService:
                         hello = v2.Hello.model_validate(
                             await node.request("hello", on_record=record)
                         )
-                        require_compatible(hello.model_dump(), v2.schema_digest(), "hardware")
+                        require_control_compatible(hello.model_dump())
                         expected = run["identities"][case["role"]]
+                        if hello.schema_sha256 != expected["schema_sha256"]:
+                            raise ValueError("Node control schema changed during check")
                         if (hello.device_id, hello.boot_id) != (
                             expected["device_id"],
                             expected["boot_id"],
