@@ -4,7 +4,7 @@ import asyncio
 from typing import Protocol
 from uuid import uuid4
 
-from . import v2
+from . import control_v2, v2
 
 
 class NodeAdapter(Protocol):
@@ -32,6 +32,16 @@ def require_compatible(identity, schema_sha256, provenance):
         raise NodeFailure("UNSUPPORTED_VERSION", "Firmware schema mismatch")
     if identity["provenance"] != provenance:
         raise NodeFailure("UNSUPPORTED_VERSION", "Firmware provenance mismatch")
+
+
+def require_control_compatible(identity):
+    """Select a supported control surface by its exact generated schema digest."""
+    profiles = {v2.schema_digest(): "diagnostic", control_v2.schema_digest(): "node_control"}
+    digest = identity["schema_sha256"]
+    if digest not in profiles:
+        raise NodeFailure("UNSUPPORTED_VERSION", "Firmware schema mismatch")
+    require_compatible(identity, digest, "hardware")
+    return profiles[digest]
 
 
 def health_freshness(age_s):

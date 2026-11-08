@@ -9,8 +9,8 @@ from uuid import uuid4
 import serial
 from serial.tools.list_ports import comports
 
-from . import v2
-from .adapters import health_freshness, require_compatible
+from . import control_v2, v2
+from .adapters import health_freshness, require_control_compatible
 
 
 def discover_ports() -> list[dict]:
@@ -53,12 +53,16 @@ class NodeSession:
         self.last_health = None
         self.connected = False
         self.connection_state = "disconnected"
+        self.active_operation = None
         self.error = None
         self.samples = deque(maxlen=90)
         self.diagnostics = deque(maxlen=100)
         self.tasks = []
         self.pending = {}
         self.command_lock = asyncio.Lock()
+        self.wire_profile = None
+        self.active_operation = None
+        self.operation_results = deque(maxlen=16)
 
     def note(self, code, message):
         self.diagnostics.append({"at": monotonic(), "code": code, "message": message})
@@ -67,6 +71,9 @@ class NodeSession:
         age = monotonic() - self.last_health if self.last_health is not None else None
         return {
             "id": self.role,
+            "wire_profile": self.wire_profile,
+            "active_operation": self.active_operation,
+            "operation_results": list(self.operation_results),
             "connected": self.connected,
             "port": self.port,
             "connection_state": health_freshness(age)
@@ -87,8 +94,11 @@ class NodeSession:
         await self.close()
         self.port, self.error = port, None
         self.identity, self.health = None, None
-        self.sequence = self.event_seq = self.event_gaps = self.framing_errors = 0
+        self.event_seq = self.event_gaps = self.framing_errors = 0
         self.startup_records = 0
+        self.wire_profile = None
+        self.active_operation = None
+        self.operation_results.clear()
         self.samples.clear()
         self.diagnostics.clear()
         self.connection_state = "connecting"
@@ -98,7 +108,7 @@ class NodeSession:
             self.tasks = [asyncio.create_task(self.read_loop())]
             hello = await self.request("hello")
             self.identity = v2.Hello.model_validate(hello)
-            require_compatible(self.identity.model_dump(), v2.schema_digest(), "hardware")
+            self.wire_profile = require_control_compatible(self.identity.model_dump())
             await self.request("control.claim", {"node_role": self.role})
             self.health = v2.Health.model_validate(await self.request("status.get"))
             self.last_health = monotonic()
@@ -111,7 +121,7 @@ class NodeSession:
             self.error = str(exc)
             raise ValueError(f"Node {self.role}: {exc}") from exc
 
-    async def request(self, name, args=None, timeout=2.0, retries=2, on_record=None):
+    async def request(self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None):
         async with self.command_lock:
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
@@ -122,6 +132,7 @@ class NodeSession:
                 command_seq=self.sequence,
                 target_boot_id=self.identity.boot_id if self.identity else None,
                 name=name,
+                run_id=run_id,
                 args=args or {},
             )
             future = asyncio.get_running_loop().create_future()
@@ -140,19 +151,42 @@ class NodeSession:
                             on_record({"direction": "node_to_host", "record": reply.model_dump()})
                         if not reply.ok:
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
+                        if name == "diag.run":
+                            operation = control_v2.AcceptedOperation.model_validate(
+                                reply.result
+                            ).model_dump()
+                            if not any(
+                                r["operation_id"] == operation.get("operation_id")
+                                for r in self.operation_results
+                            ):
+                                self.active_operation = {
+                                    **operation,
+                                    "accepted_at_us": reply.uptime_us,
+                                }
+                        elif name == "operation.stop":
+                            self.active_operation = None
                         return reply.result
                     except TimeoutError:
                         if attempt == retries:
                             raise ValueError(
                                 f"No v2 reply to {name}; compatible firmware is required"
                             ) from None
+                        if name in ("hello", "status.get"):
+                            self.pending.pop(command.command_id, None)
+                            future.cancel()
+                            self.sequence += 1
+                            command = command.model_copy(
+                                update={"command_id": str(uuid4()), "command_seq": self.sequence}
+                            )
+                            future = asyncio.get_running_loop().create_future()
+                            self.pending[command.command_id] = (command.command_seq, future)
             finally:
                 self.pending.pop(command.command_id, None)
                 if not future.done():
                     future.cancel()
 
     async def read_loop(self):
-        decoder = v2.Decoder()
+        decoder = v2.Decoder(adapter=control_v2.ADAPTER)
         try:
             while self.connected:
                 data = await asyncio.to_thread(self.serial.read, 1024)
@@ -189,6 +223,11 @@ class NodeSession:
                         if entry and entry[0] == record.command_seq and not entry[1].done():
                             entry[1].set_result(record)
                     elif self.identity:
+                        if (
+                            record.name == "operation.result"
+                            and self.wire_profile != "node_control"
+                        ):
+                            raise ValueError("Operation event outside negotiated diagnostic schema")
                         if record.event_seq <= self.event_seq:
                             continue
                         if self.event_seq:
@@ -197,12 +236,26 @@ class NodeSession:
                         if record.name == "health":
                             self.health = v2.Health.model_validate(record.data)
                             self.last_health = monotonic()
+                            if (
+                                self.active_operation
+                                and self.health.uptime_us >= self.active_operation["accepted_at_us"]
+                                and self.health.operation_id is None
+                            ):
+                                self.active_operation = None
                             self.samples.append(
                                 {
                                     "uptime_us": self.health.uptime_us,
                                     **self.health.memory.internal.model_dump(),
                                 }
                             )
+                        elif record.name == "operation.result":
+                            self.operation_results.append(record.data)
+                            if (
+                                self.active_operation
+                                and self.active_operation["operation_id"]
+                                == record.data["operation_id"]
+                            ):
+                                self.active_operation = None
                         self.on_event(self.role, record.model_dump())
         except Exception as exc:
             self.fail(str(exc))
@@ -215,6 +268,7 @@ class NodeSession:
         self.connection_state = "error"
         self.connected = False
         self.note("connection_lost", reason)
+        self.active_operation = None
         for _, future in self.pending.values():
             if not future.done():
                 future.set_exception(ValueError(reason))
@@ -234,6 +288,14 @@ class NodeSession:
 
     async def close(self, release=True):
         if release and self.connected and self.identity:
+            if self.active_operation:
+                with suppress(OSError, ValueError):
+                    await self.request(
+                        "operation.stop",
+                        {"operation_id": self.active_operation["operation_id"]},
+                        timeout=0.5,
+                        retries=0,
+                    )
             with suppress(OSError, ValueError):
                 await self.request("control.release", timeout=0.5, retries=0)
         self.connected = False
@@ -248,3 +310,4 @@ class NodeSession:
             self.serial = None
         self.pending.clear()
         self.connection_state = "disconnected"
+        self.active_operation = None
