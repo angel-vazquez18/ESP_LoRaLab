@@ -44,7 +44,12 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
 - #23: finite playback implemented, native fault/boundary checks and audio-enabled
   IDF build pass; fixed 1/8 amplitude and DMA source/frame counts remain distinct
   from heard output. See docs/node_audio.md.
-- Next: #24 capture → #32 host audio → #38 UI audio → #42 physical
+- #23: PR #157, feat/finite-pcm-playback, base feat/node-artifact-inspector.
+- #24: finite capture and private hash publication implemented; 43 audio / 336 total
+  tests pass, IDF build 0x43e90 / 73% free. Cumulative real-board DMA/count/hash,
+  sequential/cancel/recovery checks passed on boot 60. No heard/speech/instrument
+  qualification. Evidence local/m2-batch/audio-hardware-report.json.
+- Next: #32 host audio → #38 UI audio → #42 physical
   qualification. Printed revision, operator listening/speech and instruments are
   still unobserved; user is away and asked to prepare those checks for later.
 
