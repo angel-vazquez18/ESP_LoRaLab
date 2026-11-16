@@ -56,6 +56,7 @@ def test_native_partial_artifact_advertisement_matches_generated_profile(native)
         "artifact.delete",
         "artifact.put",
         "artifact.commit",
+        "artifact.get",
     }
     assert descriptor["schema_sha256"] == artifacts.schema_digest()
     for name in descriptor["commands"]:
@@ -63,10 +64,6 @@ def test_native_partial_artifact_advertisement_matches_generated_profile(native)
         assert limits.max_artifact_bytes == 131072
         assert limits.node_total_artifact_bytes == 262144
         assert limits.node_artifact_slots == 4
-    for name in ("artifact.get",):
-        with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
-            require_artifact_compatible(identity, name)
-        assert native.request(name)["error"]["code"] == "MISSING_CAPABILITY"
     assert not identity["capabilities"]["audio_capture"]
     assert not identity["capabilities"]["audio_playback"]
 
@@ -358,7 +355,7 @@ def test_json_allocation_failures_do_not_delete_before_an_acknowledgement(native
     assert accepted and rejected
 
 
-def test_host_session_uses_real_partial_store_and_keeps_upload_commands_blocked(native_library):
+def test_host_session_uses_real_store_and_rejects_unfinished_reads(native_library):
     async def scenario():
         serial = NativeSerial(native_library)
         session = NodeSession("B", lambda *_: None, lambda _: serial)
@@ -370,12 +367,12 @@ def test_host_session_uses_real_partial_store_and_keeps_upload_commands_blocked(
             assert result["artifacts"][0]["artifact_id"] == value["artifact_id"]
             assert result["artifacts"][0]["sample_count"] == 24000
             sequence = session.sequence
-            with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
+            with pytest.raises(ValueError, match="INVALID_STATE"):
                 await session.request(
                     "artifact.get",
                     {"artifact_id": value["artifact_id"], "offset": 0, "length_bytes": 1},
                 )
-            assert session.sequence == sequence
+            assert session.sequence == sequence + 1
             assert (
                 await session.request("artifact.delete", {"artifact_id": value["artifact_id"]})
             )["deleted"]
