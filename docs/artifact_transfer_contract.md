@@ -1,10 +1,11 @@
 # Node file-transfer contract
 
 Issue [#2](https://github.com/angel-vazquez18/ESP_LoRaLab/issues/2), November 15, 2026.
-This defines the next file-transfer interface and host validation. Node storage,
-upload handlers, audio drivers and the user-facing transfer workflow are still
-follow-up work in #11, #14, #18, #22 and #26. No hardware support is established
-by these schemas or software examples.
+This defines the file-transfer interface and host validation. Issue #11 adds real
+RAM reservations, listing and deletion to the portable main firmware. Chunk
+uploads (#14), final commit (#18), readback (#22), host workflows (#26) and audio
+drivers remain follow-up work. Native checks exercise the production C store;
+they do not establish physical board behavior.
 
 An artifact is a named block of bytes in the node's RAM. It is not a filesystem
 path and is not written to flash/NVS. File transfer requires an identified,
@@ -118,7 +119,8 @@ actual allocation failure, `CHECKSUM_MISMATCH` for CRC/final-hash mismatch,
 Ownership, boot and command-identity checks retain their existing errors. Only
 explicitly transient busy/I/O/timeout errors may be marked retryable. Host-side
 argument validation rejects malformed requests before sending; raw firmware
-validation still has to implement these errors in the follow-up issues.
+validation implements reservation/list/delete errors; chunk/hash/read errors
+remain in their follow-up issues.
 
 ## Compatibility and implementation boundary
 
@@ -132,7 +134,8 @@ The [typed models](../testbed/src/lora_testbed/artifact_contract_v2.py) generate
 and result for each command and a complete command envelope. Cross-field rules,
 CRC and reply correlation use the typed validators in addition to structural
 JSON Schema. State-dependent admission, buffers and actual final-file SHA-256
-still require the real store; schema validation cannot establish them.
+require firmware checks; schema validation cannot establish them. The #11 store
+implements reservation admission/buffers, not final-file SHA-256 or commit.
 
 Implemented firmware must explicitly add `artifact_transfer` inside
 `hello.capabilities.resource_limits` and
@@ -143,9 +146,11 @@ Implemented firmware must explicitly add `artifact_transfer` inside
 - `max_artifact_bytes`, `node_total_artifact_bytes`, `node_artifact_slots`,
   `artifact_chunk_bytes`, within the ceilings above and internally consistent.
 
-Current firmware omits this descriptor and remains unsupported. Do not advertise
-commands merely because the schema exists. Partial implementation may advertise
-only its working commands; a complete upload/download workflow requires all six.
+The main firmware now advertises only `artifact.begin`, `artifact.list` and
+`artifact.delete`, using generated `main/generated/artifact_profile.h` constants.
+`artifact.put`, `artifact.commit` and `artifact.get` remain unavailable; diagnostic
+firmware advertises none. A complete upload/download workflow requires all six.
+Do not advertise commands merely because their schema exists.
 The existing exact main-control handshake is still required. Diagnostic firmware,
 missing descriptors or missing commands fail with `MISSING_CAPABILITY`; unknown
 profiles/digests or malformed declarations fail with `UNSUPPORTED_VERSION`.
@@ -173,6 +178,56 @@ byte budget, lower limits, reply identity/ranges, EOF and following valid reques
 Isolated serial peers also prove that missing/mismatched support sends no file
 command. They are protocol fixtures, not a simulated file store or hardware proof.
 
-Next implement reservations/list/delete (#11), actual chunk admission/retry (#14),
-final byte/hash commit (#18), readback (#22) and the host transfer workflow (#26).
-Keep the connected board untouched during these software-only contract checks.
+## Reservation implementation and review (#11)
+
+Read the [store interface](../firmware/lora_node/main/artifacts/artifact_store.h),
+[store implementation](../firmware/lora_node/main/artifacts/artifact_store.c), then
+[control integration](../firmware/lora_node/main/control/node_control.c). The store
+owns four private slots, full-length RAM allocations, manifests, owner cleanup and
+consumer guards. The control layer owns identity/lease/idle checks and JSON replies.
+No raw data pointer is available to a consumer until a file is committed.
+
+For `begin`, validate fields and budgets, allocate the full length, then construct
+and cache the reply. If reply construction fails, undo the new reservation. For
+`delete`, validate first, construct/cache/enqueue the reply, then free the slot.
+Exact command retries reuse the reply without another allocation/free. Listing
+is a read and can return all four manifests without the mutation cache's 1024-byte
+limit. Health reports `memory.buffers.artifacts_reserved`, including unfinished
+files, separately from free-heap observations. A declared SHA-256 is metadata at
+this stage, not evidence that any bytes have been uploaded or verified.
+
+Claim release, five-second lease expiry and detected disconnect free that owner's
+unfinished/failed files. Destroying the control core frees all RAM files. RF
+`session.close` is still unavailable; its cleanup hook must be integrated when
+sessions are implemented. Committed files have explicit acquire/release protection
+and survive ownership changes, but no wire command can create one until #18.
+
+From the repository root, run:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_node_artifacts_native.py testbed/tests/test_node_control_native.py -ra
+```
+
+Expected at this checkpoint: **112 passed, no skipped tests**. This compiles the
+production C parser/control/store and locked cJSON. Cases cover four slots/fifth
+rejection, the full 262144-byte budget, 131072-byte ceiling, PCM metadata, actual
+buffer allocation failure, exact command retries, stale boot/non-owner/busy
+requests, release/lease/disconnect/reboot cleanup, reply backpressure and every
+injected JSON allocation failure across reservation/deletion reply construction.
+A real `NodeSession` also exercises begin/list/delete against that C core and
+blocks unsupported commit before serial writing.
+
+The separate native lifecycle fixture explicitly seeds committed/failed state
+inside the production store translation unit to check consumer guards, in-use
+delete rejection and lifetime rules. It adds no production test hook, commit
+handler, upload bytes or hash verification. These cases do not qualify #18 or
+physical audio. All ordinary wire cases use the public control interface.
+
+Also run `make check`, `make contracts-check`, frontend formatting, and the main
+ESP-IDF build from [development commands](development.md). Build/check results do
+not prove the connected board runs this source. Keep physical flash, heap behavior
+and USB cleanup acceptance separate, with matching identity and released ownership
+before authorized board work. No physical port is needed for this software issue.
+
+Next implement actual chunk admission/retry (#14), final byte/hash commit (#18),
+readback (#22) and the host transfer workflow (#26).
