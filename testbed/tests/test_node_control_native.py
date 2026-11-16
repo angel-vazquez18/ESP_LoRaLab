@@ -89,6 +89,7 @@ def native_library(tmp_path_factory):
             str(cjson),
             str(main / "protocol/strict_json.c"),
             str(main / "control/node_control.c"),
+            str(REPO_ROOT / "testbed/tests/native/artifact_store_fixture.c"),
             str(cjson / "cJSON.c"),
             str(REPO_ROOT / "testbed/tests/native/cjson_allocator.c"),
             "-lm",
@@ -174,7 +175,7 @@ class NativeNode:
 
     def memory(self, _, internal, psram, failures):
         used = sum(C.sizeof(b) for b in self.allocations.values())
-        internal[0] = Heap(200000 - used, 130000, 120000, True)
+        internal[0] = Heap(400000 - used, min(130000, 400000 - used), 120000, True)
         psram[0] = Heap(2095000, 2095000, 2064384, True)
         failures[0] = int(self.allocation_fails)
 
