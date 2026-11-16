@@ -17,6 +17,15 @@ def outputs(root: Path) -> dict[Path, str]:
         root / "contracts/v2/diagnostic.schema.json": document(schema()),
         root / "contracts/v2/control.schema.json": document(control_v2.schema()),
         root / "contracts/v2/artifact.schema.json": document(artifact_contract_v2.schema()),
+        root / "firmware/lora_node/main/generated/artifact_profile.h": (
+            "#pragma once\n"
+            f'#define ARTIFACT_PROFILE "{artifact_contract_v2.PROFILE}"\n'
+            f'#define ARTIFACT_SCHEMA_SHA256 "{artifact_contract_v2.schema_digest()}"\n'
+            f"#define ARTIFACT_SLOTS {artifact_contract_v2.ARTIFACT_SLOTS}U\n"
+            f"#define ARTIFACT_MAX_BYTES {artifact_contract_v2.MAX_ARTIFACT_BYTES}U\n"
+            f"#define ARTIFACT_TOTAL_BYTES {artifact_contract_v2.TOTAL_ARTIFACT_BYTES}U\n"
+            f"#define ARTIFACT_CHUNK_BYTES {artifact_contract_v2.CHUNK_BYTES}U\n"
+        ),
         root / "firmware/lora_node/main/generated/contract_schema.h": (
             f'#pragma once\n#define CONTRACT_SCHEMA_SHA256 "{control_v2.schema_digest()}"\n'
         ),
