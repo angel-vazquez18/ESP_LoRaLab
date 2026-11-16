@@ -9,7 +9,7 @@ from uuid import uuid4
 import serial
 from serial.tools.list_ports import comports
 
-from . import artifact_contract_v2, control_v2, v2
+from . import artifact_contract_v2, audio_contract_v2, control_v2, v2
 from .adapters import health_freshness, require_artifact_compatible, require_control_compatible
 
 
@@ -171,6 +171,26 @@ class NodeSession:
                 args = artifact_contract_v2.validate_arguments(
                     name, {} if args is None else args, artifact_limits
                 ).model_dump()
+            if name in audio_contract_v2.ARGUMENTS:
+                if (
+                    self.wire_profile != "node_control"
+                    or self.identity is None
+                    or self.health is None
+                ):
+                    raise ValueError(
+                        "MISSING_CAPABILITY: Audio control identity/health is unavailable"
+                    )
+                for caps in (self.identity.capabilities, self.health.capability_availability):
+                    value = audio_contract_v2.Capabilities.model_validate(
+                        caps.resource_limits.get("audio_io")
+                    )
+                    if (
+                        value.schema_sha256 != audio_contract_v2.schema_digest()
+                        or name not in value.commands
+                        or not caps.audio_playback
+                    ):
+                        raise ValueError("MISSING_CAPABILITY: Exact audio profile is unavailable")
+                args = audio_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
             self.sequence += 1
             command = v2.Command(
                 command_id=str(uuid4()),
@@ -200,7 +220,7 @@ class NodeSession:
                         if name == "status.get":
                             self.health = v2.Health.model_validate(reply.result)
                             self.last_health = monotonic()
-                        if name == "diag.run":
+                        if name == "diag.run" or name in audio_contract_v2.ARGUMENTS:
                             operation = control_v2.AcceptedOperation.model_validate(
                                 reply.result
                             ).model_dump()
