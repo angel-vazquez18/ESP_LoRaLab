@@ -187,7 +187,9 @@ class NodeSession:
                     if (
                         value.schema_sha256 != audio_contract_v2.schema_digest()
                         or name not in value.commands
-                        or not caps.audio_playback
+                        or not getattr(
+                            caps, "audio_capture" if name == "audio.capture" else "audio_playback"
+                        )
                     ):
                         raise ValueError("MISSING_CAPABILITY: Exact audio profile is unavailable")
                 args = audio_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()

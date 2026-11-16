@@ -23,6 +23,7 @@ def outputs(root: Path) -> dict[Path, str]:
         (root / "hardware/boards/heltec_wifi_lora32_v4.json").read_text()
     )
     pins = board["amplifier"]["gpio"]
+    mic = board["microphone"]["gpio"]
     return {
         root / "contracts/v2/audio.schema.json": document(audio_contract_v2.schema()),
         root / "firmware/lora_node/main/generated/audio_profile.h": (
@@ -34,6 +35,10 @@ def outputs(root: Path) -> dict[Path, str]:
             f"#define AUDIO_OUTPUT_BCLK {pins['bclk']}\n"
             f"#define AUDIO_OUTPUT_WS {pins['lrc']}\n"
             f"#define AUDIO_OUTPUT_DIN {pins['din']}\n"
+            f"#define AUDIO_INPUT_BCLK {mic['sck']}\n"
+            f"#define AUDIO_INPUT_WS {mic['ws']}\n"
+            f"#define AUDIO_INPUT_SD {mic['sd']}\n"
+            "#define AUDIO_WARMUP_SAMPLES 4800U\n"
         ),
         root / "contracts/v2/diagnostic.schema.json": document(schema()),
         root / "contracts/v2/control.schema.json": document(control_v2.schema()),

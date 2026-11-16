@@ -5,4 +5,9 @@ config LORALAB_AUDIO_PLAYBACK
     help
         Enable only for a board with the documented MAX98357A wiring.
         This configures a driver, not acoustic or electrical qualification.
+config LORALAB_AUDIO_CAPTURE
+    bool "Microphone connected to the documented board pins"
+    default n
+    help
+        INMP441 L/R must be grounded, selecting the left slot.
 endmenu
