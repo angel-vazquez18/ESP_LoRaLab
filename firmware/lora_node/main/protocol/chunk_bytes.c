@@ -48,3 +48,22 @@ uint32_t chunk_crc32(const void *bytes, size_t length)
     }
     return crc ^ UINT32_MAX;
 }
+
+bool chunk_base64_encode(const uint8_t *bytes, size_t length, char *out, size_t capacity)
+{
+    static const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    size_t count = ((length + 2) / 3) * 4;
+    if (!out || (!bytes && length) || capacity <= count) return false;
+    size_t written = 0;
+    for (size_t i = 0; i < length; i += 3) {
+        uint32_t value = (uint32_t)bytes[i] << 16;
+        if (i + 1 < length) value |= (uint32_t)bytes[i + 1] << 8;
+        if (i + 2 < length) value |= bytes[i + 2];
+        out[written++] = alphabet[(value >> 18) & 63];
+        out[written++] = alphabet[(value >> 12) & 63];
+        out[written++] = i + 1 < length ? alphabet[(value >> 6) & 63] : '=';
+        out[written++] = i + 2 < length ? alphabet[value & 63] : '=';
+    }
+    out[written] = 0;
+    return true;
+}

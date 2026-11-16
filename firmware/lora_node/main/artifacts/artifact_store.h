@@ -58,3 +58,6 @@ artifact_status artifact_store_put(artifact_store *store, const char *id, size_t
 artifact_status artifact_store_prepare_commit(artifact_store *store, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
 void artifact_store_accept_commit(artifact_store *store, const char *id);
+
+artifact_status artifact_store_get(const artifact_store *store, const char *id, size_t offset,
+                                   void *output, size_t requested, size_t *length, bool *eof);
