@@ -26,6 +26,7 @@ import "./physical.css";
 import { useTheme } from "./theme";
 import HardwareBench from "./HardwareBench";
 import type { HardwareNode } from "./HardwareBench";
+import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
 import RunComparison from "./RunComparison";
 
@@ -113,6 +114,7 @@ type State = {
   version: string;
   mode: "hardware";
   hardware_nodes: HardwareNode[];
+  artifact_transfers: ArtifactState;
   catalog: Entry[];
   procedures: {
     active_run:
@@ -128,6 +130,7 @@ const empty: State = {
   version: "0.1.0",
   mode: "hardware",
   hardware_nodes: [],
+  artifact_transfers: { active_id: null, transfers: [] },
   catalog: [],
   procedures: { active_run: null, runs: [] },
   v2_execution: { runs: [], campaigns: [] },
@@ -840,7 +843,17 @@ function App() {
             <>
               <HardwareBench
                 nodes={host.state.hardware_nodes}
-                pending={host.pending || !!active}
+                transfers={
+                  host.state.artifact_transfers ?? {
+                    active_id: null,
+                    transfers: [],
+                  }
+                }
+                pending={
+                  host.pending ||
+                  !!active ||
+                  !!host.state.artifact_transfers?.active_id
+                }
                 request={host.request}
                 error={host.error}
               />

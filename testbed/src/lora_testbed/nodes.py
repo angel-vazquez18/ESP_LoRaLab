@@ -67,11 +67,29 @@ class NodeSession:
     def note(self, code, message):
         self.diagnostics.append({"at": monotonic(), "code": code, "message": message})
 
+    def artifact_availability(self):
+        commands, blocked, limits = [], {}, None
+        for name in artifact_contract_v2.ARGUMENTS:
+            try:
+                if not self.connected or self.identity is None:
+                    raise ValueError("Connect the node to use its files")
+                value = require_artifact_compatible(
+                    self.identity.model_dump(),
+                    name,
+                    self.health.capability_availability.model_dump() if self.health else None,
+                )
+                commands.append(name)
+                limits = value.model_dump()
+            except ValueError as exc:
+                blocked[name] = str(exc)
+        return {"commands": commands, "blocked": blocked, "limits": limits}
+
     def snapshot(self):
         age = monotonic() - self.last_health if self.last_health is not None else None
         return {
             "id": self.role,
             "wire_profile": self.wire_profile,
+            "artifact_support": self.artifact_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,

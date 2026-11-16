@@ -114,6 +114,8 @@ audio and other future modules are added only when implementing real behavior.
   cancellation, partial qualification scope and durable procedure evidence.
 - `analysis_v2.py`, `run_records_v2.py`, `reports_v2.py`: analysis, durable records,
   comparisons and exports. Preserve execution outcome separately from assessment.
+- `frontend/src/NodeArtifacts.tsx`: inspector file controls and progress from the
+  shared backend, with server-computed compatibility and verified byte downloads.
 - `paths.py`: the source-checkout layout seam. Shared content resolves from the
   repository root; UI assets resolve from `testbed/frontend/dist`.
 
