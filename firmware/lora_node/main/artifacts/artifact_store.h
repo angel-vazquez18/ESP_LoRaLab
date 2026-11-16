@@ -15,7 +15,8 @@ typedef enum {
     ARTIFACT_INVALID_STATE,
     ARTIFACT_BUSY,
     ARTIFACT_OFFSET_MISMATCH,
-    ARTIFACT_CHECKSUM_MISMATCH
+    ARTIFACT_CHECKSUM_MISMATCH,
+    ARTIFACT_INTERNAL_ERROR
 } artifact_status;
 
 typedef struct {
@@ -52,3 +53,8 @@ artifact_status artifact_store_check_put(artifact_store *store, const char *id, 
                                         const void *bytes, size_t length, uint32_t crc);
 artifact_status artifact_store_put(artifact_store *store, const char *id, size_t offset,
                                   const void *bytes, size_t length, uint32_t crc);
+
+// Verification is private until its correlated reply has been admitted.
+artifact_status artifact_store_prepare_commit(artifact_store *store, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
+void artifact_store_accept_commit(artifact_store *store, const char *id);
