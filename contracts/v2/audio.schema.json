@@ -1,0 +1,133 @@
+{
+  "scope": "finite_local_audio",
+  "profile": "audio_io_v1",
+  "arguments": {
+    "audio.play": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "title": "Play",
+      "type": "object"
+    }
+  },
+  "accepted": {
+    "additionalProperties": false,
+    "properties": {
+      "operation_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "state": {
+        "const": "accepted",
+        "title": "State",
+        "type": "string"
+      },
+      "deadline_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Deadline Us",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "operation_id",
+      "state",
+      "deadline_us"
+    ],
+    "title": "AcceptedOperation",
+    "type": "object"
+  },
+  "capability": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "audio_io_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "commands": {
+        "items": {
+          "const": "audio.play",
+          "type": "string"
+        },
+        "maxItems": 1,
+        "minItems": 1,
+        "title": "Commands",
+        "type": "array"
+      },
+      "format": {
+        "const": "pcm_s16le_8000_mono",
+        "title": "Format",
+        "type": "string"
+      },
+      "sample_rate_hz": {
+        "const": 8000,
+        "title": "Sample Rate Hz",
+        "type": "integer"
+      },
+      "max_samples": {
+        "const": 24000,
+        "title": "Max Samples",
+        "type": "integer"
+      },
+      "output_gain_numerator": {
+        "const": 1,
+        "title": "Output Gain Numerator",
+        "type": "integer"
+      },
+      "output_gain_denominator": {
+        "const": 8,
+        "title": "Output Gain Denominator",
+        "type": "integer"
+      },
+      "hardware_gain_db": {
+        "const": 6,
+        "title": "Hardware Gain Db",
+        "type": "integer"
+      },
+      "output_gpio": {
+        "items": {
+          "type": "integer"
+        },
+        "maxItems": 3,
+        "minItems": 3,
+        "title": "Output Gpio",
+        "type": "array"
+      },
+      "underflow_detection": {
+        "const": "dma_callback_lateness",
+        "title": "Underflow Detection",
+        "type": "string"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "commands",
+      "format",
+      "sample_rate_hz",
+      "max_samples",
+      "output_gain_numerator",
+      "output_gain_denominator",
+      "hardware_gain_db",
+      "output_gpio",
+      "underflow_detection"
+    ],
+    "title": "Capabilities",
+    "type": "object"
+  }
+}
