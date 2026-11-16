@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "generated/artifact_profile.h"
 
@@ -12,7 +13,9 @@ typedef enum {
     ARTIFACT_ALLOCATION_FAILED,
     ARTIFACT_NOT_FOUND,
     ARTIFACT_INVALID_STATE,
-    ARTIFACT_BUSY
+    ARTIFACT_BUSY,
+    ARTIFACT_OFFSET_MISMATCH,
+    ARTIFACT_CHECKSUM_MISMATCH
 } artifact_status;
 
 typedef struct {
@@ -43,3 +46,9 @@ void artifact_store_release_owner(artifact_store *store, const char *owner);
 artifact_status artifact_store_acquire(artifact_store *store, const char *id,
                                        const void **bytes, size_t *length);
 void artifact_store_release(artifact_store *store, const char *id);
+
+// Preflight keeps reply allocation failures from advancing an upload.
+artifact_status artifact_store_check_put(artifact_store *store, const char *id, size_t offset,
+                                        const void *bytes, size_t length, uint32_t crc);
+artifact_status artifact_store_put(artifact_store *store, const char *id, size_t offset,
+                                  const void *bytes, size_t length, uint32_t crc);
