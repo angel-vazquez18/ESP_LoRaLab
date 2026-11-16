@@ -16,6 +16,28 @@
       ],
       "title": "Play",
       "type": "object"
+    },
+    "audio.capture": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "sample_count": {
+          "maximum": 24000,
+          "minimum": 1,
+          "title": "Sample Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "sample_count"
+      ],
+      "title": "Capture",
+      "type": "object"
     }
   },
   "accepted": {
@@ -61,10 +83,13 @@
       },
       "commands": {
         "items": {
-          "const": "audio.play",
+          "enum": [
+            "audio.play",
+            "audio.capture"
+          ],
           "type": "string"
         },
-        "maxItems": 1,
+        "maxItems": 2,
         "minItems": 1,
         "title": "Commands",
         "type": "array"
@@ -108,6 +133,30 @@
         "title": "Output Gpio",
         "type": "array"
       },
+      "input_gpio": {
+        "items": {
+          "type": "integer"
+        },
+        "maxItems": 3,
+        "minItems": 3,
+        "title": "Input Gpio",
+        "type": "array"
+      },
+      "input_slot": {
+        "const": "left_24_msb_in_32",
+        "title": "Input Slot",
+        "type": "string"
+      },
+      "input_conversion": {
+        "const": "signed_high_16_bits_no_gain",
+        "title": "Input Conversion",
+        "type": "string"
+      },
+      "warmup_samples": {
+        "const": 4800,
+        "title": "Warmup Samples",
+        "type": "integer"
+      },
       "underflow_detection": {
         "const": "dma_callback_lateness",
         "title": "Underflow Detection",
@@ -125,6 +174,10 @@
       "output_gain_denominator",
       "hardware_gain_db",
       "output_gpio",
+      "input_gpio",
+      "input_slot",
+      "input_conversion",
+      "warmup_samples",
       "underflow_detection"
     ],
     "title": "Capabilities",
