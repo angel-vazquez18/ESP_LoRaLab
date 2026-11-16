@@ -43,6 +43,9 @@ class Store:
                 id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT NOT NULL,
                 received_at TEXT NOT NULL, document TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS audio_operations (
+                id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS artifact_transfers (
                 id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL
             );
@@ -50,6 +53,15 @@ class Store:
                 id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL
             );
         """)
+        for audio in self.audio_operations():
+            if audio["status"] == "running":
+                audio.update(
+                    status="interrupted",
+                    finished_at=utc_now(),
+                    error="Host restarted",
+                    cleanup="unconfirmed; operation stops on ownership loss",
+                )
+                self.save_audio(audio)
         for transfer in self.transfers():
             if transfer["status"] == "running":
                 transfer.update(
@@ -149,6 +161,28 @@ class Store:
             json.loads(row[0])
             for row in self.db.execute("SELECT document FROM references_audio ORDER BY rowid DESC")
         ]
+
+    def save_audio(self, record):
+        self.db.execute(
+            "INSERT INTO audio_operations VALUES (?, ?, ?) "
+            "ON CONFLICT(id) DO UPDATE SET document=excluded.document",
+            (record["id"], record["created_at"], json.dumps(record)),
+        )
+        self.db.commit()
+
+    def audio_operations(self):
+        return [
+            json.loads(row[0])
+            for row in self.db.execute(
+                "SELECT document FROM audio_operations ORDER BY created_at DESC LIMIT 50"
+            )
+        ]
+
+    def audio_operation(self, identifier):
+        row = self.db.execute(
+            "SELECT document FROM audio_operations WHERE id=?", (identifier,)
+        ).fetchone()
+        return json.loads(row[0]) if row else None
 
     def save_transfer(self, transfer):
         self.db.execute(
