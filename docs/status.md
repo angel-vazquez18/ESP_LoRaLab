@@ -281,3 +281,15 @@ consumer guards now use actual upload and commit. `make check`: 250 passed,
 including 10 new commit cases, lint/frontend/contracts/repository checks. Main
 ESP-IDF build passed: 0x3c2c0 bytes, 76% app partition free. Physical validation
 awaits completion of the fresh flash snapshot and the cumulative readback image.
+
+## November 16 — Committed artifact readback (#22)
+
+Added bounded reads with actual lengths, canonical Base64, CRC-32 and exact EOF.
+Incomplete/failed/deleted files remain unreadable. All six artifact commands are
+now advertised; their existing schemas/digests are unchanged. `make check`: 267
+passed, including 17 new readback cases; lint/frontend/contracts/repository checks
+passed. ESP-IDF build: 0x3c890 bytes, 76% app partition free. Fresh 16 MiB flash
+snapshot SHA-256 verified, cumulative image flashed without NVS/eFuse changes.
+Physical identity/schema/ELF matched and initial 1/1024/1025/48000/131072-byte
+round trips passed. Negative/capacity/recovery checks are still being finalized.
+Full M1/audio qualification remains separate; no operator listening is claimed.

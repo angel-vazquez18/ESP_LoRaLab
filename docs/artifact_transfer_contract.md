@@ -2,8 +2,8 @@
 
 Issue [#2](https://github.com/angel-vazquez18/ESP_LoRaLab/issues/2), November 15, 2026.
 This defines the file-transfer interface and host validation. Issue #11 adds real
-RAM reservations, listing and deletion to the portable main firmware. Chunk uploads (#14) and final commit (#18) are implemented. Readback (#22),
-host workflows (#26) and audio drivers remain follow-up work. Native checks exercise the production C store;
+RAM reservations, listing and deletion to the portable main firmware. Chunk uploads (#14) and final commit (#18) are implemented. Readback (#22) is also implemented. Host workflows (#26) and audio drivers remain
+follow-up work. Native checks exercise the production C store;
 they do not establish physical board behavior.
 
 An artifact is a named block of bytes in the node's RAM. It is not a filesystem
@@ -146,9 +146,8 @@ Implemented firmware must explicitly add `artifact_transfer` inside
   `artifact_chunk_bytes`, within the ceilings above and internally consistent.
 
 The main firmware now advertises only `artifact.begin`, `artifact.list` and
-`artifact.delete`, `artifact.put` and `artifact.commit`, using generated `main/generated/artifact_profile.h` constants.
-`artifact.get` remains unavailable; diagnostic
-firmware advertises none. A complete upload/download workflow requires all six.
+`artifact.delete`, `artifact.put`, `artifact.commit` and `artifact.get`, using generated `main/generated/artifact_profile.h` constants.
+All six artifact commands are implemented; diagnostic firmware advertises none. A complete upload/download workflow requires all six.
 Do not advertise commands merely because their schema exists.
 The existing exact main-control handshake is still required. Diagnostic firmware,
 missing descriptors or missing commands fail with `MISSING_CAPABILITY`; unknown
@@ -275,3 +274,29 @@ commits, wrong-hash failure/delete/recovery, committed lifetime across release,
 and reply-allocation failures for both successful and failed hash outcomes.
 Consumer/in-use tests now use the real upload/commit API instead of seeded state.
 Physical hash/readback proof follows with #22's cumulative artifact image.
+
+## Readback implementation and review (#22)
+
+`artifact_store_get` copies only committed bytes into the bounded reply buffer.
+Offsets beyond length fail; offset equal to length yields empty EOF with CRC zero.
+The final chunk is clipped to actual length. The control layer returns canonical
+Base64, actual byte count, offset, CRC and EOF. Reads bypass the mutating reply
+cache and use fresh command identities on host timeout retries.
+
+```sh
+uv run --project testbed pytest testbed/tests/test_node_readback_native.py -ra
+```
+
+Expected at the #22 checkpoint: **17 passed, no skips**. Independently reconstruct
+1/2/3/1024/1025/48000/131072-byte files and compare exact source bytes and SHA-256.
+Check short final chunks, explicit EOF, invalid numeric fields/ranges, and rejection
+of unfinished, failed, unknown and deleted files. Following valid reads succeed
+without changing the manifest. Main firmware now advertises all six artifact
+commands. Host transfer workflows and physical audio remain separate capabilities.
+
+November 16 physical bring-up: verified the original flash backup and preserved a
+fresh complete 16 MiB snapshot before flashing this cumulative artifact image on
+esp-f85b1ba27744. The new image's device/schema/ELF fingerprint matched, and initial
+physical round trips at 1/1024/1025/48000/131072 bytes matched exactly. Raw rejection,
+capacity and recovery checks continue; their finalized evidence is recorded in
+the batch handoff. This does not close audio or all Milestone 1 hardware checks.
