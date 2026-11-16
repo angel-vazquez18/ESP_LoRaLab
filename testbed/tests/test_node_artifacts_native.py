@@ -49,14 +49,19 @@ def test_native_partial_artifact_advertisement_matches_generated_profile(native)
     health = native.request("status.get")["result"]
     descriptor = identity["capabilities"]["resource_limits"]["artifact_transfer"]
     assert descriptor == health["capability_availability"]["resource_limits"]["artifact_transfer"]
-    assert set(descriptor["commands"]) == {"artifact.begin", "artifact.list", "artifact.delete"}
+    assert set(descriptor["commands"]) == {
+        "artifact.begin",
+        "artifact.list",
+        "artifact.delete",
+        "artifact.put",
+    }
     assert descriptor["schema_sha256"] == artifacts.schema_digest()
     for name in descriptor["commands"]:
         limits = require_artifact_compatible(identity, name)
         assert limits.max_artifact_bytes == 131072
         assert limits.node_total_artifact_bytes == 262144
         assert limits.node_artifact_slots == 4
-    for name in ("artifact.put", "artifact.commit", "artifact.get"):
+    for name in ("artifact.commit", "artifact.get"):
         with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
             require_artifact_compatible(identity, name)
         assert native.request(name)["error"]["code"] == "MISSING_CAPABILITY"
