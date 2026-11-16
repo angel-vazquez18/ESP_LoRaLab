@@ -141,3 +141,18 @@ observation is implied; full physical qualification remains pending.
 Full source checks: **336 tests passed**, no skips, plus lint/frontend/generated
 contracts/repository checks. Audio-enabled ESP-IDF image size 0x43e90, 73% app
 partition free. Existing Starlette/httpx deprecation warning remains.
+
+### Signal-path finding: not yet qualified
+
+Inspection of the unattended capture found **all-zero PCM**, including the full
+24000-sample clip. The smaller `local/m2-batch/check_capture_signal.py` reproduces
+this explicitly as `SIGNAL_UNVERIFIED`, rather than accepting DMA success as a
+working microphone. Targeted capture counters then showed zero nonzero words in
+**both** raw slots after the startup discard (`raw_left_or=raw_right_or=0`).
+Thus selecting the other slot or changing the signed-16 conversion alone would
+not recover a signal in that observation. The physical cause is not established.
+Check microphone supply/ground/SD/SCK/WS, breakout enable and the actual clock/data
+signals when an operator/equipment is available. Do not change the wiring profile
+or claim microphone qualification based on speculation. Raw slot counts are
+retained in capture results for future checks. A silent file can be byte-valid
+while providing no evidence of microphone response.
