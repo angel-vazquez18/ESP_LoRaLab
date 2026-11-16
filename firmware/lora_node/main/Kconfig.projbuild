@@ -1,0 +1,8 @@
+menu "LoRaLab physical audio configuration"
+config LORALAB_AUDIO_PLAYBACK
+    bool "Amplifier/speaker connected to the documented board pins"
+    default n
+    help
+        Enable only for a board with the documented MAX98357A wiring.
+        This configures a driver, not acoustic or electrical qualification.
+endmenu

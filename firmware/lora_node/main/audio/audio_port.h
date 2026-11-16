@@ -1,0 +1,16 @@
+#pragma once
+#include <stdbool.h>
+#include <stdint.h>
+
+typedef struct {
+    uint32_t samples, dma_frames, underflows;
+    bool done, failed;
+} node_audio_progress;
+
+// stop must quiesce DMA before its borrowed buffer can be released.
+typedef struct {
+    bool playback;
+    bool (*start)(void *context, uint8_t *pcm, uint32_t samples);
+    void (*poll)(void *context, node_audio_progress *progress);
+    void (*stop)(void *context);
+} node_audio_port;

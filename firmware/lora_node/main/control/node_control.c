@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "node_control.h"
+#include "generated/audio_profile.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
 #include "protocol/chunk_bytes.h"
@@ -29,7 +30,9 @@ typedef struct {
 } record_queue;
 
 typedef struct {
-    bool active, verifying;
+    bool active, verifying, audio;
+    char artifact_id[37];
+    node_audio_progress audio_progress;
     char id[37], run_id[37];
     uint8_t *buffer;
     uint32_t iterations, completed, bytes, offset;
@@ -203,10 +206,11 @@ static cJSON *capabilities(node_control *n)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "radio",         "audio_capture", "audio_playback", "codec2_3200", "security_gcm",
+        "radio",         "audio_capture", "codec2_3200", "security_gcm",
         "fragmentation", "ack_retry",     "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "audio_playback", n->port.audio.playback);
     boolean(n, o, "memory_stats", true);
     add(n, o, "radio_limits", object(n));
     number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
@@ -230,6 +234,22 @@ static cJSON *capabilities(node_control *n)
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
     number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
     add(n, limits, "artifact_transfer", files);
+    if (n->port.audio.playback) {
+        cJSON *audio = object(n);
+        string(n, audio, "profile", AUDIO_PROFILE);
+        string(n, audio, "schema_sha256", AUDIO_SCHEMA_SHA256);
+        add(n, audio, "commands", cJSON_CreateStringArray((const char *[]){"audio.play"}, 1));
+        string(n, audio, "format", "pcm_s16le_8000_mono");
+        number(n, audio, "sample_rate_hz", AUDIO_SAMPLE_RATE);
+        number(n, audio, "max_samples", AUDIO_MAX_SAMPLES);
+        number(n, audio, "output_gain_numerator", 1);
+        number(n, audio, "output_gain_denominator", 8);
+        number(n, audio, "hardware_gain_db", 6);
+        int pins[] = {AUDIO_OUTPUT_BCLK, AUDIO_OUTPUT_WS, AUDIO_OUTPUT_DIN};
+        add(n, audio, "output_gpio", cJSON_CreateIntArray(pins, 3));
+        string(n, audio, "underflow_detection", "dma_callback_lateness");
+        add(n, limits, "audio_io", audio);
+    }
     add(n, o, "resource_limits", limits);
     number(n, o, "timestamp_resolution_us", 1);
     return o;
@@ -271,7 +291,7 @@ static cJSON *health(node_control *n)
     add(n, memory, "psram", heap(n, &psram));
     number(n, buffers, "serial_rx", n->used);
     number(n, buffers, "serial_tx_queued", queued_bytes(&n->replies) + queued_bytes(&n->events));
-    number(n, buffers, "diagnostic", n->op.active ? n->op.bytes : 0);
+    number(n, buffers, "diagnostic", n->op.active && !n->op.audio ? n->op.bytes : 0);
     number(n, buffers, "artifacts_reserved", artifact_store_reserved_bytes(n->artifacts));
     add(n, memory, "buffers", buffers);
     number(n, memory, "allocation_failures", failures);
@@ -287,7 +307,7 @@ static cJSON *health(node_control *n)
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
     boolean(n, o, "security_ready", false);
-    string(n, o, "audio_state", "not_supported");
+    string(n, o, "audio_state", n->op.active && n->op.audio ? "playing" : n->port.audio.playback ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
         error(n, n->error_code[0] ? n->error_code : NULL, n->error_message, NULL));
@@ -345,7 +365,17 @@ static void finish_operation(node_control *n, const char *status, const char *co
     if (!n->op.active)
         return;
     operation *op = &n->op;
-    n->port.deallocate(n->port.context, op->buffer);
+    char audio_error[161];
+    if (op->audio) {
+        n->port.audio.stop(n->port.context);
+        n->port.audio.poll(n->port.context, &op->audio_progress);
+        artifact_store_release(n->artifacts, op->artifact_id);
+        if (code) {
+            snprintf(audio_error, sizeof(audio_error), "%.75s; samples=%u DMA_frames=%u underflows=%u", message,
+                op->audio_progress.samples, op->audio_progress.dma_frames, op->audio_progress.underflows);
+            message = audio_error;
+        }
+    } else if (op->buffer) n->port.deallocate(n->port.context, op->buffer);
     op->buffer = NULL;
     op->active = false;
     snprintf(n->last_operation, sizeof(n->last_operation), "%s", op->id);
@@ -356,10 +386,26 @@ static void finish_operation(node_control *n, const char *status, const char *co
     n->oom = false;
     cJSON *data = object(n), *result = code ? cJSON_CreateNull() : object(n);
     if (!code) {
+        if (op->audio) {
+            string(n, result, "kind", "audio.play");
+            string(n, result, "artifact_id", op->artifact_id);
+            number(n, result, "sample_rate_hz", AUDIO_SAMPLE_RATE);
+            number(n, result, "samples_requested", op->bytes / 2);
+            number(n, result, "samples_completed", op->audio_progress.samples);
+            number(n, result, "dma_frames", op->audio_progress.dma_frames);
+            number(n, result, "underflows", op->audio_progress.underflows);
+            boolean(n, result, "dma_completed", op->audio_progress.done);
+            number(n, result, "output_gain_numerator", 1);
+            number(n, result, "output_gain_denominator", 8);
+            number(n, result, "software_gain_db", -18.06179974);
+            number(n, result, "hardware_gain_db", 6);
+            boolean(n, result, "heard_verified", false);
+        } else {
         string(n, result, "kind", "memory_probe");
         number(n, result, "iterations_completed", op->completed);
         number(n, result, "payload_bytes", op->bytes);
         number(n, result, "verified_bytes", (uint64_t)op->completed * op->bytes);
+        }
         number(n, result, "duration_us", now(n) - op->started);
         string(n, result, "stop_reason", message);
     }
@@ -458,7 +504,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -532,7 +578,7 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !artifact_command(name) &&
+    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !artifact_command(name) &&
         !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
@@ -540,6 +586,9 @@ static void process(node_control *n, size_t length)
     }
     enum action action = NONE;
     uint8_t *probe = NULL;
+    const void *play_bytes = NULL;
+    size_t play_length = 0;
+    bool play_acquired = false;
     artifact_spec file_spec = {0};
     uint8_t chunk[ARTIFACT_CHUNK_BYTES];
     size_t chunk_length = 0, chunk_offset = 0;
@@ -669,6 +718,21 @@ static void process(node_control *n, size_t length)
                         action = DELETE_FILE;
                 }
             }
+        } else if (eq(name, "audio.play")) {
+            const char *const keys[] = {"artifact_id"};
+            const char *id = text(args, "artifact_id");
+            const artifact_manifest *m = uuid(id) ? artifact_store_find(n->artifacts, id) : NULL;
+            if (!n->port.audio.playback) { code = "MISSING_CAPABILITY"; message = "Playback is not configured for this board"; }
+            else if (!exact_keys(args, keys, 1) || !uuid(id)) { code = "INVALID_ARGUMENT"; message = "A file UUID is required"; }
+            else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            else if (!m) { code = "ARTIFACT_NOT_FOUND"; message = "File not found"; }
+            else if (!eq(m->format, "pcm_s16le_8000_mono") || m->length_bytes % 2 || m->length_bytes > AUDIO_MAX_SAMPLES * 2) {
+                code = "INVALID_ARGUMENT"; message = "Playback requires complete 8 kHz signed-16-bit mono PCM";
+            } else {
+                code = artifact_error(artifact_store_acquire(n->artifacts, id, &play_bytes, &play_length));
+                if (code) message = "Playback requires an unused committed file";
+                else { action = PLAY; play_acquired = true; bytes = play_length; }
+            }
         } else if (eq(name, "diag.run")) {
             const char *const keys[] = {"kind", "iterations", "payload_bytes"};
             if (!exact_keys(args, keys, 3) || !text(args, "kind") ||
@@ -691,14 +755,6 @@ static void process(node_control *n, size_t length)
                     code = "ALLOCATION_FAILED";
                     message = "Diagnostic buffer allocation failed";
                 } else {
-                    uint8_t id[16];
-                    n->port.random_bytes(n->port.context, id, sizeof(id));
-                    id[6] = (id[6] & 15) | 64;
-                    id[8] = (id[8] & 63) | 128;
-                    snprintf(operation_id, sizeof(operation_id),
-                             "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-                             id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7], id[8], id[9],
-                             id[10], id[11], id[12], id[13], id[14], id[15]);
                     action = PROBE;
                 }
             }
@@ -732,6 +788,16 @@ static void process(node_control *n, size_t length)
             message = "Command is unavailable in this firmware";
         }
     }
+    if (!code && (action == PROBE || action == PLAY)) {
+                    uint8_t id[16];
+                    n->port.random_bytes(n->port.context, id, sizeof(id));
+                    id[6] = (id[6] & 15) | 64;
+                    id[8] = (id[8] & 63) | 128;
+                    snprintf(operation_id, sizeof(operation_id),
+                             "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+                             id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7], id[8], id[9],
+                             id[10], id[11], id[12], id[13], id[14], id[15]);
+    }
     if (!code) {
         if (eq(name, "hello"))
             result = hello(n);
@@ -750,7 +816,7 @@ static void process(node_control *n, size_t length)
                 number(n, result, "lease_expires_us", lease);
             if (action == CLAIM || action == RELEASE)
                 string(n, result, "state", n->op.active ? "running" : "idle");
-            if (action == PROBE) {
+            if (action == PROBE || action == PLAY) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
@@ -793,6 +859,7 @@ static void process(node_control *n, size_t length)
     if (!encode(n, reply)) {
         if (action == RESERVE_FILE)
             artifact_store_delete(n->artifacts, file_spec.artifact_id);
+        if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
         if (probe)
             n->port.deallocate(n->port.context, probe);
         n->reply_drops++;
@@ -807,6 +874,7 @@ static void process(node_control *n, size_t length)
         if (strlen(n->encoded) >= sizeof(n->cache[0].reply)) {
             if (action == RESERVE_FILE)
                 artifact_store_delete(n->artifacts, file_spec.artifact_id);
+            if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
             if (probe)
                 n->port.deallocate(n->port.context, probe);
             n->reply_drops++;
@@ -856,7 +924,7 @@ static void process(node_control *n, size_t length)
                            chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-    } else if (action == PROBE) {
+    } else if (action == PROBE || action == PLAY) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
         n->op.buffer = probe;
@@ -868,6 +936,12 @@ static void process(node_control *n, size_t length)
         const char *run_id = text(cmd, "run_id");
         if (run_id)
             snprintf(n->op.run_id, sizeof(n->op.run_id), "%s", run_id);
+        if (action == PLAY) {
+            n->op.audio = true;
+            snprintf(n->op.artifact_id, sizeof(n->op.artifact_id), "%s", text(args, "artifact_id"));
+            if (!n->port.audio.start(n->port.context, (uint8_t *)play_bytes, bytes / 2))
+                finish_operation(n, "failed", "INTERNAL_ERROR", "Audio driver start failed");
+        }
     } else if (action == STOP)
         finish_operation(n, "cancelled", NULL, "operator");
     cJSON_Delete(cmd);
@@ -875,7 +949,7 @@ static void process(node_control *n, size_t length)
 
 node_control *node_control_create(const node_platform *platform)
 {
-    if (!platform || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
+    if (!platform || (platform->audio.playback && (!platform->audio.start || !platform->audio.poll || !platform->audio.stop)) || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
         !platform->allocate || !platform->deallocate || !platform->memory || !platform->device_id ||
         !platform->boot_id || !platform->firmware_version || !platform->firmware_build_id ||
         !platform->idf_version || !platform->reset_cause || !platform->board_manifest_hash ||
@@ -900,8 +974,7 @@ void node_control_destroy(node_control *n)
 {
     if (!n)
         return;
-    if (n->op.buffer)
-        n->port.deallocate(n->port.context, n->op.buffer);
+    if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
     artifact_store_destroy(n->artifacts);
     free(n);
 }
@@ -926,7 +999,16 @@ void node_control_tick(node_control *n)
         return;
     operation *op = &n->op;
     if (op->active && time >= op->deadline) {
-        finish_operation(n, "failed", "TIMEOUT", "Diagnostic operation deadline expired");
+        finish_operation(n, "failed", "TIMEOUT", "Operation deadline expired");
+    } else if (op->active && op->audio) {
+        n->port.audio.poll(n->port.context, &op->audio_progress);
+        if (op->audio_progress.failed)
+            finish_operation(n, "failed", "INTERNAL_ERROR", "Audio DMA deadline missed");
+        else if (op->audio_progress.done) {
+            if (op->audio_progress.samples == op->bytes / 2)
+                finish_operation(n, "completed", NULL, NULL);
+            else finish_operation(n, "failed", "INTERNAL_ERROR", "Audio sample count mismatch");
+        }
     } else if (op->active) {
         uint32_t end = op->offset + 512;
         if (end > op->bytes)
