@@ -40,8 +40,11 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   Full checks 293 passed; frontend build/format passed. Real browser upload,
   retrieve/save byte/hash verification, visible invalid request, cancel/delete,
   disconnected gating and reconnect passed. Screenshot in visualization folder:
-  m2-file-inspector.png. QA server stopped; node port released. PR publishing next.
-- Next: #23 playback → #24 capture → #32 host audio → #38 UI audio → #42 physical
+  m2-file-inspector.png. QA server stopped; node port released. PR #156, feat/node-artifact-inspector.
+- #23: finite playback implemented, native fault/boundary checks and audio-enabled
+  IDF build pass; fixed 1/8 amplitude and DMA source/frame counts remain distinct
+  from heard output. See docs/node_audio.md.
+- Next: #24 capture → #32 host audio → #38 UI audio → #42 physical
   qualification. Printed revision, operator listening/speech and instruments are
   still unobserved; user is away and asked to prepare those checks for later.
 
