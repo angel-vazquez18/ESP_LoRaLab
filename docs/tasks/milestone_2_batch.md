@@ -49,7 +49,14 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   tests pass, IDF build 0x43e90 / 73% free. Cumulative real-board DMA/count/hash,
   sequential/cancel/recovery checks passed on boot 60. No heard/speech/instrument
   qualification. Evidence local/m2-batch/audio-hardware-report.json.
-- Next: #32 host audio → #38 UI audio → #42 physical
+- #24: PR #158, feat/finite-pcm-capture, base feat/finite-pcm-playback.
+  Signal inspection found all-zero PCM and zero raw words in both slots. Minimal
+  physical probe reproduces SIGNAL_UNVERIFIED; cause needs physical investigation.
+- #32: shared host capture/play/retrieve/stop, verified unchanged-byte WAV, metrics,
+  separate listening notes and restart/error/cancel recovery implemented. 24 new
+  host cases; 360 total pass. Real host WAV/hash/zero-warning and playback/cancel/
+  recovery passed. No microphone response/listening qualification.
+- Next: #38 UI audio → #42 physical
   qualification. Printed revision, operator listening/speech and instruments are
   still unobserved; user is away and asked to prepare those checks for later.
 

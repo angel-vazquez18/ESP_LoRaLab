@@ -23,8 +23,7 @@ flowchart LR
 Dotted full-execution integration is planned. Diagnostic firmware cannot execute
 full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
 strict serial control, identity/health, ownership, duplicate protection and a finite
-memory operation, plus bounded RAM artifact reservations/list/delete and CRC-checked chunk uploads. The new image
-still needs physical acceptance. Its capability-based build order and completion
+memory operation, plus bounded RAM artifact upload/commit/readback, finite local I2S capture/playback and verified host PCM/WAV workflows. Full physical qualification remains pending; DMA/count/hash smoke checks are separate from heard output and microphone response. Its capability-based build order and completion
 gates are in [node development plan](node_development_plan.md);
 module implementations are not organized by experiment IDs.
 
@@ -74,6 +73,10 @@ main/
 │   ├── strict_json.h
 │   ├── chunk_bytes.c           Canonical Base64 and CRC-32 for bounded chunks
 │   └── chunk_bytes.h
+├── audio/
+│   ├── esp32_audio.c          Real bounded I2S DMA input/output
+│   ├── audio_port.h           Portable driver seam
+│   └── pcm_samples.c          Explicit sample conversion and attenuation
 └── generated/
     ├── contract_schema.h       Main-control schema digest
     └── artifact_profile.h      Generated artifact digest and resource ceilings
@@ -104,9 +107,7 @@ audio and other future modules are added only when implementing real behavior.
   diagnostic and full execution schema surfaces remain distinct.
 - `artifact_contract_v2.py`: typed file-transfer arguments/results, advertised
   limits and a separate generated schema. `adapters.py` and `NodeSession` enforce
-  that declaration before sending file commands. Main firmware implements only
-  begin/list/delete so far; chunk/commit/read and complete host workflows remain
-  follow-up work. Existing wire schemas remain unchanged.
+  that declaration before sending file commands. Main firmware now implements all six commands; the shared host transfer service verifies exact source/readback bytes. Existing wire schemas remain unchanged.
 - `artifact_transfers.py`: bounded physical file upload/download lifecycle, independently
   verified persistence, cancellation and raw evidence shared by API/CLI.
 - `catalog.py`: all 23 procedures, local/pair node requirements and capability blockers.
@@ -116,6 +117,7 @@ audio and other future modules are added only when implementing real behavior.
   comparisons and exports. Preserve execution outcome separately from assessment.
 - `frontend/src/NodeArtifacts.tsx`: inspector file controls and progress from the
   shared backend, with server-computed compatibility and verified byte downloads.
+- `node_audio.py` / `audio.py`: shared finite node audio lifecycle, verified PCM/WAV inspection, explicit signal warnings and separate listening observations.
 - `paths.py`: the source-checkout layout seam. Shared content resolves from the
   repository root; UI assets resolve from `testbed/frontend/dist`.
 
