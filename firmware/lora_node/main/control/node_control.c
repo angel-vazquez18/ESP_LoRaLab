@@ -371,7 +371,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
         n->port.audio.poll(n->port.context, &op->audio_progress);
         artifact_store_release(n->artifacts, op->artifact_id);
         if (code) {
-            snprintf(audio_error, sizeof(audio_error), "%.75s; samples=%u DMA_frames=%u underflows=%u", message,
+            snprintf(audio_error, sizeof(audio_error), "%.75s; samples=%" PRIu32 " DMA_frames=%" PRIu32 " underflows=%" PRIu32, message,
                 op->audio_progress.samples, op->audio_progress.dma_frames, op->audio_progress.underflows);
             message = audio_error;
         }
