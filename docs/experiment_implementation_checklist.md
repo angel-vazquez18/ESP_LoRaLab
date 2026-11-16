@@ -194,7 +194,15 @@ Existing support: idle internal-heap/PSRAM reporting and history.
 
 ### 18 VOICE-01 Local capture codec and playback
 
-Existing support: host WAV references and browser playback; no node audio path.
+Existing support: host WAV references/browser playback, bounded artifact transfer
+with independent CRC/SHA verification, finite local node PCM capture/playback,
+verified unchanged-sample WAV retrieval, waveform/silence/clipping inspection and
+shared API/CLI/UI controls. Native/software and actual DMA/count/hash checks pass;
+physical microphone response remains unverified because both raw slots return
+zero. Heard output, printed revision, instruments and full #21 recovery remain
+open. Codec 2 and the complete VOICE-01 procedure runner are not implemented.
+See [single-node qualification](milestone_2_audio_review.md). The combined
+procedure items below stay unchecked until all their requirements are fulfilled.
 
 - [ ] Verify I2S wiring and implement bounded capture/playback, Codec 2 mode 3200
   and chunked artifact transfer/storage with CRC-32 and complete SHA-256 checks.
