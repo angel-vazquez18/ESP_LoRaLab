@@ -23,8 +23,9 @@ flowchart LR
 Dotted full-execution integration is planned. Diagnostic firmware cannot execute
 full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
 strict serial control, identity/health, ownership, duplicate protection and a finite
-memory operation. The new image still needs physical acceptance. Its capability-based build order
-and completion gates are in [node development plan](node_development_plan.md);
+memory operation, plus bounded RAM artifact reservations/list/delete. The new image
+still needs physical acceptance. Its capability-based build order and completion
+gates are in [node development plan](node_development_plan.md);
 module implementations are not organized by experiment IDs.
 
 ## Source placement
@@ -65,18 +66,24 @@ main/
 ├── control/
 │   ├── node_control.c          Portable commands, ownership, queues and operation state
 │   └── node_control.h
+├── artifacts/
+│   ├── artifact_store.c        Private RAM slots, reservations, cleanup and consumer guards
+│   └── artifact_store.h
 ├── protocol/
 │   ├── strict_json.c           Bounded UTF-8/JSON validation and integer-token checks
 │   └── strict_json.h
 └── generated/
-    └── contract_schema.h       Root contract-generator output
+    ├── contract_schema.h       Main-control schema digest
+    └── artifact_profile.h      Generated artifact digest and resource ceilings
 ```
 
 The platform fills the existing `node_platform` interface; metadata strings remain
 valid for the firmware lifetime. The USB module owns the hardware loop and calls
-the portable control interface. The control module uses JSON validation, but neither
-portable module imports ESP-IDF or FreeRTOS. Its internal ownership/queue/operation
-state stays private, so callers and native tests use the same small interface.
+the portable control interface. The control module uses JSON validation and the
+artifact store; these portable modules do not import ESP-IDF or FreeRTOS. The store
+uses injected allocation/free callbacks and never exposes uploading buffers to
+consumers. Control ownership/queues/operations and store slots/bytes stay private;
+callers and native tests use their small public interfaces.
 
 CMake lists each compiled source explicitly, with `main/` as the include root;
 qualified includes identify cross-directory dependencies. The generator and native
@@ -95,8 +102,9 @@ audio and other future modules are added only when implementing real behavior.
   diagnostic and full execution schema surfaces remain distinct.
 - `artifact_contract_v2.py`: typed file-transfer arguments/results, advertised
   limits and a separate generated schema. `adapters.py` and `NodeSession` enforce
-  that declaration before sending file commands. Node storage/transfer workflows
-  remain follow-up work; this does not expand the old wire profiles.
+  that declaration before sending file commands. Main firmware implements only
+  begin/list/delete so far; chunk/commit/read and complete host workflows remain
+  follow-up work. Existing wire schemas remain unchanged.
 - `catalog.py`: all 23 procedures, local/pair node requirements and capability blockers.
 - `procedure_runs.py`, `serial_validation.py`: bounded physical diagnostic checks,
   cancellation, partial qualification scope and durable procedure evidence.

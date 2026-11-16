@@ -4,6 +4,7 @@ idf_component_register(
         "platform/esp32_platform.c"
         "transport/usb_transport.c"
         "control/node_control.c"
+        "artifacts/artifact_store.c"
         "protocol/strict_json.c"
     INCLUDE_DIRS "."
     REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support

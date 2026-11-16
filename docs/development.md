@@ -100,7 +100,8 @@ credential and a merged workflow; it is inactive without that secret.
 ## Artifact contract checks
 
 The file-transfer definition is separate from the currently implemented control
-profile. Generate/check `contracts/v2/artifact.schema.json` with `make contracts`
+profile. Generate/check `contracts/v2/artifact.schema.json` and the main firmware
+`generated/artifact_profile.h` with `make contracts`
 and `make contracts-check`; do not change an old wire digest to imply support.
 
 ```sh
@@ -108,5 +109,15 @@ uv run --project testbed pytest testbed/tests/test_artifact_contract_v2.py testb
 ```
 
 These checks validate examples, boundaries and the host's explicit capability
-gate using isolated peers. They neither open physical ports nor implement node
-storage. See [artifact transfer contract](artifact_transfer_contract.md).
+gate using isolated peers. The main firmware separately implements RAM reservation,
+listing and deletion; it advertises only those commands. Run its native checks:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_node_artifacts_native.py testbed/tests/test_node_control_native.py -ra
+```
+
+At the #11 checkpoint this must report **112 passed, no skipped tests**, including
+the actual C store and a host `NodeSession`. An explicitly seeded store fixture
+checks committed/in-use lifetimes only; it does not implement or validate commit.
+Build the affected main target with ESP-IDF as above. No check opens a physical
+port. See the [contract walkthrough and expectations](artifact_transfer_contract.md#reservation-implementation-and-review-11).

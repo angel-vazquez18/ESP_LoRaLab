@@ -227,3 +227,31 @@ checks passed. Nine existing contract/profile/vector/header files are byte-ident
 to main. The existing Starlette/httpx warning remains. No physical port was opened
 and no board was flashed/reset by this contract work; firmware sources/headers are
 unchanged, so an ESP-IDF rebuild was not required.
+
+## November 15 — Bounded artifact reservations (#11)
+
+Main firmware now implements `artifact.begin`, `artifact.list` and `artifact.delete`
+through a portable RAM store: four slots, 131072 bytes per file and 262144 reserved
+bytes total. Reserve the entire declared size, retain metadata without exposing
+unfinished bytes, reject in-use deletion and free temporary reservations on claim
+release, lease expiry or detected disconnect. Failed allocations/reply construction
+leave existing files unchanged; exact command retries do not allocate/free twice.
+Hello/health advertise only these three commands with generated artifact profile
+metadata; health reports reserved bytes. Existing wire schemas/digests are unchanged.
+
+`make check` passed **220 tests**, including **112 native C cases** (38 new artifact
+cases), Ruff, the production dashboard build, generated-contract and repository
+checks. Frontend formatting, local documentation links and Git whitespace checks
+passed. ESP-IDF v6.0.2 built the main image: 0x3b3c0 bytes, 77% app-partition free.
+All twelve existing contract/profile/example/header files match main byte-for-byte.
+The existing Starlette/httpx warning and upstream Kconfig notes remain.
+
+No physical port was opened or board flashed/reset. A native fixture explicitly
+seeds committed/failed state only to test store lifetimes and consumer protection;
+it does not validate final commit/hash or physical audio. Upload chunks (#14),
+commit (#18), readback (#22), host workflow (#26) and RF-session-close integration
+remain separate work. See the [walkthrough and checks](artifact_transfer_contract.md#reservation-implementation-and-review-11).
+The user delegated remaining M2 implementation one issue/branch/PR at a time, with
+small Conventional Commits, explanations and tests. Stop at each review-ready PR;
+the user merges and confirms before the next issue starts. Physical checks require
+coordination and their own evidence.
