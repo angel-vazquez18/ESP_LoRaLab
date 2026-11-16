@@ -538,6 +538,12 @@ No universal pass score is invented; correctness and feasibility are separate.
 
 ### Artifact transfer and resources
 
+The first local data/PCM subset has a typed, separately fingerprinted
+[artifact transfer profile](artifact_transfer_contract.md). It defines exact
+arguments/results, capability discovery, limits and claim/file lifetimes for
+#2 without advertising unfinished firmware support. The existing diagnostic,
+main-control and earlier execution profiles retain their separate identities.
+
 Use Base64 chunks of at most 1024 raw bytes, contiguous offsets, **CRC-32/ISO-HDLC**
 (the standard `zlib.crc32` result) formatted as eight lowercase hex digits, and
 SHA-256 lowercase hex over exact artifact bytes. Duplicate chunks with matching

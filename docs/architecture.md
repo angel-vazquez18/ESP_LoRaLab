@@ -93,6 +93,10 @@ audio and other future modules are added only when implementing real behavior.
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original
   diagnostic and full execution schema surfaces remain distinct.
+- `artifact_contract_v2.py`: typed file-transfer arguments/results, advertised
+  limits and a separate generated schema. `adapters.py` and `NodeSession` enforce
+  that declaration before sending file commands. Node storage/transfer workflows
+  remain follow-up work; this does not expand the old wire profiles.
 - `catalog.py`: all 23 procedures, local/pair node requirements and capability blockers.
 - `procedure_runs.py`, `serial_validation.py`: bounded physical diagnostic checks,
   cancellation, partial qualification scope and durable procedure evidence.

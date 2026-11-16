@@ -1,6 +1,6 @@
 # Consolidated implementation status
 
-Updated November 8, 2026. The host is now physical-only by user decision, replacing
+Updated November 15, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
@@ -209,3 +209,21 @@ The command results are retained locally in `local/migration/verification.json`.
    than creating separate firmware implementations for each experiment.
 4. Complete the full physical procedure matrices as capabilities become ready.
    Preserve all 23 entries and their negative/recovery/evidence obligations.
+
+## November 15 — Artifact interface definition (#2)
+
+Defined `artifact_transfer_v1` for the six existing local artifact commands, with
+strict arguments/results, four slots, 131072 bytes per file, 262144 reserved bytes
+and 1024-byte chunks. Typed examples/checks preserve identical-chunk retries,
+CRC/Base64/length validation, PCM counts, cleanup rules and committed lifetimes.
+The host blocks missing/mismatched support before serial writes and validates
+replies for explicitly advertised support. The three existing wire schemas and
+firmware digests remain unchanged. Current firmware still advertises no artifact
+transfer; storage, chunk handlers, final commit/readback and audio are not added.
+`make check` passed 182 tests (35 new contract/session cases and the existing
+74 native firmware cases), Ruff, the dashboard build, generated-contract drift
+and repository checks. Frontend formatting, Markdown targets and Git whitespace
+checks passed. Nine existing contract/profile/vector/header files are byte-identical
+to main. The existing Starlette/httpx warning remains. No physical port was opened
+and no board was flashed/reset by this contract work; firmware sources/headers are
+unchanged, so an ESP-IDF rebuild was not required.

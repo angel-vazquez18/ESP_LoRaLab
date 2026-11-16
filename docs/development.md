@@ -96,3 +96,17 @@ python3 scripts/github_project.py sync
 Sync previews changes by default. Add `--apply` only when intentionally writing
 the Project/status labels. Scheduled reconciliation needs its dedicated Project
 credential and a merged workflow; it is inactive without that secret.
+
+## Artifact contract checks
+
+The file-transfer definition is separate from the currently implemented control
+profile. Generate/check `contracts/v2/artifact.schema.json` with `make contracts`
+and `make contracts-check`; do not change an old wire digest to imply support.
+
+```sh
+uv run --project testbed pytest testbed/tests/test_artifact_contract_v2.py testbed/tests/test_nodes.py
+```
+
+These checks validate examples, boundaries and the host's explicit capability
+gate using isolated peers. They neither open physical ports nor implement node
+storage. See [artifact transfer contract](artifact_transfer_contract.md).
