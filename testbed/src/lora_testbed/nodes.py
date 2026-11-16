@@ -64,8 +64,39 @@ class NodeSession:
         self.active_operation = None
         self.operation_results = deque(maxlen=16)
 
+    def accept_health(self, data):
+        self.health = v2.Health.model_validate(data)
+        self.last_health = monotonic()
+        if (
+            self.active_operation
+            and self.health.uptime_us >= self.active_operation["accepted_at_us"]
+            and self.health.operation_id is None
+        ):
+            self.active_operation = None
+
     def note(self, code, message):
         self.diagnostics.append({"at": monotonic(), "code": code, "message": message})
+
+    def audio_availability(self):
+        commands, blocked, limits = [], {}, None
+        for name in audio_contract_v2.ARGUMENTS:
+            try:
+                if (
+                    not self.connected
+                    or self.connection_state != "connected"
+                    or self.last_health is None
+                    or health_freshness(monotonic() - self.last_health) in ("stale", "unresponsive")
+                ) or self.wire_profile != "node_control":
+                    raise ValueError("Connect a node with fresh audio health")
+                limits = audio_contract_v2.require_capability(
+                    self.identity.capabilities if self.identity else None,
+                    self.health.capability_availability if self.health else None,
+                    name,
+                ).model_dump()
+                commands.append(name)
+            except ValueError as exc:
+                blocked[name] = str(exc)
+        return {"commands": commands, "blocked": blocked, "limits": limits}
 
     def artifact_availability(self):
         commands, blocked, limits = [], {}, None
@@ -90,6 +121,7 @@ class NodeSession:
             "id": self.role,
             "wire_profile": self.wire_profile,
             "artifact_support": self.artifact_availability(),
+            "audio_support": self.audio_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,
@@ -180,18 +212,9 @@ class NodeSession:
                     raise ValueError(
                         "MISSING_CAPABILITY: Audio control identity/health is unavailable"
                     )
-                for caps in (self.identity.capabilities, self.health.capability_availability):
-                    value = audio_contract_v2.Capabilities.model_validate(
-                        caps.resource_limits.get("audio_io")
-                    )
-                    if (
-                        value.schema_sha256 != audio_contract_v2.schema_digest()
-                        or name not in value.commands
-                        or not getattr(
-                            caps, "audio_capture" if name == "audio.capture" else "audio_playback"
-                        )
-                    ):
-                        raise ValueError("MISSING_CAPABILITY: Exact audio profile is unavailable")
+                audio_contract_v2.require_capability(
+                    self.identity.capabilities, self.health.capability_availability, name
+                )
                 args = audio_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
             self.sequence += 1
             command = v2.Command(
@@ -220,8 +243,7 @@ class NodeSession:
                         if not reply.ok:
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
                         if name == "status.get":
-                            self.health = v2.Health.model_validate(reply.result)
-                            self.last_health = monotonic()
+                            self.accept_health(reply.result)
                         if name == "diag.run" or name in audio_contract_v2.ARGUMENTS:
                             operation = control_v2.AcceptedOperation.model_validate(
                                 reply.result
@@ -309,14 +331,7 @@ class NodeSession:
                             self.event_gaps += record.event_seq - self.event_seq - 1
                         self.event_seq = record.event_seq
                         if record.name == "health":
-                            self.health = v2.Health.model_validate(record.data)
-                            self.last_health = monotonic()
-                            if (
-                                self.active_operation
-                                and self.health.uptime_us >= self.active_operation["accepted_at_us"]
-                                and self.health.operation_id is None
-                            ):
-                                self.active_operation = None
+                            self.accept_health(record.data)
                             self.samples.append(
                                 {
                                     "uptime_us": self.health.uptime_us,

@@ -60,3 +60,20 @@ def schema_digest():
     return hashlib.sha256(
         json.dumps(schema(), sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+
+
+def require_capability(identity, health, name):
+    if name not in ARGUMENTS:
+        raise ValueError("Unknown finite audio command")
+    for caps in (identity, health):
+        if caps is None:
+            raise ValueError("Audio identity/current health is unavailable")
+        limits = Capabilities.model_validate(caps.resource_limits.get("audio_io"))
+        flag = "audio_capture" if name == "audio.capture" else "audio_playback"
+        if (
+            limits.schema_sha256 != schema_digest()
+            or name not in limits.commands
+            or not getattr(caps, flag)
+        ):
+            raise ValueError("Exact configured audio capability is unavailable")
+    return limits
