@@ -1,78 +1,81 @@
 # Milestone 2 implementation batch — November 16, 2026
 
-Status: implementation PR stack ready for review; physical qualification incomplete.
+Status: implementation PRs ready for review; physical qualification incomplete.
 
-The user authorized all remaining M2 issues as one branch/PR per issue, small
-Conventional Commits, full testing and relevant builds/flashes/board checks.
-Prepare all PRs for later review; do not merge them. This supersedes the earlier
-stop-after-each-PR instruction. Dependent PRs form a stack, each based on its
-predecessor; merge/review order is explicit in each PR.
+The user authorized completing the remaining M2 implementation as one branch/PR
+per issue, small Conventional Commits and necessary builds/flashes/board checks.
+Prepare the entire stack for later review; do not merge. This supersedes the earlier
+stop-after-each-PR instruction. #2/#11 are merged; no PR in this batch was merged.
 
-Order: #14 → #18 → #22 → #26 → #33 → #23 → #24 → #32 → #38 → #42.
-#2 and #11 are merged. #42 also depends on physical recovery issue #21.
+## Review order
 
-The attached device is esp-f85b1ba27744, currently /dev/cu.usbmodem2101. The user
-confirmed all documented audio wiring on November 16. Printed board revision
-remains unobserved. The user is away: prepare listening/spoken-phrase checks for
-later. Do not claim heard output, speech response, measured clocks or rail voltage
-without observations. Full physical qualification may remain incomplete.
+Each PR targets the preceding branch; #152 targets main. Review/merge in this order
+and inspect the next PR's base/diff before merging it. The PR descriptions include
+walkthroughs, important files, commands/expected results and physical limitations.
 
-Use existing main firmware and physical-only host. Preserve seven earlier local
-edits, excluded from these PRs. Their backup/hashes and active execution state are
-in ignored local/m2-batch. Build/flash only an identified, released port after
-verifying the retained flash backup. No eFuse changes or NVS erase.
+| Issue | PR | Scope | Checkpoint |
+| --- | --- | --- | --- |
+| #14 | [#152](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/152) | Chunk offsets and CRC | Ready for review |
+| #18 | [#153](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/153) | Verified artifact commit | Ready for review |
+| #22 | [#154](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/154) | Bounded file readback | Ready for review |
+| #26 | [#155](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/155) | Shared host transfers | Ready for review |
+| #33 | [#156](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/156) | Node file inspector | Ready for review |
+| #23 | [#157](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/157) | Finite PCM playback | Ready for review |
+| #24 | [#158](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/158) | Finite microphone capture | Ready for review |
+| #32 | [#159](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/159) | Host audio / verified WAV | Ready for review |
+| #38 | [#160](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/160) | Audio inspector / stop | Ready for review |
+| #42 | [#161](https://github.com/angel-vazquez18/ESP_LoRaLab/pull/161) | Physical qualification packet | Draft; physical work pending |
 
-## Progress
+All implementation issues are open in Testing while awaiting review/merge. #42 is
+also open/blocked, with a draft PR: only actual count/hash and error/recovery
+criteria are checked. It must not auto-close; it additionally depends on physical
+USB recovery #21. There are no GitHub CI checks reported on these PRs; verification
+below was run locally and recorded in their descriptions.
 
-- #14: PR #152, branch feat/artifact-chunks, base main. 20 new native cases.
-- #18: PR #153, branch feat/artifact-commit, base feat/artifact-chunks. 10 new
-  cases; replaced seeded consumer tests with real upload/commit.
-- #22: PR #154, branch feat/artifact-readback, base feat/artifact-commit. 17 new
-  cases. Firmware build 0x3c890, 76% partition free. Fresh full flash snapshot
-  verified and image flashed, NVS retained.
-- Physical artifact check passed at 1/1024/1025/48000/131072 bytes, raw CRC/offset/
-  retry/hash/capacity/recovery, zero gaps/framing errors. Evidence:
-  local/m2-batch/artifact-hardware-report.json; boot 55, matched schema/ELF.
-- #26: PR #155, branch feat/host-artifact-transfers, base feat/artifact-readback.
-  23 new host cases; 290 total tests. Real host roundtrips, cancellation, cleanup
-  and recovery passed. Evidence: local/m2-batch/host-transfer-hardware-report.json.
-- #33: implemented node inspector files/progress/history and exact server readiness.
-  Full checks 293 passed; frontend build/format passed. Real browser upload,
-  retrieve/save byte/hash verification, visible invalid request, cancel/delete,
-  disconnected gating and reconnect passed. Screenshot in visualization folder:
-  m2-file-inspector.png. QA server stopped; node port released. PR #156, feat/node-artifact-inspector.
-- #23: finite playback implemented, native fault/boundary checks and audio-enabled
-  IDF build pass; fixed 1/8 amplitude and DMA source/frame counts remain distinct
-  from heard output. See docs/node_audio.md.
-- #23: PR #157, feat/finite-pcm-playback, base feat/node-artifact-inspector.
-- #24: finite capture and private hash publication implemented; 43 audio / 336 total
-  tests pass, IDF build 0x43e90 / 73% free. Cumulative real-board DMA/count/hash,
-  sequential/cancel/recovery checks passed on boot 60. No heard/speech/instrument
-  qualification. Evidence local/m2-batch/audio-hardware-report.json.
-- #24: PR #158, feat/finite-pcm-capture, base feat/finite-pcm-playback.
-  Signal inspection found all-zero PCM and zero raw words in both slots. Minimal
-  physical probe reproduces SIGNAL_UNVERIFIED; cause needs physical investigation.
-- #32: shared host capture/play/retrieve/stop, verified unchanged-byte WAV, metrics,
-  separate listening notes and restart/error/cancel recovery implemented. 24 new
-  host cases; 360 total pass. Real host WAV/hash/zero-warning and playback/cancel/
-  recovery passed. No microphone response/listening qualification.
-- #32: PR #159, feat/host-finite-audio, base feat/finite-pcm-capture.
-- #38: integrated audio inspector and file play/inspection controls. Real browser
-  checks passed, including actual audio-disabled firmware gates and restoration.
-  Fresh reconnect age fix has native regression coverage. 361 total tests pass.
-  Board restored to audio-enabled image f8865602..., boot68; port released and
-  own QA server stopped. See docs/local_audio_ui.md for observations/limits.
-- #38: PR #160, feat/local-audio-inspector, base feat/host-finite-audio.
-- #42: prepared quiet reference/operator packet, bounded read-only evidence
-  collection and consistency checks, detailed attended procedure and compact
-  source evidence summary. 22 new packet cases / 383 total tests pass, no skips.
-  Current-image real invalid CRC/SHA/odd PCM/unfinished-play rejections and valid
-  playback/capture recovery passed on boot69; signal still zero. Packet contains
-  actual automated recovery evidence; human/instrument/USB fields remain pending.
-  Draft PR publishing next; never auto-close #42. Board port is released.
+## Verification and hardware handoff
 
-Each PR includes its code walkthrough, verification commands/expected outcomes,
-dependency and remaining physical evidence. The ignored state map contains exact
-PR/branch heads. Preserve seven prior local edits. Software fixtures never qualify
-physical audio. All source changes/commits/pushes/PRs and required board builds,
-flashes and tests are authorized; do not merge any PR.
+- Final `make check`: **383 passed**, no skips; lint, frontend production build,
+  generated schemas and repository/GPIO checks passed. Final frontend formatting
+  passed. Existing Starlette/httpx deprecation warning remains.
+- Audio-enabled and default-disabled ESP-IDF v6.0.2 builds passed. Current enabled
+  image is 0x44080 / 73% app-partition free, ELF
+  `f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65`.
+- Identified `esp-f85b1ba27744`, USB `/dev/cu.usbmodem2101`. Original and fresh full
+  flash backups retained/verified before authorized flashes; NVS/eFuses preserved.
+  The final audio-enabled image is installed; boot69 was the last direct check.
+  No active operation, port released and isolated QA server stopped.
+- Real artifact roundtrips 1/1024/1025/48000/131072 bytes, CRC/offset/retry/hash/
+  capacity cases passed. Real audio source/DMA counts, independent PCM hashes/WAV,
+  sequential play/capture, cancellation/cleanup/recovery and current-image invalid
+  CRC/SHA/odd PCM/unfinished playback rejections passed. These do not prove sound.
+- Actual browser checks covered file workflows and local capture/waveform/warnings,
+  play/stop, error/recovery, listening notes, disabled-image gates and retained
+  history after restoration/reconnect. The WAV endpoint was byte/hash verified;
+  in-app browser download location and light/mobile visual QA remain unconfirmed.
+- **All microphone PCM and both raw slots are zero.** The minimal signal probe
+  fails `SIGNAL_UNVERIFIED`. The cause is not established. No speech response,
+  heard output, printed board revision, measured clock/rail or instrument absence
+  is claimed. The user is away; prepare attended checks for later.
+
+See [driver](../node_audio.md), [host workflow](../node_audio_workflows.md),
+[UI procedure](../local_audio_ui.md) and [physical review](../milestone_2_audio_review.md).
+The actual operator packet is `local/m2-batch/qualification-packet`; it includes
+quiet reference PCM/WAV and actual automated recovery evidence, while human/
+instrument/USB fields stay pending. `audio_qualification.py assess` returns
+expected exit2/pending. Never treat its packet consistency as automatic hardware
+qualification. Compact source evidence is in
+[the manifest](../evidence/local_audio_2026-11-16.json).
+
+## Preserved work and runtime evidence
+
+Seven pre-existing edits remain unstaged and byte-for-byte equivalent in their
+added/removed lines: the two issue forms, GitHub workflow/node plan/project brief/
+status docs and hardware README. They are excluded from all batch commits. Their
+initial patch/digests and the exact branch/PR head map remain in ignored
+`local/m2-batch`. Reuse this checkout; never reset/stash those edits blindly.
+
+Raw reports, serial records, captured WAVs, QA stores and full flash backups stay
+ignored on this laptop. SHA/location/identity checkpoints are in the tracked
+manifest. Screenshots `m2-file-inspector.png`, `m2-audio-inspector.png` and
+`m2-audio-disabled.png` are in this chat's visualization folder. Software/native
+fixtures never qualify physical RF/audio. No RF/codec/duplex capability was added.
