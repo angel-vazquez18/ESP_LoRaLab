@@ -56,7 +56,13 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   separate listening notes and restart/error/cancel recovery implemented. 24 new
   host cases; 360 total pass. Real host WAV/hash/zero-warning and playback/cancel/
   recovery passed. No microphone response/listening qualification.
-- Next: #38 UI audio → #42 physical
+- #32: PR #159, feat/host-finite-audio, base feat/finite-pcm-capture.
+- #38: integrated audio inspector and file play/inspection controls. Real browser
+  checks passed, including actual audio-disabled firmware gates and restoration.
+  Fresh reconnect age fix has native regression coverage. 361 total tests pass.
+  Board restored to audio-enabled image f8865602..., boot68; port released and
+  own QA server stopped. See docs/local_audio_ui.md for observations/limits.
+- Next: #42 physical
   qualification. Printed revision, operator listening/speech and instruments are
   still unobserved; user is away and asked to prepare those checks for later.
 
