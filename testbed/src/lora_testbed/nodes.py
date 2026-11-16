@@ -121,6 +121,21 @@ class NodeSession:
             self.error = str(exc)
             raise ValueError(f"Node {self.role}: {exc}") from exc
 
+    async def write_wire(self, wire):
+        task = asyncio.create_task(asyncio.to_thread(self.serial.write, wire))
+        cancelled = False
+        while True:
+            try:
+                written = await asyncio.shield(task)
+                break
+            except asyncio.CancelledError:
+                if task.cancelled():
+                    raise
+                cancelled = True  # Keep the command lock until the bounded write finishes.
+        if cancelled:
+            raise asyncio.CancelledError
+        return written
+
     async def request(self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None):
         async with self.command_lock:
             if not self.connected or self.serial is None:
@@ -155,7 +170,7 @@ class NodeSession:
                     wire = v2.encode(command)
                     if on_record:
                         on_record({"direction": "host_to_node", "record": command.model_dump()})
-                    written = await asyncio.to_thread(self.serial.write, wire)
+                    written = await self.write_wire(wire)
                     if written != len(wire):
                         raise ValueError("Incomplete serial write")
                     try:
@@ -164,6 +179,9 @@ class NodeSession:
                             on_record({"direction": "node_to_host", "record": reply.model_dump()})
                         if not reply.ok:
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
+                        if name == "status.get":
+                            self.health = v2.Health.model_validate(reply.result)
+                            self.last_health = monotonic()
                         if name == "diag.run":
                             operation = control_v2.AcceptedOperation.model_validate(
                                 reply.result
