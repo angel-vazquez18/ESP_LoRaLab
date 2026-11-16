@@ -4,7 +4,7 @@ import asyncio
 from typing import Protocol
 from uuid import uuid4
 
-from . import control_v2, v2
+from . import artifact_contract_v2, control_v2, v2
 
 
 class NodeAdapter(Protocol):
@@ -42,6 +42,30 @@ def require_control_compatible(identity):
         raise NodeFailure("UNSUPPORTED_VERSION", "Firmware schema mismatch")
     require_compatible(identity, digest, "hardware")
     return profiles[digest]
+
+
+def require_artifact_compatible(identity, command, capability_availability=None):
+    """Require declared support and, when available, the latest health limits."""
+    if command not in artifact_contract_v2.ARGUMENTS:
+        raise NodeFailure("UNSUPPORTED_COMMAND", "Unknown artifact command")
+    if require_control_compatible(identity) != "node_control":
+        raise NodeFailure("MISSING_CAPABILITY", "Main-node artifact firmware is required")
+    declarations = [identity["capabilities"]]
+    if capability_availability is not None:
+        declarations.append(capability_availability)
+    for capabilities in declarations:
+        raw = capabilities["resource_limits"].get("artifact_transfer")
+        if raw is None:
+            raise NodeFailure("MISSING_CAPABILITY", "Node does not advertise artifact transfer")
+        try:
+            limits = artifact_contract_v2.Capabilities.model_validate(raw)
+        except ValueError as exc:
+            raise NodeFailure("UNSUPPORTED_VERSION", "Invalid artifact capability profile") from exc
+        if limits.schema_sha256 != artifact_contract_v2.schema_digest():
+            raise NodeFailure("UNSUPPORTED_VERSION", "Artifact schema mismatch")
+        if command not in limits.commands:
+            raise NodeFailure("MISSING_CAPABILITY", "Artifact command is not implemented")
+    return limits
 
 
 def health_freshness(age_s):
