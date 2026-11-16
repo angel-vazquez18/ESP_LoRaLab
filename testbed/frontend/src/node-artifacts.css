@@ -1,0 +1,116 @@
+.node-artifacts {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hw-line);
+  color: var(--hw-text);
+}
+.node-artifacts h3,
+.node-artifacts h4 {
+  margin: 0 0 10px;
+}
+.node-artifacts p {
+  color: var(--hw-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.node-file-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.node-file-heading > span {
+  font-size: 12px;
+  color: var(--hw-muted);
+}
+.node-file-upload {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--hw-soft);
+  border: 1px solid var(--hw-line);
+  border-radius: 9px;
+}
+.node-file-upload label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+}
+.node-file-upload input,
+.node-file-upload select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px;
+  color: var(--hw-text);
+  background: var(--hw-surface);
+  border: 1px solid var(--hw-line);
+  border-radius: 6px;
+}
+.node-file-upload button {
+  justify-self: start;
+}
+.node-file-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 22px;
+}
+.node-file-list li {
+  display: grid;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--hw-line);
+}
+.node-file-list strong,
+.node-file-list span {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.node-artifacts code {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 10px;
+  margin: 5px 0;
+  line-height: 1.6;
+  color: var(--hw-muted);
+}
+.node-file-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.node-transfer {
+  padding: 14px;
+  border: 1px solid var(--hw-line);
+  background: var(--hw-soft);
+  border-radius: 9px;
+  margin: 10px 0;
+}
+.node-transfer.failed,
+.node-transfer.interrupted {
+  border-left: 3px solid #d58a50;
+}
+.node-transfer.completed {
+  border-left: 3px solid var(--hw-green);
+}
+.node-transfer progress {
+  width: 100%;
+  height: 8px;
+  margin-top: 12px;
+  accent-color: var(--hw-accent);
+}
+.node-transfer details {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--hw-muted);
+}
+@media (min-width: 640px) {
+  .node-file-list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
