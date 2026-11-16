@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import control_v2, rf_events_v2, run_protocol_v2, v2
+from . import audio_contract_v2, control_v2, rf_events_v2, run_protocol_v2, v2
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .catalog import catalog
@@ -62,6 +62,15 @@ class ArtifactUploadRequest(StrictModel):
     name: str = Field(
         default="source.bin", min_length=1, max_length=128, pattern=r"^[^\x00-\x1f\x7f]+$"
     )
+
+
+class CaptureRequest(StrictModel):
+    sample_count: int = Field(default=24000, ge=1, le=24000)
+
+
+class ListeningRequest(StrictModel):
+    heard: Literal["not_checked", "heard", "not_heard"] = "not_checked"
+    notes: str = Field(default="", max_length=1000)
 
 
 class ComparisonRequest(StrictModel):
@@ -142,6 +151,42 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/nodes/{role}/operation/stop")
     async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):
         return await app.state.host.stop_node_operation(role, body.operation_id)
+
+    @app.post("/api/nodes/{role}/audio/capture", status_code=202)
+    async def audio_capture(role: Literal["A", "B"], body: CaptureRequest):
+        return await app.state.host.audio_action(role, "capture", sample_count=body.sample_count)
+
+    @app.post("/api/nodes/{role}/audio/play", status_code=202)
+    async def audio_play(role: Literal["A", "B"], body: audio_contract_v2.Play):
+        return await app.state.host.audio_action(role, "play", artifact_id=body.artifact_id)
+
+    @app.post("/api/nodes/{role}/audio/retrieve", status_code=202)
+    async def audio_retrieve(role: Literal["A", "B"], body: audio_contract_v2.Play):
+        return await app.state.host.audio_action(role, "retrieve", artifact_id=body.artifact_id)
+
+    @app.get("/api/audio/operations")
+    async def audio_operations():
+        return app.state.host.audio.snapshot()
+
+    @app.get("/api/audio/operations/{identifier}")
+    async def audio_operation(identifier: str):
+        return app.state.host.audio.get(identifier)
+
+    @app.post("/api/audio/operations/{identifier}/stop")
+    async def audio_stop(identifier: str):
+        return await app.state.host.audio.stop(identifier)
+
+    @app.get("/api/audio/operations/{identifier}/wav")
+    async def audio_wav(identifier: str):
+        return Response(
+            app.state.host.audio.wav(identifier),
+            media_type="audio/wav",
+            headers={"Content-Disposition": f'attachment; filename="{identifier}.wav"'},
+        )
+
+    @app.post("/api/audio/operations/{identifier}/listening")
+    async def audio_listening(identifier: str, body: ListeningRequest):
+        return app.state.host.audio.listening(identifier, body.heard, body.notes)
 
     @app.get("/api/nodes/{role}/artifacts")
     async def node_artifacts(role: Literal["A", "B"]):
