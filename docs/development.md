@@ -117,7 +117,7 @@ uv run --project testbed pytest testbed/tests/test_node_artifacts_native.py test
 ```
 
 At the #11 checkpoint this must report **112 passed, no skipped tests**, including
-the actual C store and a host `NodeSession`. An explicitly seeded store fixture
-checks committed/in-use lifetimes only; it does not implement or validate commit.
+the actual C store and a host `NodeSession`. Consumer/lifetime tests now use actual uploaded bytes and verified commits (#18),
+replacing the earlier seeded-state fixture.
 Build the affected main target with ESP-IDF as above. No check opens a physical
 port. See the [contract walkthrough and expectations](artifact_transfer_contract.md#reservation-implementation-and-review-11).
