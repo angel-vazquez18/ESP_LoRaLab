@@ -30,7 +30,7 @@ typedef struct {
 } record_queue;
 
 typedef struct {
-    bool active, verifying, audio;
+    bool active, verifying, audio, capture;
     char artifact_id[37];
     node_audio_progress audio_progress;
     char id[37], run_id[37];
@@ -206,10 +206,11 @@ static cJSON *capabilities(node_control *n)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "radio",         "audio_capture", "codec2_3200", "security_gcm",
+        "radio",         "codec2_3200", "security_gcm",
         "fragmentation", "ack_retry",     "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "audio_capture", n->port.audio.capture);
     boolean(n, o, "audio_playback", n->port.audio.playback);
     boolean(n, o, "memory_stats", true);
     add(n, o, "radio_limits", object(n));
@@ -234,11 +235,14 @@ static cJSON *capabilities(node_control *n)
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
     number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
     add(n, limits, "artifact_transfer", files);
-    if (n->port.audio.playback) {
+    if (n->port.audio.playback || n->port.audio.capture) {
         cJSON *audio = object(n);
         string(n, audio, "profile", AUDIO_PROFILE);
         string(n, audio, "schema_sha256", AUDIO_SCHEMA_SHA256);
-        add(n, audio, "commands", cJSON_CreateStringArray((const char *[]){"audio.play"}, 1));
+        const char *commands[2]; unsigned count = 0;
+        if (n->port.audio.playback) commands[count++] = "audio.play";
+        if (n->port.audio.capture) commands[count++] = "audio.capture";
+        add(n, audio, "commands", cJSON_CreateStringArray(commands, count));
         string(n, audio, "format", "pcm_s16le_8000_mono");
         number(n, audio, "sample_rate_hz", AUDIO_SAMPLE_RATE);
         number(n, audio, "max_samples", AUDIO_MAX_SAMPLES);
@@ -247,6 +251,11 @@ static cJSON *capabilities(node_control *n)
         number(n, audio, "hardware_gain_db", 6);
         int pins[] = {AUDIO_OUTPUT_BCLK, AUDIO_OUTPUT_WS, AUDIO_OUTPUT_DIN};
         add(n, audio, "output_gpio", cJSON_CreateIntArray(pins, 3));
+        int input_pins[] = {AUDIO_INPUT_BCLK, AUDIO_INPUT_WS, AUDIO_INPUT_SD};
+        add(n, audio, "input_gpio", cJSON_CreateIntArray(input_pins, 3));
+        string(n, audio, "input_slot", "left_24_msb_in_32");
+        string(n, audio, "input_conversion", "signed_high_16_bits_no_gain");
+        number(n, audio, "warmup_samples", AUDIO_WARMUP_SAMPLES);
         string(n, audio, "underflow_detection", "dma_callback_lateness");
         add(n, limits, "audio_io", audio);
     }
@@ -307,7 +316,7 @@ static cJSON *health(node_control *n)
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
     boolean(n, o, "security_ready", false);
-    string(n, o, "audio_state", n->op.active && n->op.audio ? "playing" : n->port.audio.playback ? "idle" : "not_supported");
+    string(n, o, "audio_state", n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
         error(n, n->error_code[0] ? n->error_code : NULL, n->error_message, NULL));
@@ -359,6 +368,7 @@ static void remember_error(node_control *n, const char *code, const char *messag
     snprintf(n->error_code, sizeof(n->error_code), "%s", code);
     snprintf(n->error_message, sizeof(n->error_message), "%s", message);
 }
+static cJSON *manifest(node_control *n, const artifact_manifest *m);
 static void finish_operation(node_control *n, const char *status, const char *code,
                              const char *message)
 {
@@ -369,7 +379,15 @@ static void finish_operation(node_control *n, const char *status, const char *co
     if (op->audio) {
         n->port.audio.stop(n->port.context);
         n->port.audio.poll(n->port.context, &op->audio_progress);
-        artifact_store_release(n->artifacts, op->artifact_id);
+        if (op->capture) {
+            if (eq(status, "completed") && !code) {
+                if (artifact_store_capture_finish(n->artifacts, op->artifact_id, op->audio_progress.samples,
+                    n->port.sha256, n->port.context) != ARTIFACT_OK) {
+                    status = "failed"; code = "INTERNAL_ERROR"; message = "Capture hash/commit failed";
+                }
+            }
+            if (!eq(status, "completed") || code) artifact_store_delete(n->artifacts, op->artifact_id);
+        } else artifact_store_release(n->artifacts, op->artifact_id);
         if (code) {
             snprintf(audio_error, sizeof(audio_error), "%.75s; samples=%" PRIu32 " DMA_frames=%" PRIu32 " underflows=%" PRIu32, message,
                 op->audio_progress.samples, op->audio_progress.dma_frames, op->audio_progress.underflows);
@@ -387,7 +405,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
     cJSON *data = object(n), *result = code ? cJSON_CreateNull() : object(n);
     if (!code) {
         if (op->audio) {
-            string(n, result, "kind", "audio.play");
+            string(n, result, "kind", op->capture ? "audio.capture" : "audio.play");
             string(n, result, "artifact_id", op->artifact_id);
             number(n, result, "sample_rate_hz", AUDIO_SAMPLE_RATE);
             number(n, result, "samples_requested", op->bytes / 2);
@@ -400,6 +418,15 @@ static void finish_operation(node_control *n, const char *status, const char *co
             number(n, result, "software_gain_db", -18.06179974);
             number(n, result, "hardware_gain_db", 6);
             boolean(n, result, "heard_verified", false);
+            if (op->capture) {
+                number(n, result, "overflows", op->audio_progress.underflows);
+                number(n, result, "input_gain_numerator", 1);
+                number(n, result, "input_gain_denominator", 1);
+                number(n, result, "warmup_samples", AUDIO_WARMUP_SAMPLES);
+                string(n, result, "input_conversion", "signed_high_16_bits_no_gain");
+                const artifact_manifest *m = artifact_store_find(n->artifacts, op->artifact_id);
+                add(n, result, "artifact", m ? manifest(n, m) : cJSON_CreateNull());
+            }
         } else {
         string(n, result, "kind", "memory_probe");
         number(n, result, "iterations_completed", op->completed);
@@ -504,7 +531,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -578,7 +605,7 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !artifact_command(name) &&
+    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) &&
         !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
@@ -588,7 +615,7 @@ static void process(node_control *n, size_t length)
     uint8_t *probe = NULL;
     const void *play_bytes = NULL;
     size_t play_length = 0;
-    bool play_acquired = false;
+    bool play_acquired = false, capture_reserved = false;
     artifact_spec file_spec = {0};
     uint8_t chunk[ARTIFACT_CHUNK_BYTES];
     size_t chunk_length = 0, chunk_offset = 0;
@@ -718,6 +745,20 @@ static void process(node_control *n, size_t length)
                         action = DELETE_FILE;
                 }
             }
+        } else if (eq(name, "audio.capture")) {
+            const char *const keys[] = {"artifact_id", "sample_count"};
+            if (!n->port.audio.capture) { code = "MISSING_CAPABILITY"; message = "Capture is not configured for this board"; }
+            else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
+                !uint32_value(item(args, "sample_count"), 1, AUDIO_MAX_SAMPLES)) {
+                code = "INVALID_ARGUMENT"; message = "Capture requires a UUID and 1-24000 samples";
+            } else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            else {
+                void *destination = NULL;
+                bytes = (uint32_t)item(args, "sample_count")->valuedouble * 2;
+                code = artifact_error(artifact_store_capture_begin(n->artifacts, client, text(args, "artifact_id"), bytes / 2, &destination));
+                if (code) message = "Capture reservation failed";
+                else { action = CAPTURE; capture_reserved = true; play_bytes = destination; }
+            }
         } else if (eq(name, "audio.play")) {
             const char *const keys[] = {"artifact_id"};
             const char *id = text(args, "artifact_id");
@@ -788,7 +829,7 @@ static void process(node_control *n, size_t length)
             message = "Command is unavailable in this firmware";
         }
     }
-    if (!code && (action == PROBE || action == PLAY)) {
+    if (!code && (action == PROBE || action == PLAY || action == CAPTURE)) {
                     uint8_t id[16];
                     n->port.random_bytes(n->port.context, id, sizeof(id));
                     id[6] = (id[6] & 15) | 64;
@@ -816,7 +857,7 @@ static void process(node_control *n, size_t length)
                 number(n, result, "lease_expires_us", lease);
             if (action == CLAIM || action == RELEASE)
                 string(n, result, "state", n->op.active ? "running" : "idle");
-            if (action == PROBE || action == PLAY) {
+            if (action == PROBE || action == PLAY || action == CAPTURE) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
@@ -859,6 +900,7 @@ static void process(node_control *n, size_t length)
     if (!encode(n, reply)) {
         if (action == RESERVE_FILE)
             artifact_store_delete(n->artifacts, file_spec.artifact_id);
+        if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
         if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
         if (probe)
             n->port.deallocate(n->port.context, probe);
@@ -874,7 +916,8 @@ static void process(node_control *n, size_t length)
         if (strlen(n->encoded) >= sizeof(n->cache[0].reply)) {
             if (action == RESERVE_FILE)
                 artifact_store_delete(n->artifacts, file_spec.artifact_id);
-            if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
+            if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
+        if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
             if (probe)
                 n->port.deallocate(n->port.context, probe);
             n->reply_drops++;
@@ -924,7 +967,7 @@ static void process(node_control *n, size_t length)
                            chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-    } else if (action == PROBE || action == PLAY) {
+    } else if (action == PROBE || action == PLAY || action == CAPTURE) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
         n->op.buffer = probe;
@@ -936,10 +979,11 @@ static void process(node_control *n, size_t length)
         const char *run_id = text(cmd, "run_id");
         if (run_id)
             snprintf(n->op.run_id, sizeof(n->op.run_id), "%s", run_id);
-        if (action == PLAY) {
+        if (action == PLAY || action == CAPTURE) {
+            n->op.capture = action == CAPTURE;
             n->op.audio = true;
             snprintf(n->op.artifact_id, sizeof(n->op.artifact_id), "%s", text(args, "artifact_id"));
-            if (!n->port.audio.start(n->port.context, (uint8_t *)play_bytes, bytes / 2))
+            if (!n->port.audio.start(n->port.context, (uint8_t *)play_bytes, bytes / 2, n->op.capture))
                 finish_operation(n, "failed", "INTERNAL_ERROR", "Audio driver start failed");
         }
     } else if (action == STOP)
@@ -949,7 +993,7 @@ static void process(node_control *n, size_t length)
 
 node_control *node_control_create(const node_platform *platform)
 {
-    if (!platform || (platform->audio.playback && (!platform->audio.start || !platform->audio.poll || !platform->audio.stop)) || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
+    if (!platform || ((platform->audio.playback || platform->audio.capture) && (!platform->audio.start || !platform->audio.poll || !platform->audio.stop)) || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
         !platform->allocate || !platform->deallocate || !platform->memory || !platform->device_id ||
         !platform->boot_id || !platform->firmware_version || !platform->firmware_build_id ||
         !platform->idf_version || !platform->reset_cause || !platform->board_manifest_hash ||

@@ -9,8 +9,8 @@ typedef struct {
 
 // stop must quiesce DMA before its borrowed buffer can be released.
 typedef struct {
-    bool playback;
-    bool (*start)(void *context, uint8_t *pcm, uint32_t samples);
+    bool playback, capture;
+    bool (*start)(void *context, uint8_t *pcm, uint32_t samples, bool capture);
     void (*poll)(void *context, node_audio_progress *progress);
     void (*stop)(void *context);
 } node_audio_port;

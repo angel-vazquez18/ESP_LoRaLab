@@ -61,3 +61,9 @@ void artifact_store_accept_commit(artifact_store *store, const char *id);
 
 artifact_status artifact_store_get(const artifact_store *store, const char *id, size_t offset,
                                    void *output, size_t requested, size_t *length, bool *eof);
+
+// A finite hardware producer fills this private reservation; only finish publishes it.
+artifact_status artifact_store_capture_begin(artifact_store *store, const char *owner,
+    const char *id, uint32_t samples, void **destination);
+artifact_status artifact_store_capture_finish(artifact_store *store, const char *id,
+    uint32_t samples, bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);

@@ -13,6 +13,10 @@
 #define CONFIG_LORALAB_AUDIO_PLAYBACK 0
 #endif
 
+#ifndef CONFIG_LORALAB_AUDIO_CAPTURE
+#define CONFIG_LORALAB_AUDIO_CAPTURE 0
+#endif
+
 #define FRAMES 128U
 #define DESCRIPTORS 4U
 
@@ -43,7 +47,7 @@ static bool sent(i2s_chan_handle_t channel, i2s_event_data_t *event, void *conte
     if (completed >= output.target) atomic_store(&output.done, true);
     return false;
 }
-static void stop(void *context)
+static void stop_output(void *context)
 {
     (void)context;
     // No blocking writer owns this channel; disabling stops callbacks before free.
@@ -54,7 +58,7 @@ static void stop(void *context)
     heap_caps_free(output.stereo);
     output.stereo = NULL;
 }
-static bool start(void *context, uint8_t *pcm, uint32_t samples)
+static bool start_output(void *context, uint8_t *pcm, uint32_t samples)
 {
     (void)context;
     if (output.channel || !samples || samples > AUDIO_MAX_SAMPLES) return false;
@@ -86,10 +90,10 @@ static bool start(void *context, uint8_t *pcm, uint32_t samples)
     output.enabled = true;
     return true;
 fail:
-    stop(NULL);
+    stop_output(NULL);
     return false;
 }
-static void poll(void *context, node_audio_progress *progress)
+static void poll_output(void *context, node_audio_progress *progress)
 {
     (void)context;
     uint32_t frames = atomic_load(&output.frames);
@@ -98,8 +102,94 @@ static void poll(void *context, node_audio_progress *progress)
         .done = atomic_load(&output.done)};
     progress->failed = progress->underflows != 0;
 }
+static struct {
+    i2s_chan_handle_t channel;
+    bool enabled;
+    uint8_t *pcm;
+    uint32_t target, discarded;
+    int64_t last_callback;
+    atomic_uint samples, frames, overflows;
+    atomic_bool done;
+} input;
+static bool selected_capture;
+static bool received(i2s_chan_handle_t channel, i2s_event_data_t *event, void *context)
+{
+    (void)channel; (void)context;
+    int64_t time = esp_timer_get_time();
+    if (input.last_callback && time - input.last_callback > 48000)
+        atomic_fetch_add(&input.overflows, 1);
+    input.last_callback = time;
+    uint32_t frames = event->size / 8;
+    atomic_fetch_add(&input.frames, frames);
+    uint32_t samples = atomic_load(&input.samples);
+    const uint8_t *slots = event->dma_buf;
+    for (uint32_t i = 0; i < frames; i++) {
+        if (input.discarded < AUDIO_WARMUP_SAMPLES) { input.discarded++; continue; }
+        if (samples == input.target) break;
+        uint32_t word;
+        memcpy(&word, slots + i * 8, sizeof(word)); // Left of two 32-bit Philips slots.
+        uint16_t value = (uint16_t)pcm_input_sample(word);
+        input.pcm[samples * 2] = value & 255;
+        input.pcm[samples * 2 + 1] = value >> 8;
+        samples++;
+    }
+    atomic_store(&input.samples, samples);
+    if (samples == input.target) atomic_store(&input.done, true);
+    return false;
+}
+static void stop_input(void)
+{
+    if (input.enabled) ESP_ERROR_CHECK(i2s_channel_disable(input.channel));
+    input.enabled = false;
+    if (input.channel) ESP_ERROR_CHECK(i2s_del_channel(input.channel));
+    input.channel = NULL;
+    input.pcm = NULL;
+}
+static bool start_input(uint8_t *pcm, uint32_t samples)
+{
+    if (input.channel || !samples || samples > AUDIO_MAX_SAMPLES) return false;
+    memset(&input, 0, sizeof(input));
+    input.target = samples;
+    input.pcm = pcm;
+    i2s_chan_config_t channel = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_1, I2S_ROLE_MASTER);
+    channel.dma_desc_num = DESCRIPTORS;
+    channel.dma_frame_num = FRAMES;
+    i2s_std_config_t config = {
+        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(AUDIO_SAMPLE_RATE),
+        .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
+        .gpio_cfg = {.mclk = I2S_GPIO_UNUSED, .bclk = AUDIO_INPUT_BCLK,
+                     .ws = AUDIO_INPUT_WS, .dout = I2S_GPIO_UNUSED, .din = AUDIO_INPUT_SD},
+    };
+    if (i2s_new_channel(&channel, NULL, &input.channel) != ESP_OK ||
+        i2s_channel_init_std_mode(input.channel, &config) != ESP_OK) goto fail;
+    i2s_event_callbacks_t callbacks = {.on_recv = received};
+    if (i2s_channel_register_event_callback(input.channel, &callbacks, NULL) != ESP_OK ||
+        i2s_channel_enable(input.channel) != ESP_OK) goto fail;
+    input.enabled = true;
+    return true;
+fail:
+    stop_input();
+    return false;
+}
+static bool start(void *context, uint8_t *pcm, uint32_t samples, bool capture)
+{
+    selected_capture = capture;
+    return capture ? start_input(pcm, samples) : start_output(context, pcm, samples);
+}
+static void stop(void *context)
+{
+    if (selected_capture) stop_input(); else stop_output(context);
+}
+static void poll(void *context, node_audio_progress *progress)
+{
+    if (!selected_capture) { poll_output(context, progress); return; }
+    *progress = (node_audio_progress){.samples = atomic_load(&input.samples),
+        .dma_frames = atomic_load(&input.frames), .underflows = atomic_load(&input.overflows),
+        .done = atomic_load(&input.done)};
+    progress->failed = progress->underflows != 0;
+}
 node_audio_port esp32_audio_port(void)
 {
     return (node_audio_port){.playback = CONFIG_LORALAB_AUDIO_PLAYBACK,
-        .start = start, .poll = poll, .stop = stop};
+        .capture = CONFIG_LORALAB_AUDIO_CAPTURE, .start = start, .poll = poll, .stop = stop};
 }
