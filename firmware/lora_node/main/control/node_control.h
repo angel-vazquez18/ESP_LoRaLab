@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "audio/audio_port.h"
+
 #define NODE_RECORD_BYTES 4096
 #define NODE_REPLY_SLOTS 4
 #define NODE_EVENT_SLOTS 8
@@ -25,6 +27,7 @@ typedef struct {
     void (*memory)(void *, node_heap *, node_heap *, uint32_t *);
     const char *device_id, *boot_id, *firmware_version, *firmware_build_id;
     const char *idf_version, *board_manifest_hash, *schema_sha256, *reset_cause;
+    node_audio_port audio;
 } node_platform;
 
 typedef struct node_control node_control;
