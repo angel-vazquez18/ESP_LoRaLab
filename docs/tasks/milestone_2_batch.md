@@ -1,6 +1,6 @@
 # Milestone 2 implementation batch — November 16, 2026
 
-Status: in progress.
+Status: implementation PR stack ready for review; physical qualification incomplete.
 
 The user authorized all remaining M2 issues as one branch/PR per issue, small
 Conventional Commits, full testing and relevant builds/flashes/board checks.
@@ -62,9 +62,14 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   Fresh reconnect age fix has native regression coverage. 361 total tests pass.
   Board restored to audio-enabled image f8865602..., boot68; port released and
   own QA server stopped. See docs/local_audio_ui.md for observations/limits.
-- Next: #42 physical
-  qualification. Printed revision, operator listening/speech and instruments are
-  still unobserved; user is away and asked to prepare those checks for later.
+- #38: PR #160, feat/local-audio-inspector, base feat/host-finite-audio.
+- #42: prepared quiet reference/operator packet, bounded read-only evidence
+  collection and consistency checks, detailed attended procedure and compact
+  source evidence summary. 22 new packet cases / 383 total tests pass, no skips.
+  Current-image real invalid CRC/SHA/odd PCM/unfinished-play rejections and valid
+  playback/capture recovery passed on boot69; signal still zero. Packet contains
+  actual automated recovery evidence; human/instrument/USB fields remain pending.
+  Draft PR publishing next; never auto-close #42. Board port is released.
 
 Each PR includes its code walkthrough, verification commands/expected outcomes,
 dependency and remaining physical evidence. The ignored state map contains exact
