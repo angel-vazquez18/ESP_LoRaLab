@@ -270,3 +270,14 @@ and all remaining M2 PRs prepared as a stack without waiting for intermediate
 merges. This supersedes the prior stop-after-each-PR instruction. All documented
 audio wiring is confirmed; user is away, so listening/speech observations remain
 for later. Printed board revision is still unobserved.
+
+## November 16 — Verified artifact commit (#18)
+
+Complete RAM bytes are hashed before immutable commit; short uploads remain
+unfinished and incorrect final hashes become failed. Private prepared outcomes
+are published only after reply/cache admission. Committed files survive release;
+failed files require delete/restart. Removed the seeded committed-state fixture:
+consumer guards now use actual upload and commit. `make check`: 250 passed,
+including 10 new commit cases, lint/frontend/contracts/repository checks. Main
+ESP-IDF build passed: 0x3c2c0 bytes, 76% app partition free. Physical validation
+awaits completion of the fresh flash snapshot and the cumulative readback image.
