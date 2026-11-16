@@ -9,8 +9,8 @@ from uuid import uuid4
 import serial
 from serial.tools.list_ports import comports
 
-from . import control_v2, v2
-from .adapters import health_freshness, require_control_compatible
+from . import artifact_contract_v2, control_v2, v2
+from .adapters import health_freshness, require_artifact_compatible, require_control_compatible
 
 
 def discover_ports() -> list[dict]:
@@ -125,6 +125,19 @@ class NodeSession:
         async with self.command_lock:
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
+            artifact_limits = None
+            if name in artifact_contract_v2.ARGUMENTS:
+                if self.identity is None:
+                    raise ValueError("MISSING_CAPABILITY: Artifact identity is not available")
+                availability = (
+                    self.health.capability_availability.model_dump() if self.health else None
+                )
+                artifact_limits = require_artifact_compatible(
+                    self.identity.model_dump(), name, availability
+                )
+                args = artifact_contract_v2.validate_arguments(
+                    name, {} if args is None else args, artifact_limits
+                ).model_dump()
             self.sequence += 1
             command = v2.Command(
                 command_id=str(uuid4()),
@@ -165,13 +178,17 @@ class NodeSession:
                                 }
                         elif name == "operation.stop":
                             self.active_operation = None
+                        if artifact_limits is not None:
+                            return artifact_contract_v2.validate_result(
+                                name, command.args, reply.result, artifact_limits
+                            ).model_dump()
                         return reply.result
                     except TimeoutError:
                         if attempt == retries:
                             raise ValueError(
                                 f"No v2 reply to {name}; compatible firmware is required"
                             ) from None
-                        if name in ("hello", "status.get"):
+                        if name in ("hello", "status.get", "artifact.list", "artifact.get"):
                             self.pending.pop(command.command_id, None)
                             future.cancel()
                             self.sequence += 1
