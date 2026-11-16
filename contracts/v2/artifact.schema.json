@@ -1,0 +1,665 @@
+{
+  "contract_version": "2.0.0",
+  "scope": "artifact_transfer_contract",
+  "profile": "artifact_transfer_v1",
+  "command": {
+    "additionalProperties": false,
+    "properties": {
+      "v": {
+        "const": 2,
+        "title": "V",
+        "type": "integer"
+      },
+      "kind": {
+        "const": "command",
+        "title": "Kind",
+        "type": "string"
+      },
+      "command_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Command Id",
+        "type": "string"
+      },
+      "client_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Client Id",
+        "type": "string"
+      },
+      "command_seq": {
+        "maximum": 4294967295,
+        "minimum": 1,
+        "title": "Command Seq",
+        "type": "integer"
+      },
+      "target_boot_id": {
+        "pattern": "^esp-[0-9a-f]{12}:[1-9][0-9]{0,9}$",
+        "title": "Target Boot Id",
+        "type": "string"
+      },
+      "run_id": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Run Id"
+      },
+      "name": {
+        "enum": [
+          "artifact.begin",
+          "artifact.put",
+          "artifact.commit",
+          "artifact.list",
+          "artifact.get",
+          "artifact.delete"
+        ],
+        "title": "Name",
+        "type": "string"
+      },
+      "args": {
+        "additionalProperties": true,
+        "title": "Args",
+        "type": "object"
+      }
+    },
+    "required": [
+      "v",
+      "kind",
+      "command_id",
+      "client_id",
+      "command_seq",
+      "target_boot_id",
+      "run_id",
+      "name",
+      "args"
+    ],
+    "title": "Command",
+    "type": "object"
+  },
+  "command_arguments": {
+    "artifact.begin": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "source",
+            "recovered"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "length_bytes": {
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Length Bytes",
+          "type": "integer"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "known_data",
+            "pcm_s16le_8000_mono"
+          ],
+          "title": "Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "kind",
+        "length_bytes",
+        "sha256",
+        "format"
+      ],
+      "title": "Begin",
+      "type": "object"
+    },
+    "artifact.put": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "offset": {
+          "maximum": 131072,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        },
+        "data_b64": {
+          "maxLength": 1368,
+          "minLength": 1,
+          "title": "Data B64",
+          "type": "string"
+        },
+        "crc32": {
+          "pattern": "^[0-9a-f]{8}$",
+          "title": "Crc32",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "offset",
+        "data_b64",
+        "crc32"
+      ],
+      "title": "Put",
+      "type": "object"
+    },
+    "artifact.commit": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "title": "ArtifactReference",
+      "type": "object"
+    },
+    "artifact.list": {
+      "additionalProperties": false,
+      "properties": {},
+      "title": "Empty",
+      "type": "object"
+    },
+    "artifact.get": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "offset": {
+          "maximum": 131072,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        },
+        "length_bytes": {
+          "maximum": 1024,
+          "minimum": 1,
+          "title": "Length Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "offset",
+        "length_bytes"
+      ],
+      "title": "Get",
+      "type": "object"
+    },
+    "artifact.delete": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "title": "ArtifactReference",
+      "type": "object"
+    }
+  },
+  "command_results": {
+    "artifact.begin": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "next_offset": {
+          "maximum": 0,
+          "minimum": 0,
+          "title": "Next Offset",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "next_offset"
+      ],
+      "title": "BeginResult",
+      "type": "object"
+    },
+    "artifact.put": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "next_offset": {
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Next Offset",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "next_offset"
+      ],
+      "title": "PutResult",
+      "type": "object"
+    },
+    "artifact.commit": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "source",
+            "recovered"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "length_bytes": {
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Length Bytes",
+          "type": "integer"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "known_data",
+            "pcm_s16le_8000_mono"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "state": {
+          "const": "committed",
+          "title": "State",
+          "type": "string"
+        },
+        "next_offset": {
+          "maximum": 131072,
+          "minimum": 0,
+          "title": "Next Offset",
+          "type": "integer"
+        },
+        "in_use": {
+          "title": "In Use",
+          "type": "boolean"
+        },
+        "codec": {
+          "title": "Codec",
+          "type": "null"
+        },
+        "sample_rate_hz": {
+          "anyOf": [
+            {
+              "maximum": 8000,
+              "minimum": 8000,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sample Rate Hz"
+        },
+        "sample_count": {
+          "anyOf": [
+            {
+              "maximum": 24000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sample Count"
+        },
+        "frame_count": {
+          "title": "Frame Count",
+          "type": "null"
+        },
+        "source_artifact_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Artifact Id"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "kind",
+        "length_bytes",
+        "sha256",
+        "format",
+        "state",
+        "next_offset",
+        "in_use",
+        "codec",
+        "sample_rate_hz",
+        "sample_count",
+        "frame_count",
+        "source_artifact_id"
+      ],
+      "title": "CommitResult",
+      "type": "object"
+    },
+    "artifact.list": {
+      "$defs": {
+        "Manifest": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "source",
+                "recovered"
+              ],
+              "title": "Kind",
+              "type": "string"
+            },
+            "length_bytes": {
+              "maximum": 131072,
+              "minimum": 1,
+              "title": "Length Bytes",
+              "type": "integer"
+            },
+            "sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "format": {
+              "enum": [
+                "known_data",
+                "pcm_s16le_8000_mono"
+              ],
+              "title": "Format",
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "uploading",
+                "failed",
+                "committed"
+              ],
+              "title": "State",
+              "type": "string"
+            },
+            "next_offset": {
+              "maximum": 131072,
+              "minimum": 0,
+              "title": "Next Offset",
+              "type": "integer"
+            },
+            "in_use": {
+              "title": "In Use",
+              "type": "boolean"
+            },
+            "codec": {
+              "title": "Codec",
+              "type": "null"
+            },
+            "sample_rate_hz": {
+              "anyOf": [
+                {
+                  "maximum": 8000,
+                  "minimum": 8000,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sample Rate Hz"
+            },
+            "sample_count": {
+              "anyOf": [
+                {
+                  "maximum": 24000,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sample Count"
+            },
+            "frame_count": {
+              "title": "Frame Count",
+              "type": "null"
+            },
+            "source_artifact_id": {
+              "anyOf": [
+                {
+                  "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Artifact Id"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "kind",
+            "length_bytes",
+            "sha256",
+            "format",
+            "state",
+            "next_offset",
+            "in_use",
+            "codec",
+            "sample_rate_hz",
+            "sample_count",
+            "frame_count",
+            "source_artifact_id"
+          ],
+          "title": "Manifest",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/Manifest"
+          },
+          "maxItems": 4,
+          "title": "Artifacts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "artifacts"
+      ],
+      "title": "ListResult",
+      "type": "object"
+    },
+    "artifact.get": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "offset": {
+          "maximum": 131072,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        },
+        "length_bytes": {
+          "maximum": 1024,
+          "minimum": 0,
+          "title": "Length Bytes",
+          "type": "integer"
+        },
+        "data_b64": {
+          "maxLength": 1368,
+          "title": "Data B64",
+          "type": "string"
+        },
+        "crc32": {
+          "pattern": "^[0-9a-f]{8}$",
+          "title": "Crc32",
+          "type": "string"
+        },
+        "eof": {
+          "title": "Eof",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "offset",
+        "length_bytes",
+        "data_b64",
+        "crc32",
+        "eof"
+      ],
+      "title": "GetResult",
+      "type": "object"
+    },
+    "artifact.delete": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "deleted": {
+          "const": true,
+          "title": "Deleted",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "deleted"
+      ],
+      "title": "DeleteResult",
+      "type": "object"
+    }
+  },
+  "capability": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "artifact_transfer_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "commands": {
+        "items": {
+          "enum": [
+            "artifact.begin",
+            "artifact.put",
+            "artifact.commit",
+            "artifact.list",
+            "artifact.get",
+            "artifact.delete"
+          ],
+          "type": "string"
+        },
+        "maxItems": 6,
+        "minItems": 1,
+        "title": "Commands",
+        "type": "array"
+      },
+      "max_artifact_bytes": {
+        "maximum": 131072,
+        "minimum": 1,
+        "title": "Max Artifact Bytes",
+        "type": "integer"
+      },
+      "node_total_artifact_bytes": {
+        "maximum": 262144,
+        "minimum": 1,
+        "title": "Node Total Artifact Bytes",
+        "type": "integer"
+      },
+      "node_artifact_slots": {
+        "maximum": 4,
+        "minimum": 1,
+        "title": "Node Artifact Slots",
+        "type": "integer"
+      },
+      "artifact_chunk_bytes": {
+        "maximum": 1024,
+        "minimum": 1,
+        "title": "Artifact Chunk Bytes",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "commands",
+      "max_artifact_bytes",
+      "node_total_artifact_bytes",
+      "node_artifact_slots",
+      "artifact_chunk_bytes"
+    ],
+    "title": "Capabilities",
+    "type": "object"
+  }
+}
