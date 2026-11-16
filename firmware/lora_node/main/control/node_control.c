@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "node_control.h"
+#include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
 
 typedef struct {
@@ -36,6 +37,7 @@ typedef struct {
 
 struct node_control {
     node_platform port;
+    artifact_store *artifacts;
     char owner[37], role[2];
     int64_t lease_until, next_health, next_diagnostic;
     bool linked, oom, discard;
@@ -217,6 +219,16 @@ static cJSON *capabilities(node_control *n)
     number(n, limits, "operation_slice_bytes", 512);
     cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe"}, 1);
     add(n, limits, "diag_kinds", kinds);
+    cJSON *files = object(n);
+    string(n, files, "profile", ARTIFACT_PROFILE);
+    string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
+    add(n, files, "commands", cJSON_CreateStringArray(
+        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete"}, 3));
+    number(n, files, "max_artifact_bytes", ARTIFACT_MAX_BYTES);
+    number(n, files, "node_total_artifact_bytes", ARTIFACT_TOTAL_BYTES);
+    number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
+    number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
+    add(n, limits, "artifact_transfer", files);
     add(n, o, "resource_limits", limits);
     number(n, o, "timestamp_resolution_us", 1);
     return o;
@@ -259,6 +271,7 @@ static cJSON *health(node_control *n)
     number(n, buffers, "serial_rx", n->used);
     number(n, buffers, "serial_tx_queued", queued_bytes(&n->replies) + queued_bytes(&n->events));
     number(n, buffers, "diagnostic", n->op.active ? n->op.bytes : 0);
+    number(n, buffers, "artifacts_reserved", artifact_store_reserved_bytes(n->artifacts));
     add(n, memory, "buffers", buffers);
     number(n, memory, "allocation_failures", failures);
     add(n, o, "memory", memory);
@@ -358,6 +371,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
 static void lose_owner(node_control *n, const char *reason)
 {
     finish_operation(n, "cancelled", NULL, reason);
+    artifact_store_release_owner(n->artifacts, n->owner);
     n->owner[0] = n->role[0] = 0;
     n->lease_until = 0;
     memset(n->cache, 0, sizeof(n->cache));
@@ -378,8 +392,8 @@ static bool known_unavailable(const char *name)
 {
     static const char *const commands[] = {
         "session.open",    "session.close", "config.set",    "run.prepare",     "run.arm",
-        "run.start",       "run.stop",      "run.summary",   "artifact.begin",  "artifact.put",
-        "artifact.commit", "artifact.list", "artifact.get",  "artifact.delete", "audio.capture",
+        "run.start",       "run.stop",      "run.summary",   "artifact.put",
+        "artifact.commit", "artifact.get",  "audio.capture",
         "audio.encode",    "audio.decode",  "audio.play",    "fault.set",       "fault.fire",
         "clock.arm",       "clock.emit",    "clock.install", "clock.stop"};
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
@@ -388,7 +402,60 @@ static bool known_unavailable(const char *name)
     return false;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP };
+static bool artifact_command(const char *name)
+{
+    return eq(name, "artifact.begin") || eq(name, "artifact.list") || eq(name, "artifact.delete");
+}
+static const char *artifact_error(artifact_status status)
+{
+    static const char *const codes[] = {NULL, "INVALID_ARGUMENT", "RESOURCE_LIMIT",
+        "ALLOCATION_FAILED", "ARTIFACT_NOT_FOUND", "INVALID_STATE", "BUSY"};
+    return codes[status];
+}
+static cJSON *manifest(node_control *n, const artifact_manifest *m)
+{
+    cJSON *o = object(n);
+    string(n, o, "artifact_id", m->artifact_id);
+    string(n, o, "kind", m->kind);
+    string(n, o, "format", m->format);
+    string(n, o, "sha256", m->sha256);
+    number(n, o, "length_bytes", m->length_bytes);
+    number(n, o, "next_offset", m->next_offset);
+    const char *const states[] = {"uploading", "failed", "committed"};
+    string(n, o, "state", states[m->state]);
+    boolean(n, o, "in_use", m->in_use);
+    string(n, o, "codec", NULL);
+    string(n, o, "frame_count", NULL);
+    string(n, o, "source_artifact_id", NULL);
+    if (eq(m->format, "pcm_s16le_8000_mono")) {
+        number(n, o, "sample_rate_hz", 8000);
+        number(n, o, "sample_count", m->length_bytes / 2);
+    } else {
+        string(n, o, "sample_rate_hz", NULL);
+        string(n, o, "sample_count", NULL);
+    }
+    return o;
+}
+static cJSON *artifact_list(node_control *n)
+{
+    cJSON *o = object(n), *files = cJSON_CreateArray();
+    if (!files)
+        n->oom = true;
+    for (unsigned i = 0; i < ARTIFACT_SLOTS; i++) {
+        const artifact_manifest *m = artifact_store_at(n->artifacts, i);
+        if (m) {
+            cJSON *entry = manifest(n, m);
+            if (!files || !entry || !cJSON_AddItemToArray(files, entry)) {
+                cJSON_Delete(entry);
+                n->oom = true;
+            }
+        }
+    }
+    add(n, o, "artifacts", files);
+    return o;
+}
+
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -420,7 +487,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -462,13 +529,15 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !cJSON_IsNull(item(cmd, "run_id"))) {
+    if (!code && !eq(name, "diag.run") && !artifact_command(name) &&
+        !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
         message = "Control commands require null run_id";
     }
     enum action action = NONE;
     uint8_t *probe = NULL;
+    artifact_spec file_spec = {0};
     uint32_t iterations = 0, bytes = 0;
     int64_t lease = now(n) + 5000000;
     int64_t operation_deadline = now(n) + NODE_OPERATION_US;
@@ -496,6 +565,52 @@ static void process(node_control *n, size_t length)
             } else {
                 action = CLAIM;
                 fresh_claim = !n->owner[0];
+            }
+        } else if (artifact_command(name)) {
+            const char *id = text(args, "artifact_id");
+            if (n->op.active) {
+                code = "BUSY";
+                message = "File access requires an idle node";
+            } else if (eq(name, "artifact.list")) {
+                if (cJSON_GetArraySize(args)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args";
+                    message = "Listing accepts no arguments";
+                }
+            } else if (eq(name, "artifact.begin")) {
+                const char *const keys[] = {"artifact_id", "kind", "length_bytes", "sha256", "format"};
+                if (!exact_keys(args, keys, 5) ||
+                    !uint32_value(item(args, "length_bytes"), 1, UINT32_MAX)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args";
+                    message = "Invalid file reservation arguments";
+                } else {
+                    file_spec = (artifact_spec){.artifact_id = id, .kind = text(args, "kind"),
+                        .length_bytes = (size_t)item(args, "length_bytes")->valuedouble,
+                        .sha256 = text(args, "sha256"), .format = text(args, "format")};
+                    code = artifact_error(artifact_store_begin(n->artifacts, client, &file_spec));
+                    if (code)
+                        message = "File reservation failed; existing files are unchanged";
+                    else
+                        action = RESERVE_FILE;
+                }
+            } else {
+                const char *const keys[] = {"artifact_id"};
+                if (!exact_keys(args, keys, 1) || !uuid(id)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args.artifact_id";
+                    message = "A lowercase artifact UUID is required";
+                } else {
+                    const artifact_manifest *m = artifact_store_find(n->artifacts, id);
+                    if (!m) {
+                        code = "ARTIFACT_NOT_FOUND";
+                        message = "File does not exist in this boot";
+                    } else if (m->in_use) {
+                        code = "BUSY";
+                        message = "Release the active file consumer before deletion";
+                    } else
+                        action = DELETE_FILE;
+                }
             }
         } else if (eq(name, "diag.run")) {
             const char *const keys[] = {"kind", "iterations", "payload_bytes"};
@@ -565,6 +680,8 @@ static void process(node_control *n, size_t length)
             result = hello(n);
         else if (eq(name, "status.get"))
             result = health(n);
+        else if (eq(name, "artifact.list"))
+            result = artifact_list(n);
         else {
             result = object(n);
             if (action == CLAIM || action == KEEPALIVE)
@@ -575,6 +692,13 @@ static void process(node_control *n, size_t length)
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
+            }
+            if (action == RESERVE_FILE || action == DELETE_FILE) {
+                string(n, result, "artifact_id", text(args, "artifact_id"));
+                if (action == RESERVE_FILE)
+                    number(n, result, "next_offset", 0);
+                else
+                    boolean(n, result, "deleted", true);
             }
             if (action == STOP) {
                 string(n, result, "operation_id", text(args, "operation_id"));
@@ -594,6 +718,8 @@ static void process(node_control *n, size_t length)
     add(n, reply, "result", result ? result : cJSON_CreateNull());
     add(n, reply, "error", error(n, code, message, field));
     if (!encode(n, reply)) {
+        if (action == RESERVE_FILE)
+            artifact_store_delete(n->artifacts, file_spec.artifact_id);
         if (probe)
             n->port.deallocate(n->port.context, probe);
         n->reply_drops++;
@@ -606,6 +732,8 @@ static void process(node_control *n, size_t length)
                      !eq(code, "STALE_BOOT") && !eq(code, "UNSUPPORTED_VERSION") && valid_envelope;
     if (cacheable) {
         if (strlen(n->encoded) >= sizeof(n->cache[0].reply)) {
+            if (action == RESERVE_FILE)
+                artifact_store_delete(n->artifacts, file_spec.artifact_id);
             if (probe)
                 n->port.deallocate(n->port.context, probe);
             n->reply_drops++;
@@ -645,8 +773,11 @@ static void process(node_control *n, size_t length)
     } else if (action == KEEPALIVE)
         n->lease_until = lease;
     else if (action == RELEASE) {
+        artifact_store_release_owner(n->artifacts, n->owner);
         n->owner[0] = n->role[0] = 0;
         n->lease_until = 0;
+    } else if (action == DELETE_FILE) {
+        artifact_store_delete(n->artifacts, text(args, "artifact_id"));
     } else if (action == PROBE) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
@@ -676,6 +807,11 @@ node_control *node_control_create(const node_platform *platform)
     if (!n)
         return NULL;
     n->port = *platform;
+    n->artifacts = artifact_store_create(platform->context, platform->allocate, platform->deallocate);
+    if (!n->artifacts) {
+        free(n);
+        return NULL;
+    }
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;
     n->events.capacity = NODE_EVENT_SLOTS;
@@ -688,6 +824,7 @@ void node_control_destroy(node_control *n)
         return;
     if (n->op.buffer)
         n->port.deallocate(n->port.context, n->op.buffer);
+    artifact_store_destroy(n->artifacts);
     free(n);
 }
 void node_control_link(node_control *n, bool connected)
