@@ -36,6 +36,10 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   flash backup verified and cumulative artifact image flashed, NVS retained.
   Device/schema/ELF matched; initial real 1/1024/1025/48000/131072-byte round trips
   passed. Negative/capacity hardware evidence is being finalized.
+- #26: shared host service/API/CLI implemented; 23 focused cases, full checks
+  290 passed. Real host upload/download at 1/1024/1025/48000 bytes and cancellation,
+  cleanup and valid recovery passed. Evidence: local/m2-batch/host-transfer-hardware-report.json.
+  PR publishing next, based on #154.
 - Later issues: pending.
 
 Each PR includes its code walkthrough, verification commands/expected outcomes,

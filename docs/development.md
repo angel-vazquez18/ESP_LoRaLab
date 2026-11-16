@@ -121,3 +121,14 @@ the actual C store and a host `NodeSession`. Consumer/lifetime tests now use act
 replacing the earlier seeded-state fixture.
 Build the affected main target with ESP-IDF as above. No check opens a physical
 port. See the [contract walkthrough and expectations](artifact_transfer_contract.md#reservation-implementation-and-review-11).
+
+## Host file-transfer checks
+
+```sh
+uv run --project testbed pytest testbed/tests/test_artifact_transfers.py -ra
+```
+
+Expected at #26: 23 focused cases, no skips. Use `make check` for the full suite.
+See [file workflows](artifact_workflows.md) for API/CLI commands, expected hashes,
+cancellation and physical evidence boundaries. The node firmware is unchanged
+from #22, so this host-only slice needs no additional flash/build.

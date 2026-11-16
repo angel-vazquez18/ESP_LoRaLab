@@ -293,3 +293,17 @@ snapshot SHA-256 verified, cumulative image flashed without NVS/eFuse changes.
 Physical identity/schema/ELF matched and initial 1/1024/1025/48000/131072-byte
 round trips passed. Negative/capacity/recovery checks are still being finalized.
 Full M1/audio qualification remains separate; no operator listening is claimed.
+
+## November 16 — Shared host artifact workflows (#26)
+
+Added background upload/download jobs with exact readback length/bytes/SHA-256,
+verified-only file persistence, bounded raw evidence/provenance and API/CLI
+list/delete/progress/content/cancel. Restart records interrupted work without
+resuming it. Cancellation retains the serial write lock until its bounded write
+finishes, then cleans up; uncertain cleanup disconnects to release ownership.
+`make check`: 290 passed (23 new host cases), lint/frontend/contracts/repository
+checks passed. Firmware unchanged from #22. Physical host workflows passed at
+1/1024/1025/48000 bytes plus cancellation/cleanup/recovery. Cumulative firmware
+checks also passed full 131072-byte readback, raw negative/retry/hash/capacity
+cases with zero framing errors/event gaps. Raw reports/stores/backups stay ignored
+under local/m2-batch. Full audio/M1 physical qualification remains open.
