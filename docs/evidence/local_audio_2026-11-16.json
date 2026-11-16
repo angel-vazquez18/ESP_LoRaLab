@@ -1,0 +1,130 @@
+{
+  "date": "2026-11-16",
+  "hardware_qualification": "incomplete",
+  "issue": 42,
+  "physical_usb_prerequisite_issue": 21,
+  "device_id": "esp-f85b1ba27744",
+  "board_revision": "unobserved",
+  "wiring": "user confirmed documented wiring; independently unverified",
+  "speaker": {
+    "impedance_ohm": 8,
+    "rated_power_w": 1,
+    "amplifier_supply_v": 3.3,
+    "configured_hardware_gain_db": 6
+  },
+  "automated_observations": {
+    "artifact_bytes_verified": [
+      1,
+      1024,
+      1025,
+      48000,
+      131072
+    ],
+    "audio_playback_source_samples_verified": [
+      1,
+      128,
+      129,
+      24000
+    ],
+    "audio_capture_samples_and_hash_verified": [
+      1,
+      129,
+      24000
+    ],
+    "raw_signal_probe": {
+      "status": "SIGNAL_UNVERIFIED",
+      "samples": 800,
+      "nonzero_pcm_bytes": 0,
+      "raw_left_nonzero_samples": 0,
+      "raw_right_nonzero_samples": 0
+    },
+    "current_image_negative_checks": {
+      "bad_crc_rejected": true,
+      "bad_final_sha_rejected": true,
+      "failed_file_unreadable": true,
+      "odd_pcm_rejected": true,
+      "uncommitted_play_rejected": true
+    },
+    "current_image_following_playback_and_capture": "DMA/count/hash passed; microphone signal remains unverified",
+    "browser": "capture, waveform, warning, playback, stop, error/recovery, disabled-image gates, restored-image reconnect and retained history observed",
+    "final_audio_image": "f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65",
+    "final_port": "released",
+    "qa_server": "stopped"
+  },
+  "pending": [
+    "Printed board revision and independent wiring/enable/power/data inspection",
+    "Resolve zero microphone input and demonstrate spoken-phrase response",
+    "Reference and captured node playback heard with notes",
+    "Sample clock and rail measurements or actual explicit instrument limitations",
+    "Full physical USB loss/lease/reset recovery issue #21"
+  ],
+  "evidence": [
+    {
+      "path": "local/m2-batch/artifact-hardware-report.json",
+      "sha256": "64638bcaa9848ae191e47feeb04c2531faffe6caadaa324b1df67a59bb2e7ff2",
+      "bytes": 1172015,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:55",
+      "firmware_build_id": "bba68f41a3781b2cc21a00f4bd0312b41402136bbc01a7deac9a1895a3cdbe56"
+    },
+    {
+      "path": "local/m2-batch/host-transfer-hardware-report.json",
+      "sha256": "3a8ba50b604c13ef8e1d8fe943c106217afee50877e785707a681ca10fdcbe6e",
+      "bytes": 10252,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:56",
+      "firmware_build_id": "bba68f41a3781b2cc21a00f4bd0312b41402136bbc01a7deac9a1895a3cdbe56"
+    },
+    {
+      "path": "local/m2-batch/audio-hardware-report.json",
+      "sha256": "bc6b53afb95a55a0d611afa0ba1a552380fc6434bbd99977b5625f6004cadfbf",
+      "bytes": 614448,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:60",
+      "firmware_build_id": "9ae1fce748ff5dc47d78841560bde8b682375bbd5843471716c6de1417e34496"
+    },
+    {
+      "path": "local/m2-batch/capture-signal-probe.json",
+      "sha256": "3994fe8f49cbc371b9c7beb89ba277860201bf35895730a3e60dbe7d48f747f4",
+      "bytes": 4430,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:62",
+      "firmware_build_id": "f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65"
+    },
+    {
+      "path": "local/m2-batch/host-audio-hardware-report.json",
+      "sha256": "8877353c30bd20641729cdffaee1348bd27c7c0d9bf531839d0960d5f8b31fdd",
+      "bytes": 44393,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:63",
+      "firmware_build_id": "f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65"
+    },
+    {
+      "path": "local/m2-batch/audio-ui-disabled-state.json",
+      "sha256": "f9871021fa822c733c62270db831ee0cea5c90a5f496b5ab59d575d58e800c43",
+      "bytes": 119915,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:66",
+      "firmware_build_id": "55f8cc584e9e9617872c3865d287144ed42f9f4da080474906bd0f9d13ff9bcf"
+    },
+    {
+      "path": "local/m2-batch/audio-ui-final-state.json",
+      "sha256": "ea74008c8b353d43423c7d82dfe02b805c93db44d8eae079e18b797ade0808f2",
+      "bytes": 134749,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:68",
+      "firmware_build_id": "f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65"
+    },
+    {
+      "path": "local/m2-batch/audio-negative-hardware-report.json",
+      "sha256": "aaab6cb2c7090bae6027801e9e3304122e3294c8defa9068d3d6e77786e7fe98",
+      "bytes": 34720,
+      "device_id": "esp-f85b1ba27744",
+      "boot_id": "esp-f85b1ba27744:69",
+      "firmware_build_id": "f8865602905622507888f8937be66a90dc2e00cb4cb3c64fa9ac6bf903200d65"
+    }
+  ],
+  "raw_evidence_published": false,
+  "raw_evidence_location": "Retained on the laptop under ignored local/m2-batch; copy into attended packet for review",
+  "automatic_hardware_qualification": false
+}
