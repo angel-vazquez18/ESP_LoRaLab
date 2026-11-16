@@ -4,6 +4,7 @@ import asyncio
 from pathlib import Path
 
 from . import __version__
+from .artifact_transfers import ArtifactTransfers
 from .catalog import catalog, required_nodes
 from .nodes import NodeSession, discover_ports
 from .procedure_runs import ProcedureService
@@ -19,11 +20,14 @@ class Host:
         self.physical = {role: NodeSession(role, self.store.append_node_event) for role in "AB"}
         self.records = RunRecords(self.store)  # Retain access to historical evidence.
         self.procedures = ProcedureService(self.store, self.physical)
+        self.artifacts = ArtifactTransfers(self.store, self.physical)
 
     @property
     def busy(self) -> bool:
-        return self.procedures.busy or any(
-            n.active_operation is not None for n in self.physical.values()
+        return (
+            self.procedures.busy
+            or self.artifacts.busy
+            or any(n.active_operation is not None for n in self.physical.values())
         )
 
     def snapshot(self) -> dict:
@@ -47,6 +51,7 @@ class Host:
             "runs": self.store.runs(),
             "catalog": [dict(entry, preflight=self.preflight(entry["id"])) for entry in catalog()],
             "references": self.store.references(),
+            "artifact_transfers": self.artifacts.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -197,7 +202,14 @@ class Host:
         async with self.lock:
             return await self.procedures.stop()
 
+    async def artifact_action(self, action, role, *args, **kwargs):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check, operation or file transfer owns the bench")
+            return await getattr(self.artifacts, action)(role, *args, **kwargs)
+
     async def close(self):
+        await self.artifacts.close()
         await self.procedures.stop(shutdown=True)
         for node in self.physical.values():
             await node.close()
