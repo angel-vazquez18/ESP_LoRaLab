@@ -270,6 +270,45 @@ export default function NodeArtifacts({
               >
                 <Download size={14} /> Retrieve
               </button>
+              {file.format === "pcm_s16le_8000_mono" && (
+                <>
+                  <button
+                    className="button secondary"
+                    disabled={
+                      busy ||
+                      file.state !== "committed" ||
+                      file.in_use ||
+                      !(node.audio_support?.commands ?? []).includes(
+                        "audio.play",
+                      )
+                    }
+                    onClick={() =>
+                      request(
+                        `/api/nodes/${node.id}/audio/play`,
+                        post({ artifact_id: file.artifact_id }),
+                      )
+                    }
+                  >
+                    Play file on node
+                  </button>
+                  <button
+                    className="button secondary"
+                    disabled={
+                      busy ||
+                      file.state !== "committed" ||
+                      !commands.includes("artifact.get")
+                    }
+                    onClick={() =>
+                      request(
+                        `/api/nodes/${node.id}/audio/retrieve`,
+                        post({ artifact_id: file.artifact_id }),
+                      )
+                    }
+                  >
+                    Inspect PCM as WAV
+                  </button>
+                </>
+              )}
               <button
                 className="button secondary"
                 disabled={

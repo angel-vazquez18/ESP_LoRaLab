@@ -26,6 +26,7 @@ import "./physical.css";
 import { useTheme } from "./theme";
 import HardwareBench from "./HardwareBench";
 import type { HardwareNode } from "./HardwareBench";
+import type { AudioState } from "./NodeAudio";
 import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
 import RunComparison from "./RunComparison";
@@ -115,6 +116,7 @@ type State = {
   mode: "hardware";
   hardware_nodes: HardwareNode[];
   artifact_transfers: ArtifactState;
+  audio_operations: AudioState;
   catalog: Entry[];
   procedures: {
     active_run:
@@ -131,6 +133,7 @@ const empty: State = {
   mode: "hardware",
   hardware_nodes: [],
   artifact_transfers: { active_id: null, transfers: [] },
+  audio_operations: { active_id: null, operations: [] },
   catalog: [],
   procedures: { active_run: null, runs: [] },
   v2_execution: { runs: [], campaigns: [] },
@@ -588,7 +591,11 @@ function Voice({ host }: { host: Host }) {
           <div key={stage}>
             <span className="stage-number">0{i + 1}</span>
             <strong>{stage}</strong>
-            <span>Firmware support pending</span>
+            <span>
+              {i === 0
+                ? "Local capture in node inspector"
+                : "RF voice support pending"}
+            </span>
             {i < 4 && <ArrowRight size={15} />}
           </div>
         ))}
@@ -599,9 +606,10 @@ function Voice({ host }: { host: Host }) {
           <strong>Voice is in scope.</strong>
           <span>
             {" "}
-            Reference preparation works now. Node capture, codec, playback and
-            RF voice require firmware and physical validation. Local VOICE-01
-            checks need one node; RF voice needs two.
+            Reference preparation works now. Local node capture and playback
+            controls are in Bench overview → Inspect node → Local audio.
+            Microphone response and heard output still need physical validation.
+            Codec and RF voice remain unavailable; RF voice needs two nodes.
           </span>
         </div>
       </div>
@@ -849,7 +857,14 @@ function App() {
                     transfers: [],
                   }
                 }
+                audio={
+                  host.state.audio_operations ?? {
+                    active_id: null,
+                    operations: [],
+                  }
+                }
                 pending={
+                  !!host.state.audio_operations?.active_id ||
                   host.pending ||
                   !!active ||
                   !!host.state.artifact_transfers?.active_id

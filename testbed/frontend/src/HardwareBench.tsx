@@ -12,6 +12,8 @@ import {
   X,
 } from "lucide-react";
 import "./hardware.css";
+import NodeAudio from "./NodeAudio";
+import type { AudioState } from "./NodeAudio";
 import NodeArtifacts from "./NodeArtifacts";
 import type { ArtifactState } from "./NodeArtifacts";
 
@@ -25,6 +27,16 @@ export type HardwareNode = {
   id: "A" | "B";
   wire_profile: "diagnostic" | "node_control" | null;
   active_operation: { operation_id: string; deadline_us: number } | null;
+  audio_support?: {
+    commands: string[];
+    blocked: Record<string, string>;
+    limits: {
+      sample_rate_hz: number;
+      output_gain_numerator: number;
+      output_gain_denominator: number;
+      hardware_gain_db: number;
+    } | null;
+  };
   artifact_support?: {
     commands: string[];
     blocked: Record<string, string>;
@@ -180,6 +192,7 @@ function Details({
   pending,
   error: hostError,
   transfers,
+  audio,
 }: {
   node: HardwareNode;
   close: () => void;
@@ -187,6 +200,7 @@ function Details({
   pending: boolean;
   error: string;
   transfers: ArtifactState;
+  audio: AudioState;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [iterations, setIterations] = useState(10);
@@ -294,7 +308,12 @@ function Details({
           .map(([key, value]) => (
             <span key={key} className={value ? "supported" : ""}>
               {value && <Check size={12} />}
-              {key.replaceAll("_", " ")}: {value ? "ready" : "unavailable"}
+              {key.replaceAll("_", " ")}:{" "}
+              {value
+                ? key.startsWith("audio_")
+                  ? "configured"
+                  : "ready"
+                : "unavailable"}
             </span>
           ))}
       </div>
@@ -375,7 +394,8 @@ function Details({
             {node.operation_results.at(-1) && (
               <p role="status">
                 Last operation: {node.operation_results.at(-1)!.status}
-                {node.operation_results.at(-1)!.result &&
+                {node.operation_results.at(-1)!.result?.verified_bytes !=
+                  null &&
                   ` · ${node.operation_results.at(-1)!.result!.verified_bytes ?? 0} bytes verified`}
                 {node.operation_results.at(-1)!.error &&
                   ` · ${node.operation_results.at(-1)!.error!.message}`}
@@ -386,6 +406,14 @@ function Details({
             )}
           </section>
         )}
+      <NodeAudio
+        node={node}
+        audio={audio}
+        transfers={transfers}
+        request={request}
+        pending={pending}
+        hostError={hostError}
+      />
       <NodeArtifacts
         node={node}
         transfers={transfers}
@@ -416,12 +444,14 @@ export default function HardwareBench({
   request,
   error,
   transfers,
+  audio,
 }: {
   nodes: HardwareNode[];
   pending: boolean;
   request: Request;
   error: string;
   transfers: ArtifactState;
+  audio: AudioState;
 }) {
   const [ports, setPorts] = useState<Port[]>([]);
   const [selected, setSelected] = useState<Record<string, string>>({});
@@ -674,7 +704,13 @@ export default function HardwareBench({
             <Activity size={15} />
             <span>
               Voice capture & playback
-              <strong>Needs audio firmware and peripherals</strong>
+              <strong>
+                {connected.some(
+                  (n) => (n.audio_support?.commands.length ?? 0) > 0,
+                )
+                  ? "Local controls in node inspector · physical validation pending"
+                  : "Needs audio firmware and peripherals"}
+              </strong>
             </span>
           </div>
           <p>
@@ -686,6 +722,7 @@ export default function HardwareBench({
       {focused && (
         <Details
           transfers={transfers}
+          audio={audio}
           node={focused}
           close={() => setDetail(null)}
           request={request}
