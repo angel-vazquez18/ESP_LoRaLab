@@ -1,5 +1,6 @@
 """CLI client; the running backend remains the only serial-port owner."""
 
+import base64
 import json
 from pathlib import Path
 from typing import Annotated
@@ -12,11 +13,12 @@ app = typer.Typer(no_args_is_help=True, help="Control the local LoRa laboratory.
 BASE_URL = "http://127.0.0.1:8000"
 
 
-def request(path: str, body: dict | None = None):
+def request(path: str, body: dict | None = None, method: str | None = None):
     req = Request(
         BASE_URL + path,
         data=json.dumps(body).encode() if body is not None else None,
         headers={"Content-Type": "application/json"},
+        method=method,
     )
     try:
         with urlopen(req, timeout=20) as response:
@@ -138,3 +140,69 @@ def operation_stop(role: str, operation_id: str):
     if role.upper() not in ("A", "B"):
         raise typer.BadParameter("Role must be A or B")
     request(f"/api/nodes/{role.upper()}/operation/stop", {"operation_id": operation_id})
+
+
+@app.command()
+def artifact_list(role: str):
+    """List node file manifests through the running backend."""
+    request(f"/api/nodes/{role.upper()}/artifacts")
+
+
+@app.command()
+def artifact_upload(role: str, file: Path, format: str = "known_data"):
+    """Upload a bounded raw file and verify its committed readback."""
+    if not file.is_file() or not 1 <= file.stat().st_size <= 131072:
+        raise typer.BadParameter("Choose a file of 1–131072 bytes")
+    with file.open("rb") as source:
+        data = source.read(131073)
+    if not 1 <= len(data) <= 131072:
+        raise typer.BadParameter("File changed size; choose 1–131072 bytes")
+    request(
+        f"/api/nodes/{role.upper()}/artifacts",
+        {
+            "data_b64": base64.b64encode(data).decode(),
+            "format": format,
+            "name": file.name,
+        },
+    )
+
+
+@app.command()
+def artifact_download(role: str, artifact_id: str):
+    """Start a verified download; poll the returned transfer ID."""
+    request(f"/api/nodes/{role.upper()}/artifacts/{artifact_id}/download", {})
+
+
+@app.command()
+def artifact_transfer(transfer_id: str):
+    """Inspect progress, verification and retained errors."""
+    request(f"/api/artifact-transfers/{transfer_id}")
+
+
+@app.command()
+def artifact_cancel(transfer_id: str):
+    """Cancel a transfer while preserving partial evidence."""
+    request(f"/api/artifact-transfers/{transfer_id}/cancel", {})
+
+
+@app.command()
+def artifact_delete(role: str, artifact_id: str):
+    """Delete an unused node file through the shared backend."""
+    request(f"/api/nodes/{role.upper()}/artifacts/{artifact_id}", method="DELETE")
+
+
+@app.command()
+def artifact_save(transfer_id: str, output: Path):
+    """Save a verified host file; an existing destination is never overwritten."""
+    try:
+        with urlopen(
+            BASE_URL + f"/api/artifact-transfers/{transfer_id}/content", timeout=20
+        ) as response:
+            data = response.read(131073)
+        if len(data) > 131072:
+            raise ValueError("Unexpected file size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
