@@ -6,6 +6,7 @@
 #include "node_control.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
+#include "protocol/chunk_bytes.h"
 
 typedef struct {
     uint32_t sequence;
@@ -223,7 +224,7 @@ static cJSON *capabilities(node_control *n)
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
     add(n, files, "commands", cJSON_CreateStringArray(
-        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete"}, 3));
+        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete", "artifact.put"}, 4));
     number(n, files, "max_artifact_bytes", ARTIFACT_MAX_BYTES);
     number(n, files, "node_total_artifact_bytes", ARTIFACT_TOTAL_BYTES);
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
@@ -392,7 +393,7 @@ static bool known_unavailable(const char *name)
 {
     static const char *const commands[] = {
         "session.open",    "session.close", "config.set",    "run.prepare",     "run.arm",
-        "run.start",       "run.stop",      "run.summary",   "artifact.put",
+        "run.start",       "run.stop",      "run.summary",
         "artifact.commit", "artifact.get",  "audio.capture",
         "audio.encode",    "audio.decode",  "audio.play",    "fault.set",       "fault.fire",
         "clock.arm",       "clock.emit",    "clock.install", "clock.stop"};
@@ -404,12 +405,14 @@ static bool known_unavailable(const char *name)
 
 static bool artifact_command(const char *name)
 {
-    return eq(name, "artifact.begin") || eq(name, "artifact.list") || eq(name, "artifact.delete");
+    return eq(name, "artifact.begin") || eq(name, "artifact.list") || eq(name, "artifact.delete") ||
+           eq(name, "artifact.put");
 }
 static const char *artifact_error(artifact_status status)
 {
     static const char *const codes[] = {NULL, "INVALID_ARGUMENT", "RESOURCE_LIMIT",
-        "ALLOCATION_FAILED", "ARTIFACT_NOT_FOUND", "INVALID_STATE", "BUSY"};
+        "ALLOCATION_FAILED", "ARTIFACT_NOT_FOUND", "INVALID_STATE", "BUSY",
+        "OFFSET_MISMATCH", "CHECKSUM_MISMATCH"};
     return codes[status];
 }
 static cJSON *manifest(node_control *n, const artifact_manifest *m)
@@ -455,7 +458,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE };
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -538,6 +541,9 @@ static void process(node_control *n, size_t length)
     enum action action = NONE;
     uint8_t *probe = NULL;
     artifact_spec file_spec = {0};
+    uint8_t chunk[ARTIFACT_CHUNK_BYTES];
+    size_t chunk_length = 0, chunk_offset = 0;
+    uint32_t chunk_crc = 0;
     uint32_t iterations = 0, bytes = 0;
     int64_t lease = now(n) + 5000000;
     int64_t operation_deadline = now(n) + NODE_OPERATION_US;
@@ -576,6 +582,28 @@ static void process(node_control *n, size_t length)
                     code = "INVALID_ARGUMENT";
                     field = "args";
                     message = "Listing accepts no arguments";
+                }
+            } else if (eq(name, "artifact.put")) {
+                const char *const keys[] = {"artifact_id", "offset", "data_b64", "crc32"};
+                const char *crc = text(args, "crc32");
+                bool crc_valid = crc && strlen(crc) == 8;
+                for (unsigned i = 0; crc_valid && i < 8; i++) {
+                    char c = crc[i];
+                    if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) crc_valid = false;
+                    else chunk_crc = (chunk_crc << 4) | (uint32_t)(c <= '9' ? c - '0' : c - 'a' + 10);
+                }
+                if (!exact_keys(args, keys, 4) || !uuid(id) || !crc_valid ||
+                    !uint32_value(item(args, "offset"), 0, ARTIFACT_MAX_BYTES) ||
+                    !chunk_base64_decode(text(args, "data_b64"), chunk, sizeof(chunk), &chunk_length)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args";
+                    message = "Invalid chunk fields, encoding or size";
+                } else {
+                    chunk_offset = (size_t)item(args, "offset")->valuedouble;
+                    code = artifact_error(artifact_store_check_put(n->artifacts, id, chunk_offset,
+                                                                  chunk, chunk_length, chunk_crc));
+                    if (code) message = "Chunk rejected; stored bytes and offset are unchanged";
+                    else action = PUT_FILE;
                 }
             } else if (eq(name, "artifact.begin")) {
                 const char *const keys[] = {"artifact_id", "kind", "length_bytes", "sha256", "format"};
@@ -693,10 +721,10 @@ static void process(node_control *n, size_t length)
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
             }
-            if (action == RESERVE_FILE || action == DELETE_FILE) {
+            if (action == RESERVE_FILE || action == DELETE_FILE || action == PUT_FILE) {
                 string(n, result, "artifact_id", text(args, "artifact_id"));
-                if (action == RESERVE_FILE)
-                    number(n, result, "next_offset", 0);
+                if (action == RESERVE_FILE || action == PUT_FILE)
+                    number(n, result, "next_offset", action == RESERVE_FILE ? 0 : chunk_offset + chunk_length);
                 else
                     boolean(n, result, "deleted", true);
             }
@@ -776,6 +804,9 @@ static void process(node_control *n, size_t length)
         artifact_store_release_owner(n->artifacts, n->owner);
         n->owner[0] = n->role[0] = 0;
         n->lease_until = 0;
+    } else if (action == PUT_FILE) {
+        artifact_store_put(n->artifacts, text(args, "artifact_id"), chunk_offset,
+                           chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
     } else if (action == PROBE) {

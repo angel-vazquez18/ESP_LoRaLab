@@ -255,3 +255,18 @@ The user delegated remaining M2 implementation one issue/branch/PR at a time, wi
 small Conventional Commits, explanations and tests. Stop at each review-ready PR;
 the user merges and confirms before the next issue starts. Physical checks require
 coordination and their own evidence.
+
+## November 16 — Artifact chunk admission (#14)
+
+Added canonical Base64 decoding, CRC-32/ISO-HDLC and bounded contiguous chunk
+writes. Matching written ranges can be retried with fresh identities without
+rewriting/advancing; gaps, conflicts and partial appends fail unchanged. Writes
+follow reply/cache admission, including under injected JSON allocation failures.
+`make check`: 240 passed (20 new native cases), Ruff/frontend/contracts/repository
+checks passed. Main ESP-IDF build: 0x3c0c0 bytes, 77% partition free. Original
+flash backup verified; fresh pre-M2 snapshot running before the first batch flash.
+No physical chunk qualification yet. User now authorizes builds/flashes/testing
+and all remaining M2 PRs prepared as a stack without waiting for intermediate
+merges. This supersedes the prior stop-after-each-PR instruction. All documented
+audio wiring is confirmed; user is away, so listening/speech observations remain
+for later. Printed board revision is still unobserved.

@@ -88,6 +88,7 @@ def native_library(tmp_path_factory):
             "-I",
             str(cjson),
             str(main / "protocol/strict_json.c"),
+            str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(REPO_ROOT / "testbed/tests/native/artifact_store_fixture.c"),
             str(cjson / "cJSON.c"),

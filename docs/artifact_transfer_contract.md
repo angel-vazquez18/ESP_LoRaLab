@@ -147,8 +147,8 @@ Implemented firmware must explicitly add `artifact_transfer` inside
   `artifact_chunk_bytes`, within the ceilings above and internally consistent.
 
 The main firmware now advertises only `artifact.begin`, `artifact.list` and
-`artifact.delete`, using generated `main/generated/artifact_profile.h` constants.
-`artifact.put`, `artifact.commit` and `artifact.get` remain unavailable; diagnostic
+`artifact.delete` and `artifact.put`, using generated `main/generated/artifact_profile.h` constants.
+`artifact.commit` and `artifact.get` remain unavailable; diagnostic
 firmware advertises none. A complete upload/download workflow requires all six.
 Do not advertise commands merely because their schema exists.
 The existing exact main-control handshake is still required. Diagnostic firmware,
@@ -231,3 +231,29 @@ before authorized board work. No physical port is needed for this software issue
 
 Next implement actual chunk admission/retry (#14), final byte/hash commit (#18),
 readback (#22) and the host transfer workflow (#26).
+
+## Chunk implementation and review (#14)
+
+`protocol/chunk_bytes.c` decodes standard canonical Base64 into a bounded temporary
+buffer and calculates CRC-32/ISO-HDLC. `artifact_store_check_put` rejects bad CRC,
+unknown IDs, gaps, conflicting repeats and partially overlapping appends before
+changing stored bytes. A matching fully written range may be retried; return that
+range's end while leaving the actual upload cursor unchanged. Chunk admission is
+separate from the existing command-reply cache.
+
+The control layer preflights a chunk, constructs/caches/enqueues its reply, then
+calls `artifact_store_put` on the same serialized control loop. No write occurs
+when JSON/reply allocation fails. The node advertises `artifact.put` in addition
+to reservation/list/delete; commit/read/audio remain unavailable at this checkpoint.
+
+```sh
+uv run --project testbed pytest testbed/tests/test_node_chunks_native.py -ra
+```
+
+Expected at the #14 checkpoint: **20 passed, no skips**. Check 1/1024-byte chunks,
+1025-byte rejection, canonical padding, independent CRC vector `123456789`, fresh-ID
+chunk retries behind the current cursor, gaps/conflicts/partial overlaps, exact
+command retries and injected reply-allocation failures. Every rejection preserves
+bytes/cursor and permits the next valid write. This is production C exercised
+through native serial fixtures; physical checks use the cumulative artifact image
+once commit/readback are ready, with evidence recorded separately.
