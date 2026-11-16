@@ -22,10 +22,13 @@ class AudioFixture:
         self.fail_start = False
         self.progress = AudioProgress()
         self.callbacks = [AUDIO_START(self.start), AUDIO_POLL(self.poll), AUDIO_STOP(self.stop)]
-        self.port = AudioPort(True, *self.callbacks)
+        self.port = AudioPort(True, True, *self.callbacks)
 
-    def start(self, _, source, samples):
+    def start(self, _, source, samples, capture):
         self.starts += 1
+        self.capture = capture
+        self.destination = source
+        self.target = samples
         self.source = C.string_at(source, samples * 2)
         self.progress = AudioProgress()
         return not self.fail_start
@@ -165,3 +168,139 @@ def test_output_conversion_is_explicit_signed_attenuated_and_equal_in_both_slots
     target = (C.c_int16 * (len(values) * 2))()
     native_library.pcm_output_stereo(source, target, len(values))
     assert list(target) == [int(value / 8) for value in values for _ in range(2)]
+
+
+@pytest.mark.parametrize("samples", [1, 128, 129, 24000])
+def test_capture_publishes_exact_bytes_and_independent_hash_only_after_dma(audio_node, samples):
+    import base64
+    import hashlib
+    from uuid import uuid4
+
+    node, audio = audio_node
+    artifact_id = str(uuid4())
+    accepted = node.request("audio.capture", {"artifact_id": artifact_id, "sample_count": samples})
+    assert accepted["ok"] and audio.capture
+    assert node.request("audio.play", {"artifact_id": artifact_id})["error"]["code"] == "BUSY"
+    data = struct.pack("<h", -1234) * samples
+    C.memmove(audio.destination, data, len(data))
+    audio.progress = AudioProgress(samples, samples + 4800, 0, True, False)
+    node.tick()
+    event = result(node)
+    assert event["status"] == "completed"
+    manifest = event["result"]["artifact"]
+    assert manifest["state"] == "committed" and manifest["length_bytes"] == samples * 2
+    assert manifest["sha256"] == hashlib.sha256(data).hexdigest()
+    recovered = b"".join(
+        base64.b64decode(
+            node.request(
+                "artifact.get", {"artifact_id": artifact_id, "offset": i, "length_bytes": 1024}
+            )["result"]["data_b64"]
+        )
+        for i in range(0, len(data), 1024)
+    )
+    assert recovered == data
+    assert node.request("audio.play", {"artifact_id": artifact_id})["ok"]
+
+
+@pytest.mark.parametrize("bad", [0, -1, 24001, True, 8.0, "8"])
+def test_invalid_capture_count_never_reserves_or_starts(audio_node, bad):
+    from uuid import uuid4
+
+    node, audio = audio_node
+    assert not node.request("audio.capture", {"artifact_id": str(uuid4()), "sample_count": bad})[
+        "ok"
+    ]
+    assert not audio.starts and not node.allocations
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "allocation",
+        "start",
+        "overflow",
+        "short",
+        "stop",
+        "lease",
+        "disconnect",
+        "deadline",
+        "shutdown",
+    ],
+)
+def test_capture_failure_discards_partial_file_and_next_capture_works(audio_node, fault):
+    from uuid import uuid4
+
+    node, audio = audio_node
+    args = {"artifact_id": str(uuid4()), "sample_count": 24000}
+    node.allocation_fails = fault == "allocation"
+    audio.fail_start = fault == "start"
+    response = node.request("audio.capture", args)
+    if fault == "allocation":
+        assert not response["ok"]
+    elif fault == "stop":
+        node.request("operation.stop", {"operation_id": response["result"]["operation_id"]})
+    elif fault == "lease":
+        node.tick(5_000_000)
+    elif fault == "disconnect":
+        node.lib.node_control_link(node.node, False)
+        node.lib.node_control_link(node.node, True)
+    elif fault == "deadline":
+        for _ in range(31):
+            node.request("control.keepalive")
+            node.tick(1_000_000)
+            node.drain()
+    elif fault == "shutdown":
+        node.close()
+        assert audio.stops
+        node.node = node.lib.node_control_create(C.byref(node.platform))
+        node.sequence += 1
+        node.claim()
+    elif fault != "start":
+        audio.progress = AudioProgress(7, 512, int(fault == "overflow"), True, fault == "overflow")
+        node.tick()
+    node.allocation_fails = audio.fail_start = False
+    assert not node.allocations
+    if fault in ("lease", "disconnect"):
+        node.claim()
+    assert node.request("artifact.list")["result"]["artifacts"] == []
+    assert node.request("audio.capture", {**args, "artifact_id": str(uuid4())})["ok"]
+
+
+def test_capture_reply_allocation_rollback_leaves_no_private_reservation(native_library):
+    from uuid import uuid4
+
+    for position in range(80):
+        audio = AudioFixture()
+        node = NativeNode(native_library, audio=audio.port)
+        try:
+            node.claim()
+            command = node.command(
+                "audio.capture", {"artifact_id": str(uuid4()), "sample_count": 24000}
+            )
+            native_library.native_allocator_fail_after(position)
+            records = node.send(command)
+            native_library.native_allocator_fail_after(-1)
+            accepted = any(r["kind"] == "reply" and r["ok"] for r in records)
+            assert audio.starts == int(accepted)
+            if not accepted:
+                assert not node.allocations
+        finally:
+            native_library.native_allocator_fail_after(-1)
+            node.close()
+
+
+@pytest.mark.parametrize(
+    "word,expected",
+    [
+        (0, 0),
+        (0x7FFFFF00, 32767),
+        (0x80000000, -32768),
+        (0xFFFFFF00, -1),
+        (0x12345600, 0x1234),
+        (0xFFFF00, 255),
+    ],
+)
+def test_input_conversion_selects_signed_high_16_bits_without_gain(native_library, word, expected):
+    native_library.pcm_input_sample.argtypes = [C.c_uint32]
+    native_library.pcm_input_sample.restype = C.c_int16
+    assert native_library.pcm_input_sample(word) == expected

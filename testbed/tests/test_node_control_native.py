@@ -43,7 +43,7 @@ class AudioProgress(C.Structure):
     ]
 
 
-AUDIO_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_uint32)
+AUDIO_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_uint32, C.c_bool)
 AUDIO_POLL = C.CFUNCTYPE(None, C.c_void_p, C.POINTER(AudioProgress))
 AUDIO_STOP = C.CFUNCTYPE(None, C.c_void_p)
 
@@ -51,6 +51,7 @@ AUDIO_STOP = C.CFUNCTYPE(None, C.c_void_p)
 class AudioPort(C.Structure):
     _fields_ = [
         ("playback", C.c_bool),
+        ("capture", C.c_bool),
         ("start", AUDIO_START),
         ("poll", AUDIO_POLL),
         ("stop", AUDIO_STOP),
