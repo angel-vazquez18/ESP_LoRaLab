@@ -2,11 +2,13 @@ import asyncio
 import json
 import queue
 from copy import deepcopy
+from pathlib import Path
 from uuid import uuid4
 
 import pytest
 
-from lora_testbed import v2
+from lora_testbed import artifact_contract_v2 as artifacts
+from lora_testbed import control_v2, v2
 from lora_testbed.nodes import NodeSession
 
 
@@ -194,5 +196,199 @@ def test_incompatible_firmware_releases_port():
         with pytest.raises(ValueError, match="schema mismatch"):
             await session.connect("test-port")
         assert peer.closed and not session.connected and not session.tasks
+
+    asyncio.run(scenario())
+
+
+class ArtifactPeer(FirmwarePeer):
+    """Protocol replies only; this isolated peer implements no file storage."""
+
+    def __init__(self, advertised=True):
+        super().__init__()
+        self.identity["schema_sha256"] = control_v2.schema_digest()
+        self.examples = json.loads(
+            (
+                Path(__file__).resolve().parents[2] / "contracts/v2/artifact_examples.json"
+            ).read_text()
+        )
+        self.override_result = None
+        if advertised:
+            self.identity["capabilities"]["resource_limits"]["artifact_transfer"] = deepcopy(
+                self.examples["capability_example"]
+            )
+
+    def write(self, wire):
+        command = v2.Command.model_validate(json.loads(wire))
+        if command.name not in artifacts.ARGUMENTS:
+            self.status_override["capability_availability"] = deepcopy(
+                self.identity["capabilities"]
+            )
+            return super().write(wire)
+        self.writes.append(wire)
+        if self.drop_once:
+            self.drop_once = False
+            return len(wire)
+        result = deepcopy(
+            next(e["result"] for e in self.examples["valid"] if e["name"] == command.name)
+        )
+        if self.override_result:
+            result.update(self.override_result)
+        self.queue.put(
+            v2.encode(
+                v2.Reply(
+                    command_id=command.command_id,
+                    command_seq=command.command_seq,
+                    device_id=self.identity["device_id"],
+                    boot_id=self.identity["boot_id"],
+                    uptime_us=self.uptime_us,
+                    ok=True,
+                    result=result,
+                    error=None,
+                )
+            )
+        )
+        return len(wire)
+
+
+def test_missing_artifact_support_blocks_without_serial_write_or_sequence_change():
+    async def scenario():
+        for peer in (FirmwarePeer(), ArtifactPeer(advertised=False)):
+            session = NodeSession("A", lambda *_: None, lambda _, active_peer=peer: active_peer)
+            await session.connect("test-port")
+            try:
+                original_writes, sequence = len(peer.writes), session.sequence
+                for name in artifacts.ARGUMENTS:
+                    with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
+                        await session.request(name)
+                assert len(peer.writes) == original_writes and session.sequence == sequence
+            finally:
+                await session.close()
+
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize(
+    "update",
+    [
+        {"schema_sha256": "0" * 64},
+        {"profile": "unknown"},
+        {"artifact_chunk_bytes": True},
+        {"commands": ["artifact.list", "artifact.list"]},
+    ],
+)
+def test_invalid_artifact_advertisement_cannot_enable_writes(update):
+    async def scenario():
+        peer = ArtifactPeer()
+        peer.identity["capabilities"]["resource_limits"]["artifact_transfer"].update(update)
+        session = NodeSession("A", lambda *_: None, lambda _: peer)
+        await session.connect("test-port")
+        try:
+            count = len(peer.writes)
+            with pytest.raises(ValueError, match="UNSUPPORTED_VERSION"):
+                await session.request("artifact.list")
+            assert len(peer.writes) == count
+        finally:
+            await session.close()
+
+    asyncio.run(scenario())
+
+
+def test_session_checks_advertised_command_subset_and_lower_limits():
+    async def scenario():
+        peer = ArtifactPeer()
+        descriptor = peer.identity["capabilities"]["resource_limits"]["artifact_transfer"]
+        descriptor.update(commands=["artifact.list", "artifact.put"], artifact_chunk_bytes=4)
+        session = NodeSession("A", lambda *_: None, lambda _: peer)
+        await session.connect("test-port")
+        try:
+            count = len(peer.writes)
+            with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
+                await session.request(
+                    "artifact.get",
+                    {
+                        "artifact_id": "33333333-3333-4333-8333-333333333333",
+                        "offset": 0,
+                        "length_bytes": 1,
+                    },
+                )
+            args = next(e["args"] for e in peer.examples["valid"] if e["name"] == "artifact.put")
+            with pytest.raises(ValueError, match="advertised chunk limit"):
+                await session.request("artifact.put", args)
+            assert len(peer.writes) == count
+            assert len((await session.request("artifact.list"))["artifacts"]) == 1
+        finally:
+            await session.close()
+
+    asyncio.run(scenario())
+
+
+def test_supported_session_validates_messages_and_can_recover_from_bad_replies():
+    async def scenario():
+        peer = ArtifactPeer()
+        session = NodeSession("A", lambda *_: None, lambda _: peer)
+        await session.connect("test-port")
+        try:
+            assert session.wire_profile == "node_control"
+            for example in peer.examples["valid"]:
+                assert await session.request(example["name"], example["args"]) == example["result"]
+            get = next(e for e in peer.examples["valid"] if e["name"] == "artifact.get")
+            peer.override_result = {"artifact_id": "44444444-4444-4444-8444-444444444444"}
+            with pytest.raises(ValueError, match="artifact ID"):
+                await session.request("artifact.get", get["args"])
+            peer.override_result = {"crc32": "00000000"}
+            with pytest.raises(ValueError, match="CRC-32"):
+                await session.request("artifact.get", get["args"])
+            peer.override_result = None
+            assert await session.request("artifact.get", get["args"]) == get["result"]
+        finally:
+            await session.close()
+
+    asyncio.run(scenario())
+
+
+def test_live_health_can_withdraw_artifact_support_or_lower_its_limits():
+    async def scenario():
+        peer = ArtifactPeer()
+        session = NodeSession("A", lambda *_: None, lambda _: peer)
+        await session.connect("test-port")
+        try:
+            current = session.health.capability_availability.resource_limits
+            descriptor = current.pop("artifact_transfer")
+            count = len(peer.writes)
+            with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
+                await session.request("artifact.list")
+            assert len(peer.writes) == count
+            current["artifact_transfer"] = {**descriptor, "artifact_chunk_bytes": 4}
+            args = next(e["args"] for e in peer.examples["valid"] if e["name"] == "artifact.put")
+            with pytest.raises(ValueError, match="advertised chunk limit"):
+                await session.request("artifact.put", args)
+            assert len(peer.writes) == count
+            current["artifact_transfer"] = descriptor
+            assert len((await session.request("artifact.list"))["artifacts"]) == 1
+        finally:
+            await session.close()
+
+    asyncio.run(scenario())
+
+
+def test_artifact_read_retries_use_fresh_identity_but_mutations_reuse_exact_wire():
+    async def scenario():
+        peer = ArtifactPeer()
+        session = NodeSession("A", lambda *_: None, lambda _: peer)
+        await session.connect("test-port")
+        try:
+            for name, same_wire in (("artifact.get", False), ("artifact.put", True)):
+                example = next(e for e in peer.examples["valid"] if e["name"] == name)
+                peer.drop_once = True
+                assert (
+                    await session.request(name, example["args"], timeout=0.03) == example["result"]
+                )
+                assert (peer.writes[-1] == peer.writes[-2]) is same_wire
+                first, second = (json.loads(w) for w in peer.writes[-2:])
+                if not same_wire:
+                    assert first["command_id"] != second["command_id"]
+                    assert second["command_seq"] == first["command_seq"] + 1
+        finally:
+            await session.close()
 
     asyncio.run(scenario())
