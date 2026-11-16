@@ -1,0 +1,255 @@
+{
+  "contract_version": "2.0.0",
+  "profile": "artifact_transfer_v1",
+  "purpose": "contract_examples_not_firmware_support",
+  "source_bytes_hex": "313233343536373839",
+  "capability_example": {
+    "profile": "artifact_transfer_v1",
+    "commands": [
+      "artifact.begin",
+      "artifact.put",
+      "artifact.commit",
+      "artifact.list",
+      "artifact.get",
+      "artifact.delete"
+    ],
+    "max_artifact_bytes": 131072,
+    "node_total_artifact_bytes": 262144,
+    "node_artifact_slots": 4,
+    "artifact_chunk_bytes": 1024,
+    "schema_sha256": "be841147b98f69e54ac99b758dfde0ccc7e1977716017895c0aee0546e22ec6d"
+  },
+  "valid": [
+    {
+      "name": "artifact.begin",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "kind": "source",
+        "length_bytes": 9,
+        "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+        "format": "known_data"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "next_offset": 0
+      }
+    },
+    {
+      "name": "artifact.put",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "data_b64": "MTIzNDU2Nzg5",
+        "crc32": "cbf43926"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "next_offset": 9
+      }
+    },
+    {
+      "name": "artifact.commit",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "kind": "source",
+        "length_bytes": 9,
+        "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+        "format": "known_data",
+        "state": "committed",
+        "next_offset": 9,
+        "in_use": false,
+        "codec": null,
+        "sample_rate_hz": null,
+        "sample_count": null,
+        "frame_count": null,
+        "source_artifact_id": null
+      }
+    },
+    {
+      "name": "artifact.list",
+      "args": {},
+      "result": {
+        "artifacts": [
+          {
+            "artifact_id": "33333333-3333-4333-8333-333333333333",
+            "kind": "source",
+            "length_bytes": 9,
+            "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+            "format": "known_data",
+            "state": "committed",
+            "next_offset": 9,
+            "in_use": false,
+            "codec": null,
+            "sample_rate_hz": null,
+            "sample_count": null,
+            "frame_count": null,
+            "source_artifact_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "artifact.get",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "length_bytes": 1024
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "data_b64": "MTIzNDU2Nzg5",
+        "crc32": "cbf43926",
+        "length_bytes": 9,
+        "eof": true
+      }
+    },
+    {
+      "name": "artifact.delete",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "deleted": true
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "artifact.begin",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "kind": "source",
+        "length_bytes": 9,
+        "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+        "format": "unknown"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "next_offset": 1
+      }
+    },
+    {
+      "name": "artifact.put",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "data_b64": "MTIzNDU2Nzg5",
+        "crc32": "00000000"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "next_offset": 8
+      }
+    },
+    {
+      "name": "artifact.commit",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "kind": "source",
+        "length_bytes": 9,
+        "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+        "format": "known_data",
+        "state": "committed",
+        "next_offset": 8,
+        "in_use": false,
+        "codec": null,
+        "sample_rate_hz": null,
+        "sample_count": null,
+        "frame_count": null,
+        "source_artifact_id": null
+      }
+    },
+    {
+      "name": "artifact.list",
+      "args": {
+        "include_bytes": true
+      },
+      "result": {
+        "artifacts": [
+          {
+            "artifact_id": "33333333-3333-4333-8333-333333333333",
+            "kind": "source",
+            "length_bytes": 9,
+            "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+            "format": "known_data",
+            "state": "committed",
+            "next_offset": 9,
+            "in_use": false,
+            "codec": null,
+            "sample_rate_hz": null,
+            "sample_count": null,
+            "frame_count": null,
+            "source_artifact_id": null
+          },
+          {
+            "artifact_id": "33333333-3333-4333-8333-333333333333",
+            "kind": "source",
+            "length_bytes": 9,
+            "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+            "format": "known_data",
+            "state": "committed",
+            "next_offset": 9,
+            "in_use": false,
+            "codec": null,
+            "sample_rate_hz": null,
+            "sample_count": null,
+            "frame_count": null,
+            "source_artifact_id": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "artifact.get",
+      "args": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "length_bytes": 0
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "offset": 0,
+        "data_b64": "MTIzNDU2Nzg5",
+        "crc32": "cbf43926",
+        "length_bytes": 8,
+        "eof": true
+      }
+    },
+    {
+      "name": "artifact.delete",
+      "args": {
+        "artifact_id": "not-a-uuid"
+      },
+      "result": {
+        "artifact_id": "33333333-3333-4333-8333-333333333333",
+        "deleted": 1
+      }
+    }
+  ],
+  "example_envelope": {
+    "v": 2,
+    "kind": "command",
+    "command_id": "11111111-1111-4111-8111-111111111111",
+    "client_id": "22222222-2222-4222-8222-222222222222",
+    "command_seq": 1,
+    "target_boot_id": "esp-001122334455:1",
+    "run_id": null,
+    "name": "artifact.begin",
+    "args": {
+      "artifact_id": "33333333-3333-4333-8333-333333333333",
+      "kind": "source",
+      "length_bytes": 9,
+      "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
+      "format": "known_data"
+    }
+  }
+}
