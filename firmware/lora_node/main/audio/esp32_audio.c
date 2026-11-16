@@ -108,7 +108,7 @@ static struct {
     uint8_t *pcm;
     uint32_t target, discarded;
     int64_t last_callback;
-    atomic_uint samples, frames, overflows;
+    atomic_uint samples, frames, overflows, raw_left_nonzero, raw_right_nonzero, raw_left_or, raw_right_or;
     atomic_bool done;
 } input;
 static bool selected_capture;
@@ -128,6 +128,12 @@ static bool received(i2s_chan_handle_t channel, i2s_event_data_t *event, void *c
         if (samples == input.target) break;
         uint32_t word;
         memcpy(&word, slots + i * 8, sizeof(word)); // Left of two 32-bit Philips slots.
+        uint32_t right;
+        memcpy(&right, slots + i * 8 + 4, sizeof(right));
+        atomic_fetch_add(&input.raw_left_nonzero, word != 0);
+        atomic_fetch_add(&input.raw_right_nonzero, right != 0);
+        atomic_fetch_or(&input.raw_left_or, word);
+        atomic_fetch_or(&input.raw_right_or, right);
         uint16_t value = (uint16_t)pcm_input_sample(word);
         input.pcm[samples * 2] = value & 255;
         input.pcm[samples * 2 + 1] = value >> 8;
@@ -185,7 +191,11 @@ static void poll(void *context, node_audio_progress *progress)
     if (!selected_capture) { poll_output(context, progress); return; }
     *progress = (node_audio_progress){.samples = atomic_load(&input.samples),
         .dma_frames = atomic_load(&input.frames), .underflows = atomic_load(&input.overflows),
-        .done = atomic_load(&input.done)};
+        .done = atomic_load(&input.done),
+        .raw_left_nonzero = atomic_load(&input.raw_left_nonzero),
+        .raw_right_nonzero = atomic_load(&input.raw_right_nonzero),
+        .raw_left_or = atomic_load(&input.raw_left_or),
+        .raw_right_or = atomic_load(&input.raw_right_or)};
     progress->failed = progress->underflows != 0;
 }
 node_audio_port esp32_audio_port(void)

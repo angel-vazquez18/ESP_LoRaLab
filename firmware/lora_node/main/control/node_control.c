@@ -419,6 +419,10 @@ static void finish_operation(node_control *n, const char *status, const char *co
             number(n, result, "hardware_gain_db", 6);
             boolean(n, result, "heard_verified", false);
             if (op->capture) {
+                number(n, result, "raw_left_nonzero_samples", op->audio_progress.raw_left_nonzero);
+                number(n, result, "raw_right_nonzero_samples", op->audio_progress.raw_right_nonzero);
+                number(n, result, "raw_left_or", op->audio_progress.raw_left_or);
+                number(n, result, "raw_right_or", op->audio_progress.raw_right_or);
                 number(n, result, "overflows", op->audio_progress.underflows);
                 number(n, result, "input_gain_numerator", 1);
                 number(n, result, "input_gain_denominator", 1);

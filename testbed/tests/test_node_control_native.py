@@ -37,10 +37,17 @@ MEMORY = C.CFUNCTYPE(None, C.c_void_p, C.POINTER(Heap), C.POINTER(Heap), C.POINT
 
 
 class AudioProgress(C.Structure):
-    _fields_ = [(k, C.c_uint32) for k in ("samples", "dma_frames", "underflows")] + [
-        ("done", C.c_bool),
-        ("failed", C.c_bool),
-    ]
+    _fields_ = (
+        [(k, C.c_uint32) for k in ("samples", "dma_frames", "underflows")]
+        + [
+            ("done", C.c_bool),
+            ("failed", C.c_bool),
+        ]
+        + [
+            (k, C.c_uint32)
+            for k in ("raw_left_nonzero", "raw_right_nonzero", "raw_left_or", "raw_right_or")
+        ]
+    )
 
 
 AUDIO_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_uint32, C.c_bool)

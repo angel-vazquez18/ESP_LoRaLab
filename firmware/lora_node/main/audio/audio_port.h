@@ -5,6 +5,7 @@
 typedef struct {
     uint32_t samples, dma_frames, underflows;
     bool done, failed;
+    uint32_t raw_left_nonzero, raw_right_nonzero, raw_left_or, raw_right_or;
 } node_audio_progress;
 
 // stop must quiesce DMA before its borrowed buffer can be released.
