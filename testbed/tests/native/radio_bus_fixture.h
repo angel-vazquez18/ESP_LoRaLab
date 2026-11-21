@@ -7,7 +7,8 @@ typedef struct {
     bool pins[6], busy, absent, fail, gpio_fail, reject;
     unsigned transfers;
     uint16_t irq;
-    uint8_t mode, tx_bytes[255], tx_length;
+    uint8_t fail_opcode;
+    uint8_t mode, tx_bytes[255], tx_length, rx_bytes[255], rx_length;
     uint8_t opcodes[2048], registers[65536], modulation[4];
 } fixture;
 static int64_t now(void *p) { return ((fixture *)p)->time; }
@@ -25,9 +26,13 @@ static bool transfer(void *p, const uint8_t *tx, uint8_t *rx, size_t count) {
     if (tx[0] == 0x11) rx[count - 1] = 1;
     if (tx[0] == 0x80) f->mode=2;
     if (tx[0] == 0x83) f->mode=6;
+    if (tx[0] == 0x82) f->mode=5;
+    if (tx[0] == 0x13) { rx[2]=f->rx_length; rx[3]=7; }
+    if (tx[0] == 0x14) { rx[2]=173; rx[3]=251; rx[4]=170; }
+    if (tx[0] == 0x1e) { assert(tx[1]==7); memcpy(rx+3,f->rx_bytes,count-3); }
     if (tx[0] == 0x0e) { f->tx_length=count-2; memcpy(f->tx_bytes,tx+2,count-2); }
     if (tx[0] == 0x12) { rx[2]=f->irq>>8; rx[3]=f->irq; }
     if (tx[0] == 0x02) f->irq &= ~((tx[1]<<8)|tx[2]);
     if (tx[0] == 0xc0) rx[count - 1] = f->absent ? 0xff : ((f->mode<<4) | (f->reject ? 8 : 4));
-    return !f->fail;
+    return !f->fail && tx[0]!=f->fail_opcode;
 }

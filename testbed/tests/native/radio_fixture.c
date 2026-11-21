@@ -109,6 +109,52 @@ int main(int argc, char **argv) {
             }
             f.fail=false;
         }
+        if (!strncmp(argv[1],"rx",2)) {
+            node_radio_settings config={915000000,125000,7,5,2,8};
+            assert(node_radio_configure(&radio,&config));
+            unsigned before=f.transfers;
+            assert(!node_radio_rx(&radio,0,100000));
+            assert(!node_radio_rx(&radio,256,100000));
+            assert(!node_radio_rx(&radio,255,0));
+            assert(f.transfers==before);
+            assert(node_radio_rx(&radio,3,100000));
+            assert(!f.pins[RADIO_FEM_MODE] && f.pins[RADIO_FEM_ENABLE]);
+            node_radio_event event;
+            assert(!node_radio_poll(&radio,&event));
+            if (!strcmp(argv[1],"rx_timeout")) f.time+=100000;
+            else if (!strcmp(argv[1],"rx_irq_timeout")) f.irq=0x0200;
+            else if (!strcmp(argv[1],"rx_cancel")) assert(node_radio_stop(&radio));
+            else {
+                f.rx_length=!strcmp(argv[1],"rx_oversize")?4:!strcmp(argv[1],"rx_empty")?0:3;
+                if (!strcmp(argv[1],"rx_fifo_failure")) f.fail_opcode=0x1e;
+                memcpy(f.rx_bytes,(uint8_t[]){1,128,255,7},4);
+                f.irq=!strcmp(argv[1],"rx_crc")?0x42:!strcmp(argv[1],"rx_header")?0x20:2;
+            }
+            assert(!node_radio_poll(&radio,NULL));
+            assert(!node_radio_rx(&radio,3,100000));
+            assert(node_radio_poll(&radio,&event) && event.kind==RADIO_EVENT_RX);
+            if (!strcmp(argv[1],"rx")) {
+                assert(event.status==RADIO_DONE && event.crc_ok && event.signal_valid);
+                assert(event.frame_bytes==3 && !memcmp(event.bytes,f.rx_bytes,3));
+                assert(event.rssi_dbm==-86.5f && event.snr_db==-1.25f);
+            } else {
+                assert(event.status!=RADIO_DONE);
+                if (!strcmp(argv[1],"rx_crc")) assert(!event.crc_ok && event.signal_valid);
+                if (!strcmp(argv[1],"rx_timeout")) assert(!event.signal_valid && event.done_us==-1);
+                if (!strcmp(argv[1],"rx_oversize")) assert(event.status==RADIO_OVERSIZE);
+            }
+            assert(!node_radio_poll(&radio,&event));
+            assert(!f.pins[RADIO_FEM_ENABLE]);
+            f.fail_opcode=0;
+            if (!radio.available) {
+                assert(!strcmp(argv[1],"rx_fifo_failure"));
+                assert(node_radio_init(&radio,&bus,variant));
+                assert(node_radio_configure(&radio,&config));
+            }
+            assert(node_radio_rx(&radio,255,100000));
+            f.rx_length=3; f.irq=2;
+            assert(node_radio_poll(&radio,&event) && event.status==RADIO_DONE);
+        }
         assert(node_radio_init(&radio, &bus, RADIO_HELTEC_V42_GC1109));
     }
     puts("radio boundary passed");
