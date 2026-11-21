@@ -1,5 +1,6 @@
 """Finite node lifecycle against real C control and a test-only radio boundary."""
 
+import asyncio
 import base64
 import ctypes as C
 import hashlib
@@ -7,12 +8,13 @@ import json
 from uuid import uuid4
 
 import pytest
-from test_node_control_native import NativeNode
+from test_node_control_native import NativeNode, NativeSerial
 from test_node_control_native import native_library as native_library
 
 from lora_testbed import run_protocol_v2
 from lora_testbed.experiments_v2 import KnownDataPlan, KnownDataSpec, known_data, preview
 from lora_testbed.frames_v2 import data_frame
+from lora_testbed.nodes import NodeSession
 
 
 def setup(node, *, sender=False, length=160):
@@ -214,3 +216,55 @@ def test_rf_prepare_json_failures_do_not_reserve_or_start_work(native_library):
             native_library.native_allocator_fail_after(-1)
             node.close()
 
+
+def test_host_negotiates_and_collects_real_core_rf_events(native_library):
+    async def scenario():
+        radio = native_library.native_radio_create()
+        serial = NativeSerial(native_library, radio=radio)
+        events = []
+        node = NodeSession("A", lambda _, event: events.append(event), lambda _: serial)
+        await node.connect("isolated-rf-core")
+        run = str(uuid4())
+        try:
+            await node.request(
+                "session.open",
+                {
+                    "session_id": "0102030405060708",
+                    "peer_device_id": "esp-aabbccddeeff",
+                    "peer_boot_id": "esp-aabbccddeeff:1",
+                    "security": "none",
+                    "tx_key_hex": None,
+                    "rx_key_hex": None,
+                },
+                run_id=run,
+            )
+            config = await node.request("config.set", {"radio": {}, "link": {}})
+            plan = KnownDataPlan(spec=KnownDataSpec(message_count=1, max_duration_ms=3000))
+            prepared = await node.request(
+                "run.prepare",
+                {"spec": plan.spec.model_dump(), "budget": preview(plan)["timing"]["budget"]},
+                run_id=run,
+            )
+            for _ in range(100):
+                if any(
+                    r["operation_id"] == prepared["operation_id"] for r in node.operation_results
+                ):
+                    break
+                await asyncio.sleep(0.005)
+            assert any(e["name"] == "run.prepared" for e in events)
+            await node.request(
+                "run.start", {"config_revision": config["config_revision"]}, run_id=run
+            )
+            native_library.native_radio_tx_done(radio)
+            for _ in range(100):
+                if any(e["name"] == "tx.attempt" for e in events):
+                    break
+                await asyncio.sleep(0.005)
+            summary = await node.request("run.summary", run_id=run)
+            assert summary["tx_attempts"] == 1 and summary["stop_reason"] == "completed"
+            assert node.framing_errors == 0 and node.connected
+        finally:
+            await node.close()
+        assert serial.closed
+
+    asyncio.run(scenario())
