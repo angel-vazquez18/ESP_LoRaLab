@@ -54,3 +54,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #19: PR #165 (`feat/finite-radio-tx` → `feat/radio-modem-settings`).
 - #20: finite RX, signal/CRC attribution, queue-pressure/timeout/cancel and
   reinitialization-after-SPI-fault checks. Next #25 header/content acceptance.
+
+- #20: PR #166 (`feat/finite-radio-rx` → `feat/finite-radio-tx`).
+- #25: explicit frame vectors, deterministic source, once-only verification and
+  finite one-message node execution implemented. Radio limits deliberately remain
+  one message/fragment, <=215 bytes, <=30 s until later transport work. Next #27
+  serial-backed receiver-first host workflow, then #34 dashboard.
