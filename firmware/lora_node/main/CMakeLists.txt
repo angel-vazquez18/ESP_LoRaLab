@@ -3,6 +3,7 @@ idf_component_register(
         "lora_node.c"
         "radio/esp32_radio.c"
         "radio/node_radio.c"
+        "radio/radio_config_json.c"
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
         "audio/pcm_samples.c"
