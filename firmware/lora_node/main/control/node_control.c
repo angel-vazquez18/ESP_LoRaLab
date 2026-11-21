@@ -5,6 +5,7 @@
 #include <string.h>
 #include "node_control.h"
 #include "generated/audio_profile.h"
+#include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
 #include "protocol/chunk_bytes.h"
@@ -206,14 +207,24 @@ static cJSON *capabilities(node_control *n)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "radio",         "codec2_3200", "security_gcm",
+        "codec2_3200", "security_gcm",
         "fragmentation", "ack_retry",     "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "radio", n->port.radio && n->port.radio->available);
     boolean(n, o, "audio_capture", n->port.audio.capture);
     boolean(n, o, "audio_playback", n->port.audio.playback);
     boolean(n, o, "memory_stats", true);
-    add(n, o, "radio_limits", object(n));
+    cJSON *radio = object(n);
+    if (n->port.radio) {
+        const char *variant = n->port.radio->variant == RADIO_HELTEC_V42_GC1109 ? "heltec_v4_2_gc1109" :
+            n->port.radio->variant == RADIO_HELTEC_V43_KCT8103L ? "heltec_v4_3_kct8103l" : "unselected";
+        string(n, radio, "selected_board_variant", variant);
+        string(n, radio, "board_reference_sha256", RADIO_BOARD_REFERENCE_SHA256);
+        string(n, radio, "initialization_error", n->port.radio->error);
+        boolean(n, radio, "physical_qualified", false);
+    }
+    add(n, o, "radio_limits", radio);
     number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
     number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
     number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);

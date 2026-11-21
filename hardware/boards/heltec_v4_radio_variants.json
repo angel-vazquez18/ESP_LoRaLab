@@ -1,0 +1,17 @@
+{
+  "profile_version": 1,
+  "status": "reference_not_hardware_validated",
+  "radio": "SX1262",
+  "spi_clock_hz": 4000000,
+  "spi_mode": 0,
+  "busy_timeout_us": 100000,
+  "tcxo_voltage_v": 1.8,
+  "tcxo_startup_us": 5000,
+  "common_gpio": {"nss": 8, "sck": 9, "mosi": 10, "miso": 11, "reset": 12, "busy": 13, "dio1": 14, "fem_power": 7, "fem_enable": 2},
+  "variants": {
+    "heltec_v4_2_gc1109": {"fem_mode_gpio": 46, "dio2": "GC1109_CTX", "host_mode": "GC1109_CPS", "schematic": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/WiFi_LoRa_32_V4.2.pdf"},
+    "heltec_v4_3_kct8103l": {"fem_mode_gpio": 5, "dio2": "KCT8103L_CPS", "host_mode": "KCT8103L_CTX", "schematic": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/HTIT-WB32LAF_V4.3.pdf"}
+  },
+  "physical_board_revision": "unverified",
+  "r8_variant_supported": false
+}

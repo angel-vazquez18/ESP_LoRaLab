@@ -11,3 +11,16 @@ config LORALAB_AUDIO_CAPTURE
     help
         INMP441 L/R must be grounded, selecting the left slot.
 endmenu
+
+menu "LoRaLab radio board selection"
+choice LORALAB_RADIO_BOARD
+    prompt "Verified schematic variant (not detected automatically)"
+    default LORALAB_RADIO_UNSELECTED
+config LORALAB_RADIO_UNSELECTED
+    bool "Unselected: leave RF pins untouched"
+config LORALAB_RADIO_HELTEC_V42
+    bool "Standard Heltec V4.2 with GC1109 front end"
+config LORALAB_RADIO_HELTEC_V43
+    bool "Standard Heltec V4.3 R2 with KCT8103L front end"
+endchoice
+endmenu
