@@ -36,3 +36,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 
 - #3: execution capability gate, shared lifecycle examples and generated firmware
   fingerprint complete; 366 tests and full `make check` passed. Hardware execution is not advertised yet.
+
+- #3: PR #162 (`docs/radio-execution-contract` → `feat/local-audio-inspector`).
+- #12: portable/ESP-IDF initialization, explicit revision references, native
+  failure/recovery coverage, default and selected-board builds. Physical #1 remains
+  a qualification prerequisite; no board revision has been inferred.

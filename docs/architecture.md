@@ -96,6 +96,12 @@ compiler fixture use these same paths. This is directory organization within one
 ESP-IDF main component, not a collection of premature shared components. Radio,
 audio and other future modules are added only when implementing real behavior.
 
+The `radio/` module now isolates SX1262 command encoding, finite initialization and
+revision-specific ESP-IDF GPIO/SPI. A pinned, licensed Semtech driver lives under
+`radio/vendor/`; generated board metadata comes from the radio-variant reference.
+Main control reports actual initialization availability without promising execution
+handlers. See [radio driver](radio_driver.md).
+
 ## Important existing host modules
 
 - `app.py` and `cli.py`: entry interfaces; use the same Host and procedure paths.

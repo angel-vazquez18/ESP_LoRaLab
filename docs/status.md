@@ -16,6 +16,17 @@ advertised. See [radio execution](radio_execution.md) and
 RF acceptance remains open. `make check` passed 366 tests with no skips, lint,
 frontend build, generated-contract and repository checks.
 
+## November 21 — SX1262 initialization (#12)
+
+Added the pinned Semtech driver, bounded portable GPIO/SPI/time boundary, explicit
+V4.2/V4.3 board selection, real status-based availability and standby/front-end
+shutdown on failure. Default builds leave RF pins untouched. V4.3 plus the old
+GPIO5 microphone capture profile fails at build time. Native checks cover actual
+driver calls, absent/stuck/failing buses and repeated recovery; physical radio
+qualification remains pending. See [driver details](radio_driver.md). Full `make check` passed 373 tests without
+skips; an additional command-rejection native case passed afterward. Default and
+V4.3 ESP-IDF builds passed; V4.2 selection is also checked before publishing.
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones
