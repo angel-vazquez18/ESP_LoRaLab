@@ -9,8 +9,13 @@ from uuid import uuid4
 import serial
 from serial.tools.list_ports import comports
 
-from . import artifact_contract_v2, audio_contract_v2, control_v2, v2
-from .adapters import health_freshness, require_artifact_compatible, require_control_compatible
+from . import artifact_contract_v2, audio_contract_v2, control_v2, run_protocol_v2, v2
+from .adapters import (
+    health_freshness,
+    require_artifact_compatible,
+    require_control_compatible,
+    require_execution_compatible,
+)
 
 
 def discover_ports() -> list[dict]:
@@ -191,6 +196,22 @@ class NodeSession:
         async with self.command_lock:
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
+            execution_command = name in run_protocol_v2.EXECUTION_COMMANDS
+            if execution_command:
+                if self.identity is None or self.health is None:
+                    raise ValueError("MISSING_CAPABILITY: Execution identity/health unavailable")
+                if name not in run_protocol_v2.CLEANUP_COMMANDS and (
+                    self.last_health is None or monotonic() - self.last_health > 3
+                ):
+                    raise ValueError("MISSING_CAPABILITY: Execution needs fresh health")
+                require_execution_compatible(
+                    self.identity.model_dump(),
+                    name,
+                    self.health.capability_availability.model_dump(),
+                )
+                args = run_protocol_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+                if name.startswith(("run.", "session.")) and run_id is None:
+                    raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
             artifact_limits = None
             if name in artifact_contract_v2.ARGUMENTS:
                 if self.identity is None:
@@ -263,6 +284,12 @@ class NodeSession:
                             return artifact_contract_v2.validate_result(
                                 name, command.args, reply.result, artifact_limits
                             ).model_dump()
+                        if execution_command:
+                            return (
+                                run_protocol_v2.RESULTS[name]
+                                .model_validate(reply.result)
+                                .model_dump()
+                            )
                         return reply.result
                     except TimeoutError:
                         if attempt == retries:
