@@ -22,16 +22,37 @@ typedef struct {
 } node_radio_settings;
 
 typedef struct {
+    uint64_t session_id;
+    uint32_t frame_seq, message_id;
+    uint16_t fragment_index;
+    uint8_t attempt_index;
+} node_radio_reference;
+typedef enum { RADIO_DONE, RADIO_TIMEOUT, RADIO_CANCELLED, RADIO_FAILED } node_radio_outcome;
+typedef struct {
+    node_radio_reference reference;
+    node_radio_outcome status;
+    uint16_t frame_bytes;
+    int64_t command_us, done_us;
+} node_radio_event;
+
+typedef struct {
     node_radio_bus bus;
     node_radio_variant variant;
     bool available;
     const char *error;
     bool configured, ldro_enabled;
     node_radio_settings applied;
+    unsigned operation;
+    bool event_pending;
+    int64_t deadline_us;
+    node_radio_event event;
 } node_radio;
 
 bool node_radio_init(node_radio *, const node_radio_bus *, node_radio_variant);
 bool node_radio_stop(node_radio *);
 bool node_radio_valid_settings(const node_radio_settings *);
 bool node_radio_configure(node_radio *, const node_radio_settings *);
+// True means accepted; poll reports observed completion/failure exactly once.
+bool node_radio_tx(node_radio *, const uint8_t *, size_t, const node_radio_reference *, uint32_t timeout_us);
+bool node_radio_poll(node_radio *, node_radio_event *);
 const char *node_radio_variant_name(node_radio_variant);

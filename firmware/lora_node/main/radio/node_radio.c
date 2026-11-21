@@ -79,12 +79,17 @@ static void disable(node_radio *r)
 bool node_radio_stop(node_radio *r)
 {
     if (!r || !r->bus.set) return false;
+    if (r->operation) {
+        r->operation = 0;
+        r->event.status = RADIO_CANCELLED;
+        r->event_pending = true;
+    }
     bool pins = r->bus.set(r->bus.context, RADIO_FEM_ENABLE, false);
     pins = r->bus.set(r->bus.context, RADIO_FEM_MODE, false) && pins;
     bool ok = r->available && pins &&
         sx126x_set_standby(r, SX126X_STANDBY_CFG_RC) == SX126X_STATUS_OK &&
         sx126x_clear_irq_status(r, SX126X_IRQ_ALL) == SX126X_STATUS_OK && status_ok(r);
-    if (!ok) { disable(r); if (!r->error) r->error = "radio_stop_failed"; }
+    if (!ok) { disable(r); if (r->event_pending) r->event.status = RADIO_FAILED; if (!r->error) r->error = "radio_stop_failed"; }
     return ok;
 }
 const char *node_radio_variant_name(node_radio_variant v)
@@ -138,7 +143,7 @@ bool node_radio_valid_settings(const node_radio_settings *s)
 }
 bool node_radio_configure(node_radio *r, const node_radio_settings *s)
 {
-    if (!r || !r->available || !node_radio_valid_settings(s)) return false;
+    if (!r || !r->available || r->operation || r->event_pending || !node_radio_valid_settings(s)) return false;
     bool ldro = (1U << s->spreading_factor) * 1000U >= 16U * s->bandwidth_hz;
     sx126x_mod_params_lora_t modulation = {
         .sf = (sx126x_lora_sf_t)s->spreading_factor,
@@ -175,5 +180,73 @@ bool node_radio_configure(node_radio *r, const node_radio_settings *s)
     r->ldro_enabled = ldro;
     r->configured = true;
     r->error = NULL;
+    return true;
+}
+
+static void complete(node_radio *r, node_radio_outcome status, int64_t observed)
+{
+    r->operation = 0;
+    r->event.status = status;
+    r->event.done_us = observed;
+    if (!node_radio_stop(r)) r->event.status = RADIO_FAILED;
+    r->event_pending = true;
+}
+bool node_radio_tx(node_radio *r, const uint8_t *bytes, size_t length,
+                   const node_radio_reference *reference, uint32_t timeout_us)
+{
+    if (!r || !r->available || !r->configured || r->operation || r->event_pending ||
+        !bytes || !length || length > 255 || !reference || !reference->session_id ||
+        !reference->frame_seq || !reference->message_id || reference->fragment_index > 4095 ||
+        reference->attempt_index < 1 || reference->attempt_index > 6 ||
+        !timeout_us || timeout_us > 30000000) return false;
+    if (!node_radio_stop(r)) return false;
+    r->event = (node_radio_event){.reference=*reference, .frame_bytes=length,
+        .command_us=-1, .done_us=-1, .status=RADIO_FAILED};
+    r->operation = 1;
+    sx126x_pkt_params_lora_t packet = {.preamble_len_in_symb=r->applied.preamble_symbols,
+        .header_type=SX126X_LORA_PKT_EXPLICIT, .pld_len_in_bytes=length,
+        .crc_is_on=true, .invert_iq_is_on=false};
+    bool ok = sx126x_set_lora_pkt_params(r,&packet) == SX126X_STATUS_OK &&
+        sx126x_write_buffer(r,0,bytes,length) == SX126X_STATUS_OK &&
+        sx126x_clear_irq_status(r,SX126X_IRQ_ALL) == SX126X_STATUS_OK &&
+        sx126x_set_dio_irq_params(r,SX126X_IRQ_TX_DONE|SX126X_IRQ_TIMEOUT,
+            SX126X_IRQ_TX_DONE|SX126X_IRQ_TIMEOUT,0,0) == SX126X_STATUS_OK &&
+        sx126x_set_rx_tx_fallback_mode(r,SX126X_FALLBACK_STDBY_RC) == SX126X_STATUS_OK &&
+        r->bus.set(r->bus.context,RADIO_FEM_MODE,true) &&
+        r->bus.set(r->bus.context,RADIO_FEM_ENABLE,true);
+    if (ok) {
+        r->event.command_us=r->bus.now_us(r->bus.context);
+        r->deadline_us=r->event.command_us+timeout_us;
+        uint32_t ticks=((uint64_t)timeout_us*64+999)/1000;
+        ok=sx126x_set_tx_with_timeout_in_rtc_step(r,ticks)==SX126X_STATUS_OK;
+        sx126x_chip_status_t status;
+        ok=ok && sx126x_get_status(r,&status)==SX126X_STATUS_OK &&
+            (status.chip_mode==SX126X_CHIP_MODE_TX || status.chip_mode==SX126X_CHIP_MODE_STBY_RC) &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_TIMEOUT &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_PROCESS_ERROR &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_EXEC_FAILURE;
+    }
+    if (!ok) complete(r,RADIO_FAILED,-1);
+    return true;
+}
+bool node_radio_poll(node_radio *r, node_radio_event *out)
+{
+    if (!r) return false;
+    if (r->operation) {
+        int64_t observed=r->bus.now_us(r->bus.context);
+        int dio=r->bus.get(r->bus.context,RADIO_DIO1);
+        if (observed>=r->deadline_us) complete(r,RADIO_TIMEOUT,-1);
+        else if (dio<0) complete(r,RADIO_FAILED,-1);
+        else if (dio) {
+            sx126x_irq_mask_t irq=0;
+            if (sx126x_get_irq_status(r,&irq)!=SX126X_STATUS_OK) complete(r,RADIO_FAILED,-1);
+            else if (irq & SX126X_IRQ_TIMEOUT) complete(r,RADIO_TIMEOUT,-1);
+            else if (irq == SX126X_IRQ_TX_DONE) complete(r,RADIO_DONE,observed);
+            else complete(r,RADIO_FAILED,-1);
+        }
+    }
+    if (!r->event_pending || !out) return false;
+    *out=r->event;
+    r->event_pending=false;
     return true;
 }
