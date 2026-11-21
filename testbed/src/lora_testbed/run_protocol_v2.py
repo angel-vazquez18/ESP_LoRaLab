@@ -11,6 +11,41 @@ from . import rf_events_v2 as rf
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
 
+EXECUTION_PROFILE = "known_data_execution_v1"
+ExecutionName = Literal[
+    "session.open",
+    "session.close",
+    "config.set",
+    "run.prepare",
+    "run.arm",
+    "run.start",
+    "run.stop",
+    "run.summary",
+]
+EXECUTION_COMMANDS = (
+    "session.open",
+    "session.close",
+    "config.set",
+    "run.prepare",
+    "run.arm",
+    "run.start",
+    "run.stop",
+    "run.summary",
+)
+CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary")
+
+
+class Capabilities(ContractModel):
+    profile: Literal["known_data_execution_v1"]
+    schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    commands: list[ExecutionName] = Field(min_length=1, max_length=8)
+
+    @model_validator(mode="after")
+    def unique_commands(self):
+        if len(self.commands) != len(set(self.commands)):
+            raise ValueError("Duplicate execution command")
+        return self
+
 
 class Empty(ContractModel):
     pass
@@ -184,6 +219,7 @@ def schema():
         "contract_version": v2.CONTRACT_VERSION,
         "scope": "virtual_known_data_execution",
         "wire": ADAPTER.json_schema(),
+        "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},
         "command_results": {name: model.model_json_schema() for name, model in RESULTS.items()},
     }

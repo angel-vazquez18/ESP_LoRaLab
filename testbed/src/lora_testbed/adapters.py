@@ -4,7 +4,7 @@ import asyncio
 from typing import Protocol
 from uuid import uuid4
 
-from . import artifact_contract_v2, control_v2, v2
+from . import artifact_contract_v2, control_v2, run_protocol_v2, v2
 
 
 class NodeAdapter(Protocol):
@@ -65,6 +65,33 @@ def require_artifact_compatible(identity, command, capability_availability=None)
             raise NodeFailure("UNSUPPORTED_VERSION", "Artifact schema mismatch")
         if command not in limits.commands:
             raise NodeFailure("MISSING_CAPABILITY", "Artifact command is not implemented")
+    return limits
+
+
+def require_execution_compatible(identity, command, capability_availability):
+    """Fail closed until a node advertises the selected RF execution command."""
+    if command not in run_protocol_v2.EXECUTION_COMMANDS:
+        raise NodeFailure("UNSUPPORTED_COMMAND", "Unknown execution command")
+    if require_control_compatible(identity) != "node_control":
+        raise NodeFailure("MISSING_CAPABILITY", "Main-node execution firmware is required")
+    if capability_availability is None:
+        raise NodeFailure("MISSING_CAPABILITY", "Execution needs current health capabilities")
+    for capabilities in (identity["capabilities"], capability_availability):
+        raw = capabilities.get("resource_limits", {}).get("execution")
+        if raw is None:
+            raise NodeFailure("MISSING_CAPABILITY", "Node does not advertise radio execution")
+        try:
+            limits = run_protocol_v2.Capabilities.model_validate(raw)
+        except ValueError as exc:
+            raise NodeFailure(
+                "UNSUPPORTED_VERSION", "Invalid execution capability profile"
+            ) from exc
+        if limits.schema_sha256 != run_protocol_v2.schema_digest():
+            raise NodeFailure("UNSUPPORTED_VERSION", "Execution schema mismatch")
+        if command not in limits.commands:
+            raise NodeFailure("MISSING_CAPABILITY", "Execution command is not implemented")
+        if command not in run_protocol_v2.CLEANUP_COMMANDS and not capabilities.get("radio"):
+            raise NodeFailure("MISSING_CAPABILITY", "Radio is unavailable")
     return limits
 
 
