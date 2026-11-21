@@ -5,6 +5,7 @@
 #include <string.h>
 #include "node_control.h"
 #include "radio/radio_config_json.h"
+#include "radio/rf_execution.h"
 #include "generated/execution_profile.h"
 #include "generated/audio_profile.h"
 #include "generated/radio_board.h"
@@ -55,9 +56,10 @@ struct node_control {
     unsigned cache_next;
     client_watermark clients[16]; // Never evict a sequence fence within a boot.
     operation op;
+    rf_execution rf;
     node_link_settings link;
     uint32_t config_revision;
-    char config_failure[1024];
+    char config_failure[1024], mutation_success[1024];
     char last_operation[37];
     uint64_t event_sequence, telemetry_drops, reply_drops;
     uint64_t rx_records, oversized, rejected_json, rejected_envelope, backpressure;
@@ -263,12 +265,17 @@ static cJSON *capabilities(node_control *n)
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
     number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
     add(n, limits, "artifact_transfer", files);
-    if (n->port.radio && n->port.radio->available) {
+    if (n->port.radio) {
         cJSON *execution = object(n);
         string(n, execution, "profile", EXECUTION_PROFILE);
         string(n, execution, "schema_sha256", EXECUTION_SCHEMA_SHA256);
-        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set"},1));
+        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary"},8));
         add(n, limits, "execution", execution);
+        cJSON *execution_limits=object(n);
+        number(n,execution_limits,"max_message_bytes",215);number(n,execution_limits,"max_messages_per_run",1);
+        number(n,execution_limits,"max_fragments_per_message",1);number(n,execution_limits,"max_duration_ms",30000);
+        string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
+        add(n,limits,"execution_limits",execution_limits);
     }
     if (n->port.audio.playback || n->port.audio.capture) {
         cJSON *audio = object(n);
@@ -322,9 +329,9 @@ static cJSON *health(node_control *n)
     n->port.memory(n->port.context, &internal, &psram, &failures);
     cJSON *o = object(n), *memory = object(n), *buffers = object(n), *traffic = object(n);
     string(n, o, "node_role", n->role[0] ? n->role : NULL);
-    string(n, o, "state", n->op.active ? "running" : "idle");
-    string(n, o, "run_id", n->op.active && n->op.run_id[0] ? n->op.run_id : NULL);
-    string(n, o, "operation_id", n->op.active ? n->op.id : NULL);
+    string(n, o, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
+    string(n, o, "run_id", n->op.active && n->op.run_id[0] ? n->op.run_id : rf_execution_busy(&n->rf)?n->rf.plan.run:NULL);
+    string(n, o, "operation_id", n->op.active ? n->op.id : (n->rf.phase==RF_PREPARING||n->rf.phase==RF_RUNNING)?n->rf.plan.operation:NULL);
     number(n, o, "uptime_us", now(n));
     string(n, o, "reset_cause", n->port.reset_cause);
     bool configured = n->port.radio && n->port.radio->available && n->port.radio->configured;
@@ -379,10 +386,10 @@ static cJSON *hello(node_control *n)
     string(n, o, "schema_sha256", n->port.schema_sha256);
     add(n, o, "capabilities", capabilities(n));
     boolean(n, o, "claimed", n->owner[0] != 0);
-    string(n, o, "state", n->op.active ? "running" : "idle");
+    string(n, o, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
     return o;
 }
-static void emit(node_control *n, const char *name, cJSON *data, const char *run_id)
+static bool emit(node_control *n, const char *name, cJSON *data, const char *run_id)
 {
     uint64_t sequence = ++n->event_sequence;
     cJSON *o = object(n);
@@ -396,8 +403,8 @@ static void emit(node_control *n, const char *name, cJSON *data, const char *run
     string(n, o, "run_id", run_id);
     string(n, o, "name", name);
     add(n, o, "data", data);
-    if (!encode(n, o) || !enqueue(&n->events, n->encoded))
-        n->telemetry_drops++;
+    if (!encode(n, o) || !enqueue(&n->events, n->encoded)) { n->telemetry_drops++; return false; }
+    return true;
 }
 static void remember_error(node_control *n, const char *code, const char *message)
 {
@@ -485,6 +492,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
 static void lose_owner(node_control *n, const char *reason)
 {
     finish_operation(n, "cancelled", NULL, reason);
+    rf_execution_abort(&n->rf,"peer_failure",true);
     artifact_store_release_owner(n->artifacts, n->owner);
     n->owner[0] = n->role[0] = 0;
     n->lease_until = 0;
@@ -571,7 +579,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -603,7 +611,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -645,13 +653,15 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) &&
+    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) && !rf_execution_command(name) &&
         !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
         message = "Control commands require null run_id";
     }
     enum action action = NONE;
+    rf_plan radio_plan;
+    cJSON *radio_result=NULL;
     node_radio_settings radio_settings;
     node_link_settings link_settings;
     uint8_t *probe = NULL;
@@ -671,9 +681,18 @@ static void process(node_control *n, size_t length)
     n->oom = false;
     cJSON *result = NULL;
     if (!code) {
-        if (eq(name, "config.set")) {
+        if (rf_execution_command(name)) {
+            if(n->op.active) {code="BUSY";message="Another operation is active";}
+            else {
+                uint8_t id[16];n->port.random_bytes(n->port.context,id,sizeof(id));id[6]=(id[6]&15)|64;id[8]=(id[8]&63)|128;
+                snprintf(operation_id,sizeof(operation_id),"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",id[0],id[1],id[2],id[3],id[4],id[5],id[6],id[7],id[8],id[9],id[10],id[11],id[12],id[13],id[14],id[15]);
+                code=rf_execution_check(&n->rf,name,args,text(cmd,"run_id"),n->owner,n->role,n->port.device_id,n->config_revision,&n->link,operation_id,&radio_plan,&radio_result);
+                if(!code) {action=RF_COMMAND;if(!radio_result)n->oom=true;}
+                else message="Radio command rejected for this session, state or limit";
+            }
+        } else if (eq(name, "config.set")) {
             if (!n->port.radio || !n->port.radio->available) { code="MISSING_CAPABILITY"; message="Radio is unavailable"; }
-            else if (n->op.active) { code="BUSY"; message="Configuration requires idle"; }
+            else if (n->op.active || rf_execution_busy(&n->rf)) { code="BUSY"; message="Configuration requires idle"; }
             else if (n->config_revision == UINT32_MAX) { code="RESOURCE_LIMIT"; message="Configuration revision exhausted"; }
             else if (!radio_config_parse(args,&radio_settings,&link_settings)) { code="INVALID_ARGUMENT"; message="Unsupported radio or link configuration"; field="args"; }
             else action=CONFIGURE;
@@ -687,7 +706,7 @@ static void process(node_control *n, size_t length)
             } else if (n->owner[0] && !owned) {
                 code = "BUSY";
                 message = "Another client owns this node";
-            } else if (n->op.active && !eq(text(args, "node_role"), n->role)) {
+            } else if ((n->op.active || n->rf.plan.session) && !eq(text(args, "node_role"), n->role)) {
                 code = "INVALID_STATE";
                 message = "Role changes require an idle node";
             } else if (!(mark = watermark(n, client, true))) {
@@ -699,7 +718,7 @@ static void process(node_control *n, size_t length)
             }
         } else if (artifact_command(name)) {
             const char *id = text(args, "artifact_id");
-            if (n->op.active) {
+            if (n->op.active || rf_execution_busy(&n->rf)) {
                 code = "BUSY";
                 message = "File access requires an idle node";
             } else if (eq(name, "artifact.list")) {
@@ -799,7 +818,7 @@ static void process(node_control *n, size_t length)
             else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
                 !uint32_value(item(args, "sample_count"), 1, AUDIO_MAX_SAMPLES)) {
                 code = "INVALID_ARGUMENT"; message = "Capture requires a UUID and 1-24000 samples";
-            } else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            } else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
             else {
                 void *destination = NULL;
                 bytes = (uint32_t)item(args, "sample_count")->valuedouble * 2;
@@ -813,7 +832,7 @@ static void process(node_control *n, size_t length)
             const artifact_manifest *m = uuid(id) ? artifact_store_find(n->artifacts, id) : NULL;
             if (!n->port.audio.playback) { code = "MISSING_CAPABILITY"; message = "Playback is not configured for this board"; }
             else if (!exact_keys(args, keys, 1) || !uuid(id)) { code = "INVALID_ARGUMENT"; message = "A file UUID is required"; }
-            else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
             else if (!m) { code = "ARTIFACT_NOT_FOUND"; message = "File not found"; }
             else if (!eq(m->format, "pcm_s16le_8000_mono") || m->length_bytes % 2 || m->length_bytes > AUDIO_MAX_SAMPLES * 2) {
                 code = "INVALID_ARGUMENT"; message = "Playback requires complete 8 kHz signed-16-bit mono PCM";
@@ -833,7 +852,7 @@ static void process(node_control *n, size_t length)
             } else if (!eq(text(args, "kind"), "memory_probe")) {
                 code = "MISSING_CAPABILITY";
                 message = "Only memory_probe diagnostics are implemented";
-            } else if (n->op.active) {
+            } else if (n->op.active || rf_execution_busy(&n->rf)) {
                 code = "BUSY";
                 message = "Another operation is active";
             } else {
@@ -865,7 +884,7 @@ static void process(node_control *n, size_t length)
                 code = "INVALID_ARGUMENT";
                 field = "args";
                 message = "This command accepts no arguments";
-            } else if (eq(name, "control.release") && n->op.active) {
+            } else if (eq(name, "control.release") && (n->op.active || rf_execution_busy(&n->rf))) {
                 code = "INVALID_STATE";
                 message = "Stop the active operation before releasing ownership";
             } else if (eq(name, "control.release"))
@@ -887,15 +906,16 @@ static void process(node_control *n, size_t length)
                              id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7], id[8], id[9],
                              id[10], id[11], id[12], id[13], id[14], id[15]);
     }
-    if (!code && action == CONFIGURE) {
-        cJSON *failure = command_reply(n,cmd,sequence,NULL,"INTERNAL_ERROR","Radio configuration failed",NULL);
+    if (!code && (action == CONFIGURE || (action == RF_COMMAND && !read))) {
+        cJSON *failure = command_reply(n,cmd,sequence,NULL,"INTERNAL_ERROR",action==CONFIGURE?"Radio configuration failed":"Radio operation failed",NULL);
         if (!encode(n,failure) || strlen(n->encoded) >= sizeof(n->config_failure)) {
-            n->reply_drops++; cJSON_Delete(cmd); return;
+            n->reply_drops++; cJSON_Delete(radio_result); cJSON_Delete(cmd); return;
         }
         strcpy(n->config_failure,n->encoded);
     }
     if (!code) {
-        if (action == CONFIGURE) {
+        if(action==RF_COMMAND)result=radio_result;
+        else if (action == CONFIGURE) {
             result = radio_config_result(&radio_settings,&link_settings,n->config_revision+1);
             if (!result) n->oom = true;
         } else if (eq(name, "hello"))
@@ -913,8 +933,9 @@ static void process(node_control *n, size_t length)
             result = object(n);
             if (action == CLAIM || action == KEEPALIVE)
                 number(n, result, "lease_expires_us", lease);
+            if (action == CLAIM) number(n,result,"config_revision",n->config_revision);
             if (action == CLAIM || action == RELEASE)
-                string(n, result, "state", n->op.active ? "running" : "idle");
+                string(n, result, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
             if (action == PROBE || action == PLAY || action == CAPTURE) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
@@ -972,6 +993,11 @@ static void process(node_control *n, size_t length)
             cJSON_Delete(cmd);
             return; // No effects without a replayable acceptance.
         }
+        if(!code && action==RF_COMMAND) {
+            strcpy(n->mutation_success,n->encoded);
+            if(!rf_execution_apply(&n->rf,&radio_plan)) {code="INTERNAL_ERROR";message="Radio operation failed";strcpy(n->encoded,n->config_failure);}
+            else strcpy(n->encoded,n->mutation_success);
+        }
         if (!code && action == CONFIGURE) {
             if (!node_radio_configure(n->port.radio,&radio_settings)) {
                 code="INTERNAL_ERROR"; message="Radio configuration failed";
@@ -1013,6 +1039,7 @@ static void process(node_control *n, size_t length)
     } else if (action == KEEPALIVE)
         n->lease_until = lease;
     else if (action == RELEASE) {
+        rf_execution_abort(&n->rf,"host_shutdown",true);
         artifact_store_release_owner(n->artifacts, n->owner);
         n->owner[0] = n->role[0] = 0;
         n->lease_until = 0;
@@ -1045,6 +1072,12 @@ static void process(node_control *n, size_t length)
     cJSON_Delete(cmd);
 }
 
+static int64_t radio_now(void *context) {return now(context);}
+static bool radio_hash(void *context,const void *bytes,size_t count,uint8_t out[32]) {node_control *n=context;return n->port.sha256(n->port.context,bytes,count,out);}
+static void radio_random(void *context,void *bytes,size_t count) {node_control *n=context;n->port.random_bytes(n->port.context,bytes,count);}
+static bool radio_emit(void *context,const char *name,cJSON *data,const char *run) {return emit(context,name,data,run);}
+static uint64_t radio_drops(void *context) {return ((node_control *)context)->telemetry_drops;}
+static bool radio_room(void *context,unsigned count) {node_control *n=context;return n->events.capacity-n->events.count>=count;}
 node_control *node_control_create(const node_platform *platform)
 {
     if (!platform || ((platform->audio.playback || platform->audio.capture) && (!platform->audio.start || !platform->audio.poll || !platform->audio.stop)) || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
@@ -1062,6 +1095,7 @@ node_control *node_control_create(const node_platform *platform)
         free(n);
         return NULL;
     }
+    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops});
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;
     n->events.capacity = NODE_EVENT_SLOTS;
@@ -1073,6 +1107,7 @@ void node_control_destroy(node_control *n)
     if (!n)
         return;
     if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
+    rf_execution_abort(&n->rf,"host_shutdown",true);
     artifact_store_destroy(n->artifacts);
     free(n);
 }
@@ -1095,6 +1130,8 @@ void node_control_tick(node_control *n)
         lose_owner(n, "lease_expired");
     if (!n->linked)
         return;
+    n->oom=false;
+    rf_execution_tick(&n->rf);
     operation *op = &n->op;
     if (op->active && time >= op->deadline) {
         finish_operation(n, "failed", "TIMEOUT", "Operation deadline expired");
@@ -1136,7 +1173,7 @@ void node_control_tick(node_control *n)
     if (time >= n->next_health) {
         n->oom = false;
         cJSON *data = health(n);
-        emit(n, "health", data, n->op.active && n->op.run_id[0] ? n->op.run_id : NULL);
+        emit(n, "health", data, n->op.active && n->op.run_id[0] ? n->op.run_id : rf_execution_busy(&n->rf)?n->rf.plan.run:NULL);
         n->next_health = time + 1000000;
     }
     if (n->diagnostics_pending && time >= n->next_diagnostic) {
