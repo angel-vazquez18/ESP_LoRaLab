@@ -46,3 +46,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #15: strict real `config.set`, status/readback record, atomic rejection, no
   hardware effect before reply reservation and host fresh-health gating. Full
   checks and IDF build passed; physical parameter verification is pending.
+
+- #15: PR #164 (`feat/radio-modem-settings` → `feat/sx1262-init`).
+- #19: finite transmit driver and native fault/recovery cases complete; operator
+  run commands remain unadvertised until RX/message integration.
