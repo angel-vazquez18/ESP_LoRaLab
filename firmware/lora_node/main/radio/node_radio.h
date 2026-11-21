@@ -15,12 +15,23 @@ typedef struct {
 } node_radio_bus;
 
 typedef struct {
+    uint32_t frequency_hz, bandwidth_hz;
+    uint8_t spreading_factor, coding_rate_denominator;
+    int8_t tx_power_dbm;
+    uint8_t preamble_symbols;
+} node_radio_settings;
+
+typedef struct {
     node_radio_bus bus;
     node_radio_variant variant;
     bool available;
     const char *error;
+    bool configured, ldro_enabled;
+    node_radio_settings applied;
 } node_radio;
 
 bool node_radio_init(node_radio *, const node_radio_bus *, node_radio_variant);
 bool node_radio_stop(node_radio *);
+bool node_radio_valid_settings(const node_radio_settings *);
+bool node_radio_configure(node_radio *, const node_radio_settings *);
 const char *node_radio_variant_name(node_radio_variant);

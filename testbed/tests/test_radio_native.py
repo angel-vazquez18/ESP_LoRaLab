@@ -47,6 +47,7 @@ def radio_fixture(tmp_path_factory):
     "scenario",
     [
         "initialize",
+        "settings",
         "busy",
         "absent",
         "command_rejected",

@@ -1,6 +1,7 @@
 #include "radio/node_radio.h"
 #include "sx126x.h"
 #include "sx126x_hal.h"
+#include "sx126x_regs.h"
 #include <string.h>
 
 #define BUSY_TIMEOUT_US 100000LL
@@ -69,7 +70,7 @@ static bool status_ok(node_radio *r)
 }
 static void disable(node_radio *r)
 {
-    r->available = false;
+    r->available = r->configured = false;
     r->bus.set(r->bus.context, RADIO_FEM_ENABLE, false);
     r->bus.set(r->bus.context, RADIO_FEM_MODE, false);
     r->bus.set(r->bus.context, RADIO_FEM_POWER, false);
@@ -123,4 +124,56 @@ bool node_radio_init(node_radio *r, const node_radio_bus *bus, node_radio_varian
     }
     r->available = ok;
     return ok;
+}
+
+bool node_radio_valid_settings(const node_radio_settings *s)
+{
+    return s && s->frequency_hz >= 902000000 && s->frequency_hz <= 928000000 &&
+        s->frequency_hz % 1000 == 0 &&
+        (s->bandwidth_hz == 125000 || s->bandwidth_hz == 250000 || s->bandwidth_hz == 500000) &&
+        s->spreading_factor >= 7 && s->spreading_factor <= 12 &&
+        s->coding_rate_denominator >= 5 && s->coding_rate_denominator <= 8 &&
+        s->tx_power_dbm >= 2 && s->tx_power_dbm <= 20 &&
+        s->preamble_symbols >= 8 && s->preamble_symbols <= 32;
+}
+bool node_radio_configure(node_radio *r, const node_radio_settings *s)
+{
+    if (!r || !r->available || !node_radio_valid_settings(s)) return false;
+    bool ldro = (1U << s->spreading_factor) * 1000U >= 16U * s->bandwidth_hz;
+    sx126x_mod_params_lora_t modulation = {
+        .sf = (sx126x_lora_sf_t)s->spreading_factor,
+        .bw = s->bandwidth_hz == 125000 ? SX126X_LORA_BW_125 :
+              s->bandwidth_hz == 250000 ? SX126X_LORA_BW_250 : SX126X_LORA_BW_500,
+        .cr = (sx126x_lora_cr_t)(s->coding_rate_denominator - 4), .ldro = ldro};
+    sx126x_pkt_params_lora_t packet = {.preamble_len_in_symb = s->preamble_symbols,
+        .header_type = SX126X_LORA_PKT_EXPLICIT, .pld_len_in_bytes = 255,
+        .crc_is_on = true, .invert_iq_is_on = false};
+    sx126x_pa_cfg_params_t pa = {.pa_duty_cycle = 4, .hp_max = 7, .device_sel = 0, .pa_lut = 1};
+    uint8_t sync[] = {0x14, 0x24}, readback[2] = {0};
+    sx126x_pkt_type_t type;
+    #define APPLY(call) ((call) == SX126X_STATUS_OK && status_ok(r))
+    bool ok = node_radio_stop(r) &&
+        APPLY(sx126x_cal_img(r, 0xe1, 0xe9)) &&
+        APPLY(sx126x_set_rf_freq(r, s->frequency_hz)) &&
+        APPLY(sx126x_set_pa_cfg(r, &pa)) &&
+        APPLY(sx126x_cfg_tx_clamp(r)) &&
+        APPLY(sx126x_set_tx_params(r, s->tx_power_dbm, SX126X_RAMP_200_US)) &&
+        APPLY(sx126x_set_lora_mod_params(r, &modulation)) &&
+        APPLY(sx126x_set_lora_pkt_params(r, &packet)) &&
+        APPLY(sx126x_write_register(r, SX126X_REG_LR_SYNCWORD, sync, 2)) &&
+        sx126x_read_register(r, SX126X_REG_LR_SYNCWORD, readback, 2) == SX126X_STATUS_OK &&
+        !memcmp(sync, readback, 2) && sx126x_get_pkt_type(r, &type) == SX126X_STATUS_OK &&
+        type == SX126X_PKT_TYPE_LORA;
+    #undef APPLY
+    if (!ok) {
+        node_radio_stop(r);
+        disable(r);
+        r->error = "radio_configuration_failed";
+        return false;
+    }
+    r->applied = *s;
+    r->ldro_enabled = ldro;
+    r->configured = true;
+    r->error = NULL;
+    return true;
 }
