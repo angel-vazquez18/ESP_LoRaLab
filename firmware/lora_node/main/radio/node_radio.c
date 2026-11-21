@@ -183,6 +183,7 @@ bool node_radio_configure(node_radio *r, const node_radio_settings *s)
     return true;
 }
 
+static void receive_done(node_radio *r, sx126x_irq_mask_t irq, int64_t observed);
 static void complete(node_radio *r, node_radio_outcome status, int64_t observed)
 {
     r->operation = 0;
@@ -241,6 +242,7 @@ bool node_radio_poll(node_radio *r, node_radio_event *out)
             sx126x_irq_mask_t irq=0;
             if (sx126x_get_irq_status(r,&irq)!=SX126X_STATUS_OK) complete(r,RADIO_FAILED,-1);
             else if (irq & SX126X_IRQ_TIMEOUT) complete(r,RADIO_TIMEOUT,-1);
+            else if (r->operation == 2) receive_done(r,irq,observed);
             else if (irq == SX126X_IRQ_TX_DONE) complete(r,RADIO_DONE,observed);
             else complete(r,RADIO_FAILED,-1);
         }
@@ -249,4 +251,65 @@ bool node_radio_poll(node_radio *r, node_radio_event *out)
     *out=r->event;
     r->event_pending=false;
     return true;
+}
+
+bool node_radio_rx(node_radio *r, size_t maximum, uint32_t timeout_us)
+{
+    if (!r || !r->available || !r->configured || r->operation || r->event_pending ||
+        !maximum || maximum>255 || !timeout_us || timeout_us>30000000) return false;
+    if (!node_radio_stop(r)) return false;
+    r->event=(node_radio_event){.kind=RADIO_EVENT_RX,.command_us=-1,.done_us=-1,.status=RADIO_FAILED};
+    r->operation=2;
+    r->rx_maximum=maximum;
+    sx126x_pkt_params_lora_t packet={.preamble_len_in_symb=r->applied.preamble_symbols,
+        .header_type=SX126X_LORA_PKT_EXPLICIT,.pld_len_in_bytes=255,.crc_is_on=true,.invert_iq_is_on=false};
+    sx126x_irq_mask_t mask=SX126X_IRQ_RX_DONE|SX126X_IRQ_TIMEOUT|SX126X_IRQ_CRC_ERROR|SX126X_IRQ_HEADER_ERROR;
+    bool ok=sx126x_set_lora_pkt_params(r,&packet)==SX126X_STATUS_OK &&
+        sx126x_clear_irq_status(r,SX126X_IRQ_ALL)==SX126X_STATUS_OK &&
+        sx126x_set_dio_irq_params(r,mask,mask,0,0)==SX126X_STATUS_OK &&
+        sx126x_set_rx_tx_fallback_mode(r,SX126X_FALLBACK_STDBY_RC)==SX126X_STATUS_OK &&
+        r->bus.set(r->bus.context,RADIO_FEM_MODE,false) &&
+        r->bus.set(r->bus.context,RADIO_FEM_ENABLE,true);
+    if (ok) {
+        r->event.command_us=r->bus.now_us(r->bus.context);
+        r->deadline_us=r->event.command_us+timeout_us;
+        uint32_t ticks=((uint64_t)timeout_us*64+999)/1000;
+        ok=sx126x_set_rx_with_timeout_in_rtc_step(r,ticks)==SX126X_STATUS_OK;
+        sx126x_chip_status_t status;
+        ok=ok && sx126x_get_status(r,&status)==SX126X_STATUS_OK &&
+            (status.chip_mode==SX126X_CHIP_MODE_RX || status.chip_mode==SX126X_CHIP_MODE_STBY_RC) &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_TIMEOUT &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_PROCESS_ERROR &&
+            status.cmd_status!=SX126X_CMD_STATUS_CMD_EXEC_FAILURE;
+    }
+    if (!ok) complete(r,RADIO_FAILED,-1);
+    return true;
+}
+static void receive_done(node_radio *r, sx126x_irq_mask_t irq, int64_t observed)
+{
+    if (!(irq & SX126X_IRQ_RX_DONE)) {
+        complete(r,irq & SX126X_IRQ_HEADER_ERROR ? RADIO_HEADER_ERROR :
+            irq & SX126X_IRQ_CRC_ERROR ? RADIO_CRC_ERROR : RADIO_FAILED,-1);
+        return;
+    }
+    sx126x_rx_buffer_status_t buffer;
+    // Preserve chip half-dB RSSI and quarter-dB signed SNR; vendor helper rounds them.
+    const uint8_t status_cmd[]={0x14,0x00};
+    uint8_t signal[3];
+    bool ok=sx126x_get_rx_buffer_status(r,&buffer)==SX126X_STATUS_OK &&
+        sx126x_hal_read(r,status_cmd,2,signal,3)==SX126X_HAL_STATUS_OK;
+    if (!ok) { complete(r,RADIO_FAILED,observed); return; }
+    r->event.frame_bytes=buffer.pld_len_in_bytes;
+    r->event.signal_valid=true;
+    r->event.rssi_dbm=-(float)signal[0]/2.0f;
+    r->event.snr_db=(float)(int8_t)signal[1]/4.0f;
+    r->event.crc_ok=!(irq & (SX126X_IRQ_CRC_ERROR|SX126X_IRQ_HEADER_ERROR));
+    node_radio_outcome outcome=RADIO_DONE;
+    if (irq & SX126X_IRQ_HEADER_ERROR) outcome=RADIO_HEADER_ERROR;
+    else if (!r->event.crc_ok) outcome=RADIO_CRC_ERROR;
+    else if (!buffer.pld_len_in_bytes || buffer.pld_len_in_bytes>r->rx_maximum) outcome=RADIO_OVERSIZE;
+    else if (sx126x_read_buffer(r,buffer.buffer_start_pointer,r->event.bytes,buffer.pld_len_in_bytes)!=SX126X_STATUS_OK)
+        outcome=RADIO_FAILED;
+    if (sx126x_handle_rx_done(r)!=SX126X_STATUS_OK) outcome=RADIO_FAILED;
+    complete(r,outcome,observed);
 }
