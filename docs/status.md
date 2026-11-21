@@ -4,6 +4,18 @@ Updated November 15, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 21 — Radio execution contract (#3)
+
+The selected execution commands now have explicit per-command capability metadata,
+exact host compatibility checks, shared literal lifecycle/settings/timestamp
+examples and generated firmware metadata. New work requires current radio-ready
+health; declared cleanup remains available after failure. Existing control,
+diagnostic, artifact and audio digests remain unchanged. RF handlers are not yet
+advertised. See [radio execution](radio_execution.md) and
+[batch handoff](tasks/milestone_3_to_8_batch.md). No board is connected; physical
+RF acceptance remains open. `make check` passed 366 tests with no skips, lint,
+frontend build, generated-contract and repository checks.
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones
