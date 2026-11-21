@@ -2045,6 +2045,47 @@
       }
     ]
   },
+  "capability": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "known_data_execution_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "commands": {
+        "items": {
+          "enum": [
+            "session.open",
+            "session.close",
+            "config.set",
+            "run.prepare",
+            "run.arm",
+            "run.start",
+            "run.stop",
+            "run.summary"
+          ],
+          "type": "string"
+        },
+        "maxItems": 8,
+        "minItems": 1,
+        "title": "Commands",
+        "type": "array"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "commands"
+    ],
+    "title": "Capabilities",
+    "type": "object"
+  },
   "command_arguments": {
     "hello": {
       "additionalProperties": false,

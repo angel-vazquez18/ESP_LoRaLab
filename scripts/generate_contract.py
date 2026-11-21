@@ -67,6 +67,11 @@ def outputs(root: Path) -> dict[Path, str]:
             rf_events_v2.schema()
         ),
         root / "contracts/v2/execution.schema.json": document(run_protocol_v2.schema()),
+        root / "firmware/lora_node/main/generated/execution_profile.h": (
+            "#pragma once\n"
+            f'#define EXECUTION_PROFILE "{run_protocol_v2.EXECUTION_PROFILE}"\n'
+            f'#define EXECUTION_SCHEMA_SHA256 "{run_protocol_v2.schema_digest()}"\n'
+        ),
     }
 
 
