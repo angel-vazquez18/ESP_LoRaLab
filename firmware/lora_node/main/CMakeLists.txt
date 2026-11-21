@@ -4,6 +4,7 @@ idf_component_register(
         "radio/esp32_radio.c"
         "radio/node_radio.c"
         "radio/radio_config_json.c"
+        "radio/rf_frames.c"
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
         "audio/pcm_samples.c"

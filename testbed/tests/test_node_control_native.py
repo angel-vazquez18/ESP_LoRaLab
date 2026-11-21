@@ -126,6 +126,7 @@ def native_library(tmp_path_factory):
             str(main / "audio/pcm_samples.c"),
             str(main / "radio/node_radio.c"),
             str(main / "radio/radio_config_json.c"),
+            str(main / "radio/rf_frames.c"),
             str(main / "radio/vendor/sx126x/sx126x.c"),
             str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),
             "-I",
