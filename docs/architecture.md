@@ -102,6 +102,14 @@ revision-specific ESP-IDF GPIO/SPI. A pinned, licensed Semtech driver lives unde
 Main control reports actual initialization availability without promising execution
 handlers. See [radio driver](radio_driver.md).
 
+`radio/rf_frames.c` validates fixed header/source bytes; `radio/rf_execution.c`
+owns the current finite one-message node lifecycle and verified artifact delivery.
+Both use the real radio port and existing owner/serial writer. The physical host
+`radio_runs.py` shares bench ownership with audio/files/procedures, coordinates
+receiver-first work and separates verified bytes from evidence completeness. Its
+compact live snapshots avoid repeatedly sending raw records; detailed evidence
+and linked readback traces remain accessible separately.
+
 ## Important existing host modules
 
 - `app.py` and `cli.py`: entry interfaces; use the same Host and procedure paths.
