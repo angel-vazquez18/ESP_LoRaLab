@@ -131,3 +131,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   passed 521 cases; final lint/frontend/contracts/repository stages and IDF build
   passed. No hardware access. Protected session support remains gated; next #52
   owns fresh keys, nonce sequences and close/lease/reset invalidation.
+
+- #48: PR #176 (`feat/authenticated-radio-frames` →
+  `docs/session-key-contract`) is ready for review. No merge. Next #52 binds
+  private keys and nonce counters to session/ownership lifetime.
