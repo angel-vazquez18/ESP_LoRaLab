@@ -29,6 +29,8 @@ import type { HardwareNode } from "./HardwareBench";
 import type { AudioState } from "./NodeAudio";
 import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
+import RadioLink from "./RadioLink";
+import type { RadioState } from "./RadioLink";
 import RunComparison from "./RunComparison";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
@@ -117,6 +119,8 @@ type State = {
   hardware_nodes: HardwareNode[];
   artifact_transfers: ArtifactState;
   audio_operations: AudioState;
+  radio_runs: RadioState;
+  bench_busy: boolean;
   catalog: Entry[];
   procedures: {
     active_run:
@@ -134,6 +138,8 @@ const empty: State = {
   hardware_nodes: [],
   artifact_transfers: { active_id: null, transfers: [] },
   audio_operations: { active_id: null, operations: [] },
+  radio_runs: { active_id: null, active: null, runs: [] },
+  bench_busy: false,
   catalog: [],
   procedures: { active_run: null, runs: [] },
   v2_execution: { runs: [], campaigns: [] },
@@ -388,16 +394,28 @@ function Experiments({ host }: { host: Host }) {
                 </strong>
                 <span>{e.node_requirement}</span>
                 <small>
-                  {e.preflight.ready
-                    ? "Diagnostic check ready"
-                    : e.available
-                      ? "Connect a node"
-                      : "Implementation pending"}
+                  {e.id === "IF-02"
+                    ? "Single-message link check"
+                    : e.preflight.ready
+                      ? "Diagnostic check ready"
+                      : e.available
+                        ? "Connect a node"
+                        : "Implementation pending"}
                 </small>
               </button>
             ))}
         </section>
         <div>
+          {selected === "IF-02" && (
+            <RadioLink
+              state={host.state.radio_runs}
+              nodes={host.state.hardware_nodes}
+              benchBusy={host.state.bench_busy === true}
+              online={host.online}
+              request={host.request}
+              pending={host.pending}
+            />
+          )}
           {entry && (
             <section className="panel physical-check">
               <span className="eyebrow">
@@ -417,7 +435,9 @@ function Experiments({ host }: { host: Host }) {
               )}
               {entry.id !== "IF-01" && (
                 <button className="button secondary" disabled>
-                  Physical runner unavailable
+                  {entry.id === "IF-02"
+                    ? "Full procedure pending"
+                    : "Physical runner unavailable"}
                 </button>
               )}
             </section>
