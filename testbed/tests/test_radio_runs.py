@@ -362,7 +362,9 @@ def test_radio_http_and_cli_share_the_backend_contract(tmp_path, monkeypatch):
         assert client.post("/api/radio/preflight", json={}).json()["ready"] is False
         assert client.post("/api/radio/runs", json={}).status_code == 400
         assert (
-            client.post("/api/radio/runs", json={"link": {"ack_mode": "stop_wait"}}).status_code
+            client.post(
+                "/api/radio/runs", json={"link": {"ack_mode": "stop_wait", "max_retries": 3}}
+            ).status_code
             == 422
         )
         assert client.get("/api/radio/runs").json()["runs"] == []
@@ -446,6 +448,88 @@ def test_stop_during_failure_cleanup_waits_for_reserved_serial_write(
             assert record["cleanup"]["confirmed"] and not host.busy
         finally:
             serials["A"].release.set()
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_message_maximum_and_cli_bounds_reject_over_limit_before_any_job(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+    from typer.testing import CliRunner
+
+    from lora_testbed import cli
+    from lora_testbed.app import create_app
+
+    with TestClient(create_app(data_dir=tmp_path)) as client:
+        assert client.post("/api/radio/runs", json={"message_bytes": 65537}).status_code == 422
+        valid = client.post(
+            "/api/radio/preflight", json={"message_bytes": 65536, "timeout_ms": 900000}
+        )
+        assert valid.status_code == 200 and not valid.json()["ready"]
+        assert client.get("/api/radio/runs").json()["runs"] == []
+    calls = []
+    monkeypatch.setattr(cli, "request", lambda path, body=None: calls.append((path, body)))
+    runner = CliRunner()
+    assert (
+        runner.invoke(
+            cli.app,
+            ["radio-start", "--preview", "--message-bytes", "65536", "--timeout-ms", "900000"],
+        ).exit_code
+        == 0
+    )
+    assert calls[-1][1]["message_bytes"] == 65536
+    assert runner.invoke(cli.app, ["radio-start", "--message-bytes", "65537"]).exit_code != 0
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("older_peer", ["smaller_limits", "missing_fragmentation"])
+def test_older_peer_blocks_multi_fragment_work_before_session_or_configuration(
+    tmp_path, native_library, older_peer
+):
+    class OlderPeerSerial(FaultSerial):
+        def read(self, count):
+            wire = super().read(count)
+            if not wire:
+                return wire
+            record = json.loads(wire)
+
+            def rewrite(value):
+                if isinstance(value, dict):
+                    if older_peer == "missing_fragmentation" and "fragmentation" in value:
+                        value["fragmentation"] = False
+                    if older_peer == "smaller_limits" and "execution_limits" in value:
+                        value["execution_limits"]["max_message_bytes"] = 160
+                        value["execution_limits"]["max_fragments_per_message"] = 1
+                    for child in value.values():
+                        rewrite(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        rewrite(child)
+
+            rewrite(record)
+            return json.dumps(record).encode() + b"\n"
+
+    async def scenario():
+        host, serials = await connected_bench(
+            tmp_path,
+            native_library,
+            lambda role, **kw: OlderPeerSerial(**kw) if role == "B" else FaultSerial(**kw),
+        )
+        try:
+            request = RadioRunRequest(message_bytes=321)
+            readiness = host.radio.preflight(request)
+            expected = "max_message_bytes" if older_peer == "smaller_limits" else "fragmentation"
+            assert not readiness["ready"]
+            assert any(expected in blocker for blocker in readiness["blockers"])
+            with pytest.raises(ValueError, match=expected):
+                await host.start_radio(request)
+            assert not host.busy and host.radio.snapshot()["runs"] == []
+            assert not any(
+                name in {"session.open", "config.set", "run.prepare", "run.arm", "run.start"}
+                for serial in serials.values()
+                for name in serial.names
+            )
+        finally:
             await host.close()
 
     asyncio.run(scenario())

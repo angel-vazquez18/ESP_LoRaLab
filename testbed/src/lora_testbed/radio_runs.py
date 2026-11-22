@@ -1,4 +1,4 @@
-"""Bounded physical single-fragment bring-up; this is not full IF-02 qualification."""
+"""Bounded physical known-data message workflow; this is not full IF-02 qualification."""
 
 import asyncio
 import hashlib
@@ -18,17 +18,19 @@ from .adapters import require_execution_compatible
 from .artifact_contract_v2 import SHA256, ArtifactID
 from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
 from .models import StrictModel
+from .radio_accounting import failed_ranges, reconcile
 from .storage import utc_now
 
 TERMINAL = ("completed", "failed", "cancelled", "interrupted")
-MAX_WIRE_BYTES = 1048576
+MAX_WIRE_BYTES = 64 * 1024 * 1024
+MAX_RADIO_EVENTS = 65568
 
 
 class RadioRunRequest(StrictModel):
     direction: Literal["A_TO_B", "B_TO_A"] = "A_TO_B"
-    message_bytes: int = Field(default=64, ge=1, le=215)
+    message_bytes: int = Field(default=64, ge=1, le=65536)
     source_seed: int = Field(default=743, ge=0, le=2**32 - 1)
-    timeout_ms: int = Field(default=10000, ge=1000, le=30000)
+    timeout_ms: int = Field(default=10000, ge=1000, le=3600000)
     radio: Radio = Field(default_factory=lambda: Radio(tx_power_dbm=2))
     link: Link = Field(default_factory=Link)
 
@@ -47,12 +49,8 @@ class RadioRunRequest(StrictModel):
 
     @model_validator(mode="after")
     def finite_subset(self):
-        if self.link.ack_mode != "none" or self.link.max_retries:
-            raise ValueError(
-                "Initial physical bring-up requires unprotected data without ACK/retries"
-            )
-        if self.message_bytes > self.link.fragment_payload_bytes:
-            raise ValueError("Choose one message no larger than the configured fragment capacity")
+        if self.link.max_retries > 2:
+            raise ValueError("Physical node firmware supports at most two retries")
         timing = preview(self.plan())["timing"]
         if not timing["fits_selected_duration"]:
             raise ValueError(timing["duration_blocker"])
@@ -63,7 +61,7 @@ class PreparedArtifact(StrictModel):
     artifact_id: ArtifactID
     artifact_state: Literal["committed", "reserved"]
     sha256: SHA256
-    length_bytes: int = Field(ge=1, le=215)
+    length_bytes: int = Field(ge=1, le=65536)
 
 
 class RadioRuns:
@@ -138,6 +136,8 @@ class RadioRuns:
             "plan",
             "session_id",
             "verification",
+            "accounting",
+            "missing_evidence",
             "error",
             "cleanup",
             "hardware_qualified",
@@ -150,7 +150,10 @@ class RadioRuns:
         value["signal"] = [
             {
                 "role": event["role"],
-                **{key: event["data"][key] for key in ("rssi_dbm", "snr_db", "rx_done_us")},
+                **{
+                    key: event["data"][key]
+                    for key in ("rssi_dbm", "snr_db", "rx_done_us", "frame_type")
+                },
             }
             for event in record["events"]
             if event["name"] == "rx.frame"
@@ -185,7 +188,7 @@ class RadioRuns:
             + "\n"
         ).encode()
         if r["wire_bytes"] + len(data) > MAX_WIRE_BYTES:
-            raise ValueError("Radio evidence exceeds 1 MiB limit")
+            raise ValueError("Radio evidence exceeds 64 MiB limit")
         with (self.directory / f"{r['id']}.ndjson").open("ab") as output:
             output.write(data)
         r["wire_bytes"] += len(data)
@@ -203,8 +206,8 @@ class RadioRuns:
             return
         try:
             self.wire(r, {"direction": "node_event", "role": role, "record": event})
-            if len(r["events"]) >= 128:
-                raise ValueError("Radio event count exceeds single-message limit")
+            if len(r["events"]) >= MAX_RADIO_EVENTS:
+                raise ValueError("Radio event count exceeds bounded message-evidence limit")
             r["events"].append({"role": role, **event})
         except (ValueError, OSError) as exc:
             r["evidence_error"] = str(exc)
@@ -243,9 +246,20 @@ class RadioRuns:
             needed = {
                 "max_message_bytes": request.message_bytes,
                 "max_messages_per_run": 1,
-                "max_fragments_per_message": 1,
+                "max_fragments_per_message": (
+                    request.message_bytes + request.link.fragment_payload_bytes - 1
+                )
+                // request.link.fragment_payload_bytes,
                 "max_duration_ms": request.timeout_ms,
             }
+            if request.link.ack_mode == "stop_wait":
+                needed["max_retries"] = request.link.max_retries
+            features = preview(request.plan())["required_capabilities"]
+            for feature in features:
+                if not getattr(node.identity.capabilities, feature, False) or not getattr(
+                    node.health.capability_availability, feature, False
+                ):
+                    blockers.append(f"Node {role} lacks current {feature} support")
             for key, value in needed.items():
                 limit = limits.get(key)
                 if type(limit) is not int or limit < value:
@@ -290,6 +304,7 @@ class RadioRuns:
                 name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                 for name in (
                     "radio_runs.py",
+                    "radio_accounting.py",
                     "nodes.py",
                     "artifact_transfers.py",
                     "adapters.py",
@@ -303,6 +318,8 @@ class RadioRuns:
             "prepared": {},
             "summaries": {},
             "verification": None,
+            "accounting": None,
+            "missing_evidence": None,
             "events": [],
             "transfers": {},
             "readback_manifests": {},
@@ -578,15 +595,6 @@ class RadioRuns:
                             f"Node {role} telemetry is incomplete; "
                             "do not interpret missing evidence as RF loss"
                         )
-                tx = r["summaries"][r["sender"]]
-                rx = r["summaries"][r["receiver"]]
-                if (
-                    tx["original_packets"] != 1
-                    or tx["tx_attempts"] != 1
-                    or rx["delivered_messages"] != 1
-                    or rx["useful_delivered_bytes"] != len(expected)
-                ):
-                    raise ValueError("Node counters do not reconcile with one verified message")
                 r["status"] = "completed"
         except asyncio.CancelledError:
             r["status"] = "interrupted" if self.shutting_down else "cancelled"
@@ -616,6 +624,7 @@ class RadioRuns:
                 r["error"] = (
                     "Telemetry became incomplete during cleanup; verified bytes are retained"
                 )
+            r["missing_evidence"] = failed_ranges(r)
             r["finished_at"] = utc_now()
             r["stage"] = "finished"
             self.save(r)
@@ -653,29 +662,11 @@ class RadioRuns:
                         "Required radio observations are missing; "
                         "RF delivery and telemetry loss differ"
                     )
-        attempts = [
-            e["data"] for e in r["events"] if e["role"] == r["sender"] and e["name"] == "tx.attempt"
-        ]
-        delivered = [
-            e["data"]
-            for e in r["events"]
-            if e["role"] == r["receiver"] and e["name"] == "message.result"
-        ]
-        if (
-            len(attempts) != 1
-            or attempts[0]["status"] != "completed"
-            or attempts[0]["session_id"] != r["session_id"]
-            or attempts[0]["attempt_index"] != 1
-            or attempts[0]["frame_bytes"] != 40 + len(expected)
-        ):
-            raise ValueError("Transmit observations do not identify one completed original attempt")
-        if (
-            len(delivered) != 1
-            or delivered[0]["status"] != "delivered"
-            or delivered[0]["sha256"] != hashlib.sha256(expected).hexdigest()
-            or delivered[0]["message_bytes"] != len(expected)
-        ):
-            raise ValueError("Message observations do not reconcile with verified recovered bytes")
+        try:
+            r["accounting"] = reconcile(r, expected)
+        except ValueError as exc:
+            r["accounting"] = {"evidence_complete": False, "reason": str(exc)}
+            raise
 
     async def stop(self, identifier=None):
         async with self.stop_lock:
@@ -711,9 +702,9 @@ class RadioRuns:
             trace = self.artifacts.directory / f"{transfer_id}.ndjson"
             if trace.is_file():
                 members[f"transfers/{role}.ndjson"] = trace.read_bytes()
-        if sum(len(data) for data in members.values()) > 2 * 1024 * 1024:
+        if sum(len(data) for data in members.values()) > 128 * 1024 * 1024:
             raise ValueError(
-                "Radio export exceeds 2 MiB; retrieve the linked file-transfer evidence separately"
+                "Radio export exceeds 128 MiB; retrieve linked file-transfer evidence separately"
             )
         members["sha256.json"] = json.dumps(
             {name: hashlib.sha256(data).hexdigest() for name, data in members.items()}, indent=2
