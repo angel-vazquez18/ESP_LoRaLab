@@ -259,3 +259,56 @@ def audio_save(identifier: str, output: Path):
     except (HTTPError, URLError, OSError, ValueError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from exc
+
+
+@app.command()
+def radio_start(
+    direction: str = "A_TO_B",
+    message_bytes: Annotated[int, typer.Option(min=1, max=215)] = 64,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=30000)] = 10000,
+    config: Path | None = None,
+    preview: bool = False,
+):
+    """Run one unprotected known-data fragment using the shared physical backend."""
+    try:
+        body = (
+            json.loads(config.read_text())
+            if config
+            else {
+                "direction": direction.upper(),
+                "message_bytes": message_bytes,
+                "timeout_ms": timeout_ms,
+            }
+        )
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/radio/preflight" if preview else "/api/radio/runs", body)
+
+
+@app.command()
+def radio_status(identifier: str | None = None):
+    """Show active/saved physical bring-up and its byte/evidence findings."""
+    request("/api/radio/runs" + (f"/{identifier}" if identifier else ""))
+
+
+@app.command()
+def radio_stop(identifier: str):
+    """Stop the finite radio job and confirm both node sessions close."""
+    request(f"/api/radio/runs/{identifier}/stop", {})
+
+
+@app.command()
+def radio_export(identifier: str, output: Path):
+    """Save the hashed radio evidence bundle without overwriting a file."""
+    try:
+        with urlopen(BASE_URL + f"/api/radio/runs/{identifier}/export", timeout=20) as response:
+            data = response.read(2 * 1024 * 1024 + 1)
+        if len(data) > 2 * 1024 * 1024:
+            raise ValueError("Radio export exceeds 2 MiB limit")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc

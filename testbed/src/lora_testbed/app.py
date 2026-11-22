@@ -27,6 +27,7 @@ from .host import Host
 from .models import StrictModel
 from .nodes import discover_ports
 from .paths import TESTBED_ROOT
+from .radio_runs import RadioRunRequest
 from .reports import campaign_csv, evidence_bundle
 from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
@@ -143,6 +144,41 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             "schema_sha256": control_v2.schema_digest(),
             "hardware_validated": False,
         }
+
+    @app.post("/api/radio/preflight")
+    async def radio_preflight(body: RadioRunRequest):
+        return app.state.host.radio_preflight(body)
+
+    @app.post("/api/radio/runs", status_code=202)
+    async def radio_start(body: RadioRunRequest):
+        return await app.state.host.start_radio(body)
+
+    @app.get("/api/radio/runs")
+    async def radio_runs():
+        return app.state.host.radio.snapshot()
+
+    @app.get("/api/radio/runs/{identifier}")
+    async def radio_run(identifier: str):
+        return app.state.host.radio.get(identifier)
+
+    @app.post("/api/radio/runs/{identifier}/stop")
+    async def radio_stop(identifier: str):
+        return await app.state.host.radio.stop(identifier)
+
+    @app.get("/api/radio/runs/{identifier}/content/{kind}")
+    async def radio_content(identifier: str, kind: Literal["source", "recovered", "wire"]):
+        return FileResponse(
+            app.state.host.radio.content(identifier, kind),
+            media_type="application/x-ndjson" if kind == "wire" else "application/octet-stream",
+        )
+
+    @app.get("/api/radio/runs/{identifier}/export")
+    async def radio_export(identifier: str):
+        return Response(
+            app.state.host.radio.export(identifier),
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="radio-{identifier}.zip"'},
+        )
 
     @app.post("/api/nodes/{role}/memory-probe")
     async def memory_probe(role: Literal["A", "B"], body: MemoryProbeRequest):
