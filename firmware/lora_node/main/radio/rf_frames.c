@@ -2,13 +2,6 @@
 #include "radio/rf_fragments.h"
 #include <string.h>
 
-static uint64_t read_be(const uint8_t *p, unsigned count)
-{
-    uint64_t n = 0;
-    while (count--)
-        n = (n << 8) | *p++;
-    return n;
-}
 static void write_be(uint8_t *p, uint64_t n, unsigned count)
 {
     while (count)
@@ -16,11 +9,6 @@ static void write_be(uint8_t *p, uint64_t n, unsigned count)
         p[--count] = (uint8_t)n;
         n >>= 8;
     }
-}
-static bool roles(uint8_t source, uint8_t destination)
-{
-    return (source == 1 || source == 2) && (destination == 1 || destination == 2) &&
-           source != destination;
 }
 size_t rf_single_encode(uint64_t session, uint32_t sequence, uint32_t message, uint8_t source,
                         uint8_t destination, const void *body, size_t length, uint8_t out[255])
@@ -35,24 +23,19 @@ size_t rf_single_encode(uint64_t session, uint32_t sequence, uint32_t message, u
 
 bool rf_single_decode(const uint8_t *bytes, size_t length, uint32_t fragment, rf_single_header *out)
 {
-    if (!bytes || !out || fragment < 16 || fragment > 215 || length <= 40 || length > 255 ||
-        memcmp(bytes, "LT", 2) || bytes[2] != 2 || bytes[3] != 1 || bytes[4] || bytes[7] ||
-        !roles(bytes[5], bytes[6]) || read_be(bytes + 24, 2) || read_be(bytes + 26, 2) != 1 ||
-        read_be(bytes + 34, 4) || read_be(bytes + 38, 2))
+    rf_data_view v;
+    if (!out || fragment > RF_SINGLE_BYTES || !rf_data_decode(bytes, length, fragment, &v) ||
+        v.flags || v.content || v.fragment_count != 1)
         return false;
-    rf_single_header h = {.session = read_be(bytes + 8, 8),
-                          .frame_seq = read_be(bytes + 16, 4),
-                          .message_id = read_be(bytes + 20, 4),
-                          .message_bytes = read_be(bytes + 28, 4),
-                          .source = bytes[5],
-                          .destination = bytes[6]};
-    if (!h.session || !h.frame_seq || !h.message_id || !h.message_bytes ||
-        h.message_bytes > fragment || read_be(bytes + 32, 2) != h.message_bytes ||
-        length != 40 + h.message_bytes)
-        return false;
-    *out = h;
+    *out = (rf_single_header){.session = v.session,
+                              .frame_seq = v.frame_sequence,
+                              .message_id = v.message_id,
+                              .message_bytes = v.message_bytes,
+                              .source = v.source,
+                              .destination = v.destination};
     return true;
 }
+
 bool rf_known_data(rf_hash hash, void *context, uint32_t seed, uint32_t message, void *output,
                    size_t length)
 {

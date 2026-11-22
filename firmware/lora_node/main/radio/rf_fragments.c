@@ -79,3 +79,40 @@ size_t rf_message_fragment(const rf_message_plan *p, uint16_t index, const void 
     memcpy(out + 40, (const uint8_t *)source + (uint32_t)index * p->fragment_bytes, size);
     return 40 + size;
 }
+
+static uint64_t read_be(const uint8_t *p, unsigned size)
+{
+    uint64_t value = 0;
+    while (size--)
+        value = (value << 8) | *p++;
+    return value;
+}
+bool rf_data_decode(const void *frame, size_t length, uint16_t fragment, rf_data_view *out)
+{
+    const uint8_t *p = frame;
+    if (!p || !out || length <= 40 || length > 255 || memcmp(p, "LT", 2) || p[2] != 2 ||
+        p[3] != 1 || p[4] & ~2U || p[7] > 1 || !read_be(p + 16, 4) || read_be(p + 34, 4) ||
+        read_be(p + 38, 2))
+        return false;
+    rf_message_plan plan;
+    if (!rf_message_plan_init(&plan, read_be(p + 8, 8), 1, read_be(p + 20, 4), p[5], p[6], p[7],
+                              false, p[4] & 2, read_be(p + 28, 4), fragment))
+        return false;
+    uint16_t index = read_be(p + 24, 2);
+    if (read_be(p + 26, 2) != plan.fragment_count || index >= plan.fragment_count ||
+        read_be(p + 32, 2) != body_bytes(&plan, index) || length != 40U + body_bytes(&plan, index))
+        return false;
+    *out = (rf_data_view){.session = plan.session,
+                          .frame_sequence = read_be(p + 16, 4),
+                          .message_id = plan.message_id,
+                          .message_bytes = plan.message_bytes,
+                          .fragment_index = index,
+                          .fragment_count = plan.fragment_count,
+                          .body_bytes = body_bytes(&plan, index),
+                          .source = plan.source,
+                          .destination = plan.destination,
+                          .content = plan.content,
+                          .flags = plan.flags,
+                          .body = p + 40};
+    return true;
+}
