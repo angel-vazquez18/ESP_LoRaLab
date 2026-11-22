@@ -108,3 +108,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   pending. Next is M5 #44. Audio follow-up found acceptable tone output but faint/
   distorted processed speech and an internal contiguous-allocation limit; raw
   recordings remain private, and full audio qualification is not closed.
+
+- #47: PR #174 (`feat/multi-fragment-radio-runs` →
+  `feat/bounded-stop-and-wait`) is ready for review with five implementation/docs
+  commits, 501 checks and selected-board build/browser evidence. No merge.
+- Next: #44 specifies session-key provisioning/redaction and protected retry/
+  replay boundaries; current operator runs remain unprotected until implementation
+  and compatibility work is complete.
