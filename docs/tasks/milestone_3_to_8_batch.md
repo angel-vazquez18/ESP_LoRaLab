@@ -86,3 +86,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #35: bounded reconstruction, missing indexes, once-only hash verification and
   cleanup/recovery implemented; 12 new public-API cases pass. Canonical parser is
   used by current single-frame execution. Reliability scheduling follows.
+
+- #35: PR #171 (`feat/bounded-message-reassembly` →
+  `feat/bounded-message-fragments`), 447 checks and selected-board build passed.
+- #40: exact referenced ACKs, bounded receiver turnaround/cache and explicit
+  retry-versus-replay classification implemented. Combined reconstruction checks
+  require fresh re-ACKs with one application delivery. #43 adds sender policy.
