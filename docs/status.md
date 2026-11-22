@@ -542,3 +542,25 @@ after dropped DATA, over-limit rejection, history, light/dark appearance and
 390-pixel layout without horizontal page overflow. No console errors or warnings
 were observed. The final screenshot is an ignored Codex visualization named
 `multi-fragment-radio-software-fixture.png`; it is not physical RF evidence.
+
+## November 22 — Session-security contract (#44)
+
+[Session security](security_sessions.md) now maps the selected key/nonce/header
+contract to existing APIs, inventories secret fields and future persistence
+guards, separates retry duplicates from replay, and defines cancellation/
+exhaustion/retirement behavior. Protected DATA/ACK/ECHO and final-sequence public
+examples have independent AES-GCM encryption/decryption checks, including every
+AAD byte, ciphertext/tag mutation and wrong nonce/source key. The test oracle
+is dev-only Cryptography 50.0.2; fixed public keys are not production provisioning.
+
+A new public NodeSession regression reproduced rejected key values appearing in
+validation-error text. Session argument errors now omit supplied values before
+trace/error persistence; the regression passed after the fix. This does not
+implement successful protected provisioning. Current schema/capability gates
+still accept only unprotected sessions with null keys.
+
+`make check` passed 511 tests without skips, lint, frontend build, generated
+contracts and repository checks; the existing Starlette/httpx deprecation remains.
+No firmware behavior or wire digest changed, so no new IDF build or physical
+access was needed. GCM/session lifecycle/replay/host provisioning and physical
+security qualification remain the following issues.
