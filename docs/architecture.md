@@ -191,3 +191,8 @@ wire parser validation precedes insertion. Scheduler integration is separate.
 state. Receive validation/replay classification precedes scheduling; DATA insertion
 and delivery remain in reconstruction. Packet modules share the allocation/hash
 platform boundary declared as `rf_packet_port`.
+
+`radio/rf_sender` owns one immutable outstanding DATA frame, airtime-aware
+stop-and-wait states, bounded attempts and retained radio observations. It drives
+the existing real radio API; execution owns stop/lease/shutdown integration and
+message-level aggregation. ACK observations never inflate original DATA counts.

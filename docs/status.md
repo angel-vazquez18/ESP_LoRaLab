@@ -474,3 +474,19 @@ until security/scheduler integration. See [reliability](radio_reliability.md).
 contract and repository checks. Five ACK-focused cases also passed after aligning
 the cache test's timestamps monotonically. Selected-board ESP-IDF build passed;
 no flash or physical serial access occurred.
+
+## November 22 — Bounded stop-and-wait sender (#43)
+
+Added a real-radio-backed sender that copies immutable originals, applies
+applied-modem airtime deadlines and zero/one/two retry limits, validates exact ACK
+references and reports attempts separately from originals. Cancellation at every
+phase stops further work; exhaustion leaves the radio reusable. Source/session
+sequence high-water state rejects restarts, and both undrained TX/RX observations
+remain readable after bounded deadline cleanup. Nineteen focused public cases
+pass. Multi-fragment execution/capability wiring and physical acceptance follow
+in #47; no ESP is connected. See [reliability](radio_reliability.md).
+
+`make check` passed 471 tests without skips, lint, production frontend build,
+contract and repository checks. Selected-board ESP-IDF build passed. All 19 hashes
+from the original checkout's preserved local changes still match; no flash or
+physical port access occurred.
