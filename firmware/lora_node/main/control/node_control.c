@@ -227,10 +227,12 @@ static cJSON *capabilities(node_control *n)
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
         "codec2_3200", "security_gcm",
-        "fragmentation", "ack_retry",     "echo",           "clock_sync",  "fault_injection"};
+        "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
     boolean(n, o, "radio", n->port.radio && n->port.radio->available);
+    boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
+    boolean(n, o, "ack_retry", n->port.radio && n->port.radio->available);
     boolean(n, o, "audio_capture", n->port.audio.capture);
     boolean(n, o, "audio_playback", n->port.audio.playback);
     boolean(n, o, "memory_stats", true);
@@ -272,8 +274,9 @@ static cJSON *capabilities(node_control *n)
         add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary"},8));
         add(n, limits, "execution", execution);
         cJSON *execution_limits=object(n);
-        number(n,execution_limits,"max_message_bytes",215);number(n,execution_limits,"max_messages_per_run",1);
-        number(n,execution_limits,"max_fragments_per_message",1);number(n,execution_limits,"max_duration_ms",30000);
+        number(n,execution_limits,"max_message_bytes",65536);number(n,execution_limits,"max_messages_per_run",1);
+        number(n,execution_limits,"max_fragments_per_message",4096);number(n,execution_limits,"max_duration_ms",3600000);
+        number(n,execution_limits,"max_retries",2);
         string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
         add(n,limits,"execution_limits",execution_limits);
     }
@@ -1072,6 +1075,8 @@ static void process(node_control *n, size_t length)
     cJSON_Delete(cmd);
 }
 
+static void *radio_allocate(void *context, size_t size) {node_control *n=context;return n->port.allocate(n->port.context,size);}
+static void radio_release(void *context, void *bytes) {node_control *n=context;n->port.deallocate(n->port.context,bytes);}
 static int64_t radio_now(void *context) {return now(context);}
 static bool radio_hash(void *context,const void *bytes,size_t count,uint8_t out[32]) {node_control *n=context;return n->port.sha256(n->port.context,bytes,count,out);}
 static void radio_random(void *context,void *bytes,size_t count) {node_control *n=context;n->port.random_bytes(n->port.context,bytes,count);}
@@ -1095,7 +1100,7 @@ node_control *node_control_create(const node_platform *platform)
         free(n);
         return NULL;
     }
-    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops});
+    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release});
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;
     n->events.capacity = NODE_EVENT_SLOTS;
