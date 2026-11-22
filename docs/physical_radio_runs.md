@@ -37,6 +37,20 @@ explicit matching [board selection](radio_driver.md) before real use; the printe
 revision remains unconfirmed, and standard V4.3 RF conflicts with the old GPIO5
 microphone profile. Antenna/band/supply/wiring validation is still required.
 
+## Dashboard
+
+Open Experiments, select IF-02, and use the known-data radio panel. Direction,
+message length, modem settings and the run window use the same backend preflight
+as the CLI. Start stays disabled with explicit blockers for a missing/incompatible
+peer, invalid settings, an offline backend or an occupied bench. Stop targets the
+active job even while a previous result is selected.
+
+History separates exact byte verification, evidence completeness and pending
+hardware qualification. Signal comes only from retained receiver observations.
+Expand a record for requested/applied settings, node identities and summaries;
+downloads appear only for files that actually exist. The full IF-02 procedure
+remains separately pending.
+
 ## Evidence and outcomes
 
 Each run preserves device/boot identities, firmware and host source fingerprints,
@@ -99,3 +113,10 @@ files/hashes, actual CRC/signal, timeout and stop/idle recovery. Record printed
 revision, USB identity, firmware/build/profile and antenna/supply observations.
 Missing evidence remains pending; this bring-up alone does not close the complete
 IF-02 matrix. No ESP was connected during this implementation.
+
+November 22 browser verification used two real C cores behind test-only serial/SPI
+boundaries on an isolated localhost server. Both directions and 1/159/160-byte
+records, missing RX observation with verified bytes, shared-API bench exclusion,
+stop/idle cleanup, invalid size, missing peer, light/dark and 390-pixel layout
+passed. A mobile grid overflow was found and corrected. No console errors or
+warnings were observed. These are software fixtures, not physical RF results.
