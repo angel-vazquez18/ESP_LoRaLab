@@ -446,3 +446,17 @@ See [limits and checks](radio_fragments.md).
 `make check` passed 435 tests without skips, lint, frontend build, contracts and
 repository checks. The selected-board ESP-IDF build passed (0x51100-byte image,
 68% app partition free); no flash or physical serial access occurred.
+
+## November 22 — Bounded receiver reconstruction (#35)
+
+Added opaque one-message reconstruction with fixed session/roles/expected hash,
+bounded allocation/deadline, exact missing-index pages, reorder/duplicate handling
+and once-only hash-verified output. Failures/cancel scrub and release bytes while
+retaining missing indexes; old IDs cannot restart. Late conflicting packets leave
+already borrowed delivered bytes valid. Existing single-frame reception now uses
+the canonical multi-fragment parser. Multi-fragment scheduling/advertisement and
+physical RF acceptance remain pending. See [reconstruction](radio_fragments.md).
+
+`make check` passed 447 tests without skips plus lint, production frontend build,
+contract and repository checks. Selected-board ESP-IDF build passed (0x511e0-byte
+image, 68% app partition free). No physical port was opened.
