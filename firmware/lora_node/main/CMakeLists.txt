@@ -16,6 +16,7 @@ idf_component_register(
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
         "audio/pcm_samples.c"
+        "audio/codec_clip.c"
         "platform/esp32_platform.c"
         "transport/usb_transport.c"
         "control/node_control.c"

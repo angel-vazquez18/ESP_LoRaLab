@@ -1,0 +1,3 @@
+#pragma once
+#define CODEC_PROFILE "codec_io_v1"
+#define CODEC_SCHEMA_SHA256 "618c7597c32752c43c6391301d9ad489f02d1097c877776690dc77fa2c11c00d"

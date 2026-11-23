@@ -13,6 +13,7 @@ from serial.tools.list_ports import comports
 from . import (
     artifact_contract_v2,
     audio_contract_v2,
+    codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
     physical_wire_v2,
@@ -115,6 +116,28 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def codec_availability(self):
+        commands, blocked, limits = [], {}, None
+        for name in codec_contract_v2.ARGUMENTS:
+            try:
+                if (
+                    not self.connected
+                    or self.connection_state != "connected"
+                    or self.last_health is None
+                    or health_freshness(monotonic() - self.last_health) in ("stale", "unresponsive")
+                    or self.wire_profile != "node_control"
+                ):
+                    raise ValueError("Connect a node with fresh codec health")
+                limits = codec_contract_v2.require_capability(
+                    self.identity.capabilities if self.identity else None,
+                    self.health.capability_availability if self.health else None,
+                    name,
+                ).model_dump()
+                commands.append(name)
+            except ValueError as exc:
+                blocked[name] = str(exc)
+        return {"commands": commands, "blocked": blocked, "limits": limits}
+
     def artifact_availability(self):
         commands, blocked, limits = [], {}, None
         for name in artifact_contract_v2.ARGUMENTS:
@@ -139,6 +162,7 @@ class NodeSession:
             "wire_profile": self.wire_profile,
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
+            "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,
@@ -255,6 +279,13 @@ class NodeSession:
                         raise ValueError("Invalid key set identity") from None
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
+            if name == "audio.encode":
+                availability = self.codec_availability()
+                if name not in availability["commands"]:
+                    raise ValueError(
+                        availability["blocked"].get(name, "Codec command is unavailable")
+                    )
+                args = codec_contract_v2.ARGUMENTS[name].model_validate(args).model_dump()
             artifact_limits = None
             if name in artifact_contract_v2.ARGUMENTS:
                 if self.identity is None:
@@ -351,7 +382,11 @@ class NodeSession:
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
                         if name == "status.get":
                             self.accept_health(reply.result)
-                        if name == "diag.run" or name in audio_contract_v2.ARGUMENTS:
+                        if (
+                            name == "diag.run"
+                            or name in audio_contract_v2.ARGUMENTS
+                            or name in codec_contract_v2.ARGUMENTS
+                        ):
                             operation = control_v2.AcceptedOperation.model_validate(
                                 reply.result
                             ).model_dump()
