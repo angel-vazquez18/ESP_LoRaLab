@@ -255,3 +255,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   662 cases and selected 32 KiB IDF build 0x6def0 (57% app free) are the release
   checks. No flash; B remains original audio, A not enumerated, backup/PCB
   observation pending. Preparing PR on #183 before #45's API/CLI provenance.
+
+- #41: PR #186 (`feat/finite-codec-decoding` → `feat/finite-pcm-encoding`)
+  is ready for review with scoped Conventional Commits, 152 focused/662 full
+  checks and the selected-board build. Status Testing; no merge or flash. Original
+  19 files remain unchanged. Next #45 preserves three-file local codec provenance
+  through the existing shared audio service, API and CLI.
