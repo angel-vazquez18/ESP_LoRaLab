@@ -35,3 +35,19 @@ const char *codec2_dependency_revision(void)
 {
     return "06d4c11e699b0351765f10398abb4f663a984f36";
 }
+
+codec2_encoder *codec2_encoder_create(void) { return codec2_create(CODEC2_MODE_3200); }
+
+bool codec2_encoder_frame(codec2_encoder *state, short *samples, size_t sample_count,
+                          uint8_t *output, size_t capacity)
+{
+    if (!state || !samples || sample_count != 160 || !output || capacity < 8)
+        return false;
+    codec2_encode(state, output, samples);
+    return true;
+}
+
+void codec2_encoder_destroy(codec2_encoder *state)
+{
+    if (state) codec2_destroy(state);
+}
