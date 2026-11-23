@@ -25,6 +25,7 @@ from .adapters import (
     require_control_compatible,
     require_execution_compatible,
 )
+from .session_keys import require_public_metadata, setup_facts, setup_reply
 
 
 def discover_ports() -> list[dict]:
@@ -205,7 +206,9 @@ class NodeSession:
             raise asyncio.CancelledError
         return written
 
-    async def request(self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None):
+    async def request(
+        self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None, key_set_id=None
+    ):
         async with self.command_lock:
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
@@ -232,9 +235,24 @@ class NodeSession:
                         ) from None
                     raise
                 if name == "session.open" and args["security"] != "none":
-                    raise ValueError(
-                        "MISSING_CAPABILITY: Protected host provisioning is not enabled"
-                    )
+                    if not all(
+                        caps.security_gcm
+                        for caps in (
+                            self.identity.capabilities,
+                            self.health.capability_availability,
+                        )
+                    ):
+                        raise ValueError(
+                            "MISSING_CAPABILITY: Protected node support is unavailable"
+                        )
+                    key_set_id = key_set_id or str(uuid4())
+                    try:
+                        from uuid import UUID
+
+                        if str(UUID(key_set_id)) != key_set_id:
+                            raise ValueError()
+                    except (ValueError, TypeError, AttributeError):
+                        raise ValueError("Invalid key set identity") from None
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
             artifact_limits = None
@@ -270,6 +288,9 @@ class NodeSession:
                     self.identity.capabilities, self.health.capability_availability
                 )
                 args = crypto_benchmark_v2.Arguments.model_validate(args).model_dump()
+            protected_setup = (
+                name == "session.open" and (args or {}).get("security") == "aes128_gcm"
+            )
             self.sequence += 1
             command = v2.Command(
                 command_id=str(uuid4()),
@@ -294,15 +315,39 @@ class NodeSession:
                 for attempt in range(retries + 1):
                     wire = v2.encode(command)
                     if on_record:
-                        on_record({"direction": "host_to_node", "record": command.model_dump()})
-                    written = await self.write_wire(wire)
+                        snapshot = (
+                            setup_facts(command, self.role, key_set_id)
+                            if protected_setup
+                            else command.model_dump()
+                        )
+                        require_public_metadata(snapshot)
+                        on_record({"direction": "host_to_node", "record": snapshot})
+                    try:
+                        written = await self.write_wire(wire)
+                    except Exception:
+                        if protected_setup:
+                            raise ValueError(
+                                "Protected session write failed; cleanup is required"
+                            ) from None
+                        raise
                     if written != len(wire):
                         raise ValueError("Incomplete serial write")
                     try:
                         reply = await asyncio.wait_for(asyncio.shield(future), timeout)
+                        safe_reply = (
+                            setup_reply(command, reply, self.role, key_set_id)
+                            if protected_setup
+                            else reply.model_dump()
+                        )
                         if on_record:
-                            on_record({"direction": "node_to_host", "record": reply.model_dump()})
+                            require_public_metadata(safe_reply)
+                            on_record({"direction": "node_to_host", "record": safe_reply})
                         if not reply.ok:
+                            if protected_setup:
+                                raise ValueError(
+                                    f"{safe_reply['error']['code']}: "
+                                    "Protected session setup rejected"
+                                ) from None
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
                         if name == "status.get":
                             self.accept_health(reply.result)
