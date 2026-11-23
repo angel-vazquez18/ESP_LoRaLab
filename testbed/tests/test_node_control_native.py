@@ -558,9 +558,17 @@ def test_allocation_failure_has_no_operation_effect(native):
 class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
-    def __init__(self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1):
+    def __init__(
+        self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1, audio=None
+    ):
         self.core = NativeNode(
-            lib, realtime=True, radio=radio, device=device, boot=boot, codec2_mode=codec2_mode
+            lib,
+            realtime=True,
+            radio=radio,
+            device=device,
+            boot=boot,
+            codec2_mode=codec2_mode,
+            audio=audio,
         )
         self.lock = threading.RLock()
         self.queue = queue.Queue()
