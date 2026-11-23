@@ -289,3 +289,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   build 0x6e520, 57% app free. Execution SHA b029707…; other wire schemas unchanged.
   No flash/physical claim; original 19 files unchanged. Preparing PR on #187,
   then #68 common host secure voice and matched byte/workload comparisons.
+
+- #64: PR #188 (`feat/protected-voice-content` → `feat/local-codec-provenance`)
+  is ready for review with five scoped commits, 19 dedicated/694 full passing
+  cases and selected-board IDF build 0x6e520, no skips. Issue Testing; no merge or
+  flash. Starting #68 on its own dependent branch: common host voice orchestration,
+  fresh protected sessions and labelled equal-encoded-size versus standard64 data
+  comparisons, with retrieval outside the RF window.
