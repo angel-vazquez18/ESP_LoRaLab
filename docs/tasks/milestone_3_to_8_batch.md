@@ -245,3 +245,13 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   or flash. Original 19 saved files still match. The two temporary WIP stashes
   are retired after all source is committed/pushed. Next M6 #41: complete-artifact
   decoding with fresh state, bounded PCM output, errors/resources and cleanup.
+
+- #41 implemented: complete encoded artifacts decode into separate trimmed PCM,
+  one frame per step, with retained errors/counts/timing and before/ready/after
+  platform heap snapshots. A minimized public-library repro exposed the upstream
+  static phase PRNG; a recorded reproducible patch makes it context-owned.
+  Repeated/interleaved fresh decoders agree; all eleven constructor failures,
+  worker/output/hash failures and interruption paths recover. Focused 152/full
+  662 cases and selected 32 KiB IDF build 0x6def0 (57% app free) are the release
+  checks. No flash; B remains original audio, A not enumerated, backup/PCB
+  observation pending. Preparing PR on #183 before #45's API/CLI provenance.

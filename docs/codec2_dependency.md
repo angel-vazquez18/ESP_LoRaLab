@@ -154,3 +154,12 @@ With #36's working encoder, enrolled dependency details are combined under
 An unavailable library still uses the `codec2_library` enrollment description.
 Consult the command declaration for operation support; the mode flag alone does
 not imply an implemented decoder.
+
+## Per-context decoder phase state (#41)
+
+A second reproducible patch moves the upstream static phase PRNG into each codec
+context, preserving its seed/arithmetic and packed format. Fresh/interleaved
+decoders no longer depend on another clip's history. The current native requested
+heap peak is 31,324 bytes; earlier values above describe the earlier constructor.
+See [decoder behavior, checks and hardware limits](codec_decoding.md). Both
+recorded patches and all retained resources are included in dependency hashes.

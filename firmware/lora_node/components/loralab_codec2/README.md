@@ -11,3 +11,8 @@ main control core retains its once-per-startup result; codec operations remain
 unavailable until their implementation.
 
 See [source/build provenance, tests and binary distribution notes](../../../../docs/codec2_dependency.md).
+
+The concrete clip adapter now exposes bounded encode/decode frame calls. A second
+recorded patch gives each context its own phase PRNG with the original seed and
+arithmetic. Both patches are reapplied by the importer and included in resource
+hashes. See [decoder state and verification](../../../../docs/codec_decoding.md).

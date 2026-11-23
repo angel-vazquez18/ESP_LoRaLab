@@ -725,3 +725,13 @@ artifact manifest schema revision changes to represent encoded output; existing
 control/diagnostic/audio/RF identities are unchanged. See
 [the exact migration, developer command and verification](codec_encoding.md).
 Decoding and host operator workflows remain later issues.
+
+### Complete encoded artifact decoding (#41)
+
+The exact `codec_io_v1` supplement now advertises `audio.encode` and `audio.decode`.
+The latter requires a committed mode-3200 encoded artifact with exact eight-byte
+frame geometry and retained original sample count, and publishes separate trimmed
+PCM only on success. There is no implicit playback or lossy source-byte equality.
+Its result retains partial counters/timing and platform heap snapshots even on
+failure/cancel. Current fingerprint/migration and phase-state patch are documented
+in [codec decoding](codec_decoding.md); historical evidence is not rewritten.

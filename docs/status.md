@@ -4,6 +4,23 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Complete-artifact codec decoding (#41)
+
+Added finite fresh-state decoding into a separate hash-published recovered PCM,
+explicit final-padding trimming, typed host tracking and before/ready/after heap
+snapshots. A reproduced upstream process-global phase generator now belongs to
+each codec context through a recorded vendor patch; repeated/interleaved contexts
+are independent. Cancellation, ownership loss, timeout, allocation/final-hash
+failure and duplicate commands preserve bounded cleanup and a following valid
+clip. No implicit playback or lossless PCM comparison.
+
+Focused 152 and full 662 cases pass without skips; selected V4.2/32 KiB IDF build
+0x6def0, 57% app free. Exact codec supplement changed; other wire digests remain
+unchanged from #36. See [decoding walkthrough and checks](codec_decoding.md).
+No flash or physical codec/voice qualification. B remains on its original audio
+image; A/printed PCB revisions and a successful deployment backup remain pending.
+Next #45 adds shared API/CLI codec workflow with saved three-file provenance.
+
 ## November 23 — Finite committed-PCM encoding (#36)
 
 Added a portable one-frame-per-step encoder with fresh Codec 2 state, immutable
