@@ -324,6 +324,96 @@ def audio_save(identifier: str, output: Path):
 
 
 @app.command()
+def voice_start(
+    source: str = "microphone",
+    reference_id: str | None = None,
+    direction: str = "A_TO_B",
+    samples: Annotated[int, typer.Option(min=1, max=24000)] = 24000,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 30000,
+    comparisons: bool = True,
+    check: bool = False,
+    sf: Annotated[int, typer.Option(min=7, max=12)] = 7,
+    bandwidth: int = 125000,
+    coding_rate: int = 5,
+    power: Annotated[int, typer.Option(min=2, max=20)] = 2,
+    ack: str = "none",
+    retries: int | None = None,
+    guard_us: int = 50000,
+):
+    """Run a protected clip, or check readiness, with labelled data comparisons."""
+    if source not in ("reference", "microphone"):
+        raise typer.BadParameter("Use reference or microphone")
+    if (source == "reference") != (reference_id is not None):
+        raise typer.BadParameter("Select a reference ID only for a reference source")
+    link = {"ack_mode": ack, "guard_us": guard_us}
+    if retries is not None:
+        link["max_retries"] = retries
+    request(
+        "/api/voice/preflight" if check else "/api/voice/runs",
+        {
+            "source": source,
+            "reference_id": reference_id,
+            "direction": direction,
+            "sample_count": samples,
+            "timeout_ms": timeout_ms,
+            "include_comparisons": comparisons,
+            "security": "aes128_gcm",
+            "link": link,
+            "radio": {
+                "spreading_factor": sf,
+                "bandwidth_hz": bandwidth,
+                "coding_rate_denominator": coding_rate,
+                "tx_power_dbm": power,
+            },
+        },
+    )
+
+
+@app.command()
+def voice_status(identifier: str):
+    """Inspect voice stages, verified files, comparison bases and observations."""
+    request(f"/api/voice/runs/{identifier}")
+
+
+@app.command()
+def voice_stop(identifier: str):
+    """Stop the whole voice job and retain bounded child cleanup."""
+    request(f"/api/voice/runs/{identifier}/stop", {})
+
+
+@app.command()
+def voice_listening(identifier: str, heard: str = "not_checked", notes: str = ""):
+    """Record receiver listening separately from delivery and driver completion."""
+    if heard not in ("not_checked", "heard", "not_heard"):
+        raise typer.BadParameter("Use not_checked, heard or not_heard")
+    request(f"/api/voice/runs/{identifier}/listening", {"heard": heard, "notes": notes})
+
+
+@app.command()
+def voice_save(identifier: str, kind: str, output: Path, wav: bool = False):
+    """Save a verified voice stage without overwriting an existing target."""
+    if kind not in ("source", "encoded", "recovered", "decoded") or (
+        wav and kind not in ("source", "decoded")
+    ):
+        raise typer.BadParameter(
+            "Choose source/encoded/recovered/decoded; WAV needs source or decoded"
+        )
+    try:
+        suffix = "?as_wav=true" if wav else ""
+        with urlopen(
+            BASE_URL + f"/api/voice/runs/{identifier}/artifacts/{kind}{suffix}", timeout=20
+        ) as response:
+            data = response.read(48045)
+        if not data or len(data) > 48044:
+            raise ValueError("Unexpected voice artifact size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+
+
+@app.command()
 def radio_start(
     direction: str = "A_TO_B",
     security: str = "none",
