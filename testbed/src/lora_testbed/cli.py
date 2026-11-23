@@ -289,6 +289,7 @@ def audio_save(identifier: str, output: Path):
 @app.command()
 def radio_start(
     direction: str = "A_TO_B",
+    security: str = "none",
     message_bytes: Annotated[int, typer.Option(min=1, max=65536)] = 64,
     timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 10000,
     config: Path | None = None,
@@ -301,6 +302,7 @@ def radio_start(
             if config
             else {
                 "direction": direction.upper(),
+                "security": security,
                 "message_bytes": message_bytes,
                 "timeout_ms": timeout_ms,
             }

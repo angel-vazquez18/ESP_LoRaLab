@@ -385,8 +385,16 @@ def test_radio_http_and_cli_share_the_backend_contract(tmp_path, monkeypatch):
         == 0
     )
     assert calls == [
-        ("/api/radio/preflight", {"direction": "B_TO_A", "message_bytes": 159, "timeout_ms": 10000})
+        (
+            "/api/radio/preflight",
+            {"direction": "B_TO_A", "security": "none", "message_bytes": 159, "timeout_ms": 10000},
+        )
     ]
+    assert (
+        runner.invoke(cli.app, ["radio-start", "--preview", "--security", "aes128_gcm"]).exit_code
+        == 0
+    )
+    assert calls[-1][0] == "/api/radio/preflight" and calls[-1][1]["security"] == "aes128_gcm"
 
 
 def test_duplicate_device_identity_blocks_radio_start(tmp_path, native_library):
