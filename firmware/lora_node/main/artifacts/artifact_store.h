@@ -75,5 +75,8 @@ artifact_status artifact_store_encode_begin(artifact_store *store, const char *o
     const char *id, const char *source_id, uint32_t samples, void **destination);
 artifact_status artifact_store_decode_begin(artifact_store *store, const char *owner,
     const char *id, const char *source_id, uint32_t samples, void **destination);
+// Authenticated RF reconstruction is the only external encoded producer.
+artifact_status artifact_store_recover_encoded_begin(artifact_store *store, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, const char *sha256, void **destination);
 artifact_status artifact_store_encode_finish(artifact_store *store, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
