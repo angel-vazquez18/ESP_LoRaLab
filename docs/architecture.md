@@ -259,3 +259,8 @@ publication; control composes its generic operation/ownership lifecycle. The
 `codec_io_v1` supplement separates enrolled immutable codec facts from compact
 current availability. `NodeSession` gates the profile/freshness and tracks results;
 operator host/UI orchestration follows its own issues.
+
+`NodeAudio` now also owns the local codec three-file job. It reuses the existing
+transfer service and bench lock, stores separate codec child results and never
+starts playback implicitly. Same-content capture/playback references preserve
+provenance under node artifact ID reuse. See [codec workflow](codec_provenance.md).

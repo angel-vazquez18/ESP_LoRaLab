@@ -192,3 +192,8 @@ keep historical records unchanged. Encoding needs no microphone/speaker pins.
 Finite codec decoding and its target-memory limitations are covered by
 [the decoder walkthrough](codec_decoding.md). Run the focused command there before
 full checks when changing the worker, codec supplement or cleanup.
+
+For local codec orchestration/API/CLI changes, run
+`uv run --project testbed pytest testbed/tests/test_local_codec_host.py testbed/tests/test_node_audio_host.py -q`
+and `make check`. See [codec provenance](codec_provenance.md) for expected results
+and physical acceptance. Host-only changes require no flash.

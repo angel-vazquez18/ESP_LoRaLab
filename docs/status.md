@@ -4,6 +4,21 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Local codec provenance workflow (#45)
+
+Shared host/API/CLI now retrieve and verify source, encoded and decoded artifacts
+under one bench owner, retaining node stage results/timings and linked transfer
+records. Explicit playback links require the same role/device/boot and full source
+manifest; source-capture links also require hash agreement under artifact ID reuse.
+Cancellation/failure preserves verified earlier files without round-trip success.
+Codec results stay separate from existing audio DMA result fields.
+
+Full `make check` passed 675 cases without skips, plus lint/frontend/contracts/
+repository/dependency checks. Coverage includes 13 new codec and 25 existing audio
+cases. No firmware source/build/flash changes in this issue. Matching #41
+codec firmware remains required; physical voice, RF and instrument checks remain
+open. See [workflow, reading order and physical checks](codec_provenance.md).
+
 ## November 23 — Complete-artifact codec decoding (#41)
 
 Added finite fresh-state decoding into a separate hash-published recovered PCM,

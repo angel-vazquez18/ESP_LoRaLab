@@ -133,3 +133,6 @@ After matching identity, applicable backup and verified board configuration:
    a fresh clip. Exercise reset/disconnect recovery with retained host evidence.
 
 Full physical voice acceptance remains issue #80.
+
+The shared local API/CLI workflow, verified downloads and linked playback findings
+are now implemented in [#45](codec_provenance.md). Physical acceptance remains open.
