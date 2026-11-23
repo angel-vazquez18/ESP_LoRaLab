@@ -118,13 +118,14 @@ class PutResult(ArtifactReference):
 
 
 class Manifest(Begin):
+    format: Literal["known_data", "pcm_s16le_8000_mono", "codec2_3200_v1"]
     state: Literal["uploading", "failed", "committed"]
     next_offset: Offset
     in_use: bool
-    codec: None
+    codec: Literal["codec2_3200_v1"] | None
     sample_rate_hz: Annotated[int, Field(ge=8000, le=8000)] | None
     sample_count: int | None = Field(ge=1, le=24000)
-    frame_count: None
+    frame_count: int | None = Field(ge=1, le=150)
     source_artifact_id: ArtifactID | None
 
     @model_validator(mode="after")
@@ -135,11 +136,24 @@ class Manifest(Begin):
             raise ValueError("Committed artifact must have its complete length")
         if self.in_use and self.state != "committed":
             raise ValueError("Uncommitted artifact cannot be in use")
-        if self.format == "pcm_s16le_8000_mono":
-            if self.sample_rate_hz != 8000 or self.sample_count != self.length_bytes // 2:
-                raise ValueError("PCM metadata does not match the declared bytes")
-        elif self.sample_rate_hz is not None or self.sample_count is not None:
-            raise ValueError("Known data has no audio sample metadata")
+        if self.format == "codec2_3200_v1":
+            if (
+                self.codec != self.format
+                or self.sample_rate_hz != 8000
+                or self.sample_count is None
+                or self.frame_count != (self.sample_count + 159) // 160
+                or self.length_bytes != self.frame_count * 8
+                or self.source_artifact_id is None
+            ):
+                raise ValueError("Encoded metadata does not match mode-3200 frame geometry")
+        else:
+            if self.codec is not None or self.frame_count is not None:
+                raise ValueError("Unencoded artifacts have no codec frame metadata")
+            if self.format == "pcm_s16le_8000_mono":
+                if self.sample_rate_hz != 8000 or self.sample_count != self.length_bytes // 2:
+                    raise ValueError("PCM metadata does not match the declared bytes")
+            elif self.sample_rate_hz is not None or self.sample_count is not None:
+                raise ValueError("Known data has no audio sample metadata")
         return self
 
 

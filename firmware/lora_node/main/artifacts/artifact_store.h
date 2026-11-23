@@ -27,6 +27,8 @@ typedef struct {
 typedef struct {
     char artifact_id[37], kind[10], sha256[65], format[21];
     size_t length_bytes, next_offset;
+    char source_artifact_id[37];
+    uint32_t sample_count, frame_count;
     artifact_state state;
     bool in_use;
 } artifact_manifest;
@@ -67,3 +69,9 @@ artifact_status artifact_store_capture_begin(artifact_store *store, const char *
     const char *id, uint32_t samples, void **destination);
 artifact_status artifact_store_capture_finish(artifact_store *store, const char *id,
     uint32_t samples, bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
+
+// Local derived output stays private until all frames and its final hash exist.
+artifact_status artifact_store_encode_begin(artifact_store *store, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, void **destination);
+artifact_status artifact_store_encode_finish(artifact_store *store, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
