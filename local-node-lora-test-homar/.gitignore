@@ -1,0 +1,9 @@
+.pio/
+.host-test/
+.venv/
+__pycache__/
+*.pyc
+# New runs are local outputs. The frozen requested evidence has a separate name.
+captures/
+# Frozen evidence must survive the containing repository's generic *.log rule.
+!10-lora-message-tests/**/*.log

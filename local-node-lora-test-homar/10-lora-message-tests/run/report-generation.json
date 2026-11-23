@@ -1,0 +1,10 @@
+{
+  "command": [
+    "C:\\Users\\Homar\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\tools\\create_lora_consistency_pdf.py",
+    "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\captures\\20261123-lora-consistency-run01"
+  ],
+  "returncode": 0,
+  "stdout": "{\"pdf\": \"C:\\\\Users\\\\Homar\\\\Documents\\\\Arduino\\\\esp32-audio-chunker-test\\\\captures\\\\20261123-lora-consistency-run01\\\\consistency-report.pdf\", \"audit_json\": \"C:\\\\Users\\\\Homar\\\\Documents\\\\Arduino\\\\esp32-audio-chunker-test\\\\captures\\\\20261123-lora-consistency-run01\\\\consistency-report.json\", \"counts\": {\"requested\": 10, \"attempted\": 10, \"passed\": 10, \"failed\": 0, \"incomplete\": 0, \"not_run\": 0}, \"all_requested_trials_verified\": true}\n",
+  "stderr": ""
+}
