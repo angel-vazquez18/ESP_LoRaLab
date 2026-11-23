@@ -16,6 +16,8 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from native_codec2 import COMPONENT as CODEC_COMPONENT
+from native_codec2 import build_codec2
 from native_crypto import load_frame_cipher
 
 from lora_testbed import control_v2, crypto_benchmark_v2, rf_events_v2
@@ -97,6 +99,7 @@ class Platform(C.Structure):
             ("cpu_frequency_mhz", C.c_uint32),
             ("hardware_aes", C.c_bool),
             ("dynamic_frequency", C.c_bool),
+            ("codec2_mode", C.c_uint),
         ]
     )
 
@@ -109,6 +112,7 @@ def native_library(tmp_path_factory):
     if compiler is None or not (cjson / "cJSON.c").exists():
         pytest.skip("Native firmware checks require a C compiler and IDF-managed cJSON sources")
     crypto = load_frame_cipher()
+    codec = build_codec2()
     output = tmp_path_factory.mktemp("firmware-core") / "node_control.so"
     toolchain = [compiler]
     if platform.system() == "Darwin":
@@ -129,6 +133,8 @@ def native_library(tmp_path_factory):
             str(main),
             "-I",
             str(cjson),
+            "-I",
+            str(CODEC_COMPONENT),
             str(main / "protocol/strict_json.c"),
             str(main / "protocol/secure_json.c"),
             str(main / "protocol/chunk_bytes.c"),
@@ -150,6 +156,8 @@ def native_library(tmp_path_factory):
             str(cjson / "cJSON.c"),
             str(REPO_ROOT / "testbed/tests/native/cjson_allocator.c"),
             str(crypto._name),
+            str(codec),
+            "-Wl,-dead_strip" if platform.system() == "Darwin" else "-Wl,--gc-sections",
             "-Wl,-rpath," + str(Path(crypto._name).parent),
             "-lm",
             "-o",
@@ -185,7 +193,14 @@ def native_library(tmp_path_factory):
 
 class NativeNode:
     def __init__(
-        self, lib, realtime=False, boot=1, audio=None, radio=None, device="esp-001122334455"
+        self,
+        lib,
+        realtime=False,
+        boot=1,
+        audio=None,
+        radio=None,
+        device="esp-001122334455",
+        codec2_mode=3200,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -217,6 +232,7 @@ class NativeNode:
             audio or AudioPort(),
             radio,
         )
+        self.platform.codec2_mode = codec2_mode
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -541,7 +557,7 @@ def test_allocation_failure_has_no_operation_effect(native):
 class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
-    def __init__(self, lib, radio=None, device="esp-001122334455", boot=1):
+    def __init__(self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1):
         self.core = NativeNode(lib, realtime=True, radio=radio, device=device, boot=boot)
         self.lock = threading.RLock()
         self.queue = queue.Queue()

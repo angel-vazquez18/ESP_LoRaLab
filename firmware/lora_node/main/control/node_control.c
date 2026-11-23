@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "codec2_dependency.h"
+
 #include "node_control.h"
 #include "radio/radio_config_json.h"
 #include "radio/rf_execution.h"
@@ -50,6 +52,8 @@ typedef struct {
 
 struct node_control {
     node_platform port;
+    codec2_frame_format codec2_format;
+    bool codec2_library_ready;
     artifact_store *artifacts;
     char owner[37], role[2];
     int64_t lease_until, next_health, next_diagnostic;
@@ -282,6 +286,17 @@ static cJSON *capabilities(node_control *n)
     number(n, benchmark, "warmup_operations", CRYPTO_BENCH_WARMUPS);
     number(n, benchmark, "page_samples", CRYPTO_BENCH_PAGE);
     add(n, limits, "crypto_benchmark", benchmark);
+    cJSON *codec = object(n);
+    string(n, codec, "version", codec2_dependency_version());
+    string(n, codec, "source_commit", codec2_dependency_revision());
+    boolean(n, codec, "library_ready", n->codec2_library_ready);
+    number(n, codec, "mode", n->codec2_library_ready ? 3200 : 0);
+    number(n, codec, "samples_per_frame", n->codec2_format.samples);
+    number(n, codec, "bits_per_frame", n->codec2_format.bits);
+    number(n, codec, "bytes_per_frame", n->codec2_format.bytes);
+    number(n, codec, "sample_rate_hz", n->codec2_format.sample_rate_hz);
+    string(n, codec, "build_options", "mode3200_only;kiss_fft;float;O2;no_fast_math");
+    add(n, limits, "codec2_library", codec);
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
@@ -1211,6 +1226,7 @@ node_control *node_control_create(const node_platform *platform)
     if (!n)
         return NULL;
     n->port = *platform;
+    n->codec2_library_ready = codec2_dependency_query(platform->codec2_mode, &n->codec2_format);
     n->artifacts = artifact_store_create(platform->context, platform->allocate, platform->deallocate);
     if (!n->artifacts) {
         free(n);

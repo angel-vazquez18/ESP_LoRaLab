@@ -26,7 +26,7 @@ idf_component_register(
     INCLUDE_DIRS "." "radio/vendor/sx126x"
     REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support
              esp_driver_i2s esp_driver_spi esp_driver_gpio
-             nvs_flash espressif__cjson mbedtls heap esp_app_format
+             nvs_flash espressif__cjson mbedtls heap esp_app_format loralab_codec2
 )
 
 # Board reference file.
