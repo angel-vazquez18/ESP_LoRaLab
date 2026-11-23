@@ -12,6 +12,7 @@ from .procedure_runs import ProcedureService
 from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
 from .storage import Store
+from .voice_runs import VoiceRuns
 
 
 class Host:
@@ -25,6 +26,7 @@ class Host:
         self.artifacts = ArtifactTransfers(self.store, self.physical)
         self.audio = NodeAudio(self.store, self.physical, self.artifacts)
         self.radio = RadioRuns(self.store, self.physical, self.artifacts)
+        self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
@@ -35,6 +37,7 @@ class Host:
     def busy(self) -> bool:
         return (
             self.procedures.busy
+            or self.voice.busy
             or self.radio.busy
             or self.audio.busy
             or self.artifacts.busy
@@ -66,6 +69,7 @@ class Host:
             "artifact_transfers": self.artifacts.snapshot(),
             "audio_operations": self.audio.snapshot(),
             "radio_runs": self.radio.snapshot(),
+            "voice_runs": self.voice.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -254,8 +258,23 @@ class Host:
                 raise RuntimeError("Another check or operation owns the bench")
             return await self.radio.start(request)
 
+    def voice_preflight(self, request):
+        ready = self.voice.preflight(request)
+        if self.busy:
+            ready["ready"] = False
+            ready["blockers"].append("Another operation owns the bench")
+        return ready
+
+    async def start_voice(self, request):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation owns the bench")
+            return await self.voice.start(request)
+
     async def stop(self):
         async with self.lock:
+            if self.voice.busy:
+                return await self.voice.stop()
             if self.radio.busy:
                 return await self.radio.stop()
             return await self.procedures.stop()
@@ -273,6 +292,7 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.voice.close()
         await self.radio.close()
         await self.audio.close()
         await self.artifacts.close()
