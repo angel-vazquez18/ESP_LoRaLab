@@ -2153,17 +2153,38 @@
           "type": "string"
         },
         "security": {
-          "const": "none",
+          "enum": [
+            "none",
+            "aes128_gcm"
+          ],
           "title": "Security",
           "type": "string"
         },
         "tx_key_hex": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "title": "Tx Key Hex",
-          "type": "null"
+          "writeOnly": true
         },
         "rx_key_hex": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "title": "Rx Key Hex",
-          "type": "null"
+          "writeOnly": true
         }
       },
       "required": [

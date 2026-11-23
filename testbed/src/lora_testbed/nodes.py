@@ -230,6 +230,10 @@ class NodeSession:
                             "INVALID_ARGUMENT: Invalid session.open arguments"
                         ) from None
                     raise
+                if name == "session.open" and args["security"] != "none":
+                    raise ValueError(
+                        "MISSING_CAPABILITY: Protected host provisioning is not enabled"
+                    )
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
             artifact_limits = None

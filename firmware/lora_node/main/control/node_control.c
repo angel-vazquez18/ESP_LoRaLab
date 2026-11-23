@@ -11,13 +11,14 @@
 #include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
+#include "protocol/secure_json.h"
 #include "protocol/chunk_bytes.h"
 
 typedef struct {
     uint32_t sequence;
     uint8_t hash[32];
     char client[37], command[37], reply[1024];
-    bool valid;
+    bool valid, key_setup;
 } cached_reply;
 
 typedef struct {
@@ -48,7 +49,7 @@ struct node_control {
     artifact_store *artifacts;
     char owner[37], role[2];
     int64_t lease_until, next_health, next_diagnostic;
-    bool linked, oom, discard;
+    bool linked, oom, discard, dispatching;
     size_t used;
     char line[NODE_RECORD_BYTES], encoded[NODE_RECORD_BYTES];
     record_queue replies, events;
@@ -69,6 +70,17 @@ struct node_control {
 
 static int64_t now(node_control *n) { return n->port.now_us(n->port.context); }
 static bool eq(const char *a, const char *b) { return a && b && !strcmp(a, b); }
+static void wipe_bytes(void *bytes, size_t length)
+{
+    volatile uint8_t *p = bytes;
+    while (length--) *p++ = 0;
+}
+static void retire_key_cache(node_control *n)
+{
+    if (rf_execution_security_ready(&n->rf)) return;
+    for (unsigned i = 0; i < NODE_CACHE_SLOTS; i++)
+        if (n->cache[i].key_setup) wipe_bytes(&n->cache[i], sizeof(n->cache[i]));
+}
 static const cJSON *item(const cJSON *o, const char *key)
 {
     return cJSON_GetObjectItemCaseSensitive(o, key);
@@ -361,7 +373,7 @@ static cJSON *health(node_control *n)
     number(n, traffic, "completed_operations", n->completed_operations);
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
-    boolean(n, o, "security_ready", false);
+    boolean(n, o, "security_ready", rf_execution_security_ready(&n->rf));
     string(n, o, "audio_state", n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
@@ -499,6 +511,11 @@ static void lose_owner(node_control *n, const char *reason)
     artifact_store_release_owner(n->artifacts, n->owner);
     n->owner[0] = n->role[0] = 0;
     n->lease_until = 0;
+    if (!n->dispatching && n->used) {
+        wipe_bytes(n->line, sizeof(n->line));
+        n->used = 0;
+        n->discard = true; // Discard the rest of this interrupted record through LF.
+    }
     memset(n->cache, 0, sizeof(n->cache));
     n->cache_next = 0;
 }
@@ -586,6 +603,7 @@ enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STO
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
+    retire_key_cache(n);
     if (n->replies.count == n->replies.capacity) {
         n->backpressure++;
         n->diagnostics_pending++;
@@ -1013,6 +1031,7 @@ static void process(node_control *n, size_t length)
         }
         cached_reply *c = &n->cache[n->cache_next++ % NODE_CACHE_SLOTS];
         c->valid = true;
+        c->key_setup = !code && eq(name, "session.open") && radio_plan.protected_mode;
         c->sequence = sequence;
         memcpy(c->hash, fingerprint, sizeof(c->hash));
         snprintf(c->client, sizeof(c->client), "%s", client);
@@ -1091,6 +1110,7 @@ node_control *node_control_create(const node_platform *platform)
         !platform->idf_version || !platform->reset_cause || !platform->board_manifest_hash ||
         !platform->schema_sha256)
         return NULL;
+    secure_json_ensure();
     node_control *n = calloc(1, sizeof(*n));
     if (!n)
         return NULL;
@@ -1114,6 +1134,7 @@ void node_control_destroy(node_control *n)
     if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
     rf_execution_abort(&n->rf,"host_shutdown",true);
     artifact_store_destroy(n->artifacts);
+    wipe_bytes(n, sizeof(*n));
     free(n);
 }
 void node_control_link(node_control *n, bool connected)
@@ -1121,6 +1142,7 @@ void node_control_link(node_control *n, bool connected)
     if (n->linked && !connected) {
         n->link_losses++;
         lose_owner(n, "disconnect");
+        wipe_bytes(n->line, sizeof(n->line));
         n->used = 0;
         n->discard = false;
         n->replies.count = n->events.count = 0;
@@ -1209,15 +1231,19 @@ void node_control_feed(node_control *n, const uint8_t *bytes, size_t length)
                 if (n->used && n->line[n->used - 1] == '\r')
                     n->used--;
                 n->line[n->used] = '\0';
+                n->dispatching = true;
                 node_control_tick(n); // Expire ownership before dispatch.
                 process(n, n->used);
+                n->dispatching = false;
             }
+            wipe_bytes(n->line, sizeof(n->line));
             n->used = 0;
             n->discard = false;
         } else if (!n->discard) {
             if (n->used < sizeof(n->line) - 1)
                 n->line[n->used++] = (char)byte;
             else {
+                wipe_bytes(n->line, sizeof(n->line));
                 n->used = 0;
                 n->discard = true;
                 n->oversized++;

@@ -6,6 +6,7 @@
 #include "radio/rf_frames.h"
 #include "radio/rf_reassembly.h"
 #include "radio/rf_sender.h"
+#include "security/session_crypto.h"
 
 typedef struct
 {
@@ -47,6 +48,8 @@ typedef struct
     uint32_t revision, seed, bytes, duration_ms;
     uint32_t ack_timeout, reassembly, drain, processing;
     node_link_settings link;
+    bool protected_mode;
+    const cJSON *provision_keys;
     uint8_t role, source;
     const char *reason;
 } rf_plan;
@@ -62,6 +65,7 @@ typedef struct
     char artifact_id[37], sha_hex[65];
     uint8_t *payload, expected_hash[32];
     rf_reassembly *receiver;
+    rf_secure_session *security;
     rf_sender *transmitter;
     rf_ack_receiver *acknowledgments;
     bool ack_pending, ack_transmitting;
@@ -90,3 +94,5 @@ void rf_execution_tick(rf_execution *);
 bool rf_execution_abort(rf_execution *, const char *reason, bool close);
 bool rf_execution_busy(const rf_execution *);
 const char *rf_execution_state(const rf_execution *);
+
+bool rf_execution_security_ready(const rf_execution *);

@@ -41,3 +41,31 @@ def test_rejected_session_key_values_never_enter_errors_or_trace(native_library)
             await node.close()
 
     asyncio.run(scenario())
+
+
+def test_host_protected_setup_stays_blocked_before_trace_until_provisioning_guards(native_library):
+    async def scenario():
+        peer = NativeSerial(native_library, radio=native_library.native_radio_create())
+        node = NodeSession("A", lambda *_: None, lambda _: peer)
+        trace = []
+        await node.connect("fixture-only-protected-gate")
+        try:
+            with pytest.raises(ValueError, match="Protected host provisioning is not enabled"):
+                await node.request(
+                    "session.open",
+                    {
+                        "session_id": "0102030405060708",
+                        "peer_device_id": "esp-66778899aabb",
+                        "peer_boot_id": "esp-66778899aabb:1",
+                        "security": "aes128_gcm",
+                        "tx_key_hex": "11" * 16,
+                        "rx_key_hex": "22" * 16,
+                    },
+                    run_id=str(uuid4()),
+                    on_record=trace.append,
+                )
+            assert not trace and node.rf_run_id is None
+        finally:
+            await node.close()
+
+    asyncio.run(scenario())

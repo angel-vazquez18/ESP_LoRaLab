@@ -5,7 +5,7 @@ import json
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from pydantic import Field, TypeAdapter, model_validator
+from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 
 from . import rf_events_v2 as rf
 from . import v2
@@ -59,9 +59,25 @@ class Session(ContractModel):
     session_id: rf.SessionID
     peer_device_id: v2.Identifier
     peer_boot_id: v2.Identifier
-    security: Literal["none"]
-    tx_key_hex: None
-    rx_key_hex: None
+    model_config = ConfigDict(hide_input_in_errors=True)
+    security: Literal["none", "aes128_gcm"]
+    tx_key_hex: str | None = Field(
+        pattern=r"^[0-9a-f]{32}$", repr=False, json_schema_extra={"writeOnly": True}
+    )
+    rx_key_hex: str | None = Field(
+        pattern=r"^[0-9a-f]{32}$", repr=False, json_schema_extra={"writeOnly": True}
+    )
+
+    @model_validator(mode="after")
+    def source_keys(self):
+        if self.security == "none":
+            if self.tx_key_hex is not None or self.rx_key_hex is not None:
+                raise ValueError("Unprotected sessions require null keys")
+        elif (
+            self.tx_key_hex is None or self.rx_key_hex is None or self.tx_key_hex == self.rx_key_hex
+        ):
+            raise ValueError("Protected sessions require distinct source keys")
+        return self
 
 
 class Configuration(ContractModel):
@@ -185,6 +201,7 @@ RESULTS = {
 
 
 class Command(v2.Command, ContractModel):
+    model_config = ConfigDict(hide_input_in_errors=True)
     command_id: rf.RunID
     client_id: rf.RunID
     run_id: rf.RunID | None = None

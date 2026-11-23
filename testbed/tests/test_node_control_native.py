@@ -10,11 +10,13 @@ import queue
 import shutil
 import subprocess
 import threading
+from pathlib import Path
 from time import monotonic
 from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from native_crypto import load_frame_cipher
 
 from lora_testbed import control_v2, rf_events_v2
 from lora_testbed.app import create_app
@@ -100,6 +102,7 @@ def native_library(tmp_path_factory):
     cjson = REPO_ROOT / "firmware/lora_node/managed_components/espressif__cjson/cJSON"
     if compiler is None or not (cjson / "cJSON.c").exists():
         pytest.skip("Native firmware checks require a C compiler and IDF-managed cJSON sources")
+    crypto = load_frame_cipher()
     output = tmp_path_factory.mktemp("firmware-core") / "node_control.so"
     toolchain = [compiler]
     if platform.system() == "Darwin":
@@ -121,6 +124,7 @@ def native_library(tmp_path_factory):
             "-I",
             str(cjson),
             str(main / "protocol/strict_json.c"),
+            str(main / "protocol/secure_json.c"),
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(main / "audio/pcm_samples.c"),
@@ -139,6 +143,8 @@ def native_library(tmp_path_factory):
             str(main / "artifacts/artifact_store.c"),
             str(cjson / "cJSON.c"),
             str(REPO_ROOT / "testbed/tests/native/cjson_allocator.c"),
+            str(crypto._name),
+            "-Wl,-rpath," + str(Path(crypto._name).parent),
             "-lm",
             "-o",
             str(output),
