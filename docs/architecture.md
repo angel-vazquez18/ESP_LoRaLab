@@ -264,3 +264,9 @@ operator host/UI orchestration follows its own issues.
 transfer service and bench lock, stores separate codec child results and never
 starts playback implicitly. Same-content capture/playback references preserve
 provenance under node artifact ID reuse. See [codec workflow](codec_provenance.md).
+
+Encoded voice now uses `rf_execution` as ordinary authenticated message content.
+The sender borrows an existing committed codec artifact; the receiver publishes a
+private recovered encoded artifact only after complete authenticated/hash-verified
+reconstruction. Existing explicit decode/play operations remain separate. See
+[protected content](protected_voice_content.md) for boundaries and compatibility.

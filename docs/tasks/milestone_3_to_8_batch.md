@@ -278,3 +278,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   for committed encoded bytes through authenticated reconstruction and guarded
   decode/playback. Local job API/CLI reading/test instructions are in
   `docs/codec_provenance.md`.
+
+- #64 implemented: committed encoded bytes use the common protected message path,
+  source borrowing and private recovered codec publication. Eight default DATA
+  fragments preserve the exact 1200-byte source; lost-ACK retry works in both
+  directions with one delivery. Missing/tag/hash failures suppress publication;
+  transfer/decode/play stops release resources and following work succeeds. New
+  typed source geometry/required length matches C admission. Nineteen dedicated
+  and 694 full cases pass, no skips, plus all shared checks; selected 32 KiB IDF
+  build 0x6e520, 57% app free. Execution SHA b029707…; other wire schemas unchanged.
+  No flash/physical claim; original 19 files unchanged. Preparing PR on #187,
+  then #68 common host secure voice and matched byte/workload comparisons.

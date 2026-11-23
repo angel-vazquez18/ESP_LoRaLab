@@ -45,3 +45,9 @@ modules inside one main component; see root `docs/architecture.md` for the tree.
 Finite `audio.decode` creates a separate recovered PCM artifact with trimmed final
 padding and stage heap snapshots. Review [decoding](../docs/codec_decoding.md) for
 the matching codec profile, cleanup, checks and pending hardware qualification.
+
+Committed Codec 2 output can now travel as protected message content with the
+existing fragmentation/replay/retry path. Receiver publication is complete/hash
+gated; local decode/play stay explicit. See
+[protected voice content](../docs/protected_voice_content.md) for the matching
+execution profile and remaining hardware checks.
