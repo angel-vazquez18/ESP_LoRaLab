@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from functools import lru_cache
 from typing import Annotated, Any, Literal
 
 from pydantic import Field, TypeAdapter, model_validator
@@ -86,6 +87,7 @@ def schema():
     }
 
 
+@lru_cache(maxsize=1)
 def schema_digest():
     return hashlib.sha256(
         json.dumps(schema(), sort_keys=True, separators=(",", ":")).encode()

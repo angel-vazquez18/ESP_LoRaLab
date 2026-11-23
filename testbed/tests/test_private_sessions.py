@@ -393,3 +393,25 @@ def test_persistence_guard_fences_structured_and_serialized_private_commands(enc
         require_public_metadata({"wrapped": record})
     require_public_metadata({"notes": 'The field "tx_key_hex" is excluded', "tx_key_hex": None})
 
+
+def test_live_two_node_state_refresh_is_bounded_and_tracks_disconnect(tmp_path, native_library):
+    from time import monotonic
+
+    from test_radio_runs import connected_bench
+
+    async def scenario():
+        host, _ = await connected_bench(tmp_path, native_library)
+        try:
+            started = monotonic()
+            snapshot = host.snapshot()
+            elapsed = monotonic() - started
+            assert snapshot["connected_node_count"] == 2
+            assert elapsed < 1.0, f"Two-node state refresh took {elapsed:.3f} seconds"
+            await host.physical["B"].close()
+            fresh = host.snapshot()
+            assert fresh["connected_node_count"] == 1
+            assert not next(n for n in fresh["hardware_nodes"] if n["id"] == "B")["connected"]
+        finally:
+            await host.close()
+
+    asyncio.run(scenario())
