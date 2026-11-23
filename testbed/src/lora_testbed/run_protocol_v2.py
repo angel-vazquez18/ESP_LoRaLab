@@ -85,8 +85,26 @@ class Configuration(ContractModel):
     link: Link
 
 
+class EncodedSourceSpec(KnownDataSpec):
+    catalog_id: Literal["VOICE-02"] = "VOICE-02"
+    source: Literal["encoded_source"] = "encoded_source"
+    message_count: Literal[1] = 1
+    message_bytes: int = Field(ge=8, le=1200, multiple_of=8)
+    source_seed: None = None
+    source_artifact_id: rf.RunID
+    sample_count: int = Field(ge=1, le=24000)
+    security: Literal["aes128_gcm"] = "aes128_gcm"
+    expected_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @model_validator(mode="after")
+    def exact_encoded_frames(self):
+        if self.message_bytes != ((self.sample_count + 159) // 160) * 8:
+            raise ValueError("Encoded message length differs from its complete mode-3200 frames")
+        return self
+
+
 class Prepare(ContractModel):
-    spec: KnownDataSpec
+    spec: KnownDataSpec | EncodedSourceSpec
     budget: Budget
 
 
@@ -234,7 +252,7 @@ ADAPTER = TypeAdapter(WireRecord)
 def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
-        "scope": "virtual_known_data_execution",
+        "scope": "finite_message_execution",
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},

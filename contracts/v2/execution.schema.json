@@ -1,6 +1,6 @@
 {
   "contract_version": "2.0.0",
-  "scope": "virtual_known_data_execution",
+  "scope": "finite_message_execution",
   "wire": {
     "$defs": {
       "Accepted": {
@@ -2538,6 +2538,101 @@
           "title": "Budget",
           "type": "object"
         },
+        "EncodedSourceSpec": {
+          "additionalProperties": false,
+          "properties": {
+            "catalog_id": {
+              "const": "VOICE-02",
+              "default": "VOICE-02",
+              "title": "Catalog Id",
+              "type": "string"
+            },
+            "direction": {
+              "default": "A_TO_B",
+              "enum": [
+                "A_TO_B",
+                "B_TO_A"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "source": {
+              "const": "encoded_source",
+              "default": "encoded_source",
+              "title": "Source",
+              "type": "string"
+            },
+            "message_count": {
+              "const": 1,
+              "default": 1,
+              "title": "Message Count",
+              "type": "integer"
+            },
+            "message_bytes": {
+              "maximum": 1200,
+              "minimum": 8,
+              "multipleOf": 8,
+              "title": "Message Bytes",
+              "type": "integer"
+            },
+            "source_seed": {
+              "default": null,
+              "title": "Source Seed",
+              "type": "null"
+            },
+            "source_artifact_id": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "title": "Source Artifact Id",
+              "type": "string"
+            },
+            "sample_count": {
+              "maximum": 24000,
+              "minimum": 1,
+              "title": "Sample Count",
+              "type": "integer"
+            },
+            "security": {
+              "const": "aes128_gcm",
+              "default": "aes128_gcm",
+              "title": "Security",
+              "type": "string"
+            },
+            "max_duration_ms": {
+              "default": 120000,
+              "maximum": 3600000,
+              "minimum": 1000,
+              "title": "Max Duration Ms",
+              "type": "integer"
+            },
+            "source_duration_ms": {
+              "default": null,
+              "title": "Source Duration Ms",
+              "type": "null"
+            },
+            "instrumentation": {
+              "$ref": "#/$defs/Instrumentation"
+            },
+            "expected_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Expected Sha256",
+              "type": "string"
+            },
+            "playback": {
+              "const": false,
+              "default": false,
+              "title": "Playback",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "message_bytes",
+            "source_artifact_id",
+            "sample_count",
+            "expected_sha256"
+          ],
+          "title": "EncodedSourceSpec",
+          "type": "object"
+        },
         "Instrumentation": {
           "additionalProperties": false,
           "properties": {
@@ -2664,7 +2759,15 @@
       "additionalProperties": false,
       "properties": {
         "spec": {
-          "$ref": "#/$defs/KnownDataSpec"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KnownDataSpec"
+            },
+            {
+              "$ref": "#/$defs/EncodedSourceSpec"
+            }
+          ],
+          "title": "Spec"
         },
         "budget": {
           "$ref": "#/$defs/Budget"
