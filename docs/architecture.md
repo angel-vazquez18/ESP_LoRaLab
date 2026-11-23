@@ -76,7 +76,8 @@ main/
 ├── audio/
 │   ├── esp32_audio.c          Real bounded I2S DMA input/output
 │   ├── audio_port.h           Portable driver seam
-│   └── pcm_samples.c          Explicit sample conversion and attenuation
+│   ├── pcm_samples.c          Explicit sample conversion and attenuation
+│   └── codec_clip.c           Finite immutable artifact encoding and cleanup
 └── generated/
     ├── contract_schema.h       Main-control schema digest
     └── artifact_profile.h      Generated artifact digest and resource ceilings
@@ -248,4 +249,11 @@ state polling responsive without caching live health/capability snapshots. See
 component shared with native builds. It owns mode selection, retained upstream
 resources/notices and the frame-dimension query. Portable control caches the
 startup query for metadata; the ESP32 platform selects the configured mode. It
-does not yet expose encode/decode operations. See [Codec 2](codec2_dependency.md).
+now exposes finite encoding through `audio/codec_clip`; decoding remains pending.
+See [Codec 2](codec2_dependency.md) and [clip encoding](codec_encoding.md).
+
+The codec clip worker owns fresh state, one-frame slices and derived artifact
+publication; control composes its generic operation/ownership lifecycle. The
+`codec_io_v1` supplement separates enrolled immutable codec facts from compact
+current availability. `NodeSession` gates the profile/freshness and tracks results;
+operator host/UI orchestration follows its own issues.

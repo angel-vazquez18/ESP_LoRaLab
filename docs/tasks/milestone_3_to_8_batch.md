@@ -226,3 +226,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   604 cases pass, plus selected 32 KiB IDF build (0x6c970, 58% app free). Existing
   schema identities/4096-byte limit remain unchanged. Publishing the parent fix
   before reapplying the saved #36 implementation. No flash.
+
+- #36 implemented on corrected #29 base 406122e: bounded fresh-state encoding,
+  private derived output/hash publication, original/padded frame counts and stage
+  timing. Exact full/partial output matches a separate public-library reference;
+  cancel/lease/disconnect/deadline, allocation, final-hash and 100 acceptance-failure
+  positions recover cleanly. Compact current codec profile preserves bounded
+  configured health. Full 625 checks and focused 141 pass without skips; selected
+  V4.2/32 KiB build 0x6d870, 57% app free. Artifact SHA 2f630… and codec SHA 618c75…;
+  other wire fingerprints unchanged. All #36 work restored from named stashes;
+  conflict resolved preserving parent bounds and child encoding. Preparing scoped
+  commits/PR; next #41. Physical B remains original a5ecf08a… at boot 104 on 8000;
+  full backup failed twice at 12288 bytes, no flash; A/PCB revisions still pending.

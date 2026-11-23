@@ -508,8 +508,8 @@ of saved evidence. Do not infer authentication correctness from a CRC failure.
 
 Pin Codec 2 release **1.2.0**, mode **3200**, with unmodified packed codec frame
 bytes and default codec settings. Record release, resolved source commit and
-build flags in the firmware manifest; the lockfile captures the exact downloaded
-source digest. Use a fresh encoder/decoder state per message. Its mode uses 160
+build flags in the firmware manifest; the dependency manifest captures the exact
+upstream revision, retained/generated resource hashes and local constructor patch. Use a fresh encoder/decoder state per message. Its mode uses 160
 samples per frame and 64 encoded bits: at 8 kHz, 20 ms → 8 bytes. A three-second
 clip is 150 frames → **1200 encoded bytes** before the RF header/tag overhead.
 At the default fragment size this is eight DATA packets. These are format
@@ -712,3 +712,16 @@ and availability checks still apply. Both correlated replies and periodic events
 remain within 4096 bytes, including configured radio/audio and a retained error.
 The separate diagnostic image and existing schema fingerprints are unchanged by
 this metadata-packing correction.
+
+### Implemented finite encoding supplement (#36)
+
+`codec_io_v1` adds owned `audio.encode` with source/output artifact UUIDs, fresh
+per-clip mode-3200 state and a separate immutable encoded result. A partial final
+frame is zero-padded with original sample count preserved; odd-byte PCM rejects.
+Full codec/build details are enrolled in hello and current profile/hash/commands
+are retained in health. Typed results link IDs/hashes/counts and node-local stage
+times, including partial cancellation/failure without a published artifact. The
+artifact manifest schema revision changes to represent encoded output; existing
+control/diagnostic/audio/RF identities are unchanged. See
+[the exact migration, developer command and verification](codec_encoding.md).
+Decoding and host operator workflows remain later issues.
