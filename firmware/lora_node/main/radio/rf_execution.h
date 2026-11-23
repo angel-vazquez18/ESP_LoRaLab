@@ -48,7 +48,9 @@ typedef struct
     uint32_t revision, seed, bytes, duration_ms;
     uint32_t ack_timeout, reassembly, drain, processing;
     node_link_settings link;
-    bool protected_mode;
+    bool protected_mode, encoded;
+    char source_artifact_id[37], expected_sha256[65];
+    uint32_t sample_count;
     const cJSON *provision_keys;
     uint8_t role, source;
     const char *reason;
@@ -63,7 +65,9 @@ typedef struct
     bool used, sender, oom, finished, failed, started;
     uint64_t drops_start;
     char artifact_id[37], sha_hex[65];
-    uint8_t *payload, expected_hash[32];
+    const uint8_t *payload;
+    uint8_t *generated, *recovered_output, expected_hash[32];
+    bool source_borrowed;
     rf_reassembly *receiver;
     rf_secure_session *security;
     rf_sender *transmitter;
