@@ -30,6 +30,7 @@ contracts-check:
 
 repo-check:
 	python3 scripts/check_repository.py
+	python3 scripts/vendor_codec2.py --check
 
 check: test lint frontend contracts-check repo-check
 
