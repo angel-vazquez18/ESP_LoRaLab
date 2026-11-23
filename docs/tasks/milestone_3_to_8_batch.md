@@ -146,3 +146,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   `feat/authenticated-radio-frames`) is ready for review, 539 passing checks
   and the selected-board build. No merge or flash. Starting #53 for checked,
   bounded node-local crypto measurements independent of serial/RF time.
+
+- #53: checked public-vector local benchmark and shared API/CLI evidence retrieval
+  implemented; four sizes and separate first/warm-up/timed counts pass through the
+  real PSA/C serial seam. Cancellation/missing evidence never produces a valid
+  distribution. Selected-board IDF build passed (0x641a0 bytes, 61% app free);
+  final full checks passed 556 cases without skips, lint/frontend/contracts/repository checks. Physical batches and
+  acceleration/target resource qualification remain pending. Next #60 is replay
+  acceptance and authenticated duplicate re-ACK.
