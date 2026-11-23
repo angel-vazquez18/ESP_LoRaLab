@@ -203,3 +203,9 @@ Protected encoded transport has dedicated native coverage in
 `make check` and the affected IDF target. See
 [protected voice checks](protected_voice_content.md); fixtures do not qualify RF
 or audible output.
+
+Secure voice composition checks are in `testbed/tests/test_voice_workflows.py`.
+Run it with local audio and common-radio cases, then full `make check`; the exact
+command and physical acceptance steps are in
+[secure voice workflow](secure_voice_workflows.md). Host-only changes reuse #64's
+matching firmware and do not qualify hardware.

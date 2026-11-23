@@ -152,3 +152,7 @@ ready:
 
 Latest physical deployment remains blocked by unsuccessful full-backup attempts
 and unobserved printed PCB revisions; Node A was absent in the last USB inventory.
+
+The common host orchestration and labelled comparison workflows are now implemented
+in [#68](secure_voice_workflows.md). Receiver decode/play remain separate node
+operations under that shared host owner; physical qualification stays open.

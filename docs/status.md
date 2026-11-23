@@ -4,6 +4,25 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Shared secure voice workflows (#68)
+
+Host/API/CLI now compose reference upload or microphone capture, verified local
+codec preparation, common protected receiver-first transfer, separate receiver
+decode/play and two labelled data comparison bases (equal encoded bytes versus
+standard 64 bytes). Common radio readbacks occur after observed RF completion;
+each RF child provisions fresh source keys through the existing private owner.
+Job-created node artifacts retire after evidence retention; preexisting files are
+preserved. Child-owner release and terminal-after-cleanup ordering prevent stage
+races, and a cancelled stop caller cannot prematurely release the bench.
+
+Twelve dedicated cases include both source types/directions, unavailable speaker,
+source/RF failures and following-work recovery, API/CLI integrity/listening and
+active shutdown without resume. Full `make check` passes 706 cases without skips,
+plus lint/frontend/contracts/repository/dependency checks. Host-only;
+no firmware/wire change or flash. See [secure voice workflow](secure_voice_workflows.md)
+for reading order, comparison interpretation, commands and physical checks.
+Dedicated dashboard follows #72; physical voice qualification remains #80.
+
 ## November 23 — Protected encoded message content (#64)
 
 Committed encoded artifacts now use the existing protected message/retry/replay
