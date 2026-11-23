@@ -242,7 +242,7 @@ static cJSON *command_reply(node_control *n, const cJSON *cmd, uint32_t sequence
     add(n,reply,"error",error(n,code,message,field));
     return reply;
 }
-static cJSON *capabilities(node_control *n)
+static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
@@ -267,15 +267,17 @@ static cJSON *capabilities(node_control *n)
         boolean(n, radio, "physical_qualified", false);
     }
     add(n, o, "radio_limits", radio);
-    number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
-    number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
-    number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);
-    number(n, limits, "duplicate_cache_records", NODE_CACHE_SLOTS);
-    number(n, limits, "max_clients_per_boot", 16);
-    number(n, limits, "diag_max_iterations", 10000);
-    number(n, limits, "diag_max_payload_bytes", NODE_PROBE_BYTES);
-    number(n, limits, "operation_timeout_us", NODE_OPERATION_US);
-    number(n, limits, "operation_slice_bytes", 512);
+    if (enrollment) {
+        number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
+        number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
+        number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);
+        number(n, limits, "duplicate_cache_records", NODE_CACHE_SLOTS);
+        number(n, limits, "max_clients_per_boot", 16);
+        number(n, limits, "diag_max_iterations", 10000);
+        number(n, limits, "diag_max_payload_bytes", NODE_PROBE_BYTES);
+        number(n, limits, "operation_timeout_us", NODE_OPERATION_US);
+        number(n, limits, "operation_slice_bytes", 512);
+    }
     cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe", "crypto_benchmark"}, 2);
     add(n, limits, "diag_kinds", kinds);
     cJSON *benchmark = object(n);
@@ -286,17 +288,19 @@ static cJSON *capabilities(node_control *n)
     number(n, benchmark, "warmup_operations", CRYPTO_BENCH_WARMUPS);
     number(n, benchmark, "page_samples", CRYPTO_BENCH_PAGE);
     add(n, limits, "crypto_benchmark", benchmark);
-    cJSON *codec = object(n);
-    string(n, codec, "version", codec2_dependency_version());
-    string(n, codec, "source_commit", codec2_dependency_revision());
-    boolean(n, codec, "library_ready", n->codec2_library_ready);
-    number(n, codec, "mode", n->codec2_library_ready ? 3200 : 0);
-    number(n, codec, "samples_per_frame", n->codec2_format.samples);
-    number(n, codec, "bits_per_frame", n->codec2_format.bits);
-    number(n, codec, "bytes_per_frame", n->codec2_format.bytes);
-    number(n, codec, "sample_rate_hz", n->codec2_format.sample_rate_hz);
-    string(n, codec, "build_options", "mode3200_only;kiss_fft;float;O2;no_fast_math");
-    add(n, limits, "codec2_library", codec);
+    if (enrollment) {
+        cJSON *codec = object(n);
+        string(n, codec, "version", codec2_dependency_version());
+        string(n, codec, "source_commit", codec2_dependency_revision());
+        boolean(n, codec, "library_ready", n->codec2_library_ready);
+        number(n, codec, "mode", n->codec2_library_ready ? 3200 : 0);
+        number(n, codec, "samples_per_frame", n->codec2_format.samples);
+        number(n, codec, "bits_per_frame", n->codec2_format.bits);
+        number(n, codec, "bytes_per_frame", n->codec2_format.bytes);
+        number(n, codec, "sample_rate_hz", n->codec2_format.sample_rate_hz);
+        string(n, codec, "build_options", "mode3200_only;kiss_fft;float;O2;no_fast_math");
+        add(n, limits, "codec2_library", codec);
+    }
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
@@ -381,7 +385,7 @@ static cJSON *health(node_control *n)
     add(n, o, "radio", configured ? radio_config_radio(&n->port.radio->applied, n->port.radio->ldro_enabled) : cJSON_CreateNull());
     add(n, o, "link", configured ? radio_config_link(&n->link) : cJSON_CreateNull());
     number(n, o, "config_revision", n->config_revision);
-    add(n, o, "capability_availability", capabilities(n));
+    add(n, o, "capability_availability", capabilities(n, false));
     add(n, memory, "internal", heap(n, &internal));
     add(n, memory, "psram", heap(n, &psram));
     number(n, buffers, "serial_rx", n->used);
@@ -427,7 +431,7 @@ static cJSON *hello(node_control *n)
     add(n, o, "supported_wire_versions", versions);
     string(n, o, "contract_version", "2.0.0");
     string(n, o, "schema_sha256", n->port.schema_sha256);
-    add(n, o, "capabilities", capabilities(n));
+    add(n, o, "capabilities", capabilities(n, true));
     boolean(n, o, "claimed", n->owner[0] != 0);
     string(n, o, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
     return o;

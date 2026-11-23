@@ -700,3 +700,15 @@ project's own wire format and operational policy.
 - [Heltec hardware documentation](https://wiki.heltec.org/docs/devices/open-source-hardware/esp32-series/lora-32/wifi-lora-32-v4/)
   for the eventual identified revision; generic diagnostic firmware cannot assume
   this radio, USB route, pin map or RAM configuration.
+
+### Main-control enrollment and health bounds
+
+The main image enrolls fixed transport/workload bounds and codec source metadata
+in hello. Health repeats current capability flags and operative profile
+declarations, plus applied configuration, errors and actual memory/traffic values.
+Missing immutable enrollment fields in health do not make a capability unavailable;
+use the same-boot identity for those fixed limits. Command-specific current profile
+and availability checks still apply. Both correlated replies and periodic events
+remain within 4096 bytes, including configured radio/audio and a retained error.
+The separate diagnostic image and existing schema fingerprints are unchanged by
+this metadata-packing correction.

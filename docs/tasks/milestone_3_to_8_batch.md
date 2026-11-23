@@ -219,3 +219,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   on 8000 at boot104 with unchanged original audio image. Earlier temporary binary
   is marked superseded. #36 WIP is saved in a named stash while this parent fix
   is published, then will be reapplied on the corrected base.
+
+- #29 bounded-report follow-up: reproduced a configured audio+RF missing health
+  reply directly in C. Constant enrollment metadata now stays in hello; current
+  profiles/flags/settings/errors/measurements remain in health. Focused 94 and full
+  604 cases pass, plus selected 32 KiB IDF build (0x6c970, 58% app free). Existing
+  schema identities/4096-byte limit remain unchanged. Publishing the parent fix
+  before reapplying the saved #36 implementation. No flash.

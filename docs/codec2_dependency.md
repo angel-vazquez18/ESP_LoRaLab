@@ -73,8 +73,10 @@ from ESP32; this is not target heap/stack qualification.
 
 `capabilities.resource_limits.codec2_library` reports version, source commit,
 `library_ready`, selected mode, actual frame dimensions, sample rate and options.
-Hello and health use the same cached startup result; polling does not repeatedly
-allocate a codec. A library probe is distinct from a working codec command,
+Hello retains immutable codec source/frame details and transport/workload limits.
+Health reports fresh availability flags, operative profile declarations and
+measurements; it uses the same cached startup result without repeating that
+immutable enrollment metadata. Polling does not repeatedly allocate a codec. A library probe is distinct from a working codec command,
 measured processing time or acoustic intelligibility. The diagnostic image and
 all existing wire/schema fingerprints remain unchanged: this metadata uses the
 existing main-control resource-limits extension point.
@@ -97,14 +99,14 @@ make check
 idf.py -C firmware/lora_node build size
 ```
 
-The focused command passed 93 cases without skips (16 codec and 77 existing control
-cases). Final `make check` passed 603 cases without skips, Ruff, frontend build,
+The focused command passed 94 cases without skips (17 codec and 77 existing control
+cases). Final `make check` passed 604 cases without skips, Ruff, frontend build,
 byte-exact generated contracts, repository checks and the 55 retained resource
 hashes. One existing Starlette/httpx deprecation warning remains.
 
-The selected-board ESP-IDF v6.0.2 build passed without flashing: image 0x6c950 bytes,
+The selected-board ESP-IDF v6.0.2 build passed without flashing: image 0x6c970 bytes,
 58% of the 1 MiB application partition free. Compared with #63's 0x65480 image,
-this is 29,904 additional bytes with the same local board/audio selection. The
+this is 29,936 additional bytes with the same local board/audio selection. The
 linker reports 73,841 bytes total DIRAM use, including 13,530 data and 8,256 BSS
 bytes; these are whole-image static accounting, not runtime free heap. The build
 also reports 16,384 bytes dedicated IRAM use and separate RTC allocations. Target
@@ -133,3 +135,15 @@ The prepared peripheral-disabled hardware image was never flashed: the required
 The old temporary binary was marked superseded after this stack finding. Node B
 was reconnected at boot104 with its unchanged original audio firmware fingerprint
 `a5ecf08a…`. No codec startup/stack result is claimed on physical hardware.
+
+### Bounded health records
+
+Direct C-interface testing reproduced a missing reply with configured RF and both
+audio paths: repeated immutable metadata pushed the health reply beyond 4096 bytes.
+The main image now enrolls constant transport/workload bounds and codec source
+details only in `hello`. `health` retains current flags, full operative profile
+declarations, applied settings, errors and memory/traffic measurements. Consumers
+continue to require fresh matching profiles; no record limit or watchdog deadline
+was widened. A combined-peripheral/configuration/error regression checks both
+correlated status and periodic health through the same bounded writer. Final
+verification passed 604 cases and the selected 32 KiB IDF build (0x6c970).

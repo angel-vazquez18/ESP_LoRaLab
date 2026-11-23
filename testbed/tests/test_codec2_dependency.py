@@ -57,3 +57,29 @@ def test_partial_codec_construction_returns_unavailable_without_leaking(failure)
         [str(executable), str(failure)], capture_output=True, text=True, timeout=10
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_configured_audio_radio_health_remains_bounded_after_an_error(native_library):
+    from uuid import uuid4
+
+    from test_node_audio_native import AudioFixture
+
+    audio = AudioFixture()
+    node = NativeNode(native_library, audio=audio.port, radio=native_library.native_radio_create())
+    try:
+        hello = node.request("hello")["result"]
+        assert hello["capabilities"]["resource_limits"]["codec2_library"]["library_ready"]
+        assert hello["capabilities"]["resource_limits"]["max_record_bytes"] == 4096
+        node.claim()
+        assert node.request("config.set", {"radio": {"spreading_factor": 12}, "link": {}})["ok"]
+        rejected = node.request("run.start", {"config_revision": 1}, run_id=str(uuid4()))
+        assert rejected["error"]["code"] == "INVALID_STATE"
+        status = node.request("status.get")["result"]
+        assert status["capability_availability"]["radio"]
+        assert status["capability_availability"]["audio_capture"]
+        assert status["last_error"]["code"] == "INVALID_STATE"
+        assert "codec2_library" not in status["capability_availability"]["resource_limits"]
+        node.tick(1000000)
+        assert any(r.get("name") == "health" for r in node.drain())
+    finally:
+        node.close()
