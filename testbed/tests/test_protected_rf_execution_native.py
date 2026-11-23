@@ -236,7 +236,13 @@ def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequen
         node.drain()
         native_library.native_radio_inject(node.radio, good, len(good), 2)
         node.tick()
-        node.drain()
+        ack_records = node.drain()
+        assert any(
+            r.get("name") == "ack.result"
+            and r["data"]["status"] == "received"
+            and r["data"]["acked_frame_seq"] == 1
+            for r in ack_records
+        )
         node.tick(50001)
         node.drain()
         final = sent(node)

@@ -1172,6 +1172,15 @@ void rf_execution_tick(rf_execution *r)
                                                                           : "invalid_frame");
         if (status.state == RF_SENDER_COMPLETED)
         {
+            if (event.kind == RADIO_EVENT_RX && status.acks)
+            {
+                cJSON *ack = object(r);
+                number(r, ack, "acked_frame_seq", r->fragments.first_sequence + r->tx_fragment);
+                number(r, ack, "ack_frame_seq", word(event.bytes + 16));
+                number(r, ack, "attempt_index", status.attempts);
+                string(r, ack, "status", "received");
+                send(r, "ack.result", ack);
+            }
             r->tx_fragment++;
             if (r->tx_fragment < r->fragments.fragment_count)
                 r->next_tx = r->port.now_us(r->port.context) + r->plan.link.guard_us;
