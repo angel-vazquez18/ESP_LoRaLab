@@ -77,6 +77,11 @@ class ListeningRequest(StrictModel):
     notes: str = Field(default="", max_length=1000)
 
 
+class CodecPlaybackRequest(StrictModel):
+    operation_id: control_v2.UUID
+    stage: Literal["source", "decoded"] = "decoded"
+
+
 class ComparisonRequest(StrictModel):
     run_ids: list[str] = Field(min_length=1, max_length=4)
 
@@ -224,6 +229,27 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/nodes/{role}/audio/retrieve", status_code=202)
     async def audio_retrieve(role: Literal["A", "B"], body: audio_contract_v2.Play):
         return await app.state.host.audio_action(role, "retrieve", artifact_id=body.artifact_id)
+
+    @app.post("/api/nodes/{role}/audio/codec", status_code=202)
+    async def audio_codec(role: Literal["A", "B"], body: audio_contract_v2.Play):
+        return await app.state.host.audio_action(role, "codec", artifact_id=body.artifact_id)
+
+    @app.get("/api/audio/operations/{identifier}/artifacts/{stage}")
+    async def codec_artifact(
+        identifier: str, stage: Literal["source", "encoded", "decoded"], as_wav: bool = False
+    ):
+        extension = "wav" if as_wav else "codec2" if stage == "encoded" else "pcm"
+        return Response(
+            app.state.host.audio.codec_content(identifier, stage, as_wav),
+            media_type="audio/wav" if as_wav else "application/octet-stream",
+            headers={
+                "Content-Disposition": f'attachment; filename="{identifier}-{stage}.{extension}"'
+            },
+        )
+
+    @app.post("/api/audio/operations/{identifier}/playback")
+    async def codec_playback(identifier: str, body: CodecPlaybackRequest):
+        return app.state.host.audio.link_playback(identifier, body.operation_id, body.stage)
 
     @app.get("/api/audio/operations")
     async def audio_operations():
