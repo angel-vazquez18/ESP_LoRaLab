@@ -271,3 +271,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   checks pass, no skips. Host-only change; no firmware build/flash. Original 19
   saved files still match. Preparing PR on #186; next #64 protected encoded bytes
   through the common message path, then #68 host voice and #72 UI.
+
+- #45: PR #187 (`feat/local-codec-provenance` → `feat/finite-codec-decoding`)
+  is ready for review with five scoped commits and 675 full passing checks, no
+  skips. Issue Testing, no merge or flash. Starting #64 on the dependent branch
+  for committed encoded bytes through authenticated reconstruction and guarded
+  decode/playback. Local job API/CLI reading/test instructions are in
+  `docs/codec_provenance.md`.
