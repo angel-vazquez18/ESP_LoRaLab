@@ -110,3 +110,26 @@ bytes; these are whole-image static accounting, not runtime free heap. The build
 also reports 16,384 bytes dedicated IRAM use and separate RTC allocations. Target
 startup behavior, temporary heap/stack peak and encode/decode performance still
 need matching hardware validation. No codec image has been installed on a node.
+
+## Required task stack
+
+A same-toolchain stack report found `make_analysis_window` alone reserves 8272
+bytes on ESP32-S3. That exceeds the previous 8192-byte main-task allocation before
+its caller frames. The dependency now requires `CONFIG_ESP_MAIN_TASK_STACK_SIZE`
+at least 32768 when `CONFIG_LORALAB_CODEC2` is enabled; tracked defaults select
+32768. This reserves 24,576 additional runtime stack bytes relative to the old
+configuration. Whole-image static DIRAM and image length remain as reported above.
+
+A real IDF build with the old cached 8192-byte configuration failed at the guard;
+the same selected V4.2 profile rebuilt successfully at 32768 (0x6c950, 58% app free).
+Native library checks still passed 16 cases and generated contracts stayed exact.
+For an existing checkout, use `idf.py -C firmware/lora_node menuconfig` and set
+**Component config → ESP System Settings → Main task stack size** to 32768. IDF
+can cache an alternate `SDKCONFIG` path; update the configuration actually used
+by the build. Runtime stack high-water acceptance still needs hardware evidence.
+
+The prepared peripheral-disabled hardware image was never flashed: the required
+16 MiB backup stopped twice after 12,288 streamed bytes, at 460800 and 115200 baud.
+The old temporary binary was marked superseded after this stack finding. Node B
+was reconnected at boot104 with its unchanged original audio firmware fingerprint
+`a5ecf08a…`. No codec startup/stack result is claimed on physical hardware.

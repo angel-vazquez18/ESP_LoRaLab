@@ -19,7 +19,13 @@ repository/resource-hash checks; focused codec/control checks passed 93. The
 selected-board IDF build passed: image 0x6c950, 58% app partition free, 29,904 bytes
 above #63. Whole-image static DIRAM use is 73,841 bytes; native constructor peak
 is not target heap evidence. No flash. See [Codec 2 review and checks](codec2_dependency.md).
-Physical backend8000 now identifies B `esp-f85b1ba27744:101` running the original
+The target compiler reports an 8272-byte constructor frame; the default main-task
+stack is now 32 KiB with an enabled-codec build guard. The old 8192-byte cached
+profile correctly fails; the 32 KiB V4.2 rebuild passes with unchanged image size.
+The attempted 16 MiB backup failed twice at12,288 bytes, so no image was installed;
+B reconnected at boot104 with the original audio fingerprint.
+
+Physical backend8000 now identifies B `esp-f85b1ba27744:104` running the original
 local-audio build (`a5ecf08a…`), with RF disabled. A has not appeared in USB inventory;
 printed PCB revisions remain unknown. No physical RF/codec qualification claimed.
 

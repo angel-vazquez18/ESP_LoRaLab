@@ -177,3 +177,8 @@ cleanup. `make check` also verifies retained dependency hashes without downloadi
 sources. The native fixture requires CMake/a host compiler; missing prerequisites
 fail instead of substituting a codec. [Reimport, build/size and review notes](codec2_dependency.md)
 record the target impact and distinguish library readiness from codec operations.
+
+Codec-enabled target builds require a 32 KiB main-task stack. Existing cached
+configurations fail clearly below that budget; update the active `SDKCONFIG` via
+`idf.py -C firmware/lora_node menuconfig`. See the measured
+[constructor stack requirement](codec2_dependency.md#required-task-stack).

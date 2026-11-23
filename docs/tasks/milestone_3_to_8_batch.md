@@ -210,3 +210,12 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   is ready for review with four scoped commits, 603 passing checks and the selected-
   board build. Issue status is Testing; no merge. Starting #36 for finite committed-
   PCM encoding, fresh state and a separate immutable encoded artifact.
+
+- #29 follow-up while starting #36: exact target stack reports exposed an 8272-byte
+  constructor frame, larger than the old 8192-byte task. Added 32 KiB defaults and
+  a codec-enabled build guard. Actual old-profile build fails; explicit 32 KiB V4.2
+  rebuild passes (same 0x6c950 image). Native 16 cases/contracts pass. Required
+  full-flash backup failed twice after 12,288 streamed bytes; no flash. B is back
+  on 8000 at boot104 with unchanged original audio image. Earlier temporary binary
+  is marked superseded. #36 WIP is saved in a named stash while this parent fix
+  is published, then will be reapplied on the corrected base.

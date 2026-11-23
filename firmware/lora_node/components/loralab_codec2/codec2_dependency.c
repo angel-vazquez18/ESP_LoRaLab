@@ -1,3 +1,10 @@
+#ifdef ESP_PLATFORM
+#include "sdkconfig.h"
+#if defined(CONFIG_LORALAB_CODEC2) && CONFIG_ESP_MAIN_TASK_STACK_SIZE < 32768
+#error "Codec 2 requires CONFIG_ESP_MAIN_TASK_STACK_SIZE >= 32768; update sdkconfig before building"
+#endif
+#endif
+
 #include "codec2_dependency.h"
 #include "codec2.h"
 
