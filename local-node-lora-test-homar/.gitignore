@@ -1,0 +1,9 @@
+.pio/
+.host-test/
+.venv/
+__pycache__/
+*.pyc
+captures/
+output/
+# Keep explicitly requested frozen evidence despite parent *.log rules.
+!20-lora-encryption-comparison-tests/**/*.log

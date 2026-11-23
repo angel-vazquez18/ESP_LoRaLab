@@ -1,0 +1,1328 @@
+{
+  "source_repository": "https://github.com/homarrodriguez/lora-walkie-talkie",
+  "source_commit": "918bf14a399ba2d0a7d2d96e71894344259ae4b5",
+  "target_repository": "https://github.com/angel-vazquez18/ESP_LoRaLab",
+  "target_base_commit": "d781bd64dc0fc0ba61d7fe1bab27eead75c89b1c",
+  "branch": "local-node-lora-test-encryption-homar",
+  "scope": "Only local-node-lora-test-homar/; standalone 20-trial encrypted versus unencrypted audio bench, no integration",
+  "frozen_archive_files_verified": 130,
+  "file_count": 166,
+  "files": {
+    ".gitattributes": {
+      "bytes": 242,
+      "sha256": "31cce4247de590e41ab8192974681af0c2df564f7d82e655b741a51de297dc1d",
+      "source_path": ".gitattributes",
+      "source_git_sha256": "c48eba7a57b351726d46b006bb42c4a8023f98da82878a72382e7872ae455a26",
+      "source_worktree_sha256": "c48eba7a57b351726d46b006bb42c4a8023f98da82878a72382e7872ae455a26",
+      "comparison": "packaging_adaptation"
+    },
+    ".gitignore": {
+      "bytes": 180,
+      "sha256": "943dbab19549b2a9c99447db6de94534745b4ba2e1a81198fa6f1a908f99031c",
+      "source_path": ".gitignore",
+      "source_git_sha256": "c8ffb2fc472b2a8be7cfe284b88b4a350e45ec26f00d4b43ba3a8a6021ddedc5",
+      "source_worktree_sha256": "fdcf50b53d880e7f4d9d48d36906551635f037853b5fb2241f8615ef752ddb83",
+      "comparison": "packaging_adaptation"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/ARCHIVE_MANIFEST.json": {
+      "bytes": 22298,
+      "sha256": "23638502a568bfc6e8959bf44e7d5c50da9263bf3120ebc91a55dc9e83cd5ba8",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/ARCHIVE_MANIFEST.json",
+      "source_git_sha256": "23638502a568bfc6e8959bf44e7d5c50da9263bf3120ebc91a55dc9e83cd5ba8",
+      "source_worktree_sha256": "23638502a568bfc6e8959bf44e7d5c50da9263bf3120ebc91a55dc9e83cd5ba8",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.json": {
+      "bytes": 108689,
+      "sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.json",
+      "source_git_sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "source_worktree_sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.pdf": {
+      "bytes": 22327,
+      "sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.pdf",
+      "source_git_sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "source_worktree_sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/docs/LORA_ENCRYPTION_COMPARISON.md": {
+      "bytes": 8370,
+      "sha256": "f6de54488f4e3c38d7ec80def53dec452b7a3287a382e8f51c6c36bf8be0910a",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/docs/LORA_ENCRYPTION_COMPARISON.md",
+      "source_git_sha256": "f6de54488f4e3c38d7ec80def53dec452b7a3287a382e8f51c6c36bf8be0910a",
+      "source_worktree_sha256": "f6de54488f4e3c38d7ec80def53dec452b7a3287a382e8f51c6c36bf8be0910a",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/audio_diagnostics.h": {
+      "bytes": 847,
+      "sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/audio_diagnostics.h",
+      "source_git_sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "source_worktree_sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/config.h": {
+      "bytes": 4054,
+      "sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/config.h",
+      "source_git_sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "source_worktree_sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/crypto_radio_frame.h": {
+      "bytes": 2561,
+      "sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/crypto_radio_frame.h",
+      "source_git_sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "source_worktree_sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/lora_display_model.h": {
+      "bytes": 3026,
+      "sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/lora_display_model.h",
+      "source_git_sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "source_worktree_sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/protocol.h": {
+      "bytes": 1121,
+      "sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/protocol.h",
+      "source_git_sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0",
+      "source_worktree_sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/radio_frame.h": {
+      "bytes": 4091,
+      "sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/include/radio_frame.h",
+      "source_git_sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "source_worktree_sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/chunking/chunker.cpp": {
+      "bytes": 4662,
+      "sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/chunking/chunker.cpp",
+      "source_git_sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377",
+      "source_worktree_sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/chunking/chunker.h": {
+      "bytes": 1977,
+      "sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/chunking/chunker.h",
+      "source_git_sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3",
+      "source_worktree_sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/lora_bench_display/lora_bench_display.cpp": {
+      "bytes": 5743,
+      "sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/lora_bench_display/lora_bench_display.cpp",
+      "source_git_sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "source_worktree_sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/lora_bench_display/lora_bench_display.h": {
+      "bytes": 585,
+      "sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/lib/lora_bench_display/lora_bench_display.h",
+      "source_git_sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "source_worktree_sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/platformio.ini": {
+      "bytes": 3829,
+      "sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/platformio.ini",
+      "source_git_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "source_worktree_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/src/lora_crypto_bench.cpp": {
+      "bytes": 44331,
+      "sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/src/lora_crypto_bench.cpp",
+      "source_git_sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "source_worktree_sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/crypto_radio_frame_test.cpp": {
+      "bytes": 2180,
+      "sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/crypto_radio_frame_test.cpp",
+      "source_git_sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "source_worktree_sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/lora_crypto_bench_test.py": {
+      "bytes": 20316,
+      "sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/lora_crypto_bench_test.py",
+      "source_git_sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "source_worktree_sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/lora_crypto_report_test.py": {
+      "bytes": 11157,
+      "sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/test/host/lora_crypto_report_test.py",
+      "source_git_sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0",
+      "source_worktree_sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/create_lora_crypto_pdf.py": {
+      "bytes": 42779,
+      "sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/create_lora_crypto_pdf.py",
+      "source_git_sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "source_worktree_sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/lora_crypto_bench.py": {
+      "bytes": 35220,
+      "sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/lora_crypto_bench.py",
+      "source_git_sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9",
+      "source_worktree_sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/lora_transfer_bench.py": {
+      "bytes": 48591,
+      "sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/lora_transfer_bench.py",
+      "source_git_sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5",
+      "source_worktree_sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/run_lora_crypto_comparison.ps1": {
+      "bytes": 1359,
+      "sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/run_lora_crypto_comparison.ps1",
+      "source_git_sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78",
+      "source_worktree_sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/verify_heltec_bench.py": {
+      "bytes": 16282,
+      "sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/implementation/tools/verify_heltec_bench.py",
+      "source_git_sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600",
+      "source_worktree_sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM6.bin": {
+      "bytes": 3509,
+      "sha256": "e968524275063b08f2ff0a6b10c65c656b7f9d76068ca9ddb5149ed1f1cf69d1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM6.bin",
+      "source_git_sha256": "e968524275063b08f2ff0a6b10c65c656b7f9d76068ca9ddb5149ed1f1cf69d1",
+      "source_worktree_sha256": "e968524275063b08f2ff0a6b10c65c656b7f9d76068ca9ddb5149ed1f1cf69d1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM6.log": {
+      "bytes": 5385,
+      "sha256": "00686bf2a57d1d1b6c72c8179be9deb608482b74c9eca777823beea810870eae",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM6.log",
+      "source_git_sha256": "00686bf2a57d1d1b6c72c8179be9deb608482b74c9eca777823beea810870eae",
+      "source_worktree_sha256": "00686bf2a57d1d1b6c72c8179be9deb608482b74c9eca777823beea810870eae",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM7.bin": {
+      "bytes": 3519,
+      "sha256": "f41e3ba267c7360277396e6bc3eec3a5cf3693aad6a6498a448e5985aefa3765",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM7.bin",
+      "source_git_sha256": "f41e3ba267c7360277396e6bc3eec3a5cf3693aad6a6498a448e5985aefa3765",
+      "source_worktree_sha256": "f41e3ba267c7360277396e6bc3eec3a5cf3693aad6a6498a448e5985aefa3765",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM7.log": {
+      "bytes": 5395,
+      "sha256": "c50e5faf0586b1150b97261c00182595422d0da7620d58eabd01b6e0641cb2f7",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/serial-COM7.log",
+      "source_git_sha256": "c50e5faf0586b1150b97261c00182595422d0da7620d58eabd01b6e0641cb2f7",
+      "source_worktree_sha256": "c50e5faf0586b1150b97261c00182595422d0da7620d58eabd01b6e0641cb2f7",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/source.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/source.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/readiness/summary.json": {
+      "bytes": 13107,
+      "sha256": "e2e7c77d64f59d351c281a064dc66f30c83fdb0cc0aa63d026cedc6ceab32702",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/readiness/summary.json",
+      "source_git_sha256": "e2e7c77d64f59d351c281a064dc66f30c83fdb0cc0aa63d026cedc6ceab32702",
+      "source_worktree_sha256": "e2e7c77d64f59d351c281a064dc66f30c83fdb0cc0aa63d026cedc6ceab32702",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/README.md": {
+      "bytes": 2491,
+      "sha256": "cfdf3ba2a0c5b596010f52027d1dca0f738e99def20504769f0d76555d81771a",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/README.md",
+      "source_git_sha256": "cfdf3ba2a0c5b596010f52027d1dca0f738e99def20504769f0d76555d81771a",
+      "source_worktree_sha256": "cfdf3ba2a0c5b596010f52027d1dca0f738e99def20504769f0d76555d81771a",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/build-info.json": {
+      "bytes": 781,
+      "sha256": "a386843543c11e7eda56dd46ae45c3f04de96d810613fe23c2964e401b0418b3",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/build-info.json",
+      "source_git_sha256": "a386843543c11e7eda56dd46ae45c3f04de96d810613fe23c2964e401b0418b3",
+      "source_worktree_sha256": "a386843543c11e7eda56dd46ae45c3f04de96d810613fe23c2964e401b0418b3",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/crypto-comparison-report.json": {
+      "bytes": 108689,
+      "sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/crypto-comparison-report.json",
+      "source_git_sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "source_worktree_sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/crypto-comparison-report.pdf": {
+      "bytes": 22327,
+      "sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/crypto-comparison-report.pdf",
+      "source_git_sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "source_worktree_sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/implementation-manifest.json": {
+      "bytes": 3864,
+      "sha256": "1e24e05c64bd49d7ba29b7c5ef8da08a30f3da816c310dcf2e76a66d953931a5",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/implementation-manifest.json",
+      "source_git_sha256": "1e24e05c64bd49d7ba29b7c5ef8da08a30f3da816c310dcf2e76a66d953931a5",
+      "source_worktree_sha256": "1e24e05c64bd49d7ba29b7c5ef8da08a30f3da816c310dcf2e76a66d953931a5",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM6.bin": {
+      "bytes": 2344138,
+      "sha256": "b741b290da3b8f7d892c92b2d54818cdb2308fbeb75d641cd3efbb2effbfc32d",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM6.bin",
+      "source_git_sha256": "b741b290da3b8f7d892c92b2d54818cdb2308fbeb75d641cd3efbb2effbfc32d",
+      "source_worktree_sha256": "b741b290da3b8f7d892c92b2d54818cdb2308fbeb75d641cd3efbb2effbfc32d",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM6.log": {
+      "bytes": 1816351,
+      "sha256": "c5c8d19b1ef882500a44a4eb0f69edb09f65500f68d74daa55145c224fe29f59",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM6.log",
+      "source_git_sha256": "c5c8d19b1ef882500a44a4eb0f69edb09f65500f68d74daa55145c224fe29f59",
+      "source_worktree_sha256": "c5c8d19b1ef882500a44a4eb0f69edb09f65500f68d74daa55145c224fe29f59",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM7.bin": {
+      "bytes": 2342940,
+      "sha256": "051fa9a0b75df035fdfe191ff1ee10bf42db1505c0ee545307ce49a9dce9add7",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM7.bin",
+      "source_git_sha256": "051fa9a0b75df035fdfe191ff1ee10bf42db1505c0ee545307ce49a9dce9add7",
+      "source_worktree_sha256": "051fa9a0b75df035fdfe191ff1ee10bf42db1505c0ee545307ce49a9dce9add7",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM7.log": {
+      "bytes": 1815052,
+      "sha256": "1234c078b4e176e2a58f90552e71eb765b7ec5af203cc69187f191a8e6737cb9",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/serial-COM7.log",
+      "source_git_sha256": "1234c078b4e176e2a58f90552e71eb765b7ec5af203cc69187f191a8e6737cb9",
+      "source_worktree_sha256": "1234c078b4e176e2a58f90552e71eb765b7ec5af203cc69187f191a8e6737cb9",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/source.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/source.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/summary.json": {
+      "bytes": 3517515,
+      "sha256": "1165af3365c81317c33a618c50758232c6241ba92912838aa5528f505b947984",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/summary.json",
+      "source_git_sha256": "1165af3365c81317c33a618c50758232c6241ba92912838aa5528f505b947984",
+      "source_worktree_sha256": "1165af3365c81317c33a618c50758232c6241ba92912838aa5528f505b947984",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 148297,
+      "sha256": "ce010bbaf31288542751bdbb5d967f0cb4dcca43e985d59d736565d4d7488407",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-01-PLAIN-COM6-to-COM7/summary.json",
+      "source_git_sha256": "ce010bbaf31288542751bdbb5d967f0cb4dcca43e985d59d736565d4d7488407",
+      "source_worktree_sha256": "ce010bbaf31288542751bdbb5d967f0cb4dcca43e985d59d736565d4d7488407",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148807,
+      "sha256": "755e9852a0477fbe39eb5b16e427f292105e6813f53a2c4f56fe8509364916ea",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-02-PLAIN-COM7-to-COM6/summary.json",
+      "source_git_sha256": "755e9852a0477fbe39eb5b16e427f292105e6813f53a2c4f56fe8509364916ea",
+      "source_worktree_sha256": "755e9852a0477fbe39eb5b16e427f292105e6813f53a2c4f56fe8509364916ea",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149475,
+      "sha256": "cd7052bf29644508ff2e471ae23aab2a5c300d6c527d347649e99fb61c93ef87",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-03-PLAIN-COM6-to-COM7/summary.json",
+      "source_git_sha256": "cd7052bf29644508ff2e471ae23aab2a5c300d6c527d347649e99fb61c93ef87",
+      "source_worktree_sha256": "cd7052bf29644508ff2e471ae23aab2a5c300d6c527d347649e99fb61c93ef87",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 149168,
+      "sha256": "a2530190af834c6fff15d4101133b2924273f6f5b80b5c73ebff39dbac0fd8cc",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-04-PLAIN-COM7-to-COM6/summary.json",
+      "source_git_sha256": "a2530190af834c6fff15d4101133b2924273f6f5b80b5c73ebff39dbac0fd8cc",
+      "source_worktree_sha256": "a2530190af834c6fff15d4101133b2924273f6f5b80b5c73ebff39dbac0fd8cc",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149597,
+      "sha256": "1d9826cb7532a5abd4e04bdaca64e3f1090858ec37137f4a2d7ac553d99422b8",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-05-PLAIN-COM6-to-COM7/summary.json",
+      "source_git_sha256": "1d9826cb7532a5abd4e04bdaca64e3f1090858ec37137f4a2d7ac553d99422b8",
+      "source_worktree_sha256": "1d9826cb7532a5abd4e04bdaca64e3f1090858ec37137f4a2d7ac553d99422b8",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 150786,
+      "sha256": "bb4e06cd0148c9f62c4bca32c1b99d3bf34e31b331ef3d39e9b90ca0c20704ad",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-06-PLAIN-COM7-to-COM6/summary.json",
+      "source_git_sha256": "bb4e06cd0148c9f62c4bca32c1b99d3bf34e31b331ef3d39e9b90ca0c20704ad",
+      "source_worktree_sha256": "bb4e06cd0148c9f62c4bca32c1b99d3bf34e31b331ef3d39e9b90ca0c20704ad",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149586,
+      "sha256": "b97212a79d07b77e0fe405133b062b7fe4dbf2fbef0859f3cafaa9497c59cc38",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-07-PLAIN-COM6-to-COM7/summary.json",
+      "source_git_sha256": "b97212a79d07b77e0fe405133b062b7fe4dbf2fbef0859f3cafaa9497c59cc38",
+      "source_worktree_sha256": "b97212a79d07b77e0fe405133b062b7fe4dbf2fbef0859f3cafaa9497c59cc38",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148771,
+      "sha256": "a6f7dc4e33b6697c89b157a657a53401591ff2cc148c183cd99046d09de73d2e",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-08-PLAIN-COM7-to-COM6/summary.json",
+      "source_git_sha256": "a6f7dc4e33b6697c89b157a657a53401591ff2cc148c183cd99046d09de73d2e",
+      "source_worktree_sha256": "a6f7dc4e33b6697c89b157a657a53401591ff2cc148c183cd99046d09de73d2e",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149593,
+      "sha256": "85daf08429d8ea4391769668515283a422925f0595dddfcfee23669e4f2e90e8",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-09-PLAIN-COM6-to-COM7/summary.json",
+      "source_git_sha256": "85daf08429d8ea4391769668515283a422925f0595dddfcfee23669e4f2e90e8",
+      "source_worktree_sha256": "85daf08429d8ea4391769668515283a422925f0595dddfcfee23669e4f2e90e8",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148360,
+      "sha256": "bd3b5b96df6ee63ce305a110545d83ae3c0c913bb3984d75b8fbb85e816f1916",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-10-PLAIN-COM7-to-COM6/summary.json",
+      "source_git_sha256": "bd3b5b96df6ee63ce305a110545d83ae3c0c913bb3984d75b8fbb85e816f1916",
+      "source_worktree_sha256": "bd3b5b96df6ee63ce305a110545d83ae3c0c913bb3984d75b8fbb85e816f1916",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/rx-ciphertext.bin",
+      "source_git_sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "source_worktree_sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151960,
+      "sha256": "c19e95ab3764cab997aa922e0ffc57f0d70efe1c2082fc013d3b4b07fb176f74",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/summary.json",
+      "source_git_sha256": "c19e95ab3764cab997aa922e0ffc57f0d70efe1c2082fc013d3b4b07fb176f74",
+      "source_worktree_sha256": "c19e95ab3764cab997aa922e0ffc57f0d70efe1c2082fc013d3b4b07fb176f74",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-11-GCM-COM6-to-COM7/tx-ciphertext.bin",
+      "source_git_sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "source_worktree_sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/rx-ciphertext.bin",
+      "source_git_sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "source_worktree_sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151308,
+      "sha256": "19ce1ab9c5a61fc823f2ad20643db2ee5c969d65ed04c869437066ef60e0b7b0",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/summary.json",
+      "source_git_sha256": "19ce1ab9c5a61fc823f2ad20643db2ee5c969d65ed04c869437066ef60e0b7b0",
+      "source_worktree_sha256": "19ce1ab9c5a61fc823f2ad20643db2ee5c969d65ed04c869437066ef60e0b7b0",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-12-GCM-COM7-to-COM6/tx-ciphertext.bin",
+      "source_git_sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "source_worktree_sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/rx-ciphertext.bin",
+      "source_git_sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "source_worktree_sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151296,
+      "sha256": "bb152500803aeaa3bd190b093d6dee7b3a11f47ec4797dc17e9421c27a85bb38",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/summary.json",
+      "source_git_sha256": "bb152500803aeaa3bd190b093d6dee7b3a11f47ec4797dc17e9421c27a85bb38",
+      "source_worktree_sha256": "bb152500803aeaa3bd190b093d6dee7b3a11f47ec4797dc17e9421c27a85bb38",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-13-GCM-COM6-to-COM7/tx-ciphertext.bin",
+      "source_git_sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "source_worktree_sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/rx-ciphertext.bin",
+      "source_git_sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "source_worktree_sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 153131,
+      "sha256": "af6b09f4539a9e62abea593d9a325d74619f59a5a2f13cfaab75db8e03a5f273",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/summary.json",
+      "source_git_sha256": "af6b09f4539a9e62abea593d9a325d74619f59a5a2f13cfaab75db8e03a5f273",
+      "source_worktree_sha256": "af6b09f4539a9e62abea593d9a325d74619f59a5a2f13cfaab75db8e03a5f273",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-14-GCM-COM7-to-COM6/tx-ciphertext.bin",
+      "source_git_sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "source_worktree_sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/rx-ciphertext.bin",
+      "source_git_sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "source_worktree_sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151930,
+      "sha256": "8b2d2a031cb5361a7eb4c2d0ff53a622db8660be79ad91836e2d3cf42163c11c",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/summary.json",
+      "source_git_sha256": "8b2d2a031cb5361a7eb4c2d0ff53a622db8660be79ad91836e2d3cf42163c11c",
+      "source_worktree_sha256": "8b2d2a031cb5361a7eb4c2d0ff53a622db8660be79ad91836e2d3cf42163c11c",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-15-GCM-COM6-to-COM7/tx-ciphertext.bin",
+      "source_git_sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "source_worktree_sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/rx-ciphertext.bin",
+      "source_git_sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "source_worktree_sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151309,
+      "sha256": "9d579b059a5ae4889bf2c1a159c24c9aea47445be774bbf46ec80a017d7f9c07",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/summary.json",
+      "source_git_sha256": "9d579b059a5ae4889bf2c1a159c24c9aea47445be774bbf46ec80a017d7f9c07",
+      "source_worktree_sha256": "9d579b059a5ae4889bf2c1a159c24c9aea47445be774bbf46ec80a017d7f9c07",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-16-GCM-COM7-to-COM6/tx-ciphertext.bin",
+      "source_git_sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "source_worktree_sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/rx-ciphertext.bin",
+      "source_git_sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "source_worktree_sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 152556,
+      "sha256": "c1c0a8edbb8f52ee61d8bfcddbbe5135cf7e277d6e3c0108f06f0f3e39399c57",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/summary.json",
+      "source_git_sha256": "c1c0a8edbb8f52ee61d8bfcddbbe5135cf7e277d6e3c0108f06f0f3e39399c57",
+      "source_worktree_sha256": "c1c0a8edbb8f52ee61d8bfcddbbe5135cf7e277d6e3c0108f06f0f3e39399c57",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-17-GCM-COM6-to-COM7/tx-ciphertext.bin",
+      "source_git_sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "source_worktree_sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/rx-ciphertext.bin",
+      "source_git_sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "source_worktree_sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151323,
+      "sha256": "e90d5db53b4dbef0562368199db1d4b43c54c6d4325b83d25008cdd74b89ce17",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/summary.json",
+      "source_git_sha256": "e90d5db53b4dbef0562368199db1d4b43c54c6d4325b83d25008cdd74b89ce17",
+      "source_worktree_sha256": "e90d5db53b4dbef0562368199db1d4b43c54c6d4325b83d25008cdd74b89ce17",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-18-GCM-COM7-to-COM6/tx-ciphertext.bin",
+      "source_git_sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "source_worktree_sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/rx-ciphertext.bin",
+      "source_git_sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "source_worktree_sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 152138,
+      "sha256": "80a08ba81b7a58faff281c207cfcb4b345e55e8440d6f1cbc080d15a5fe5d865",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/summary.json",
+      "source_git_sha256": "80a08ba81b7a58faff281c207cfcb4b345e55e8440d6f1cbc080d15a5fe5d865",
+      "source_worktree_sha256": "80a08ba81b7a58faff281c207cfcb4b345e55e8440d6f1cbc080d15a5fe5d865",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-19-GCM-COM6-to-COM7/tx-ciphertext.bin",
+      "source_git_sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "source_worktree_sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/received.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/rx-ciphertext.bin",
+      "source_git_sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "source_worktree_sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/sender-before-radio.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151640,
+      "sha256": "40ac1c6e7e1fd45f5034b9f768ceffd339a5bf0527629fcd04f8392ffac9e927",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/summary.json",
+      "source_git_sha256": "40ac1c6e7e1fd45f5034b9f768ceffd339a5bf0527629fcd04f8392ffac9e927",
+      "source_worktree_sha256": "40ac1c6e7e1fd45f5034b9f768ceffd339a5bf0527629fcd04f8392ffac9e927",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/run/trial-20-GCM-COM7-to-COM6/tx-ciphertext.bin",
+      "source_git_sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "source_worktree_sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/archive_lora_crypto_run.py": {
+      "bytes": 6957,
+      "sha256": "57da1e49c8a525020b84bee3ae3364f14dcd9ac3ea0e1b33baa5db7a3fb511be",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/archive_lora_crypto_run.py",
+      "source_git_sha256": "57da1e49c8a525020b84bee3ae3364f14dcd9ac3ea0e1b33baa5db7a3fb511be",
+      "source_worktree_sha256": "57da1e49c8a525020b84bee3ae3364f14dcd9ac3ea0e1b33baa5db7a3fb511be",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/audit_lora_crypto_run.py": {
+      "bytes": 23292,
+      "sha256": "e63452a1859f2e85ddaf74848b8e9ac31b5b5f458a54595f056a11cd21dbb957",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/audit_lora_crypto_run.py",
+      "source_git_sha256": "e63452a1859f2e85ddaf74848b8e9ac31b5b5f458a54595f056a11cd21dbb957",
+      "source_worktree_sha256": "e63452a1859f2e85ddaf74848b8e9ac31b5b5f458a54595f056a11cd21dbb957",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-build.log": {
+      "bytes": 8816,
+      "sha256": "eb9873951de9a25b5ee1645087dc88178de9dd7eb4799c69ce99c5606cd1dcd6",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-build.log",
+      "source_git_sha256": "eb9873951de9a25b5ee1645087dc88178de9dd7eb4799c69ce99c5606cd1dcd6",
+      "source_worktree_sha256": "eb9873951de9a25b5ee1645087dc88178de9dd7eb4799c69ce99c5606cd1dcd6",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-host-tests.log": {
+      "bytes": 892,
+      "sha256": "112444c7efc05676ae9023c43d28dca999562f05db58944389f770295bc77de1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-host-tests.log",
+      "source_git_sha256": "112444c7efc05676ae9023c43d28dca999562f05db58944389f770295bc77de1",
+      "source_worktree_sha256": "112444c7efc05676ae9023c43d28dca999562f05db58944389f770295bc77de1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-initial-build-failure.log": {
+      "bytes": 76306,
+      "sha256": "8e197a07b664c2e9dd0e7d5903e6ad7b67ecc0e7cddb13f6477609f4ab1eeed1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-initial-build-failure.log",
+      "source_git_sha256": "8e197a07b664c2e9dd0e7d5903e6ad7b67ecc0e7cddb13f6477609f4ab1eeed1",
+      "source_worktree_sha256": "8e197a07b664c2e9dd0e7d5903e6ad7b67ecc0e7cddb13f6477609f4ab1eeed1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-macro-build-failure.log": {
+      "bytes": 16250,
+      "sha256": "50e4f43e68af21383b0fc21261146a2759439ff796898c26fdd024e9a2352ddf",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-macro-build-failure.log",
+      "source_git_sha256": "50e4f43e68af21383b0fc21261146a2759439ff796898c26fdd024e9a2352ddf",
+      "source_worktree_sha256": "50e4f43e68af21383b0fc21261146a2759439ff796898c26fdd024e9a2352ddf",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-report-qa.json": {
+      "bytes": 1008,
+      "sha256": "0020683efe6968f67f414947ab6d7bc7a908c97d4224a218c6bdc2b19f8a78f9",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-report-qa.json",
+      "source_git_sha256": "0020683efe6968f67f414947ab6d7bc7a908c97d4224a218c6bdc2b19f8a78f9",
+      "source_worktree_sha256": "0020683efe6968f67f414947ab6d7bc7a908c97d4224a218c6bdc2b19f8a78f9",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-run01-independent-audit.json": {
+      "bytes": 56910,
+      "sha256": "5077eda0ecfe7f1790ba539edb2d17aaac9fab183a2b7060214866904fb24ecf",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-run01-independent-audit.json",
+      "source_git_sha256": "5077eda0ecfe7f1790ba539edb2d17aaac9fab183a2b7060214866904fb24ecf",
+      "source_worktree_sha256": "5077eda0ecfe7f1790ba539edb2d17aaac9fab183a2b7060214866904fb24ecf",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-upload.log": {
+      "bytes": 23940,
+      "sha256": "6fd7e12b621baf647a84af538d2cce568a03ff23801e516819001fd666a1e2a1",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-upload.log",
+      "source_git_sha256": "6fd7e12b621baf647a84af538d2cce568a03ff23801e516819001fd666a1e2a1",
+      "source_worktree_sha256": "6fd7e12b621baf647a84af538d2cce568a03ff23801e516819001fd666a1e2a1",
+      "comparison": "exact"
+    },
+    "20-lora-encryption-comparison-tests/20261123-run01/validation/snapshot_lora_crypto_implementation.py": {
+      "bytes": 2934,
+      "sha256": "8039e5195ef678cadbba14d8b47d4d981dcfbbd10621b104d1059e3549968c59",
+      "source_path": "20-lora-encryption-comparison-tests/20261123-run01/validation/snapshot_lora_crypto_implementation.py",
+      "source_git_sha256": "8039e5195ef678cadbba14d8b47d4d981dcfbbd10621b104d1059e3549968c59",
+      "source_worktree_sha256": "8039e5195ef678cadbba14d8b47d4d981dcfbbd10621b104d1059e3549968c59",
+      "comparison": "exact"
+    },
+    "include/audio_diagnostics.h": {
+      "bytes": 847,
+      "sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "source_path": "include/audio_diagnostics.h",
+      "source_git_sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "source_worktree_sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc",
+      "comparison": "exact"
+    },
+    "include/config.h": {
+      "bytes": 4054,
+      "sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "source_path": "include/config.h",
+      "source_git_sha256": "60581917a40e3151830f15e0e5a2359049471b3805447dfc851405d5a48b845b",
+      "source_worktree_sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "comparison": "exact"
+    },
+    "include/crypto_radio_frame.h": {
+      "bytes": 2561,
+      "sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "source_path": "include/crypto_radio_frame.h",
+      "source_git_sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "source_worktree_sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6",
+      "comparison": "exact"
+    },
+    "include/lora_display_model.h": {
+      "bytes": 3026,
+      "sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "source_path": "include/lora_display_model.h",
+      "source_git_sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "source_worktree_sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a",
+      "comparison": "exact"
+    },
+    "include/protocol.h": {
+      "bytes": 1121,
+      "sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0",
+      "source_path": "include/protocol.h",
+      "source_git_sha256": "e09dc5703be793553979c4a6496f33076fe8c6cd46ce42f2a20d680720789580",
+      "source_worktree_sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0",
+      "comparison": "exact"
+    },
+    "include/radio_frame.h": {
+      "bytes": 4091,
+      "sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "source_path": "include/radio_frame.h",
+      "source_git_sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "source_worktree_sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8",
+      "comparison": "exact"
+    },
+    "input/source.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_path": "captures/20261116-042848-015538-speaker_check/recording.wav",
+      "source_git_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "source_worktree_sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90",
+      "comparison": "exact"
+    },
+    "lib/chunking/chunker.cpp": {
+      "bytes": 4662,
+      "sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377",
+      "source_path": "lib/chunking/chunker.cpp",
+      "source_git_sha256": "99fa3fbd3205dea4557b59284eb9618af91a7877206fd504cc44bef23074dc89",
+      "source_worktree_sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377",
+      "comparison": "exact"
+    },
+    "lib/chunking/chunker.h": {
+      "bytes": 1977,
+      "sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3",
+      "source_path": "lib/chunking/chunker.h",
+      "source_git_sha256": "f05eb2f9aec58cc6e258b542247169f065dd3617b8f52d5446be8e2904dad340",
+      "source_worktree_sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3",
+      "comparison": "exact"
+    },
+    "lib/lora_bench_display/lora_bench_display.cpp": {
+      "bytes": 5743,
+      "sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "source_path": "lib/lora_bench_display/lora_bench_display.cpp",
+      "source_git_sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "source_worktree_sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507",
+      "comparison": "exact"
+    },
+    "lib/lora_bench_display/lora_bench_display.h": {
+      "bytes": 585,
+      "sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "source_path": "lib/lora_bench_display/lora_bench_display.h",
+      "source_git_sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "source_worktree_sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459",
+      "comparison": "exact"
+    },
+    "platformio.ini": {
+      "bytes": 1374,
+      "sha256": "a0326f17d1b6581d20a1bd8cc9b73d40a0d39c83450cfff1d0f147477df1ef4f",
+      "source_path": "platformio.ini",
+      "source_git_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "source_worktree_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "comparison": "packaging_adaptation"
+    },
+    "README.md": {
+      "bytes": 12131,
+      "sha256": "4f8f5e6d3f5f8add72f60ffc8617cfca203a3213908bd60820c3b651a3288957",
+      "source_path": "README.md",
+      "source_git_sha256": "2783af39064c774255c8fee2d6866fef8c4ddb1ada2629cf86b5707c27907ab2",
+      "source_worktree_sha256": "2783af39064c774255c8fee2d6866fef8c4ddb1ada2629cf86b5707c27907ab2",
+      "comparison": "packaging_adaptation"
+    },
+    "requirements.txt": {
+      "bytes": 218,
+      "sha256": "32d3270dd411ffb434bdc3938d2bf92b4157dde6552fd559efd5a3764b25ba55",
+      "comparison": "package_documentation_or_validation"
+    },
+    "src/lora_crypto_bench.cpp": {
+      "bytes": 44331,
+      "sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "source_path": "src/lora_crypto_bench.cpp",
+      "source_git_sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "source_worktree_sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f",
+      "comparison": "exact"
+    },
+    "test/host/chunker_test.cpp": {
+      "bytes": 3561,
+      "sha256": "0f229d57f5c0a53224762e265e81387746844a56534049493440ba66dbd922d1",
+      "source_path": "test/host/chunker_test.cpp",
+      "source_git_sha256": "0f229d57f5c0a53224762e265e81387746844a56534049493440ba66dbd922d1",
+      "source_worktree_sha256": "0f229d57f5c0a53224762e265e81387746844a56534049493440ba66dbd922d1",
+      "comparison": "exact"
+    },
+    "test/host/crypto_radio_frame_test.cpp": {
+      "bytes": 2180,
+      "sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "source_path": "test/host/crypto_radio_frame_test.cpp",
+      "source_git_sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "source_worktree_sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8",
+      "comparison": "exact"
+    },
+    "test/host/diagnostics_test.cpp": {
+      "bytes": 680,
+      "sha256": "9be560e1ce0fd30bb66df4ed6869e4dab458ac673631f38671f123944013961a",
+      "source_path": "test/host/diagnostics_test.cpp",
+      "source_git_sha256": "9be560e1ce0fd30bb66df4ed6869e4dab458ac673631f38671f123944013961a",
+      "source_worktree_sha256": "9be560e1ce0fd30bb66df4ed6869e4dab458ac673631f38671f123944013961a",
+      "comparison": "exact"
+    },
+    "test/host/lora_crypto_bench_test.py": {
+      "bytes": 20316,
+      "sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "source_path": "test/host/lora_crypto_bench_test.py",
+      "source_git_sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "source_worktree_sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340",
+      "comparison": "exact"
+    },
+    "test/host/lora_crypto_report_test.py": {
+      "bytes": 11141,
+      "sha256": "fc414d6c184147068dedf722e44d11c5a9956b935a43da131227cea04f67798c",
+      "source_path": "test/host/lora_crypto_report_test.py",
+      "source_git_sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0",
+      "source_worktree_sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0",
+      "comparison": "packaging_adaptation"
+    },
+    "test/host/lora_display_model_test.cpp": {
+      "bytes": 4517,
+      "sha256": "9ec5f5b2c4b899274a53afab392e21562a471e271ef045fd991937b31ab5ba1b",
+      "source_path": "test/host/lora_display_model_test.cpp",
+      "source_git_sha256": "9ec5f5b2c4b899274a53afab392e21562a471e271ef045fd991937b31ab5ba1b",
+      "source_worktree_sha256": "9ec5f5b2c4b899274a53afab392e21562a471e271ef045fd991937b31ab5ba1b",
+      "comparison": "exact"
+    },
+    "test/host/package_launcher_test.py": {
+      "bytes": 2060,
+      "sha256": "269a223292b49a60b2092d4118fd3950887acff4697f1717e2f841799a274148",
+      "comparison": "package_documentation_or_validation"
+    },
+    "test/host/radio_frame_test.cpp": {
+      "bytes": 9310,
+      "sha256": "bb4fe0dc53b71fecb3488de3223ca2766d087664005aed9feb18f569df02e293",
+      "source_path": "test/host/radio_frame_test.cpp",
+      "source_git_sha256": "bb4fe0dc53b71fecb3488de3223ca2766d087664005aed9feb18f569df02e293",
+      "source_worktree_sha256": "bb4fe0dc53b71fecb3488de3223ca2766d087664005aed9feb18f569df02e293",
+      "comparison": "exact"
+    },
+    "test/host/run.ps1": {
+      "bytes": 2175,
+      "sha256": "5510dc7dccf21d0f342210355ecdd6c1b288241d32ae91b1235c5df273cb3f35",
+      "source_path": "test/host/run.ps1",
+      "source_git_sha256": "b72e9e15ec523f320417ce97e15bd242790be4074306c518863f539ee3642aad",
+      "source_worktree_sha256": "b72e9e15ec523f320417ce97e15bd242790be4074306c518863f539ee3642aad",
+      "comparison": "packaging_adaptation"
+    },
+    "test/host/usb_identity_test.py": {
+      "bytes": 3532,
+      "sha256": "d3a0b86676f59637f614e525eadfc6ff1e8aa36df3752379dc1c30fc533dad25",
+      "comparison": "package_documentation_or_validation"
+    },
+    "tools/create_lora_consistency_pdf.py": {
+      "bytes": 49085,
+      "sha256": "198cfe265267baeaa6e6f840146118532ba6d172086fcf876ed323a82a3eafdb",
+      "source_path": "tools/create_lora_consistency_pdf.py",
+      "source_git_sha256": "198cfe265267baeaa6e6f840146118532ba6d172086fcf876ed323a82a3eafdb",
+      "source_worktree_sha256": "198cfe265267baeaa6e6f840146118532ba6d172086fcf876ed323a82a3eafdb",
+      "comparison": "exact"
+    },
+    "tools/create_lora_crypto_pdf.py": {
+      "bytes": 42779,
+      "sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "source_path": "tools/create_lora_crypto_pdf.py",
+      "source_git_sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "source_worktree_sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86",
+      "comparison": "exact"
+    },
+    "tools/filter_ide_includes.py": {
+      "bytes": 1337,
+      "sha256": "1ada7e22e731702c4a26ce38717a88cef71a645d5a55dd2ff1596d3bf4ac3e43",
+      "source_path": "tools/filter_ide_includes.py",
+      "source_git_sha256": "1ada7e22e731702c4a26ce38717a88cef71a645d5a55dd2ff1596d3bf4ac3e43",
+      "source_worktree_sha256": "1ada7e22e731702c4a26ce38717a88cef71a645d5a55dd2ff1596d3bf4ac3e43",
+      "comparison": "exact"
+    },
+    "tools/lora_crypto_bench.py": {
+      "bytes": 34992,
+      "sha256": "e2f9dae0d6e906296d7059a57acdb8e716581ec8f10e0875bab469d266450ce6",
+      "source_path": "tools/lora_crypto_bench.py",
+      "source_git_sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9",
+      "source_worktree_sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9",
+      "comparison": "packaging_adaptation"
+    },
+    "tools/lora_transfer_bench.py": {
+      "bytes": 48657,
+      "sha256": "7c6fff26854acc70f4402e471754c1a3451324929ab8627a19ae519b675ca3f0",
+      "source_path": "tools/lora_transfer_bench.py",
+      "source_git_sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5",
+      "source_worktree_sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5",
+      "comparison": "packaging_adaptation"
+    },
+    "tools/run_lora_crypto_comparison.ps1": {
+      "bytes": 1440,
+      "sha256": "b3c9ba3f8910e238effe885728fc7a25c78b7ca0370e5f04a20ae695cc77a5f0",
+      "source_path": "tools/run_lora_crypto_comparison.ps1",
+      "source_git_sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78",
+      "source_worktree_sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78",
+      "comparison": "packaging_adaptation"
+    },
+    "tools/verify_heltec_bench.py": {
+      "bytes": 1867,
+      "sha256": "6e71e8b31eab0f400dd22e42b2d30c89a89c3ed008522c07dedd581869886617",
+      "source_path": "tools/verify_heltec_bench.py",
+      "source_git_sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600",
+      "source_worktree_sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600",
+      "comparison": "packaging_adaptation"
+    },
+    "validation/PACKAGE_VALIDATION.json": {
+      "bytes": 1926,
+      "sha256": "83608a7eb01b11e8a6f1b7baad306f58bc6d95c61a7202e9d73118a5ec190d7a",
+      "comparison": "package_documentation_or_validation"
+    }
+  }
+}

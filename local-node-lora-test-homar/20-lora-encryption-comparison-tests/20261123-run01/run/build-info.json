@@ -1,0 +1,20 @@
+{
+  "build_log": "output/validation/lora-crypto-build.log",
+  "same_binary_per_node_for_both_modes": true,
+  "hardware_aes_enabled": true,
+  "environments": {
+    "heltec_crypto_com6": {
+      "flash_used_bytes": 490406,
+      "static_ram_used_bytes": 26692,
+      "firmware_bin_bytes": 502800,
+      "sha256": "f70571e51dde1698f9650cbb727aafa65af14daf0e4b450629ebba76fa323e10"
+    },
+    "heltec_crypto_com7": {
+      "flash_used_bytes": 490406,
+      "static_ram_used_bytes": 26692,
+      "firmware_bin_bytes": 502800,
+      "sha256": "7ed0af2a049af014608fcfb0bcd518b1db0c73d657fd541d49c281f1d690a85c"
+    }
+  },
+  "limits": "Static RAM and linker flash usage are build values, not peak runtime memory or per-message storage. No audio is written to flash."
+}

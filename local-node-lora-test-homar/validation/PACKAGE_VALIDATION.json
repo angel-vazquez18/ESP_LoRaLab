@@ -1,0 +1,48 @@
+{
+  "created_at": "2026-11-23T21:18:55.807525+00:00",
+  "scope": "Standalone package validation only; no ESP_LoRaLab integration or physical device access",
+  "python_offline_tests": {
+    "passed": 39,
+    "failed": 0,
+    "groups": {
+      "crypto_runner": 16,
+      "report": 12,
+      "usb_identity": 8,
+      "launcher_gates": 3
+    }
+  },
+  "cpp_suites": {
+    "passed": 5,
+    "compiler_flags": "-std=c++17 -Wall -Wextra -Werror"
+  },
+  "launcher_check": {
+    "passed": true,
+    "serial_discovery": false,
+    "ports_opened": false
+  },
+  "package_only_report_audit": {
+    "verified_trials": 20,
+    "warnings": [],
+    "outside_package_reads_forbidden": true,
+    "package_evidence_reads": 65
+  },
+  "active_firmware_header_library_files_byte_exact": 11,
+  "frozen_archive_files_hash_verified": 130,
+  "firmware_builds": {
+    "heltec_crypto_com6": {
+      "status": "SUCCESS",
+      "binary_bytes": 502800,
+      "binary_sha256": "548715455ec9a977e18cf9fe901ccbd07a4e5cafba2115a37b482f4f39b55d81"
+    },
+    "heltec_crypto_com7": {
+      "status": "SUCCESS",
+      "binary_bytes": 502800,
+      "binary_sha256": "851a9522f0f0238b9bf6d9f8c46a9542e44832421a7c848da2fcdb321c98a36e"
+    }
+  },
+  "build_log_sha256": "dd90c42cc18c2aa226f89be5f1890ebe57c40578166354b5b48186e6f605b089",
+  "build_environment_note": "Initial deeply nested Windows dependency extraction hit the path-length limit. Successful builds used PLATFORMIO_LIBDEPS_DIR pointing to the existing pinned dependency cache and PLATFORMIO_BUILD_DIR pointing to a shorter temporary build directory. Source and pinned versions were unchanged.",
+  "tests_environment_note": "Python tests used the existing Python runtime with installed pyserial available through PYTHONPATH. The package declares all dependencies for installation into its own .venv.",
+  "devices_opened": false,
+  "firmware_uploaded": false
+}

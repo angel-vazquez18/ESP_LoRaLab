@@ -1,0 +1,532 @@
+{
+  "purpose": "twenty_new_physical_plain_vs_aes128gcm_trials",
+  "created_at": "2026-11-23T20:56:43.195164+00:00",
+  "original_run": "captures/20261123-lora-crypto-comparison-run01",
+  "file_count": 130,
+  "historical_archive_counts_unchanged": {
+    "10-lora-message-tests": 58,
+    "10-lora-message-tests/20261123-processing-run01": 71
+  },
+  "files": {
+    "Heltec_LoRa_20_Trial_Encryption_Comparison_Report.json": {
+      "bytes": 108689,
+      "sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1"
+    },
+    "Heltec_LoRa_20_Trial_Encryption_Comparison_Report.pdf": {
+      "bytes": 22327,
+      "sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6"
+    },
+    "implementation/docs/LORA_ENCRYPTION_COMPARISON.md": {
+      "bytes": 8370,
+      "sha256": "f6de54488f4e3c38d7ec80def53dec452b7a3287a382e8f51c6c36bf8be0910a"
+    },
+    "implementation/include/audio_diagnostics.h": {
+      "bytes": 847,
+      "sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc"
+    },
+    "implementation/include/config.h": {
+      "bytes": 4054,
+      "sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d"
+    },
+    "implementation/include/crypto_radio_frame.h": {
+      "bytes": 2561,
+      "sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6"
+    },
+    "implementation/include/lora_display_model.h": {
+      "bytes": 3026,
+      "sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a"
+    },
+    "implementation/include/protocol.h": {
+      "bytes": 1121,
+      "sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0"
+    },
+    "implementation/include/radio_frame.h": {
+      "bytes": 4091,
+      "sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8"
+    },
+    "implementation/lib/chunking/chunker.cpp": {
+      "bytes": 4662,
+      "sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377"
+    },
+    "implementation/lib/chunking/chunker.h": {
+      "bytes": 1977,
+      "sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3"
+    },
+    "implementation/lib/lora_bench_display/lora_bench_display.cpp": {
+      "bytes": 5743,
+      "sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507"
+    },
+    "implementation/lib/lora_bench_display/lora_bench_display.h": {
+      "bytes": 585,
+      "sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459"
+    },
+    "implementation/platformio.ini": {
+      "bytes": 3829,
+      "sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3"
+    },
+    "implementation/src/lora_crypto_bench.cpp": {
+      "bytes": 44331,
+      "sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f"
+    },
+    "implementation/test/host/crypto_radio_frame_test.cpp": {
+      "bytes": 2180,
+      "sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8"
+    },
+    "implementation/test/host/lora_crypto_bench_test.py": {
+      "bytes": 20316,
+      "sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340"
+    },
+    "implementation/test/host/lora_crypto_report_test.py": {
+      "bytes": 11157,
+      "sha256": "0fe1ce59949f5c8a8994ec55202cb5381797579b0c540a3f7ea6f4d718b123c0"
+    },
+    "implementation/tools/create_lora_crypto_pdf.py": {
+      "bytes": 42779,
+      "sha256": "db0ef245bd9f58156b03787ad87e0a7153928e5690936172e283a05909c4db86"
+    },
+    "implementation/tools/lora_crypto_bench.py": {
+      "bytes": 35220,
+      "sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9"
+    },
+    "implementation/tools/lora_transfer_bench.py": {
+      "bytes": 48591,
+      "sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5"
+    },
+    "implementation/tools/run_lora_crypto_comparison.ps1": {
+      "bytes": 1359,
+      "sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78"
+    },
+    "implementation/tools/verify_heltec_bench.py": {
+      "bytes": 16282,
+      "sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600"
+    },
+    "readiness/serial-COM6.bin": {
+      "bytes": 3509,
+      "sha256": "e968524275063b08f2ff0a6b10c65c656b7f9d76068ca9ddb5149ed1f1cf69d1"
+    },
+    "readiness/serial-COM6.log": {
+      "bytes": 5385,
+      "sha256": "00686bf2a57d1d1b6c72c8179be9deb608482b74c9eca777823beea810870eae"
+    },
+    "readiness/serial-COM7.bin": {
+      "bytes": 3519,
+      "sha256": "f41e3ba267c7360277396e6bc3eec3a5cf3693aad6a6498a448e5985aefa3765"
+    },
+    "readiness/serial-COM7.log": {
+      "bytes": 5395,
+      "sha256": "c50e5faf0586b1150b97261c00182595422d0da7620d58eabd01b6e0641cb2f7"
+    },
+    "readiness/source.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "readiness/summary.json": {
+      "bytes": 13107,
+      "sha256": "e2e7c77d64f59d351c281a064dc66f30c83fdb0cc0aa63d026cedc6ceab32702"
+    },
+    "README.md": {
+      "bytes": 2491,
+      "sha256": "cfdf3ba2a0c5b596010f52027d1dca0f738e99def20504769f0d76555d81771a"
+    },
+    "run/build-info.json": {
+      "bytes": 781,
+      "sha256": "a386843543c11e7eda56dd46ae45c3f04de96d810613fe23c2964e401b0418b3"
+    },
+    "run/crypto-comparison-report.json": {
+      "bytes": 108689,
+      "sha256": "321983a3b538f167a4db22f0a75b697f5abb0bfb93fabc61097c9e8a9645fbe1"
+    },
+    "run/crypto-comparison-report.pdf": {
+      "bytes": 22327,
+      "sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6"
+    },
+    "run/implementation-manifest.json": {
+      "bytes": 3864,
+      "sha256": "1e24e05c64bd49d7ba29b7c5ef8da08a30f3da816c310dcf2e76a66d953931a5"
+    },
+    "run/serial-COM6.bin": {
+      "bytes": 2344138,
+      "sha256": "b741b290da3b8f7d892c92b2d54818cdb2308fbeb75d641cd3efbb2effbfc32d"
+    },
+    "run/serial-COM6.log": {
+      "bytes": 1816351,
+      "sha256": "c5c8d19b1ef882500a44a4eb0f69edb09f65500f68d74daa55145c224fe29f59"
+    },
+    "run/serial-COM7.bin": {
+      "bytes": 2342940,
+      "sha256": "051fa9a0b75df035fdfe191ff1ee10bf42db1505c0ee545307ce49a9dce9add7"
+    },
+    "run/serial-COM7.log": {
+      "bytes": 1815052,
+      "sha256": "1234c078b4e176e2a58f90552e71eb765b7ec5af203cc69187f191a8e6737cb9"
+    },
+    "run/source.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/summary.json": {
+      "bytes": 3517515,
+      "sha256": "1165af3365c81317c33a618c50758232c6241ba92912838aa5528f505b947984"
+    },
+    "run/trial-01-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-01-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-01-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 148297,
+      "sha256": "ce010bbaf31288542751bdbb5d967f0cb4dcca43e985d59d736565d4d7488407"
+    },
+    "run/trial-02-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-02-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-02-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148807,
+      "sha256": "755e9852a0477fbe39eb5b16e427f292105e6813f53a2c4f56fe8509364916ea"
+    },
+    "run/trial-03-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-03-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-03-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149475,
+      "sha256": "cd7052bf29644508ff2e471ae23aab2a5c300d6c527d347649e99fb61c93ef87"
+    },
+    "run/trial-04-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-04-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-04-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 149168,
+      "sha256": "a2530190af834c6fff15d4101133b2924273f6f5b80b5c73ebff39dbac0fd8cc"
+    },
+    "run/trial-05-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-05-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-05-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149597,
+      "sha256": "1d9826cb7532a5abd4e04bdaca64e3f1090858ec37137f4a2d7ac553d99422b8"
+    },
+    "run/trial-06-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-06-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-06-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 150786,
+      "sha256": "bb4e06cd0148c9f62c4bca32c1b99d3bf34e31b331ef3d39e9b90ca0c20704ad"
+    },
+    "run/trial-07-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-07-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-07-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149586,
+      "sha256": "b97212a79d07b77e0fe405133b062b7fe4dbf2fbef0859f3cafaa9497c59cc38"
+    },
+    "run/trial-08-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-08-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-08-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148771,
+      "sha256": "a6f7dc4e33b6697c89b157a657a53401591ff2cc148c183cd99046d09de73d2e"
+    },
+    "run/trial-09-PLAIN-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-09-PLAIN-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-09-PLAIN-COM6-to-COM7/summary.json": {
+      "bytes": 149593,
+      "sha256": "85daf08429d8ea4391769668515283a422925f0595dddfcfee23669e4f2e90e8"
+    },
+    "run/trial-10-PLAIN-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-10-PLAIN-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-10-PLAIN-COM7-to-COM6/summary.json": {
+      "bytes": 148360,
+      "sha256": "bd3b5b96df6ee63ce305a110545d83ae3c0c913bb3984d75b8fbb85e816f1916"
+    },
+    "run/trial-11-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-11-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442"
+    },
+    "run/trial-11-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-11-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151960,
+      "sha256": "c19e95ab3764cab997aa922e0ffc57f0d70efe1c2082fc013d3b4b07fb176f74"
+    },
+    "run/trial-11-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f8d1c68141e01af9064c5e6410cdec663526c504a58ea9bafb9544a422470442"
+    },
+    "run/trial-12-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-12-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211"
+    },
+    "run/trial-12-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-12-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151308,
+      "sha256": "19ce1ab9c5a61fc823f2ad20643db2ee5c969d65ed04c869437066ef60e0b7b0"
+    },
+    "run/trial-12-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "f7f02a95db230b3b70ae2c325ea2fb68809885bf3dd3f8cfbc6f92ce22b5e211"
+    },
+    "run/trial-13-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-13-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec"
+    },
+    "run/trial-13-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-13-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151296,
+      "sha256": "bb152500803aeaa3bd190b093d6dee7b3a11f47ec4797dc17e9421c27a85bb38"
+    },
+    "run/trial-13-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "08e4dad6a3415b1d5a03071d25671025eb1b60c1bd483de1e6e3a1005bd591ec"
+    },
+    "run/trial-14-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-14-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc"
+    },
+    "run/trial-14-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-14-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 153131,
+      "sha256": "af6b09f4539a9e62abea593d9a325d74619f59a5a2f13cfaab75db8e03a5f273"
+    },
+    "run/trial-14-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "dba4a53b03242d14db4daa55d220945c5ea01f9920f3f1e61263d70db2c730dc"
+    },
+    "run/trial-15-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-15-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2"
+    },
+    "run/trial-15-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-15-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 151930,
+      "sha256": "8b2d2a031cb5361a7eb4c2d0ff53a622db8660be79ad91836e2d3cf42163c11c"
+    },
+    "run/trial-15-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "147152af1d9bae4a24cfa0d76dd02a6acb9803e78b636f4afd95e2eaa2ee4cc2"
+    },
+    "run/trial-16-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-16-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7"
+    },
+    "run/trial-16-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-16-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151309,
+      "sha256": "9d579b059a5ae4889bf2c1a159c24c9aea47445be774bbf46ec80a017d7f9c07"
+    },
+    "run/trial-16-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "6fa042624e582138e6dd112aecfc1b6178b88118932c3ee2ab543f9e756e98a7"
+    },
+    "run/trial-17-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-17-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6"
+    },
+    "run/trial-17-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-17-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 152556,
+      "sha256": "c1c0a8edbb8f52ee61d8bfcddbbe5135cf7e277d6e3c0108f06f0f3e39399c57"
+    },
+    "run/trial-17-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8a351788a0828349e258dde947fa001f532be2a980d84f53b582997ee5370b6"
+    },
+    "run/trial-18-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-18-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1"
+    },
+    "run/trial-18-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-18-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151323,
+      "sha256": "e90d5db53b4dbef0562368199db1d4b43c54c6d4325b83d25008cdd74b89ce17"
+    },
+    "run/trial-18-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "c980898e49c0bd5c05f76d70be2ceabcd288b4eaf55ad62a4bc89cd8b4a11cf1"
+    },
+    "run/trial-19-GCM-COM6-to-COM7/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-19-GCM-COM6-to-COM7/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb"
+    },
+    "run/trial-19-GCM-COM6-to-COM7/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-19-GCM-COM6-to-COM7/summary.json": {
+      "bytes": 152138,
+      "sha256": "80a08ba81b7a58faff281c207cfcb4b345e55e8440d6f1cbc080d15a5fe5d865"
+    },
+    "run/trial-19-GCM-COM6-to-COM7/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "b8d5891ee98a4f8c97b5f313f48e95c6e39d4b131ef1efeeb8272134dd8388cb"
+    },
+    "run/trial-20-GCM-COM7-to-COM6/received.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-20-GCM-COM7-to-COM6/rx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a"
+    },
+    "run/trial-20-GCM-COM7-to-COM6/sender-before-radio.wav": {
+      "bytes": 48044,
+      "sha256": "933db29fd989b7aa64028e31219e14f64ce340aa80cf8679e823bddc38f0ca90"
+    },
+    "run/trial-20-GCM-COM7-to-COM6/summary.json": {
+      "bytes": 151640,
+      "sha256": "40ac1c6e7e1fd45f5034b9f768ceffd339a5bf0527629fcd04f8392ffac9e927"
+    },
+    "run/trial-20-GCM-COM7-to-COM6/tx-ciphertext.bin": {
+      "bytes": 48000,
+      "sha256": "43e1ef6b3f1d61f9a1a097ef77cdff68ba7e5ecfc1db99bf8b884c1ab778549a"
+    },
+    "validation/archive_lora_crypto_run.py": {
+      "bytes": 6957,
+      "sha256": "57da1e49c8a525020b84bee3ae3364f14dcd9ac3ea0e1b33baa5db7a3fb511be"
+    },
+    "validation/audit_lora_crypto_run.py": {
+      "bytes": 23292,
+      "sha256": "e63452a1859f2e85ddaf74848b8e9ac31b5b5f458a54595f056a11cd21dbb957"
+    },
+    "validation/lora-crypto-build.log": {
+      "bytes": 8816,
+      "sha256": "eb9873951de9a25b5ee1645087dc88178de9dd7eb4799c69ce99c5606cd1dcd6"
+    },
+    "validation/lora-crypto-host-tests.log": {
+      "bytes": 892,
+      "sha256": "112444c7efc05676ae9023c43d28dca999562f05db58944389f770295bc77de1"
+    },
+    "validation/lora-crypto-initial-build-failure.log": {
+      "bytes": 76306,
+      "sha256": "8e197a07b664c2e9dd0e7d5903e6ad7b67ecc0e7cddb13f6477609f4ab1eeed1"
+    },
+    "validation/lora-crypto-macro-build-failure.log": {
+      "bytes": 16250,
+      "sha256": "50e4f43e68af21383b0fc21261146a2759439ff796898c26fdd024e9a2352ddf"
+    },
+    "validation/lora-crypto-report-qa.json": {
+      "bytes": 1008,
+      "sha256": "0020683efe6968f67f414947ab6d7bc7a908c97d4224a218c6bdc2b19f8a78f9"
+    },
+    "validation/lora-crypto-run01-independent-audit.json": {
+      "bytes": 56910,
+      "sha256": "5077eda0ecfe7f1790ba539edb2d17aaac9fab183a2b7060214866904fb24ecf"
+    },
+    "validation/lora-crypto-upload.log": {
+      "bytes": 23940,
+      "sha256": "6fd7e12b621baf647a84af538d2cce568a03ff23801e516819001fd666a1e2a1"
+    },
+    "validation/snapshot_lora_crypto_implementation.py": {
+      "bytes": 2934,
+      "sha256": "8039e5195ef678cadbba14d8b47d4d981dcfbbd10621b104d1059e3549968c59"
+    }
+  }
+}
