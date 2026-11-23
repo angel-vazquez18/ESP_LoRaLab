@@ -56,7 +56,9 @@
     "src/sine.c": "9d286a353734f6968e6fd6502d089a95d46a226757a16346fa9b27169b958252",
     "src/sine.h": "ca6a177e4382bd634c343bed061120d0287e443c07eb03ee1c1e4d5aeeb3616c"
   },
-  "local_patches": [],
+  "local_patches": [
+    "patches/0001-unwind-mode3200-constructor-failures.patch"
+  ],
   "source": "https://github.com/drowe67/codec2",
   "tag": "1.2.0",
   "license": "LGPL-2.1-only",
@@ -109,7 +111,7 @@
     "vendor/src/codebook/dlsp7.txt": "6c8563ad9adedadeed06acae4dd0fed981981cd75953de54c71a262a15768334",
     "vendor/src/codebook/dlsp8.txt": "6c8563ad9adedadeed06acae4dd0fed981981cd75953de54c71a262a15768334",
     "vendor/src/codebook/dlsp9.txt": "6c8563ad9adedadeed06acae4dd0fed981981cd75953de54c71a262a15768334",
-    "vendor/src/codec2.c": "de5b4f46a2081b3fc8d20edf119df6154c69bb7f8117bab61b841167be8972f3",
+    "vendor/src/codec2.c": "321aeb6e793b29c9f80bdd847c025131fc4f3a7f7f826498be4d042750f9a367",
     "vendor/src/codec2.h": "b8d2c2a18f03aff240f4d5799ba4010ac817509304a225647dd40ef4ad9c4857",
     "vendor/src/codec2_fft.c": "9190b741cb5ef609a56bc4b7dd1c3fe18a9ecb70a4255806a729cfd19394a211",
     "vendor/src/codec2_fft.h": "91d88c42998a743d54f25c12f03cab4522bdc7d01a2a16c750e3c3d6b5cc6766",
@@ -134,7 +136,7 @@
     "vendor/src/mbest.h": "c501ae2b2443c729f106c36b362b36f39849dcb7e9d9d2fda272e047079adcf9",
     "vendor/src/newamp1.h": "457f8357a8ca2f064f77cb68abebfe1acf4fb6be82802b43244d7c926d356423",
     "vendor/src/newamp2.h": "d0848ca72de8a7c392b0513428c94b6779df631e47e5fc163fc8b13e6270bb04",
-    "vendor/src/nlp.c": "5c35a44bc3093bd74fe7411e48214ed38afd59b0b84206d73b1751343f27c3ba",
+    "vendor/src/nlp.c": "7e2fc51b3d785cdd9816e563af9e53319ee3a32b2781b22c4289b07ec87be9c6",
     "vendor/src/nlp.h": "0ba662b3d14ba4563b28b7ee028b00d9acdcbfe90ab6cba6e240ce31796d5d68",
     "vendor/src/os.h": "27115da4a8401b71b491a76ee2af70650cf8dc0476c7c007cfa45f3f23c0d982",
     "vendor/src/pack.c": "cfeeda4561b6a06a748d1edd7a8511ec5a328e241852e11ac38127d704a50220",
@@ -147,6 +149,7 @@
     "vendor/src/sine.c": "9d286a353734f6968e6fd6502d089a95d46a226757a16346fa9b27169b958252",
     "vendor/src/sine.h": "ca6a177e4382bd634c343bed061120d0287e443c07eb03ee1c1e4d5aeeb3616c",
     "generated/codebookd.c": "e25d948eb4724a767ba69a41283d1e84615b53312e888ab25b11d915b9d173b6",
-    "generated/codec2/version.h": "c724c27ba7e7caa9e613f387201a0f9a94adf0e1aaed1da6ec7f770d19ba414b"
+    "generated/codec2/version.h": "c724c27ba7e7caa9e613f387201a0f9a94adf0e1aaed1da6ec7f770d19ba414b",
+    "patches/0001-unwind-mode3200-constructor-failures.patch": "599be1eb02a37a67ff766565d7d594f54771caf72dfecfdbe3879df2f2ef14c7"
   }
 }

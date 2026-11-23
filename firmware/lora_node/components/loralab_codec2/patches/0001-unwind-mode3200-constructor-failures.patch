@@ -1,0 +1,110 @@
+--- a/src/codec2.c
++++ b/src/codec2.c
+@@ -123,7 +123,7 @@
+     return NULL;
+   }
+ 
+-  c2 = (struct CODEC2 *)MALLOC(sizeof(struct CODEC2));
++  c2 = (struct CODEC2 *)CALLOC(1, sizeof(struct CODEC2));
+   if (c2 == NULL) return NULL;
+ 
+   c2->mode = mode;
+@@ -136,36 +136,25 @@
+   int m_pitch = c2->m_pitch = c2->c2const.m_pitch;
+ 
+   c2->Pn = (float *)MALLOC(2 * n_samp * sizeof(float));
+-  if (c2->Pn == NULL) {
+-    return NULL;
+-  }
++  if (c2->Pn == NULL) goto allocation_failure;
+   c2->Sn_ = (float *)MALLOC(2 * n_samp * sizeof(float));
+-  if (c2->Sn_ == NULL) {
+-    FREE(c2->Pn);
+-    return NULL;
+-  }
++  if (c2->Sn_ == NULL) goto allocation_failure;
+   c2->w = (float *)MALLOC(m_pitch * sizeof(float));
+-  if (c2->w == NULL) {
+-    FREE(c2->Pn);
+-    FREE(c2->Sn_);
+-    return NULL;
+-  }
++  if (c2->w == NULL) goto allocation_failure;
+   c2->Sn = (float *)MALLOC(m_pitch * sizeof(float));
+-  if (c2->Sn == NULL) {
+-    FREE(c2->Pn);
+-    FREE(c2->Sn_);
+-    FREE(c2->w);
+-    return NULL;
+-  }
++  if (c2->Sn == NULL) goto allocation_failure;
+ 
+   for (i = 0; i < m_pitch; i++) c2->Sn[i] = 1.0;
+   c2->hpf_states[0] = c2->hpf_states[1] = 0.0;
+   for (i = 0; i < 2 * n_samp; i++) c2->Sn_[i] = 0;
+   c2->fft_fwd_cfg = codec2_fft_alloc(FFT_ENC, 0, NULL, NULL);
++  if (c2->fft_fwd_cfg == NULL) goto allocation_failure;
+   c2->fftr_fwd_cfg = codec2_fftr_alloc(FFT_ENC, 0, NULL, NULL);
++  if (c2->fftr_fwd_cfg == NULL) goto allocation_failure;
+   make_analysis_window(&c2->c2const, c2->fft_fwd_cfg, c2->w, c2->W);
+   make_synthesis_window(&c2->c2const, c2->Pn);
+   c2->fftr_inv_cfg = codec2_fftr_alloc(FFT_DEC, 1, NULL, NULL);
++  if (c2->fftr_inv_cfg == NULL) goto allocation_failure;
+   c2->prev_f0_enc = 1 / P_MAX_S;
+   c2->bg_est = 0.0;
+   c2->ex_phase = 0.0;
+@@ -181,9 +170,7 @@
+   c2->prev_e_dec = 1;
+ 
+   c2->nlp = nlp_create(&c2->c2const);
+-  if (c2->nlp == NULL) {
+-    return NULL;
+-  }
++  if (c2->nlp == NULL) goto allocation_failure;
+ 
+   c2->lpc_pf = 1;
+   c2->bass_boost = 1;
+@@ -200,7 +187,7 @@
+   c2->post_filter_en = true;
+ 
+   c2->bpf_buf = (float *)MALLOC(sizeof(float) * (BPF_N + 4 * c2->n_samp));
+-  assert(c2->bpf_buf != NULL);
++  if (c2->bpf_buf == NULL) goto allocation_failure;
+   for (i = 0; i < BPF_N + 4 * c2->n_samp; i++) c2->bpf_buf[i] = 0.0;
+ 
+   c2->softdec = NULL;
+@@ -269,6 +256,10 @@
+   }
+ 
+   return c2;
++
++allocation_failure:
++  codec2_destroy(c2);
++  return NULL;
+ }
+ 
+ /*---------------------------------------------------------------------------*\
+@@ -284,7 +275,7 @@
+ void codec2_destroy(struct CODEC2 *c2) {
+   assert(c2 != NULL);
+   FREE(c2->bpf_buf);
+-  nlp_destroy(c2->nlp);
++  if (c2->nlp != NULL) nlp_destroy(c2->nlp);
+   codec2_fft_free(c2->fft_fwd_cfg);
+   codec2_fftr_free(c2->fftr_fwd_cfg);
+   codec2_fftr_free(c2->fftr_inv_cfg);
+--- a/src/nlp.c
++++ b/src/nlp.c
+@@ -152,7 +152,11 @@
+   for (i = 0; i < NLP_NTAP; i++) nlp->mem_fir[i] = 0.0;
+ 
+   nlp->fft_cfg = codec2_fft_alloc(PE_FFT_SIZE, 0, NULL, NULL);
+-  assert(nlp->fft_cfg != NULL);
++  if (nlp->fft_cfg == NULL) {
++    if (Fs == 16000) free(nlp->Sn16k);
++    free(nlp);
++    return NULL;
++  }
+ 
+   return (void *)nlp;
+ }

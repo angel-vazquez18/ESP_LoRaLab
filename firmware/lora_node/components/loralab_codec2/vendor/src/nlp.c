@@ -152,7 +152,11 @@ void *nlp_create(C2CONST *c2const) {
   for (i = 0; i < NLP_NTAP; i++) nlp->mem_fir[i] = 0.0;
 
   nlp->fft_cfg = codec2_fft_alloc(PE_FFT_SIZE, 0, NULL, NULL);
-  assert(nlp->fft_cfg != NULL);
+  if (nlp->fft_cfg == NULL) {
+    if (Fs == 16000) free(nlp->Sn16k);
+    free(nlp);
+    return NULL;
+  }
 
   return (void *)nlp;
 }
