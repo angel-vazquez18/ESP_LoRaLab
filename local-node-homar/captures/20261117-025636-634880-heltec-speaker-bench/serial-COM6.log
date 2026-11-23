@@ -1,0 +1,54 @@
+2026-11-17T02:56:36.650+00:00 OPEN Heltec-A at 115200 baud; DTR=0 RTS=0
+2026-11-17T02:56:36.709+00:00 RX [HEARTBEAT] uptime=1772828 ms heap=239608 state=IDLE
+2026-11-17T02:56:37.703+00:00 RX [HEARTBEAT] uptime=1773828 ms heap=239608 state=IDLE
+2026-11-17T02:56:38.468+00:00 TX stage=identity_and_readiness command='i'
+2026-11-17T02:56:38.501+00:00 RX 
+2026-11-17T02:56:38.501+00:00 RX [SYSTEM]
+2026-11-17T02:56:38.501+00:00 RX [BOARD] Heltec-A / COM6 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+2026-11-17T02:56:38.501+00:00 RX [BOARD] Base MAC: 8C:FD:49:B5:B7:8C | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+2026-11-17T02:56:38.501+00:00 RX [BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+2026-11-17T02:56:38.512+00:00 RX [BOARD] COM label is the assigned bench port; Windows may reassign it
+2026-11-17T02:56:38.512+00:00 RX Build: Nov 16 2026 21:26:23, Arduino 3.3.12, IDF v5.5.5
+2026-11-17T02:56:38.512+00:00 RX Reset reason: 11, uptime: 1774628 ms
+2026-11-17T02:56:38.512+00:00 RX Free heap: 239608 bytes
+2026-11-17T02:56:38.512+00:00 RX Minimum free heap: 239376 bytes
+2026-11-17T02:56:38.512+00:00 RX TX audio buffer: 48000 bytes
+2026-11-17T02:56:38.512+00:00 RX RX audio buffer: 48000 bytes
+2026-11-17T02:56:38.512+00:00 RX Chunk bitmap: 25 bytes
+2026-11-17T02:56:38.512+00:00 RX Simulated drop interval: 0
+2026-11-17T02:56:38.512+00:00 RX [I2S] MIC requested=1 ready=1, SPK requested=1 ready=1
+2026-11-17T02:56:38.512+00:00 RX [I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+2026-11-17T02:56:38.512+00:00 RX [I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz
+2026-11-17T02:56:38.512+00:00 RX [AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1
+2026-11-17T02:56:38.512+00:00 RX [AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+2026-11-17T02:56:38.512+00:00 RX [AMP] Startup edge phase requires scope validation; ready is software status only
+2026-11-17T02:56:38.512+00:00 RX [I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+2026-11-17T02:56:38.708+00:00 RX [HEARTBEAT] uptime=1774829 ms heap=239608 state=IDLE
+2026-11-17T02:56:38.823+00:00 TX stage=individual_COM6 command='s'
+2026-11-17T02:56:38.854+00:00 RX 
+2026-11-17T02:56:38.854+00:00 RX [STATE] PLAYBACK
+2026-11-17T02:56:38.865+00:00 RX [AUDIO] Playing 1 kHz speaker test tone...
+2026-11-17T02:56:38.865+00:00 RX [DIN] BEGIN
+2026-11-17T02:56:39.908+00:00 RX [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1036645
+2026-11-17T02:56:39.908+00:00 RX [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+2026-11-17T02:56:39.908+00:00 RX [DIN] END
+2026-11-17T02:56:39.908+00:00 RX [AUDIO] Tone transfer complete; verify audible output
+2026-11-17T02:56:39.908+00:00 RX 
+2026-11-17T02:56:39.908+00:00 RX [STATE] IDLE
+2026-11-17T02:56:39.908+00:00 RX [HEARTBEAT] uptime=1776033 ms heap=239608 state=IDLE
+2026-11-17T02:56:40.911+00:00 RX [HEARTBEAT] uptime=1777034 ms heap=239608 state=IDLE
+2026-11-17T02:56:41.913+00:00 RX [HEARTBEAT] uptime=1778034 ms heap=239608 state=IDLE
+2026-11-17T02:56:42.913+00:00 RX [HEARTBEAT] uptime=1779034 ms heap=239608 state=IDLE
+2026-11-17T02:56:43.245+00:00 TX stage=paired_tones command='s'
+2026-11-17T02:56:43.266+00:00 RX 
+2026-11-17T02:56:43.266+00:00 RX [STATE] PLAYBACK
+2026-11-17T02:56:43.277+00:00 RX [AUDIO] Playing 1 kHz speaker test tone...
+2026-11-17T02:56:43.277+00:00 RX [DIN] BEGIN
+2026-11-17T02:56:44.300+00:00 RX [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1031711
+2026-11-17T02:56:44.300+00:00 RX [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+2026-11-17T02:56:44.311+00:00 RX [DIN] END
+2026-11-17T02:56:44.311+00:00 RX [AUDIO] Tone transfer complete; verify audible output
+2026-11-17T02:56:44.311+00:00 RX 
+2026-11-17T02:56:44.311+00:00 RX [STATE] IDLE
+2026-11-17T02:56:44.311+00:00 RX [HEARTBEAT] uptime=1780433 ms heap=239608 state=IDLE
+2026-11-17T02:56:44.332+00:00 CLOSE

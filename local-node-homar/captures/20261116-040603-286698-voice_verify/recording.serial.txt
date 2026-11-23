@@ -1,0 +1,15 @@
+
+[STATE] RECORDING
+
+[AUDIO] Speak now. Recording for 3 seconds...
+[MIC] samples=24000 min=-4700 max=8030 mean=-198.4 AC_RMS=1747.4 zero=14 clipped=0
+[MIC] First raw 32-bit slots: ffee5c00 00174e00 00083400 ffd47600 ffd6c200 ffe00a00 ffd8aa00 ffcf4800
+[MIC RAW] zero_words=0 all_one_words=0 longest_identical_run=2 / 24000
+[AUDIO] Recording complete in 3020 ms
+
+[STATE] IDLE
+[HEARTBEAT] uptime=172197 ms heap=228224 state=IDLE
+
+[PCM_BEGIN] bytes=48000 rate=8000 bits=16 channels=1 crc32=fb16594c
+
+[PCM_END]

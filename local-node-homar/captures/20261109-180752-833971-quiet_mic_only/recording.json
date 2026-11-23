@@ -1,0 +1,114 @@
+{
+  "samples": 24000,
+  "sample_rate_hz": 8000,
+  "duration_seconds": 3.0,
+  "min": -32768,
+  "max": 32767,
+  "mean": -29.600083333333334,
+  "ac_rms": 1374.1094061184963,
+  "ac_rms_dbfs_relative_to_32768": -27.548572449644304,
+  "zero_percent": 49.8,
+  "rail_percent": 0.1125,
+  "longest_identical_run_samples": 71,
+  "largest_adjacent_jump": 33045,
+  "most_common_values": [
+    [
+      0,
+      11952
+    ],
+    [
+      -2,
+      11566
+    ],
+    [
+      -32768,
+      21
+    ],
+    [
+      16,
+      8
+    ],
+    [
+      -4,
+      7
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      -18,
+      6
+    ],
+    [
+      32767,
+      6
+    ]
+  ],
+  "rms_100ms": [
+    1591.5433955755022,
+    1822.6418137555168,
+    1613.466735015011,
+    1140.850906122268,
+    1753.5265442102666,
+    920.7714863091711,
+    1872.6786483537426,
+    1699.9534684808286,
+    2020.1165402644472,
+    2049.668004824196,
+    216.18686361571557,
+    684.46532417647,
+    1893.3523166595276,
+    1974.677322057961,
+    275.0283349038786,
+    1174.2241145752373,
+    1272.2630761756784,
+    1300.7443599723968,
+    1766.6137212192143,
+    1756.4203369353247,
+    587.9520431123614,
+    29.97223715373946,
+    1644.8458852579472,
+    664.4456674552104,
+    1494.551638452148,
+    320.08246593651455,
+    524.9828521009043,
+    581.0008003436828,
+    54.50940285858945,
+    1701.2001645896935
+  ],
+  "crc32": "b99b23e3",
+  "capture": {
+    "label": "quiet_mic_only",
+    "requested_at_utc": "2026-11-09T23:07:52.833971+00:00",
+    "serial_port": "COM4",
+    "mode": "new_recording",
+    "playback_status": "not_requested",
+    "recording_time_known": true,
+    "received_at_utc": "2026-11-09T23:08:00.190165+00:00",
+    "firmware": {
+      "diagnostic_lines": [
+        "[AUDIO] Speak now. Recording for 3 seconds...",
+        "[MIC] samples=24000 min=-32768 max=32767 mean=-29.6 AC_RMS=1374.1 zero=11952 clipped=25",
+        "[MIC] First raw 32-bit slots: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffe1ac01",
+        "[MIC RAW] zero_words=9612 all_one_words=11511 longest_identical_run=66 / 24000",
+        "[AUDIO] Recording complete in 3045 ms"
+      ],
+      "pcm": {
+        "samples": 24000,
+        "min": -32768,
+        "max": 32767,
+        "mean": -29.6,
+        "ac_rms": 1374.1,
+        "zero_samples": 11952,
+        "clipped_samples": 25
+      },
+      "raw": {
+        "zero_words": 9612,
+        "all_one_words": 11511,
+        "longest_identical_run": 66,
+        "samples": 24000
+      }
+    }
+  }
+}

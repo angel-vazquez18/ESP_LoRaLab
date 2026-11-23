@@ -1,0 +1,178 @@
+{
+  "duration_s": 8.033333,
+  "streams": [
+    {
+      "type": "video",
+      "codec": "h264",
+      "metadata": {
+        "language": "und",
+        "handler_name": "VideoHandler"
+      },
+      "duration_s": 8.033333333333333
+    },
+    {
+      "type": "audio",
+      "codec": "aac",
+      "metadata": {
+        "language": "und",
+        "handler_name": "SoundHandler"
+      },
+      "duration_s": 8.03299319727891
+    }
+  ],
+  "frames": [
+    {
+      "time_s": 0.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-000.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 0.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-000.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 1.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-001.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 1.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-001.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 2.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-002.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 2.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-002.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 3.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-003.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 3.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-003.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 4.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-004.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 4.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-004.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 5.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-005.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 5.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-005.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 6.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-006.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 6.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-006.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 7.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-007.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 7.5,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-007.50s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 8.0,
+      "path": "output\\validation\\scope-video-2-20261116\\frame-008.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="792" height="612" preserveAspectRatio="xMinYMin meet" viewBox="0 0 792 612" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="792" height="612"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-612)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="792" height="612" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="36" y="574" style="font-family: Arial-Bold; font-size: 22px;fill: rgb(9%,18%,27%); stroke:none;" transform="translate(0,1148) scale(1,-1)">Heltec V4 - audio and LoRa wiring</text>
+			<text x="36" y="553" style="font-family: Arial; font-size: 10px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,1106) scale(1,-1)">External connections for one node. Duplicate this circuit for a second node.</text>
+			<path d="M 36,541 L 756,541 Z" style="stroke: rgb(89%,91%,94%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 36,33 L 756,33 Z" style="stroke: rgb(89%,91%,94%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="36" y="18" style="font-family: Arial; font-size: 8px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,36) scale(1,-1)">PROJECT WIRING PROPOSAL  |  Heltec WiFi LoRa 32 V4  |  Rev A - 2026-11-16</text>
+			<text x="740.43359375" y="18" style="font-family: Arial; font-size: 8px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,36) scale(1,-1)">1 / 4</text>
+			<rect x="272" y="276" width="215" height="231" rx="8" ry="8" style="stroke: rgb(9%,18%,27%); stroke-linecap: butt; stroke-width: 1.5; fill: rgb(95%,96%,97%); fill-rule: evenodd;"/>
+			<text x="296.1533203125" y="486" style="font-family: Arial-Bold; font-size: 12px;fill: rgb(9%,18%,27%); stroke:none;" transform="translate(0,972) scale(1,-1)">U1  HELTEC WiFi LoRa 32 V4</text>
+			<text x="319.58056640625" y="470" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,940) scale(1,-1)">ESP32-S3 + onboard SX1262</text>
+			<rect x="36" y="302" width="133" height="176" rx="5" ry="5" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(95%,96%,97%); fill-rule: evenodd;"/>
+			<text x="66.4853515625" y="462" style="font-family: Arial-Bold; font-size: 12px;fill: rgb(9%,39%,63%); stroke:none;" transform="translate(0,924) scale(1,-1)">U2  INMP441</text>
+			<rect x="602" y="270" width="154" height="208" rx="5" ry="5" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(95%,96%,97%); fill-rule: evenodd;"/>
+			<text x="633.6455078125" y="462" style="font-family: Arial-Bold; font-size: 12px;fill: rgb(48%,28%,62%); stroke:none;" transform="translate(0,924) scale(1,-1)">U3  MAX98357A</text>
+			<text x="139.998046875" y="445" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,890) scale(1,-1)">VDD</text>
+			<text x="282" y="445" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(67%,39%,9%); stroke:none;" transform="translate(0,890) scale(1,-1)">3V3</text>
+			<path d="M 169,448 L 272,448 Z" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="169" cy="448" r="1.6" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1; fill: rgb(67%,39%,9%); fill-rule: evenodd;"/>
+			<circle cx="272" cy="448" r="1.6" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1; fill: rgb(67%,39%,9%); fill-rule: evenodd;"/>
+			<text x="139.00048828125" y="419" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,838) scale(1,-1)">GND</text>
+			<text x="282" y="419" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(19%,23%,28%); stroke:none;" transform="translate(0,838) scale(1,-1)">GND</text>
+			<path d="M 169,422 L 272,422 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="169" cy="422" r="1.6" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,23%,28%); fill-rule: evenodd;"/>
+			<circle cx="272" cy="422" r="1.6" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,23%,28%); fill-rule: evenodd;"/>
+			<text x="109.482421875" y="393" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,786) scale(1,-1)">SCK / BCLK</text>
+			<text x="282" y="393" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,39%,63%); stroke:none;" transform="translate(0,786) scale(1,-1)">GPIO4</text>
+			<path d="M 169,396 L 272,396 Z" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="169" cy="396" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<circle cx="272" cy="396" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<polygon points="211 396, 216 398.5, 216 393.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<text x="144.50244140625" y="367" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,734) scale(1,-1)">WS</text>
+			<text x="282" y="367" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,39%,63%); stroke:none;" transform="translate(0,734) scale(1,-1)">GPIO6</text>
+			<path d="M 169,370 L 272,370 Z" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="169" cy="370" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<circle cx="272" cy="370" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<polygon points="211 370, 216 372.5, 216 367.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<text x="114.9931640625" y="341" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,682) scale(1,-1)">SD / DATA</text>
+			<text x="282" y="341" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,39%,63%); stroke:none;" transform="translate(0,682) scale(1,-1)">GPIO38</text>
+			<path d="M 169,344 L 272,344 Z" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="169" cy="344" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<circle cx="272" cy="344" r="1.6" style="stroke: rgb(9%,39%,63%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<polygon points="231 344, 226 346.5, 226 341.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,39%,63%); fill-rule: evenodd;"/>
+			<text x="48" y="318" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,636) scale(1,-1)">L/R</text>
+			<path d="M 36,321 L 23,321 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 23,321 L 23,282 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 23,282 L 23,277 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 14,277 L 32,277 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 17,273 L 29,273 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 20,269 L 26,269 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="42" y="283" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,566) scale(1,-1)">GND = left channel</text>
+			<text x="434.216796875" y="445" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(72%,21%,19%); stroke:none;" transform="translate(0,890) scale(1,-1)">5V (USB)</text>
+			<text x="612" y="445" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,890) scale(1,-1)">VIN</text>
+			<path d="M 487,448 L 602,448 Z" style="stroke: rgb(72%,21%,19%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="448" r="1.6" style="stroke: rgb(72%,21%,19%); stroke-linecap: butt; stroke-width: 1; fill: rgb(72%,21%,19%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="448" r="1.6" style="stroke: rgb(72%,21%,19%); stroke-linecap: butt; stroke-width: 1; fill: rgb(72%,21%,19%); fill-rule: evenodd;"/>
+			<text x="454.7783203125" y="419" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(19%,23%,28%); stroke:none;" transform="translate(0,838) scale(1,-1)">GND</text>
+			<text x="612" y="419" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,838) scale(1,-1)">GND</text>
+			<path d="M 487,422 L 602,422 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="422" r="1.6" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,23%,28%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="422" r="1.6" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,23%,28%); fill-rule: evenodd;"/>
+			<text x="440.8720703125" y="393" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(48%,28%,62%); stroke:none;" transform="translate(0,786) scale(1,-1)">GPIO15</text>
+			<text x="612" y="393" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,786) scale(1,-1)">BCLK</text>
+			<path d="M 487,396 L 602,396 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="396" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="396" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<polygon points="550 396, 545 398.5, 545 393.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<text x="440.8720703125" y="367" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(48%,28%,62%); stroke:none;" transform="translate(0,734) scale(1,-1)">GPIO16</text>
+			<text x="612" y="367" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,734) scale(1,-1)">LRC / WS</text>
+			<path d="M 487,370 L 602,370 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="370" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="370" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<polygon points="550 370, 545 372.5, 545 367.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<text x="440.8720703125" y="341" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(48%,28%,62%); stroke:none;" transform="translate(0,682) scale(1,-1)">GPIO47</text>
+			<text x="612" y="341" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,682) scale(1,-1)">DIN</text>
+			<path d="M 487,344 L 602,344 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="344" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="344" r="1.6" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<polygon points="550 344, 545 346.5, 545 341.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,28%,62%); fill-rule: evenodd;"/>
+			<text x="440.8720703125" y="315" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,630) scale(1,-1)">GPIO48</text>
+			<text x="612" y="315" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,630) scale(1,-1)">SD / MODE</text>
+			<path d="M 487,318 L 602,318 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="487" cy="318" r="1.6" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<circle cx="602" cy="318" r="1.6" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<polygon points="550 318, 545 320.5, 545 315.5" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<circle cx="565" cy="318" r="2.3" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<path d="M 565,318 L 565,265.5 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<rect x="561" y="239.5" width="8" height="26.0" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<path d="M 565,239.5 L 565,187 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="505.9853515625" y="249.5" style="font-family: Arial; font-size: 9px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,499) scale(1,-1)">R1  1 kOhm</text>
+			<path d="M 565,187 L 565,182 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 556,182 L 574,182 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 559,178 L 571,178 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 562,174 L 568,174 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="612" y="289" style="font-family: Arial; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,578) scale(1,-1)">GAIN</text>
+			<path d="M 602,292 L 589,292 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 589,292 L 589,259 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 589,259 L 589,254 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 580,254 L 598,254 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 583,250 L 595,250 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 586,246 L 592,246 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="643" y="280" style="font-family: Arial-Bold; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,560) scale(1,-1)">SPK+</text>
+			<text x="706" y="280" style="font-family: Arial-Bold; font-size: 9px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,560) scale(1,-1)">SPK-</text>
+			<path d="M 652,270 L 652,214 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 722,270 L 722,214 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 652,214 L 675,214 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 722,214 L 699,214 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<rect x="675" y="205" width="7" height="18" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polygon points="682 205, 697 195, 697 233, 682 223" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.4; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<path d="M 697,214 L 699,214 Z" style="stroke: rgb(48%,28%,62%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="640.03466796875" y="181" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(48%,28%,62%); stroke:none;" transform="translate(0,362) scale(1,-1)">LS1  8 ohm speaker</text>
+			<text x="625.970947265625" y="165" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,330) scale(1,-1)">Neither lead connects to GND.</text>
+			<text x="282" y="295" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,590) scale(1,-1)">GPIO39</text>
+			<path d="M 272,298 L 223,298 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<path d="M 223,298 L 223,223 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.7;"/>
+			<circle cx="223" cy="223" r="2.2" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<circle cx="223" cy="201" r="2.2" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(6%,48%,47%); fill-rule: evenodd;"/>
+			<path d="M 223,223 L 211,204 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<path d="M 223,201 L 223,183 Z" style="stroke: rgb(6%,48%,47%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 223,183 L 223,178 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 214,178 L 232,178 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 217,174 L 229,174 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 220,170 L 226,170 Z" style="stroke: rgb(19%,23%,28%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<text x="54" y="237" style="font-family: Arial; font-size: 10px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,474) scale(1,-1)">SW1  Optional PTT</text>
+			<text x="54" y="222" style="font-family: Arial; font-size: 10px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,444) scale(1,-1)">Normally-open button</text>
+			<text x="54" y="207" style="font-family: Arial; font-size: 10px;fill: rgb(6%,48%,47%); stroke:none;" transform="translate(0,414) scale(1,-1)">GPIO39 to GND</text>
+			<text x="54" y="184" style="font-family: Consolas; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,368) scale(1,-1)">Firmware: INPUT_PULLUP</text>
+			<text x="54" y="168" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,336) scale(1,-1)">Pressed = LOW; released = HIGH.</text>
+			<text x="352.88671875" y="389" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,18%,27%); stroke:none;" transform="translate(0,778) scale(1,-1)">LoRa radio</text>
+			<text x="354.83251953125" y="374" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,18%,27%); stroke:none;" transform="translate(0,748) scale(1,-1)">and OLED</text>
+			<text x="352.2373046875" y="357" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,714) scale(1,-1)">already wired</text>
+			<text x="353.729248046875" y="343" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,686) scale(1,-1)">on the board</text>
+			<path d="M 379,507 L 379,529 Z" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1.6;"/>
+			<path d="M 371,534 L 379,529 Z" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1.6;"/>
+			<path d="M 387,534 L 379,529 Z" style="stroke: rgb(67%,39%,9%); stroke-linecap: butt; stroke-width: 1.6;"/>
+			<text x="393" y="520" style="font-family: Arial; font-size: 9px;fill: rgb(67%,39%,9%); stroke:none;" transform="translate(0,1040) scale(1,-1)">ANT1: matched LoRa antenna</text>
+			<path d="M 379,276 L 379,224 Z" style="stroke: rgb(72%,21%,19%); stroke-linecap: butt; stroke-width: 2;"/>
+			<rect x="292" y="180" width="174" height="44" rx="4" ry="4" style="stroke: rgb(89%,91%,94%); stroke-linecap: butt; stroke-width: 1; fill: rgb(95%,96%,97%); fill-rule: evenodd;"/>
+			<text x="307.04443359375" y="207" style="font-family: Arial-Bold; font-size: 10px;fill: rgb(9%,18%,27%); stroke:none;" transform="translate(0,414) scale(1,-1)">USB-C data cable to computer</text>
+			<text x="303.46240234375" y="191" style="font-family: Arial; font-size: 9px;fill: rgb(32%,39%,46%); stroke:none;" transform="translate(0,382) scale(1,-1)">One USB power source for this bench</text>
+			<text x="389" y="246" style="font-family: Arial; font-size: 9px;fill: rgb(72%,21%,19%); stroke:none;" transform="translate(0,492) scale(1,-1)">USB 5 V</text>
+			<rect x="36" y="61" width="720" height="79" rx="4" ry="4" style="stroke: rgb(89%,91%,94%); stroke-linecap: butt; stroke-width: 1; fill: rgb(95%,96%,97%); fill-rule: evenodd;"/>
+			<text x="49" y="122" style="font-family: Arial; font-size: 9.5px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,244) scale(1,-1)">PROPOSED PIN MAP - reviewed against manufacturer drawings; not yet tested on this Heltec.</text>
+			<text x="49" y="107" style="font-family: Arial; font-size: 9.5px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,214) scale(1,-1)">All GND symbols join the same ground. R1 goes from SD to GND, not in series with GPIO48.</text>
+			<text x="49" y="92" style="font-family: Arial; font-size: 9.5px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,184) scale(1,-1)">Leave the GNSS/GPS socket and expansion/touch accessories disconnected (GPIO38/39 are reused).</text>
+			<text x="49" y="77" style="font-family: Arial; font-size: 9.5px;fill: rgb(14%,21%,29%); stroke:none;" transform="translate(0,154) scale(1,-1)">USB-powered bench only. Attach the correct antenna to LoRa ANT before power. See pin locator on sheet 2.</text>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,56 @@
+[OLED] ACK received at 0x3C; node label written
+
+==============================================
+ ESP32 Audio / Voice Chunker Hardware Test
+ Diagnostic revision: audio-bench-4-heltec-r2
+==============================================
+Audio format:
+  8000 Hz, 16-bit, mono, 3 seconds
+  PCM buffer: 48000 bytes
+  Chunk payload: 240 bytes
+  Packet count: 200
+  Voice packet size: 247 bytes
+
+Commands:
+  r = record then direct playback
+  p = record, packetize, simulated transport, playback
+  t = deterministic chunker integrity test
+  s = play 1 kHz speaker test tone
+  m = microphone capture/statistics only
+  d = export last recording as binary PCM (use tools/capture_audio.py)
+  l = toggle simulated loss: 0 / every 17th index
+  h = toggle diagnostic heartbeat
+  i = print system information
+  x = print protocol information
+  PTT button: disabled
+==============================================
+[INIT] Starting I2S drivers...
+[AMP] Startup aborted: stopped BCLK/LRC are not both low
+[INIT] One or more requested I2S drivers failed; diagnostics remain available
+
+[SYSTEM]
+[BOARD] Heltec-B / COM7 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+[BOARD] Base MAC: 44:1B:F6:6F:99:E4 | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+[BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+[BOARD] COM label is the assigned bench port; Windows may reassign it
+Build: Nov 16 2026 15:42:30, Arduino 3.3.12, IDF v5.5.5
+Reset reason: 11, uptime: 1751 ms
+Free heap: 249876 bytes
+Minimum free heap: 242624 bytes
+TX audio buffer: 48000 bytes
+RX audio buffer: 48000 bytes
+Chunk bitmap: 25 bytes
+Simulated drop interval: 0
+[I2S] MIC requested=1 ready=1, SPK requested=1 ready=0
+[I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+[I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 16-bit; nominal 256 kHz / 8 kHz
+[AMP] SD/MODE=GPIO48; startup enable-to-clock wait >=20 us; ready=0
+[AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+[AMP] Startup edge phase requires scope validation; ready is software status only
+[I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+
+[STATE] IDLE
+[HEARTBEAT] uptime=1762 ms heap=249876 state=IDLE
+[HEARTBEAT] uptime=2762 ms heap=249876 state=IDLE
+[HEARTBEAT] uptime=3762 ms heap=249876 state=IDLE
+[HEARTBEAT] uptime=4762 ms heap=249876 state=IDLE

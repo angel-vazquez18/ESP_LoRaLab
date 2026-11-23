@@ -1,0 +1,83 @@
+2026-11-17T02:22:27.415+00:00 OPEN Heltec-A at 115200 baud; DTR=0 RTS=0
+2026-11-17T02:22:27.456+00:00 RX [AMP] Silent I2S clocks started before SD enable; continuous 512 kHz / 8 kHz requested
+2026-11-17T02:22:28.058+00:00 RX [INIT] Requested I2S drivers initialized (see ready flags)
+2026-11-17T02:22:28.058+00:00 RX 
+2026-11-17T02:22:28.058+00:00 RX [SYSTEM]
+2026-11-17T02:22:28.058+00:00 RX [BOARD] Heltec-A / COM6 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+2026-11-17T02:22:28.058+00:00 RX [BOARD] Base MAC: 8C:FD:49:B5:B7:8C | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+2026-11-17T02:22:28.058+00:00 RX [BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+2026-11-17T02:22:28.058+00:00 RX [BOARD] COM label is the assigned bench port; Windows may reassign it
+2026-11-17T02:22:28.058+00:00 RX Build: Nov 16 2026 21:20:59, Arduino 3.3.12, IDF v5.5.5
+2026-11-17T02:22:28.058+00:00 RX Reset reason: 11, uptime: 13590 ms
+2026-11-17T02:22:28.058+00:00 RX Free heap: 239980 bytes
+2026-11-17T02:22:28.058+00:00 RX Minimum free heap: 239764 bytes
+2026-11-17T02:22:28.058+00:00 RX TX audio buffer: 48000 bytes
+2026-11-17T02:22:28.058+00:00 RX RX audio buffer: 48000 bytes
+2026-11-17T02:22:28.058+00:00 RX Chunk bitmap: 25 bytes
+2026-11-17T02:22:28.058+00:00 RX Simulated drop interval: 0
+2026-11-17T02:22:28.058+00:00 RX [I2S] MIC requested=1 ready=1, SPK requested=1 ready=1
+2026-11-17T02:22:28.058+00:00 RX [I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+2026-11-17T02:22:28.058+00:00 RX [I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz
+2026-11-17T02:22:28.058+00:00 RX [AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1
+2026-11-17T02:22:28.058+00:00 RX [AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+2026-11-17T02:22:28.058+00:00 RX [AMP] Startup edge phase requires scope validation; ready is software status only
+2026-11-17T02:22:28.058+00:00 RX [I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+2026-11-17T02:22:28.058+00:00 RX 
+2026-11-17T02:22:28.058+00:00 RX [STATE] IDLE
+2026-11-17T02:22:28.070+00:00 RX [HEARTBEAT] uptime=13601 ms heap=239980 state=IDLE
+2026-11-17T02:22:29.069+00:00 RX [HEARTBEAT] uptime=14602 ms heap=239980 state=IDLE
+2026-11-17T02:22:29.217+00:00 TX stage=identity_and_readiness command='i'
+2026-11-17T02:22:29.270+00:00 RX 
+2026-11-17T02:22:29.270+00:00 RX [SYSTEM]
+2026-11-17T02:22:29.270+00:00 RX [BOARD] Heltec-A / COM6 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+2026-11-17T02:22:29.270+00:00 RX [BOARD] Base MAC: 8C:FD:49:B5:B7:8C | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+2026-11-17T02:22:29.270+00:00 RX [BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+2026-11-17T02:22:29.270+00:00 RX [BOARD] COM label is the assigned bench port; Windows may reassign it
+2026-11-17T02:22:29.270+00:00 RX Build: Nov 16 2026 21:20:59, Arduino 3.3.12, IDF v5.5.5
+2026-11-17T02:22:29.270+00:00 RX Reset reason: 11, uptime: 14802 ms
+2026-11-17T02:22:29.270+00:00 RX Free heap: 239980 bytes
+2026-11-17T02:22:29.270+00:00 RX Minimum free heap: 239748 bytes
+2026-11-17T02:22:29.270+00:00 RX TX audio buffer: 48000 bytes
+2026-11-17T02:22:29.270+00:00 RX RX audio buffer: 48000 bytes
+2026-11-17T02:22:29.270+00:00 RX Chunk bitmap: 25 bytes
+2026-11-17T02:22:29.270+00:00 RX Simulated drop interval: 0
+2026-11-17T02:22:29.270+00:00 RX [I2S] MIC requested=1 ready=1, SPK requested=1 ready=1
+2026-11-17T02:22:29.270+00:00 RX [I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+2026-11-17T02:22:29.270+00:00 RX [I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz
+2026-11-17T02:22:29.270+00:00 RX [AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1
+2026-11-17T02:22:29.270+00:00 RX [AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+2026-11-17T02:22:29.270+00:00 RX [AMP] Startup edge phase requires scope validation; ready is software status only
+2026-11-17T02:22:29.270+00:00 RX [I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+2026-11-17T02:22:29.580+00:00 TX stage=speaker_pin_probe command='v'
+2026-11-17T02:22:29.611+00:00 RX [PINS] BEGIN
+2026-11-17T02:22:29.611+00:00 RX [PINS] SD GPIO48=1
+2026-11-17T02:22:29.632+00:00 RX [PINS] BCLK GPIO40 rising_edges=10463 elapsed_us=20448 approx_hz=511688.2
+2026-11-17T02:22:29.643+00:00 RX [PINS] LRC GPIO41 rising_edges=164 elapsed_us=20440 approx_hz=8023.5
+2026-11-17T02:22:29.643+00:00 RX [PINS] MCU pad readback only; this does not verify amplifier-terminal voltage or wire continuity
+2026-11-17T02:22:29.643+00:00 RX [PINS] END
+2026-11-17T02:22:29.955+00:00 TX stage=individual_COM6_1 command='s'
+2026-11-17T02:22:29.987+00:00 RX 
+2026-11-17T02:22:29.987+00:00 RX [STATE] PLAYBACK
+2026-11-17T02:22:29.998+00:00 RX [AUDIO] Playing 1 kHz speaker test tone...
+2026-11-17T02:22:29.998+00:00 RX [DIN] BEGIN
+2026-11-17T02:22:31.029+00:00 RX [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1028676
+2026-11-17T02:22:31.029+00:00 RX [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+2026-11-17T02:22:31.029+00:00 RX [DIN] END
+2026-11-17T02:22:31.029+00:00 RX [AUDIO] Tone transfer complete; verify audible output
+2026-11-17T02:22:31.029+00:00 RX 
+2026-11-17T02:22:31.029+00:00 RX [STATE] IDLE
+2026-11-17T02:22:31.040+00:00 RX [HEARTBEAT] uptime=16572 ms heap=239608 state=IDLE
+2026-11-17T02:22:32.032+00:00 RX [HEARTBEAT] uptime=17572 ms heap=239608 state=IDLE
+2026-11-17T02:22:32.162+00:00 TX stage=individual_COM6_2 command='s'
+2026-11-17T02:22:32.184+00:00 RX 
+2026-11-17T02:22:32.184+00:00 RX [STATE] PLAYBACK
+2026-11-17T02:22:32.195+00:00 RX [AUDIO] Playing 1 kHz speaker test tone...
+2026-11-17T02:22:32.195+00:00 RX [DIN] BEGIN
+2026-11-17T02:22:33.217+00:00 RX [PINS] DIN GPIO47 rising_edges=31744 elapsed_us=1023824
+2026-11-17T02:22:33.217+00:00 RX [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+2026-11-17T02:22:33.217+00:00 RX [DIN] END
+2026-11-17T02:22:33.217+00:00 RX [AUDIO] Tone transfer complete; verify audible output
+2026-11-17T02:22:33.217+00:00 RX 
+2026-11-17T02:22:33.217+00:00 RX [STATE] IDLE
+2026-11-17T02:22:33.228+00:00 RX [HEARTBEAT] uptime=18764 ms heap=239608 state=IDLE
+2026-11-17T02:22:34.030+00:00 CLOSE

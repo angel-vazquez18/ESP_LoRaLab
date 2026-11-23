@@ -1,0 +1,180 @@
+{
+  "started_at": "2026-11-17T03:06:03.993+00:00",
+  "requested_ports": [
+    "COM6",
+    "COM7"
+  ],
+  "identify_only": false,
+  "nodes": [
+    {
+      "port": "COM6",
+      "label": "Heltec-A",
+      "assigned_port": "COM6",
+      "port_matches_assignment": true,
+      "usb_serial": "8C:FD:49:B5:B7:8C",
+      "mac_normalized": "8CFD49B5B78C",
+      "description": "USB Serial Device (COM6)",
+      "hardware_id": "USB VID:PID=303A:1001 SER=8C:FD:49:B5:B7:8C",
+      "log_file": "serial-COM6.log"
+    },
+    {
+      "port": "COM7",
+      "label": "Heltec-B",
+      "assigned_port": "COM7",
+      "port_matches_assignment": true,
+      "usb_serial": "44:1B:F6:6F:99:E4",
+      "mac_normalized": "441BF66F99E4",
+      "description": "USB Serial Device (COM7)",
+      "hardware_id": "USB VID:PID=303A:1001 SER=44:1B:F6:6F:99:E4",
+      "log_file": "serial-COM7.log"
+    }
+  ],
+  "stages": [
+    {
+      "name": "identity_and_readiness",
+      "command": "i",
+      "started_at": "2026-11-17T03:06:05.827+00:00",
+      "ports": {
+        "COM6": {
+          "label": "Heltec-A",
+          "sent_at": "2026-11-17T03:06:05.827+00:00",
+          "started": true,
+          "transfer_complete": false,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [
+            "[SYSTEM]",
+            "[BOARD] Heltec-A / COM6 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile",
+            "[BOARD] Base MAC: 8C:FD:49:B5:B7:8C | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes",
+            "[BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled",
+            "[BOARD] COM label is the assigned bench port; Windows may reassign it",
+            "Build: Nov 16 2026 21:26:23, Arduino 3.3.12, IDF v5.5.5",
+            "Reset reason: 11, uptime: 2341981 ms",
+            "Free heap: 239608 bytes",
+            "Minimum free heap: 239376 bytes",
+            "TX audio buffer: 48000 bytes",
+            "RX audio buffer: 48000 bytes",
+            "Chunk bitmap: 25 bytes",
+            "Simulated drop interval: 0",
+            "[I2S] MIC requested=1 ready=1, SPK requested=1 ready=1",
+            "[I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz",
+            "[I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz",
+            "[AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1",
+            "[AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND",
+            "[AMP] Startup edge phase requires scope validation; ready is software status only",
+            "[I2S] Frequencies above are configured targets, not measurements; MCLK disabled"
+          ],
+          "completed_at": "2026-11-17T03:06:05.861+00:00"
+        },
+        "COM7": {
+          "label": "Heltec-B",
+          "sent_at": "2026-11-17T03:06:05.827+00:00",
+          "started": true,
+          "transfer_complete": false,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [
+            "[SYSTEM]",
+            "[BOARD] Heltec-B / COM7 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile",
+            "[BOARD] Base MAC: 44:1B:F6:6F:99:E4 | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes",
+            "[BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled",
+            "[BOARD] COM label is the assigned bench port; Windows may reassign it",
+            "Build: Nov 16 2026 21:45:15, Arduino 3.3.12, IDF v5.5.5",
+            "Reset reason: 1, uptime: 8796 ms",
+            "Free heap: 239980 bytes",
+            "Minimum free heap: 239748 bytes",
+            "TX audio buffer: 48000 bytes",
+            "RX audio buffer: 48000 bytes",
+            "Chunk bitmap: 25 bytes",
+            "Simulated drop interval: 0",
+            "[I2S] MIC requested=1 ready=1, SPK requested=1 ready=1",
+            "[I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz",
+            "[I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz",
+            "[AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1",
+            "[AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND",
+            "[AMP] Startup edge phase requires scope validation; ready is software status only",
+            "[I2S] Frequencies above are configured targets, not measurements; MCLK disabled"
+          ],
+          "completed_at": "2026-11-17T03:06:05.873+00:00"
+        }
+      },
+      "command_dispatch_span_ms": 0.0,
+      "completed_at": "2026-11-17T03:06:05.873+00:00"
+    },
+    {
+      "name": "individual_COM6",
+      "command": "s",
+      "started_at": "2026-11-17T03:06:06.181+00:00",
+      "ports": {
+        "COM6": {
+          "label": "Heltec-A",
+          "sent_at": "2026-11-17T03:06:06.181+00:00",
+          "started": true,
+          "transfer_complete": true,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [],
+          "completed_at": "2026-11-17T03:06:07.251+00:00"
+        }
+      },
+      "command_dispatch_span_ms": 0.0,
+      "completed_at": "2026-11-17T03:06:07.251+00:00"
+    },
+    {
+      "name": "individual_COM7",
+      "command": "s",
+      "started_at": "2026-11-17T03:06:08.376+00:00",
+      "ports": {
+        "COM7": {
+          "label": "Heltec-B",
+          "sent_at": "2026-11-17T03:06:08.376+00:00",
+          "started": true,
+          "transfer_complete": true,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [],
+          "completed_at": "2026-11-17T03:06:09.460+00:00"
+        }
+      },
+      "command_dispatch_span_ms": 0.0,
+      "completed_at": "2026-11-17T03:06:09.460+00:00"
+    },
+    {
+      "name": "paired_tones",
+      "command": "s",
+      "started_at": "2026-11-17T03:06:10.586+00:00",
+      "ports": {
+        "COM6": {
+          "label": "Heltec-A",
+          "sent_at": "2026-11-17T03:06:10.586+00:00",
+          "started": true,
+          "transfer_complete": true,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [],
+          "completed_at": "2026-11-17T03:06:11.645+00:00"
+        },
+        "COM7": {
+          "label": "Heltec-B",
+          "sent_at": "2026-11-17T03:06:10.586+00:00",
+          "started": true,
+          "transfer_complete": true,
+          "passed": true,
+          "finished": true,
+          "diagnostics": [],
+          "completed_at": "2026-11-17T03:06:11.668+00:00"
+        }
+      },
+      "command_dispatch_span_ms": 0.0,
+      "completed_at": "2026-11-17T03:06:11.668+00:00"
+    }
+  ],
+  "tone_repetitions": 1,
+  "tone_seconds": 1,
+  "probe_pins": false,
+  "both_connections_open_together": true,
+  "software_passed": true,
+  "audible_output": "Not automatically verified; listener confirmation required",
+  "finished_at": "2026-11-17T03:06:11.670+00:00",
+  "connections_closed": true
+}

@@ -1,0 +1,116 @@
+{
+  "samples": 24000,
+  "sample_rate_hz": 8000,
+  "duration_seconds": 3.0,
+  "min": -5182,
+  "max": 5236,
+  "mean": 10.328833333333334,
+  "ac_rms": 656.242587413604,
+  "ac_rms_dbfs_relative_to_32768": -33.96771048180323,
+  "zero_percent": 0.4791666666666667,
+  "rail_percent": 0.0,
+  "longest_identical_run_samples": 3,
+  "largest_adjacent_jump": 3008,
+  "most_common_values": [
+    [
+      22,
+      156
+    ],
+    [
+      46,
+      155
+    ],
+    [
+      48,
+      154
+    ],
+    [
+      62,
+      152
+    ],
+    [
+      30,
+      151
+    ],
+    [
+      42,
+      151
+    ],
+    [
+      34,
+      149
+    ],
+    [
+      32,
+      148
+    ]
+  ],
+  "rms_100ms": [
+    111.60017921132564,
+    67.56596776484446,
+    39.46086669093825,
+    76.94738462092133,
+    90.73665191090092,
+    118.45296534912075,
+    85.52011459300087,
+    1223.4729257323188,
+    2146.926598652129,
+    1359.0898664179642,
+    1037.5244936867755,
+    704.6517260320874,
+    282.212065652764,
+    182.01598830871973,
+    85.71088028949417,
+    77.19569288503084,
+    644.2197489987403,
+    591.3134321153208,
+    562.3737236037971,
+    205.16554291595847,
+    165.0867953532323,
+    187.69965370239765,
+    88.81233022503126,
+    51.044637328518654,
+    1026.3316349991362,
+    916.8419602090646,
+    191.065145958126,
+    196.9580412169049,
+    186.01571170199577,
+    128.52163242038284
+  ],
+  "crc32": "08bf937f",
+  "capture": {
+    "label": "playbback_check",
+    "requested_at_utc": "2026-11-02T11:18:36.253039+00:00",
+    "serial_port": "COM4",
+    "mode": "new_recording_direct_playback",
+    "playback_status": "digital_path_complete",
+    "recording_time_known": true,
+    "received_at_utc": "2026-11-02T11:18:46.611375+00:00",
+    "firmware": {
+      "diagnostic_lines": [
+        "[AUDIO] Speak now. Recording for 3 seconds...",
+        "[MIC] samples=24000 min=-5182 max=5236 mean=10.3 AC_RMS=656.2 zero=115 clipped=0",
+        "[MIC] First raw 32-bit slots: 006fd200 00718c00 0070c400 00779600 00808e00 00857400 008df800 008b0400",
+        "[MIC RAW] zero_words=0 all_one_words=0 longest_identical_run=2 / 24000",
+        "[AUDIO] Recording complete in 3022 ms",
+        "[AUDIO] Direct PCM playback...",
+        "[AUDIO] Direct playback complete (digital path)"
+      ],
+      "pcm": {
+        "samples": 24000,
+        "min": -5182,
+        "max": 5236,
+        "mean": 10.3,
+        "ac_rms": 656.2,
+        "zero_samples": 115,
+        "clipped_samples": 0
+      },
+      "raw": {
+        "zero_words": 0,
+        "all_one_words": 0,
+        "longest_identical_run": 2,
+        "samples": 24000
+      }
+    }
+  }
+}

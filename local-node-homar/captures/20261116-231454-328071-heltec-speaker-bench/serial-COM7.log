@@ -1,0 +1,58 @@
+2026-11-16T23:14:54.350+00:00 OPEN Heltec-B at 115200 baud; DTR=0 RTS=0
+2026-11-16T23:14:54.400+00:00 RX [AMP] Silent I2S clocks started before SD enable; continuous 512 kHz / 8 kHz requested
+2026-11-16T23:14:54.992+00:00 RX [INIT] Requested I2S drivers initialized (see ready flags)
+2026-11-16T23:14:55.004+00:00 RX 
+2026-11-16T23:14:55.004+00:00 RX [SYSTEM]
+2026-11-16T23:14:55.004+00:00 RX [BOARD] Heltec-B / COM7 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+2026-11-16T23:14:55.004+00:00 RX [BOARD] Base MAC: 44:1B:F6:6F:99:E4 | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+2026-11-16T23:14:55.005+00:00 RX [BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+2026-11-16T23:14:55.005+00:00 RX [BOARD] COM label is the assigned bench port; Windows may reassign it
+2026-11-16T23:14:55.005+00:00 RX Build: Nov 16 2026 16:51:33, Arduino 3.3.12, IDF v5.5.5
+2026-11-16T23:14:55.005+00:00 RX Reset reason: 11, uptime: 17666 ms
+2026-11-16T23:14:55.005+00:00 RX Free heap: 239988 bytes
+2026-11-16T23:14:55.005+00:00 RX Minimum free heap: 239772 bytes
+2026-11-16T23:14:55.005+00:00 RX TX audio buffer: 48000 bytes
+2026-11-16T23:14:55.005+00:00 RX RX audio buffer: 48000 bytes
+2026-11-16T23:14:55.005+00:00 RX Chunk bitmap: 25 bytes
+2026-11-16T23:14:55.005+00:00 RX Simulated drop interval: 0
+2026-11-16T23:14:55.005+00:00 RX [I2S] MIC requested=1 ready=1, SPK requested=1 ready=1
+2026-11-16T23:14:55.005+00:00 RX [I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+2026-11-16T23:14:55.005+00:00 RX [I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz
+2026-11-16T23:14:55.005+00:00 RX [AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1
+2026-11-16T23:14:55.005+00:00 RX [AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+2026-11-16T23:14:55.005+00:00 RX [AMP] Startup edge phase requires scope validation; ready is software status only
+2026-11-16T23:14:55.005+00:00 RX [I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+2026-11-16T23:14:55.005+00:00 RX 
+2026-11-16T23:14:55.005+00:00 RX [STATE] IDLE
+2026-11-16T23:14:55.016+00:00 RX [HEARTBEAT] uptime=17677 ms heap=239988 state=IDLE
+2026-11-16T23:14:56.005+00:00 RX [HEARTBEAT] uptime=18678 ms heap=239988 state=IDLE
+2026-11-16T23:14:56.153+00:00 TX stage=identity_and_readiness command='i'
+2026-11-16T23:14:56.164+00:00 RX 
+2026-11-16T23:14:56.164+00:00 RX [SYSTEM]
+2026-11-16T23:14:56.164+00:00 RX [BOARD] Heltec-B / COM7 | Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 profile
+2026-11-16T23:14:56.164+00:00 RX [BOARD] Base MAC: 44:1B:F6:6F:99:E4 | chip: ESP32-S3 rev 2 | flash: 16777216 bytes | PSRAM: 2097152 bytes
+2026-11-16T23:14:56.164+00:00 RX [BOARD] OLED ACK/init=1 | radio held in reset, FEM disabled | PTT disabled
+2026-11-16T23:14:56.164+00:00 RX [BOARD] COM label is the assigned bench port; Windows may reassign it
+2026-11-16T23:14:56.164+00:00 RX Build: Nov 16 2026 16:51:33, Arduino 3.3.12, IDF v5.5.5
+2026-11-16T23:14:56.164+00:00 RX Reset reason: 11, uptime: 18828 ms
+2026-11-16T23:14:56.164+00:00 RX Free heap: 239988 bytes
+2026-11-16T23:14:56.164+00:00 RX Minimum free heap: 239756 bytes
+2026-11-16T23:14:56.164+00:00 RX TX audio buffer: 48000 bytes
+2026-11-16T23:14:56.164+00:00 RX RX audio buffer: 48000 bytes
+2026-11-16T23:14:56.164+00:00 RX Chunk bitmap: 25 bytes
+2026-11-16T23:14:56.164+00:00 RX Simulated drop interval: 0
+2026-11-16T23:14:56.164+00:00 RX [I2S] MIC requested=1 ready=1, SPK requested=1 ready=1
+2026-11-16T23:14:56.164+00:00 RX [I2S] MIC BCLK=4 WS=6 SD=38, left 32-bit; nominal 512 kHz / 8 kHz
+2026-11-16T23:14:56.164+00:00 RX [I2S] SPK BCLK=40 LRC=41 DIN=47, L=R 32-bit wire slots; nominal 512000 Hz / 8000 Hz
+2026-11-16T23:14:56.164+00:00 RX [AMP] SD/MODE=GPIO48; silent clocks settle 20 ms before enable; ready=1
+2026-11-16T23:14:56.164+00:00 RX [AMP] SD/MODE connects to GPIO48 with a 1k pulldown to GND
+2026-11-16T23:14:56.164+00:00 RX [AMP] Startup edge phase requires scope validation; ready is software status only
+2026-11-16T23:14:56.164+00:00 RX [I2S] Frequencies above are configured targets, not measurements; MCLK disabled
+2026-11-16T23:14:56.516+00:00 TX stage=speaker_pin_probe command='v'
+2026-11-16T23:14:56.559+00:00 RX [PINS] BEGIN
+2026-11-16T23:14:56.559+00:00 RX [PINS] SD GPIO48=1
+2026-11-16T23:14:56.580+00:00 RX [PINS] BCLK GPIO40 rising_edges=10472 elapsed_us=20464 approx_hz=511727.9
+2026-11-16T23:14:56.580+00:00 RX [PINS] LRC GPIO41 rising_edges=163 elapsed_us=20456 approx_hz=7968.3
+2026-11-16T23:14:56.580+00:00 RX [PINS] MCU pad readback only; this does not verify amplifier-terminal voltage or wire continuity
+2026-11-16T23:14:56.580+00:00 RX [PINS] END
+2026-11-16T23:14:56.580+00:00 CLOSE
