@@ -22,6 +22,27 @@
       ],
       "title": "Encode",
       "type": "object"
+    },
+    "audio.decode": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "source_artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Source Artifact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "source_artifact_id"
+      ],
+      "title": "Encode",
+      "type": "object"
     }
   },
   "accepted": {
@@ -67,17 +88,25 @@
       },
       "commands": {
         "items": {
-          "const": "audio.encode",
+          "enum": [
+            "audio.encode",
+            "audio.decode"
+          ],
           "type": "string"
         },
-        "maxItems": 1,
-        "minItems": 1,
+        "maxItems": 2,
+        "minItems": 2,
         "title": "Commands",
         "type": "array"
       },
       "codec": {
         "const": "codec2_3200_v1",
         "title": "Codec",
+        "type": "string"
+      },
+      "decoder_phase_state": {
+        "const": "per_clip_seed1",
+        "title": "Decoder Phase State",
         "type": "string"
       },
       "version": {
@@ -146,6 +175,7 @@
       "schema_sha256",
       "commands",
       "codec",
+      "decoder_phase_state",
       "version",
       "source_commit",
       "library_ready",
@@ -436,6 +466,382 @@
     "title": "Result",
     "type": "object"
   },
+  "decode_result": {
+    "$defs": {
+      "CommitResult": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "title": "Artifact Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "source",
+              "recovered"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "length_bytes": {
+            "maximum": 131072,
+            "minimum": 1,
+            "title": "Length Bytes",
+            "type": "integer"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sha256",
+            "type": "string"
+          },
+          "format": {
+            "enum": [
+              "known_data",
+              "pcm_s16le_8000_mono",
+              "codec2_3200_v1"
+            ],
+            "title": "Format",
+            "type": "string"
+          },
+          "state": {
+            "const": "committed",
+            "title": "State",
+            "type": "string"
+          },
+          "next_offset": {
+            "maximum": 131072,
+            "minimum": 0,
+            "title": "Next Offset",
+            "type": "integer"
+          },
+          "in_use": {
+            "title": "In Use",
+            "type": "boolean"
+          },
+          "codec": {
+            "anyOf": [
+              {
+                "const": "codec2_3200_v1",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Codec"
+          },
+          "sample_rate_hz": {
+            "anyOf": [
+              {
+                "maximum": 8000,
+                "minimum": 8000,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Rate Hz"
+          },
+          "sample_count": {
+            "anyOf": [
+              {
+                "maximum": 24000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Count"
+          },
+          "frame_count": {
+            "anyOf": [
+              {
+                "maximum": 150,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Count"
+          },
+          "source_artifact_id": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Artifact Id"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "kind",
+          "length_bytes",
+          "sha256",
+          "format",
+          "state",
+          "next_offset",
+          "in_use",
+          "codec",
+          "sample_rate_hz",
+          "sample_count",
+          "frame_count",
+          "source_artifact_id"
+        ],
+        "title": "CommitResult",
+        "type": "object"
+      },
+      "DecodeMemory": {
+        "additionalProperties": false,
+        "properties": {
+          "scope": {
+            "const": "platform_heap_snapshots_not_peak",
+            "title": "Scope",
+            "type": "string"
+          },
+          "before": {
+            "$ref": "#/$defs/MemorySnapshot"
+          },
+          "ready": {
+            "$ref": "#/$defs/MemorySnapshot"
+          },
+          "after": {
+            "$ref": "#/$defs/MemorySnapshot"
+          }
+        },
+        "required": [
+          "scope",
+          "before",
+          "ready",
+          "after"
+        ],
+        "title": "DecodeMemory",
+        "type": "object"
+      },
+      "HeapSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "free_bytes": {
+            "minimum": 0,
+            "title": "Free Bytes",
+            "type": "integer"
+          },
+          "minimum_free_bytes": {
+            "minimum": 0,
+            "title": "Minimum Free Bytes",
+            "type": "integer"
+          },
+          "largest_free_bytes": {
+            "minimum": 0,
+            "title": "Largest Free Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "free_bytes",
+          "minimum_free_bytes",
+          "largest_free_bytes"
+        ],
+        "title": "HeapSnapshot",
+        "type": "object"
+      },
+      "MemorySnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "internal": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/HeapSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "psram": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/HeapSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "allocation_failures": {
+            "minimum": 0,
+            "title": "Allocation Failures",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "internal",
+          "psram",
+          "allocation_failures"
+        ],
+        "title": "MemorySnapshot",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "memory": {
+        "$ref": "#/$defs/DecodeMemory"
+      },
+      "kind": {
+        "const": "audio_decode",
+        "title": "Kind",
+        "type": "string"
+      },
+      "codec": {
+        "const": "codec2_3200_v1",
+        "title": "Codec",
+        "type": "string"
+      },
+      "source_artifact_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Source Artifact Id",
+        "type": "string"
+      },
+      "source_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Source Sha256",
+        "type": "string"
+      },
+      "artifact_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Artifact Id",
+        "type": "string"
+      },
+      "sample_count": {
+        "maximum": 24000,
+        "minimum": 1,
+        "title": "Sample Count",
+        "type": "integer"
+      },
+      "samples_completed": {
+        "maximum": 24000,
+        "minimum": 0,
+        "title": "Samples Completed",
+        "type": "integer"
+      },
+      "frame_count": {
+        "maximum": 150,
+        "minimum": 1,
+        "title": "Frame Count",
+        "type": "integer"
+      },
+      "frames_completed": {
+        "maximum": 150,
+        "minimum": 0,
+        "title": "Frames Completed",
+        "type": "integer"
+      },
+      "decoded_bytes": {
+        "maximum": 48000,
+        "minimum": 0,
+        "title": "Decoded Bytes",
+        "type": "integer"
+      },
+      "trimmed_samples": {
+        "maximum": 159,
+        "minimum": 0,
+        "title": "Trimmed Samples",
+        "type": "integer"
+      },
+      "setup_us": {
+        "minimum": 0,
+        "title": "Setup Us",
+        "type": "integer"
+      },
+      "conversion_us": {
+        "minimum": 0,
+        "title": "Conversion Us",
+        "type": "integer"
+      },
+      "codec_us": {
+        "minimum": 0,
+        "title": "Codec Us",
+        "type": "integer"
+      },
+      "finalize_us": {
+        "minimum": 0,
+        "title": "Finalize Us",
+        "type": "integer"
+      },
+      "started_us": {
+        "minimum": 0,
+        "title": "Started Us",
+        "type": "integer"
+      },
+      "finished_us": {
+        "minimum": 0,
+        "title": "Finished Us",
+        "type": "integer"
+      },
+      "duration_us": {
+        "minimum": 0,
+        "title": "Duration Us",
+        "type": "integer"
+      },
+      "artifact": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/CommitResult"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "stop_reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Stop Reason"
+      }
+    },
+    "required": [
+      "memory",
+      "kind",
+      "codec",
+      "source_artifact_id",
+      "source_sha256",
+      "artifact_id",
+      "sample_count",
+      "samples_completed",
+      "frame_count",
+      "frames_completed",
+      "decoded_bytes",
+      "trimmed_samples",
+      "setup_us",
+      "conversion_us",
+      "codec_us",
+      "finalize_us",
+      "started_us",
+      "finished_us",
+      "duration_us",
+      "artifact",
+      "stop_reason"
+    ],
+    "title": "DecodeResult",
+    "type": "object"
+  },
   "availability": {
     "additionalProperties": false,
     "properties": {
@@ -451,11 +857,14 @@
       },
       "commands": {
         "items": {
-          "const": "audio.encode",
+          "enum": [
+            "audio.encode",
+            "audio.decode"
+          ],
           "type": "string"
         },
-        "maxItems": 1,
-        "minItems": 1,
+        "maxItems": 2,
+        "minItems": 2,
         "title": "Commands",
         "type": "array"
       }

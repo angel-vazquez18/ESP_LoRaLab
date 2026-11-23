@@ -279,7 +279,7 @@ class NodeSession:
                         raise ValueError("Invalid key set identity") from None
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
-            if name == "audio.encode":
+            if name in codec_contract_v2.ARGUMENTS:
                 availability = self.codec_availability()
                 if name not in availability["commands"]:
                     raise ValueError(
