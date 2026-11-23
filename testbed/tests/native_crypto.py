@@ -45,7 +45,8 @@ set(TF_PSA_CRYPTO_CONFIG_FILE
 add_subdirectory("{source / "tf-psa-crypto"}" tfpsa)
 add_library(frame_crypto SHARED
     "{MAIN / "security/frame_crypto.c"}"
-    "{MAIN / "security/session_crypto.c"}")
+    "{MAIN / "security/session_crypto.c"}"
+    "{MAIN / "security/crypto_benchmark.c"}")
 target_include_directories(frame_crypto PRIVATE "{MAIN}")
 target_link_libraries(frame_crypto PRIVATE tfpsacrypto)
 target_compile_options(frame_crypto PRIVATE -Wall -Wextra -Werror)

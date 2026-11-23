@@ -1,0 +1,488 @@
+{
+  "scope": "local_crypto_benchmark",
+  "profile": "local_crypto_benchmark_v1",
+  "arguments": {
+    "additionalProperties": false,
+    "properties": {
+      "iterations": {
+        "default": 1000,
+        "maximum": 10000,
+        "minimum": 1,
+        "title": "Iterations",
+        "type": "integer"
+      },
+      "payload_bytes": {
+        "default": 160,
+        "enum": [
+          16,
+          64,
+          160,
+          199
+        ],
+        "title": "Payload Bytes",
+        "type": "integer"
+      },
+      "kind": {
+        "const": "crypto_benchmark",
+        "default": "crypto_benchmark",
+        "title": "Kind",
+        "type": "string"
+      }
+    },
+    "title": "Arguments",
+    "type": "object"
+  },
+  "accepted": {
+    "additionalProperties": false,
+    "properties": {
+      "operation_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "state": {
+        "const": "accepted",
+        "title": "State",
+        "type": "string"
+      },
+      "deadline_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Deadline Us",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "operation_id",
+      "state",
+      "deadline_us"
+    ],
+    "title": "AcceptedOperation",
+    "type": "object"
+  },
+  "declaration": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "local_crypto_benchmark_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "vector_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Vector Sha256",
+        "type": "string"
+      },
+      "max_iterations": {
+        "const": 10000,
+        "title": "Max Iterations",
+        "type": "integer"
+      },
+      "warmup_operations": {
+        "const": 50,
+        "title": "Warmup Operations",
+        "type": "integer"
+      },
+      "page_samples": {
+        "const": 16,
+        "title": "Page Samples",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "vector_sha256",
+      "max_iterations",
+      "warmup_operations",
+      "page_samples"
+    ],
+    "title": "Declaration",
+    "type": "object"
+  },
+  "event": {
+    "$defs": {
+      "Page": {
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "title": "Operation Id",
+            "type": "string"
+          },
+          "path": {
+            "enum": [
+              "encrypt",
+              "decrypt",
+              "invalid_tag",
+              "copy"
+            ],
+            "title": "Path",
+            "type": "string"
+          },
+          "phase": {
+            "enum": [
+              "first_call",
+              "warmup",
+              "timed"
+            ],
+            "title": "Phase",
+            "type": "string"
+          },
+          "first_index": {
+            "maximum": 9999,
+            "minimum": 0,
+            "title": "First Index",
+            "type": "integer"
+          },
+          "page_index": {
+            "maximum": 99999,
+            "minimum": 0,
+            "title": "Page Index",
+            "type": "integer"
+          },
+          "payload_bytes": {
+            "enum": [
+              16,
+              64,
+              160,
+              199
+            ],
+            "title": "Payload Bytes",
+            "type": "integer"
+          },
+          "samples": {
+            "items": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "boolean"
+                }
+              ],
+              "type": "array"
+            },
+            "maxItems": 16,
+            "minItems": 1,
+            "title": "Samples",
+            "type": "array"
+          }
+        },
+        "required": [
+          "operation_id",
+          "path",
+          "phase",
+          "first_index",
+          "page_index",
+          "payload_bytes",
+          "samples"
+        ],
+        "title": "Page",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "v": {
+        "const": 2,
+        "default": 2,
+        "title": "V",
+        "type": "integer"
+      },
+      "kind": {
+        "const": "event",
+        "default": "event",
+        "title": "Kind",
+        "type": "string"
+      },
+      "device_id": {
+        "maxLength": 96,
+        "minLength": 1,
+        "title": "Device Id",
+        "type": "string"
+      },
+      "boot_id": {
+        "maxLength": 96,
+        "minLength": 1,
+        "title": "Boot Id",
+        "type": "string"
+      },
+      "node_role": {
+        "anyOf": [
+          {
+            "enum": [
+              "A",
+              "B"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Node Role"
+      },
+      "event_seq": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Event Seq",
+        "type": "integer"
+      },
+      "uptime_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Uptime Us",
+        "type": "integer"
+      },
+      "run_id": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Run Id"
+      },
+      "name": {
+        "const": "crypto.benchmark",
+        "title": "Name",
+        "type": "string"
+      },
+      "data": {
+        "$ref": "#/$defs/Page"
+      }
+    },
+    "required": [
+      "device_id",
+      "boot_id",
+      "node_role",
+      "event_seq",
+      "uptime_us",
+      "run_id",
+      "name",
+      "data"
+    ],
+    "title": "Event",
+    "type": "object"
+  },
+  "result": {
+    "$defs": {
+      "Counts": {
+        "additionalProperties": false,
+        "properties": {
+          "first_call": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "First Call",
+            "type": "integer"
+          },
+          "warmup": {
+            "maximum": 50,
+            "minimum": 0,
+            "title": "Warmup",
+            "type": "integer"
+          },
+          "timed": {
+            "maximum": 10000,
+            "minimum": 0,
+            "title": "Timed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "first_call",
+          "warmup",
+          "timed"
+        ],
+        "title": "Counts",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "const": "crypto_benchmark",
+        "title": "Kind",
+        "type": "string"
+      },
+      "profile": {
+        "const": "local_crypto_benchmark_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "vector_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Vector Sha256",
+        "type": "string"
+      },
+      "payload_bytes": {
+        "enum": [
+          16,
+          64,
+          160,
+          199
+        ],
+        "title": "Payload Bytes",
+        "type": "integer"
+      },
+      "iterations_requested": {
+        "maximum": 10000,
+        "minimum": 1,
+        "title": "Iterations Requested",
+        "type": "integer"
+      },
+      "pages_emitted": {
+        "maximum": 100000,
+        "minimum": 0,
+        "title": "Pages Emitted",
+        "type": "integer"
+      },
+      "samples_lost": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Samples Lost",
+        "type": "integer"
+      },
+      "checked_complete": {
+        "title": "Checked Complete",
+        "type": "boolean"
+      },
+      "checked_counts": {
+        "additionalProperties": {
+          "$ref": "#/$defs/Counts"
+        },
+        "propertyNames": {
+          "enum": [
+            "encrypt",
+            "decrypt",
+            "invalid_tag",
+            "copy"
+          ]
+        },
+        "title": "Checked Counts",
+        "type": "object"
+      },
+      "implementation": {
+        "const": "PSA_GCM_MbedTLS_4.1.0_TFPSA_1.1.0",
+        "title": "Implementation",
+        "type": "string"
+      },
+      "timer": {
+        "const": "platform_monotonic_us",
+        "title": "Timer",
+        "type": "string"
+      },
+      "timestamp_resolution_us": {
+        "const": 1,
+        "title": "Timestamp Resolution Us",
+        "type": "integer"
+      },
+      "configured_cpu_frequency_mhz": {
+        "maximum": 1000,
+        "minimum": 0,
+        "title": "Configured Cpu Frequency Mhz",
+        "type": "integer"
+      },
+      "dynamic_frequency_enabled": {
+        "title": "Dynamic Frequency Enabled",
+        "type": "boolean"
+      },
+      "hardware_aes_configured": {
+        "title": "Hardware Aes Configured",
+        "type": "boolean"
+      },
+      "buffer_policy": {
+        "const": "fixed_nonoverlap_215B_output_16_sample_page",
+        "title": "Buffer Policy",
+        "type": "string"
+      },
+      "measurement": {
+        "const": "one_shot_PSA_call_including_provider_internal_work",
+        "title": "Measurement",
+        "type": "string"
+      },
+      "first_call_scope": {
+        "const": "first_per_path_in_this_batch_not_cold_boot",
+        "title": "First Call Scope",
+        "type": "string"
+      },
+      "copy_baseline": {
+        "const": "memcpy_payload_plus_16_tag_bytes_no_authentication",
+        "title": "Copy Baseline",
+        "type": "string"
+      },
+      "public_vector_material_only": {
+        "const": true,
+        "title": "Public Vector Material Only",
+        "type": "boolean"
+      },
+      "duration_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Duration Us",
+        "type": "integer"
+      },
+      "stop_reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Stop Reason"
+      }
+    },
+    "required": [
+      "kind",
+      "profile",
+      "schema_sha256",
+      "vector_sha256",
+      "payload_bytes",
+      "iterations_requested",
+      "pages_emitted",
+      "samples_lost",
+      "checked_complete",
+      "checked_counts",
+      "implementation",
+      "timer",
+      "timestamp_resolution_us",
+      "configured_cpu_frequency_mhz",
+      "dynamic_frequency_enabled",
+      "hardware_aes_configured",
+      "buffer_policy",
+      "measurement",
+      "first_call_scope",
+      "copy_baseline",
+      "public_vector_material_only",
+      "duration_us",
+      "stop_reason"
+    ],
+    "title": "Result",
+    "type": "object"
+  }
+}
