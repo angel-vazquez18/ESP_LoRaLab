@@ -22,3 +22,6 @@ size_t rf_ack_take(rf_ack_receiver *, int64_t now_us, uint8_t out[56]);
 void rf_ack_cancel(rf_ack_receiver *);
 bool rf_ack_matches(const void *ack, size_t ack_bytes, const void *outstanding_data,
                     size_t data_bytes, uint16_t fragment_bytes);
+
+// Structural reference match only. Protected ACK authentication is the owner's responsibility.
+bool rf_ack_header_matches(const uint8_t ack[40], const uint8_t data[40]);

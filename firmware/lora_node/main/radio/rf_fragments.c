@@ -87,20 +87,21 @@ static uint64_t read_be(const uint8_t *p, unsigned size)
         value = (value << 8) | *p++;
     return value;
 }
-bool rf_data_decode(const void *frame, size_t length, uint16_t fragment, rf_data_view *out)
+bool rf_data_inspect(const void *frame, size_t length, uint16_t fragment, rf_data_view *out)
 {
     const uint8_t *p = frame;
     if (!p || !out || length <= 40 || length > 255 || memcmp(p, "LT", 2) || p[2] != 2 ||
-        p[3] != 1 || p[4] & ~2U || p[7] > 1 || !read_be(p + 16, 4) || read_be(p + 34, 4) ||
+        p[3] != 1 || p[4] & ~3U || p[7] > 1 || !read_be(p + 16, 4) || read_be(p + 34, 4) ||
         read_be(p + 38, 2))
         return false;
     rf_message_plan plan;
     if (!rf_message_plan_init(&plan, read_be(p + 8, 8), 1, read_be(p + 20, 4), p[5], p[6], p[7],
-                              false, p[4] & 2, read_be(p + 28, 4), fragment))
+                              p[4] & 1, p[4] & 2, read_be(p + 28, 4), fragment))
         return false;
     uint16_t index = read_be(p + 24, 2);
     if (read_be(p + 26, 2) != plan.fragment_count || index >= plan.fragment_count ||
-        read_be(p + 32, 2) != body_bytes(&plan, index) || length != 40U + body_bytes(&plan, index))
+        read_be(p + 32, 2) != body_bytes(&plan, index) ||
+        length != 40U + body_bytes(&plan, index) + ((p[4] & 1) ? 16U : 0U))
         return false;
     *out = (rf_data_view){.session = plan.session,
                           .frame_sequence = read_be(p + 16, 4),
@@ -113,6 +114,15 @@ bool rf_data_decode(const void *frame, size_t length, uint16_t fragment, rf_data
                           .destination = plan.destination,
                           .content = plan.content,
                           .flags = plan.flags,
-                          .body = p + 40};
+                          .body = (p[4] & 1) ? NULL : p + 40};
+    return true;
+}
+
+bool rf_data_decode(const void *frame, size_t length, uint16_t fragment, rf_data_view *out)
+{
+    rf_data_view candidate;
+    if (!out || !rf_data_inspect(frame, length, fragment, &candidate) || (candidate.flags & 1))
+        return false;
+    *out = candidate;
     return true;
 }

@@ -36,3 +36,7 @@ typedef struct
 } rf_data_view;
 /* Validated unprotected view; its body borrows the caller's frame storage. */
 bool rf_data_decode(const void *frame, size_t frame_bytes, uint16_t fragment_bytes, rf_data_view *);
+
+// Bounded wire inspection only; protected bodies are NULL until authenticated.
+bool rf_data_inspect(const void *frame, size_t frame_bytes, uint16_t fragment_bytes,
+                     rf_data_view *);

@@ -139,12 +139,16 @@ bool rf_ack_matches(const void *ack, size_t ack_bytes, const void *data, size_t 
 {
     rf_data_view v;
     const uint8_t *p = ack;
-    if (!p || ack_bytes != 40 || !rf_data_decode(data, data_bytes, fragment, &v) || v.flags != 2 ||
-        memcmp(p, "LT", 2) || p[2] != 2 || p[3] != 2 || p[4] || p[5] != v.destination ||
-        p[6] != v.source || p[7] != v.content || be(p + 8, 8) != v.session || !be(p + 16, 4) ||
-        be(p + 20, 4) != v.message_id || be(p + 24, 2) != v.fragment_index ||
-        be(p + 26, 2) != v.fragment_count || be(p + 28, 4) != v.message_bytes || be(p + 32, 2) ||
-        be(p + 34, 4) != v.frame_sequence || be(p + 38, 2))
+    return p && ack_bytes == 40 && rf_data_decode(data, data_bytes, fragment, &v) && v.flags == 2 &&
+           rf_ack_header_matches(p, data);
+}
+bool rf_ack_header_matches(const uint8_t p[40], const uint8_t d[40])
+{
+    if (!p || !d || (d[4] != 2 && d[4] != 3) || memcmp(d, "LT", 2) || d[2] != 2 || d[3] != 1 ||
+        memcmp(p, "LT", 2) || p[2] != 2 || p[3] != 2 || p[4] != (d[4] & 1) || p[5] != d[6] ||
+        p[6] != d[5] || p[7] != d[7] || memcmp(p + 8, d + 8, 8) || !be(p + 16, 4) ||
+        memcmp(p + 20, d + 20, 12) || be(p + 32, 2) || be(p + 34, 4) != be(d + 16, 4) ||
+        be(p + 38, 2))
         return false;
     return true;
 }

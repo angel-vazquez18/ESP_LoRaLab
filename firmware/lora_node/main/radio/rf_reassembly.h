@@ -23,7 +23,7 @@ void rf_reassembly_destroy(rf_reassembly *);
 bool rf_reassembly_begin(rf_reassembly *, uint32_t message, uint8_t content, uint8_t flags,
                          uint32_t message_bytes, const uint8_t sha256[32], int64_t now_us,
                          int64_t deadline_us);
-/* Unprotected DATA only. GCM must be integrated before protected frames can enter. */
+/* Unprotected DATA entry; protected input uses the trusted authenticated entry below. */
 rf_reassembly_result rf_reassembly_accept(rf_reassembly *, const void *, size_t, int64_t now_us);
 rf_reassembly_result rf_reassembly_poll(rf_reassembly *, int64_t now_us);
 void rf_reassembly_cancel(rf_reassembly *);
@@ -31,3 +31,8 @@ void rf_reassembly_cancel(rf_reassembly *);
 size_t rf_reassembly_missing(const rf_reassembly *, uint16_t first, uint16_t *out, size_t capacity);
 /* Borrow once; pointer remains valid until begin/cancel/destroy. */
 bool rf_reassembly_take(rf_reassembly *, const void **bytes, size_t *length, uint8_t sha256[32]);
+
+// Trusted caller only, after session authentication/replay policy; keeps protected flags.
+rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *, const uint8_t header[40],
+                                                        const uint8_t *body, size_t body_bytes,
+                                                        int64_t now_us);
