@@ -69,6 +69,8 @@ typedef struct
     rf_sender *transmitter;
     rf_ack_receiver *acknowledgments;
     bool ack_pending, ack_transmitting;
+    uint8_t protected_ack_header[40];
+    int64_t protected_ack_due;
     int64_t receive_deadline, drain_deadline;
     uint32_t frame_attempts, frame_originals;
     rf_message_plan fragments;

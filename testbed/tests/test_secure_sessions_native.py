@@ -29,9 +29,9 @@ def test_close_retires_keys_and_cached_setup_without_echoing_secrets(native_libr
         opened = node.send(command)
         assert next(r for r in opened if r["kind"] == "reply")["ok"]
         ready = node.request("status.get")["result"]
-        assert ready["security_ready"] and not ready["capability_availability"]["security_gcm"]
+        assert ready["security_ready"] and ready["capability_availability"]["security_gcm"]
         blocked = node.request("run.prepare", {"spec": {}, "budget": {}}, run_id=run)
-        assert not blocked["ok"] and blocked["error"]["code"] == "MISSING_CAPABILITY"
+        assert not blocked["ok"] and blocked["error"]["code"] == "INVALID_STATE"
         closed = node.request("session.close", {}, run_id=run)
         assert closed["ok"] and not node.request("status.get")["result"]["security_ready"]
         replay = next(r for r in node.send(command) if r["kind"] == "reply")

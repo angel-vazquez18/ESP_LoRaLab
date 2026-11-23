@@ -1,6 +1,7 @@
 #pragma once
 #include "radio/node_radio.h"
 #include "radio/rf_frames.h"
+#include "security/session_crypto.h"
 
 typedef struct rf_sender rf_sender;
 typedef enum
@@ -18,6 +19,7 @@ typedef struct
     uint32_t state, originals, attempts, acks, rejected_acks;
     int64_t ack_deadline_us, retry_at_us;
     const char *reason;
+    uint32_t last_ack_acceptance;
 } rf_sender_status;
 
 uint32_t rf_radio_airtime_us(const node_radio_settings *, size_t frame_bytes);
@@ -31,3 +33,6 @@ bool rf_sender_begin(rf_sender *, const void *frame, size_t frame_bytes, uint16_
 bool rf_sender_poll(rf_sender *, node_radio_event *observation);
 void rf_sender_snapshot(const rf_sender *, rf_sender_status *);
 void rf_sender_cancel(rf_sender *);
+
+// Borrow a session owner before beginning work; retained retries never invoke seal.
+bool rf_sender_security(rf_sender *, rf_secure_session *);
