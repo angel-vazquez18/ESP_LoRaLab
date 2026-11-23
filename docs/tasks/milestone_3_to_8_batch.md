@@ -205,3 +205,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Physical backend restored at8000 and B identified on14601 (boot101, original
   local-audio build a5ecf08a…); A not enumerated, PCB revision still unknown.
   Preparing this issue's scoped commits/PR before M6 #36.
+
+- #29: PR #182 (`chore/codec2-mode3200` → `feat/private-host-sessions`)
+  is ready for review with four scoped commits, 603 passing checks and the selected-
+  board build. Issue status is Testing; no merge. Starting #36 for finite committed-
+  PCM encoding, fresh state and a separate immutable encoded artifact.
