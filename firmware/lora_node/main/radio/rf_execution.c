@@ -926,6 +926,11 @@ static bool resume_receive(rf_execution *r)
     int64_t now = r->port.now_us(r->port.context);
     int64_t until = r->delivered ? r->drain_deadline : r->receive_deadline;
     int64_t remaining = until - now;
+    if (remaining <= 0 && r->delivered && !r->ack_pending && !r->ack_transmitting)
+    {
+        finish(r, "completed", false); // The completed drain can expire between timer reads.
+        return true;
+    }
     return remaining > 0 &&
            node_radio_rx(r->radio, 255, remaining > 30000000 ? 30000000 : remaining);
 }
