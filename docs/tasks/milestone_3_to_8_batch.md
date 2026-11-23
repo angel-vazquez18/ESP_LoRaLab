@@ -165,3 +165,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   two-node lost-ACK recovery with one delivery and exact readback. Final full
   checks passed 562 cases without skips and selected-board IDF build (0x65390,
   60% app free). Host protection remains gated until #63; physical #67 pending.
+
+- #60: PR #180 (`feat/authenticated-replay-window` →
+  `feat/local-crypto-benchmark`) is ready for review, 562 checks and final IDF
+  build passed. No merge or physical RF claim. Starting #63's private host key
+  owner, allowlisted setup traces and persistence guards.
