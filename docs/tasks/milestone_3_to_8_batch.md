@@ -194,3 +194,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   currently exposes only `esp-f85b1ba27744`. Physical backend is stopped; neither
   port has been opened or flashed. Printed PCB revisions remain unobserved.
   Next: M6 #29, pinned Codec 2 mode 3200 dependency/provenance.
+
+- #29 implemented: pinned official Codec 2 1.2.0 subset, reproducible retained
+  codebook/resources/notices, actual frame queries and metadata with codec commands
+  still unavailable. Allocator probing reproduced an upstream 4480-byte partial-
+  construction leak; the recorded local cleanup patch passes all eleven actual
+  failure positions and a following fresh query. Final `make check`: 603 cases,
+  no skips, lint/frontend/contracts/repository/resource hashes pass. Focused codec/
+  control: 93. IDF: 0x6c950, 58% app free, +29,904 bytes over #63; no flash.
+  Physical backend restored at8000 and B identified on14601 (boot101, original
+  local-audio build a5ecf08a…); A not enumerated, PCB revision still unknown.
+  Preparing this issue's scoped commits/PR before M6 #36.

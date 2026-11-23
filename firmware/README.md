@@ -4,7 +4,7 @@ Two standalone ESP-IDF v6.0.2 projects live here:
 
 | Project | Current behavior | Purpose |
 | --- | --- | --- |
-| `lora_node/` | Main-control NDJSON, identity/health, ownership, memory probe | Main node development, one image for A/B |
+| `lora_node/` | Main control, artifacts/audio, selected-board finite RF/security and codec dependency | Main node development, one image for A/B |
 | `diagnostic/` | v2 diagnostic serial/health subset | Existing hardware diagnostic reference |
 
 The original scaffold was relocated from root `lora_node/` without replacing its C source.
@@ -12,9 +12,11 @@ Old build output and sdkconfig were preserved under ignored `local/migration/`.
 The old sdkconfig selected only 2 MiB flash; the new tracked defaults select the
 confirmed ESP32-S3 / 16 MiB flash, 2 MiB PSRAM and USB Serial/JTAG. The main
 target now uses one NDJSON writer and suppresses ordinary application logs after
-initialization. No RF/audio peripheral driver is initialized. The new control
-image is not flashed or physically accepted yet; see
-[Milestone 1 review](../docs/milestone_1_review.md).
+initialization. Audio and RF initialization follow explicit wiring/board settings;
+RF stays untouched when no variant is selected. Current capability and physical
+acceptance limits are recorded in [status](../docs/status.md). The main target now
+has a pinned [Codec 2 component](../docs/codec2_dependency.md); encode/decode
+operations remain separate work.
 
 From repository root, activate ESP-IDF then build either target:
 

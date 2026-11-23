@@ -168,3 +168,12 @@ keys, safe setup evidence, verified readback and separate RF/authentication/ACK
 observations. Follow [protected host sessions](protected_host_sessions.md) for the
 31-case focused command, matching execution fingerprint, GUI/CLI review and
 remaining physical checks. Keys are never operator inputs or saved evidence.
+
+## Pinned speech codec (#29)
+
+Run `uv run --project testbed pytest testbed/tests/test_codec2_dependency.py -q`
+for real library geometry/mode exclusion, public metadata and partial-constructor
+cleanup. `make check` also verifies retained dependency hashes without downloading
+sources. The native fixture requires CMake/a host compiler; missing prerequisites
+fail instead of substituting a codec. [Reimport, build/size and review notes](codec2_dependency.md)
+record the target impact and distinguish library readiness from codec operations.
