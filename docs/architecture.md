@@ -230,3 +230,11 @@ Control owns its serial operation/cancellation lifecycle. `crypto_benchmark_v2.p
 owns the additive schema and independent raw-page assessment; Host/API/CLI use
 that same path and the existing observation store. This never borrows an ordinary
 session key or radio path. See [measurement details](crypto_benchmark.md).
+
+The private session owner now also contains the 128-frame replay bitmap and
+16 accepted-DATA hashes. `rf_secure_receive` authenticates before a trusted
+metadata/insertion callback and commits only its success. Protected radio execution
+uses this boundary for DATA and referenced ACKs; raw header inspection never
+exposes ciphertext as plaintext. The sender retains a single sealed DATA frame
+for exact retries, while receivers seal new ACKs with fresh local sequences.
+See [protected replay](protected_replay.md). Safe host key provisioning follows #63.

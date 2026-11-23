@@ -6,12 +6,12 @@ client, logical role, run/session ID and peer device/boot through the existing
 execution lifecycle. The private `security/session_crypto` owner imports separate
 TX/RX volatile PSA handles. Keys and counters are created/retired together.
 
-This is a lifecycle slice. `security_gcm` stays false, protected `run.prepare`
-rejects before RF, and the shared host explicitly blocks protected provisioning
-before trace callbacks. Ordinary host runs still use `none`/null keys until
-replay/transport integration (#60) and safe host provisioning (#63). The existing
-`security_ready` health field reports loaded usable keys; it does not promise
-protected radio execution. No new firmware was flashed for these checks.
+The main image now uses this owner in the [protected radio/replay path](protected_replay.md)
+from #60. It advertises node GCM support when the selected radio is available;
+`security_ready` separately reports loaded usable keys. Shared host provisioning
+remains blocked before trace callbacks until #63 supplies fresh ephemeral keys
+and persistence guards. Local public-vector measurements are implemented in #53.
+No new firmware was flashed for these software checks.
 
 ## Source ownership and sequence reservation
 
@@ -27,7 +27,7 @@ sequence greater than the previous attempted seal, and burns it before calling
 the cipher. Unused/skipped reservations and failed attempts never return to the
 pool. Once the final sequence is used, neither another reservation nor encrypting
 that same header succeeds. Exact retries use retained ciphertext without sealing
-again. DATA/ACK/ECHO must share this owner when transport is integrated.
+again. DATA and ACK now share the appropriate source owner; future ECHO must do the same.
 
 The owner validates source/session binding before cipher use. It preserves the
 frame primitive’s private plaintext scratch and unchanged output on failure.

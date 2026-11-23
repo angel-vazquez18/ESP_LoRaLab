@@ -156,3 +156,13 @@ advertisement and ordinary host provisioning remain blocked until their replay/
 transport and safe provisioning implementation. See
 [session key lifetime](session_key_lifecycle.md) for exact limits, erasure checks
 and compatibility migration.
+
+## Protected known-data node slice (#60)
+
+The main image now accepts matching protected known-data specifications after
+owned private setup. GCM authentication/replay checks precede insertion, DATA
+retries reuse exact bytes, and eligible duplicate DATA produces a fresh referenced
+protected ACK without second delivery. Timing budgets include tag bytes and
+56-byte ACKs. Node GCM capability reflects selected radio availability; ordinary
+host provisioning remains gated pending #63. See [review, checks and physical
+limits](protected_replay.md). No physical RF/security qualification is established.

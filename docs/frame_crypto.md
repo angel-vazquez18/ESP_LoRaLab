@@ -89,9 +89,10 @@ from #44 remain the byte oracle, not a replacement native cipher.
 
 The main image now composes the primitive through #52’s private session-key
 owner. Owned firmware setup can load keys and enforce nonce lifetime, while
-`security_gcm` remains false and protected RF/host work is blocked. #60 must
-integrate replay/transport before application insertion, and #63 must provision/
-redact keys through the shared host. #53 adds local measurements. See
+#60's [protected radio/replay integration](protected_replay.md) authenticates before
+application insertion and advertises node GCM support with an available radio.
+#63 must still provision/redact keys through the shared host; ordinary protected
+operator runs remain blocked. #53 supplies checked local measurements. See
 [session lifetime](session_key_lifecycle.md).
 No protected operator run or physical security result is claimed by this slice.
 
