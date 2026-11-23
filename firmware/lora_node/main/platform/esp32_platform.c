@@ -111,6 +111,13 @@ void esp32_platform_init(node_platform *platform)
     *platform = (node_platform){
         .audio = esp32_audio_port(),
         .radio = esp32_radio_init(),
+        .cpu_frequency_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
+#ifdef CONFIG_MBEDTLS_HARDWARE_AES
+        .hardware_aes = true,
+#endif
+#ifdef CONFIG_PM_ENABLE
+        .dynamic_frequency = true,
+#endif
         .now_us = uptime,
         .sha256 = hash,
         .random_bytes = random_bytes,

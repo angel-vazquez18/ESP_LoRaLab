@@ -13,6 +13,8 @@
 #include "protocol/strict_json.h"
 #include "protocol/secure_json.h"
 #include "protocol/chunk_bytes.h"
+#include "security/crypto_benchmark.h"
+#include "generated/crypto_benchmark_profile.h"
 
 typedef struct {
     uint32_t sequence;
@@ -35,7 +37,9 @@ typedef struct {
 } record_queue;
 
 typedef struct {
-    bool active, verifying, audio, capture;
+    bool active, verifying, audio, capture, benchmark;
+    crypto_benchmark *crypto;
+    crypto_benchmark_status crypto_status;
     char artifact_id[37];
     node_audio_progress audio_progress;
     char id[37], run_id[37];
@@ -267,8 +271,16 @@ static cJSON *capabilities(node_control *n)
     number(n, limits, "diag_max_payload_bytes", NODE_PROBE_BYTES);
     number(n, limits, "operation_timeout_us", NODE_OPERATION_US);
     number(n, limits, "operation_slice_bytes", 512);
-    cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe"}, 1);
+    cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe", "crypto_benchmark"}, 2);
     add(n, limits, "diag_kinds", kinds);
+    cJSON *benchmark = object(n);
+    string(n, benchmark, "profile", CRYPTO_BENCH_PROFILE);
+    string(n, benchmark, "schema_sha256", CRYPTO_BENCH_SCHEMA_SHA256);
+    string(n, benchmark, "vector_sha256", CRYPTO_BENCH_VECTOR_SHA256);
+    number(n, benchmark, "max_iterations", CRYPTO_BENCH_MAX_ITERATIONS);
+    number(n, benchmark, "warmup_operations", CRYPTO_BENCH_WARMUPS);
+    number(n, benchmark, "page_samples", CRYPTO_BENCH_PAGE);
+    add(n, limits, "crypto_benchmark", benchmark);
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
@@ -358,7 +370,7 @@ static cJSON *health(node_control *n)
     add(n, memory, "psram", heap(n, &psram));
     number(n, buffers, "serial_rx", n->used);
     number(n, buffers, "serial_tx_queued", queued_bytes(&n->replies) + queued_bytes(&n->events));
-    number(n, buffers, "diagnostic", n->op.active && !n->op.audio ? n->op.bytes : 0);
+    number(n, buffers, "diagnostic", n->op.active && n->op.benchmark ? crypto_benchmark_bytes() : n->op.active && !n->op.audio ? n->op.bytes : 0);
     number(n, buffers, "artifacts_reserved", artifact_store_reserved_bytes(n->artifacts));
     add(n, memory, "buffers", buffers);
     number(n, memory, "allocation_failures", failures);
@@ -426,6 +438,63 @@ static void remember_error(node_control *n, const char *code, const char *messag
     snprintf(n->error_code, sizeof(n->error_code), "%s", code);
     snprintf(n->error_message, sizeof(n->error_message), "%s", message);
 }
+static const char *const benchmark_paths[] = {"encrypt", "decrypt", "invalid_tag", "copy"};
+static const char *const benchmark_phases[] = {"first_call", "warmup", "timed"};
+static bool benchmark_page(node_control *n)
+{
+    const crypto_benchmark_page *page = crypto_benchmark_pending(n->op.crypto);
+    if (!page) return true;
+    cJSON *data = object(n), *samples = cJSON_CreateArray();
+    string(n, data, "operation_id", n->op.id);
+    string(n, data, "path", benchmark_paths[page->path]);
+    string(n, data, "phase", benchmark_phases[page->phase]);
+    number(n, data, "first_index", page->first_index);
+    number(n, data, "page_index", crypto_benchmark_progress(n->op.crypto).pages_emitted);
+    number(n, data, "payload_bytes", n->op.bytes);
+    for (unsigned i = 0; i < page->count; i++) {
+        cJSON *sample = cJSON_CreateArray();
+        if (!sample || !cJSON_AddItemToArray(sample, cJSON_CreateNumber(page->samples[i].start_us)) ||
+            !cJSON_AddItemToArray(sample, cJSON_CreateNumber(page->samples[i].end_us)) ||
+            !cJSON_AddItemToArray(sample, cJSON_CreateBool(page->samples[i].checked)) ||
+            !cJSON_AddItemToArray(samples, sample)) { cJSON_Delete(sample); n->oom = true; break; }
+    }
+    add(n, data, "samples", samples);
+    if (!emit(n, "crypto.benchmark", data, n->op.run_id[0] ? n->op.run_id : NULL)) return false;
+    crypto_benchmark_ack(n->op.crypto);
+    return true;
+}
+static void benchmark_result(node_control *n, cJSON *result)
+{
+    operation *op = &n->op;
+    string(n, result, "kind", "crypto_benchmark");
+    string(n, result, "profile", CRYPTO_BENCH_PROFILE);
+    string(n, result, "schema_sha256", CRYPTO_BENCH_SCHEMA_SHA256);
+    string(n, result, "vector_sha256", CRYPTO_BENCH_VECTOR_SHA256);
+    number(n, result, "payload_bytes", op->bytes);
+    number(n, result, "iterations_requested", op->iterations);
+    number(n, result, "pages_emitted", op->crypto_status.pages_emitted);
+    number(n, result, "samples_lost", op->crypto_status.samples_lost);
+    boolean(n, result, "checked_complete", op->crypto_status.finished && !op->crypto_status.failed && !op->crypto_status.samples_lost);
+    cJSON *counts = object(n);
+    for (unsigned path = 0; path < 4; path++) {
+        cJSON *phases = object(n);
+        for (unsigned phase = 0; phase < 3; phase++)
+            number(n, phases, benchmark_phases[phase], op->crypto_status.checked[path][phase]);
+        add(n, counts, benchmark_paths[path], phases);
+    }
+    add(n, result, "checked_counts", counts);
+    string(n, result, "implementation", "PSA_GCM_MbedTLS_4.1.0_TFPSA_1.1.0");
+    string(n, result, "timer", "platform_monotonic_us");
+    number(n, result, "timestamp_resolution_us", 1);
+    number(n, result, "configured_cpu_frequency_mhz", n->port.cpu_frequency_mhz);
+    boolean(n, result, "dynamic_frequency_enabled", n->port.dynamic_frequency);
+    boolean(n, result, "hardware_aes_configured", n->port.hardware_aes);
+    string(n, result, "buffer_policy", "fixed_nonoverlap_215B_output_16_sample_page");
+    string(n, result, "measurement", "one_shot_PSA_call_including_provider_internal_work");
+    string(n, result, "first_call_scope", "first_per_path_in_this_batch_not_cold_boot");
+    string(n, result, "copy_baseline", "memcpy_payload_plus_16_tag_bytes_no_authentication");
+    boolean(n, result, "public_vector_material_only", true);
+}
 static cJSON *manifest(node_control *n, const artifact_manifest *m);
 static void finish_operation(node_control *n, const char *status, const char *code,
                              const char *message)
@@ -434,6 +503,18 @@ static void finish_operation(node_control *n, const char *status, const char *co
         return;
     operation *op = &n->op;
     char audio_error[161];
+    if (op->benchmark) {
+        unsigned lost = 0;
+        const crypto_benchmark_page *page = crypto_benchmark_pending(op->crypto);
+        if (page && !benchmark_page(n)) lost = page->count;
+        op->crypto_status = crypto_benchmark_progress(op->crypto);
+        op->crypto_status.samples_lost += lost;
+        if (!crypto_benchmark_destroy(&op->crypto)) {
+            op->crypto_status.failed = true;
+            status = "failed"; code = "INTERNAL_ERROR"; message = "Benchmark key retirement failed";
+        }
+        if (code) op->crypto_status.failed = true;
+    }
     if (op->audio) {
         n->port.audio.stop(n->port.context);
         n->port.audio.poll(n->port.context, &op->audio_progress);
@@ -460,9 +541,10 @@ static void finish_operation(node_control *n, const char *status, const char *co
     if (code)
         remember_error(n, code, message);
     n->oom = false;
-    cJSON *data = object(n), *result = code ? cJSON_CreateNull() : object(n);
-    if (!code) {
-        if (op->audio) {
+    cJSON *data = object(n), *result = code && !op->benchmark ? cJSON_CreateNull() : object(n);
+    if (!code || op->benchmark) {
+        if (op->benchmark) benchmark_result(n, result);
+        else if (op->audio) {
             string(n, result, "kind", op->capture ? "audio.capture" : "audio.play");
             string(n, result, "artifact_id", op->artifact_id);
             number(n, result, "sample_rate_hz", AUDIO_SAMPLE_RATE);
@@ -599,7 +681,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, BENCHMARK, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -870,9 +952,17 @@ static void process(node_control *n, size_t length)
                 code = "INVALID_ARGUMENT";
                 field = "args";
                 message = "Invalid diagnostic kind or bounded workload";
+            } else if (eq(text(args, "kind"), "crypto_benchmark")) {
+                bytes = (uint32_t)item(args, "payload_bytes")->valuedouble;
+                iterations = (uint32_t)item(args, "iterations")->valuedouble;
+                if (bytes != 16 && bytes != 64 && bytes != 160 && bytes != 199) {
+                    code = "INVALID_ARGUMENT"; message = "Benchmark payload must be 16, 64, 160 or 199 bytes";
+                } else if (n->op.active || n->op.crypto || rf_execution_busy(&n->rf)) {
+                    code = "BUSY"; message = "Another operation or cleanup is active";
+                } else action = BENCHMARK;
             } else if (!eq(text(args, "kind"), "memory_probe")) {
                 code = "MISSING_CAPABILITY";
-                message = "Only memory_probe diagnostics are implemented";
+                message = "Diagnostic kind is not implemented";
             } else if (n->op.active || rf_execution_busy(&n->rf)) {
                 code = "BUSY";
                 message = "Another operation is active";
@@ -917,7 +1007,7 @@ static void process(node_control *n, size_t length)
             message = "Command is unavailable in this firmware";
         }
     }
-    if (!code && (action == PROBE || action == PLAY || action == CAPTURE)) {
+    if (!code && (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE)) {
                     uint8_t id[16];
                     n->port.random_bytes(n->port.context, id, sizeof(id));
                     id[6] = (id[6] & 15) | 64;
@@ -957,7 +1047,7 @@ static void process(node_control *n, size_t length)
             if (action == CLAIM) number(n,result,"config_revision",n->config_revision);
             if (action == CLAIM || action == RELEASE)
                 string(n, result, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
-            if (action == PROBE || action == PLAY || action == CAPTURE) {
+            if (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
@@ -1070,7 +1160,7 @@ static void process(node_control *n, size_t length)
                            chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-    } else if (action == PROBE || action == PLAY || action == CAPTURE) {
+    } else if (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
         n->op.buffer = probe;
@@ -1082,6 +1172,11 @@ static void process(node_control *n, size_t length)
         const char *run_id = text(cmd, "run_id");
         if (run_id)
             snprintf(n->op.run_id, sizeof(n->op.run_id), "%s", run_id);
+        if (action == BENCHMARK) {
+            n->op.benchmark = true;
+            n->op.crypto = crypto_benchmark_create(bytes, iterations, n->port.context, n->port.now_us);
+            if (!n->op.crypto) finish_operation(n, "failed", "ALLOCATION_FAILED", "Benchmark public key setup failed");
+        }
         if (action == PLAY || action == CAPTURE) {
             n->op.capture = action == CAPTURE;
             n->op.audio = true;
@@ -1133,6 +1228,7 @@ void node_control_destroy(node_control *n)
         return;
     if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
     rf_execution_abort(&n->rf,"host_shutdown",true);
+    if (!crypto_benchmark_destroy(&n->op.crypto)) return; // Retain failed cleanup for retry.
     artifact_store_destroy(n->artifacts);
     wipe_bytes(n, sizeof(*n));
     free(n);
@@ -1160,8 +1256,22 @@ void node_control_tick(node_control *n)
     n->oom=false;
     rf_execution_tick(&n->rf);
     operation *op = &n->op;
+    if (!op->active && op->crypto) crypto_benchmark_destroy(&op->crypto);
     if (op->active && time >= op->deadline) {
         finish_operation(n, "failed", "TIMEOUT", "Operation deadline expired");
+    } else if (op->active && op->benchmark) {
+        // Pause at bounded queue pressure; never include serial work in a call sample.
+        if (n->events.count + 2 <= n->events.capacity) {
+            int64_t slice_start = now(n);
+            for (unsigned i = 0; i < CRYPTO_BENCH_PAGE; i++) {
+                crypto_benchmark_step(op->crypto);
+                if (now(n) - slice_start >= 2000) break;
+            }
+            benchmark_page(n);
+            crypto_benchmark_status progress = crypto_benchmark_progress(op->crypto);
+            if (progress.failed) finish_operation(n, "failed", "INTERNAL_ERROR", "Benchmark output or timer verification failed");
+            else if (progress.finished) finish_operation(n, "completed", NULL, NULL);
+        }
     } else if (op->active && op->audio) {
         n->port.audio.poll(n->port.context, &op->audio_progress);
         if (op->audio_progress.failed)
