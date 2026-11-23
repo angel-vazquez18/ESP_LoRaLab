@@ -1,8 +1,31 @@
 #include <stdio.h>
 #include "codec2.h"
 
-int main(void)
+static int encode_reference(const char *source, const char *destination)
 {
+    FILE *input = fopen(source, "rb");
+    FILE *output = fopen(destination, "wb");
+    struct CODEC2 *state = codec2_create(CODEC2_MODE_3200);
+    int result = 0;
+    if (!input || !output || !state) result = 1;
+    while (!result) {
+        short pcm[160] = {0};
+        unsigned char bits[8];
+        size_t count = fread(pcm, sizeof(short), 160, input);
+        if (!count) break;
+        codec2_encode(state, bits, pcm);
+        if (fwrite(bits, 1, 8, output) != 8) result = 2;
+    }
+    if (input && ferror(input)) result = 3;
+    if (input) fclose(input);
+    if (output && fclose(output)) result = 4;
+    if (state) codec2_destroy(state);
+    return result;
+}
+
+int main(int argc, char **argv)
+{
+    if (argc == 3) return encode_reference(argv[1], argv[2]);
     struct CODEC2 *state = codec2_create(CODEC2_MODE_3200);
     if (!state)
         return 1;
