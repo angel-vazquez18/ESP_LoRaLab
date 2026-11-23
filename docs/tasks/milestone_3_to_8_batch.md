@@ -307,3 +307,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   pass without skips. Host-only, no wire/build/flash change; #64 target prerequisite
   remains 0x6e520. Original 19 files match saved hashes. Preparing PR on #188; next
   #72 voice-stage UI. Physical voice qualification remains #80.
+
+- #68: PR #189 (`feat/secure-voice-workflows` → `feat/protected-voice-content`)
+  is ready for review with seven scoped implementation/test/docs commits and 706
+  full passing cases, no skips. Status Testing, no merge/flash. Starting #72 on
+  its own dependent branch for shared controls, clip inspection, clock labels,
+  integrity, listening and accurate incomplete states.
