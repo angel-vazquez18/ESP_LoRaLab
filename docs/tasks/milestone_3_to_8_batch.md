@@ -238,3 +238,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   conflict resolved preserving parent bounds and child encoding. Preparing scoped
   commits/PR; next #41. Physical B remains original a5ecf08a… at boot 104 on 8000;
   full backup failed twice at 12288 bytes, no flash; A/PCB revisions still pending.
+
+- #36: PR #183 (`feat/finite-pcm-encoding` → `chore/codec2-mode3200`)
+  is ready for review with five scoped implementation/docs commits, 625 full checks,
+  141 focused cases and the 32 KiB selected-board build. Status Testing; no merge
+  or flash. Original 19 saved files still match. The two temporary WIP stashes
+  are retired after all source is committed/pushed. Next M6 #41: complete-artifact
+  decoding with fresh state, bounded PCM output, errors/resources and cleanup.
