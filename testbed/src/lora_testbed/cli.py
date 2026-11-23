@@ -135,6 +135,31 @@ def memory_probe(
 
 
 @app.command()
+def crypto_benchmark(
+    role: str,
+    iterations: Annotated[int, typer.Option(min=1, max=10000)] = 1000,
+    payload_bytes: int = 160,
+):
+    """Start a public-vector local benchmark, with USB/RF outside each timed call."""
+    if role.upper() not in ("A", "B") or payload_bytes not in (16, 64, 160, 199):
+        raise typer.BadParameter("Role must be A/B; payload must be 16, 64, 160 or 199")
+    request(
+        f"/api/nodes/{role.upper()}/crypto-benchmark",
+        {"iterations": iterations, "payload_bytes": payload_bytes},
+    )
+
+
+@app.command()
+def crypto_benchmark_result(role: str, operation_id: str, records: bool = False):
+    """Read retained local measurements; incomplete evidence has no distribution."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(
+        f"/api/nodes/{role.upper()}/crypto-benchmark/{operation_id}?include_records={str(records).lower()}"
+    )
+
+
+@app.command()
 def operation_stop(role: str, operation_id: str):
     """Cancel the selected node operation without disconnecting the node."""
     if role.upper() not in ("A", "B"):

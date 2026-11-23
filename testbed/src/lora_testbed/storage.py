@@ -125,6 +125,17 @@ class Store:
         )
         self.db.commit()
 
+    def node_operation_records(self, role: str, operation_id: str) -> list[dict]:
+        rows = self.db.execute(
+            "SELECT document FROM node_observations WHERE role=? "
+            "AND json_extract(document, '$.kind')='event' "
+            "AND json_extract(document, '$.data.operation_id')=? ORDER BY id LIMIT 40501",
+            (role, operation_id),
+        ).fetchall()
+        if len(rows) > 40500:
+            raise ValueError("Node operation evidence exceeds the bounded benchmark record limit")
+        return [json.loads(row[0]) for row in rows]
+
     def runs(self) -> list[dict]:
         return [
             json.loads(row[0])

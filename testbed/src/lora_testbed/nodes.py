@@ -14,6 +14,7 @@ from . import (
     artifact_contract_v2,
     audio_contract_v2,
     control_v2,
+    crypto_benchmark_v2,
     physical_wire_v2,
     run_protocol_v2,
     v2,
@@ -262,6 +263,13 @@ class NodeSession:
                     self.identity.capabilities, self.health.capability_availability, name
                 )
                 args = audio_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+            if name == "diag.run" and (args or {}).get("kind") == "crypto_benchmark":
+                if self.wire_profile != "node_control" or not self.identity or not self.health:
+                    raise ValueError("Matching main-node benchmark identity and health required")
+                crypto_benchmark_v2.require_capability(
+                    self.identity.capabilities, self.health.capability_availability
+                )
+                args = crypto_benchmark_v2.Arguments.model_validate(args).model_dump()
             self.sequence += 1
             command = v2.Command(
                 command_id=str(uuid4()),
@@ -388,7 +396,13 @@ class NodeSession:
                         if entry and entry[0] == record.command_seq and not entry[1].done():
                             entry[1].set_result(record)
                     elif self.identity:
-                        if record.name not in ("health", "diagnostic", "operation.result"):
+                        if record.name == "crypto.benchmark":
+                            if self.wire_profile != "node_control" or not self.health:
+                                raise ValueError("Benchmark event outside negotiated main profile")
+                            crypto_benchmark_v2.require_capability(
+                                self.identity.capabilities, self.health.capability_availability
+                            )
+                        elif record.name not in ("health", "diagnostic", "operation.result"):
                             require_execution_compatible(
                                 self.identity.model_dump(),
                                 "run.summary",
