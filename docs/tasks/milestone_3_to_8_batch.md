@@ -154,3 +154,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   final full checks passed 556 cases without skips, lint/frontend/contracts/repository checks. Physical batches and
   acceleration/target resource qualification remain pending. Next #60 is replay
   acceptance and authenticated duplicate re-ACK.
+
+- #53: PR #179 (`feat/local-crypto-benchmark` →
+  `feat/ephemeral-session-keys`) is ready for review, 556 checks and IDF build
+  passed. No merge or physical timing claim. Starting #60 replay integration.
