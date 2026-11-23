@@ -648,10 +648,8 @@ void synthesise(int n_samp, codec2_fftr_cfg fftr_inv_cfg,
       Sn_[i] += sw_[j] * Pn[i] * FFTI_FACTOR;
 }
 
-/* todo: this should probably be in some states rather than a static */
-static unsigned long next = 1;
-
-int codec2_rand(void) {
-  next = next * 1103515245 + 12345;
-  return ((unsigned)(next / 65536) % 32768);
+/* Keep phase randomisation in its decoder, preserving the original sequence. */
+int codec2_rand(unsigned long *state) {
+  *state = *state * 1103515245 + 12345;
+  return ((unsigned)(*state / 65536) % 32768);
 }

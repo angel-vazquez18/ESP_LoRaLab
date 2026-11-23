@@ -159,7 +159,8 @@ void sample_phase(MODEL *model, COMP H[],
 void phase_synth_zero_order(
     int n_samp, MODEL *model,
     float *ex_phase, /* excitation phase of fundamental        */
-    COMP H[]         /* L synthesis filter freq domain samples */
+    COMP H[],        /* L synthesis filter freq domain samples */
+    unsigned long *random_state
 
 ) {
   int m;
@@ -190,7 +191,7 @@ void phase_synth_zero_order(
          phase is not needed in the unvoiced case, but no harm in
          keeping it.
       */
-      float phi = TWO_PI * (float)codec2_rand() / CODEC2_RAND_MAX;
+      float phi = TWO_PI * (float)codec2_rand(random_state) / CODEC2_RAND_MAX;
       Ex[m].real = cosf(phi);
       Ex[m].imag = sinf(phi);
     }

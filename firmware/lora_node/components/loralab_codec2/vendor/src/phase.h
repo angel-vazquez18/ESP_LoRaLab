@@ -33,7 +33,7 @@
 
 void sample_phase(MODEL *model, COMP filter_phase[], COMP A[]);
 void phase_synth_zero_order(int n_samp, MODEL *model, float *ex_phase,
-                            COMP filter_phase[]);
+                            COMP filter_phase[], unsigned long *random_state);
 
 void mag_to_phase(float phase[], float Gdbfk[], int Nfft,
                   codec2_fft_cfg fwd_cfg, codec2_fft_cfg inv_cfg);

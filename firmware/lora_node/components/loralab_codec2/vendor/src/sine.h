@@ -47,6 +47,6 @@ void synthesise(int n_samp, codec2_fftr_cfg fftr_inv_cfg, float Sn_[],
                 MODEL *model, float Pn[], int shift);
 
 #define CODEC2_RAND_MAX 32767
-int codec2_rand(void);
+int codec2_rand(unsigned long *state);
 
 #endif

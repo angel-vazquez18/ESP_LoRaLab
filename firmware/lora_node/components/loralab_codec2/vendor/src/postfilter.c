@@ -100,7 +100,7 @@
 
 \*---------------------------------------------------------------------------*/
 
-void postfilter(MODEL *model, float *bg_est) {
+void postfilter(MODEL *model, float *bg_est, unsigned long *random_state) {
   int m, uv;
   float e, thresh;
 
@@ -128,7 +128,7 @@ void postfilter(MODEL *model, float *bg_est) {
   if (model->voiced)
     for (m = 1; m <= model->L; m++)
       if (model->A[m] < thresh) {
-        model->phi[m] = (TWO_PI / CODEC2_RAND_MAX) * (float)codec2_rand();
+        model->phi[m] = (TWO_PI / CODEC2_RAND_MAX) * (float)codec2_rand(random_state);
         uv++;
       }
 

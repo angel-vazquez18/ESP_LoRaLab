@@ -127,6 +127,7 @@ struct CODEC2 *codec2_create(int mode) {
   if (c2 == NULL) return NULL;
 
   c2->mode = mode;
+  c2->random_state = 1;
 
   /* store constants in a few places for convenience */
 
@@ -1645,15 +1646,15 @@ void synthesise_one_frame(struct CODEC2 *c2, short speech[], MODEL *model,
   if (CODEC2_MODE_ACTIVE(CODEC2_MODE_700C, c2->mode)) {
     /* newamp1, we've already worked out rate L phase */
     COMP *H = Aw;
-    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H);
+    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H, &c2->random_state);
   } else {
     /* LPC based phase synthesis */
     COMP H[MAX_AMP + 1];
     sample_phase(model, H, Aw);
-    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H);
+    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H, &c2->random_state);
   }
 
-  postfilter(model, &c2->bg_est);
+  postfilter(model, &c2->bg_est, &c2->random_state);
   synthesise(c2->n_samp, c2->fftr_inv_cfg, c2->Sn_, model, c2->Pn, 1);
 
   for (i = 0; i < c2->n_samp; i++) {
