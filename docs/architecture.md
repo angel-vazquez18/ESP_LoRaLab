@@ -202,8 +202,9 @@ message-level aggregation. ACK observations never inflate original DATA counts.
 
 The session-security contract maps key-bearing fields and future provisioning
 persistence boundaries in [security_sessions.md](security_sessions.md). Current
-execution still rejects non-null keys; session rejection errors omit input
-values before trace/error persistence. Public protected-frame fixtures are
+firmware supports owned private key setup while protected RF and shared-host
+provisioning remain gated; session rejection errors omit input values before
+trace/error persistence. Public protected-frame fixtures are
 independently checked with a dev-only cryptographic oracle, separate from
 firmware GCM and physical security qualification.
 
@@ -213,3 +214,12 @@ authentication; temporary buffers are scrubbed. The actual pinned crypto source
 is used in native checks, with a separate independent vector oracle. Session
 key/sequence/replay orchestration remains the owner’s responsibility; see
 [frame cipher](frame_crypto.md) and the following integration issues.
+
+`security/session_crypto` binds separate private TX/RX handles and reserved
+monotonic source sequences to a session/role. Execution owns its setup/retirement;
+control owns secret setup-cache invalidation and raw-input cleanup.
+`protocol/secure_json` installs startup-only cJSON allocation hooks that wipe
+owned blocks even on parser rejection or failed allocation. Native core and
+primitive checks share the pinned PSA builder in `tests/native_crypto.py`.
+The shared host still blocks protected provisioning before trace callbacks; see
+[session key lifetime and migration](session_key_lifecycle.md).

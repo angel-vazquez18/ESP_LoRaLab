@@ -87,10 +87,12 @@ from #44 remain the byte oracle, not a replacement native cipher.
 
 ## Integration and hardware still pending
 
-The main image compiles the primitive, but ordinary sessions still accept only
-`none`; `security_gcm` remains false. #52 must own key/nonce lifetime and invoke
-this API, #60 must enforce replay before application insertion, and #63 must
-provision/redact keys through the shared host. #53 adds local measurements.
+The main image now composes the primitive through #52’s private session-key
+owner. Owned firmware setup can load keys and enforce nonce lifetime, while
+`security_gcm` remains false and protected RF/host work is blocked. #60 must
+integrate replay/transport before application insertion, and #63 must provision/
+redact keys through the shared host. #53 adds local measurements. See
+[session lifetime](session_key_lifecycle.md).
 No protected operator run or physical security result is claimed by this slice.
 
 Later physical acceptance under #67 must identify both boards/firmware profiles,

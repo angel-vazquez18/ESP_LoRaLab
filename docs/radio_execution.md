@@ -145,3 +145,14 @@ Failed reconstruction emits all available missing-index parts before its result
 and summary. Explicit stop remains bounded even if that report is backpressured,
 and marks interrupted reporting incomplete. See [accounting, review commands and
 physical checks](physical_radio_runs.md#multi-fragment-accounting-and-review-47).
+
+## Owned protected setup (#52)
+
+Firmware `session.open` now accepts the selected protected key variant and
+imports a private role/session-bound owner. Close/stop/ownership loss retires it,
+and readiness reports actual loaded keys. This expands the generated execution
+digest; rebuild matching RF stacks. Protected `run.prepare`, `security_gcm`
+advertisement and ordinary host provisioning remain blocked until their replay/
+transport and safe provisioning implementation. See
+[session key lifetime](session_key_lifecycle.md) for exact limits, erasure checks
+and compatibility migration.
