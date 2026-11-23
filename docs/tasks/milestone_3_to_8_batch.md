@@ -141,3 +141,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Final checks passed 539 cases and selected-board IDF build; no flash. Protected
   RF/host provisioning stay blocked pending #60/#63. Next #53 is a local public-
   vector crypto measurement; full physical acceptance remains #67.
+
+- #52: PR #178 (`feat/ephemeral-session-keys` →
+  `feat/authenticated-radio-frames`) is ready for review, 539 passing checks
+  and the selected-board build. No merge or flash. Starting #53 for checked,
+  bounded node-local crypto measurements independent of serial/RF time.
