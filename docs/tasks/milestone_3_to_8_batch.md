@@ -185,3 +185,12 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   exact bytes, authenticated fragments/ACKs, idle cleanup and mobile width 390.
   Repeated immutable schema generation was profiled and fixed without caching
   live state. No physical port or flash; physical #67 remains pending.
+
+- #63: PR #181 (`feat/private-host-sessions` →
+  `feat/authenticated-replay-window`) is ready for review with scoped Conventional
+  Commits, 587 checks, IDF build and isolated desktop/mobile browser evidence.
+  Issue status is Testing; no merge. Original checkout's 19 saved files still
+  match their hashes. User reports both nodes wired/connected; USB inventory
+  currently exposes only `esp-f85b1ba27744`. Physical backend is stopped; neither
+  port has been opened or flashed. Printed PCB revisions remain unobserved.
+  Next: M6 #29, pinned Codec 2 mode 3200 dependency/provenance.
