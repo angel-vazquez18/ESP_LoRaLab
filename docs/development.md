@@ -160,3 +160,11 @@ For #60, run the two native files listed in [protected replay](protected_replay.
 They check real PSA/C node acceptance and a paired SPI/IRQ fixture with a lost
 protected ACK. Missing/old/bad-tag frames cannot enter application delivery;
 protected fixture results do not qualify physical RF.
+
+## Protected sessions (#63)
+
+The same receiver-first backend now supports AES-128-GCM with fresh per-source/run
+keys, safe setup evidence, verified readback and separate RF/authentication/ACK
+observations. Follow [protected host sessions](protected_host_sessions.md) for the
+31-case focused command, matching execution fingerprint, GUI/CLI review and
+remaining physical checks. Keys are never operator inputs or saved evidence.

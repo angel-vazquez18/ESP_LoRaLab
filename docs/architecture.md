@@ -200,11 +200,11 @@ stop-and-wait states, bounded attempts and retained radio observations. It drive
 the existing real radio API; execution owns stop/lease/shutdown integration and
 message-level aggregation. ACK observations never inflate original DATA counts.
 
-The session-security contract maps key-bearing fields and future provisioning
-persistence boundaries in [security_sessions.md](security_sessions.md). Current
-firmware supports owned private key setup while protected RF and shared-host
-provisioning remain gated; session rejection errors omit input values before
-trace/error persistence. Public protected-frame fixtures are
+The session-security contract maps key-bearing fields and provisioning
+persistence boundaries in [security_sessions.md](security_sessions.md). Firmware
+composes owned private setup, protected RF and replay checks. Shared-host setup
+uses a private ephemeral owner and allowlisted callback records; rejection errors
+omit input values before trace/error persistence. Public protected-frame fixtures are
 independently checked with a dev-only cryptographic oracle, separate from
 firmware GCM and physical security qualification.
 
@@ -221,7 +221,7 @@ control owns secret setup-cache invalidation and raw-input cleanup.
 `protocol/secure_json` installs startup-only cJSON allocation hooks that wipe
 owned blocks even on parser rejection or failed allocation. Native core and
 primitive checks share the pinned PSA builder in `tests/native_crypto.py`.
-The shared host still blocks protected provisioning before trace callbacks; see
+The shared host rejects missing GCM capability before trace callbacks; see
 [session key lifetime and migration](session_key_lifecycle.md).
 
 `security/crypto_benchmark.c` owns the separate public-vector local diagnostic,
@@ -237,4 +237,9 @@ metadata/insertion callback and commits only its success. Protected radio execut
 uses this boundary for DATA and referenced ACKs; raw header inspection never
 exposes ciphertext as plaintext. The sender retains a single sealed DATA frame
 for exact retries, while receivers seal new ACKs with fresh local sequences.
-See [protected replay](protected_replay.md). Safe host key provisioning follows #63.
+See [protected replay](protected_replay.md). #63 implements safe host provisioning
+in `session_keys.py`; `radio_security.py` classifies retained RF/authentication
+stages without inferring rejection from silence. Persistence/export/API guards
+independently reject secret-bearing metadata. Immutable schema digest caches keep
+state polling responsive without caching live health/capability snapshots. See
+[protected host sessions](protected_host_sessions.md).

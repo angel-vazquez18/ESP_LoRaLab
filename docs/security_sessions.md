@@ -3,8 +3,9 @@
 This document maps the selected v2 security contract to the current run APIs.
 The firmware now composes owned private key setup, [session-key retirement](session_key_lifecycle.md)
 and [protected DATA/replay/retry acceptance](protected_replay.md). Available selected
-radios advertise node GCM support; safe ordinary host provisioning remains blocked
-until #63. [Local crypto measurement](crypto_benchmark.md) is implemented in #53.
+radios advertise node GCM support; #63 implements fresh shared-host provisioning,
+allowlisted setup records and independent persistence guards. See
+[protected host sessions](protected_host_sessions.md) for current behavior and checks. [Local crypto measurement](crypto_benchmark.md) is implemented in #53.
 #48 provides the isolated
 [authenticated-frame primitive](frame_crypto.md). Public vectors are conformance
 data, never evidence that installed firmware implements security.
@@ -44,21 +45,20 @@ masking is too late. Redacted setup records are evidence, not replayable setup
 commands. A random `key_set_id` identifies the ephemeral setup without deriving
 anything from either key.
 
-| Existing boundary | Current behavior | Gate before protected provisioning |
-| --- | --- | --- |
-| `NodeSession.request` argument validation | Session errors omit supplied values; protected host setup is blocked before write | Keep safe errors for malformed key/profile/peer input, with no chained input-bearing error |
-| `NodeSession.request(..., on_record=...)` before serial write and after reply | Current valid session keys are null; command snapshots currently include args | Replace secret-bearing snapshots with allowlisted setup facts before invoking the trace callback |
-| `radio_runs.trace` and linked raw NDJSON | Persist callback rows; ordinary setup is unprotected | Reject raw key-bearing rows at the persistence boundary as a second guard |
-| `radio_runs.save`, snapshots, history and exports | Persist public run metadata | Keep keys in a private ephemeral owner, outside run dictionaries, models and artifacts |
-| Node reply/event/error serialization | Owned firmware setup accepts private keys; replies report no key values | Never echo input values or keys; report only readiness/IDs/counts and static errors |
-| Firmware session/duplicate/serial buffers | Private source handles and inputs are retired/wiped in #52 | Explicitly scrub keys, decoded/serialized temporary key bytes and secret-bearing input buffers on retirement; no secret-bearing cached reply |
+| Boundary | Implemented behavior |
+| --- | --- |
+| `NodeSession.request` validation | Protected setup errors omit supplied values and input-bearing exception context |
+| Setup callbacks | Receive allowlisted setup facts/results before any recording, never private command snapshots |
+| Radio/transfer traces and SQLite records | Reject structured and serialized secret-bearing metadata before persistence |
+| Run snapshots/history/export | Retain only the public security profile, independent key-set ID, setup facts and observed-stage assessment |
+| API validation | Reject accidentally supplied secrets without echoing the request input |
+| Node replies/events/errors | Return readiness, IDs and static errors; never input keys |
+| Firmware session/duplicate/serial buffers | Retire private source handles and wipe parser/input buffers on cleanup |
 
-Firmware retirement/input erasure is implemented in #52. Successful host
-provisioning and its persistence guards remain #63; protected operator execution
-is still blocked. The current public-session regression
-proves rejection errors and trace callbacks do not expose supplied key values.
-It does not qualify future successful key provisioning. Never persist
-`ValidationError.errors()` input/context or a raw provisioning request.
+Firmware retirement/input erasure is implemented in #52 and shared-host guards
+in #63. The private host owner is retired immediately after provisioning or any
+partial setup failure. Never persist `ValidationError.errors()` input/context or
+a raw provisioning request. Physical acceptance remains separate under #67.
 
 ## Nonce, header and sequence ownership
 
@@ -150,9 +150,9 @@ uv run --project testbed pytest testbed/tests/test_security_vectors.py testbed/t
 make check
 ```
 
-Expect all focused checks without skips, secret sentinels absent from serialized
-rejection/trace evidence, and no protected request sent to the current node.
-The cipher and owned firmware lifecycle checks now exercise #48/#52 boundaries.
-#60 now supplies protected transport/replay checks. #63 must still add successful
-host-provisioning redaction/cleanup cases, then obtain
-physical qualification under #67. This contract PR does not close those checks.
+Expect all focused checks without skips and secret sentinels absent from serialized
+rejection/trace evidence. #48/#52 cover the cipher and firmware lifecycle; #60
+covers protected transport/replay. #63 adds successful paired runs, actual saved
+file/export scans, partial setup, cancellation and fresh reconnect checks. See
+[the 31-case focused command](protected_host_sessions.md#reproduce-software-checks).
+Physical qualification under #67 remains pending.

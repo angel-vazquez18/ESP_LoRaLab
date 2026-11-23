@@ -402,7 +402,12 @@ sequence under the responder's key. Echo payloads are limited to one fragment.
 The current API mapping, secret-bearing field inventory, lifecycle walkthroughs
 and public protected examples are in [session security](security_sessions.md).
 That document distinguishes the specified protected path from current capability
-gates; its examples do not enable encryption on installed nodes.
+gates; its examples do not enable encryption on installed nodes. The shared
+[protected-session workflow](protected_host_sessions.md) now implements fresh host
+keys and safe setup evidence. Accepted ACKs are recorded as `ack.result` only
+after authentication, replay and outstanding-reference checks; raw `rx.frame`
+arrival alone is not acceptance. Rebuild both sides against its current execution
+fingerprint, preserving older records as historical evidence.
 
 Use the ESP-IDF-supplied Mbed TLS authenticated GCM interface with AES-128 keys,
 12-byte nonce and full 16-byte tag. Never release decryption output until tag
