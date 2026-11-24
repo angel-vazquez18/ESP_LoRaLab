@@ -218,3 +218,11 @@ npm --prefix testbed/frontend run format:check
 ```
 
 Browser steps and expected findings are in `secure_voice_workflows.md`.
+
+PTT and adjacent audio/control checks:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_ptt_native.py testbed/tests/test_ptt_host.py testbed/tests/test_node_audio_native.py testbed/tests/test_node_audio_host.py testbed/tests/test_node_control_native.py -q
+```
+
+Configuration/build and physical prerequisites are in `host_armed_ptt.md`.

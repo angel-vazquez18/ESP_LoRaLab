@@ -12,6 +12,8 @@
 #include "radio/rf_execution.h"
 #include "generated/execution_profile.h"
 #include "generated/audio_profile.h"
+#include "generated/ptt_profile.h"
+#include "input/ptt_gate.h"
 #include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
@@ -47,7 +49,8 @@ typedef struct {
 
 typedef struct {
     codec_memory codec_before, codec_ready, codec_after;
-    bool active, verifying, audio, capture, benchmark, codec;
+    bool active, verifying, audio, capture, benchmark, codec, waiting_ptt, ptt_trigger;
+    ptt_gate button;
     codec_clip *clip;
     codec_clip_status codec_status;
     crypto_benchmark *crypto;
@@ -351,6 +354,13 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
         add(n,limits,"execution_limits",execution_limits);
     }
+    if (n->port.ptt_pressed && n->port.audio.capture) {
+        cJSON *ptt = object(n);
+        string(n, ptt, "profile", PTT_PROFILE);
+        string(n, ptt, "schema_sha256", PTT_SCHEMA_SHA256);
+        add(n, ptt, "commands", cJSON_CreateStringArray((const char *[]){"ptt.arm"}, 1));
+        add(n, limits, "ptt_io", ptt);
+    }
     if (n->port.audio.playback || n->port.audio.capture) {
         cJSON *audio = object(n);
         string(n, audio, "profile", AUDIO_PROFILE);
@@ -447,7 +457,7 @@ static cJSON *health(node_control *n)
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
     boolean(n, o, "security_ready", rf_execution_security_ready(&n->rf));
-    string(n, o, "audio_state", n->op.active && n->op.codec ? (n->op.codec_status.decoding ? "decoding" : "encoding") : n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
+    string(n, o, "audio_state", n->op.active && n->op.waiting_ptt ? "waiting_ptt" : n->op.active && n->op.codec ? (n->op.codec_status.decoding ? "decoding" : "encoding") : n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
         error(n, n->error_code[0] ? n->error_code : NULL, n->error_message, NULL));
@@ -617,8 +627,10 @@ static void finish_operation(node_control *n, const char *status, const char *co
         if (code) op->crypto_status.failed = true;
     }
     if (op->audio) {
-        n->port.audio.stop(n->port.context);
-        n->port.audio.poll(n->port.context, &op->audio_progress);
+        if (!op->waiting_ptt) {
+            n->port.audio.stop(n->port.context);
+            n->port.audio.poll(n->port.context, &op->audio_progress);
+        }
         if (op->capture) {
             if (eq(status, "completed") && !code) {
                 if (artifact_store_capture_finish(n->artifacts, op->artifact_id, op->audio_progress.samples,
@@ -649,6 +661,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
         else if (op->benchmark) benchmark_result(n, result);
         else if (op->audio) {
             string(n, result, "kind", op->capture ? "audio.capture" : "audio.play");
+            if (op->ptt_trigger) string(n, result, "trigger", "host_armed_ptt");
             string(n, result, "artifact_id", op->artifact_id);
             number(n, result, "sample_rate_hz", AUDIO_SAMPLE_RATE);
             number(n, result, "samples_requested", op->bytes / 2);
@@ -864,7 +877,7 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) && !rf_execution_command(name) &&
+    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !eq(name, "ptt.arm") && !artifact_command(name) && !rf_execution_command(name) &&
         !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
@@ -1043,9 +1056,10 @@ static void process(node_control *n, size_t length)
                 if (code) message = "Codec work requires a committed matching source and available resources";
                 else action = CODEC;
             }
-        } else if (eq(name, "audio.capture")) {
+        } else if (eq(name, "audio.capture") || eq(name, "ptt.arm")) {
             const char *const keys[] = {"artifact_id", "sample_count"};
-            if (!n->port.audio.capture) { code = "MISSING_CAPABILITY"; message = "Capture is not configured for this board"; }
+            if (eq(name, "ptt.arm") && !n->port.ptt_pressed) { code = "MISSING_CAPABILITY"; message = "PTT input is not configured for this board"; }
+            else if (!n->port.audio.capture) { code = "MISSING_CAPABILITY"; message = "Capture is not configured for this board"; }
             else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
                 !uint32_value(item(args, "sample_count"), 1, AUDIO_MAX_SAMPLES)) {
                 code = "INVALID_ARGUMENT"; message = "Capture requires a UUID and 1-24000 samples";
@@ -1320,7 +1334,11 @@ static void process(node_control *n, size_t length)
             n->op.capture = action == CAPTURE;
             n->op.audio = true;
             snprintf(n->op.artifact_id, sizeof(n->op.artifact_id), "%s", text(args, "artifact_id"));
-            if (!n->port.audio.start(n->port.context, (uint8_t *)play_bytes, bytes / 2, n->op.capture))
+            if (eq(name, "ptt.arm")) {
+                n->op.waiting_ptt = n->op.ptt_trigger = true;
+                n->op.buffer = (uint8_t *)play_bytes; // Reserved artifact owns these bytes.
+                ptt_gate_arm(&n->op.button, n->port.ptt_pressed(n->port.context), now(n));
+            } else if (!n->port.audio.start(n->port.context, (uint8_t *)play_bytes, bytes / 2, n->op.capture))
                 finish_operation(n, "failed", "INTERNAL_ERROR", "Audio driver start failed");
         }
     } else if (action == STOP)
@@ -1399,6 +1417,12 @@ void node_control_tick(node_control *n)
     if (!op->active && op->crypto) crypto_benchmark_destroy(&op->crypto);
     if (op->active && time >= op->deadline) {
         finish_operation(n, "failed", "TIMEOUT", "Operation deadline expired");
+    } else if (op->active && op->waiting_ptt) {
+        if (ptt_gate_step(&op->button, n->port.ptt_pressed(n->port.context), time)) {
+            op->waiting_ptt = false;
+            if (!n->port.audio.start(n->port.context, op->buffer, op->bytes / 2, true))
+                finish_operation(n, "failed", "INTERNAL_ERROR", "PTT capture driver start failed");
+        }
     } else if (op->active && op->benchmark) {
         // Pause at bounded queue pressure; never include serial work in a call sample.
         if (n->events.count + 2 <= n->events.capacity) {

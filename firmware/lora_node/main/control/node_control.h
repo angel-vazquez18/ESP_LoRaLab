@@ -33,6 +33,7 @@ typedef struct {
     uint32_t cpu_frequency_mhz;
     bool hardware_aes, dynamic_frequency;
     unsigned codec2_mode;
+    bool (*ptt_pressed)(void *); // NULL leaves the physical input disabled.
 } node_platform;
 
 typedef struct node_control node_control;

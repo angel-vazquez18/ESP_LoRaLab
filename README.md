@@ -64,9 +64,10 @@ make firmware-build
 ```
 
 `make diagnostic-build` builds the existing diagnostic target. These targets only
-build; flashing is a separate operator action. The main node has strict serial control and finite memory diagnostics; radio,
-security and audio remain unavailable. The new control image requires physical
-acceptance; see [Milestone 1 review](docs/milestone_1_review.md) and the
+build; flashing is a separate operator action. Main firmware includes strict serial
+control, finite diagnostics, artifact/audio/codec operations and protected finite
+radio messages. Board selections and exact live capabilities gate their use;
+physical acceptance is still required. See [Milestone 1 review](docs/milestone_1_review.md) and the
 [firmware guide](firmware/README.md).
 
 ## Verify
@@ -95,6 +96,10 @@ with independent verification and playback provenance. See
 [local codec workflow](docs/codec_provenance.md) for commands and physical checks.
 
 Secure finite voice from a reference or microphone is now available through the
-shared host API/CLI, with labelled equal-encoded-size and standard64 comparisons.
+shared Voice dashboard, API and CLI, with labelled equal-encoded-size and
+standard64 comparisons.
 See [secure voice workflows](docs/secure_voice_workflows.md) for readiness,
 commands, retained files and remaining physical acceptance.
+
+Optional [host-armed PTT capture](docs/host_armed_ptt.md) defaults off. Confirm the
+printed board revision and GPIO47-to-GND wiring before enabling a physical image.

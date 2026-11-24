@@ -17,6 +17,7 @@ from . import (
     control_v2,
     crypto_benchmark_v2,
     physical_wire_v2,
+    ptt_contract_v2,
     run_protocol_v2,
     v2,
 )
@@ -116,6 +117,25 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def ptt_availability(self):
+        try:
+            audio = self.audio_availability()
+            if "audio.capture" not in audio["commands"]:
+                raise ValueError(audio["blocked"].get("audio.capture", "Capture is unavailable"))
+            limits = ptt_contract_v2.require_capability(
+                self.identity.capabilities, self.health.capability_availability
+            )
+            return {
+                "commands": ["ptt.arm"],
+                "limits": {
+                    **limits.model_dump(),
+                    **ptt_contract_v2.POLICY,
+                },
+                "blocked": {},
+            }
+        except ValueError as exc:
+            return {"commands": [], "limits": None, "blocked": {"ptt.arm": str(exc)}}
+
     def codec_availability(self):
         commands, blocked, limits = [], {}, None
         for name in codec_contract_v2.ARGUMENTS:
@@ -162,6 +182,7 @@ class NodeSession:
             "wire_profile": self.wire_profile,
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
+            "ptt_support": self.ptt_availability(),
             "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
@@ -299,6 +320,11 @@ class NodeSession:
                 args = artifact_contract_v2.validate_arguments(
                     name, {} if args is None else args, artifact_limits
                 ).model_dump()
+            if name in ptt_contract_v2.ARGUMENTS:
+                availability = self.ptt_availability()
+                if name not in availability["commands"]:
+                    raise ValueError(availability["blocked"][name])
+                args = ptt_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
             if name in audio_contract_v2.ARGUMENTS:
                 if (
                     self.wire_profile != "node_control"
@@ -385,6 +411,7 @@ class NodeSession:
                         if (
                             name == "diag.run"
                             or name in audio_contract_v2.ARGUMENTS
+                            or name in ptt_contract_v2.ARGUMENTS
                             or name in codec_contract_v2.ARGUMENTS
                         ):
                             operation = control_v2.AcceptedOperation.model_validate(

@@ -266,6 +266,12 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     async def audio_capture(role: Literal["A", "B"], body: CaptureRequest):
         return await app.state.host.audio_action(role, "capture", sample_count=body.sample_count)
 
+    @app.post("/api/nodes/{role}/audio/ptt", status_code=202)
+    async def audio_ptt(role: Literal["A", "B"], body: CaptureRequest):
+        return await app.state.host.audio_action(
+            role, "capture", sample_count=body.sample_count, wait_for_ptt=True
+        )
+
     @app.post("/api/nodes/{role}/audio/play", status_code=202)
     async def audio_play(role: Literal["A", "B"], body: audio_contract_v2.Play):
         return await app.state.host.audio_action(role, "play", artifact_id=body.artifact_id)

@@ -240,6 +240,12 @@ def audio_capture(role: str, samples: Annotated[int, typer.Option(min=1, max=240
 
 
 @app.command()
+def audio_ptt(role: str, samples: Annotated[int, typer.Option(min=1, max=24000)] = 24000):
+    """Arm one finite capture; release then press the configured PTT within 30 seconds."""
+    request(f"/api/nodes/{role.upper()}/audio/ptt", {"sample_count": samples})
+
+
+@app.command()
 def audio_play(role: str, artifact_id: str):
     """Play one committed PCM file on the physical node."""
     request(f"/api/nodes/{role.upper()}/audio/play", {"artifact_id": artifact_id})

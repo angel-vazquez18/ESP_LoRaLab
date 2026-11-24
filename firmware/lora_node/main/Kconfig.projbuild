@@ -32,3 +32,14 @@ config LORALAB_CODEC2
     help
         Queries real frame dimensions once; encode/decode operations are separate.
 endmenu
+
+menu "LoRaLab optional local controls"
+config LORALAB_PTT
+    bool "Board revision and GPIO47 PTT-to-GND wiring verified"
+    depends on LORALAB_AUDIO_CAPTURE
+    default n
+    help
+        Configures only GPIO47 as input with pull-up. The host must arm one
+        fixed-length capture, then a fresh debounced release/press starts it.
+        No button action or transmission resumes after stop or ownership loss.
+endmenu

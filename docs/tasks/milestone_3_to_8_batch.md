@@ -332,3 +332,22 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   `secure-voice-dashboard-software-fixture.jpg` in the session visualization root.
   Starting #30 on its own dependent branch; input remains opt-in and unqualified
   until PCB/GPIO47 wiring acceptance.
+
+- #30 implemented: optional portable 50 ms release/press gate and opt-in GPIO47
+  input, one host-selected finite capture using existing operation/artifact/audio
+  cleanup. No implicit RF or resume; disabled/held/busy/unowned input cannot start
+  work. Twenty new native/API/CLI cases pass, including 80 admission-failure
+  positions with following-work recovery and exact current/identity profiles.
+  Native serial fixture preserves compact bounded JSON. Full 729 cases pass with
+  no skips, plus all shared checks and frontend formatting.
+  V4.2/32 KiB IDF builds: disabled 0x6e880 and isolated microphone/PTT enabled
+  0x6e930, 57% app free, static DIRAM 73,841. PTT supplement 547a3d…; other wire
+  hashes unchanged. No flash or physical GPIO/PCB acceptance; original user
+  checkout remains separate. Next #37 optional OLED views of actual node state.
+
+- #30: PR #193 (`feat/host-armed-ptt` → `feat/voice-stage-dashboard`) is ready
+  for review with six scoped commits and 729 full passing cases, no skips; both
+  IDF configurations pass, normal PTT stays off. Issue Testing, no merge/flash.
+  PCB/GPIO47 physical prerequisite #1 remains open; PR does not auto-close it.
+  Starting #37 on its own dependent branch for optional bounded OLED status
+  derived from real state, with absence/failure isolated from serial control.

@@ -32,6 +32,7 @@ class Heap(C.Structure):
     ] + [("present", C.c_bool)]
 
 
+PTT = C.CFUNCTYPE(C.c_bool, C.c_void_p)
 NOW = C.CFUNCTYPE(C.c_int64, C.c_void_p)
 HASH = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_size_t, C.c_void_p)
 RANDOM = C.CFUNCTYPE(None, C.c_void_p, C.c_void_p, C.c_size_t)
@@ -100,6 +101,7 @@ class Platform(C.Structure):
             ("hardware_aes", C.c_bool),
             ("dynamic_frequency", C.c_bool),
             ("codec2_mode", C.c_uint),
+            ("ptt_pressed", PTT),
         ]
     )
 
@@ -139,6 +141,7 @@ def native_library(tmp_path_factory):
             str(main / "protocol/secure_json.c"),
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
+            str(main / "input/ptt_gate.c"),
             str(main / "audio/pcm_samples.c"),
             str(main / "audio/codec_clip.c"),
             str(main / "radio/node_radio.c"),
@@ -202,6 +205,7 @@ class NativeNode:
         radio=None,
         device="esp-001122334455",
         codec2_mode=3200,
+        ptt=None,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -234,6 +238,8 @@ class NativeNode:
             radio,
         )
         self.platform.codec2_mode = codec2_mode
+        self.ptt_callback = PTT(ptt) if ptt else PTT()
+        self.platform.ptt_pressed = self.ptt_callback
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -559,7 +565,14 @@ class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
     def __init__(
-        self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1, audio=None
+        self,
+        lib,
+        radio=None,
+        device="esp-001122334455",
+        codec2_mode=3200,
+        boot=1,
+        audio=None,
+        ptt=None,
     ):
         self.core = NativeNode(
             lib,
@@ -569,6 +582,7 @@ class NativeSerial:
             boot=boot,
             codec2_mode=codec2_mode,
             audio=audio,
+            ptt=ptt,
         )
         self.lock = threading.RLock()
         self.queue = queue.Queue()
@@ -577,7 +591,7 @@ class NativeSerial:
     def _pump(self):
         self.core.tick()
         for record in self.core.drain():
-            self.queue.put(json.dumps(record).encode() + b"\n")
+            self.queue.put(json.dumps(record, separators=(",", ":")).encode() + b"\n")
 
     def write(self, wire):
         with self.lock:

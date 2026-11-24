@@ -18,6 +18,7 @@
 #include "radio/esp32_radio.h"
 #include "generated/contract_schema.h"
 #include "platform/esp32_platform.h"
+#include "platform/esp32_ptt.h"
 
 // Metadata is borrowed by the control engine for the firmware lifetime.
 static char device_id[17], boot_id[32], reset_cause[32], elf_sha256[65];
@@ -136,4 +137,5 @@ void esp32_platform_init(node_platform *platform)
         .schema_sha256 = CONTRACT_SCHEMA_SHA256,
         .reset_cause = reset_cause,
     };
+    esp32_ptt_init(platform);
 }
