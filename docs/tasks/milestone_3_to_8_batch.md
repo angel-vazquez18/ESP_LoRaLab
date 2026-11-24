@@ -392,5 +392,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   stage_memory_observation_v1/4004d780…; existing hashes unchanged. Full check 828
   cases, no skips, all shared checks/formatting; 20 dedicated cases. V4.2/32 KiB
   IDF 0x711a0/56% app free/73,841 static DIRAM. Original 19 files unchanged;
-  no flash or target memory qualification. Preparing PR, then #74 fixed-rate
-  encoded producer, bounded whole-message queue and actual consumer accounting.
+  no flash or target memory qualification. PR #196 is ready
+  (`feat/stage-memory-observations` → `feat/reserved-run-lifecycle`), issue Testing,
+  no agent merge. Next #74 fixed-rate encoded producer, bounded whole-message
+  queue and actual consumer accounting.
