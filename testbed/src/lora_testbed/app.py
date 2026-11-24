@@ -18,7 +18,15 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import audio_contract_v2, control_v2, crypto_benchmark_v2, rf_events_v2, run_protocol_v2, v2
+from . import (
+    audio_contract_v2,
+    control_v2,
+    crypto_benchmark_v2,
+    memory_observation_v2,
+    rf_events_v2,
+    run_protocol_v2,
+    v2,
+)
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .campaign_plans import CampaignSpec
@@ -37,6 +45,7 @@ from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
 from .serial_validation import SerialValidationRequest, serial_plan
 from .session_keys import require_public_metadata
 from .voice_runs import VoiceRunRequest
+from .workload_assessment import AssessmentRequest
 
 
 class PreflightRequest(StrictModel):
@@ -258,6 +267,32 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         role: Literal["A", "B"], operation_id: control_v2.UUID, include_records: bool = False
     ):
         return app.state.host.crypto_benchmark_evidence(role, operation_id, include_records)
+
+    @app.post("/api/workload-assessments", status_code=201)
+    async def workload_assessment(body: AssessmentRequest):
+        return app.state.host.observations.save(body)
+
+    @app.get("/api/workload-assessments")
+    async def workload_assessments(limit: int = Query(20, ge=1, le=100)):
+        return app.state.host.observations.list(limit)
+
+    @app.get("/api/workload-assessments/{identifier}")
+    async def workload_assessment_get(identifier: control_v2.UUID):
+        return app.state.host.observations.get(identifier)
+
+    @app.post("/api/nodes/{role}/memory-observation")
+    async def memory_observation_start(role: Literal["A", "B"], body: memory_observation_v2.Start):
+        return await app.state.host.observations.start_memory(role, body.duration_ms)
+
+    @app.post("/api/nodes/{role}/memory-observation/{observation_id}/collect", status_code=201)
+    async def memory_observation_collect(
+        role: Literal["A", "B"], observation_id: control_v2.UUID, stop: bool = False
+    ):
+        return await app.state.host.observations.collect_memory(role, observation_id, stop)
+
+    @app.post("/api/nodes/{role}/source-observation/{run_id}/collect", status_code=201)
+    async def source_observation_collect(role: Literal["A", "B"], run_id: control_v2.UUID):
+        return await app.state.host.observations.collect_source(role, run_id)
 
     @app.post("/api/physical-campaigns/plans/preview")
     async def physical_campaign_preview(body: CampaignSpec):

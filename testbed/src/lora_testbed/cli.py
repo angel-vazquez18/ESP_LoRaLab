@@ -13,7 +13,7 @@ app = typer.Typer(no_args_is_help=True, help="Control the local LoRa laboratory.
 BASE_URL = "http://127.0.0.1:8000"
 
 
-def request(path: str, body: dict | None = None, method: str | None = None):
+def request(path: str, body: dict | None = None, method: str | None = None, timeout: float = 20):
     req = Request(
         BASE_URL + path,
         data=json.dumps(body).encode() if body is not None else None,
@@ -21,7 +21,7 @@ def request(path: str, body: dict | None = None, method: str | None = None):
         method=method,
     )
     try:
-        with urlopen(req, timeout=20) as response:
+        with urlopen(req, timeout=timeout) as response:
             result = json.load(response)
     except HTTPError as exc:
         typer.echo(exc.read().decode(), err=True)
@@ -141,6 +141,70 @@ def campaign_plan_result(plan_id: str):
 
     TypeAdapter(UUID).validate_python(plan_id)
     request(f"/api/physical-campaigns/plans/{plan_id}")
+
+
+@app.command()
+def workload_assess(path: Path):
+    """Save an assessment of an imported source/memory trace; never hardware qualification."""
+    if path.stat().st_size > 12 * 1024 * 1024:
+        raise typer.BadParameter("Trace exceeds 12 MiB")
+    request("/api/workload-assessments", json.loads(path.read_text()))
+
+
+@app.command()
+def workload_assessments():
+    """List retained observed-workload assessments."""
+    request("/api/workload-assessments")
+
+
+@app.command()
+def workload_result(identifier: str):
+    """Read a saved assessment and its exact raw evidence."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/workload-assessments/{identifier}")
+
+
+@app.command()
+def memory_observe(
+    role: str, duration_ms: Annotated[int, typer.Option(min=1000, max=300000)] = 30000
+):
+    """Start a finite observer alongside the selected node's workload."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(f"/api/nodes/{role.upper()}/memory-observation", {"duration_ms": duration_ms})
+
+
+@app.command()
+def memory_collect(role: str, observation_id: str, stop: bool = False):
+    """Save actual observer status/events, optionally stopping that exact observer first."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(observation_id)
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(
+        f"/api/nodes/{role.upper()}/memory-observation/{observation_id}/collect?stop={str(stop).lower()}",
+        {},
+    )
+
+
+@app.command()
+def source_collect(role: str, run_id: str):
+    """Read terminal source pages before the owning RF runner closes its session."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(run_id)
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(f"/api/nodes/{role.upper()}/source-observation/{run_id}/collect", {}, timeout=60)
 
 
 @app.command()
