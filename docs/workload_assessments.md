@@ -3,8 +3,10 @@
 Issue #82 adds persisted evidence and analysis, not the complete MEM-01 or VOICE-03
 procedure matrices. Software consistency, execution outcome and physical
 qualification remain separate. No import or readback in this slice sets
-`hardware_qualified` to true. Campaign execution (#87), dashboard plots (#88), the
-full sustained-source procedure (#105) and physical acceptance (#136) follow.
+`hardware_qualified` to true. Campaign execution is implemented in #87, and the bounded dashboard plots and
+full downloads in #88 are documented in [memory/source histories](workload_plots.md).
+The full sustained-source procedure (#105) and physical acceptance (#136) remain
+separate work.
 
 ## Source accounting
 

@@ -134,6 +134,9 @@ evidence independently of byte readback.
 - `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
   stage-memory reconciliation, immutable evidence and bound readback; imported
   traces never establish physical qualification.
+- `workload_plots.py` and `frontend/src/WorkloadObservations.tsx`: bounded actual-row
+  memory/source histories and independent full-evidence exports; clock/gap rules
+  remain in the backend and physical qualification stays separate.
 - `nodes.py`: physical serial sessions for the exact diagnostic or main-control
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original

@@ -501,3 +501,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   expected checks and hardware instructions. Issue/card Testing; no merge. Full
   928 cases and final 13 strengthened campaign cases pass; all shared checks and
   UI formatting pass. Starting #88 memory/source-history plots on a fresh branch.
+
+
+- #88 implemented on #202: bounded actual-row memory/source plots, explicit clock/
+  gap/null scope, distinct boot/sample/workload minima and startup/[3,60)/drain,
+  valid negative overload findings, paged stages/buffers and independent complete
+  hash-checked JSON exports. Compatible finite observer controls reuse current
+  connection binding. Nine dedicated cases and full 937 cases pass without skips,
+  all shared checks/UI formatting. Isolated native/browser fixtures verify long
+  traces/one-sample peak, active/terminal collection, disconnect, full download,
+  dark/light and 390-pixel layout; no hardware qualification. Original 19 files
+  unchanged; no firmware/wire/build/flash/physical access. Next #107 linked reruns
+  and verified campaign exports, then #115 campaign UI and physical #132.

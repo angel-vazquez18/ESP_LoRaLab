@@ -4,6 +4,31 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Memory and source history views (#88)
+
+Results now plots immutable memory/stage/buffer and source/backlog observations
+through a bounded actual-row projection, with separate boot/sample/workload
+minima, unknown true peak, absent PSRAM, visible gaps and coherent-clock guards.
+The source view separates startup, nominal [3,60)-second assessment and bounded
+drain, exposes overload as a valid negative finding and keeps receiver delivery
+and independent clocks distinct. Stage/buffer pages are bounded at 32 rows;
+full hash-checked evidence downloads retain every stored observation. Compatible
+finite memory observer controls share the backend and current connection binding.
+Saved chart histories never grow after disconnect or invent future observations.
+
+Nine focused native/ASGI cases pass, including a 3,001-sample injected-clock window
+with a one-sample peak, paging, missing tails, mixed clocks and corrupt records.
+Full check passes 937 cases without skips and all shared checks; UI formatting
+passes. Interactive browser checks used a clearly labelled isolated software
+fixture, including observer collection/disconnect, long records, full download,
+light/dark and mobile layout, with no captured console warnings/errors. Download
+hash/count checks retain 3,000 source frames and 451 audits. Existing Starlette/
+httpx deprecation remains. All 19 original files are unchanged. No physical port,
+reset, flash, firmware/wire change or new IDF build. Physical qualification and
+full MEM-01/VOICE-03 procedures remain open. See [views, checks and physical
+instructions](workload_plots.md). Next #107 adds linked selected-case reruns and
+verified campaign evidence exports; #115 adds campaign controls to the dashboard.
+
 ## November 24 — Owned physical campaign execution (#87)
 
 Saved plans now execute through the existing diagnostic, partial serial, audio,
