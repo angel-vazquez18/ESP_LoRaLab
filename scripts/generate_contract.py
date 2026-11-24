@@ -11,6 +11,7 @@ from lora_testbed import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    memory_observation_v2,
     oled_status_v2,
     ptt_contract_v2,
     rf_events_v2,
@@ -74,6 +75,14 @@ def outputs(root: Path) -> dict[Path, str]:
         )
     vector_header += "};\n"
     return {
+        root / "contracts/v2/memory_observation.schema.json": document(memory_observation_v2.schema()),
+        root / "firmware/lora_node/main/generated/memory_profile.h": (
+            "#pragma once\n"
+            f'#define MEMORY_OBSERVATION_PROFILE "{memory_observation_v2.PROFILE}"\n'
+            f'#define MEMORY_OBSERVATION_SHA256 "{memory_observation_v2.schema_digest()}"\n'
+            f"#define MEMORY_PERIOD_US {memory_observation_v2.PERIOD_US}LL\n"
+            f"#define MEMORY_MAX_BUFFERS {memory_observation_v2.MAX_BUFFERS}U\n"
+        ),
         root / "contracts/v2/oled_status.schema.json": document(oled_status_v2.schema()),
         root / "firmware/lora_node/main/generated/oled_board.h": (
             "#pragma once\n"
