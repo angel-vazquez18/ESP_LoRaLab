@@ -29,3 +29,8 @@ bool native_radio_configure_default(void *radio) {
     node_radio_settings settings={915000000,125000,7,5,2,8};
     return node_radio_configure(radio,&settings);
 }
+
+unsigned native_radio_generation(void *radio) {return boundary_for(radio)->tx_generation;}
+bool native_radio_listening(void *radio) {return ((node_radio *)radio)->operation==2;}
+
+bool native_radio_transmitting(void *radio) {return ((node_radio *)radio)->operation==1;}

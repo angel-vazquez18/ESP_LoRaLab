@@ -26,8 +26,9 @@ identifies the vocabulary, not an implementation promise.
    `run.prepared` evidence before arming.
 4. Arm the receiver with the applied revision and wait for `receiver_ready = true`
    before starting the sender with its applied revision. A stale revision fails.
-   The first implementation uses single-fragment known data with ACKs disabled;
-   fragmentation, retries and security require their own implemented capabilities.
+   Known data supports bounded fragmentation and optional stop-and-wait with up
+   to two retries. Require the relevant capabilities and numeric limits on both
+   peers. Security and encoded content remain unavailable.
 5. Collect frame/message events and a final `run.summary` from each node. Stop on
    cancellation, deadline, peer loss or ownership loss, then close the session.
    Reset/reconnect never resumes a previous run. An uncertain stop invalidates the
@@ -70,31 +71,34 @@ boards, matched antennas, verified RF control wiring and directional frame/hash,
 IRQ, timeout, stop, reconnect and applied-setting evidence. No ESP was connected
 for this change.
 
-## Implemented single-message subset (#25)
+## Implemented single-message execution (#25, #47)
 
-The main image now implements the eight selected execution commands, using the
-real SX1262 driver. It still requires explicit board selection and successful
-initialization. `resource_limits.execution_limits` reports this initial bound:
-**one known-data message per session, one fragment, at most the configured
-fragment capacity (16–215 bytes; default 160), and 1–30 seconds maximum duration**.
-Larger/multiple/protected/encoded work rejects rather than being truncated or
-silently substituted. The shared contract's larger ceilings remain future limits;
-the host must respect this smaller node declaration. No full IF-02 qualification
-or operator simulation is introduced.
+The main image implements the eight selected execution commands through the real
+SX1262 driver. Explicit board selection and successful initialization are required.
+`resource_limits.execution_limits` bounds one known-data message per session,
+65,536 useful bytes, 4,096 fragments, 3,600,000 ms and two retries. Fragment body
+capacity is 16–215 bytes (default 160). Both identity and current health must
+advertise the capabilities needed by the actual request. The host also checks
+smaller limits from an older peer before opening/arming a session.
+
+Multiple/protected/encoded messages reject rather than being truncated or silently
+substituted. Configuration and preparation validate applied airtime, ACK timeout,
+receiver drain, processing and reassembly deadlines before allocation or RF.
+No full IF-02 qualification or operator simulation is introduced.
 
 `session.open` binds a host run UUID, a nonzero session ID, owner, A/B role and a
 distinct peer device/boot identity. Configure while idle, then prepare a typed
-one-message known-data spec/budget. Preparation generates the documented SHA-256
+one-message known-data spec/budget, including its full fragment count. Preparation generates the documented SHA-256
 block source and reserves a RAM artifact: committed source on TX, an expected-hash
 reservation on RX. The preparation result labels that artifact state explicitly.
 `run.prepared` and its correlated operation result precede arming/starting.
 Stale revisions reject. The receiver arms before the sender starts; only the
 sender starts an asynchronous TX operation. The node never invents peer readiness.
 
-The portable framing module encodes each field at explicit big-endian offsets;
+The portable fragment module encodes each field at explicit big-endian offsets;
 there are no packed-struct wire assumptions. Receive order is PHY CRC/header,
 bounded DATA framing, session/roles/message metadata, exact deterministic body,
-then delivery. The complete actual received bytes and their hash are committed
+then bounded reconstruction and hash-gated once-only delivery. The complete actual received bytes and their hash are committed
 as a recovered artifact. Duplicate/stale message tracking prevents second
 application delivery. Wrong/truncated/changed frames produce rejection evidence
 and rearm within the remaining finite window. There is no authentication claim
@@ -132,3 +136,12 @@ cleanup remain attributable. Allocation-failure cases do not reserve hidden work
 The serial/SPI peers in these checks exist only in tests. No ESP is connected;
 physical RF, board revision, antenna-power and precise IRQ timing validation stay
 pending. The receiver-first host workflow/dashboard follow in #27/#34.
+
+The execution owner composes `rf_fragments`, `rf_reassembly`, `rf_ack` and
+`rf_sender`. Source/recovered artifacts are published in 1,024-byte store chunks;
+large messages do not bypass the artifact chunk ceiling. A completed TX-done
+confirms an original once, while each DATA/ACK attempt retains distinct evidence.
+Failed reconstruction emits all available missing-index parts before its result
+and summary. Explicit stop remains bounded even if that report is backpressured,
+and marks interrupted reporting incomplete. See [accounting, review commands and
+physical checks](physical_radio_runs.md#multi-fragment-accounting-and-review-47).

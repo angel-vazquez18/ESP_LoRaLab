@@ -490,3 +490,55 @@ in #47; no ESP is connected. See [reliability](radio_reliability.md).
 contract and repository checks. Selected-board ESP-IDF build passed. All 19 hashes
 from the original checkout's preserved local changes still match; no flash or
 physical port access occurred.
+
+## November 22 — Soldered protoboard audio follow-up
+
+The user connected Node A (`esp-a4cb8fa21878`, boot 25) after soldering the
+protoboard and confirmed the original GPIO map. Using its existing
+`b96c0ca-dirty` audio image (build `a5ecf08a0ce76daf85ae05f49464c549c2b094cb7a241048bd5bb5e35acf3041`),
+with no flash/reset, three-second capture/readback produced 24,000 varying
+signed-16 samples at configured 8 kHz. PCM length/hash matched independently;
+RMS was 2375.69, extrema -5865/7213, with no clipping or reported overflows.
+The user confirmed recognizable speech in laptop playback. This replaces the
+earlier all-zero microphone response finding for this assembly.
+
+The user then found an unsoldered amplifier VIN-to-3V3 connection and repaired
+it with USB disconnected. On reconnect (boot 27), the lower-level reference was
+not heard, but a three-second 2 kHz reference with source peak 24,000 was clearly
+audible. Fresh raw speech was recognizable on the laptop, yet inaudible on the
+node. A separate high-pass/boosted/soft-limited diagnostic copy produced audible
+but faint or distorted speech. This supports the local audio path; intelligible
+node playback and full audio qualification remain pending. DSP processing may
+contribute to the diagnostic copy’s distortion.
+
+Retaining four 48,000-byte artifacts reproduced two driver-start allocation
+failures: the largest internal block was 90,112 bytes versus a 96,000-byte output
+buffer. After removing three independently backed-up older test files, the same
+recording played to completion with zero underflows. This is an operational
+workaround; bounded playback buffering/level control still needs improvement.
+Raw jobs, metrics and private recordings remain ignored under the original
+checkout’s `local/audio-qualification/2026-11-22-protoboard-01`. No new RF image
+was installed and no physical RF result is claimed.
+
+## November 22 — Multi-fragment shared runs (#47)
+
+One-message radio execution now composes the bounded packet modules and supports
+up to 65,536 bytes/4,096 fragments, optional stop-and-wait with zero/one/two
+retries, explicit preparation budgets and safe terminal cleanup. The shared
+API/CLI/dashboard independently verify source/recovered bytes and reconcile DATA
+originals, attempts, accepted fragments, delivery and ACK traffic. Telemetry gaps
+leave byte verification visible but dependent accounting incomplete; missing-index
+reports require every numbered part and matching receiver totals. See
+[review commands and hardware obligations](physical_radio_runs.md).
+
+`make check` passed 501 tests without skips, lint, production frontend build,
+generated contracts and repository checks. The only warning is the existing
+Starlette/httpx deprecation. Physical RF qualification remains pending.
+
+Selected-board ESP-IDF build passed (0x53300-byte image, 68% app partition free);
+frontend formatting passed. Browser checks on isolated C serial/SPI fixtures
+verified both directions, a three-fragment ACK/retry run, exact missing index 0
+after dropped DATA, over-limit rejection, history, light/dark appearance and
+390-pixel layout without horizontal page overflow. No console errors or warnings
+were observed. The final screenshot is an ignored Codex visualization named
+`multi-fragment-radio-software-fixture.png`; it is not physical RF evidence.

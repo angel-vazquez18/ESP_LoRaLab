@@ -9,6 +9,7 @@ type Signal = {
   rssi_dbm: number;
   snr_db: number;
   rx_done_us: number;
+  frame_type?: string | null;
 };
 type Identity = { device_id: string; boot_id: string };
 type Verification = {
@@ -17,6 +18,30 @@ type Verification = {
   sha256: string;
   sample_hex: string;
 };
+type Accounting =
+  | {
+      evidence_complete: true;
+      data_originals: number;
+      data_attempts: number;
+      data_retries: number;
+      accepted_fragments: number;
+      delivered_messages: number;
+      ack_transmissions: number;
+      valid_ack_observations: number;
+      unique_original_delivery_ratio: number;
+      receiver_duplicates: number;
+    }
+  | { evidence_complete: false; reason: string };
+type MissingEvidence =
+  | {
+      ranges_complete: true;
+      missing_indexes: number[];
+      accepted_fragments: number;
+      fragment_count: number;
+      part_count: number;
+      scope: string;
+    }
+  | { ranges_complete: false; reason: string };
 export type RadioRun = {
   id: string;
   created_at: string;
@@ -34,6 +59,8 @@ export type RadioRun = {
   };
   identities: Record<string, Identity>;
   verification: Verification | null;
+  accounting?: Accounting | null;
+  missing_evidence?: MissingEvidence | null;
   error: string | null;
   cleanup: { confirmed: boolean; nodes?: Record<string, string> } | null;
   signal?: Signal[];
@@ -56,7 +83,7 @@ const stages: Record<string, string> = {
   configuring: "Applying matching settings",
   preparing: "Preparing both nodes",
   arming: "Arming the receiver",
-  transmitting: "Sending one fragment",
+  transmitting: "Sending message fragments",
   retrieving: "Verifying recovered bytes",
   stopping: "Closing node sessions",
   finished: "Finished",
@@ -103,6 +130,8 @@ export default function RadioLink({
     tx_power_dbm: "2",
     fragment_payload_bytes: "160",
     source_seed: "743",
+    ack_mode: "none",
+    max_retries: "0",
   });
   const [readiness, setReadiness] = useState<{
     key: string;
@@ -130,8 +159,8 @@ export default function RadioLink({
         },
         link: {
           fragment_payload_bytes: number(form.fragment_payload_bytes),
-          ack_mode: "none",
-          max_retries: 0,
+          ack_mode: form.ack_mode,
+          max_retries: number(form.max_retries),
         },
       }),
     [form],
@@ -261,6 +290,7 @@ export default function RadioLink({
     label: string,
     values: number[],
     format = (value: number) => String(value),
+    disabled = false,
   ) {
     return (
       <label>
@@ -268,6 +298,7 @@ export default function RadioLink({
         <select
           aria-label={`Radio ${label.toLowerCase()}`}
           value={form[key]}
+          disabled={disabled}
           onChange={(e) => update(key, e.target.value)}
         >
           {values.map((value) => (
@@ -315,8 +346,8 @@ export default function RadioLink({
                 <option value="B_TO_A">B → A</option>
               </select>
             </label>
-            {input("message_bytes", "Message bytes", 1, 215)}
-            {input("timeout_ms", "Run window (ms)", 1000, 30000)}
+            {input("message_bytes", "Message bytes", 1, 65536)}
+            {input("timeout_ms", "Run window (ms)", 1000, 3600000)}
           </div>
           <details className="radio-settings">
             <summary>Modem and source settings</summary>
@@ -348,6 +379,30 @@ export default function RadioLink({
               )}
               {input("tx_power_dbm", "SX1262 power (dBm)", 2, 20)}
               {input("fragment_payload_bytes", "Fragment capacity", 16, 215)}
+              <label>
+                Acknowledgments
+                <select
+                  aria-label="Radio acknowledgments"
+                  value={form.ack_mode}
+                  onChange={(event) =>
+                    setForm((old) => ({
+                      ...old,
+                      ack_mode: event.target.value,
+                      max_retries: event.target.value === "none" ? "0" : "2",
+                    }))
+                  }
+                >
+                  <option value="none">Disabled</option>
+                  <option value="stop_wait">Stop and wait</option>
+                </select>
+              </label>
+              {select(
+                "max_retries",
+                "Retry limit",
+                [0, 1, 2],
+                String,
+                form.ack_mode === "none",
+              )}
               {input("source_seed", "Source seed", 0, 4294967295)}
             </div>
             <p>
@@ -458,13 +513,87 @@ export default function RadioLink({
                     <code>{record.verification.sample_hex}</code>
                   </>
                 )}
+                {record.accounting?.evidence_complete && (
+                  <div
+                    className="radio-accounting"
+                    aria-label="Reconciled radio accounting"
+                  >
+                    {[
+                      [
+                        "Confirmed DATA originals",
+                        record.accounting.data_originals,
+                      ],
+                      ["DATA attempts", record.accounting.data_attempts],
+                      ["Retries", record.accounting.data_retries],
+                      [
+                        "Unique accepted fragments",
+                        record.accounting.accepted_fragments,
+                      ],
+                      [
+                        "Delivered messages",
+                        record.accounting.delivered_messages,
+                      ],
+                      [
+                        "Receiver duplicates",
+                        record.accounting.receiver_duplicates,
+                      ],
+                      [
+                        "ACK transmissions",
+                        record.accounting.ack_transmissions,
+                      ],
+                      [
+                        "Matched ACK observations",
+                        record.accounting.valid_ack_observations,
+                      ],
+                      [
+                        "Original delivery ratio",
+                        `${(100 * record.accounting.unique_original_delivery_ratio).toFixed(1)}%`,
+                      ],
+                    ].map(([label, value]) => (
+                      <div key={label}>
+                        <span>{label}</span>
+                        <strong>{value}</strong>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {record.accounting?.evidence_complete === false && (
+                  <p>
+                    Frame accounting is incomplete. {record.accounting.reason}
+                  </p>
+                )}
+                {record.missing_evidence && (
+                  <details className="radio-settings">
+                    <summary>Missing fragment evidence</summary>
+                    {record.missing_evidence.ranges_complete ? (
+                      <>
+                        <p>
+                          {record.missing_evidence.accepted_fragments} of{" "}
+                          {record.missing_evidence.fragment_count} fragments
+                          inserted; all {record.missing_evidence.part_count}{" "}
+                          range parts retained.
+                        </p>
+                        <pre>
+                          {record.missing_evidence.missing_indexes.join(", ") ||
+                            "No missing indexes; inspect the failure reason."}
+                        </pre>
+                        <p>{record.missing_evidence.scope}</p>
+                      </>
+                    ) : (
+                      <p>{record.missing_evidence.reason}</p>
+                    )}
+                  </details>
+                )}
                 <div className="radio-signal">
-                  <strong>Observed receiver signal</strong>
+                  <strong>Observed receive signal</strong>
                   {signals.length ? (
                     signals.map((signal, index) => (
                       <span key={index}>
-                        Node {signal.role}: {signal.rssi_dbm.toFixed(1)} dBm
-                        RSSI · {signal.snr_db.toFixed(2)} dB SNR
+                        Node {signal.role} ·{" "}
+                        {signal.frame_type?.toUpperCase() ||
+                          "unclassified frame"}
+                        : {signal.rssi_dbm.toFixed(1)} dBm RSSI ·{" "}
+                        {signal.snr_db.toFixed(2)} dB SNR
                       </span>
                     ))
                   ) : (

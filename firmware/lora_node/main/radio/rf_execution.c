@@ -144,13 +144,13 @@ static cJSON *summary(rf_execution *r)
     number(r, o, "intended_messages", 1);
     number(r, o, "started_messages", r->started);
     number(r, o, "finished_messages", r->finished && r->started);
-    number(r, o, "original_packets", r->sender && r->attempts ? 1 : 0);
+    number(r, o, "original_packets", r->originals);
     number(r, o, "tx_attempts", r->attempts);
     number(r, o, "radio_observations", r->observations);
     number(r, o, "accepted_fragments", r->accepted);
     number(r, o, "duplicates", r->duplicates);
     number(r, o, "delivered_messages", r->delivered);
-    number(r, o, "failed_messages", r->failed && r->started);
+    number(r, o, "failed_messages", r->failed && r->started && !r->delivered);
     number(r, o, "useful_source_bytes", r->sender ? r->plan.bytes : 0);
     number(r, o, "useful_delivered_bytes", r->delivered ? r->plan.bytes : 0);
     if (r->first_tx >= 0)
@@ -171,7 +171,17 @@ static cJSON *summary(rf_execution *r)
         string(r, o, "last_rx_us", NULL);
     string(r, o, "stop_reason", r->stop_reason ? r->stop_reason : "operator");
     number(r, o, "telemetry_drops", r->port.drops(r->port.context) - r->drops_start);
-    add(r, o, "validity_reasons", cJSON_CreateArray());
+    cJSON *validity = cJSON_CreateArray();
+    if (r->missing_evidence_incomplete && validity)
+    {
+        cJSON *reason = cJSON_CreateString("missing_range_evidence_incomplete");
+        if (!reason || !cJSON_AddItemToArray(validity, reason))
+        {
+            cJSON_Delete(reason);
+            r->oom = true;
+        }
+    }
+    add(r, o, "validity_reasons", validity);
     return o;
 }
 static void state(rf_execution *r)
@@ -232,7 +242,8 @@ bool rf_execution_busy(const rf_execution *r)
 }
 const char *rf_execution_state(const rf_execution *r)
 {
-    return (const char *[]){"idle", "preparing", "prepared", "armed", "running"}[r->phase];
+    return (const char *[]){"idle",    "preparing", "prepared", "armed",
+                            "running", "draining",  "stopping"}[r->phase];
 }
 const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *args,
                                const char *run, const char *owner, const char *role,
@@ -322,8 +333,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             !integer(s, "source_seed", 0, UINT32_MAX, 743, &p->seed) ||
             !integer(s, "max_duration_ms", 1000, 3600000, 120000, &p->duration_ms))
             return "INVALID_ARGUMENT";
-        if (count != 1 || p->bytes > link->fragment_payload_bytes || p->bytes > 215 ||
-            p->duration_ms > 30000)
+        if (count != 1)
             return "RESOURCE_LIMIT";
         const char *direction = text(s, "direction");
         if (!direction)
@@ -346,14 +356,36 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             !cJSON_GetObjectItemCaseSensitive(b, "drain_us") ||
             !cJSON_GetObjectItemCaseSensitive(b, "processing_budget_us"))
             return "INVALID_ARGUMENT";
-        if (!integer(b, "ack_timeout_us", 0, 0, 0, &p->ack_timeout) ||
-            !integer(b, "reassembly_timeout_us", 1, 30000000, 0, &p->reassembly) ||
-            !integer(b, "drain_us", 0, 30000000, 0, &p->drain) ||
-            !integer(b, "processing_budget_us", 0, 30000000, 0, &p->processing) ||
+        if (!integer(b, "ack_timeout_us", 0, 30000000, 0, &p->ack_timeout) ||
+            !integer(b, "reassembly_timeout_us", 1, 3600000000U, 0, &p->reassembly) ||
+            !integer(b, "drain_us", 0, 3600000000U, 0, &p->drain) ||
+            !integer(b, "processing_budget_us", 0, 3600000000U, 0, &p->processing) ||
             !integer(b, "capture_budget_us", 0, 0, 0, &unused) ||
             !integer(b, "playback_budget_us", 0, 0, 0, &unused) ||
             !integer(b, "fault_budget_us", 0, 0, 0, &unused) ||
             !literal(b, "model_version", "sx126x_lora_v1"))
+            return "INVALID_ARGUMENT";
+        uint32_t fragments =
+            (p->bytes + link->fragment_payload_bytes - 1) / link->fragment_payload_bytes;
+        uint32_t last = p->bytes - (fragments - 1) * link->fragment_payload_bytes;
+        uint32_t last_air = rf_radio_airtime_us(&r->radio->applied, 40 + last);
+        uint32_t full_air = fragments > 1 ? rf_radio_airtime_us(&r->radio->applied,
+                                                                40 + link->fragment_payload_bytes)
+                                          : last_air;
+        uint32_t ack =
+            link->ack_requested ? 100000 + rf_radio_airtime_us(&r->radio->applied, 40) : 0;
+        uint32_t attempts = 1 + link->max_retries;
+        uint64_t horizon =
+            link->ack_requested ? (uint64_t)(full_air + ack + link->guard_us) * attempts : 0;
+        uint64_t minimum_drain = horizon > 2000000 ? horizon : 2000000;
+        uint64_t data = (uint64_t)(fragments - 1) * full_air + last_air;
+        uint64_t processing = 10000U * (1U + fragments * attempts);
+        uint64_t lifetime = data * attempts + (uint64_t)fragments * attempts * ack +
+                            ((uint64_t)fragments * attempts - 1) * link->guard_us + processing +
+                            2000000;
+        if (p->ack_timeout != ack || p->drain < minimum_drain || p->processing < processing ||
+            p->reassembly < lifetime || p->reassembly > (uint64_t)p->duration_ms * 1000 ||
+            p->drain > (uint64_t)p->duration_ms * 1000)
             return "INVALID_ARGUMENT";
         unsigned free_slots = 0;
         for (unsigned i = 0; i < ARTIFACT_SLOTS; i++)
@@ -361,6 +393,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
                 free_slots++;
         if (!free_slots)
             return "RESOURCE_LIMIT";
+        p->link = *link;
         p->revision = revision;
         snprintf(p->operation, 37, "%s", op);
     }
@@ -422,15 +455,62 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
     }
     return NULL;
 }
-static bool publish(rf_execution *r)
+static void release_buffers(rf_execution *r)
 {
-    if (artifact_store_put(r->artifacts, r->artifact_id, 0, r->payload, r->plan.bytes,
-                           chunk_crc32(r->payload, r->plan.bytes)) != ARTIFACT_OK ||
-        artifact_store_prepare_commit(r->artifacts, r->artifact_id, r->port.hash,
+    rf_ack_destroy(r->acknowledgments);
+    r->acknowledgments = NULL;
+    r->ack_pending = r->ack_transmitting = false;
+    rf_sender_destroy(r->transmitter);
+    r->transmitter = NULL;
+    rf_reassembly_destroy(r->receiver);
+    r->receiver = NULL;
+    if (r->payload)
+    {
+        memset(r->payload, 0, r->plan.bytes);
+        r->port.release(r->port.context, r->payload);
+        r->payload = NULL;
+    }
+}
+static bool publish_bytes(rf_execution *r, const void *bytes)
+{
+    const uint8_t *source = bytes;
+    for (size_t offset = 0; offset < r->plan.bytes;)
+    {
+        size_t size = r->plan.bytes - offset;
+        if (size > ARTIFACT_CHUNK_BYTES)
+            size = ARTIFACT_CHUNK_BYTES;
+        if (artifact_store_put(r->artifacts, r->artifact_id, offset, source + offset, size,
+                               chunk_crc32(source + offset, size)) != ARTIFACT_OK)
+            return false;
+        offset += size;
+    }
+    if (artifact_store_prepare_commit(r->artifacts, r->artifact_id, r->port.hash,
                                       r->port.context) != ARTIFACT_OK)
         return false;
     artifact_store_accept_commit(r->artifacts, r->artifact_id);
     return true;
+}
+static void sender_counts(rf_execution *r, const rf_sender_status *s)
+{
+    r->attempts += s->attempts - r->frame_attempts;
+    r->frame_attempts = s->attempts;
+}
+static bool transmit(rf_execution *r)
+{
+    uint8_t frame[255];
+    size_t length =
+        rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, frame);
+    if (!length || !rf_sender_begin(r->transmitter, frame, length,
+                                    r->plan.link.fragment_payload_bytes, r->plan.link.max_retries,
+                                    r->plan.link.guard_us, 20000, 80000, r->deadline))
+        return false;
+    r->frame_attempts = r->frame_originals = 0;
+    r->next_tx = -1;
+    rf_sender_poll(r->transmitter, NULL);
+    rf_sender_status status;
+    rf_sender_snapshot(r->transmitter, &status);
+    sender_counts(r, &status);
+    return status.state == RF_SENDER_TX;
 }
 bool rf_execution_apply(rf_execution *r, const rf_plan *p)
 {
@@ -452,35 +532,108 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->plan = *p;
         r->sender = p->role == p->source;
         r->observations = r->accepted = r->duplicates = r->attempts = r->delivered = 0;
+        r->originals = 0;
+        r->tx_fragment = 0;
+        r->next_tx = r->first_fragment = -1;
+        r->missing_count = r->missing_parts = r->missing_part = 0;
+        r->missing_cursor = 0;
+        r->failure_result_reported = r->missing_evidence_incomplete = false;
+        r->artifact_id[0] = 0;
+        r->ack_pending = r->ack_transmitting = false;
+        r->payload = r->port.allocate(r->port.context, p->bytes);
+        if (!r->payload)
+            return false;
         r->first_tx = r->last_tx = r->first_rx = r->last_rx = -1;
         r->finished = r->failed = r->started = false;
         r->stop_reason = NULL;
         r->drops_start = r->port.drops(r->port.context);
         uint8_t digest[32];
-        if (!rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->payload, p->bytes) ||
+        if (!rf_message_plan_init(&r->fragments, p->session, 1, 1, p->source,
+                                  p->source == 1 ? 2 : 1, 0, false, p->link.ack_requested, p->bytes,
+                                  p->link.fragment_payload_bytes) ||
+            !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->payload, p->bytes) ||
             !r->port.hash(r->port.context, r->payload, p->bytes, digest))
+        {
+            release_buffers(r);
             return false;
+        }
+        memcpy(r->expected_hash, digest, 32);
         hex(digest, r->sha_hex);
         uuid(r, r->artifact_id);
         artifact_spec spec = {r->artifact_id, r->sender ? "source" : "recovered", r->sha_hex,
                               "known_data", p->bytes};
         if (artifact_store_begin(r->artifacts, p->owner, &spec) != ARTIFACT_OK)
+        {
+            release_buffers(r);
             return false;
-        if (r->sender && !publish(r))
+        }
+        if (r->sender && !publish_bytes(r, r->payload))
         {
             artifact_store_delete(r->artifacts, r->artifact_id);
+            release_buffers(r);
             return false;
         }
         r->used = true;
         r->phase = RF_PREPARING;
-        r->receiver =
-            (rf_single_receiver){p->session, p->seed, 1, p->bytes, 0, 0, p->source, p->role};
+        rf_packet_port port = {r->port.context, r->port.allocate, r->port.release, r->port.hash};
+        if (r->sender)
+        {
+            r->transmitter = rf_sender_create(port, r->radio);
+            if (!r->transmitter)
+            {
+                r->used = false;
+                r->phase = RF_IDLE;
+                release_buffers(r);
+                return false;
+            }
+        }
+        else
+        {
+            rf_packet_port port = {r->port.context, r->port.allocate, r->port.release,
+                                   r->port.hash};
+            r->receiver = rf_reassembly_create(port, p->session, p->source, p->role,
+                                               p->link.fragment_payload_bytes);
+            if (!r->receiver)
+            {
+                artifact_store_delete(r->artifacts, r->artifact_id);
+                r->used = false;
+                r->phase = RF_IDLE;
+                release_buffers(r);
+                return false;
+            }
+            if (p->link.ack_requested)
+            {
+                r->acknowledgments =
+                    rf_ack_create(port, p->session, p->role, p->source,
+                                  p->link.fragment_payload_bytes, 1, 20000, p->drain);
+                if (!r->acknowledgments)
+                {
+                    artifact_store_delete(r->artifacts, r->artifact_id);
+                    r->used = false;
+                    r->phase = RF_IDLE;
+                    release_buffers(r);
+                    return false;
+                }
+            }
+        }
         return true;
     }
     if (p->action == RF_ARM)
     {
-        if (!node_radio_rx(r->radio, 255, p->duration_ms * 1000) || r->radio->operation != 2)
+        int64_t now = r->port.now_us(r->port.context);
+        int64_t lifetime = p->reassembly < (uint64_t)p->duration_ms * 1000
+                               ? p->reassembly
+                               : (int64_t)p->duration_ms * 1000;
+        if (!rf_reassembly_begin(r->receiver, 1, 0, p->link.ack_requested ? 2 : 0, p->bytes,
+                                 r->expected_hash, now, now + lifetime))
             return false;
+        r->receive_deadline = now + lifetime;
+        uint32_t slice = lifetime > 30000000 ? 30000000 : lifetime;
+        if (!node_radio_rx(r->radio, 255, slice) || r->radio->operation != 2)
+        {
+            rf_reassembly_cancel(r->receiver);
+            return false;
+        }
         r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
         r->phase = RF_ARMED;
         r->started = true;
@@ -488,29 +641,31 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
     }
     if (p->action == RF_START)
     {
-        uint8_t frame[255];
-        size_t length = rf_single_encode(p->session, 1, 1, p->source, p->source == 1 ? 2 : 1,
-                                         r->payload, p->bytes, frame);
-        node_radio_reference reference = {p->session, 1, 1, 0, 1};
-        if (!length || !node_radio_tx(r->radio, frame, length, &reference, p->duration_ms * 1000))
-            return false;
         r->plan = *p;
-        r->attempts = 1;
+        r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
+        if (!transmit(r))
+            return false;
         r->started = true;
         r->phase = RF_RUNNING;
-        r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
         return true;
     }
     return false;
 }
-static void finish(rf_execution *r, const char *reason, bool failed)
+static void finalize(rf_execution *r, const char *reason, bool failed)
 {
     bool operation_active = r->phase == RF_PREPARING || (r->sender && r->phase == RF_RUNNING);
     r->phase = RF_IDLE;
     r->stop_reason = reason;
     r->finished = true;
     r->failed = failed;
-    if (failed && !r->sender)
+    if (r->radio && (r->radio->operation || r->radio->event_pending))
+    {
+        node_radio_stop(r->radio);
+        node_radio_event ignored;
+        node_radio_poll(r->radio, &ignored);
+    }
+    release_buffers(r);
+    if (failed && !r->sender && !r->delivered)
         artifact_store_delete(r->artifacts, r->artifact_id);
     send(r, "run.summary", summary(r));
     if (operation_active)
@@ -521,6 +676,91 @@ static void finish(rf_execution *r, const char *reason, bool failed)
     }
     state(r);
 }
+static void finish(rf_execution *r, const char *reason, bool failed)
+{
+    if (r->phase == RF_REPORTING)
+        return;
+    if (failed && !r->sender && r->started && !r->delivered && r->receiver)
+    {
+        if (r->radio->operation || r->radio->event_pending)
+        {
+            node_radio_stop(r->radio);
+            node_radio_event ignored;
+            node_radio_poll(r->radio, &ignored);
+        }
+        r->stop_reason = reason;
+        r->failed = r->finished = true;
+        uint16_t missing[64];
+        unsigned cursor = 0;
+        size_t n;
+        r->missing_count = 0;
+        while ((n = rf_reassembly_missing(r->receiver, cursor, missing, 64)))
+        {
+            r->missing_count += n;
+            cursor = missing[n - 1] + 1;
+        }
+        r->missing_parts = (r->missing_count + 63) / 64;
+        r->missing_part = r->missing_cursor = 0;
+        r->failure_result_reported = false;
+        r->phase = RF_REPORTING;
+        return;
+    }
+    finalize(r, reason, failed);
+}
+static void report_failure(rf_execution *r)
+{
+    if (r->missing_part < r->missing_parts)
+    {
+        if (!r->port.room(r->port.context, 1))
+            return;
+        uint16_t missing[64];
+        size_t n = rf_reassembly_missing(r->receiver, r->missing_cursor, missing, 64);
+        cJSON *o = object(r), *ranges = cJSON_CreateArray();
+        number(r, o, "message_id", 1);
+        number(r, o, "part_index", r->missing_part);
+        number(r, o, "part_count", r->missing_parts);
+        for (size_t i = 0; i < n; i++)
+        {
+            int pair[] = {missing[i], missing[i]};
+            cJSON *range = cJSON_CreateIntArray(pair, 2);
+            if (!range || !ranges || !cJSON_AddItemToArray(ranges, range))
+            {
+                cJSON_Delete(range);
+                r->oom = true;
+            }
+        }
+        add(r, o, "ranges", ranges);
+        if (send(r, "message.missing", o))
+        {
+            r->missing_cursor = missing[n - 1] + 1;
+            r->missing_part++;
+        }
+        return;
+    }
+    if (!r->failure_result_reported)
+    {
+        if (!r->port.room(r->port.context, 1))
+            return;
+        cJSON *o = object(r);
+        number(r, o, "message_id", 1);
+        string(r, o, "status", "failed");
+        number(r, o, "message_bytes", r->plan.bytes);
+        string(r, o, "sha256", NULL);
+        number(r, o, "fragment_count", r->fragments.fragment_count);
+        number(r, o, "missing_count", r->missing_count);
+        number(r, o, "missing_parts", r->missing_parts);
+        if (r->first_fragment >= 0)
+            number(r, o, "first_fragment_us", r->first_fragment);
+        else
+            string(r, o, "first_fragment_us", NULL);
+        string(r, o, "complete_us", NULL);
+        if (send(r, "message.result", o))
+            r->failure_result_reported = true;
+        return;
+    }
+    if (r->port.room(r->port.context, 2))
+        finalize(r, r->stop_reason, true);
+}
 bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
 {
     bool ok = true;
@@ -530,11 +770,23 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
         node_radio_event ignored;
         node_radio_poll(r->radio, &ignored);
     }
-    if (rf_execution_busy(r))
+    if (r->phase == RF_REPORTING)
+    {
+        r->missing_evidence_incomplete =
+            r->missing_part < r->missing_parts || !r->failure_result_reported;
+        finalize(r, reason, true);
+    }
+    else if (rf_execution_busy(r))
         finish(r, reason, true);
+    if (r->phase == RF_REPORTING)
+    {
+        r->missing_evidence_incomplete = true;
+        finalize(r, reason, true);
+    }
     if (close)
     {
         artifact_store_release_owner(r->artifacts, r->plan.owner);
+        release_buffers(r);
         r->plan.session = 0;
         r->used = false;
         r->phase = RF_IDLE;
@@ -557,11 +809,128 @@ static void rejected(rf_execution *r, const char *reason)
     string(r, o, "related_injection_id", NULL);
     send(r, "rx.rejected", o);
 }
+static uint32_t word(const uint8_t *p)
+{
+    return ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) | ((uint32_t)p[2] << 8) | p[3];
+}
+static void tx_observation(rf_execution *r, const node_radio_event *event, const char *kind)
+{
+    cJSON *o = object(r);
+    string(r, o, "session_id", r->plan.session_text);
+    number(r, o, "frame_seq", event->reference.frame_seq);
+    number(r, o, "message_id", event->reference.message_id);
+    number(r, o, "fragment_index", event->reference.fragment_index);
+    number(r, o, "attempt_index", event->reference.attempt_index);
+    string(r, o, "frame_type", kind);
+    number(r, o, "frame_bytes", event->frame_bytes);
+    if (event->command_us >= 0)
+        number(r, o, "tx_command_us", event->command_us);
+    else
+        string(r, o, "tx_command_us", NULL);
+    if (event->done_us >= 0)
+        number(r, o, "tx_done_us", event->done_us);
+    else
+        string(r, o, "tx_done_us", NULL);
+    string(r, o, "status", event->status == RADIO_DONE ? "completed" : "failed");
+    send(r, "tx.attempt", o);
+}
+static bool resume_receive(rf_execution *r)
+{
+    int64_t now = r->port.now_us(r->port.context);
+    int64_t until = r->delivered ? r->drain_deadline : r->receive_deadline;
+    int64_t remaining = until - now;
+    return remaining > 0 &&
+           node_radio_rx(r->radio, 255, remaining > 30000000 ? 30000000 : remaining);
+}
+static bool receiver_ack_work(rf_execution *r)
+{
+    int64_t now = r->port.now_us(r->port.context);
+    if (r->delivered && now >= r->drain_deadline)
+    {
+        finish(r, r->ack_pending || r->ack_transmitting ? "timeout" : "completed",
+               r->ack_pending || r->ack_transmitting);
+        return true;
+    }
+    if (r->ack_transmitting)
+    {
+        node_radio_event event;
+        if (!node_radio_poll(r->radio, &event))
+            return true;
+        tx_observation(r, &event, "ack");
+        r->ack_transmitting = false;
+        if (event.status != RADIO_DONE || !resume_receive(r))
+            finish(r, "error", true);
+        return true;
+    }
+    if (!r->ack_pending)
+        return false;
+    uint8_t frame[56];
+    size_t length = rf_ack_take(r->acknowledgments, now, frame);
+    if (!length)
+    {
+        if (now >= r->deadline)
+            finish(r, "timeout", true);
+        return true;
+    }
+    node_radio_reference reference = {r->plan.session, word(frame + 16), 1,
+                                      ((uint16_t)frame[24] << 8) | frame[25], 1};
+    uint32_t timeout = rf_radio_airtime_us(&r->radio->applied, length) + 80000;
+    if (!node_radio_tx(r->radio, frame, length, &reference, timeout))
+        finish(r, "error", true);
+    else
+    {
+        r->attempts++;
+        r->ack_transmitting = true;
+        r->ack_pending = false;
+    }
+    return true;
+}
+static void received_ack(rf_execution *r, const node_radio_event *event)
+{
+    if (!event->signal_valid)
+        return;
+    uint8_t data[255];
+    size_t length =
+        rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, data);
+    bool decoded = event->crc_ok && rf_ack_matches(event->bytes, event->frame_bytes, data, length,
+                                                   r->plan.link.fragment_payload_bytes);
+    r->observations++;
+    if (r->first_rx < 0)
+        r->first_rx = event->done_us;
+    r->last_rx = event->done_us;
+    cJSON *o = object(r);
+    string(r, o, "session_id", decoded ? r->plan.session_text : NULL);
+    string(r, o, "source_role", decoded ? (r->plan.source == 1 ? "B" : "A") : NULL);
+    if (decoded)
+    {
+        number(r, o, "frame_seq", word(event->bytes + 16));
+        number(r, o, "message_id", 1);
+        number(r, o, "fragment_index", r->tx_fragment);
+    }
+    else
+    {
+        string(r, o, "frame_seq", NULL);
+        string(r, o, "message_id", NULL);
+        string(r, o, "fragment_index", NULL);
+    }
+    string(r, o, "frame_type", decoded ? "ack" : NULL);
+    number(r, o, "frame_bytes", event->frame_bytes);
+    number(r, o, "rx_done_us", event->done_us);
+    add(r, o, "rssi_dbm", cJSON_CreateNumber(event->rssi_dbm));
+    add(r, o, "snr_db", cJSON_CreateNumber(event->snr_db));
+    add(r, o, "crc_ok", cJSON_CreateBool(event->crc_ok));
+    send(r, "rx.frame", o);
+}
 void rf_execution_tick(rf_execution *r)
 {
     if (!rf_execution_busy(r))
         return;
     r->oom = false;
+    if (r->phase == RF_REPORTING)
+    {
+        report_failure(r);
+        return;
+    }
     if (r->phase == RF_PREPARING)
     {
         if (!r->port.room(r->port.context, 3))
@@ -587,42 +956,67 @@ void rf_execution_tick(rf_execution *r)
     node_radio_poll(r->radio, NULL);
     if (!r->port.room(r->port.context, 6))
         return;
+    if (!r->sender && receiver_ack_work(r))
+        return;
     node_radio_event event;
-    if (!node_radio_poll(r->radio, &event))
+    if (r->sender)
+    {
+        int64_t now = r->port.now_us(r->port.context);
+        if (r->next_tx >= 0)
+        {
+            if (now >= r->deadline)
+                finish(r, "timeout", true);
+            else if (now >= r->next_tx && !transmit(r))
+                finish(r, "error", true);
+            return;
+        }
+        bool observed = rf_sender_poll(r->transmitter, &event);
+        rf_sender_status status;
+        rf_sender_snapshot(r->transmitter, &status);
+        sender_counts(r, &status);
+        if (!observed)
+        {
+            if (status.state == RF_SENDER_FAILED || status.state == RF_SENDER_CANCELLED)
+                finish(r, status.state == RF_SENDER_FAILED ? "timeout" : "error", true);
+            return;
+        }
+    }
+    else if (!node_radio_poll(r->radio, &event))
         return;
     if (r->sender)
     {
-        cJSON *o = object(r);
-        string(r, o, "session_id", r->plan.session_text);
-        number(r, o, "frame_seq", 1);
-        number(r, o, "message_id", 1);
-        number(r, o, "fragment_index", 0);
-        number(r, o, "attempt_index", 1);
-        string(r, o, "frame_type", "data");
-        number(r, o, "frame_bytes", event.frame_bytes);
-        if (event.command_us >= 0)
-            number(r, o, "tx_command_us", event.command_us);
+        if (event.kind == RADIO_EVENT_TX)
+        {
+            tx_observation(r, &event, "data");
+            if (event.status == RADIO_DONE && !r->frame_originals)
+            {
+                r->originals++;
+                r->frame_originals = 1;
+            }
+            if (r->first_tx < 0)
+                r->first_tx = event.command_us;
+            r->last_tx = event.done_us;
+        }
         else
-            string(r, o, "tx_command_us", NULL);
-        if (event.done_us >= 0)
-            number(r, o, "tx_done_us", event.done_us);
-        else
-            string(r, o, "tx_done_us", NULL);
-        string(r, o, "status", event.status == RADIO_DONE ? "completed" : "failed");
-        send(r, "tx.attempt", o);
-        r->first_tx = event.command_us;
-        r->last_tx = event.done_us;
-        finish(r,
-               event.status == RADIO_DONE      ? "completed"
-               : event.status == RADIO_TIMEOUT ? "timeout"
-                                               : "error",
-               event.status != RADIO_DONE);
+            received_ack(r, &event);
+        rf_sender_status status;
+        rf_sender_snapshot(r->transmitter, &status);
+        if (status.state == RF_SENDER_COMPLETED)
+        {
+            r->tx_fragment++;
+            if (r->tx_fragment < r->fragments.fragment_count)
+                r->next_tx = r->port.now_us(r->port.context) + r->plan.link.guard_us;
+            else
+                finish(r, "completed", false);
+        }
+        else if (status.state == RF_SENDER_FAILED || status.state == RF_SENDER_CANCELLED)
+            finish(r, event.status == RADIO_TIMEOUT ? "timeout" : "error", true);
         return;
     }
-    rf_single_header h;
+    rf_data_view h;
     bool decoded =
-        event.status == RADIO_DONE && rf_single_decode(event.bytes, event.frame_bytes,
-                                                       r->plan.bytes < 16 ? 16 : r->plan.bytes, &h);
+        event.status == RADIO_DONE &&
+        rf_data_decode(event.bytes, event.frame_bytes, r->plan.link.fragment_payload_bytes, &h);
     if (event.signal_valid)
     {
         r->observations++;
@@ -637,9 +1031,9 @@ void rf_execution_tick(rf_execution *r)
         string(r, o, "source_role", decoded ? (h.source == 1 ? "A" : "B") : NULL);
         if (decoded)
         {
-            number(r, o, "frame_seq", h.frame_seq);
+            number(r, o, "frame_seq", h.frame_sequence);
             number(r, o, "message_id", h.message_id);
-            number(r, o, "fragment_index", 0);
+            number(r, o, "fragment_index", h.fragment_index);
         }
         else
         {
@@ -655,6 +1049,8 @@ void rf_execution_tick(rf_execution *r)
         add(r, o, "crc_ok", cJSON_CreateBool(event.crc_ok));
         send(r, "rx.frame", o);
     }
+    if (event.status == RADIO_TIMEOUT && resume_receive(r))
+        return;
     if (event.status == RADIO_TIMEOUT || event.status == RADIO_CANCELLED ||
         event.status == RADIO_FAILED)
     {
@@ -662,45 +1058,103 @@ void rf_execution_tick(rf_execution *r)
         return;
     }
     uint8_t digest[32];
-    rf_acceptance accepted =
-        decoded ? rf_single_accept(&r->receiver, event.bytes, event.frame_bytes,
-                                   r->plan.bytes < 16 ? 16 : r->plan.bytes, r->port.hash,
-                                   r->port.context, r->payload, digest)
-                : RF_INVALID_FRAME;
-    if (accepted == RF_DELIVERED && publish(r))
+    rf_acceptance accepted = RF_INVALID_FRAME;
+    rf_reassembly_result insertion = RF_REASSEMBLY_REJECTED;
+    if (decoded)
     {
-        r->accepted = r->delivered = 1;
+        if (h.session != r->plan.session)
+            accepted = RF_WRONG_SESSION;
+        else if (h.source != r->plan.source || h.destination != r->plan.role)
+            accepted = RF_WRONG_ROLE;
+        else if (h.message_id != 1 || h.message_bytes != r->plan.bytes ||
+                 h.fragment_count != r->fragments.fragment_count)
+            accepted = RF_WRONG_MESSAGE;
+        else if (memcmp(h.body,
+                        r->payload + (uint32_t)h.fragment_index * r->fragments.fragment_bytes,
+                        h.body_bytes))
+            accepted = RF_CONTENT_MISMATCH;
+        else
+        {
+            insertion =
+                rf_reassembly_accept(r->receiver, event.bytes, event.frame_bytes, event.done_us);
+            if (insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE)
+            {
+                r->accepted++;
+                if (r->first_fragment < 0)
+                    r->first_fragment = event.done_us;
+                cJSON *o = object(r);
+                string(r, o, "session_id", r->plan.session_text);
+                string(r, o, "source_role", r->plan.source == 1 ? "A" : "B");
+                number(r, o, "frame_seq", h.frame_sequence);
+                number(r, o, "message_id", 1);
+                number(r, o, "fragment_index", h.fragment_index);
+                number(r, o, "payload_bytes", h.body_bytes);
+                number(r, o, "accepted_us", r->port.now_us(r->port.context));
+                send(r, "rx.accepted", o);
+                accepted = RF_DELIVERED;
+            }
+            else if (insertion == RF_REASSEMBLY_DUPLICATE)
+            {
+                r->duplicates++;
+                accepted = RF_DUPLICATE;
+            }
+            else
+                accepted = RF_INTERNAL_ERROR;
+        }
+    }
+    const void *complete = NULL;
+    size_t complete_bytes = 0;
+    if (insertion == RF_REASSEMBLY_COMPLETE &&
+        rf_reassembly_take(r->receiver, &complete, &complete_bytes, digest) &&
+        complete_bytes == r->plan.bytes && publish_bytes(r, complete))
+
+    {
+        r->delivered = 1;
         hex(digest, r->sha_hex);
         cJSON *o = object(r);
-        string(r, o, "session_id", r->plan.session_text);
-        string(r, o, "source_role", r->plan.source == 1 ? "A" : "B");
-        number(r, o, "frame_seq", h.frame_seq);
-        number(r, o, "message_id", h.message_id);
-        number(r, o, "fragment_index", 0);
-        number(r, o, "payload_bytes", r->plan.bytes);
-        number(r, o, "accepted_us", r->port.now_us(r->port.context));
-        send(r, "rx.accepted", o);
-        o = object(r);
         number(r, o, "message_id", 1);
         string(r, o, "status", "delivered");
         number(r, o, "message_bytes", r->plan.bytes);
         string(r, o, "sha256", r->sha_hex);
-        number(r, o, "fragment_count", 1);
+        number(r, o, "fragment_count", r->fragments.fragment_count);
         number(r, o, "missing_count", 0);
         number(r, o, "missing_parts", 0);
-        number(r, o, "first_fragment_us", event.done_us);
+        number(r, o, "first_fragment_us", r->first_fragment);
         number(r, o, "complete_us", r->port.now_us(r->port.context));
         send(r, "message.result", o);
-        finish(r, "completed", false);
+        if (!r->plan.link.ack_requested)
+        {
+            finish(r, "completed", false);
+            return;
+        }
+        r->phase = RF_DRAINING;
+        int64_t now = r->port.now_us(r->port.context);
+        r->drain_deadline = r->deadline - now < r->plan.drain ? r->deadline : now + r->plan.drain;
+    }
+    if (r->plan.link.ack_requested &&
+        (insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE ||
+         insertion == RF_REASSEMBLY_DUPLICATE))
+    {
+        rf_ack_classification classification =
+            insertion == RF_REASSEMBLY_DUPLICATE ? RF_ACK_RETRY_DUPLICATE : RF_ACK_NEW_DATA;
+        if (!rf_ack_offer(r->acknowledgments, event.bytes, event.frame_bytes, classification,
+                          event.done_us))
+        {
+            finish(r, "error", true);
+            return;
+        }
+        r->ack_pending = true;
         return;
     }
-    rejected(r, accepted == RF_CONTENT_MISMATCH ? "content_mismatch"
-                : accepted == RF_WRONG_SESSION  ? "wrong_session"
-                : accepted == RF_WRONG_ROLE     ? "wrong_source"
-                : event.crc_ok                  ? "invalid_frame"
-                                                : "phy_crc_or_header");
-    int64_t remaining = r->deadline - r->port.now_us(r->port.context);
-    if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || accepted == RF_DELIVERED ||
-        !node_radio_rx(r->radio, 255, remaining))
+    if (accepted != RF_DELIVERED)
+        rejected(r, accepted == RF_CONTENT_MISMATCH ? "content_mismatch"
+                    : accepted == RF_WRONG_SESSION  ? "wrong_session"
+                    : accepted == RF_WRONG_ROLE     ? "wrong_source"
+                    : event.crc_ok                  ? "invalid_frame"
+                                                    : "phy_crc_or_header");
+    int64_t until = r->delivered ? r->drain_deadline : r->receive_deadline;
+    int64_t remaining = until - r->port.now_us(r->port.context);
+    if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || insertion == RF_REASSEMBLY_COMPLETE ||
+        !node_radio_rx(r->radio, 255, remaining > 30000000 ? 30000000 : remaining))
         finish(r, "error", true);
 }

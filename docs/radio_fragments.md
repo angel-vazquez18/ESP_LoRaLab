@@ -33,9 +33,9 @@ index/source length reject without changing the output. Protected header vectors
 reserve the full tag, reject 200-byte protected slices and never emit an
 unencrypted protected frame. Run `make check` and build the main ESP-IDF image.
 
-The public packet planner supports those bounds. Operator execution still
-advertises one message/one fragment until receiver reconstruction and transport
-scheduling are integrated. No physical fragmentation result is claimed. Later
+The public packet planner and operator execution support those bounds for one
+unprotected known-data message. Reconstruction and bounded stop-and-wait
+scheduling are integrated; see [shared runs](physical_radio_runs.md). No physical fragmentation result is claimed. Later
 qualification must compare actual recovered bytes/hashes and retained metadata
 across boundary lengths, both directions, loss, cancellation and recovery.
 
@@ -64,8 +64,10 @@ hashes are trusted local run context, not authentication of an RF peer.
 
 `rf_data_decode` is the canonical unprotected multi-fragment parser. Existing
 single-fragment execution now uses it through its narrow compatibility adapter.
-The reconstruction module is ready for the reliability scheduler; operator
-execution still does not advertise multi-fragment transport in this PR.
+The execution owner now composes reconstruction with the reliability scheduler
+and advertises fragmentation only when the real radio is available. Missing
+indexes emit in bounded 64-range pages before the terminal message result. Stop
+can interrupt reporting and explicitly marks that evidence incomplete.
 
 Run `uv run --project testbed pytest testbed/tests/test_rf_reassembly_native.py -q`.
 Expected: 12 cases pass without skips. They cover reordered/duplicate exact

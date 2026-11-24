@@ -1,7 +1,11 @@
 #pragma once
 #include "artifacts/artifact_store.h"
 #include "radio/radio_config_json.h"
+#include "radio/rf_ack.h"
+#include "radio/rf_fragments.h"
 #include "radio/rf_frames.h"
+#include "radio/rf_reassembly.h"
+#include "radio/rf_sender.h"
 
 typedef struct
 {
@@ -12,6 +16,8 @@ typedef struct
     bool (*emit)(void *, const char *, cJSON *, const char *);
     bool (*room)(void *, unsigned);
     uint64_t (*drops)(void *);
+    void *(*allocate)(void *, size_t);
+    void (*release)(void *, void *);
 } rf_execution_port;
 typedef enum
 {
@@ -19,7 +25,9 @@ typedef enum
     RF_PREPARING,
     RF_PREPARED,
     RF_ARMED,
-    RF_RUNNING
+    RF_RUNNING,
+    RF_DRAINING,
+    RF_REPORTING
 } rf_phase;
 typedef enum
 {
@@ -38,6 +46,7 @@ typedef struct
     uint64_t session;
     uint32_t revision, seed, bytes, duration_ms;
     uint32_t ack_timeout, reassembly, drain, processing;
+    node_link_settings link;
     uint8_t role, source;
     const char *reason;
 } rf_plan;
@@ -51,8 +60,20 @@ typedef struct
     bool used, sender, oom, finished, failed, started;
     uint64_t drops_start;
     char artifact_id[37], sha_hex[65];
-    uint8_t payload[215];
-    rf_single_receiver receiver;
+    uint8_t *payload, expected_hash[32];
+    rf_reassembly *receiver;
+    rf_sender *transmitter;
+    rf_ack_receiver *acknowledgments;
+    bool ack_pending, ack_transmitting;
+    int64_t receive_deadline, drain_deadline;
+    uint32_t frame_attempts, frame_originals;
+    rf_message_plan fragments;
+    uint16_t tx_fragment;
+    uint32_t originals;
+    uint32_t missing_count, missing_parts, missing_part;
+    uint16_t missing_cursor;
+    bool failure_result_reported, missing_evidence_incomplete;
+    int64_t next_tx, first_fragment;
     uint32_t observations, accepted, duplicates, attempts, delivered;
     int64_t deadline, first_tx, last_tx, first_rx, last_rx;
     const char *stop_reason;

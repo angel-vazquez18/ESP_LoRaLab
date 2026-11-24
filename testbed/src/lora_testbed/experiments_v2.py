@@ -189,7 +189,13 @@ def preview(plan: KnownDataPlan) -> dict:
     attempts = packets * attempts_per_packet
     ack_airtime = airtime_us(radio, 40 + tag_bytes) if reliable else 0
     ack_timeout = link.ack_turnaround_us + ack_airtime + link.ack_margin_us if reliable else 0
-    drain = max(2_000_000, ack_timeout + link.guard_us)
+    # Keep the receiver available for the final original's complete retry horizon.
+    retry_horizon = (
+        (max(full_airtime, last_airtime) + ack_timeout + link.guard_us) * attempts_per_packet
+        if reliable
+        else 0
+    )
+    drain = max(2_000_000, retry_horizon)
     # Provisional contract allowances; not measured CPU or hardware performance.
     processing = 10000 * (spec.message_count + attempts)
     worst_rf = data_us_per_message * spec.message_count * attempts_per_packet

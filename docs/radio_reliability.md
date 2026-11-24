@@ -41,8 +41,9 @@ produce nothing, only the exact outstanding DATA matches, byte-identical eligibl
 retries receive fresh ACK sequences, wrong/expired/replay frames reject, sequence
 exhaustion/cancel/cache bounds hold, and combined reconstruction plus re-ACK
 produces exactly one application delivery. Run `make check` and compile the main
-ESP-IDF image. These modules are not yet advertised as operator ACK/retry support;
-the reliability scheduler and host multi-fragment integration follow.
+ESP-IDF image. Operator execution now composes these modules and advertises ACK/retry support
+only with current radio availability. The host checks both peers’ capabilities
+and numeric limits before starting; see [shared runs](physical_radio_runs.md).
 
 Physical acceptance later needs lost-DATA/lost-ACK cases, exact DATA retry byte
 hashes, one application delivery, observed ACK turnaround/deadlines, distinct
@@ -71,9 +72,9 @@ Only a CRC-valid exact ACK reference finishes the outstanding original. Rejected
 ACKs do not extend its deadline. ACK loss can produce the identical DATA retry,
 a fresh receiver ACK and one application delivery. Exhaustion is explicit and
 leaves the radio reusable. Cancellation must be invoked on stop, ownership loss
-or shutdown by the execution owner; the host/node lifecycle wiring follows in
-multi-fragment integration. These modules are not yet an advertised ACK/retry
-operator workflow.
+or shutdown by the execution owner; the execution owner now wires those lifecycle hooks into bounded multi-fragment
+runs. Delivered receive state remains available through drain so a lost final ACK
+can be answered without another application delivery.
 
 Radio observations are retained through the public poll interface. A blocked
 consumer prevents further attempts, while finite driver/run deadlines still
@@ -89,5 +90,6 @@ deadline extension, real caller-buffer mutation, ACK-loss once-only recovery,
 five literal airtime vectors, ACK-disabled operation, cancellation at ready/TX/
 ACK/guard, preflight before RF, old-sequence rejection and retained observations
 through the run deadline. Compile the main ESP-IDF image and run `make check`.
-Physical IRQ/ACK timing, actual loss recovery, lease-loss integration and full
-host runs remain later acceptance; no board was connected.
+Software checks also cover full host runs and stop/lease/disconnect integration.
+Physical IRQ/ACK timing, actual loss recovery and hardware resource behavior
+remain later acceptance; no RF image was installed during this work.

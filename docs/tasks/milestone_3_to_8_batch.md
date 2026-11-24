@@ -4,8 +4,9 @@
 
 Continue software development through the remaining milestones without waiting
 for individual PR merges. One issue/branch/PR per scope, small descriptive
-Conventional Commits, no merges. The user will review and test later. No ESP is
-connected; do not flash or open physical ports. Preserve the original checkout's
+Conventional Commits, no merges. The user will review and test later. Software work does not use physical ports.
+A separately connected audio node was exercised at the user’s request using its
+existing image; its RF profile is still unconfirmed and it was not flashed. Preserve the original checkout's
 19 existing changes and their ignored snapshot under `local/milestone-batch`.
 
 ## Checkouts and dependencies
@@ -99,3 +100,18 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   retries, exact ACK completion, high-water/cancel/observation cleanup implemented;
   19 focused cases pass. Next #47 integrates these packet modules into node
   execution and host multi-fragment runs; physical #51 remains pending.
+
+- #43: PR #173 (`feat/bounded-stop-and-wait` → `feat/referenced-radio-acks`).
+- #47: multi-fragment node/host/UI integration and independent accounting are
+  implemented. Full checks passed 501 cases, selected-board IDF build and desktop/mobile
+  browser acceptance. Documentation is ready for the issue’s PR. Physical #51 remains
+  pending. Next is M5 #44. Audio follow-up found acceptable tone output but faint/
+  distorted processed speech and an internal contiguous-allocation limit; raw
+  recordings remain private, and full audio qualification is not closed.
+
+- #47: PR #174 (`feat/multi-fragment-radio-runs` →
+  `feat/bounded-stop-and-wait`) is ready for review with five implementation/docs
+  commits, 501 checks and selected-board build/browser evidence. No merge.
+- Next: #44 specifies session-key provisioning/redaction and protected retry/
+  replay boundaries; current operator runs remain unprotected until implementation
+  and compatibility work is complete.

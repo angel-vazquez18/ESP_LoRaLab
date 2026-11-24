@@ -264,12 +264,12 @@ def audio_save(identifier: str, output: Path):
 @app.command()
 def radio_start(
     direction: str = "A_TO_B",
-    message_bytes: Annotated[int, typer.Option(min=1, max=215)] = 64,
-    timeout_ms: Annotated[int, typer.Option(min=1000, max=30000)] = 10000,
+    message_bytes: Annotated[int, typer.Option(min=1, max=65536)] = 64,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 10000,
     config: Path | None = None,
     preview: bool = False,
 ):
-    """Run one unprotected known-data fragment using the shared physical backend."""
+    """Run one known-data message using the shared physical backend."""
     try:
         body = (
             json.loads(config.read_text())
@@ -304,9 +304,9 @@ def radio_export(identifier: str, output: Path):
     """Save the hashed radio evidence bundle without overwriting a file."""
     try:
         with urlopen(BASE_URL + f"/api/radio/runs/{identifier}/export", timeout=20) as response:
-            data = response.read(2 * 1024 * 1024 + 1)
-        if len(data) > 2 * 1024 * 1024:
-            raise ValueError("Radio export exceeds 2 MiB limit")
+            data = response.read(128 * 1024 * 1024 + 1)
+        if len(data) > 128 * 1024 * 1024:
+            raise ValueError("Radio export exceeds 128 MiB limit")
         with output.open("xb") as target:
             target.write(data)
     except (HTTPError, URLError, OSError, ValueError) as exc:
