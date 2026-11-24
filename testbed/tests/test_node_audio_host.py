@@ -373,3 +373,38 @@ def test_live_health_audio_withdrawal_disables_readiness_and_direct_command(
             assert not serial.audio.starts
 
     asyncio.run(scenario())
+
+
+def test_reconnect_starts_with_new_health_age_and_preserves_audio_findings(
+    native_library, tmp_path
+):
+    async def scenario():
+        async with audio_bench(native_library, tmp_path) as (host, serial):
+            r = await host.audio_action("A", "capture", sample_count=8)
+            r = await finished(host.audio, r["id"])
+            node = host.physical["A"]
+            await node.close()
+            replacement = AudioSerial(native_library)
+            node.opener = lambda _: replacement
+            node.last_health = time.monotonic() - 100
+            entered = asyncio.Event()
+            release = asyncio.Event()
+            original = node.request
+
+            async def request(name, *args, **kwargs):
+                if name == "hello":
+                    entered.set()
+                    await release.wait()
+                return await original(name, *args, **kwargs)
+
+            node.request = request
+            connecting = asyncio.create_task(node.connect("native-reconnect-audio"))
+            await asyncio.wait_for(entered.wait(), 2)
+            assert node.snapshot()["connection_state"] == "connecting"
+            assert node.snapshot()["audio_support"]["commands"] == []
+            release.set()
+            await connecting
+            assert node.snapshot()["audio_support"]["commands"]
+            assert host.audio.get(r["id"])["clip"]["sample_count"] == 8
+
+    asyncio.run(scenario())

@@ -144,6 +144,7 @@ class NodeSession:
         await self.close()
         self.port, self.error = port, None
         self.identity, self.health = None, None
+        self.last_health = None
         self.event_seq = self.event_gaps = self.framing_errors = 0
         self.startup_records = 0
         self.wire_profile = None
