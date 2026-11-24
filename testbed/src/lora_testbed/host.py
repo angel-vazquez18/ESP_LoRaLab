@@ -6,6 +6,7 @@ from pathlib import Path
 from . import __version__
 from .artifact_transfers import ArtifactTransfers
 from .catalog import catalog, required_nodes
+from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .procedure_runs import ProcedureService
 from .run_records_v2 import RunRecords
@@ -17,15 +18,21 @@ class Host:
         self.store = Store(data_dir)
         self.lock = asyncio.Lock()
         self.mode = "hardware"
-        self.physical = {role: NodeSession(role, self.store.append_node_event) for role in "AB"}
+        self.physical = {role: NodeSession(role, self.node_event) for role in "AB"}
         self.records = RunRecords(self.store)  # Retain access to historical evidence.
         self.procedures = ProcedureService(self.store, self.physical)
         self.artifacts = ArtifactTransfers(self.store, self.physical)
+        self.audio = NodeAudio(self.store, self.physical, self.artifacts)
+
+    def node_event(self, role, event):
+        self.store.append_node_event(role, event)
+        self.audio.observe(role, event)
 
     @property
     def busy(self) -> bool:
         return (
             self.procedures.busy
+            or self.audio.busy
             or self.artifacts.busy
             or any(n.active_operation is not None for n in self.physical.values())
         )
@@ -52,6 +59,7 @@ class Host:
             "catalog": [dict(entry, preflight=self.preflight(entry["id"])) for entry in catalog()],
             "references": self.store.references(),
             "artifact_transfers": self.artifacts.snapshot(),
+            "audio_operations": self.audio.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -169,8 +177,8 @@ class Host:
 
     async def stop_node_operation(self, role, operation_id):
         async with self.lock:
-            if self.procedures.busy:
-                raise RuntimeError("Stop the procedure through its own controls")
+            if self.procedures.busy or self.audio.busy:
+                raise RuntimeError("Stop the active procedure/audio job through its own controls")
             node = self.physical[role]
             if node.wire_profile != "node_control":
                 raise ValueError("Matching main-node control firmware is required")
@@ -208,7 +216,14 @@ class Host:
                 raise RuntimeError("Another check, operation or file transfer owns the bench")
             return await getattr(self.artifacts, action)(role, *args, **kwargs)
 
+    async def audio_action(self, role, action, **kwargs):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check, file transfer or audio operation owns the bench")
+            return await self.audio.start(role, action, **kwargs)
+
     async def close(self):
+        await self.audio.close()
         await self.artifacts.close()
         await self.procedures.stop(shutdown=True)
         for node in self.physical.values():

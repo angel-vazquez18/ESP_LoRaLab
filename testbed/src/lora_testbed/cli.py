@@ -206,3 +206,56 @@ def artifact_save(transfer_id: str, output: Path):
     except (HTTPError, URLError, OSError, ValueError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from exc
+
+
+@app.command()
+def audio_capture(role: str, samples: Annotated[int, typer.Option(min=1, max=24000)] = 24000):
+    """Capture exact PCM, independently retrieve it and retain a WAV."""
+    request(f"/api/nodes/{role.upper()}/audio/capture", {"sample_count": samples})
+
+
+@app.command()
+def audio_play(role: str, artifact_id: str):
+    """Play one committed PCM file on the physical node."""
+    request(f"/api/nodes/{role.upper()}/audio/play", {"artifact_id": artifact_id})
+
+
+@app.command()
+def audio_retrieve(role: str, artifact_id: str):
+    """Verify a committed PCM file and wrap unchanged samples as WAV."""
+    request(f"/api/nodes/{role.upper()}/audio/retrieve", {"artifact_id": artifact_id})
+
+
+@app.command()
+def audio_status(identifier: str):
+    """Inspect audio progress, errors, gain and retained signal findings."""
+    request(f"/api/audio/operations/{identifier}")
+
+
+@app.command()
+def audio_stop(identifier: str):
+    """Stop the shared audio job and confirm bounded cleanup."""
+    request(f"/api/audio/operations/{identifier}/stop", {})
+
+
+@app.command()
+def audio_listening(identifier: str, heard: str = "not_checked", notes: str = ""):
+    """Record operator listening separately from driver completion."""
+    if heard not in ("not_checked", "heard", "not_heard"):
+        raise typer.BadParameter("Use not_checked, heard or not_heard")
+    request(f"/api/audio/operations/{identifier}/listening", {"heard": heard, "notes": notes})
+
+
+@app.command()
+def audio_save(identifier: str, output: Path):
+    """Save verified PCM as WAV without overwriting an existing file."""
+    try:
+        with urlopen(BASE_URL + f"/api/audio/operations/{identifier}/wav", timeout=20) as response:
+            data = response.read(48045)
+        if len(data) > 48044:
+            raise ValueError("Unexpected WAV size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc

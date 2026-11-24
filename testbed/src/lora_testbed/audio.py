@@ -52,3 +52,50 @@ def save_wav(root: Path, reference: dict, content: bytes):
     directory = root / "audio"
     directory.mkdir(exist_ok=True)
     (directory / f"{reference['id']}.wav").write_bytes(content)
+
+
+def inspect_pcm(pcm: bytes, expected_samples: int) -> dict:
+    if type(expected_samples) is not int or not 1 <= expected_samples <= 24000:
+        raise ValueError("Expected sample count must be 1–24000")
+    if len(pcm) != expected_samples * 2:
+        raise ValueError("PCM length does not match the exact requested sample count")
+    samples = struct.unpack(f"<{expected_samples}h", pcm)
+    peak = max(abs(v) for v in samples)
+    rms = (sum(v * v for v in samples) / expected_samples) ** 0.5
+    width = max(1, (expected_samples + 127) // 128)
+    return {
+        "sample_count": expected_samples,
+        "raw_bytes": len(pcm),
+        "sample_rate_hz": 8000,
+        "channels": 1,
+        "bit_depth": 16,
+        "duration_s": expected_samples / 8000,
+        "pcm_sha256": hashlib.sha256(pcm).hexdigest(),
+        "peak_abs": peak,
+        "rms": rms,
+        "all_zero": peak == 0,
+        "near_silence": rms <= 32,
+        "silence_rms_threshold": 32,
+        "clipped_samples": sum(v in (-32768, 32767) for v in samples),
+        "waveform": [
+            {"min": min(samples[i : i + width]) / 32768, "max": max(samples[i : i + width]) / 32768}
+            for i in range(0, expected_samples, width)
+        ],
+        "signal_warning": "All samples are zero; microphone response is unverified"
+        if peak == 0
+        else "Near silence; check response with a known spoken phrase"
+        if rms <= 32
+        else None,
+        "hardware_qualified": False,
+    }
+
+
+def pcm_wav(pcm: bytes, expected_samples: int) -> bytes:
+    inspect_pcm(pcm, expected_samples)
+    target = io.BytesIO()
+    with wave.open(target, "wb") as output:
+        output.setnchannels(1)
+        output.setsampwidth(2)
+        output.setframerate(8000)
+        output.writeframes(pcm)
+    return target.getvalue()
