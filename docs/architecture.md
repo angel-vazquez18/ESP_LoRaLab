@@ -125,6 +125,8 @@ evidence independently of byte readback.
 - `adapters.py`: compatibility checks and retained generic client interfaces.
 - `physical_adapter.py`: shared connection-bound physical requests and cleanup.
 - `diagnostic_jobs.py`: durable local diagnostic lifecycle and restart interruption.
+- `campaign_plans.py`: immutable typed physical intent, seeded expansion/order,
+  bounded linked batches and cached capability readiness. It starts no work.
 - `nodes.py`: physical serial sessions for the exact diagnostic or main-control
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original

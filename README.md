@@ -126,3 +126,8 @@ The [common physical lifecycle](docs/common_physical_lifecycle.md) binds data,
 audio/files and diagnostic jobs to an exact USB connection as well as device/boot.
 It retains primary versus cleanup failures, committed captures after readback
 failure, and durable diagnostic summaries/evidence without automatic resume.
+
+[Physical campaign plans](docs/physical_campaign_plans.md) save typed settings,
+repetitions, directions and seeded order with linked batches bounded to 64 cases
+and 30 minutes. Preview/save/list/reload work through the API and CLI; campaign
+execution and its dashboard remain separate following work.

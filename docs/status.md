@@ -4,6 +4,32 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Persistent physical campaign plans (#81)
+
+Typed physical plans now save selected workloads, exact settings, repetitions,
+directions, matched source seeds, stable seeded order and case/batch links before
+execution. Local cases require one selected role; RF requires two distinct device
+identities. The planner reuses current data/voice/diagnostic request models and
+retains all 23 CDR procedure references with explicit unavailable-matrix blockers.
+Large totals split into linked batches of at most 64 cases/1,800 declared seconds
+without dropping cases. Oversized atomic cases and plans above 4,096 cases fail
+before any partial save. Plans and schema/source/document fingerprints remain
+immutable; cached readiness never authorizes later connection reuse.
+
+API/CLI preview/save/list/reload work offline and preserve historical interrupted/
+blocked campaigns in their original storage. Historical campaign expansion and
+matched-seed rules were inspected; artificial packet-pacing estimates/execution
+are not imported. The verified mixed example expands nine cases and a 600-second
+planning reserve. Execution is still #87 and dashboard integration #88; saving a
+plan starts no hardware work.
+
+Full check passes 889 cases without skips and all lint/frontend/contract/repository/
+vendor checks. Final 24 planner cases, including the added documented example,
+and a final 86-case planner/lifecycle/hardware-gate check pass; final lint,
+contracts/repository and UI formatting pass. Existing Starlette/httpx deprecation
+remains. Host-only: no wire hash or firmware change, no new IDF build, physical
+port or flash. See [planner policy, example and checks](physical_campaign_plans.md).
+
 ## November 24 — Shared bound physical lifecycle (#75)
 
 Radio, audio, files and local diagnostics now share one adapter for requests and

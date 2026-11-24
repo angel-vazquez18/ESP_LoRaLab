@@ -1,0 +1,36 @@
+{
+  "name": "Local memory and bidirectional known-data checks",
+  "repetitions": 3,
+  "directions": ["A_TO_B", "B_TO_A"],
+  "order": "randomized",
+  "order_seed": 743,
+  "notes": "Capability checks; full procedure qualification remains separate.",
+  "templates": [
+    {
+      "label": "Node A memory probe",
+      "case": {
+        "kind": "memory_probe",
+        "role": "A",
+        "iterations": 10,
+        "payload_bytes": 4096
+      }
+    },
+    {
+      "label": "Known-data baseline",
+      "case": {
+        "kind": "known_data",
+        "request": {
+          "message_bytes": 64,
+          "source_seed": 743,
+          "timeout_ms": 10000,
+          "security": "none",
+          "radio": {
+            "spreading_factor": 7,
+            "bandwidth_hz": 125000,
+            "tx_power_dbm": 2
+          }
+        }
+      }
+    }
+  ]
+}

@@ -2,7 +2,8 @@
 
 > Historical document. The November 1 physical-only decision supersedes the
 > simulator workflows and commands below; those implementations were removed.
-> See [current status](status.md) and [host usage](../testbed/README.md).
+> See [current status](status.md), [host usage](../testbed/README.md), and the
+> new [physical campaign planner](physical_campaign_plans.md).
 
 Implemented October 18, 2026. These workflows currently execute **legacy v1
 simulation only**. Hardware mode remains diagnostic; campaigns cannot issue RF

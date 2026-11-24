@@ -439,3 +439,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   UI formatting pass. Original 19 files unchanged. Beginning #81 on a separate
   branch: persist physical plans, seeded order, requirements and linked bounded
   batches. Do not restore historical simulator execution; #87 owns execution.
+
+- #81 implemented on #199: typed physical workload/procedure references,
+  deterministic matched-seed expansion/order, immutable hashed intent and linked
+  64-case/30-minute batches with no dropped cases. Local node B works alone; RF
+  checks distinct identities. All 23 full procedure references remain explicitly
+  blocked until implemented. Existing compatible request models and historical
+  expansion/storage patterns were inspected; no simulator execution is restored.
+  API/CLI preview/save/list/reload and verified nine-case offline example work.
+  Full 889 cases without skips and all shared checks pass; final 24 planner and
+  86 integration cases pass, plus final lint/contracts/repository/UI formatting.
+  Host-only, no wire/build/flash change. Execution is #87, UI #88. Next #82 is
+  host memory-observation procedure/evidence integration; inspect its live scope.
