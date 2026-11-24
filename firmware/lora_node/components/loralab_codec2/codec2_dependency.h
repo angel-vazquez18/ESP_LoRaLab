@@ -13,8 +13,10 @@ const char *codec2_dependency_version(void);
 const char *codec2_dependency_revision(void);
 
 // One fresh state per clip; encoded bytes use the upstream packed format.
-typedef struct CODEC2 codec2_encoder;
-codec2_encoder *codec2_encoder_create(void);
-bool codec2_encoder_frame(codec2_encoder *state, short *samples, size_t sample_count,
+typedef struct CODEC2 codec2_clip_state;
+codec2_clip_state *codec2_clip_create(void);
+bool codec2_encode_frame(codec2_clip_state *state, short *samples, size_t sample_count,
                           uint8_t *output, size_t capacity);
-void codec2_encoder_destroy(codec2_encoder *state);
+bool codec2_decode_frame(codec2_clip_state *state, const uint8_t *input, size_t length,
+                          short *output, size_t sample_capacity);
+void codec2_clip_destroy(codec2_clip_state *state);

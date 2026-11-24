@@ -188,3 +188,7 @@ It checks production C output against a separate public-library reference, exact
 frame/sample/hash relationships, interruption/allocation/publication cleanup and
 current host gates. Match both artifact and codec fingerprints after rebuilding;
 keep historical records unchanged. Encoding needs no microphone/speaker pins.
+
+Finite codec decoding and its target-memory limitations are covered by
+[the decoder walkthrough](codec_decoding.md). Run the focused command there before
+full checks when changing the worker, codec supplement or cleanup.

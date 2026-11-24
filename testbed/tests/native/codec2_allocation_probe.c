@@ -41,17 +41,29 @@ void codec_test_free(void *pointer)
     live--;
     free(block);
 }
+static bool decoder_probe(void)
+{
+    codec2_clip_state *state = codec2_clip_create();
+    if (!state) return false;
+    short samples[160];
+    uint8_t bits[8] = {0};
+    bool decoded = codec2_decode_frame(state, bits, sizeof(bits), samples, 160);
+    codec2_clip_destroy(state);
+    return decoded;
+}
+
 int main(int argc, char **argv)
 {
     fail_at = argc > 1 ? (unsigned)strtoul(argv[1], NULL, 10) : 0;
     codec2_frame_format format;
-    bool ready = codec2_dependency_query(3200, &format);
+    bool decoder = argc > 2 && !strcmp(argv[2], "decode");
+    bool ready = decoder ? decoder_probe() : codec2_dependency_query(3200, &format);
     printf("ready=%u calls=%u live=%u peak=%zu\n", ready, calls, live, peak);
     if (live || retained || (fail_at && fail_at <= calls && ready))
         return 3;
     if ((!fail_at || fail_at > calls) && !ready)
         return 4;
     fail_at = calls = 0;
-    ready = codec2_dependency_query(3200, &format);
+    ready = decoder ? decoder_probe() : codec2_dependency_query(3200, &format);
     return !ready || live || retained ? 5 : 0;
 }

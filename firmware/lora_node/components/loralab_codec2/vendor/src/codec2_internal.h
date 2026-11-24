@@ -36,6 +36,7 @@
 
 struct CODEC2 {
   int mode;
+  unsigned long random_state;
   C2CONST c2const;
   int Fs;
   int n_samp;

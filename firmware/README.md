@@ -41,3 +41,7 @@ owns ESP-IDF callbacks and persistent identity; `transport/` owns USB I/O;
 `control/` owns the portable state machine; `protocol/` owns strict JSON parsing.
 The root generator maintains `generated/contract_schema.h`. These remain source
 modules inside one main component; see root `docs/architecture.md` for the tree.
+
+Finite `audio.decode` creates a separate recovered PCM artifact with trimmed final
+padding and stage heap snapshots. Review [decoding](../docs/codec_decoding.md) for
+the matching codec profile, cleanup, checks and pending hardware qualification.

@@ -36,9 +36,9 @@ const char *codec2_dependency_revision(void)
     return "06d4c11e699b0351765f10398abb4f663a984f36";
 }
 
-codec2_encoder *codec2_encoder_create(void) { return codec2_create(CODEC2_MODE_3200); }
+codec2_clip_state *codec2_clip_create(void) { return codec2_create(CODEC2_MODE_3200); }
 
-bool codec2_encoder_frame(codec2_encoder *state, short *samples, size_t sample_count,
+bool codec2_encode_frame(codec2_clip_state *state, short *samples, size_t sample_count,
                           uint8_t *output, size_t capacity)
 {
     if (!state || !samples || sample_count != 160 || !output || capacity < 8)
@@ -47,7 +47,16 @@ bool codec2_encoder_frame(codec2_encoder *state, short *samples, size_t sample_c
     return true;
 }
 
-void codec2_encoder_destroy(codec2_encoder *state)
+bool codec2_decode_frame(codec2_clip_state *state, const uint8_t *input, size_t length,
+                          short *output, size_t sample_capacity)
+{
+    if (!state || !input || length != 8 || !output || sample_capacity < 160)
+        return false;
+    codec2_decode(state, output, input);
+    return true;
+}
+
+void codec2_clip_destroy(codec2_clip_state *state)
 {
     if (state) codec2_destroy(state);
 }

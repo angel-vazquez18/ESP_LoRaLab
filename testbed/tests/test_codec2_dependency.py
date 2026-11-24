@@ -29,7 +29,10 @@ def test_node_reports_checked_codec_dependency_and_only_implemented_operations(
         )
         assert info["sample_rate_hz"] == 8000
         assert capabilities["codec2_3200"]
-        assert capabilities["resource_limits"]["codec_io"]["commands"] == ["audio.encode"]
+        assert capabilities["resource_limits"]["codec_io"]["commands"] == [
+            "audio.encode",
+            "audio.decode",
+        ]
     finally:
         node.close()
 

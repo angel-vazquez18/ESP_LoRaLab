@@ -96,7 +96,10 @@ def test_host_session_tracks_negotiated_encoding_and_receives_typed_terminal_res
         session = NodeSession("A", lambda *_: None, opener=lambda _: serial)
         try:
             await session.connect("fixture-only")
-            assert session.snapshot()["codec_support"]["commands"] == ["audio.encode"]
+            assert session.snapshot()["codec_support"]["commands"] == [
+                "audio.encode",
+                "audio.decode",
+            ]
             accepted = await session.request(
                 "audio.encode", {"source_artifact_id": source, "artifact_id": str(uuid4())}
             )

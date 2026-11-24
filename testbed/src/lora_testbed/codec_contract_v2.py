@@ -21,18 +21,19 @@ class Encode(ArtifactReference):
     @model_validator(mode="after")
     def distinct_artifacts(self):
         if self.artifact_id == self.source_artifact_id:
-            raise ValueError("Encoding requires a separate output artifact")
+            raise ValueError("Codec work requires a separate output artifact")
         return self
 
 
-ARGUMENTS = {"audio.encode": Encode}
+ARGUMENTS = {"audio.encode": Encode, "audio.decode": Encode}
 
 
 class Capabilities(StrictModel):
     profile: Literal["codec_io_v1"]
     schema_sha256: SHA256
-    commands: list[Literal["audio.encode"]] = Field(min_length=1, max_length=1)
+    commands: list[Literal["audio.encode", "audio.decode"]] = Field(min_length=2, max_length=2)
     codec: Literal["codec2_3200_v1"]
+    decoder_phase_state: Literal["per_clip_seed1"]
     version: Literal["1.2.0"]
     source_commit: Literal["06d4c11e699b0351765f10398abb4f663a984f36"]
     library_ready: Literal[True]
@@ -50,7 +51,7 @@ class Capabilities(StrictModel):
 class Availability(StrictModel):
     profile: Literal["codec_io_v1"]
     schema_sha256: SHA256
-    commands: list[Literal["audio.encode"]] = Field(min_length=1, max_length=1)
+    commands: list[Literal["audio.encode", "audio.decode"]] = Field(min_length=2, max_length=2)
 
 
 class Result(StrictModel):
@@ -97,6 +98,73 @@ class Result(StrictModel):
         return self
 
 
+class HeapSnapshot(StrictModel):
+    free_bytes: int = Field(ge=0)
+    minimum_free_bytes: int = Field(ge=0)
+    largest_free_bytes: int = Field(ge=0)
+
+
+class MemorySnapshot(StrictModel):
+    internal: HeapSnapshot | None
+    psram: HeapSnapshot | None
+    allocation_failures: int = Field(ge=0)
+
+
+class DecodeMemory(StrictModel):
+    scope: Literal["platform_heap_snapshots_not_peak"]
+    before: MemorySnapshot
+    ready: MemorySnapshot
+    after: MemorySnapshot
+
+
+class DecodeResult(StrictModel):
+    memory: DecodeMemory
+    kind: Literal["audio_decode"]
+    codec: Literal["codec2_3200_v1"]
+    source_artifact_id: ArtifactID
+    source_sha256: SHA256
+    artifact_id: ArtifactID
+    sample_count: int = Field(ge=1, le=24000)
+    samples_completed: int = Field(ge=0, le=24000)
+    frame_count: int = Field(ge=1, le=150)
+    frames_completed: int = Field(ge=0, le=150)
+    decoded_bytes: int = Field(ge=0, le=48000)
+    trimmed_samples: int = Field(ge=0, le=159)
+    setup_us: int = Field(ge=0)
+    conversion_us: int = Field(ge=0)
+    codec_us: int = Field(ge=0)
+    finalize_us: int = Field(ge=0)
+    started_us: int = Field(ge=0)
+    finished_us: int = Field(ge=0)
+    duration_us: int = Field(ge=0)
+    artifact: CommitResult | None
+    stop_reason: str | None
+
+    @model_validator(mode="after")
+    def consistent_counts(self):
+        if (
+            self.frame_count != (self.sample_count + 159) // 160
+            or self.frames_completed > self.frame_count
+            or self.samples_completed != min(self.sample_count, self.frames_completed * 160)
+            or self.decoded_bytes != self.samples_completed * 2
+            or self.trimmed_samples != self.frame_count * 160 - self.sample_count
+            or self.finished_us - self.started_us != self.duration_us
+            or self.artifact_id == self.source_artifact_id
+        ):
+            raise ValueError("Decoded counts, identities or duration are inconsistent")
+        if self.artifact is not None and (
+            self.frames_completed != self.frame_count
+            or self.artifact.artifact_id != self.artifact_id
+            or self.artifact.source_artifact_id != self.source_artifact_id
+            or self.artifact.format != "pcm_s16le_8000_mono"
+            or self.artifact.length_bytes != self.decoded_bytes
+            or self.artifact.sample_count != self.sample_count
+            or self.artifact.kind != "recovered"
+        ):
+            raise ValueError("Published PCM differs from the completed decode")
+        return self
+
+
 def schema():
     return {
         "scope": "finite_codec_artifacts",
@@ -105,6 +173,7 @@ def schema():
         "accepted": control_v2.AcceptedOperation.model_json_schema(),
         "capability": Capabilities.model_json_schema(),
         "result": Result.model_json_schema(),
+        "decode_result": DecodeResult.model_json_schema(),
         "availability": Availability.model_json_schema(),
     }
 
@@ -122,7 +191,7 @@ def require_capability(identity, health, name):
     if identity is None or health is None:
         raise ValueError("Codec identity/current health is unavailable")
     if not identity.codec2_3200 or not health.codec2_3200:
-        raise ValueError("Codec 2 encoding is unavailable")
+        raise ValueError("Codec 2 artifact transforms are unavailable")
     limits = Capabilities.model_validate(identity.resource_limits.get("codec_io"))
     current = Availability.model_validate(health.resource_limits.get("codec_io"))
     if (

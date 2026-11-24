@@ -21,8 +21,8 @@ dropped. There is no host normalization, AGC or extra signal processing here.
 `audio/codec_clip` owns validation, the committed source borrow, private output
 reservation, fresh library state, bounded steps, timing and cleanup. The public
 dependency adapter exposes create/frame/destroy without leaking its private
-library headers into portable control. The pinned upstream signal-processing
-code and packed format are unchanged.
+library headers into portable control. The packed format and codebooks are unchanged. The later decoder patch scopes
+phase randomisation to its context; see [decoding](codec_decoding.md).
 
 `artifacts/artifact_store` reserves the derived output under the same four-slot/
 262,144-byte budget. It publishes only after final SHA-256 succeeds. The encoded
@@ -70,7 +70,8 @@ current-profile fingerprints and fresh health before writing, tracks the accepte
 operation and receives its typed terminal result through the existing observer.
 A mismatched profile or stale health rejects before trace callbacks or serial I/O.
 GUI/CLI operation controls and retained codec workflow records remain #68/#72;
-this PR does not add an operator encode button or decoder.
+this scope does not add an operator encode button. Decoding is now implemented
+in [#41](codec_decoding.md).
 
 When encoding is available, hello's `resource_limits.codec_io` combines dependency
 version/revision/options, queried dimensions and the available command list.
@@ -80,7 +81,8 @@ working codec command. Immutable transport/workload bounds stay in same-boot
 enrollment. Current profiles, flags, applied radio settings and measurements remain
 fresh; bounded health tests include all peripherals, configured RF and an error.
 The codec flag now means a usable selected mode; consult commands for supported
-operations. `audio.decode` is still unavailable pending #41.
+operations. `audio.decode` is now listed as well; the current codec supplement fingerprint and
+its migration are in [decoding](codec_decoding.md).
 
 Two fingerprints identify this revision:
 

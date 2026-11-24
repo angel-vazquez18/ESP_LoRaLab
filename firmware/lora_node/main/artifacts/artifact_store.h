@@ -73,5 +73,7 @@ artifact_status artifact_store_capture_finish(artifact_store *store, const char 
 // Local derived output stays private until all frames and its final hash exist.
 artifact_status artifact_store_encode_begin(artifact_store *store, const char *owner,
     const char *id, const char *source_id, uint32_t samples, void **destination);
+artifact_status artifact_store_decode_begin(artifact_store *store, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, void **destination);
 artifact_status artifact_store_encode_finish(artifact_store *store, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);

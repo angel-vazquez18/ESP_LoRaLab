@@ -322,6 +322,22 @@ artifact_status artifact_store_encode_begin(artifact_store *s, const char *owner
     *destination = slot->bytes;
     return ARTIFACT_OK;
 }
+artifact_status artifact_store_decode_begin(artifact_store *s, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, void **destination)
+{
+    if (!destination || !samples || samples > 24000 || !hex_string(source_id, 36, true) ||
+        equal(source_id, id)) return ARTIFACT_INVALID_ARGUMENT;
+    artifact_spec spec = {.artifact_id = id, .kind = "recovered", .format = "pcm_s16le_8000_mono",
+        .length_bytes = samples * 2,
+        .sha256 = "0000000000000000000000000000000000000000000000000000000000000000"};
+    artifact_status status = artifact_store_begin(s, owner, &spec);
+    if (status != ARTIFACT_OK) return status;
+    artifact_slot *slot = find(s, id);
+    slot->producing = true;
+    memcpy(slot->manifest.source_artifact_id, source_id, 37);
+    *destination = slot->bytes;
+    return ARTIFACT_OK;
+}
 artifact_status artifact_store_encode_finish(artifact_store *s, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
 {

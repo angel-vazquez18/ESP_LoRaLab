@@ -5,7 +5,7 @@
 struct codec_clip {
     codec_clip_port port;
     artifact_store *store;
-    codec2_encoder *encoder;
+    codec2_clip_state *state;
     const uint8_t *input;
     uint8_t *output;
     codec_clip_status status;
@@ -15,7 +15,7 @@ void codec_clip_destroy(codec_clip **owner)
 {
     if (!owner || !*owner) return;
     codec_clip *clip = *owner;
-    codec2_encoder_destroy(clip->encoder);
+    codec2_clip_destroy(clip->state);
     if (!clip->status.complete && clip->output)
         artifact_store_delete(clip->store, clip->status.output_id);
     artifact_store_release(clip->store, clip->status.source_id);
@@ -26,7 +26,7 @@ void codec_clip_destroy(codec_clip **owner)
 }
 
 artifact_status codec_clip_create(artifact_store *store, const char *owner,
-    const char *source_id, const char *output_id, codec_clip_port port, codec_clip **output)
+    const char *source_id, const char *output_id, bool decoding, codec_clip_port port, codec_clip **output)
 {
     if (!store || !owner || !output || !port.allocate || !port.deallocate || !port.sha256 || !port.now_us ||
         !source_id || !output_id || strlen(source_id) != 36 || strlen(output_id) != 36 ||
@@ -34,7 +34,11 @@ artifact_status codec_clip_create(artifact_store *store, const char *owner,
     *output = NULL;
     const artifact_manifest *source = artifact_store_find(store, source_id);
     if (!source) return ARTIFACT_NOT_FOUND;
-    if (strcmp(source->format, "pcm_s16le_8000_mono") || !source->length_bytes ||
+    if (decoding) {
+        if (strcmp(source->format, "codec2_3200_v1") || !source->sample_count || source->sample_count > 24000 ||
+            source->frame_count != (source->sample_count + 159) / 160 ||
+            source->length_bytes != source->frame_count * 8) return ARTIFACT_INVALID_ARGUMENT;
+    } else if (strcmp(source->format, "pcm_s16le_8000_mono") || !source->length_bytes ||
         source->length_bytes % 2 || source->length_bytes > 48000) return ARTIFACT_INVALID_ARGUMENT;
     if (source->state != ARTIFACT_COMMITTED) return ARTIFACT_INVALID_STATE;
     int64_t started = port.now_us(port.context);
@@ -47,7 +51,8 @@ artifact_status codec_clip_create(artifact_store *store, const char *owner,
     memcpy(clip->status.source_id, source_id, 37);
     memcpy(clip->status.source_sha256, source->sha256, 65);
     memcpy(clip->status.output_id, output_id, 37);
-    clip->status.input_samples = source->length_bytes / 2;
+    clip->status.decoding = decoding;
+    clip->status.input_samples = decoding ? source->sample_count : source->length_bytes / 2;
     clip->status.frame_count = (clip->status.input_samples + 159) / 160;
     clip->status.padded_samples = clip->status.frame_count * 160 - clip->status.input_samples;
     size_t length = 0;
@@ -59,12 +64,14 @@ artifact_status codec_clip_create(artifact_store *store, const char *owner,
     }
     clip->input = input;
     void *destination = NULL;
-    error = artifact_store_encode_begin(store, owner, output_id, source_id,
+    error = decoding ? artifact_store_decode_begin(store, owner, output_id, source_id,
+                                        clip->status.input_samples, &destination) :
+                       artifact_store_encode_begin(store, owner, output_id, source_id,
                                         clip->status.input_samples, &destination);
     if (error == ARTIFACT_OK) {
         clip->output = destination;
-        clip->encoder = codec2_encoder_create();
-        if (!clip->encoder) error = ARTIFACT_ALLOCATION_FAILED;
+        clip->state = codec2_clip_create();
+        if (!clip->state) error = ARTIFACT_ALLOCATION_FAILED;
     }
     int64_t ended = port.now_us(port.context);
     if (ended < started) error = ARTIFACT_INTERNAL_ERROR;
@@ -85,7 +92,7 @@ void codec_clip_step(codec_clip *clip)
     if (status->frames_completed < status->frame_count) {
         short samples[160] = {0};
         uint32_t offset = status->frames_completed * 160;
-        for (unsigned i = 0; i < 160 && offset + i < status->input_samples; i++) {
+        for (unsigned i = 0; !status->decoding && i < 160 && offset + i < status->input_samples; i++) {
             unsigned value = clip->input[(offset + i) * 2] |
                              (unsigned)clip->input[(offset + i) * 2 + 1] << 8;
             samples[i] = (short)(value >= 32768 ? (int)value - 65536 : (int)value);
@@ -93,17 +100,33 @@ void codec_clip_step(codec_clip *clip)
         int64_t call_start = clip->port.now_us(clip->port.context);
         if (call_start < started) { status->error = ARTIFACT_INTERNAL_ERROR; return; }
         status->conversion_us += (uint64_t)(call_start - started);
-        bool encoded = codec2_encoder_frame(clip->encoder, samples, 160,
-                                             clip->output + status->encoded_bytes, 8);
+        bool converted = status->decoding ?
+            codec2_decode_frame(clip->state, clip->input + status->encoded_bytes, 8, samples, 160) :
+            codec2_encode_frame(clip->state, samples, 160, clip->output + status->encoded_bytes, 8);
         int64_t ended = clip->port.now_us(clip->port.context);
-        if (!encoded || ended < call_start) { status->error = ARTIFACT_INTERNAL_ERROR; return; }
+        if (!converted || ended < call_start) { status->error = ARTIFACT_INTERNAL_ERROR; return; }
         status->codec_us += (uint64_t)(ended - call_start);
+        uint32_t count = status->input_samples - offset;
+        if (count > 160) count = 160;
+        if (status->decoding) {
+            for (unsigned i = 0; i < count; i++) {
+                uint16_t value = (uint16_t)samples[i];
+                clip->output[(offset + i) * 2] = value & 255;
+                clip->output[(offset + i) * 2 + 1] = value >> 8;
+            }
+            int64_t copied = clip->port.now_us(clip->port.context);
+            if (copied < ended) { status->error = ARTIFACT_INTERNAL_ERROR; return; }
+            status->conversion_us += (uint64_t)(copied - ended);
+        }
+        status->samples_completed += count;
         status->frames_completed++;
         status->encoded_bytes += 8;
         return;
     }
-    status->error = artifact_store_encode_finish(clip->store, status->output_id,
-                                                  clip->port.sha256, clip->port.context);
+    status->error = status->decoding ?
+        artifact_store_capture_finish(clip->store, status->output_id, status->input_samples,
+                                     clip->port.sha256, clip->port.context) :
+        artifact_store_encode_finish(clip->store, status->output_id, clip->port.sha256, clip->port.context);
     int64_t ended = clip->port.now_us(clip->port.context);
     if (ended < started) status->error = ARTIFACT_INTERNAL_ERROR;
     else status->finalize_us = (uint64_t)(ended - started);
