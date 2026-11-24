@@ -1,0 +1,39 @@
+{
+  "started_at": "2026-11-16T21:44:56.432+00:00",
+  "requested_ports": [
+    "COM6",
+    "COM7"
+  ],
+  "identify_only": false,
+  "nodes": [
+    {
+      "port": "COM6",
+      "label": "Heltec-A",
+      "assigned_port": "COM6",
+      "port_matches_assignment": true,
+      "usb_serial": "8C:FD:49:B5:B7:8C",
+      "mac_normalized": "8CFD49B5B78C",
+      "description": "USB Serial Device (COM6)",
+      "hardware_id": "USB VID:PID=303A:1001 SER=8C:FD:49:B5:B7:8C",
+      "log_file": "serial-COM6.log"
+    },
+    {
+      "port": "COM7",
+      "label": "Heltec-B",
+      "assigned_port": "COM7",
+      "port_matches_assignment": true,
+      "usb_serial": "44:1B:F6:6F:99:E4",
+      "mac_normalized": "441BF66F99E4",
+      "description": "USB Serial Device (COM7)",
+      "hardware_id": "USB VID:PID=303A:1001 SER=44:1B:F6:6F:99:E4"
+    }
+  ],
+  "stages": [],
+  "tone_repetitions": 3,
+  "both_connections_open_together": false,
+  "software_passed": false,
+  "audible_output": "Not automatically verified; listener confirmation required",
+  "error": "could not open port 'COM6': PermissionError(13, 'Access is denied.', None, 5)",
+  "finished_at": "2026-11-16T21:44:56.439+00:00",
+  "connections_closed": true
+}

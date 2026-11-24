@@ -1,0 +1,8 @@
+{
+  "label": "playback_check",
+  "requested_at_utc": "2026-11-02T11:03:38.120473+00:00",
+  "serial_port": "COM4",
+  "mode": "export_existing",
+  "recording_time_known": false,
+  "error": "[PCM ERROR] No complete recording; use m, r or p first"
+}

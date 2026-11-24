@@ -1,0 +1,90 @@
+23:16:11.414 > 
+23:16:11.414 > [STATE] PLAYBACK
+23:16:11.421 > [AUDIO] Playing 1 kHz speaker test tone...
+23:16:11.421 > [DIN] BEGIN
+23:16:12.454 > [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1037425
+23:16:12.454 > [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+23:16:12.454 > [DIN] END
+23:16:12.454 > [AUDIO] Tone transfer complete; verify audible output
+23:16:12.454 > 
+23:16:12.454 > [STATE] IDLE
+23:16:12.470 > [HEARTBEAT] uptime=2427923 ms heap=239872 state=IDLE
+23:16:12.921 > 
+23:16:12.921 > [STATE] PLAYBACK
+23:16:12.921 > [AUDIO] Playing 1 kHz speaker test tone...
+23:16:12.921 > [DIN] BEGIN
+23:16:13.954 > [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1035475
+23:16:13.954 > [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+23:16:13.954 > [DIN] END
+23:16:13.954 > [AUDIO] Tone transfer complete; verify audible output
+23:16:13.954 > 
+23:16:13.954 > [STATE] IDLE
+23:16:13.971 > [HEARTBEAT] uptime=2429427 ms heap=239872 state=IDLE
+23:16:14.975 > [HEARTBEAT] uptime=2430428 ms heap=239872 state=IDLE
+23:16:15.968 > [HEARTBEAT] uptime=2431428 ms heap=239872 state=IDLE
+23:16:16.974 > [HEARTBEAT] uptime=2432428 ms heap=239872 state=IDLE
+23:16:17.975 > [HEARTBEAT] uptime=2433428 ms heap=239872 state=IDLE
+23:16:18.975 > [HEARTBEAT] uptime=2434428 ms heap=239872 state=IDLE
+23:16:19.974 > [HEARTBEAT] uptime=2435428 ms heap=239872 state=IDLE
+23:16:20.974 > [HEARTBEAT] uptime=2436428 ms heap=239872 state=IDLE
+23:16:21.973 > [HEARTBEAT] uptime=2437428 ms heap=239872 state=IDLE
+23:16:22.968 > [HEARTBEAT] uptime=2438428 ms heap=239872 state=IDLE
+23:16:23.975 > [HEARTBEAT] uptime=2439428 ms heap=239872 state=IDLE
+23:16:24.973 > [HEARTBEAT] uptime=2440428 ms heap=239872 state=IDLE
+23:16:25.965 > [HEARTBEAT] uptime=2441428 ms heap=239872 state=IDLE
+23:16:26.969 > [HEARTBEAT] uptime=2442428 ms heap=239872 state=IDLE
+23:16:27.975 > [HEARTBEAT] uptime=2443428 ms heap=239872 state=IDLE
+23:16:28.974 > [HEARTBEAT] uptime=2444428 ms heap=239872 state=IDLE
+23:16:29.971 > [HEARTBEAT] uptime=2445428 ms heap=239872 state=IDLE
+23:16:30.970 > [HEARTBEAT] uptime=2446428 ms heap=239872 state=IDLE
+23:16:31.968 > [HEARTBEAT] uptime=2447428 ms heap=239872 state=IDLE
+23:16:32.975 > [HEARTBEAT] uptime=2448428 ms heap=239872 state=IDLE
+23:16:33.964 > [HEARTBEAT] uptime=2449428 ms heap=239872 state=IDLE
+23:16:34.971 > [HEARTBEAT] uptime=2450428 ms heap=239872 state=IDLE
+23:16:35.969 > [HEARTBEAT] uptime=2451428 ms heap=239872 state=IDLE
+23:16:36.974 > [HEARTBEAT] uptime=2452428 ms heap=239872 state=IDLE
+23:16:37.972 > [HEARTBEAT] uptime=2453428 ms heap=239872 state=IDLE
+23:16:38.967 > [HEARTBEAT] uptime=2454428 ms heap=239872 state=IDLE
+23:16:39.974 > [HEARTBEAT] uptime=2455428 ms heap=239872 state=IDLE
+23:16:40.974 > [HEARTBEAT] uptime=2456428 ms heap=239872 state=IDLE
+23:16:41.973 > [HEARTBEAT] uptime=2457428 ms heap=239872 state=IDLE
+23:16:42.968 > [HEARTBEAT] uptime=2458428 ms heap=239872 state=IDLE
+23:16:43.973 > [HEARTBEAT] uptime=2459428 ms heap=239872 state=IDLE
+23:16:44.969 > [HEARTBEAT] uptime=2460428 ms heap=239872 state=IDLE
+23:16:45.959 > 
+23:16:45.959 > [STATE] PLAYBACK
+23:16:45.985 > [AUDIO] Playing 1 kHz speaker test tone...
+23:16:45.985 > [DIN] BEGIN
+23:16:47.023 > [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1037483
+23:16:47.023 > [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+23:16:47.023 > [DIN] END
+23:16:47.023 > [AUDIO] Tone transfer complete; verify audible output
+23:16:47.023 > 
+23:16:47.023 > [STATE] IDLE
+23:16:47.023 > [HEARTBEAT] uptime=2462483 ms heap=239872 state=IDLE
+23:16:48.020 > [HEARTBEAT] uptime=2463484 ms heap=239872 state=IDLE
+23:16:48.521 > 
+23:16:48.521 > [STATE] PLAYBACK
+23:16:48.542 > [AUDIO] Playing 1 kHz speaker test tone...
+23:16:48.542 > [DIN] BEGIN
+23:16:49.565 > [PINS] DIN GPIO47 rising_edges=31964 elapsed_us=1025463
+23:16:49.565 > [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+23:16:49.565 > [DIN] END
+23:16:49.565 > [AUDIO] Tone transfer complete; verify audible output
+23:16:49.565 > 
+23:16:49.565 > [STATE] IDLE
+23:16:49.565 > [HEARTBEAT] uptime=2465027 ms heap=239872 state=IDLE
+23:16:50.567 > [HEARTBEAT] uptime=2466028 ms heap=239872 state=IDLE
+23:16:51.524 > 
+23:16:51.524 > [STATE] PLAYBACK
+23:16:51.536 > [AUDIO] Playing 1 kHz speaker test tone...
+23:16:51.536 > [DIN] BEGIN
+23:16:52.569 > [PINS] DIN GPIO47 rising_edges=32000 elapsed_us=1039470
+23:16:52.576 > [PINS] DIN activity only: no tone frequency or amplifier-terminal continuity inferred
+23:16:52.576 > [DIN] END
+23:16:52.576 > [AUDIO] Tone transfer complete; verify audible output
+23:16:52.576 > 
+23:16:52.576 > [STATE] IDLE
+23:16:52.581 > [HEARTBEAT] uptime=2468035 ms heap=239872 state=IDLE
+23:16:53.574 > [HEARTBEAT] uptime=2469036 ms heap=239872 state=IDLE
+23:16:54.570 > [HEARTBEAT] uptime=2470036 ms heap=239872 state=IDLE

@@ -1,0 +1,153 @@
+{
+  "samples": 24000,
+  "sample_rate_hz": 8000,
+  "duration_seconds": 3.0,
+  "min": -474,
+  "max": 306,
+  "mean": -20.775166666666667,
+  "ac_rms": 119.0455351954541,
+  "ac_rms_dbfs_relative_to_32768": -48.79473646268608,
+  "zero_percent": 0.625,
+  "rail_percent": 0.0,
+  "longest_identical_run_samples": 4,
+  "largest_adjacent_jump": 172,
+  "most_common_values": [
+    [
+      36,
+      236
+    ],
+    [
+      40,
+      225
+    ],
+    [
+      48,
+      215
+    ],
+    [
+      52,
+      211
+    ],
+    [
+      58,
+      209
+    ],
+    [
+      60,
+      207
+    ],
+    [
+      24,
+      205
+    ],
+    [
+      42,
+      203
+    ]
+  ],
+  "rms_100ms": [
+    75.75391079013677,
+    98.33130223891068,
+    82.62057855038296,
+    57.37752173107514,
+    88.57508114588437,
+    103.0947622335878,
+    77.65123952648793,
+    57.282021612369796,
+    70.30956549431949,
+    130.3437954027732,
+    168.0919837469949,
+    134.00901089105912,
+    53.8967067639573,
+    42.16378778051137,
+    66.99608197499313,
+    52.880998477714094,
+    78.04953555275009,
+    195.71801143481915,
+    174.27552897638842,
+    160.04361905430656,
+    238.23425446396243,
+    177.97261025225203,
+    60.19019853763568,
+    104.49944975931692,
+    91.94563611178074,
+    200.56744501538628,
+    198.7959883901081,
+    100.81086250994979,
+    37.283374310810444,
+    39.60486081278408
+  ],
+  "crc32": "901624e7",
+  "capture": {
+    "label": "automated-save-check",
+    "requested_at_utc": "2026-11-02T10:15:28.842691+00:00",
+    "serial_port": "COM4",
+    "mode": "new_recording",
+    "recording_time_known": true,
+    "received_at_utc": "2026-11-02T10:15:36.202010+00:00",
+    "firmware": {
+      "diagnostic_lines": [
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Spe",
+        "[AUDIO] Speak now. Recording for 3 seconds...",
+        "[MIC] samples=24000 min=-474 max=306 mean=-20.8 AC_RMS=119.0 zero=150 clipped=0",
+        "[MIC] First raw 32-bit slots: ffe95a00 ffe99e00 ffee5600 ffe57400 fff50400 ffe88c00 ffed8200 ffed7000",
+        "[MIC RAW] zero_words=2 all_one_words=0 longest_identical_run=2 / 24000",
+        "[AUDIO] Recording complete in 3036 ms"
+      ],
+      "pcm": {
+        "samples": 24000,
+        "min": -474,
+        "max": 306,
+        "mean": -20.8,
+        "ac_rms": 119.0,
+        "zero_samples": 150,
+        "clipped_samples": 0
+      },
+      "raw": {
+        "zero_words": 2,
+        "all_one_words": 0,
+        "longest_identical_run": 2,
+        "samples": 24000
+      }
+    }
+  }
+}

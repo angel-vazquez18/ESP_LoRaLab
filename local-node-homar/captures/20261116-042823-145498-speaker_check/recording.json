@@ -1,0 +1,116 @@
+{
+  "samples": 24000,
+  "sample_rate_hz": 8000,
+  "duration_seconds": 3.0,
+  "min": -2960,
+  "max": 2640,
+  "mean": -50.36083333333333,
+  "ac_rms": 275.35405656349525,
+  "ac_rms_dbfs_relative_to_32768": -41.511169119880165,
+  "zero_percent": 0.5041666666666667,
+  "rail_percent": 0.0,
+  "longest_identical_run_samples": 6,
+  "largest_adjacent_jump": 1914,
+  "most_common_values": [
+    [
+      -78,
+      163
+    ],
+    [
+      -76,
+      153
+    ],
+    [
+      -86,
+      152
+    ],
+    [
+      -70,
+      149
+    ],
+    [
+      -98,
+      147
+    ],
+    [
+      -88,
+      146
+    ],
+    [
+      -72,
+      145
+    ],
+    [
+      -82,
+      144
+    ]
+  ],
+  "rms_100ms": [
+    57.00942904467646,
+    82.84358756113838,
+    119.27967136104961,
+    83.18807005815196,
+    177.09586387039082,
+    240.18511610838837,
+    978.0795110828158,
+    690.1779698019925,
+    613.1637383276999,
+    352.0776689879663,
+    110.09143926754705,
+    186.2316433906977,
+    186.82353973736824,
+    196.89691465332817,
+    72.41104888067842,
+    89.10297413666953,
+    115.95973439086518,
+    95.39318633948653,
+    118.858760720445,
+    124.95083032937396,
+    116.7462633235,
+    56.3325394421377,
+    89.94923568324525,
+    49.676100893689316,
+    168.5170911213459,
+    119.02258189100084,
+    150.41432777498292,
+    104.89096719927794,
+    59.70569487075751,
+    66.29585205727429
+  ],
+  "crc32": "d9872c32",
+  "capture": {
+    "label": "speaker_check",
+    "requested_at_utc": "2026-11-16T09:28:23.145498+00:00",
+    "serial_port": "COM4",
+    "mode": "new_recording_direct_playback",
+    "playback_status": "digital_path_complete",
+    "recording_time_known": true,
+    "received_at_utc": "2026-11-16T09:28:33.507142+00:00",
+    "firmware": {
+      "diagnostic_lines": [
+        "[AUDIO] Speak now. Recording for 3 seconds...",
+        "[MIC] samples=24000 min=-2960 max=2640 mean=-50.4 AC_RMS=275.4 zero=121 clipped=0",
+        "[MIC] First raw 32-bit slots: ffd9d000 ffe3e600 ffeb8800 ffee5200 ffee8000 ffef4600 ffdfd400 ffdac200",
+        "[MIC RAW] zero_words=0 all_one_words=0 longest_identical_run=2 / 24000",
+        "[AUDIO] Recording complete in 3034 ms",
+        "[AUDIO] Direct PCM playback...",
+        "[AUDIO] Direct playback complete (digital path)"
+      ],
+      "pcm": {
+        "samples": 24000,
+        "min": -2960,
+        "max": 2640,
+        "mean": -50.4,
+        "ac_rms": 275.4,
+        "zero_samples": 121,
+        "clipped_samples": 0
+      },
+      "raw": {
+        "zero_words": 0,
+        "all_one_words": 0,
+        "longest_identical_run": 2,
+        "samples": 24000
+      }
+    }
+  }
+}

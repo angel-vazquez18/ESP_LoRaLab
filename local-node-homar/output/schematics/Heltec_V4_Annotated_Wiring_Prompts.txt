@@ -1,0 +1,122 @@
+Heltec V4 annotated wiring image
+Method: built-in image_gen tool; edit of user-supplied manufacturer pin map.
+Final selected image: Heltec_V4_Annotated_Wiring.png
+Review: visually traced microphone GPIO4/6/38, amp GPIO15/16/47/48, optional PTT GPIO39, supply/ground, resistor and speaker nets. Firmware and physical hardware validation are pending.
+The first two generated drafts were rejected for routing errors. Use only the final selected project image.
+
+INITIAL PROMPT
+Edit the attached image into a precise beginner-friendly wiring reference for the user's Heltec WiFi LoRa 32 V4 audio project. Input image 1 is the edit target and authoritative reference for the Heltec board appearance, orientation and physical contact positions. Create one high-resolution landscape PNG illustration with a white background. Use the recognizable actual board from the input, display facing viewer, USB-C at bottom, centrally located and LARGE. Keep its proportions, exact number/order of 18 side-header holes and four auxiliary top pads. Extend the canvas left and right for clearly labeled external module terminal blocks. Retain ONLY the selected GPIO labels near the corresponding board holes, rather than the overwhelming alternate-function legend. No need to reproduce unused pin labels, bottom radio table, GNSS inset, or original background. Preserve the input board itself and the orientation exactly. This is an engineering wiring diagram, not a decorative illustration.
+
+Title: "Heltec V4 - Audio Wiring"
+Small subtitle: "Proposed wiring reference - firmware port and hardware checks pending"
+
+Critical endpoint mapping, fully verified for this project:
+Left-side header, numbering bottom to top 1..18, USB end = 1:
+- GPIO4 is LEFT physical position 15, the FOURTH hole down from the top. Connect this hole to INMP441 SCK / BCLK.
+- GPIO6 is LEFT physical position 17, the SECOND hole down from the top. Connect this hole to INMP441 WS.
+- GPIO38 is LEFT physical position 11, the EIGHTH hole down from the top. Connect this hole to INMP441 SD / DATA.
+- GPIO39 is LEFT physical position 10, the NINTH hole down from the top. Connect this hole to one terminal of an OPTIONAL normally-open PTT switch.
+- LEFT physical position 2 (second hole UP from bottom) is 3V3; connect it to INMP441 VDD.
+- LEFT physical position 1 (bottom hole) is GND; connect it to INMP441 GND and L/R, and the other PTT switch terminal, using a clear shared ground junction.
+Right-side header, numbering bottom to top 1..18:
+- GPIO48 is RIGHT physical position 14, FIFTH hole down from the top. Connect this hole to MAX98357A SD / MODE.
+- GPIO47 is RIGHT physical position 13, SIXTH hole down from the top. Connect this hole to MAX98357A DIN.
+- RIGHT physical position 2 (second hole UP from bottom) is 5V / USB; connect it to MAX98357A VIN.
+- RIGHT physical position 1 (bottom hole) is GND; connect to MAX98357A GND and GAIN, and bottom of the 1 kOhm resistor.
+AUXILIARY pads at the TOP antenna end:
+- The left pair of two SMALL auxiliary pads are GPIO15 and GPIO16, left to right, exactly as shown by the pink labels in the input.
+- GPIO15 -> MAX98357A BCLK.
+- GPIO16 -> MAX98357A LRC / WS.
+These auxiliary GPIO15/16 are NOT side-header positions 15/16. Draw wires FROM THE ACTUAL TWO SMALL TOP PADS, with explicit labels "GPIO15 (aux pad)" and "GPIO16 (aux pad)".
+The right auxiliary pair GPIO17/18 belongs to the OLED and must have NO added wires.
+
+External modules are clear diagrammatic terminal blocks, NOT invented photographic breakout-board pin orders:
+LEFT: "INMP441 microphone" with exactly six labeled terminals VDD, GND, SCK / BCLK, WS, SD / DATA, L/R. Arrange terminal order to minimize wire crossings; prominently state "Match terminal names on your module".
+RIGHT: "MAX98357A amplifier" with exactly seven labeled logic/power terminals VIN, GND, BCLK, LRC / WS, DIN, SD / MODE, GAIN; plus exactly TWO separate speaker output terminals SPK+ and SPK-. Use module terminal labels, not invented module physical pin numbers.
+Below/right: simple speaker with two leads, one to SPK+ and one to SPK-. Label "8 ohm speaker". Neither speaker lead EVER connects to GND.
+One resistor labeled "1 kOhm" branches FROM THE SAME SD / MODE wire connected to GPIO48 down to common GND. This resistor is a PULLDOWN, NOT a series resistor. Include clear junction dots at both branches. SD / MODE must NOT directly connect to 3V3, 5V, or GND.
+Optional PTT switch near lower left: normally-open two-contact push button between GPIO39 and common GND. Label "Optional PTT - INPUT_PULLUP". No series resistor needed.
+
+Wire rendering:
+Use continuous easily traced colored lines from actual selected board holes/pads to the corresponding labeled module terminal. Orthogonal routes, spacious routing lanes, avoid crossings. Small wire-jump arcs if crossing is unavoidable, NEVER a junction dot on a crossing of unrelated signals. Junction dots only for intentional common GND or resistor branch. All wire endpoints must touch the intended circular hole/pad and correct module terminal. No floating wires. Every selected board contact should have a readable GPIO or voltage label nearby. Distinguish GPIO labels from header physical position; prefer visible GPIO only. Power red for 5V, orange for 3V3, black/charcoal ground, blue microphone signals, purple speaker data/clock, teal SD control and PTT. A small legend is fine. Treat ground as one net; use a labeled GND bus if necessary.
+
+Include these short bottom notes exactly:
+"GPIO15/16 are auxiliary pads, not side-header pin numbers."
+"Leave GPS/GNSS and expansion accessories disconnected."
+"Speaker connects only to SPK+ and SPK-."
+"USB-powered bench. All module grounds are common."
+"LoRa radio is already wired on the Heltec board."
+"Connect PTT after firmware configures GPIO39 as an input."
+
+Do not add any wires to GPIO2, GPIO5, GPIO7, GPIO8-14, GPIO17-21, GPIO26-37, GPIO40-46. Do not label GPIO5 as microphone WS: the correct WS is GPIO6. Do not connect any external SX1262 module; it is onboard. No code fragments except INPUT_PULLUP. Make the map readable when zoomed, neat, and mechanically faithful to the provided central board.
+
+FIRST CORRECTION PROMPT
+Correct the latest generated "Heltec V4 - Audio Wiring" diagram. The other supplied image is the original manufacturer pin map and is authoritative for physical header hole locations. Produce a corrected high-resolution landscape PNG. Preserve the neat style, exact central board orientation, modules, power wiring, pulldown and notes. This is a technical accuracy edit: the draft has specific wrong connections that MUST be fixed. No decorative changes.
+
+CORRECTION 1 - Microphone clock wires are swapped:
+The label GPIO6 at left header position17 (SECOND hole down from top) MUST connect ONLY to microphone WS.
+The label GPIO4 at left header position15 (FOURTH hole down from top) MUST connect ONLY to microphone SCK / BCLK.
+In the current draft those two wires go to opposite terminals. Swap the actual wire paths at the microphone side. Follow each wire end to end. Do not merely swap printed labels. GPIO38 at left position11 -> SD/DATA remains correct.
+
+CORRECTION 2 - Amp data/enable are one physical hole too high:
+Move GPIO48 tag AND its teal wire anchor from right header position15 to right header position14, FIFTH actual hole down from top. Connect this only to amplifier SD / MODE.
+Move GPIO47 tag AND its purple wire anchor from right header position14 to right header position13, SIXTH actual hole down from top. Connect this only to amplifier DIN.
+Keep the physical header numbers truthful: right top is18, then17,16,15,14,13... Bottom1 ground and position2 5V remain correct.
+
+CORRECTION 3 - The two auxiliary clock wires MUST actually reach the amp:
+Currently GPIO15 and16 stop at explanatory cards and the amp BCLK/LRC have no proper individual sources; fix this.
+Remove the two large upper explanatory cards if necessary to free space for actual wire routes.
+Route one continuous purple wire from the ACTUAL GPIO15 small auxiliary pad at upper left of the antenna connector, all the way to amplifier BCLK. Label "GPIO15 (aux pad) -> BCLK".
+Route a SECOND SEPARATE continuous purple wire from the ACTUAL GPIO16 small auxiliary pad immediately right of GPIO15, all the way to amplifier LRC / WS. Label "GPIO16 (aux pad) -> LRC / WS".
+These two wires must NOT touch/join each other, must NOT join DIN, and must not originate at the text card. They originate at the two small actual top pads. Use two well-spaced routes through open space above and right of the board, reaching the amplifier at their respective rows.
+The right auxiliary GPIO17 and18 pads remain unconnected.
+
+CORRECTION 4 - Common ground:
+Amplifier GAIN must have a clear continuous black wire joining the bottom common GND bus. It must NOT terminate on the module outline. Both AMP GND and GAIN join the ground bus, as does the 1kOhm pulldown bottom.
+INMP441 GND and L/R join the ground bus. PTT other terminal joins GND.
+The GPIO48 -> AMP SD / MODE wire has a real branch junction to the TOP of the 1 kOhm resistor. Resistor BOTTOM goes to GND. Do not put it in series with the SD signal.
+
+END TO END NETLIST, ALL of which must be visibly correct:
+Heltec 3V3 left-position2 -> MIC VDD.
+Heltec left-position1 GND -> MIC GND and MIC L/R.
+Heltec GPIO4 left-position15 -> MIC SCK/BCLK.
+Heltec GPIO6 left-position17 -> MIC WS.
+Heltec GPIO38 left-position11 -> MIC SD/DATA.
+Heltec GPIO39 left-position10 -> normally-open PTT contact1.
+PTT contact2 -> GND.
+Heltec right-position2 USB5V -> AMP VIN.
+Heltec right-position1 GND -> AMP GND and AMP GAIN.
+Heltec GPIO15 actual aux pad -> AMP BCLK.
+Heltec GPIO16 actual aux pad -> AMP LRC/WS.
+Heltec GPIO47 right-position13 -> AMP DIN.
+Heltec GPIO48 right-position14 -> AMP SD/MODE AND 1kOhm resistor top.
+1kOhm resistor bottom -> GND.
+AMP SPK+ -> speaker lead1.
+AMP SPK- -> speaker lead2.
+Neither speaker lead to GND.
+
+For clarity, it is acceptable to route independent wires at crossings with explicit white underlay gaps or little bridge arcs. No junction at unrelated crossings. Simplify excessive text to make more wire space if needed. All wire endpoints must visibly touch actual holes and module terminals. Keep title and the disclaimer that firmware port/hardware checks are pending.
+
+FINAL CORRECTION PROMPT
+Make these three precise corrections to the attached wiring diagram, preserving everything else. This is an edit of the most recent generated diagram.
+
+1) MICROPHONE TEXT-ONLY SWAP:
+In the INMP441 box on the LEFT, the third terminal row currently reads "SCK / BCLK" and its blue wire physically goes to GPIO6. REPLACE ONLY THAT ROW'S TEXT with "WS".
+In the INMP441 box, the fourth terminal row currently reads "WS" and its blue wire physically goes to GPIO4. REPLACE ONLY THAT ROW'S TEXT with "SCK / BCLK".
+Do NOT move the blue wires or GPIO labels. After this text swap, GPIO6 connects to WS and GPIO4 connects to SCK / BCLK. That is correct because the module is a logical terminal block whose pin order is arbitrary; the instruction "Match terminal names on your module" remains.
+
+2) ENTIRELY REPLACE THE TWO AUXILIARY CLOCK ROUTES AT THE TOP:
+Erase the two upper boxed captions and their existing purple wire paths, including the two amp clock input wires that currently appear joined. Preserve the two actual board pads and their small pink GPIO15 and GPIO16 labels. Preserve every other wire.
+Now draw TWO INDEPENDENT CLOCK WIRES, with visibly DIFFERENT COLORS so their independence is obvious:
+MAGENTA wire: starts at the actual GPIO15 aux pad, the LEFTMOST of the four small top board pads (near image x649 y296). Goes left to x580, up to y128, all the way across to x1160, then DOWN to y390, then RIGHT to the amplifier BCLK terminal (x1305 y390). Add a small magenta label on this wire above the board: "GPIO15 -> BCLK". No large caption box.
+GREEN wire: starts at the actual GPIO16 aux pad, the SECOND small pad from the left (near image x674 y296). Goes left to x560, up to y160, then across to x1195, then DOWN to y426, then RIGHT to the amplifier LRC / WS terminal (x1305 y426). Add a small green label on this wire: "GPIO16 -> LRC / WS". No large caption box.
+These coordinates refer to the current 1536x1024 image. Adapt slightly to avoid text. Route without joining the two wires. Use explicit small white halo gaps at crossings. The magenta wire must touch ONLY GPIO15 and amplifier BCLK; the green wire must touch ONLY GPIO16 and amplifier LRC / WS. Do not connect GPIO17 or GPIO18. These TWO routes must each be continuous, start at a physical pad, and reach a DIFFERENT amp terminal. Do not stop a wire at its label. Do not connect LRC to BCLK.
+Update legend for "Magenta: AMP BCLK" and "Green: AMP LRC / WS" if needed. DIN remains purple.
+
+3) AMPLIFIER GAIN WIRE:
+Erase the ambiguous GAIN-to-module-outline route.
+From the GAIN terminal at x1305 y535, draw a BLACK wire horizontally LEFT to x1205, then vertically DOWN to the existing bottom common ground bus at y834, with a clear solid black junction dot at x1205 y834.
+Keep this black wire separated from the amplifier's outline, so it clearly joins GND rather than the outline. At any crossing of unrelated wires, use white halo gaps with no junction dot.
+Keep AMP GND's existing black wire and the 1 kOhm pulldown unchanged.
+
+All other connections remain unchanged, including GPIO48 at right physical position14 to SD/MODE, GPIO47 at position13 to DIN, resistor from SD to GND, speaker floating between SPK+ and SPK-, power and PTT. The title, proposal status and bottom notes remain. Output the corrected PNG.

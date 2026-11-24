@@ -1,0 +1,19 @@
+
+[STATE] RECORDING
+
+[AUDIO] Speak now. Recording for 3 seconds...
+[MIC] samples=24000 min=-5170 max=4522 mean=33.8 AC_RMS=659.4 zero=98 clipped=0
+[MIC] First raw 32-bit slots: ff918200 ff948800 ff939600 ff993400 ff935a00 ff937a00 ff944c00 ff919600
+[MIC RAW] zero_words=0 all_one_words=0 longest_identical_run=2 / 24000
+[AUDIO] Recording complete in 3021 ms
+
+[STATE] PLAYBACK
+[AUDIO] Direct PCM playback...
+[AUDIO] Direct playback complete (digital path)
+
+[STATE] IDLE
+[HEARTBEAT] uptime=55901 ms heap=222848 state=IDLE
+
+[PCM_BEGIN] bytes=48000 rate=8000 bits=16 channels=1 crc32=46248425
+
+[PCM_END]

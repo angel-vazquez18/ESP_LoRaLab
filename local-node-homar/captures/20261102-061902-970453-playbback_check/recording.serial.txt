@@ -1,0 +1,4 @@
+
+[PCM_BEGIN] bytes=48000 rate=8000 bits=16 channels=1 crc32=08bf937f
+
+[PCM_END]

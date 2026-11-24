@@ -1,0 +1,97 @@
+{
+  "duration_s": 7.3,
+  "streams": [
+    {
+      "type": "video",
+      "codec": "h264",
+      "metadata": {
+        "language": "und",
+        "handler_name": "VideoHandler"
+      },
+      "duration_s": 7.3
+    },
+    {
+      "type": "audio",
+      "codec": "aac",
+      "metadata": {
+        "language": "und",
+        "handler_name": "SoundHandler"
+      },
+      "duration_s": 7.29
+    }
+  ],
+  "frames": [
+    {
+      "time_s": 0.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-000.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 1.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-001.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 2.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-002.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 3.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-003.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 4.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-004.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 5.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-005.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 6.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-006.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    },
+    {
+      "time_s": 7.0,
+      "path": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\output\\validation\\scope-video-20261116\\frame-007.00s.png",
+      "size": [
+        960,
+        540
+      ],
+      "rotation": 0
+    }
+  ]
+}
