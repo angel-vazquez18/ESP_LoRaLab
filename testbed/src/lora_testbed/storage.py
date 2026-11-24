@@ -129,6 +129,17 @@ class Store:
         )
         self.db.commit()
 
+    def memory_observation_records(self, role, observation_id):
+        rows = self.db.execute(
+            "SELECT document FROM node_observations WHERE role=? "
+            "AND json_extract(document,'$.name')='memory.sample' "
+            "AND json_extract(document,'$.data.observation_id')=? ORDER BY id LIMIT 12001",
+            (role, observation_id),
+        ).fetchall()
+        if len(rows) > 12000:
+            raise ValueError("Memory evidence exceeds the bounded observation record limit")
+        return [json.loads(row[0]) for row in rows]
+
     def node_operation_records(self, role: str, operation_id: str) -> list[dict]:
         rows = self.db.execute(
             "SELECT document FROM node_observations WHERE role=? "

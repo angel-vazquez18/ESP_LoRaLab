@@ -16,6 +16,7 @@ from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
 from .storage import Store
 from .voice_runs import VoiceRuns
+from .workload_observations import WorkloadObservations
 
 
 class Host:
@@ -33,6 +34,7 @@ class Host:
         self.radio = RadioRuns(self.store, self.physical, self.artifacts, self.adapter)
         self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
         self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
+        self.observations = WorkloadObservations(self.store, self.adapter)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
@@ -403,6 +405,7 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.observations.close()
         await self.diagnostics.close()
         await self.voice.close()
         await self.radio.close()
