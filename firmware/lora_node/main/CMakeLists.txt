@@ -22,6 +22,7 @@ idf_component_register(
         "platform/esp32_display.c"
         "transport/usb_transport.c"
         "control/node_control.c"
+        "memory/observations.c"
         "input/ptt_gate.c"
         "display/node_view.c"
         "display/oled_panel.c"
