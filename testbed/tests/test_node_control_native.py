@@ -70,6 +70,29 @@ class AudioPort(C.Structure):
     ]
 
 
+class NodeView(C.Structure):
+    _fields_ = [
+        ("state", C.c_int),
+        ("role", C.c_char),
+        ("claimed", C.c_bool),
+        ("linked", C.c_bool),
+        ("completed", C.c_uint32),
+        ("total", C.c_uint32),
+        ("tx_attempts", C.c_uint32),
+        ("delivered", C.c_uint32),
+        ("uptime_us", C.c_uint64),
+        ("error_code", C.c_char * 40),
+    ]
+
+
+DISPLAY_POST = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.POINTER(NodeView))
+DISPLAY_STATUS = C.CFUNCTYPE(C.c_uint, C.c_void_p)
+
+
+class DisplayPort(C.Structure):
+    _fields_ = [("post", DISPLAY_POST), ("status", DISPLAY_STATUS)]
+
+
 class Platform(C.Structure):
     _fields_ = (
         [
@@ -102,6 +125,7 @@ class Platform(C.Structure):
             ("dynamic_frequency", C.c_bool),
             ("codec2_mode", C.c_uint),
             ("ptt_pressed", PTT),
+            ("display", DisplayPort),
         ]
     )
 
@@ -142,6 +166,8 @@ def native_library(tmp_path_factory):
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(main / "input/ptt_gate.c"),
+            str(main / "display/node_view.c"),
+            str(main / "display/oled_panel.c"),
             str(main / "audio/pcm_samples.c"),
             str(main / "audio/codec_clip.c"),
             str(main / "radio/node_radio.c"),
@@ -184,6 +210,8 @@ def native_library(tmp_path_factory):
     lib.native_radio_sent.argtypes = [C.c_void_p, C.c_void_p]
     lib.native_radio_sent.restype = C.c_uint
     lib.native_radio_tx_done.argtypes = [C.c_void_p]
+    lib.node_view_state_name.argtypes = [C.c_int]
+    lib.node_view_state_name.restype = C.c_char_p
     lib.node_control_create.argtypes = [C.POINTER(Platform)]
     lib.node_control_create.restype = C.c_void_p
     lib.node_control_destroy.argtypes = [C.c_void_p]
@@ -206,6 +234,8 @@ class NativeNode:
         device="esp-001122334455",
         codec2_mode=3200,
         ptt=None,
+        display=None,
+        display_status=None,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -240,6 +270,9 @@ class NativeNode:
         self.platform.codec2_mode = codec2_mode
         self.ptt_callback = PTT(ptt) if ptt else PTT()
         self.platform.ptt_pressed = self.ptt_callback
+        self.display_callback = DISPLAY_POST(display) if display else DISPLAY_POST()
+        self.display_status = DISPLAY_STATUS(display_status) if display_status else DISPLAY_STATUS()
+        self.platform.display = DisplayPort(self.display_callback, self.display_status)
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -573,6 +606,8 @@ class NativeSerial:
         boot=1,
         audio=None,
         ptt=None,
+        display=None,
+        display_status=None,
     ):
         self.core = NativeNode(
             lib,
@@ -583,6 +618,8 @@ class NativeSerial:
             codec2_mode=codec2_mode,
             audio=audio,
             ptt=ptt,
+            display=display,
+            display_status=display_status,
         )
         self.lock = threading.RLock()
         self.queue = queue.Queue()

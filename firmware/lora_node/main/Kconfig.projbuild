@@ -43,3 +43,14 @@ config LORALAB_PTT
         fixed-length capture, then a fresh debounced release/press starts it.
         No button action or transmission resumes after stop or ownership loss.
 endmenu
+
+menu "LoRaLab optional OLED status"
+config LORALAB_OLED
+    bool "Standard V4 R2 OLED pins and Vext power control verified"
+    depends on LORALAB_RADIO_HELTEC_V42 || LORALAB_RADIO_HELTEC_V43
+    default n
+    help
+        SSD1315 128x64 at address 0x3c. Uses SDA17/SCL18, reset21 and
+        GPIO36 low to enable Vext. Verify the actual standard PCB first;
+        V4-R8 is unsupported. Updates use an isolated bounded I2C worker.
+endmenu

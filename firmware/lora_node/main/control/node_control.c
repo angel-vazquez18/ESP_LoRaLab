@@ -13,6 +13,7 @@
 #include "generated/execution_profile.h"
 #include "generated/audio_profile.h"
 #include "generated/ptt_profile.h"
+#include "generated/oled_board.h"
 #include "input/ptt_gate.h"
 #include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
@@ -69,8 +70,9 @@ struct node_control {
     bool codec2_library_ready;
     artifact_store *artifacts;
     char owner[37], role[2];
-    int64_t lease_until, next_health, next_diagnostic;
-    bool linked, oom, discard, dispatching;
+    int64_t lease_until, next_health, next_diagnostic, next_display;
+    bool linked, oom, discard, dispatching, has_view;
+    node_view last_view;
     size_t used;
     char line[NODE_RECORD_BYTES], encoded[NODE_RECORD_BYTES];
     record_queue replies, events;
@@ -255,6 +257,47 @@ static cJSON *command_reply(node_control *n, const cJSON *cmd, uint32_t sequence
     add(n,reply,"error",error(n,code,message,field));
     return reply;
 }
+static void publish_view(node_control *n, int64_t time)
+{
+    if (!n->port.display.post) return;
+    node_view view = {
+        .state = n->owner[0] ? VIEW_CLAIMED : VIEW_UNCLAIMED,
+        .role = n->role[0], .claimed = n->owner[0] != 0, .linked = n->linked,
+        .uptime_us = time < 0 ? 0 : (uint64_t)time,
+        .tx_attempts = rf_execution_busy(&n->rf) ? n->rf.attempts : 0,
+        .delivered = rf_execution_busy(&n->rf) ? n->rf.delivered : 0,
+    };
+    operation *op = &n->op;
+    if (op->active) {
+        if (op->waiting_ptt) view.state = VIEW_WAIT_PTT;
+        else if (op->audio) view.state = op->capture ? VIEW_CAPTURE : VIEW_PLAY;
+        else if (op->codec) view.state = op->codec_status.decoding ? VIEW_DECODE : VIEW_ENCODE;
+        else view.state = VIEW_DIAGNOSTIC;
+        view.completed = op->codec ? op->codec_status.frames_completed : op->audio ? op->audio_progress.samples : op->completed;
+        view.total = op->codec ? op->codec_status.frame_count : op->audio ? op->bytes / 2 : op->iterations;
+    } else if (rf_execution_busy(&n->rf)) {
+        switch (n->rf.phase) {
+            case RF_PREPARING: view.state = VIEW_PREPARING; break;
+            case RF_PREPARED: view.state = VIEW_PREPARED; break;
+            case RF_ARMED: view.state = n->rf.observations ? VIEW_RX : VIEW_ARMED; break;
+            case RF_RUNNING: view.state = n->rf.sender ? VIEW_TX : VIEW_RX; break;
+            case RF_DRAINING: view.state = VIEW_DRAINING; break;
+            case RF_REPORTING: view.state = VIEW_STOPPING; break;
+            default: break;
+        }
+    }
+    snprintf(view.error_code, sizeof(view.error_code), "%s",
+             n->error_code[0] ? n->error_code : n->rf.failed ? "RF_RUN_FAILED" : "");
+    bool changed = !n->has_view || view.state != n->last_view.state ||
+        view.role != n->last_view.role || view.linked != n->last_view.linked ||
+        view.claimed != n->last_view.claimed || strcmp(view.error_code, n->last_view.error_code);
+    if (!changed && time < n->next_display) return;
+    n->port.display.post(n->port.context, &view);
+    n->last_view = view;
+    n->has_view = true;
+    n->next_display = time + 250000; // Coalesce progress; state changes never wait here.
+}
+
 static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
@@ -329,6 +372,14 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         string(n, io, "schema_sha256", CODEC_SCHEMA_SHA256);
         add(n, io, "commands", cJSON_CreateStringArray((const char *[]){"audio.encode", "audio.decode"}, 2));
         add(n, limits, "codec_io", io);
+    }
+    if (!enrollment && n->port.display.status) {
+        cJSON *display = object(n);
+        string(n, display, "profile", OLED_PROFILE);
+        string(n, display, "schema_sha256", OLED_SCHEMA_SHA256);
+        string(n, display, "state", node_display_status_name(n->port.display.status(n->port.context)));
+        boolean(n, display, "physical_qualified", false);
+        add(n, limits, "oled", display);
     }
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
@@ -1409,8 +1460,10 @@ void node_control_tick(node_control *n)
     int64_t time = now(n);
     if (n->owner[0] && time >= n->lease_until)
         lose_owner(n, "lease_expired");
-    if (!n->linked)
+    if (!n->linked) {
+        publish_view(n, time);
         return;
+    }
     n->oom=false;
     rf_execution_tick(&n->rf);
     operation *op = &n->op;
@@ -1477,6 +1530,7 @@ void node_control_tick(node_control *n)
             }
         }
     }
+    publish_view(n, time);
     if (time >= n->next_health) {
         n->oom = false;
         cJSON *data = health(n);

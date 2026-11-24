@@ -19,6 +19,7 @@
 #include "generated/contract_schema.h"
 #include "platform/esp32_platform.h"
 #include "platform/esp32_ptt.h"
+#include "platform/esp32_display.h"
 
 // Metadata is borrowed by the control engine for the firmware lifetime.
 static char device_id[17], boot_id[32], reset_cause[32], elf_sha256[65];
@@ -138,4 +139,5 @@ void esp32_platform_init(node_platform *platform)
         .reset_cause = reset_cause,
     };
     esp32_ptt_init(platform);
+    platform->display = esp32_display_init();
 }

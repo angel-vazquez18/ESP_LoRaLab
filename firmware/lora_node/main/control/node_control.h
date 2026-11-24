@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "audio/audio_port.h"
+#include "display/node_view.h"
 #include "radio/node_radio.h"
 
 #define NODE_RECORD_BYTES 4096
@@ -34,6 +35,7 @@ typedef struct {
     bool hardware_aes, dynamic_frequency;
     unsigned codec2_mode;
     bool (*ptt_pressed)(void *); // NULL leaves the physical input disabled.
+    node_display_port display;
 } node_platform;
 
 typedef struct node_control node_control;
