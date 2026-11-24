@@ -33,6 +33,7 @@ import type { RadioState } from "./RadioLink";
 import VoiceRuns from "./VoiceRuns";
 import type { VoiceState } from "./VoiceRuns";
 import RunComparison from "./RunComparison";
+import WorkloadObservations from "./WorkloadObservations";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
 type Metrics = {
@@ -508,6 +509,11 @@ function Results({ host }: { host: Host }) {
         eyebrow="RETAINED EVIDENCE"
         title="Results & exports"
         description="Execution outcome, assessment and physical qualification remain separate. Historical records retain their original provenance."
+      />
+      <WorkloadObservations
+        nodes={host.state.hardware_nodes}
+        request={host.request}
+        pending={host.pending}
       />
       <History
         rows={host.state.procedures.runs}
