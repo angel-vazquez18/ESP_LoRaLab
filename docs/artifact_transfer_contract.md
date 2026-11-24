@@ -2,9 +2,8 @@
 
 Issue [#2](https://github.com/angel-vazquez18/ESP_LoRaLab/issues/2), November 15, 2026.
 This defines the file-transfer interface and host validation. Issue #11 adds real
-RAM reservations, listing and deletion to the portable main firmware. Chunk
-uploads (#14), final commit (#18), readback (#22), host workflows (#26) and audio
-drivers remain follow-up work. Native checks exercise the production C store;
+RAM reservations, listing and deletion to the portable main firmware. Chunk uploads (#14) and final commit (#18) are implemented. Readback (#22),
+host workflows (#26) and audio drivers remain follow-up work. Native checks exercise the production C store;
 they do not establish physical board behavior.
 
 An artifact is a named block of bytes in the node's RAM. It is not a filesystem
@@ -119,8 +118,8 @@ actual allocation failure, `CHECKSUM_MISMATCH` for CRC/final-hash mismatch,
 Ownership, boot and command-identity checks retain their existing errors. Only
 explicitly transient busy/I/O/timeout errors may be marked retryable. Host-side
 argument validation rejects malformed requests before sending; raw firmware
-validation implements reservation/list/delete errors; chunk/hash/read errors
-remain in their follow-up issues.
+validation implements reservation/list/delete/chunk/commit errors; read errors
+remain in their follow-up issue.
 
 ## Compatibility and implementation boundary
 
@@ -147,8 +146,8 @@ Implemented firmware must explicitly add `artifact_transfer` inside
   `artifact_chunk_bytes`, within the ceilings above and internally consistent.
 
 The main firmware now advertises only `artifact.begin`, `artifact.list` and
-`artifact.delete` and `artifact.put`, using generated `main/generated/artifact_profile.h` constants.
-`artifact.commit` and `artifact.get` remain unavailable; diagnostic
+`artifact.delete`, `artifact.put` and `artifact.commit`, using generated `main/generated/artifact_profile.h` constants.
+`artifact.get` remains unavailable; diagnostic
 firmware advertises none. A complete upload/download workflow requires all six.
 Do not advertise commands merely because their schema exists.
 The existing exact main-control handshake is still required. Diagnostic firmware,
@@ -217,11 +216,10 @@ injected JSON allocation failure across reservation/deletion reply construction.
 A real `NodeSession` also exercises begin/list/delete against that C core and
 blocks unsupported commit before serial writing.
 
-The separate native lifecycle fixture explicitly seeds committed/failed state
-inside the production store translation unit to check consumer guards, in-use
-delete rejection and lifetime rules. It adds no production test hook, commit
-handler, upload bytes or hash verification. These cases do not qualify #18 or
-physical audio. All ordinary wire cases use the public control interface.
+At the #11 checkpoint, a native fixture seeded committed/failed state to check
+consumer guards and lifetime rules. Issue #18 removes that fixture: these tests
+now use real uploads and SHA-256 commits. All wire cases use the public control
+interface; neither kind of native test qualifies physical audio.
 
 Also run `make check`, `make contracts-check`, frontend formatting, and the main
 ESP-IDF build from [development commands](development.md). Build/check results do
@@ -257,3 +255,23 @@ command retries and injected reply-allocation failures. Every rejection preserve
 bytes/cursor and permits the next valid write. This is production C exercised
 through native serial fixtures; physical checks use the cumulative artifact image
 once commit/readback are ready, with evidence recorded separately.
+
+## Verified commit implementation and review (#18)
+
+The store hashes the actual complete RAM bytes through the platform SHA-256
+callback. `artifact_store_prepare_commit` records a private verification result;
+`artifact_store_accept_commit` publishes it only after the correlated reply is
+constructed/cached/enqueued. A short file stays uploading; a wrong final hash
+becomes failed. A successful commit is immutable and can be acquired by consumers.
+Repeated commits return the same manifest. Failed/unfinished content is unusable.
+
+```sh
+uv run --project testbed pytest testbed/tests/test_node_commit_native.py -ra
+```
+
+Expected at this checkpoint: **10 passed, no skips**. Cases independently verify
+hashes for 1/1024/1025/48000/131072-byte files, incomplete/excess writes, immutable
+commits, wrong-hash failure/delete/recovery, committed lifetime across release,
+and reply-allocation failures for both successful and failed hash outcomes.
+Consumer/in-use tests now use the real upload/commit API instead of seeded state.
+Physical hash/readback proof follows with #22's cumulative artifact image.

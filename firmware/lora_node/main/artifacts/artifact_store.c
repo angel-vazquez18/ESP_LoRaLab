@@ -8,6 +8,8 @@ typedef struct {
     artifact_manifest manifest;
     char owner[37];
     void *bytes;
+    bool commit_prepared;
+    artifact_status commit_result;
 } artifact_slot;
 
 struct artifact_store {
@@ -196,6 +198,38 @@ artifact_status artifact_store_put(artifact_store *s, const char *id, size_t off
     if (offset == slot->manifest.next_offset) {
         memcpy((uint8_t *)slot->bytes + offset, bytes, length);
         slot->manifest.next_offset += length;
+        slot->commit_prepared = false;
     }
     return ARTIFACT_OK;
+}
+
+artifact_status artifact_store_prepare_commit(artifact_store *s, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
+{
+    artifact_slot *slot = find(s, id);
+    if (!slot) return ARTIFACT_NOT_FOUND;
+    slot->commit_prepared = false;
+    artifact_manifest *m = &slot->manifest;
+    if (m->state == ARTIFACT_COMMITTED) return ARTIFACT_OK;
+    if (m->state != ARTIFACT_UPLOADING || m->next_offset != m->length_bytes)
+        return ARTIFACT_INVALID_STATE;
+    uint8_t digest[32];
+    if (!sha256 || !sha256(context, slot->bytes, m->length_bytes, digest))
+        return ARTIFACT_INTERNAL_ERROR;
+    static const char hex[] = "0123456789abcdef";
+    bool matches = true;
+    for (unsigned i = 0; i < sizeof(digest); i++)
+        if (m->sha256[i * 2] != hex[digest[i] >> 4] ||
+            m->sha256[i * 2 + 1] != hex[digest[i] & 15]) matches = false;
+    slot->commit_result = matches ? ARTIFACT_OK : ARTIFACT_CHECKSUM_MISMATCH;
+    slot->commit_prepared = true;
+    return slot->commit_result;
+}
+void artifact_store_accept_commit(artifact_store *s, const char *id)
+{
+    artifact_slot *slot = find(s, id);
+    if (slot && slot->commit_prepared) {
+        slot->manifest.state = slot->commit_result == ARTIFACT_OK ? ARTIFACT_COMMITTED : ARTIFACT_FAILED;
+        slot->commit_prepared = false;
+    }
 }

@@ -4,11 +4,12 @@ import asyncio
 import ctypes as C
 import hashlib
 import json
+import zlib
 from copy import deepcopy
 from uuid import uuid4
 
 import pytest
-from test_node_control_native import ALLOC, FREE, NativeNode, NativeSerial
+from test_node_control_native import ALLOC, FREE, HASH, NativeNode, NativeSerial
 from test_node_control_native import native as native
 from test_node_control_native import native_library as native_library
 
@@ -54,6 +55,7 @@ def test_native_partial_artifact_advertisement_matches_generated_profile(native)
         "artifact.list",
         "artifact.delete",
         "artifact.put",
+        "artifact.commit",
     }
     assert descriptor["schema_sha256"] == artifacts.schema_digest()
     for name in descriptor["commands"]:
@@ -61,7 +63,7 @@ def test_native_partial_artifact_advertisement_matches_generated_profile(native)
         assert limits.max_artifact_bytes == 131072
         assert limits.node_total_artifact_bytes == 262144
         assert limits.node_artifact_slots == 4
-    for name in ("artifact.commit", "artifact.get"):
+    for name in ("artifact.get",):
         with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
             require_artifact_compatible(identity, name)
         assert native.request(name)["error"]["code"] == "MISSING_CAPABILITY"
@@ -369,7 +371,10 @@ def test_host_session_uses_real_partial_store_and_keeps_upload_commands_blocked(
             assert result["artifacts"][0]["sample_count"] == 24000
             sequence = session.sequence
             with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
-                await session.request("artifact.commit", {"artifact_id": value["artifact_id"]})
+                await session.request(
+                    "artifact.get",
+                    {"artifact_id": value["artifact_id"], "offset": 0, "length_bytes": 1},
+                )
             assert session.sequence == sequence
             assert (
                 await session.request("artifact.delete", {"artifact_id": value["artifact_id"]})
@@ -388,8 +393,7 @@ class StoreSpec(C.Structure):
     ]
 
 
-def test_store_consumer_guards_and_committed_lifetime_with_explicit_seeded_states(native_library):
-    # This fixture bypasses commit only to check #11 lifetimes; it does not prove #18.
+def test_store_consumer_guards_and_lifetimes_after_real_commit(native_library):
     lib = native_library
     lib.artifact_store_create.argtypes = [C.c_void_p, ALLOC, FREE]
     lib.artifact_store_create.restype = C.c_void_p
@@ -409,8 +413,16 @@ def test_store_consumer_guards_and_committed_lifetime_with_explicit_seeded_state
     lib.artifact_store_release_owner.argtypes = [C.c_void_p, C.c_char_p]
     lib.artifact_store_reserved_bytes.argtypes = [C.c_void_p]
     lib.artifact_store_reserved_bytes.restype = C.c_size_t
-    lib.native_artifact_seed_state.argtypes = [C.c_void_p, C.c_char_p, C.c_bool]
-    lib.native_artifact_seed_state.restype = C.c_bool
+    lib.artifact_store_put.argtypes = [
+        C.c_void_p,
+        C.c_char_p,
+        C.c_size_t,
+        C.c_void_p,
+        C.c_size_t,
+        C.c_uint32,
+    ]
+    lib.artifact_store_prepare_commit.argtypes = [C.c_void_p, C.c_char_p, HASH, C.c_void_p]
+    lib.artifact_store_accept_commit.argtypes = [C.c_void_p, C.c_char_p]
     node = NativeNode(lib)
     store = lib.artifact_store_create(None, node.callbacks[3], node.callbacks[4])
     assert store
@@ -423,7 +435,10 @@ def test_store_consumer_guards_and_committed_lifetime_with_explicit_seeded_state
         pointer, length = C.c_void_p(1), C.c_size_t(1)
         assert lib.artifact_store_acquire(store, identity, C.byref(pointer), C.byref(length)) == 5
         assert pointer.value is None and length.value == 0
-        assert lib.native_artifact_seed_state(store, identity, True)
+        data = C.create_string_buffer(b"a" * 16, 16)
+        assert lib.artifact_store_put(store, identity, 0, data, 16, zlib.crc32(data.raw)) == 0
+        assert lib.artifact_store_prepare_commit(store, identity, node.callbacks[1], None) == 0
+        lib.artifact_store_accept_commit(store, identity)
         assert lib.artifact_store_acquire(store, identity, C.byref(pointer), C.byref(length)) == 0
         assert C.string_at(pointer, length.value) == b"a" * 16
         assert lib.artifact_store_delete(store, identity) == 6
@@ -436,7 +451,11 @@ def test_store_consumer_guards_and_committed_lifetime_with_explicit_seeded_state
         assert lib.artifact_store_reserved_bytes(store) == 0
         assert lib.artifact_store_acquire(store, identity, C.byref(pointer), C.byref(length)) == 4
         assert lib.artifact_store_begin(store, owner, C.byref(request)) == 0
-        assert lib.native_artifact_seed_state(store, identity, False)
+        data = C.create_string_buffer(b"b" * 16, 16)
+        assert lib.artifact_store_put(store, identity, 0, data, 16, zlib.crc32(data.raw)) == 0
+        assert lib.artifact_store_prepare_commit(store, identity, node.callbacks[1], None) == 8
+        lib.artifact_store_accept_commit(store, identity)
+        assert lib.artifact_store_acquire(store, identity, C.byref(pointer), C.byref(length)) == 5
         lib.artifact_store_release_owner(store, str(uuid4()).encode())
         assert lib.artifact_store_reserved_bytes(store) == 16
         lib.artifact_store_release_owner(store, owner)

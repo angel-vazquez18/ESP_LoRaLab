@@ -224,7 +224,7 @@ static cJSON *capabilities(node_control *n)
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
     add(n, files, "commands", cJSON_CreateStringArray(
-        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete", "artifact.put"}, 4));
+        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete", "artifact.put", "artifact.commit"}, 5));
     number(n, files, "max_artifact_bytes", ARTIFACT_MAX_BYTES);
     number(n, files, "node_total_artifact_bytes", ARTIFACT_TOTAL_BYTES);
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
@@ -394,7 +394,7 @@ static bool known_unavailable(const char *name)
     static const char *const commands[] = {
         "session.open",    "session.close", "config.set",    "run.prepare",     "run.arm",
         "run.start",       "run.stop",      "run.summary",
-        "artifact.commit", "artifact.get",  "audio.capture",
+        "artifact.get",  "audio.capture",
         "audio.encode",    "audio.decode",  "audio.play",    "fault.set",       "fault.fire",
         "clock.arm",       "clock.emit",    "clock.install", "clock.stop"};
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
@@ -406,13 +406,13 @@ static bool known_unavailable(const char *name)
 static bool artifact_command(const char *name)
 {
     return eq(name, "artifact.begin") || eq(name, "artifact.list") || eq(name, "artifact.delete") ||
-           eq(name, "artifact.put");
+           eq(name, "artifact.put") || eq(name, "artifact.commit");
 }
 static const char *artifact_error(artifact_status status)
 {
     static const char *const codes[] = {NULL, "INVALID_ARGUMENT", "RESOURCE_LIMIT",
         "ALLOCATION_FAILED", "ARTIFACT_NOT_FOUND", "INVALID_STATE", "BUSY",
-        "OFFSET_MISMATCH", "CHECKSUM_MISMATCH"};
+        "OFFSET_MISMATCH", "CHECKSUM_MISMATCH", "INTERNAL_ERROR"};
     return codes[status];
 }
 static cJSON *manifest(node_control *n, const artifact_manifest *m)
@@ -458,7 +458,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE };
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -582,6 +582,18 @@ static void process(node_control *n, size_t length)
                     code = "INVALID_ARGUMENT";
                     field = "args";
                     message = "Listing accepts no arguments";
+                }
+            } else if (eq(name, "artifact.commit")) {
+                const char *const keys[] = {"artifact_id"};
+                if (!exact_keys(args, keys, 1) || !uuid(id)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args.artifact_id";
+                    message = "A lowercase artifact UUID is required";
+                } else {
+                    code = artifact_error(artifact_store_prepare_commit(n->artifacts, id,
+                                                         n->port.sha256, n->port.context));
+                    if (!code || eq(code, "CHECKSUM_MISMATCH")) action = COMMIT_FILE;
+                    if (code) message = "File commit requires complete bytes and matching SHA-256";
                 }
             } else if (eq(name, "artifact.put")) {
                 const char *const keys[] = {"artifact_id", "offset", "data_b64", "crc32"};
@@ -710,6 +722,11 @@ static void process(node_control *n, size_t length)
             result = health(n);
         else if (eq(name, "artifact.list"))
             result = artifact_list(n);
+        else if (action == COMMIT_FILE) {
+            artifact_manifest committed = *artifact_store_find(n->artifacts, text(args, "artifact_id"));
+            committed.state = ARTIFACT_COMMITTED;
+            result = manifest(n, &committed);
+        }
         else {
             result = object(n);
             if (action == CLAIM || action == KEEPALIVE)
@@ -792,6 +809,8 @@ static void process(node_control *n, size_t length)
         }
     }
     send_reply(n, n->encoded); // Reserve correlation before performing effects.
+    if (action == COMMIT_FILE)
+        artifact_store_accept_commit(n->artifacts, text(args, "artifact_id"));
     if (code)
         remember_error(n, code, message);
     else if (action == CLAIM) {

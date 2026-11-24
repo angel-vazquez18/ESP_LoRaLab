@@ -25,9 +25,12 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
 ## Progress
 
 - #14: implemented and verified: 20 new native cases; full checks 240 passed;
-  ESP-IDF main build passed (0x3c0c0 bytes, 77% partition free). PR publishing next.
+  ESP-IDF main build passed (0x3c0c0 bytes, 77% partition free). PR #152 open.
   Existing board still ran the old log-only image; verified original backup and
   started a fresh 16 MiB snapshot before the first batch flash.
+- #18: implemented real SHA-256 commit, immutable/failed transitions and real
+  consumer lifecycle tests. 10 new cases; full checks 250 passed. ESP-IDF build
+  passed (0x3c2c0 bytes, 76% partition free). PR publishing next.
 - Later issues: pending.
 
 Each PR includes its code walkthrough, verification commands/expected outcomes,
