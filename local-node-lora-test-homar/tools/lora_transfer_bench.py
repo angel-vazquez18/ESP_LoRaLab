@@ -34,6 +34,8 @@ CHUNK_BYTES = 240
 DATA_PACKET_BYTES = 251
 ACK_PACKET_BYTES = 14
 REPORT_PYTHON = Path(sys.executable)
+TIMING_FIRMWARE = "lora-integrity-3-timing"
+OLED_FIRMWARES = {"lora-integrity-2-oled", TIMING_FIRMWARE}
 
 
 def utc_now():
@@ -98,7 +100,7 @@ def compare_pcm(source, received):
     }
 
 
-def validate_hello(node, hello):
+def validate_hello(node, hello, require_processing_timing=False):
     if normalized_mac(hello.get("mac")) != node["mac_normalized"]:
         raise RuntimeError(f"{node['port']}: firmware MAC does not match USB identity")
     if hello.get("radio_ready") is not True:
@@ -116,6 +118,10 @@ def validate_hello(node, hello):
     for key in ("data_airtime_us", "ack_airtime_us"):
         if not isinstance(hello.get(key), (int, float)) or hello[key] <= 0:
             raise RuntimeError(f"{node['port']}: invalid {key}")
+    if require_processing_timing and (
+            hello.get("firmware") != TIMING_FIRMWARE
+            or type(hello.get("timing_schema")) is not int or hello["timing_schema"] != 1):
+        raise RuntimeError(f"{node['port']}: processing timing requires {TIMING_FIRMWARE} with timing_schema=1")
 
 
 def clock_sample(sent_ns, received_ns, device_us, boot_id):
@@ -208,6 +214,87 @@ def packet_accounting(tx_packets, rx_packets, hello, source=None, message_id=Non
         "estimated_airtime_successful_radio_calls_us": tx_ok * data_airtime + ack_tx_ok * ack_airtime,
         "airtime_note": "Configured LoRa airtime includes preamble, PHY header, PHY CRC and FEC. Payload byte counts exclude those PHY costs. Failed radio calls have unknown actual airtime; successful calls are not proof of reception.",
     }
+
+
+def audit_processing_timing(tx_packets, rx_packets, done, complete, required=False):
+    """Audit local CPU intervals separately from radio delivery or clock alignment.
+
+    Firmware counts encoding once per chunk (attempt 1), and decoding/acceptance
+    once per unique RX chunk. Duplicate RX work is measured but summed separately.
+    A partial RF failure may have consistent observations without a complete
+    200-chunk timing result. Missing fields are never interpreted as zero time.
+    """
+    errors, tx_values, rx_values, duplicate_values = [], {}, {}, []
+    present = (any("chunking_us" in p for p in tx_packets)
+               or any("dechunking_us" in p for p in rx_packets)
+               or "chunking_total_us" in done or "dechunking_total_us" in complete)
+    inspect = present or required
+
+    def nonnegative_int(value):
+        return type(value) is int and value >= 0
+
+    if inspect:
+        for ordinal, packet in enumerate(tx_packets):
+            index, attempt, elapsed = packet.get("index"), packet.get("attempt"), packet.get("chunking_us")
+            if type(index) is not int or not 0 <= index < CHUNKS:
+                errors.append(f"TX packet {ordinal}: invalid chunk index")
+                continue
+            if type(attempt) is not int or attempt < 1 or not nonnegative_int(elapsed):
+                errors.append(f"TX packet {ordinal}: missing/invalid attempt or chunking_us")
+                continue
+            if attempt == 1:
+                if index in tx_values:
+                    errors.append(f"TX chunk {index}: repeated first-attempt timing")
+                else:
+                    tx_values[index] = elapsed
+            elif elapsed != 0 or index not in tx_values:
+                errors.append(f"TX chunk {index}: retry must reuse a measured first attempt and report chunking_us=0")
+        for ordinal, packet in enumerate(rx_packets):
+            index, duplicate, elapsed = packet.get("index"), packet.get("duplicate"), packet.get("dechunking_us")
+            if type(index) is not int or not 0 <= index < CHUNKS:
+                errors.append(f"RX packet {ordinal}: invalid chunk index")
+                continue
+            if type(duplicate) is not bool or not nonnegative_int(elapsed):
+                errors.append(f"RX packet {ordinal}: missing/invalid duplicate flag or dechunking_us")
+                continue
+            if duplicate:
+                duplicate_values.append(elapsed)
+                if index not in rx_values:
+                    errors.append(f"RX chunk {index}: duplicate precedes unique measured acceptance")
+            elif index in rx_values:
+                errors.append(f"RX chunk {index}: repeated unique-acceptance timing")
+            else:
+                rx_values[index] = elapsed
+
+    def totals(values, firmware, prefix):
+        measured = sum(values.values()) if values else None
+        count = firmware.get(f"{prefix}_count")
+        elapsed = firmware.get(f"{prefix}_total_us")
+        matches = (nonnegative_int(count) and nonnegative_int(elapsed)
+                   and count == len(values) and elapsed == sum(values.values()))
+        if inspect and firmware:
+            if not nonnegative_int(count) or not nonnegative_int(elapsed):
+                errors.append(f"{prefix}: missing/invalid firmware count or total")
+            elif not matches:
+                errors.append(f"{prefix}: firmware count/total differs from packet measurements")
+        return {"count": len(values), "total_us": measured,
+                "mean_per_packet_us": measured / len(values) if values else None,
+                "firmware_count": count, "firmware_total_us": elapsed,
+                "totals_match": matches}
+
+    tx = totals(tx_values, done, "chunking")
+    rx = totals(rx_values, complete, "dechunking")
+    rx.update({"duplicate_count": len(duplicate_values),
+               "duplicate_total_us": sum(duplicate_values) if inspect else None,
+               "duplicate_mean_per_packet_us": (sum(duplicate_values) / len(duplicate_values)
+                                                if duplicate_values else None)})
+    full = set(tx_values) == set(range(CHUNKS)) and set(rx_values) == set(range(CHUNKS))
+    if required and not present:
+        errors.append("Processing timing measurements are missing")
+    return {"schema": 1, "required": required, "available": bool(tx_values or rx_values),
+            "complete": full, "valid": full and tx["totals_match"] and rx["totals_match"] and not errors,
+            "errors": errors, "tx": tx, "rx": rx,
+            "scope": "Device-local chunk encoding/CRC and accepted packet decode/reassembly; excludes RF/ACK waits, rejected packets and PHY errors. Duplicate RX processing is separate. Zero microseconds is valid at timer resolution."}
 
 
 class Connection:
@@ -444,7 +531,7 @@ def can_continue_after_trial(trial):
     """Continue only a cleanly concluded RF delivery failure, never a broken bench."""
     done = trial.get("tx_done", {})
     if any(trial.get(key) for key in ("error", "cleanup_errors", "receiver_dump_error",
-                                    "clock_after_error", "interrupted")):
+                                    "clock_after_error", "interrupted", "processing_timing_error")):
         return False
     packets = trial.get("tx_packets", [])
     return (
@@ -460,7 +547,7 @@ def can_continue_after_trial(trial):
 
 
 def run_trial(tx, rx, source, folder, number, message_id, timeout, negative_control=False,
-              oled_progress=False, total_trials=3):
+              oled_progress=False, total_trials=3, require_processing_timing=False):
     trial = {"trial": number, "id": message_id, "tx_port": tx.node["port"],
              "rx_port": rx.node["port"], "started_at": utc_now(), "passed": False,
              "negative_control": negative_control}
@@ -553,6 +640,13 @@ def run_trial(tx, rx, source, folder, number, message_id, timeout, negative_cont
     trial["accounting"] = packet_accounting(tx_packets, rx_packets, tx.hello, source, message_id)
     done = trial.get("tx_done", {})
     complete = trial.get("rx_complete") or {}
+    trial["processing_timing"] = audit_processing_timing(
+        tx_packets, rx_packets, done, complete, require_processing_timing)
+    processing = trial["processing_timing"]
+    if require_processing_timing and (processing["errors"] or (
+            done.get("success") is True and not processing["valid"])):
+        trial["processing_timing_error"] = (
+            "; ".join(processing["errors"]) or "A successful transfer requires 200 reconciled TX and RX timing observations")
     if done and done.get("end_us", 0) >= done.get("start_us", 0):
         trial["sender_local_transfer_us"] = done["end_us"] - done["start_us"]
     if complete:
@@ -576,6 +670,7 @@ def run_trial(tx, rx, source, folder, number, message_id, timeout, negative_cont
         "error" not in trial and not trial.get("cleanup_errors")
         and not trial.get("receiver_dump_error")
         and not trial.get("clock_after_error") and not trial.get("interrupted")
+        and not trial.get("processing_timing_error")
         and done.get("success") is True and done.get("acked_chunks") == CHUNKS
         and complete.get("received_chunks") == CHUNKS
         and trial.get("rx_dump", {}).get("complete") is True
@@ -596,7 +691,7 @@ def run_trial(tx, rx, source, folder, number, message_id, timeout, negative_cont
     return trial
 
 
-def preflight(wav_path, report_python, oled_progress=False):
+def preflight(wav_path, report_python, oled_progress=False, require_processing_timing=False):
     """Local files/dependencies only: no device enumeration, port open or commands."""
     _, source = read_source(wav_path)
     reporter = PROJECT_ROOT / "tools/create_lora_consistency_pdf.py"
@@ -611,10 +706,14 @@ def preflight(wav_path, report_python, oled_progress=False):
     firmware = (PROJECT_ROOT / "src/lora_bench.cpp").read_text(encoding="utf-8")
     if "load_block" not in firmware or "block_bytes" not in firmware:
         raise RuntimeError("Firmware source lacks acknowledged USB LOAD protocol")
-    if oled_progress and ("lora-integrity-2-oled" not in firmware or 'TEST ' not in firmware):
+    if oled_progress and (not any(version in firmware for version in OLED_FIRMWARES) or 'TEST ' not in firmware):
         raise RuntimeError("Firmware source lacks the requested OLED TEST protocol")
+    if require_processing_timing and (TIMING_FIRMWARE not in firmware or any(field not in firmware for field in (
+            "timing_schema", "chunking_us", "dechunking_us", "chunking_total_us", "dechunking_total_us"))):
+        raise RuntimeError("Firmware source lacks the required schema-1 processing timing protocol")
     return {"local_only": True, "ports_opened": False, "source": source,
             "report_python": str(report_python), "oled_protocol_requested": oled_progress,
+            "processing_timing_required": require_processing_timing,
             "note": "Checks local source and dependencies; flashed device identity/firmware are checked only when a run starts"}
 
 
@@ -643,6 +742,8 @@ def main(argv=None):
                         help="Maximum autonomous transfer wait per trial, <=240 seconds")
     parser.add_argument("--output-dir", type=Path, help="New directory only; existing directories are refused")
     parser.add_argument("--oled-progress", action="store_true", help="Set both OLED TEST counters before each trial")
+    parser.add_argument("--require-processing-timing", action="store_true",
+                        help="Require schema-1 firmware and reconciled chunking/dechunking measurements for successful trials")
     parser.add_argument("--continue-on-failure", action="store_true", help="Continue after ordinary RF delivery failures only")
     parser.add_argument("--distance-inches", type=float, help="User-reported separation; not measured by the software")
     parser.add_argument("--report-python", type=Path, default=REPORT_PYTHON,
@@ -655,7 +756,8 @@ def main(argv=None):
         parser.error("--distance-inches must be positive")
     if args.check_only:
         try:
-            print(json.dumps(preflight(args.wav, args.report_python, args.oled_progress), indent=2))
+            print(json.dumps(preflight(args.wav, args.report_python, args.oled_progress,
+                                       args.require_processing_timing), indent=2))
             return 0
         except Exception as exc:
             print(f"Preflight failed: {exc}", file=sys.stderr)
@@ -667,6 +769,7 @@ def main(argv=None):
                "requested_trials": args.trials, "alternate": args.alternate,
                "negative_control_requested": args.negative_control,
                "oled_progress": args.oled_progress, "continue_on_failure": args.continue_on_failure,
+               "processing_timing_required": args.require_processing_timing,
                "distance_inches": args.distance_inches, "distance_basis": "user-reported; not software-measured",
                "physical_radio_only": True, "source_sent_only_to_transmitter": True,
                "both_connections_open_together": False, "passed": False,
@@ -674,7 +777,8 @@ def main(argv=None):
     connections = []
     result = 1
     try:
-        summary["preflight"] = preflight(args.wav, args.report_python, args.oled_progress)
+        summary["preflight"] = preflight(args.wav, args.report_python, args.oled_progress,
+                                         args.require_processing_timing)
         source, summary["source"] = read_source(args.wav)
         save_wav(folder / "source.wav", source)
         summary["nodes"] = discover_nodes([args.tx_port, args.rx_port])
@@ -685,9 +789,9 @@ def main(argv=None):
         summary["both_connections_open_together"] = all(c.serial.is_open for c in connections)
         for connection in connections:
             hello = connection.request("HELLO", "hello")["message"]
-            validate_hello(connection.node, hello)
-            if args.oled_progress and hello.get("firmware") != "lora-integrity-2-oled":
-                raise RuntimeError(f"{connection.node['port']}: OLED run requires lora-integrity-2-oled firmware")
+            validate_hello(connection.node, hello, args.require_processing_timing)
+            if args.oled_progress and hello.get("firmware") not in OLED_FIRMWARES:
+                raise RuntimeError(f"{connection.node['port']}: OLED run requires a supported OLED firmware")
             if args.oled_progress and (hello.get("oled_ready") is not True or hello.get("oled_layout_ok") is not True):
                 raise RuntimeError(f"{connection.node['port']}: OLED initialization/layout is not ready")
             connection.hello = hello
@@ -721,7 +825,8 @@ def main(argv=None):
             trial_folder.mkdir()
             print(f"Trial {index + 1}/{args.trials}: {tx.node['port']} -> {rx.node['port']}, message {message_id}", flush=True)
             trial = run_trial(tx, rx, source, trial_folder, index + 1, message_id, args.timeout,
-                              oled_progress=args.oled_progress, total_trials=args.trials)
+                              oled_progress=args.oled_progress, total_trials=args.trials,
+                              require_processing_timing=args.require_processing_timing)
             trial["directory"] = trial_folder.name
             summary["trials"].append(trial)
             print(f"  {'PASS' if trial['passed'] else 'FAIL'}: {trial.get('receiver_comparison', {}).get('different_bytes', 'unknown')} differing bytes", flush=True)
@@ -783,4 +888,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit("This file supplies shared helpers. Start the 20-trial bench with tools/lora_crypto_bench.py or tools/run_lora_crypto_comparison.ps1.")

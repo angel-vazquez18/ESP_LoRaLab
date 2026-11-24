@@ -1,5 +1,8 @@
-# Python 3.11+; versions used by the source project's bench/report environments.
+# Python 3.11+; versions used by the source benchmark environments.
 platformio==6.2.0
 pyserial==3.5
+cryptography==50.0.2
 reportlab==4.4.9
 numpy==2.3.5
+# Offline PDF assertions in the packaged test suite.
+pypdf==6.21.4

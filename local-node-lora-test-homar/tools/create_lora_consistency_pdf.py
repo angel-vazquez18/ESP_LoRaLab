@@ -125,7 +125,70 @@ def packet_audit(trial, source):
             "rx_crc_errors": sum(e.get("status") == -7 for e in trial.get("rx_errors", []))}
 
 
-def audit_trial(run, trial, source, source_info, logs):
+def processing_audit(trial, node_hello):
+    """Reconcile device-local measurements independently of host pass flags."""
+    result = {}
+    for name, port_key, events_key, completion_key, sample_key, total_key, count_key in (
+        ("chunking", "tx_port", "tx_packets", "tx_done", "chunking_us", "chunking_total_us", "chunking_count"),
+        ("dechunking", "rx_port", "rx_packets", "rx_complete", "dechunking_us", "dechunking_total_us", "dechunking_count"),
+    ):
+        schema = node_hello.get(trial.get(port_key), {}).get("timing_schema")
+        events = trial.get(events_key, [])
+        completion = trial.get(completion_key) or {}
+        advertised = schema == 1
+        present = any(sample_key in e for e in events) or total_key in completion or count_key in completion
+        audit = {"schema": schema, "status": "not_recorded", "valid": False, "count": 0,
+                 "total_us": None, "mean_per_chunk_us": None, "errors": [],
+                 "duplicate_count": 0, "duplicate_total_us": None}
+        if not advertised and not present:
+            result[name] = audit
+            continue
+        errors = audit["errors"]
+        if not advertised:
+            errors.append("Timing schema 1 not advertised by this node")
+        selected, duplicates = [], []
+        def duration_ok(value):
+            return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+        for event in events:
+            value = event.get(sample_key)
+            if not duration_ok(value):
+                errors.append(f"Missing/invalid {sample_key} at index {event.get('index')}")
+            if name == "chunking":
+                if event.get("attempt") == 1:
+                    selected.append(event)
+                elif isinstance(event.get("attempt"), int) and event["attempt"] > 1:
+                    if value != 0:
+                        errors.append("TX retry repeats a chunking measurement")
+                else:
+                    errors.append("Invalid TX attempt number")
+            elif event.get("duplicate") is False:
+                selected.append(event)
+            elif event.get("duplicate") is True:
+                duplicates.append(event)
+            else:
+                errors.append("RX duplicate flag missing or invalid")
+        indices = [e.get("index") for e in selected]
+        if len(selected) != CHUNKS or set(indices) != set(range(CHUNKS)):
+            errors.append("Timing requires all 200 distinct first/unique chunk events")
+        values = [e[sample_key] for e in selected if duration_ok(e.get(sample_key))]
+        observed_total = sum(values) if len(values) == len(selected) and values else None
+        if completion.get(count_key) != len(selected) or not duration_ok(completion.get(count_key)):
+            errors.append("Firmware processing count does not match event count")
+        if not duration_ok(completion.get(total_key)) or completion.get(total_key) != observed_total:
+            errors.append("Firmware processing total does not match event sum")
+        audit.update(count=len(selected), firmware_count=completion.get(count_key),
+                     firmware_total_us=completion.get(total_key), observed_total_us=observed_total,
+                     duplicate_count=len(duplicates),
+                     duplicate_total_us=sum(e[sample_key] for e in duplicates) if duplicates and all(duration_ok(e.get(sample_key)) for e in duplicates) else (0 if advertised and not duplicates else None))
+        audit["valid"] = not errors
+        audit["status"] = "verified" if audit["valid"] else "invalid"
+        if audit["valid"]:
+            audit.update(total_us=observed_total, mean_per_chunk_us=observed_total / len(selected))
+        result[name] = audit
+    return result
+
+
+def audit_trial(run, trial, source, source_info, logs, node_hello=None):
     relative = trial.get("directory", f"trial-{trial['trial']:02d}-{trial.get('tx_port', 'unknown')}-to-{trial.get('rx_port', 'unknown')}")
     reasons = []
     try:
@@ -169,8 +232,11 @@ def audit_trial(run, trial, source, source_info, logs):
     bounds = [b for b in bounds if isinstance(b, dict) and all(number(b.get(k)) is not None for k in ("lower_us", "upper_us", "midpoint_us"))]
     if not stable:
         bounds = []
+    processing = processing_audit(trial, node_hello or {})
     timing = {"sender_local_seconds": seconds(duration),
               "receiver_span_seconds": seconds(trial.get("receiver_local_span_us")),
+              "chunking_processing_seconds": seconds(processing["chunking"]["total_us"]),
+              "dechunking_processing_seconds": seconds(processing["dechunking"]["total_us"]),
               "calculated_airtime_seconds": seconds(trial.get("accounting", {}).get("estimated_airtime_successful_radio_calls_us")),
               "usb_upload_host_seconds": host_interval(logs.get(trial.get("tx_port"), []), trial, "load_ready", "loaded"),
               "usb_export_host_seconds": host_interval(logs.get(trial.get("rx_port"), []), trial, "dump_begin", "dump_end"),
@@ -178,6 +244,19 @@ def audit_trial(run, trial, source, source_info, logs):
               "packet_midpoint_median_ms": statistics.median(b["midpoint_us"] for b in bounds) / 1000 if bounds else None,
               "packet_lower_min_ms": min(b["lower_us"] for b in bounds) / 1000 if bounds else None,
               "packet_upper_max_ms": max(b["upper_us"] for b in bounds) / 1000 if bounds else None}
+    hello = node_hello or {}
+    for role, port_key, packet_key, status_key, unit_key in (
+        ("data", "tx_port", "tx_packets", "tx_radio_status", "data_airtime_us"),
+        ("ack", "rx_port", "rx_packets", "ack_status", "ack_airtime_us"),
+    ):
+        unit = number(hello.get(trial.get(port_key), {}).get(unit_key))
+        events = trial.get(packet_key)
+        calls = sum(e.get(status_key, e.get("radio_status") if role == "data" else None) == 0
+                    for e in events) if isinstance(events, list) else None
+        timing[f"calculated_{role}_airtime_seconds"] = seconds(calls * unit) if calls is not None and unit is not None else None
+    final_acks = [e["ack_us"] for e in trial.get("tx_packets", [])
+                  if e.get("acked") is True and number(e.get("ack_us")) is not None]
+    timing["sender_to_final_ack_seconds"] = seconds(difference(max(final_acks), done.get("start_us"))) if final_acks and done.get("success") is True else None
     memories = []
     for role, key in (("TX", "tx_role"), ("RX", "rx_role")):
         item = trial.get(key, {})
@@ -191,13 +270,42 @@ def audit_trial(run, trial, source, source_info, logs):
                              "bitmap_bytes": item.get("chunker_bitmap_bytes"), "storage": item.get("allocation_storage")})
     rssis = [e["rssi_dbm"] for e in trial.get("rx_packets", []) if number(e.get("rssi_dbm")) is not None]
     snrs = [e["snr_db"] for e in trial.get("rx_packets", []) if number(e.get("snr_db")) is not None]
+    for name, audit in processing.items():
+        if audit['status'] == 'invalid':
+            reasons.append(f"{name} timing invalid: " + '; '.join(audit['errors']))
+            if status == 'PASS':
+                status = 'INCOMPLETE'
     return {"trial": trial["trial"], "directory": relative, "tx_port": trial.get("tx_port", "?"),
             "rx_port": trial.get("rx_port", "?"), "status": status, "recorded_passed": trial.get("passed"),
             "reasons": reasons, "sender_pcm_exact": exact_tx, "received_pcm_exact": exact_rx,
             "sender_wav": tx_info, "received_wav": rx_info, "packets": packets, "timing": timing, "memory": memories,
-            "oled_test": trial.get("oled_test", {}),
+            "oled_test": trial.get("oled_test", {}), "processing": processing,
             "rssi_dbm_range": [min(rssis), max(rssis)] if rssis else None,
             "snr_db_range": [min(snrs), max(snrs)] if snrs else None}
+
+
+def distribution(values):
+    """Equal-weight observations; missing measurements are never zero-imputed."""
+    values = [v for v in values if number(v) is not None]
+    return {"n": len(values), "mean": statistics.mean(values) if values else None,
+            "minimum": min(values) if values else None, "maximum": max(values) if values else None}
+
+
+def aggregate(trials):
+    timing_keys = ("sender_local_seconds", "receiver_span_seconds", "sender_to_final_ack_seconds",
+                   "calculated_airtime_seconds", "calculated_data_airtime_seconds", "calculated_ack_airtime_seconds",
+                   "usb_upload_host_seconds", "usb_export_host_seconds",
+                   "chunking_processing_seconds", "dechunking_processing_seconds")
+    memory_keys = ("requested_bytes", "actual_bytes", "psram_free_delta_bytes", "scratch_bytes")
+    return {
+        "basis": "Arithmetic mean per attempted trial with an available measurement; missing values excluded; n gives each denominator.",
+        "attempted_trials": len(trials),
+        "timing": {key: distribution(t["timing"].get(key) for t in trials) for key in timing_keys},
+        "memory_by_role": {role: {key: distribution(m.get(key) for t in trials for m in t["memory"] if m["role"] == role)
+                                  for key in memory_keys} for role in ("TX", "RX")},
+        "packet_bytes": {key: distribution(t["packets"].get(key) for t in trials)
+                         for key in ("data_successful_call_bytes", "ack_successful_call_bytes")},
+    }
 
 
 def collect(run):
@@ -230,7 +338,14 @@ def collect(run):
     source_info, source = wav_evidence(run / "source.wav")
     ports = summary.get("requested_ports") or sorted({e.get(k) for e in entries.values() for k in ("tx_port", "rx_port") if e.get(k)})
     logs = serial_logs(run, ports)
-    trials = [audit_trial(run, entries[i], source, source_info, logs) for i in sorted(entries)]
+    hello = {node.get("port"): node.get("hello", {}) for node in summary.get("nodes", [])}
+    trials = [audit_trial(run, entries[i], source, source_info, logs, hello) for i in sorted(entries)]
+    required = summary.get('processing_timing_required') is True
+    for trial in trials:
+        if required and not all(a['valid'] for a in trial['processing'].values()):
+            trial['reasons'].append('This run requires verified chunking and dechunking timing')
+            if trial['status'] == 'PASS':
+                trial['status'] = 'INCOMPLETE'
     tally = Counter(t["status"] for t in trials)
     counts = {"requested": requested, "attempted": len(trials), "passed": tally["PASS"], "failed": tally["FAIL"],
               "incomplete": tally["INCOMPLETE"], "not_run": max(0, requested - len(trials))}
@@ -255,10 +370,13 @@ def collect(run):
     distance = number(summary.get("distance_inches"))
     if distance is None or distance <= 0:
         distance = 24
-    return {"schema_version": 1, "generated_at": datetime.now(timezone.utc).isoformat(),
+    return {"schema_version": 3, "generated_at": datetime.now(timezone.utc).isoformat(),
             "run_folder": str(run), "historical_validation_fixture": summary.get("historical_validation_fixture", False),
             "fixture_note": summary.get("fixture_note"), "requested_trials": requested,
             "counts": counts, "per_direction": per_direction, "plan": plan, "trials": trials,
+            "averages": aggregate(trials),
+            "processing_timing_required": required,
+            "all_processing_timing_verified": len(trials) == requested and all(t['processing'][name]['valid'] for t in trials for name in ('chunking','dechunking')),
             "all_requested_trials_verified": passed, "recorded_run_passed": summary.get("passed"),
             "distance_inches": distance, "distance_basis": "User-reported; not measured from radio signal strength",
             "source": source_info, "nodes": summary.get("nodes", []),
@@ -274,7 +392,7 @@ def collect(run):
             "connections_closed": summary.get("connections_closed"),
             "both_connections_open_together": summary.get("both_connections_open_together"),
             "started_at": summary.get("started_at"), "finished_at": summary.get("finished_at"),
-            "measurement_limits": ["Chunking and reassembly processing times were not measured separately.",
+            "measurement_limits": ["Processing timing uses device-local elapsed microseconds around instrumented chunking/reassembly code. It includes timer and scheduling overhead; it is not pure CPU-cycle time. Missing or inconsistent measurements are excluded.",
                 "TX duration uses the sender's local clock; RX span uses the receiver's local clock.",
                 "USB host intervals include serial transport, buffering and acknowledgements, not pure memory-write time.",
                 "Cross-device packet estimates assume the device-to-host offset stays inside pre/post calibration envelopes; they are not guaranteed one-way latency or pure RF propagation.",
@@ -284,6 +402,10 @@ def collect(run):
 
 def fmt(value, places=3):
     return "--" if number(value) is None else f"{value:,.{places}f}"
+
+
+def bytes_kib(value):
+    return "Unknown" if number(value) is None else f"{value:,.0f} bytes / {value / 1024:.3f} KiB"
 
 
 def make_pdf(path, report):
@@ -299,7 +421,7 @@ def make_pdf(path, report):
     c = canvas.Canvas(str(path), pagesize=(W, H), pageCompression=1)
     c.setTitle("Heltec LoRa consistency - saved evidence")
     c.setAuthor("ESP32 audio chunker bench")
-    page_count = 4 if report["trials"] else 2
+    page_count = 6 if report["trials"] else 2
     page_no = 0
 
     def text(value, y, size=10, x=M, width=CW, bold=False, color=navy):
@@ -335,6 +457,8 @@ def make_pdf(path, report):
         return text(value, y, 13, bold=True) - 8
 
     def table(headers, rows, widths, y, size=9, padding=6):
+        if abs(sum(widths)-CW) > .01:
+            raise ValueError("Table columns exceed report width")
         def cell(value, head=False):
             return Paragraph(escape(str(value)), ParagraphStyle("cell", fontName="Helvetica-Bold" if head else "Helvetica",
                              fontSize=size, leading=size*1.25, textColor=colors.white if head else navy))
@@ -391,7 +515,7 @@ def make_pdf(path, report):
         return y-height-3
 
     counts=report["counts"]
-    y=page("Consistency results", "Saved evidence only. Missing trials and unavailable measurements remain explicit.")
+    y=page("Consistency results", f"Run started: {escape(str(report['started_at']))}. Saved evidence from this run only.")
     verdict="All requested trials verified" if report["all_requested_trials_verified"] else "Requested run is not fully verified"
     y=text(verdict,y,16,bold=True,color=teal if report["all_requested_trials_verified"] else amber)-7
     y=text(f"<b>{counts['requested']} requested / {counts['attempted']} attempted / {counts['passed']} passed</b>. "
@@ -413,11 +537,54 @@ def make_pdf(path, report):
            f"Connections recorded closed: {report['connections_closed']}.",y,9.5)
 
     if report["trials"]:
+        averages = report["averages"]
+        y=page("Average values at a glance", f"<b>Voice recording: {fmt(source.get('duration_seconds'),2)} seconds per message.</b> "
+               f"{counts['attempted']} attempted trials; ~{report['distance_inches']:g} inches; n = sample count.")
+        y=text("<b>Airtime is included in TX time.</b> TX and RX overlap; do not add these intervals.",y,10)-12
+        rows=[]
+        for label,key,meaning in (
+            ("Sender transaction", "sender_local_seconds", "Sender start to completion; includes waits and retries."),
+            ("Receiving interval", "receiver_span_seconds", "First to last unique accepted packet; excludes initial packet airtime and final ACK."),
+            ("Delivery confirmed", "sender_to_final_ack_seconds", "Sender start to receipt of the last acknowledgement (ACK)."),
+            ("Combined airtime", "calculated_airtime_seconds", "Calculated DATA + ACK radio time, including retries and duplicate ACKs."),
+            ("DATA airtime", "calculated_data_airtime_seconds", "Configured packet airtime x successful data transmit calls."),
+            ("ACK airtime", "calculated_ack_airtime_seconds", "Configured packet airtime x successful ACK transmit calls."),
+            ("USB source loading", "usb_upload_host_seconds", "Host-observed load_ready to loaded; before radio transmission."),
+            ("USB receiver export", "usb_export_host_seconds", "Host-observed dump_begin to dump_end; after radio reception."),
+            ("Chunking total", "chunking_processing_seconds", "Sum of 200 first-attempt packet-building measurements per message."),
+            ("Dechunking total", "dechunking_processing_seconds", "Sum of 200 unique accepted-packet reassembly measurements; duplicates excluded."),
+        ):
+            stats=averages["timing"][key]
+            scale,unit=(1000,"ms") if key in ("chunking_processing_seconds","dechunking_processing_seconds") else (1,"s")
+            mean=f"{fmt(stats['mean']*scale)} {unit}" if stats['n'] else "Not measured"
+            span=f"{fmt(stats['minimum']*scale)} - {fmt(stats['maximum']*scale)} {unit}" if stats['n'] else "Not available"
+            rows.append([label, mean, span, f"n={stats['n']}. {meaning}"])
+        y=table(["Measurement", "Mean", "Range / unit", "What it measures"],rows,[112,72,109,239],y,8.4,padding=2.5)
+        y=text("<b>Processing values use milliseconds (ms); transfer values use seconds (s).</b> Means use only verified measurements, with n as their denominator. Missing does not mean zero. See the Processing measurements page for scope and per-trial values.",y,8.6,color=gray)-8
+        y=heading("Average memory reserved per message",y)
+        rows=[]
+        for role,label in (("TX","Transmitter"),("RX","Receiver")):
+            values=averages["memory_by_role"][role]
+            rows.append([label]+[f"{bytes_kib(values[key]['mean'])} (n={values[key]['n']})" for key in ("requested_bytes","actual_bytes","psram_free_delta_bytes","scratch_bytes")])
+        y=table(["Role", "Requested", "Allocated block", "PSRAM decrease", "Scratch"],rows,[70,114,116,122,110],y,8.1,padding=4)
+        y=text("1 KiB = 1,024 bytes. RX includes PCM, a 25-byte bitmap and state/padding. Requested size, allocator block and free-memory decrease are separate readings; scratch is separate from the audio buffer.",y,8.6,color=gray)-8
+        capacities=report['physical_capacity']
+        y=text("Board capacities are reported on the Timing and memory page. Audio is held in volatile PSRAM; device flash is not used for the recording.",y,8.6)-10
+        total_unique=sum(t['packets']['unique_received'] for t in report['trials'])
+        retries=sum(t['packets']['retries'] for t in report['trials'])
+        errors=sum(t['packets']['rx_crc_errors'] for t in report['trials'])
+        duplicates=sum(t['packets']['receiver_duplicates'] for t in report['trials'])
+        exact=sum(t['received_pcm_exact'] for t in report['trials'])
+        y=text(f"<b>{counts['passed']}/{counts['requested']} verified passes; {exact} exact PCM matches.</b> {total_unique:,} unique chunks; {retries} retries; {errors} receiver CRC errors; {duplicates} duplicates.",y,8.6)-8
+        y=text("<b>Audio encoding: uncompressed linear PCM.</b> 16-bit, 8 kHz, mono; 128 kbit/s of audio. No speech-compression codec; WAV container. See the next page for format details.",y,8.6)
+        y-=6
+        y=text("<b>Encryption: none.</b> These trials sent audio without encryption. CRC32 checks detect errors; they do not encrypt data.",y,8.6)
+
         y=page("Audio and packet integrity", "A pass requires saved completion status, exact WAV payloads and independently checked packet CRCs.")
         y=table(["Trial / direction","Outcome","RX / ACK","Retry","Data / ACK bytes","PCM exact"],
                 [[f"{t['trial']}  {t['tx_port']} > {t['rx_port']}",t['status'],f"{t['packets']['unique_received']} / {t['packets']['unique_acked']}",t['packets']['retries'],
                   f"{t['packets']['data_successful_call_bytes']:,} / {t['packets']['ack_successful_call_bytes']:,}","Yes" if t['received_pcm_exact'] else "No / unverified"] for t in report["trials"][:10]],
-                [142,74,65,44,119,88],y,8.6)
+                [142,74,65,44,119,88],y,8.6,padding=4)
         crc_errors=sum(t['packets']['rx_crc_errors'] for t in report['trials'])
         bad_crcs=sum(len(t['packets']['invalid_crc_events']) for t in report['trials'])
         y=note(f"RX / ACK are unique indices out of 200. Byte counts use successful radio calls and exclude PHY overhead. Logged RX radio CRC errors: {crc_errors}; source-derived packet CRC failures: {bad_crcs}. A retry may recover a radio error without changing the final PCM.",y)
@@ -425,6 +592,7 @@ def make_pdf(path, report):
         y=table(["Layer","Size / meaning"],[
                 ["Original WAV file",f"{fmt(source.get('wav_file_bytes'),0)} bytes including its WAV header"],
                 ["Audio PCM payload",f"{fmt(source.get('pcm_bytes'),0)} bytes; 24,000 mono 16-bit samples at 8 kHz when contract valid"],
+                ["Audio encoding / codec", "Uncompressed linear PCM: signed 16-bit little-endian, 8 kHz, mono. No speech-compression codec. Audio rate: 128 kbit/s (16,000 bytes/s), excluding protocol overhead."],
                 ["Data framing", "200 x (240 PCM + 7 header + 4 application CRC) = 50,200 bytes before retries"],
                 ["ACK framing", "200 x 14 = 2,800 ACK bytes before retries; PHY preamble, coding and CRC are additional"]],
                 [150,382],y,9)
@@ -432,18 +600,18 @@ def make_pdf(path, report):
         y=text("PCM SHA-256: <font name='Courier' size='8'>"+escape(source.get("pcm_sha256","unavailable"))+"</font>",y,9)-7
         y=text(f"PCM CRC32: <b>{escape(source.get('pcm_crc32','unavailable'))}</b>. SHA-256 and byte equality apply to PCM, not the WAV container header.",y,9.5)-14
         cinfo=report["negative_control"]
-        y=note(f"Receiver-off control requested: {cinfo['requested']}; recorded result: {cinfo['recorded_passed']}. This is separate from the positive trial count. A passing control means expected delivery failure with the receiver stopped; this report does not re-audit that control's raw evidence.",y)
+        y=note(f"Receiver-off control: requested={cinfo['requested']}, recorded result={cinfo['recorded_passed']}. Separate from positive trials; a passing control means expected failure, not audio delivery. Control evidence is not re-audited here.",y)
 
         y=page("Timing and memory", "Measured intervals, calculated airtime and estimates are deliberately kept separate.")
         y=table(["Trial","TX local s","RX span s","Airtime s","USB in / out s","Packet est. ms"],
                 [[t['trial'],fmt(t['timing']['sender_local_seconds']),fmt(t['timing']['receiver_span_seconds']),fmt(t['timing']['calculated_airtime_seconds']),
                   f"{fmt(t['timing']['usb_upload_host_seconds'])} / {fmt(t['timing']['usb_export_host_seconds'])}",fmt(t['timing']['packet_midpoint_median_ms'])] for t in report['trials'][:10]],
                 [44,78,78,78,135,119],y,8.7,padding=3)
-        y=note("TX: sender start to completion. RX: first to last accepted packet, not whole transfer. Airtime is calculated. USB host intervals include transport and buffering; see limits on the next page.",y)
-        y=note("Packet estimate: median eligible first-attempt-to-accepted-RX midpoint, including retries. See the clock limitations on the next page. Bounds and eligibility counts are in JSON.",y)
+        y=note("TX: sender start to completion. RX: first to last accepted packet, not whole transfer. Airtime is calculated. USB host intervals include transport and buffering; see Traceability and limits.",y)
+        y=note("Packet estimate: median eligible first-attempt-to-accepted-RX midpoint, including retries. See Traceability and limits for clock assumptions. Bounds and eligibility counts are in JSON.",y)
         y=heading("Physical storage capacity reported by the boards",y)
         def capacity(value):
-            return "Unknown (not reported)" if value is None else f"{value:,.0f} B ({value / 1048576:g} MiB)"
+            return "Unknown (not reported)" if value is None else f"{value:,.0f} bytes ({value / 1048576:g} MiB)"
         y=table(["Port","Flash total","PSRAM total"],
                 [[node['port'],capacity(node['flash_total_bytes']),capacity(node['psram_total_bytes'])] for node in report['physical_capacity']] or [["--","Unknown (not reported)","Unknown (not reported)"]],
                 [70,231,231],y,8.7,padding=4)
@@ -457,8 +625,23 @@ def make_pdf(path, report):
             values=[m[key] for m in items if number(m.get(key)) is not None]
             return '--' if not values else fmt(min(values),0) if min(values)==max(values) else f"{fmt(min(values),0)} - {fmt(max(values),0)}"
         rows=[[port,role]+[memory_range(items,key) for key in ('requested_bytes','actual_bytes','psram_free_delta_bytes','scratch_bytes')] for (port,role),items in sorted(grouped.items())]
-        y=table(["Port","Role","Requested B","Actual block B","PSRAM delta B","Scratch B"],rows[:8] or [["--"]*6],[66,42,98,110,116,100],y,8.7,padding=4)
+        y=table(["Port","Role","Requested bytes","Actual block bytes","PSRAM delta bytes","Scratch bytes"],rows[:8] or [["--"]*6],[66,42,98,110,116,100],y,8.7,padding=4)
         y=note("Per-role ranges across attempted trials. RX size includes PCM and bitmap. Allocation and free-PSRAM change are separate readings. Scratch is not total RAM or stack usage; full readings are in JSON.",y)
+
+        y=page("Processing measurements", "Device-local elapsed time for chunking and dechunking. No historical values are substituted.")
+        y=table(["Trial", "Chunking total ms", "Dechunking total ms", "Chunk mean us", "Dechunk mean us", "Verified counts TX / RX"],
+                [[t['trial'],fmt(seconds(t['processing']['chunking']['total_us'])*1000 if t['processing']['chunking']['valid'] else None),
+                  fmt(seconds(t['processing']['dechunking']['total_us'])*1000 if t['processing']['dechunking']['valid'] else None),
+                  fmt(t['processing']['chunking']['mean_per_chunk_us']),fmt(t['processing']['dechunking']['mean_per_chunk_us']),
+                  f"{t['processing']['chunking']['count'] if t['processing']['chunking']['valid'] else '--'} / {t['processing']['dechunking']['count'] if t['processing']['dechunking']['valid'] else '--'}"] for t in report['trials'][:10]],
+                [42,93,101,89,95,112],y,8.8,padding=4)
+        y=note("ms = milliseconds; us = microseconds. 1 ms = 1,000 us. Each total sums 200 measured chunk operations. The per-chunk mean is that trial's total divided by 200. A dash denotes missing or inconsistent evidence, not zero elapsed time.",y)
+        y=heading("What is included",y)
+        y=text("<b>Chunking:</b> PCM copying, header/frame construction and application CRC creation, plus the existing CRC used to bind the ACK. Retry attempts reuse the frame and report zero additional chunking time.<br/><br/><b>Dechunking:</b> frame/header/message/CRC validation and copying, reassembly acceptance and bitmap/count updates, plus duplicate classification/checking. Only the first accepted copy contributes to the message total; duplicate processing is excluded.",y,10)-14
+        y=heading("Measurement boundaries",y)
+        y=text("These are elapsed intervals from the ESP32's local microsecond timer. They include timer calls and any scheduling/interruption overhead inside the measured region; they are not pure CPU cycles. The timed regions exclude radio transmission/reception waits, ACK handling/delay, OLED rendering and serial logging. USB transport and isolated memory-write latency are separate and are not inferred from these totals.",y,10)-14
+        y=heading("Independent consistency checks",y)
+        y=text("A processing total is accepted only when the node advertises timing schema 1, all 200 distinct first/unique packet timings are present, and their sum and count exactly match the completion event. Zero microseconds is valid at timer resolution. Legacy runs without these fields remain unmeasured. Detailed audit reasons and duplicate-processing totals are preserved in JSON.",y,10)-12
 
     y=page("Traceability and limits", "Keep this report with the run summary, serial logs and unchanged WAV evidence.")
     y=heading("Hardware and firmware reported by the nodes",y)

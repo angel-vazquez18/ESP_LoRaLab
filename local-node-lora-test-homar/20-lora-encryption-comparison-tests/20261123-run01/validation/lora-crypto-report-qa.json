@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-23",
+  "pdf": "output/pdf/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.pdf",
+  "sha256": "ca3f0266bafbd5d8200d3d7cb1e58357c41d986aa02fc6a92d5f8f4ae84df4b6",
+  "pages": 7,
+  "render_directory": "tmp/pdfs/lora-crypto-final",
+  "all_pages_visually_inspected": true,
+  "visual_result": "PASS: readable text and tables; no clipping or overlaps",
+  "root_additional_page_reviews": [1, 2, 5],
+  "independent_numeric_review": "PASS: 256 timing and memory mean/range/count comparisons between independent audit and report JSON matched",
+  "verified_physical_trials": 20,
+  "report_warnings": [],
+  "clarifications": [
+    "Transport payload totals include metadata and ACKs",
+    "Transfer differences include retry variation and blocked test order",
+    "Device-local elapsed intervals overlap and must not be added",
+    "Extra full-message crypto buffer is an implementation choice",
+    "Host key was not saved; stopped nodes retain key in volatile RAM until reset or replacement"
+  ]
+}

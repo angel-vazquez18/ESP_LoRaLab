@@ -21,3 +21,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Radio frame tests failed' }
 if ($LASTEXITCODE -ne 0) { throw 'LoRa display model test compilation failed' }
 & "$testBuild\lora_display_model_test.exe"
 if ($LASTEXITCODE -ne 0) { throw 'LoRa display model tests failed' }
+
+& $Compiler -std=c++17 -Wall -Wextra -Werror "-I$projectRoot\include" "-I$projectRoot\lib\chunking" "$PSScriptRoot\crypto_radio_frame_test.cpp" -o "$testBuild\crypto_radio_frame_test.exe"
+if ($LASTEXITCODE -ne 0) { throw 'Crypto metadata test compilation failed' }
+& "$testBuild\crypto_radio_frame_test.exe"
+if ($LASTEXITCODE -ne 0) { throw 'Crypto metadata tests failed' }

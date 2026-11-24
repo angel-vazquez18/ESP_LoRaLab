@@ -1,7 +1,7 @@
-# Preserve the copied source and frozen evidence byte-for-byte.
+# Preserve source, byte hashes and frozen evidence across platform checkouts.
 * -text
 *.pdf binary
 *.bin binary
 *.wav binary
 * whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-10-lora-message-tests/** -whitespace
+20-lora-encryption-comparison-tests/** -whitespace

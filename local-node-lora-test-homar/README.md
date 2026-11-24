@@ -1,102 +1,219 @@
-# Isolated Heltec LoRa voice-transfer test
+# Isolated LoRa voice test: 10 plain plus 10 encrypted messages
 
-This folder contains the firmware, tools, source voice sample, and frozen evidence for the ten-trial LoRa transfer experiment on 2026-11-23. It is a standalone test snapshot inside ESP_LoRaLab. It does not integrate with ESP_LoRaLab's application, ESP-IDF build, encrypted packet format, or NDJSON protocol, and makes no compatibility or integration qualification claim.
+This folder packages the standalone `esp32-audio-chunker-test` experiment from
+[lora-walkie-talkie](https://github.com/homarrodriguez/lora-walkie-talkie), source
+commit `918bf14`. It contains the firmware, source recording, command-driven test
+runner, offline analysis and frozen evidence for **20 physical LoRa transfers**:
+ten unencrypted followed by ten using **AES-128-GCM**. Each group alternates
+direction, giving five transfers from each node. It is retained separately for
+future integration; it does not connect to ESP_LoRaLab's application or build.
 
-The experiment sends the same three-second recorded voice sample over the physical SX1262 radios ten times, alternating directions: five Heltec-A to Heltec-B transfers and five Heltec-B to Heltec-A transfers. The reported board separation was **24 inches**; software does not measure that distance. The source is uploaded by USB only to the transmitter. Receiver PCM is obtained from radio packet reassembly and then downloaded by USB for comparison. Microphone capture, speaker playback, and PTT are inactive.
+## Results already recorded
 
-## Contents and evidence
+The physical run on 2026-11-23 passed **20/20 transfers** between Heltec-A / COM6
+and Heltec-B / COM7 at a user-reported separation of approximately **24 inches
+(60.96 cm)**. All 4,000 unique DATA chunks were reconstructed. Every received
+recording matched the source byte for byte. All ten encrypted messages passed
+authentication and independent computer-side ciphertext verification.
 
-- `src/lora_bench.cpp`: dedicated `lora-integrity-2-oled` firmware.
-- `include/` and `lib/`: bounded packet framing, CRC, chunk assembly, and onboard OLED display dependencies.
-- `input/source.wav`: the original input recording, 8,000 Hz, mono, signed 16-bit PCM, 24,000 samples / 48,000 PCM bytes. The WAV file is 48,044 bytes; its container header is not sent over LoRa.
-- `tools/`: manual-start launcher, radio runner, readiness check, offline reports, and USB identity dependency.
-- `test/host/`: offline protocol, chunker, OLED, runner, readiness, and report tests. Tests generate temporary evidence rather than using the frozen run as a fixture.
-- [`10-lora-message-tests/`](10-lora-message-tests/): frozen ten-trial results and source provenance, supplied with this snapshot. Read its reports and `summary.json` for the actual outcomes, packet retries/errors, and timing limits. Do not overwrite this evidence with a new run.
+The source is **3.00 seconds** of uncompressed linear PCM: 8,000 samples/second,
+16-bit signed little-endian, mono. It contains 24,000 samples / **48,000 audio
+bytes**; its WAV file occupies **48,044 bytes**. No speech-compression codec is
+used. The WAV header is not sent over LoRa.
 
-Firmware, protocol, OLED code, and most tools/tests are copied verbatim from the source project. Packaging changes are limited to the LoRa-only PlatformIO configuration, local Python/WAV defaults, portable host-tool discovery, extraction of USB identity helpers with mocked tests, this documentation, and dependencies. No compiled firmware, build cache, old three-trial run, audio driver, microphone/speaker bench, or stored synthetic report fixture is included.
+| Average per message | Unencrypted | AES-128-GCM |
+| --- | ---: | ---: |
+| Sender transaction | 29.461 s | 29.537 s |
+| Receiver first transport arrival to ready | 29.322 s | 29.458 s |
+| Calculated DATA, metadata and ACK airtime | 22.202 s | 22.214 s |
+| Chunking, sum for 200 unique chunks | 116.745 ms | 116.630 ms |
+| Dechunking, sum for 200 unique chunks | 72.517 ms | 72.483 ms |
+| Encryption | Not used | 17.598 ms |
+| Authenticated decryption | Not used | 17.662 ms |
+| Allocated message buffers per node | 48,116 bytes | 96,232 bytes |
 
-`config.h` retains shared audio-format constants and unused audio/simulated-transport settings to preserve the tested source. Those unused sections do not describe this radio firmware. `audio_diagnostics.h` supplies CRC helpers. `verify_heltec_bench.py` contains only the known-node table and USB identity helpers, preserved verbatim from the source project; the legacy audio/tone CLI has been removed. Its filename stays the same to preserve the LoRa runner's import.
+One KiB is 1,024 bytes. The additional 48,000-byte requested crypto buffer is a
+choice in this implementation; it is not an inherent AES requirement. The
+allocator reserves 48,116 bytes for that extra buffer. All audio remains in
+volatile PSRAM. The board has 2 MiB PSRAM and 16 MiB flash; no audio is written
+to flash. The same firmware image supports both modes.
 
-## Hardware and build
+The groups logged 16 and 14 DATA retries respectively, and 12 and nine receiver
+radio CRC errors. Retry recovery left zero changed audio bytes. Whole-transfer
+differences also reflect retry variation and sequential group order, so the
+observed 76 ms difference does not isolate encryption cost. Processing values
+are local elapsed intervals, including scheduling overhead; transfer intervals
+overlap and must not be added together. Airtime is calculated from the successful
+radio calls and configured modem settings, rather than measured with RF equipment.
 
-Use the standard Heltec WiFi LoRa 32 V4.3 with ESP32-S3R2, 16 MB flash, 2 MB quad PSRAM, and SX1262. This snapshot is not configured for V4-R8. Keep the matching LoRa antennas connected. The OLED and radio are onboard. Keep the L76/GNSS expansion unplugged for the existing external audio wiring; external audio hardware is not exercised here.
+Read the [seven-page comparison PDF](20-lora-encryption-comparison-tests/20261123-run01/Heltec_LoRa_20_Trial_Encryption_Comparison_Report.pdf),
+[independent audit](20-lora-encryption-comparison-tests/20261123-run01/validation/lora-crypto-run01-independent-audit.json),
+and [frozen archive index](20-lora-encryption-comparison-tests/20261123-run01/README.md).
+The archive manifest preserves 130 files, including raw serial logs, recovered
+WAVs, ciphertext exports, per-trial summaries, build/upload evidence and the
+exact measured source snapshot. Those are historical physical observations;
+local software tests do not establish a new radio result. Do not overwrite them.
 
-| Node | Recorded Windows port | USB identity / MAC |
+## Package layout
+
+- `src/lora_crypto_bench.cpp`: measured `lora-crypto-1-gcm` radio firmware.
+- `include/` and `lib/`: framing, chunk assembly, CRC, OLED and format constants.
+- `input/source.wav`: original recorded source, preserved byte-for-byte.
+- `tools/lora_crypto_bench.py`: 20-trial physical runner, also supporting a local
+  check and an explicitly requested readiness-only hardware check.
+- `tools/run_lora_crypto_comparison.ps1`: command gate for exactly ten trials
+  per mode. Calling it with no flags describes the plan only.
+- `tools/create_lora_crypto_pdf.py`: offline audit and PDF generator.
+- `tools/lora_transfer_bench.py` and `tools/create_lora_consistency_pdf.py`:
+  shared runner and report dependencies. The transfer module's legacy standalone
+  CLI is disabled in this package; use the crypto comparison entry point.
+- `tools/verify_heltec_bench.py`: USB identity helpers only, with no audio CLI.
+- `test/host/`: mocked-device Python checks and portable C++ protocol tests.
+- `20-lora-encryption-comparison-tests/`: the requested frozen physical run.
+- `SNAPSHOT_MANIFEST.json`: packaged-file hashes and source provenance.
+
+The firmware, headers and libraries are copied verbatim. Packaging adaptations
+are confined to the LoRa-only PlatformIO configuration, portable interpreter and
+WAV defaults, dependency declarations, the USB helper extraction, the disabled
+legacy transfer CLI, portable temporary-file handling in report tests, host
+test launcher, documentation and manifest. No compiled
+firmware, environment, dependency cache, microphone/speaker driver or old
+ten-trial archive is added as a top-level runnable component. Files under the
+frozen archive retain the original paths and context of the measured source;
+they are evidence, not the package's active build configuration.
+
+## Hardware and local setup
+
+This bench targets the standard Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2 / SX1262
+boards used by the source project, not V4-R8. The onboard OLED and radio need no
+additional display or radio wiring. Keep matching LoRa antennas attached. Audio
+capture, physical speaker playback and PTT are inactive. This package does not
+change ESP_LoRaLab's hardware assignments or validate its external audio wiring.
+
+| Node | Recorded port | Hardware MAC / USB identity |
 | --- | --- | --- |
 | Heltec-A | COM6 | `8C:FD:49:B5:B7:8C` |
 | Heltec-B | COM7 | `44:1B:F6:6F:99:E4` |
 
-Windows may change the port assignment. The runner verifies the known USB identities and firmware identity before a run. The build labels are fixed to the two recorded assignments; verify the board before any upload.
+Windows can reassign port numbers. The runner matches USB identity and firmware
+identity before a test. The display shows the assigned node/port, role, status
+and `Test n of 20`; short chunking phases remain visible as the last phase.
 
-Radio configuration: 915 MHz, bandwidth 500 kHz, SF7, coding rate 4/5, sync word `0x12`, and SX1262 chip power -9 dBm. Chip power is not a calibrated radiated-power measurement; the board has an RF front end. Onboard connections are NSS8, SCK9, MOSI10, MISO11, RESET12, BUSY13, and DIO1 14. The firmware initializes the V4 front end, 1.8 V TCXO, and DIO2 switching. OLED uses SDA17, SCL18, RESET21, and Vext36. Amplifier SD48 remains low.
+The fixed radio profile is 915 MHz, bandwidth 500 kHz, SF7, coding rate 4/5,
+sync word `0x12`, preamble eight symbols and SX1262 chip power -9 dBm. Chip power
+is not a calibrated radiated-power measurement; the board includes an RF front
+end. The measured onboard pin configuration is preserved in `config.h`.
 
-From **this folder**, use Python 3.11 or newer and PowerShell 7 (`pwsh`) with local script execution permitted:
+Run the following commands **from this folder**, using Python 3.11 or newer:
 
 ```powershell
 py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\pio.exe run -e heltec_lora_com6 -e heltec_lora_com7
+.\.venv\Scripts\pio.exe run -e heltec_crypto_com6 -e heltec_crypto_com7
 ```
 
-PlatformIO is pinned to `espressif32@8.0.0`; RadioLib is `7.6.0`; the ThingPulse OLED driver is `4.6.2`. The two environments retain the source project's board, memory, USB, and compilation settings. Initial dependency installation may need network access.
+PlatformIO is pinned to `espressif32@8.0.0`, RadioLib to `7.6.0`, and the
+ThingPulse OLED driver to `4.6.2`. A first dependency install needs network access.
+Python dependencies are installed in the chosen environment, without searching
+another user's runtime directories.
 
-Upload only when deliberately preparing these identified devices. Close their serial monitors first:
+On Windows, use a short checkout path if dependency extraction reports a path
+length error. PlatformIO also accepts `PLATFORMIO_LIBDEPS_DIR` and
+`PLATFORMIO_BUILD_DIR` environment variables pointing to short local paths;
+these relocate dependency/build caches without changing the firmware source.
+
+Upload only when deliberately preparing these two identified boards and after
+closing their serial monitors. These commands replace installed firmware:
 
 ```powershell
-.\.venv\Scripts\pio.exe run -e heltec_lora_com6 -t upload
-.\.venv\Scripts\pio.exe run -e heltec_lora_com7 -t upload
+.\.venv\Scripts\pio.exe run -e heltec_crypto_com6 -t upload
+.\.venv\Scripts\pio.exe run -e heltec_crypto_com7 -t upload
 ```
 
-These commands replace the devices' existing firmware. The firmware boots without transmitting; an explicit host test command starts each transfer.
+Booting the firmware does not start a transmission. Both modes use the same
+binary on each node; there is no reflashing between groups.
 
-## Verify locally, then start manually
+## Local checks and explicit test start
 
-The following commands do **not** enumerate or open serial devices and do not transmit:
+These commands do not open or enumerate physical serial ports:
 
 ```powershell
-# Description only; default invocation does not launch Python.
-.\tools\run_lora_consistency.ps1
-# Local source, WAV, dependency, and requested protocol checks only.
-.\tools\run_lora_consistency.ps1 -Check
-# Python tests use mocked devices and temporary local files.
-.\.venv\Scripts\python.exe -B -m unittest discover -s test\host -p '*_test.py'
-# Portable C++ tests; supply a g++ path if it is not on PATH.
-.\test\host\run.ps1 -Compiler 'C:\msys64\ucrt64\bin\g++.exe'
+# Description only; does not even invoke Python.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/run_lora_crypto_comparison.ps1
+# Source and host cryptography checks only.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/run_lora_crypto_comparison.ps1 -Check
+# Offline tests with generated temporary evidence and mocked devices.
+.\.venv\Scripts\python.exe -B -m unittest discover -s test/host -p '*_test.py'
+powershell -NoProfile -ExecutionPolicy Bypass -File test/host/run.ps1 -Compiler 'C:\msys64\ucrt64\bin\g++.exe'
 ```
 
-The launcher gate test finds `pwsh` or `powershell` on PATH. If PowerShell 7 is installed elsewhere, set `$env:LORA_TEST_POWERSHELL` to its executable path before the Python tests. This selects the test shell without changing the machine's execution policy.
-
-The optional readiness command below **opens both devices** and checks the installed OLED/firmware state, but never loads voice PCM, arms RX, or starts RF. It expects freshly booted devices with zero prior test/transmit counters:
+When the identified devices are ready and a new physical run is intended:
 
 ```powershell
-.\.venv\Scripts\python.exe tools\prepare_lora_consistency.py --ports COM6 COM7
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/run_lora_crypto_comparison.ps1 -Start
 ```
 
-**Only start another radio test when explicitly intended.** With both boards identified, antennas attached, and other serial monitors closed:
+The launcher accepts `-Python`, `-Wav`, `-TxPort`, `-RxPort` and `-OutputDir`
+overrides. Default inputs are this folder's `.venv\Scripts\python.exe` and
+`input\source.wav`. Default results go into a fresh timestamped `captures/`
+directory. A specified output directory must not already exist. The runner
+keeps both USB readers active, sends source PCM only to the transmitter, stops
+on a failed trial without replacing it, and closes both serial ports afterward.
+
+The optional readiness command below **does open both ports**. It checks
+identity, OLED, radio readiness and cryptographic self-tests, but does not load
+source audio, arm reception or transmit a LoRa message:
 
 ```powershell
-.\tools\run_lora_consistency.ps1 -Start
+.\.venv\Scripts\python.exe tools/lora_crypto_bench.py --wav input/source.wav --prepare-only
 ```
 
-The launcher always requests ten alternating trials, OLED test counters, continuation after ordinary RF delivery failures, and the user-reported 24-inch distance. It accepts `-TxPort`, `-RxPort`, `-Wav`, and `-OutputDir` overrides; output must be a new directory. Its default Python is `.venv\Scripts\python.exe`, used for both collection and PDF reporting. Override `-RunnerPython` and `-ReportPython` when using separate existing environments. Default new results go under `captures/`, not the frozen archive.
-
-The generic Python runner remains unchanged apart from its report-interpreter default; it also supports other trial counts. Use the PowerShell launcher for this defined ten-trial experiment. Never use a historical report as proof that a new run passed.
-
-## What is measured
-
-Each message is split into 200 chunks of 240 PCM bytes. Each LoRa data payload is 251 bytes: a 7-byte voice header, 240 PCM bytes, and a 4-byte application CRC32. Each ACK is 14 bytes. Stop-and-wait delivery has a 500 ms ACK timeout and a maximum of six attempts per chunk. Data and ACK byte accounting is separate from LoRa PHY airtime and overhead.
-
-The runner compares source, transmitter dump, and receiver dump using exact PCM bytes, CRC32, SHA-256, and sample differences. A final byte-exact result can coexist with a corrupted radio packet that was recovered through retry; reports retain both facts. Memory observations include requested/actual allocations and PSRAM changes. These are scoped allocation measurements, not a complete whole-system memory profile.
-
-Device timestamps and bounded clock alignment estimate transfer/ACK intervals when eligible. They do not measure radio propagation time. USB scheduling, firmware processing, retries, and display refresh have separate effects; consult each report's timing caveats.
-
-Both OLEDs show the node label, Transmitter/Receiver role, current state, most recent processing phase, and `Test n of 10`. `Last: CHUNKING` / `Last: DECHUNKING` retain the last short processing phase so it remains readable. They do not claim that processing is still active. Display updates run separately from the RF-critical path.
-
-Offline report regeneration for a **new** run:
+Each completed run automatically generates a PDF and JSON audit. To regenerate
+an offline report from new saved evidence without opening devices:
 
 ```powershell
-.\.venv\Scripts\python.exe tools\create_lora_consistency_pdf.py captures\NEW-RUN-FOLDER
-.\.venv\Scripts\python.exe tools\report_lora_transfer.py captures\NEW-RUN-FOLDER
+.\.venv\Scripts\python.exe tools/create_lora_crypto_pdf.py captures/NEW-RUN-FOLDER
 ```
 
-These report tools read saved evidence and do not access hardware. Missing, incomplete, or corrupted evidence remains distinguishable from a passing trial.
+## Encryption and evidence boundaries
+
+The computer provisions one fresh 128-bit session key over USB to both nodes.
+KEY commands are redacted and no secret key is saved. Each encrypted message
+gets a new 12-byte nonce, supplied only to the transmitter over USB. The sender
+encrypts all 48,000 PCM bytes once, then sends a 40-byte metadata payload with
+an eight-byte authenticated header, nonce, 16-byte tag and CRC32. Its ACK is 14
+bytes. The ciphertext is split into the same 200 DATA frames as unencrypted
+PCM: each contains 240 content bytes, a seven-byte voice header and four-byte
+CRC32, for a 251-byte radio payload. A DATA ACK is 14 bytes.
+
+Without retries, encryption adds **54 radio payload bytes** and **32.128 ms**
+of calculated metadata-plus-ACK airtime. Ciphertext is still 48,000 bytes;
+ciphertext plus nonce and tag occupies 48,028 bytes. The receiver reconstructs
+it, verifies the tag, and decrypts before releasing the message and acknowledging
+the final DATA frame. Retries reuse the same sealed message.
+
+The host computes an independent expected AES-GCM result while the live key is
+available and compares both nodes' exported ciphertext. It also compares the
+final PCM byte-for-byte with the source. The discarded host key is unavailable
+for repeating the historical AES calculation offline; retained bytes, hashes,
+metadata and authentication events can still be audited. STOP leaves a node's
+key in volatile RAM until reset or replacement. This bench does not implement
+production key management, persistent replay protection or authenticated ACKs.
+
+CRC32 detects accidental corruption, and SHA-256 identifies saved content;
+neither is encryption. GCM supplies encryption and authentication for the audio
+and its bound header. Preflight known-answer and tamper rejection self-tests are
+separate from the twenty physical radio trials.
+
+## Future integration boundary
+
+ESP_LoRaLab's selected baseline uses ESP-IDF 6, modular C firmware, bounded
+NDJSON v2 control, a different RF framing/fragment contract, planned per-frame
+protection and replay/ACK rules, and Codec 2 speech coding. This package uses
+Arduino/PlatformIO, its existing text/JSON plus binary USB protocol, 240-byte
+content chunks and whole-message GCM over uncompressed PCM. Those interfaces
+are not interchangeable. The package adds no application imports, build hooks,
+shared-schema changes or hardware qualification claims for ESP_LoRaLab.
+
+The requested work is only to retain this separate folder for review. Integration
+and any physical test of ESP_LoRaLab remain future work.

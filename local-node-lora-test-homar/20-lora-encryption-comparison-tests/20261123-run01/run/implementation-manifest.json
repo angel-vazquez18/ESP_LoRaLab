@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-11-23T20:41:03.875285+00:00",
+  "purpose": "fresh_20_physical_trials_10_plain_10_aes128gcm",
+  "firmware": "lora-crypto-1-gcm",
+  "timing_schema": 1,
+  "crypto_schema": 1,
+  "same_binary_per_node_for_both_modes": true,
+  "trial_order": "10 PLAIN then 10 GCM; five each direction within each group",
+  "nonce_source": "96-bit OS-random nonce on host, unique per GCM trial; provisioned only to TX, carried to RX by LoRa",
+  "key_handling": "fresh 128-bit key in RAM only, USB provisioned, command logs redacted, no key saved",
+  "encoding": "uncompressed 8000 Hz 16-bit mono PCM; 3 seconds; 48000 audio bytes",
+  "units": {
+    "device_timers": "microseconds",
+    "memory": "bytes",
+    "KiB": "1024 bytes"
+  },
+  "files": {
+    "platformio.ini": {
+      "bytes": 3829,
+      "sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3"
+    },
+    "src/lora_crypto_bench.cpp": {
+      "bytes": 44331,
+      "sha256": "edc6ade9f6bb7c09b5f421505d2ec45f14848d0dca2a9f872522ff4cfee2284f"
+    },
+    "include/crypto_radio_frame.h": {
+      "bytes": 2561,
+      "sha256": "3661233ea256ba17ed424c8fe472fe48745430e6a398e57e1a148131e80b2ca6"
+    },
+    "include/radio_frame.h": {
+      "bytes": 4091,
+      "sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8"
+    },
+    "include/audio_diagnostics.h": {
+      "bytes": 847,
+      "sha256": "a02a3eb4e36ed8fc58e50f8037234a19d7719a6adbf0daa977717c75fbedddcc"
+    },
+    "include/protocol.h": {
+      "bytes": 1121,
+      "sha256": "aae57c7394be1fee20ecb04c098d01b823ec172144c0bf2fc8e1c7dd733da2f0"
+    },
+    "include/config.h": {
+      "bytes": 4054,
+      "sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d"
+    },
+    "include/lora_display_model.h": {
+      "bytes": 3026,
+      "sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a"
+    },
+    "lib/chunking/chunker.cpp": {
+      "bytes": 4662,
+      "sha256": "8a1c222452ef87fcf86c30628f8ddfcb507c22c4485a403564b6428cd0d85377"
+    },
+    "lib/chunking/chunker.h": {
+      "bytes": 1977,
+      "sha256": "ffaae62702d63ad39fa93ab5c08cdb0f85ef3126396c2ff90a05eb0ce5e159f3"
+    },
+    "lib/lora_bench_display/lora_bench_display.cpp": {
+      "bytes": 5743,
+      "sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507"
+    },
+    "lib/lora_bench_display/lora_bench_display.h": {
+      "bytes": 585,
+      "sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459"
+    },
+    "tools/lora_crypto_bench.py": {
+      "bytes": 35220,
+      "sha256": "917d9c1f763f4b194b3bddef9e0b6590a399bdd8d991f1af027daa2f40bd2cb9"
+    },
+    "tools/lora_transfer_bench.py": {
+      "bytes": 48591,
+      "sha256": "3b9947a66fce5a032ed87761a7f93e24c529fc589185a56f2052636c18d5fbe5"
+    },
+    "tools/verify_heltec_bench.py": {
+      "bytes": 16282,
+      "sha256": "6eccd200792a8d8380d0f3c7ac9a7ef6fd25db10e6f52fc70fdb8337f4b48600"
+    },
+    "tools/run_lora_crypto_comparison.ps1": {
+      "bytes": 1359,
+      "sha256": "74b1bc3547ea6c1e5a9760f82f178c90a74e6ff7c0b0794c7697efc294e7bc78"
+    },
+    "test/host/lora_crypto_bench_test.py": {
+      "bytes": 20316,
+      "sha256": "85b36578866061fa0876312cc136015a895dd54eb6aba4eceaac3cd42ca20340"
+    },
+    "test/host/crypto_radio_frame_test.cpp": {
+      "bytes": 2180,
+      "sha256": "ec8d8a0a75240617164873ece1bb20fb8ff2182eceb510b31ef1a11ddf8a6bd8"
+    },
+    ".pio/build/heltec_crypto_com6/firmware.bin": {
+      "bytes": 502800,
+      "sha256": "f70571e51dde1698f9650cbb727aafa65af14daf0e4b450629ebba76fa323e10"
+    },
+    ".pio/build/heltec_crypto_com7/firmware.bin": {
+      "bytes": 502800,
+      "sha256": "7ed0af2a049af014608fcfb0bcd518b1db0c73d657fd541d49c281f1d690a85c"
+    }
+  }
+}
