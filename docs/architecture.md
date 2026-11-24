@@ -199,3 +199,10 @@ platform boundary declared as `rf_packet_port`.
 stop-and-wait states, bounded attempts and retained radio observations. It drives
 the existing real radio API; execution owns stop/lease/shutdown integration and
 message-level aggregation. ACK observations never inflate original DATA counts.
+
+The session-security contract maps key-bearing fields and future provisioning
+persistence boundaries in [security_sessions.md](security_sessions.md). Current
+execution still rejects non-null keys; session rejection errors omit input
+values before trace/error persistence. Public protected-frame fixtures are
+independently checked with a dev-only cryptographic oracle, separate from
+firmware GCM and physical security qualification.

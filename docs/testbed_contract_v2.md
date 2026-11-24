@@ -397,6 +397,11 @@ sequence under the responder's key. Echo payloads are limited to one fragment.
 
 ## 8. Security, replay and reliable retransmission
 
+The current API mapping, secret-bearing field inventory, lifecycle walkthroughs
+and public protected examples are in [session security](security_sessions.md).
+That document distinguishes the specified protected path from current capability
+gates; its examples do not enable encryption on installed nodes.
+
 Use the ESP-IDF-supplied Mbed TLS authenticated GCM interface with AES-128 keys,
 12-byte nonce and full 16-byte tag. Never release decryption output until tag
 verification succeeds. The two profiles are `none` and `aes128_gcm`; no custom

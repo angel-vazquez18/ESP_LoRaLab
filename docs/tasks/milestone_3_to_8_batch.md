@@ -115,3 +115,13 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - Next: #44 specifies session-key provisioning/redaction and protected retry/
   replay boundaries; current operator runs remain unprotected until implementation
   and compatibility work is complete.
+
+- #44: documented key provisioning/redaction/nonce and retry/replay boundaries,
+  added public protected vectors with independent checks, and fixed input-bearing
+  session rejection errors (red/green native-session regression). Full checks
+  passed 511 cases. Protected operator sessions remain gated. Next #48 uses
+  the public PSA API in the pinned IDF Mbed TLS/TF-PSA-Crypto sources.
+
+- #44: PR #175 (`docs/session-key-contract` →
+  `feat/multi-fragment-radio-runs`) is ready for review, 511 checks, no merge.
+  Starting #48 against the public PSA interface in the pinned IDF crypto tree.

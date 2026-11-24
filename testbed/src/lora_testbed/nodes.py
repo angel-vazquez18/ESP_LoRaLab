@@ -7,6 +7,7 @@ from time import monotonic
 from uuid import uuid4
 
 import serial
+from pydantic import ValidationError
 from serial.tools.list_ports import comports
 
 from . import (
@@ -220,7 +221,15 @@ class NodeSession:
                     name,
                     self.health.capability_availability.model_dump(),
                 )
-                args = run_protocol_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+                try:
+                    args = run_protocol_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+                except ValidationError:
+                    if name == "session.open":
+                        # Pydantic errors can echo rejected key values.
+                        raise ValueError(
+                            "INVALID_ARGUMENT: Invalid session.open arguments"
+                        ) from None
+                    raise
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
             artifact_limits = None
