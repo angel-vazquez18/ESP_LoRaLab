@@ -132,3 +132,13 @@ Expected at #26: 23 focused cases, no skips. Use `make check` for the full suite
 See [file workflows](artifact_workflows.md) for API/CLI commands, expected hashes,
 cancellation and physical evidence boundaries. The node firmware is unchanged
 from #22, so this host-only slice needs no additional flash/build.
+
+## Pinned frame-crypto checks
+
+`testbed/tests/test_frame_crypto_native.py` requires CMake, a host C compiler
+and the exact ESP-IDF v6.0.2 crypto sources. Set `IDF_PATH` if the SDK is outside
+`~/.espressif/v6.0.2/esp-idf`. The fixture verifies the pinned clean crypto commit,
+compiles the actual PSA source into ignored local cache and never fetches code
+or opens a physical port. Missing/wrong sources fail rather than skip. See
+[frame cipher](frame_crypto.md) for source versions, native-profile limitations
+and focused commands.

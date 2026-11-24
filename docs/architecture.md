@@ -206,3 +206,10 @@ execution still rejects non-null keys; session rejection errors omit input
 values before trace/error persistence. Public protected-frame fixtures are
 independently checked with a dev-only cryptographic oracle, separate from
 firmware GCM and physical security qualification.
+
+`security/frame_crypto` imports a volatile PSA key handle and provides bounded
+protected-frame seal/open/destroy. Caller output is exposed only after verified
+authentication; temporary buffers are scrubbed. The actual pinned crypto source
+is used in native checks, with a separate independent vector oracle. Session
+key/sequence/replay orchestration remains the owner’s responsibility; see
+[frame cipher](frame_crypto.md) and the following integration issues.

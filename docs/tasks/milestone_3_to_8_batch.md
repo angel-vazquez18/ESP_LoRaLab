@@ -125,3 +125,13 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #44: PR #175 (`docs/session-key-contract` →
   `feat/multi-fragment-radio-runs`) is ready for review, 511 checks, no merge.
   Starting #48 against the public PSA interface in the pinned IDF crypto tree.
+
+- #48: bounded PSA frame-cipher API and target build implemented; actual pinned
+  native crypto passed 10 focused conformance/failure/cleanup cases. Full suite
+  passed 521 cases; final lint/frontend/contracts/repository stages and IDF build
+  passed. No hardware access. Protected session support remains gated; next #52
+  owns fresh keys, nonce sequences and close/lease/reset invalidation.
+
+- #48: PR #176 (`feat/authenticated-radio-frames` →
+  `docs/session-key-contract`) is ready for review. No merge. Next #52 binds
+  private keys and nonce counters to session/ownership lifetime.

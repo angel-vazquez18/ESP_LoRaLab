@@ -1,0 +1,9 @@
+{
+  "idf_version": "v6.0.2",
+  "mbedtls_commit": "6cc42afad309e861f4c07e6f106e2ab14a9cb8e5",
+  "mbedtls_version": "4.1.0",
+  "tf_psa_crypto_version": "1.1.0",
+  "source": "https://github.com/espressif/mbedtls",
+  "api": "PSA Crypto AEAD",
+  "license_choice": "Apache-2.0"
+}

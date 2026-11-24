@@ -4,8 +4,9 @@ This document maps the selected v2 security contract to the current run APIs.
 It specifies the protected implementation that follows; it does not enable it.
 Current `run_protocol_v2.Session` and firmware `rf_execution` accept only
 `security = none` with null keys. `security_gcm` stays false. Protected sessions,
-replay enforcement, production provisioning and crypto measurements remain #48,
-#52, #60, #63 and their dependent work. Public vectors are conformance data,
+replay enforcement, production provisioning and crypto measurements remain #52,
+#53, #60, #63 and their dependent work. #48 provides the isolated
+[authenticated-frame primitive](frame_crypto.md). Public vectors are conformance data,
 never evidence that installed firmware implements security.
 
 ## Provision one fresh key pair per run
@@ -80,7 +81,8 @@ switch a protected session to plaintext.
 The algorithm details follow [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf).
 The independent test oracle is [Cryptography AESGCM](https://cryptography.io/en/stable/hazmat/primitives/aead/#cryptography.hazmat.primitives.ciphers.aead.AESGCM),
 locked as a development dependency. The pinned ESP-IDF v6.0.2 checkout contains Mbed TLS 4.1.0 / TF-PSA-Crypto
-1.1.0; #48 must use its public PSA AEAD interface, not private legacy GCM headers.
+1.1.0; the frame primitive uses its public PSA AEAD interface, not private legacy
+GCM headers.
 See the [ESP-IDF PSA migration guidance](https://docs.espressif.com/projects/esp-idf/en/v6.0/esp32s3/migration-guides/release-6.x/6.0/security.html).
 A passing Python vector alone never qualifies the firmware cipher.
 

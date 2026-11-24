@@ -564,3 +564,25 @@ contracts and repository checks; the existing Starlette/httpx deprecation remain
 No firmware behavior or wire digest changed, so no new IDF build or physical
 access was needed. GCM/session lifecycle/replay/host provisioning and physical
 security qualification remain the following issues.
+
+## November 22 — Authenticated-frame primitive (#48)
+
+`security/frame_crypto` now imports volatile non-exportable AES-128 PSA handles,
+seals exact protected frames and verifies into private scratch before returning
+plaintext. Full 40-byte AAD, 12-byte header-derived nonce and 16-byte tag are
+explicit. Temporary buffers are scrubbed; failed output is unchanged with zero
+written bytes, and failed key destruction preserves ownership for recovery.
+No public test key is built into the primitive. See [frame cipher](frame_crypto.md).
+
+Ten native checks link the actual pinned IDF crypto source and cover all public
+DATA/ACK/ECHO/max-sequence vectors, every changed frame byte, wrong source key,
+valid recovery, empty ACK and buffer/key-owner bounds, plus 200 import/destroy
+cycles. The first known-answer check was observed red before implementation.
+The complete suite passed 521 tests without skips. A lint-only CMake-string
+line length was corrected; the focused cipher checks and remaining lint/
+frontend/contracts/repository stages then passed. The selected-board IDF build
+passed (0x53300 bytes, 68% app partition free), without flashing.
+
+Current sessions still accept only unprotected mode and report `security_gcm`
+false. Key/nonce ownership, replay, host provisioning and physical acceptance
+remain pending; native software crypto does not validate ESP acceleration/timing.
