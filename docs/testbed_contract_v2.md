@@ -735,3 +735,14 @@ PCM only on success. There is no implicit playback or lossy source-byte equality
 Its result retains partial counters/timing and platform heap snapshots even on
 failure/cancel. Current fingerprint/migration and phase-state patch are documented
 in [codec decoding](codec_decoding.md); historical evidence is not rewritten.
+
+### Protected committed encoded content (#64)
+
+`run.prepare` now admits the finite `VOICE-02` / `encoded_source` variant with
+required source UUID, original sample count, exact encoded length and SHA, one
+message and AES-GCM only. Playback is false; decode/play are subsequent explicit
+operations. Common header content type 1, framing, authentication, replay and
+reconstruction apply. No encoded file becomes a consumer input until complete
+verified publication. The exact execution supplement changes; see
+[protected voice content](protected_voice_content.md) for schema migration,
+processing allowance, source/receiver ownership and acceptance instructions.

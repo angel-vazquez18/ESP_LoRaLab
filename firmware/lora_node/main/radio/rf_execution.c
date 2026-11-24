@@ -82,6 +82,25 @@ static bool null_value(const cJSON *o, const char *k)
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
     return !v || cJSON_IsNull(v);
 }
+static bool source_text(const char *value, size_t length)
+{
+    if (!value || strlen(value) != length) return false;
+    for (size_t i = 0; i < length; i++) {
+        if (length == 36 && (i == 8 || i == 13 || i == 18 || i == 23)) {
+            if (value[i] != '-') return false;
+        } else if (!((value[i] >= '0' && value[i] <= '9') || (value[i] >= 'a' && value[i] <= 'f')))
+            return false;
+    }
+    return true;
+}
+static void decode_hash(const char *value, uint8_t out[32])
+{
+    for (unsigned i = 0; i < 32; i++) {
+        unsigned a = value[2 * i], b = value[2 * i + 1];
+        out[i] = ((a <= '9' ? a - '0' : a - 'a' + 10) << 4) |
+                  (b <= '9' ? b - '0' : b - 'a' + 10);
+    }
+}
 static bool key_text(const char *key)
 {
     if (!key || strlen(key) != 32)
@@ -349,17 +368,19 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         const cJSON *s = cJSON_GetObjectItemCaseSensitive(args, "spec"),
                     *b = cJSON_GetObjectItemCaseSensitive(args, "budget");
         uint32_t count;
+        p->encoded = eq(text(s, "source"), "encoded_source");
         if (r->used || r->phase != RF_IDLE || !r->radio->configured || !revision)
             return "INVALID_STATE";
         if (!allowed(args, outer, 2) || !allowed(s, specs, 14) || !allowed(b, budgets, 8) ||
-            !literal(s, "catalog_id", "IF-02") || !literal(s, "source", "known_data") ||
+            !literal(s, "catalog_id", p->encoded ? "VOICE-02" : "IF-02") ||
+            !literal(s, "source", p->encoded ? "encoded_source" : "known_data") ||
             !literal(s, "security", p->protected_mode ? "aes128_gcm" : "none") ||
-            !boolean(s, "playback", false) || !null_value(s, "source_artifact_id") ||
-            !null_value(s, "sample_count") || !null_value(s, "source_duration_ms") ||
-            !null_value(s, "expected_sha256") ||
-            !integer(s, "message_count", 1, 10000, 100, &count) ||
+            !boolean(s, "playback", false) || !null_value(s, "source_duration_ms") ||
+            (!p->encoded && (!null_value(s, "source_artifact_id") ||
+                             !null_value(s, "sample_count") || !null_value(s, "expected_sha256"))) ||
+            !integer(s, "message_count", 1, 10000, p->encoded ? 1 : 100, &count) ||
             !integer(s, "message_bytes", 1, 65536, 64, &p->bytes) ||
-            !integer(s, "source_seed", 0, UINT32_MAX, 743, &p->seed) ||
+            (!p->encoded && !integer(s, "source_seed", 0, UINT32_MAX, 743, &p->seed)) ||
             !integer(s, "max_duration_ms", 1000, 3600000, 120000, &p->duration_ms))
             return "INVALID_ARGUMENT";
         if (count != 1)
@@ -370,6 +391,25 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if (!eq(direction, "A_TO_B") && !eq(direction, "B_TO_A"))
             return "INVALID_ARGUMENT";
         p->source = eq(direction, "A_TO_B") ? 1 : 2;
+        if (p->encoded) {
+            const char *id = text(s, "source_artifact_id"), *sha = text(s, "expected_sha256");
+            if (!p->protected_mode || !source_text(id, 36) || !source_text(sha, 64) ||
+                !cJSON_GetObjectItemCaseSensitive(s, "message_bytes") ||
+                !null_value(s, "source_seed") || !cJSON_GetObjectItemCaseSensitive(s, "sample_count") ||
+                !integer(s, "sample_count", 1, 24000, 0, &p->sample_count) ||
+                p->bytes != ((p->sample_count + 159) / 160) * 8) return "INVALID_ARGUMENT";
+            memcpy(p->source_artifact_id, id, 37);
+            memcpy(p->expected_sha256, sha, 65);
+            if (p->role == p->source) {
+                const artifact_manifest *source = artifact_store_find(r->artifacts, id);
+                if (!source) return "ARTIFACT_NOT_FOUND";
+                if (source->state != ARTIFACT_COMMITTED) return "INVALID_STATE";
+                if (source->in_use) return "BUSY";
+                if (!eq(source->format, "codec2_3200_v1") || source->sample_count != p->sample_count ||
+                    source->length_bytes != p->bytes || source->frame_count != (p->sample_count + 159) / 160 ||
+                    !eq(source->sha256, sha)) return "INVALID_ARGUMENT";
+            }
+        }
         const cJSON *instrument = cJSON_GetObjectItemCaseSensitive(s, "instrumentation");
         const char *const flags[] = {"packet_events", "crypto_samples", "memory_10hz",
                                      "clock_samples"};
@@ -411,7 +451,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             link->ack_requested ? (uint64_t)(full_air + ack + link->guard_us) * attempts : 0;
         uint64_t minimum_drain = horizon > 2000000 ? horizon : 2000000;
         uint64_t data = (uint64_t)(fragments - 1) * full_air + last_air;
-        uint64_t processing = 10000U * (1U + fragments * attempts);
+        uint64_t processing = 10000U * (1U + fragments * attempts) + (p->encoded ? 5000000U : 0);
         uint64_t lifetime = data * attempts + (uint64_t)fragments * attempts * ack +
                             ((uint64_t)fragments * attempts - 1) * link->guard_us + processing +
                             2000000;
@@ -423,7 +463,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         for (unsigned i = 0; i < ARTIFACT_SLOTS; i++)
             if (!artifact_store_at(r->artifacts, i))
                 free_slots++;
-        if (!free_slots)
+        if (!free_slots && !(p->encoded && p->role == p->source))
             return "RESOURCE_LIMIT";
         p->link = *link;
         p->revision = revision;
@@ -496,16 +536,31 @@ static void release_buffers(rf_execution *r)
     r->transmitter = NULL;
     rf_reassembly_destroy(r->receiver);
     r->receiver = NULL;
-    if (r->payload)
-    {
-        memset(r->payload, 0, r->plan.bytes);
-        r->port.release(r->port.context, r->payload);
-        r->payload = NULL;
+    if (r->source_borrowed)
+        artifact_store_release(r->artifacts, r->plan.source_artifact_id);
+    if (r->generated) {
+        memset(r->generated, 0, r->plan.bytes);
+        r->port.release(r->port.context, r->generated);
     }
+    r->source_borrowed = false;
+    r->generated = r->recovered_output = NULL;
+    r->payload = NULL;
 }
 static bool publish_bytes(rf_execution *r, const void *bytes)
 {
     const uint8_t *source = bytes;
+    if (r->plan.encoded) {
+        if (!r->recovered_output) return false;
+        memcpy(r->recovered_output, bytes, r->plan.bytes);
+        if (artifact_store_encode_finish(r->artifacts, r->artifact_id, r->port.hash, r->port.context) != ARTIFACT_OK)
+            return false;
+        const artifact_manifest *output = artifact_store_find(r->artifacts, r->artifact_id);
+        if (!output || !eq(output->sha256, r->plan.expected_sha256)) {
+            artifact_store_delete(r->artifacts, r->artifact_id);
+            return false;
+        }
+        return true;
+    }
     for (size_t offset = 0; offset < r->plan.bytes;)
     {
         size_t size = r->plan.bytes - offset;
@@ -604,23 +659,39 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->failure_result_reported = r->missing_evidence_incomplete = false;
         r->artifact_id[0] = 0;
         r->ack_pending = r->ack_transmitting = false;
-        r->payload = r->port.allocate(r->port.context, p->bytes);
-        if (!r->payload)
-            return false;
+        if (p->encoded && r->sender) {
+            const void *source = NULL;
+            size_t size = 0;
+            if (artifact_store_acquire(r->artifacts, p->source_artifact_id, &source, &size) != ARTIFACT_OK)
+                return false;
+            r->source_borrowed = true;
+            r->payload = source;
+            if (size != p->bytes) { release_buffers(r); return false; }
+        } else if (!p->encoded) {
+            r->generated = r->port.allocate(r->port.context, p->bytes);
+            r->payload = r->generated;
+            if (!r->payload) return false;
+        }
         r->first_tx = r->last_tx = r->first_rx = r->last_rx = -1;
         r->finished = r->failed = r->started = false;
         r->stop_reason = NULL;
         r->drops_start = r->port.drops(r->port.context);
         uint8_t digest[32];
         if (!rf_message_plan_init(&r->fragments, p->session, 1, 1, p->source,
-                                  p->source == 1 ? 2 : 1, 0, p->protected_mode,
+                                  p->source == 1 ? 2 : 1, p->encoded ? 1 : 0, p->protected_mode,
                                   p->link.ack_requested, p->bytes,
                                   p->link.fragment_payload_bytes) ||
-            !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->payload, p->bytes) ||
-            !r->port.hash(r->port.context, r->payload, p->bytes, digest))
+            (!p->encoded && !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->generated, p->bytes)) ||
+            ((!p->encoded || r->sender) && !r->port.hash(r->port.context, r->payload, p->bytes, digest)))
         {
             release_buffers(r);
             return false;
+        }
+        if (p->encoded) {
+            uint8_t expected[32];
+            decode_hash(p->expected_sha256, expected);
+            if (r->sender && memcmp(digest, expected, 32)) { release_buffers(r); return false; }
+            memcpy(digest, expected, 32);
         }
         if (r->sender && p->protected_mode)
         {
@@ -634,15 +705,22 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         }
         memcpy(r->expected_hash, digest, 32);
         hex(digest, r->sha_hex);
-        uuid(r, r->artifact_id);
-        artifact_spec spec = {r->artifact_id, r->sender ? "source" : "recovered", r->sha_hex,
-                              "known_data", p->bytes};
-        if (artifact_store_begin(r->artifacts, p->owner, &spec) != ARTIFACT_OK)
-        {
-            release_buffers(r);
-            return false;
+        if (p->encoded && r->sender) memcpy(r->artifact_id, p->source_artifact_id, 37);
+        else {
+            uuid(r, r->artifact_id);
+            artifact_status status;
+            if (p->encoded) {
+                void *output = NULL;
+                status = artifact_store_recover_encoded_begin(r->artifacts, p->owner, r->artifact_id,
+                    p->source_artifact_id, p->sample_count, p->expected_sha256, &output);
+                r->recovered_output = output;
+            } else {
+                artifact_spec spec = {r->artifact_id, r->sender ? "source" : "recovered", r->sha_hex, "known_data", p->bytes};
+                status = artifact_store_begin(r->artifacts, p->owner, &spec);
+            }
+            if (status != ARTIFACT_OK) { release_buffers(r); return false; }
         }
-        if (r->sender && !publish_bytes(r, r->payload))
+        if (r->sender && !p->encoded && !publish_bytes(r, r->payload))
         {
             artifact_store_delete(r->artifacts, r->artifact_id);
             release_buffers(r);
@@ -700,7 +778,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         int64_t lifetime = p->reassembly < (uint64_t)p->duration_ms * 1000
                                ? p->reassembly
                                : (int64_t)p->duration_ms * 1000;
-        if (!rf_reassembly_begin(r->receiver, 1, 0,
+        if (!rf_reassembly_begin(r->receiver, 1, p->encoded ? 1 : 0,
                                  (p->protected_mode ? 1 : 0) | (p->link.ack_requested ? 2 : 0),
                                  p->bytes, r->expected_hash, now, now + lifetime))
             return false;
@@ -748,7 +826,7 @@ static void finalize(rf_execution *r, const char *reason, bool failed)
     if (operation_active)
     {
         cJSON *o = object(r);
-        string(r, o, "kind", "known_data_tx");
+        string(r, o, "kind", r->plan.encoded ? "encoded_voice_tx" : "known_data_tx");
         operation(r, !failed, failed ? (cJSON_Delete(o), (cJSON *)NULL) : o);
     }
     state(r);
@@ -1061,12 +1139,12 @@ static bool insert_protected(void *context, const uint8_t header[40], const uint
         call->accepted = RF_WRONG_SESSION;
     else if (h->source != r->plan.source || h->destination != r->plan.role)
         call->accepted = RF_WRONG_ROLE;
-    else if (h->message_id != 1 || h->message_bytes != r->plan.bytes || h->content != 0 ||
+    else if (h->message_id != 1 || h->message_bytes != r->plan.bytes || h->content != (r->plan.encoded ? 1 : 0) ||
              h->fragment_count != r->fragments.fragment_count ||
              h->flags != (unsigned)(1 | (r->plan.link.ack_requested ? 2 : 0)) ||
              bytes != h->body_bytes)
         call->accepted = RF_WRONG_MESSAGE;
-    else if (memcmp(body, r->payload + (uint32_t)h->fragment_index * r->fragments.fragment_bytes,
+    else if (!r->plan.encoded && memcmp(body, r->payload + (uint32_t)h->fragment_index * r->fragments.fragment_bytes,
                     bytes))
         call->accepted = RF_CONTENT_MISMATCH;
     else
@@ -1254,6 +1332,8 @@ void rf_execution_tick(rf_execution *r)
                               r->plan.link.ack_requested, r->plan.drain, insert_protected, &call);
         insertion = call.insertion;
         accepted = call.accepted;
+        if (insertion == RF_REASSEMBLY_HASH_FAILED)
+            security_rejection = "content_mismatch";
         if (decision == RF_SECURE_RETRY_DUPLICATE)
         {
             insertion = RF_REASSEMBLY_DUPLICATE;

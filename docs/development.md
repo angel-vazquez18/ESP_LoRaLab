@@ -197,3 +197,9 @@ For local codec orchestration/API/CLI changes, run
 `uv run --project testbed pytest testbed/tests/test_local_codec_host.py testbed/tests/test_node_audio_host.py -q`
 and `make check`. See [codec provenance](codec_provenance.md) for expected results
 and physical acceptance. Host-only changes require no flash.
+
+Protected encoded transport has dedicated native coverage in
+`testbed/tests/test_protected_voice_native.py`. Run it, main control checks, full
+`make check` and the affected IDF target. See
+[protected voice checks](protected_voice_content.md); fixtures do not qualify RF
+or audible output.

@@ -347,6 +347,7 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         number(n,execution_limits,"max_message_bytes",65536);number(n,execution_limits,"max_messages_per_run",1);
         number(n,execution_limits,"max_fragments_per_message",4096);number(n,execution_limits,"max_duration_ms",3600000);
         number(n,execution_limits,"max_retries",2);
+        boolean(n,execution_limits,"encoded_source",true);
         string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
         add(n,limits,"execution_limits",execution_limits);
     }

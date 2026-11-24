@@ -4,6 +4,24 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Protected encoded message content (#64)
+
+Committed encoded artifacts now use the existing protected message/retry/replay
+path, with exact source metadata preflight, immutable borrowing, private receiver
+output and complete hash-gated publication. Received codec manifests preserve
+source ID/sample/frame metadata. Explicit decode/play remain separate; incomplete,
+tampered and hash-mismatched content cannot publish playable input. Both-direction
+lost-ACK retry delivers one complete clip. Source borrow and transfer/decode/play
+cancellation recover cleanly.
+
+Nineteen dedicated cases and final full `make check` pass: 694 total cases, no
+skips, plus lint/frontend/contracts/repository/dependency checks. Selected V4.2/
+32 KiB IDF build is 0x6e520, 57% app free; static DIRAM remains 73,841 bytes.
+Execution SHA changes to b029707…; other wire identities stay unchanged. See
+[protected voice content](protected_voice_content.md) for reading order, migration
+and physical checks. No flash/physical acceptance. Next #68 adds common host voice
+orchestration and clearly labelled matched data comparisons; #72 adds its UI.
+
 ## November 23 — Local codec provenance workflow (#45)
 
 Shared host/API/CLI now retrieve and verify source, encoded and decoded artifacts

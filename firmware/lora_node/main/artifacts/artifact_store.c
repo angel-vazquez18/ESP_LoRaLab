@@ -338,6 +338,22 @@ artifact_status artifact_store_decode_begin(artifact_store *s, const char *owner
     *destination = slot->bytes;
     return ARTIFACT_OK;
 }
+artifact_status artifact_store_recover_encoded_begin(artifact_store *s, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, const char *sha256, void **destination)
+{
+    if (!destination || !samples || samples > 24000 || !hex_string(source_id, 36, true) ||
+        !hex_string(sha256, 64, false) || equal(source_id, id)) return ARTIFACT_INVALID_ARGUMENT;
+    artifact_spec spec = {id, "recovered", sha256, "codec2_3200_v1", ((samples + 159) / 160) * 8};
+    artifact_status status = reserve(s, owner, &spec, true);
+    if (status != ARTIFACT_OK) return status;
+    artifact_slot *slot = find(s, id);
+    slot->producing = true;
+    memcpy(slot->manifest.source_artifact_id, source_id, 37);
+    slot->manifest.sample_count = samples;
+    slot->manifest.frame_count = (samples + 159) / 160;
+    *destination = slot->bytes;
+    return ARTIFACT_OK;
+}
 artifact_status artifact_store_encode_finish(artifact_store *s, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
 {
