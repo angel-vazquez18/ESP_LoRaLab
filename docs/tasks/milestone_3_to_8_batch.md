@@ -418,3 +418,16 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   source/memory 32 cases pass, target build remains 0x73c50. Next #75 integrates
   common physical host lifecycle/error/recovery rules across existing data,
   audio and diagnostic workflows; it is not the VOICE-03 procedure (#105).
+
+- #75 implemented on #197: one physical adapter shared by radio/audio/files/local
+  diagnostics, with device/boot/connection binding and safe per-step cleanup.
+  Same-boot reconnect cannot resume old work or close the new connection.
+  Durable diagnostic jobs/summary/evidence cover acceptance, missing results,
+  immediate stop and shutdown. Committed captures survive failed readback for
+  explicit recovery; original and cleanup failures remain separate. A red
+  acceptance/shutdown test reproduced a write after database close; shutdown now
+  joins the acceptance owner before closing resources. Twenty-one dedicated
+  cases, full 866 cases without skips, all shared checks/UI formatting and final
+  63-case recovery/provenance checks pass. Host-only; no wire/build/flash change.
+  Procedure provenance includes actual shared modules. Next #81 persists physical
+  campaign plans/order/case links; execution remains the separate #87 scope.

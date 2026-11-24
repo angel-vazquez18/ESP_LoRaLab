@@ -4,6 +4,33 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Shared bound physical lifecycle (#75)
+
+Radio, audio, files and local diagnostics now share one adapter for requests and
+cleanup, bound to device, boot and a new host USB connection ID. Same-boot
+reconnect cannot resume old work or let old cleanup close the fresh connection.
+Cleanup attempts remain independent: a failed stop reply does not skip close or
+fresh idle/key confirmation. Primary errors and per-step cleanup errors remain
+separate; missing evidence cannot become a silent pass. Existing domain runners
+retain their actual preparation, receiver-first arm and content checks.
+
+Memory probes and crypto benchmarks now have durable host jobs, terminal results,
+bounded hashed command traces and API evidence, with the existing device operation
+ID plus a host_run_id. Active restart/shutdown is interrupted without resume;
+shutdown joins acceptance writes before closing the port/store. Cancelled callers
+retain bench ownership through cleanup. Failed audio readback preserves a
+committed capture for explicit retrieval/deletion, while private unfinished work
+retires and failed clips remain unavailable.
+
+Twenty-one dedicated public adapter/Host/ASGI cases pass, including twelve RF
+stage/following-work cases with and without a second cleanup fault. Final full
+check passes 866 cases without skips and all lint/frontend/contract/repository/
+vendor checks; a final 63-case recovery/provenance check and UI formatting pass.
+The Starlette/httpx deprecation remains. This is host-only: no wire hash or firmware
+change, no new IDF build, physical port or flash. Procedure fingerprints include
+the actual shared sources without rewriting historical evidence. Physical
+acceptance remains separate. See [common lifecycle and checks](common_physical_lifecycle.md).
+
 ## November 24 — Independent encoded source and bounded RF queue (#74)
 
 A dedicated reserved task now produces eight encoded bytes per 20 ms for sixty

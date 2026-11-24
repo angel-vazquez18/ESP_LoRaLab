@@ -9,19 +9,19 @@ both toolchains for every task. The Python project remains self-contained under
 flowchart LR
     UI[React dashboard] --> HOST[Python backend / run lifecycle]
     CLI[CLI] --> HOST
-    HOST --> ADAPTER[Node adapter interface]
+    HOST --> ADAPTER[Bound physical adapter]
     HOST --> CHECK[Physical diagnostic procedure lifecycle]
     CHECK --> SERIAL[Physical diagnostic serial sessions]
     SERIAL --> DIAG[ESP-IDF diagnostic target]
     SERIAL --> NODE[ESP-IDF main control target]
-    ADAPTER -. planned full execution adapter .-> NODE
+    ADAPTER --> SERIAL
     HOST --> EVIDENCE[SQLite / raw events / artifacts / assessments]
     CONTRACT[Shared contracts / vectors / procedures] -. governs .-> HOST
     CONTRACT -. governs .-> NODE
 ```
 
-Dotted full-execution integration is planned. Diagnostic firmware cannot execute
-full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
+Physical RF/audio/diagnostic jobs share the bound adapter and real serial
+sessions. Diagnostic firmware cannot execute full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
 strict serial control, identity/health, ownership, duplicate protection and a finite
 memory operation, plus bounded RAM artifact upload/commit/readback, finite local I2S capture/playback and verified host PCM/WAV workflows. Full physical qualification remains pending; DMA/count/hash smoke checks are separate from heard output and microphone response. Its capability-based build order and completion
 gates are in [node development plan](node_development_plan.md);
@@ -41,11 +41,14 @@ module implementations are not organized by experiment IDs.
 | `docs` | Requirements, status, procedures, decisions and agent task context | A replacement for source-code evidence |
 | `scripts` | Cross-project generation and verification | Duplicated host/firmware domain logic |
 
-The host is physical-only. `nodes.py` provides the implemented diagnostic session
-interface, used by the partial IF-01 check. A future full RF serial adapter must
-satisfy the execution interface in `adapters.py` with compatibility and capability
-checks before enabling runs or campaigns. No virtual devices or simulator runners
-are instantiated or retained as operator features.
+The host is physical-only. `nodes.py` owns typed serial sessions. The implemented
+`physical_adapter.py` binds requests/cleanup to device, boot and a fresh host USB
+connection ID; `radio_runs.py`, `node_audio.py`, `artifact_transfers.py` and
+`diagnostic_jobs.py` reuse it. Domain runners preserve their own preparation,
+content checks and state transitions. The retained generic v2 client interfaces
+in `adapters.py` are not an operator simulator. See
+[common physical lifecycle](common_physical_lifecycle.md) for recovery, records
+and checks. No virtual devices or simulator runners are operator features.
 
 ## Main firmware layout
 
@@ -119,7 +122,9 @@ evidence independently of byte readback.
 
 - `app.py` and `cli.py`: entry interfaces; use the same Host and procedure paths.
 - `host.py`: bench ownership and lifecycle coordination.
-- `adapters.py`: node interface, request/reply/event handling and failures.
+- `adapters.py`: compatibility checks and retained generic client interfaces.
+- `physical_adapter.py`: shared connection-bound physical requests and cleanup.
+- `diagnostic_jobs.py`: durable local diagnostic lifecycle and restart interruption.
 - `nodes.py`: physical serial sessions for the exact diagnostic or main-control
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original

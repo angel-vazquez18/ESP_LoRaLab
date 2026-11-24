@@ -121,3 +121,8 @@ The [fixed-rate encoded source](docs/fixed_rate_source.md) independently produce
 8 bytes per 20 ms, bounds all encoded queue content to 4,800 bytes and preserves
 actual pacing/drop/drain evidence. It reuses protected multi-message transport;
 host procedure controls and sustained-link qualification follow separately.
+
+The [common physical lifecycle](docs/common_physical_lifecycle.md) binds data,
+audio/files and diagnostic jobs to an exact USB connection as well as device/boot.
+It retains primary versus cleanup failures, committed captures after readback
+failure, and durable diagnostic summaries/evidence without automatic resume.
