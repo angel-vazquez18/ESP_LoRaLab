@@ -11,6 +11,7 @@ from .diagnostic_jobs import DiagnosticJobs
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .physical_adapter import PhysicalAdapter
+from .physical_campaigns import PhysicalCampaigns
 from .procedure_runs import ProcedureService
 from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
@@ -35,6 +36,7 @@ class Host:
         self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
         self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
         self.observations = WorkloadObservations(self.store, self.adapter)
+        self.physical_campaigns = PhysicalCampaigns(self)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
@@ -43,6 +45,10 @@ class Host:
 
     @property
     def busy(self) -> bool:
+        return self.physical_campaigns.busy or self.workload_busy
+
+    @property
+    def workload_busy(self) -> bool:
         return (
             self.procedures.busy
             or self.diagnostics.busy
@@ -80,6 +86,7 @@ class Host:
             "radio_runs": self.radio.snapshot(),
             "diagnostic_runs": self.diagnostics.snapshot(),
             "voice_runs": self.voice.snapshot(),
+            "physical_campaigns": self.physical_campaigns.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -244,10 +251,19 @@ class Host:
                     raise ValueError("This physical device is already assigned to the other role")
             return node.snapshot()
 
-    async def memory_probe(self, role, iterations, payload_bytes):
+    def require_available_bench(self, owner=None):
+        if self.workload_busy or (
+            self.physical_campaigns.busy and owner is not self.physical_campaigns.owner
+        ):
+            raise RuntimeError("Another run or campaign owns the bench")
+
+    async def start_campaign(self, plan_id):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check or operation already owns the bench")
+            return await self.physical_campaigns.start(plan_id)
+
+    async def memory_probe(self, role, iterations, payload_bytes, *, _owner=None, _on_created=None):
+        async with self.lock:
+            self.require_available_bench(_owner)
             node = self.physical[role]
             if not node.connected or node.identity is None:
                 raise ValueError("Connect the physical node first")
@@ -268,12 +284,14 @@ class Host:
                 role,
                 binding,
                 {"kind": "memory_probe", "iterations": iterations, "payload_bytes": payload_bytes},
+                on_created=_on_created,
             )
 
-    async def crypto_benchmark(self, role, iterations, payload_bytes):
+    async def crypto_benchmark(
+        self, role, iterations, payload_bytes, *, _owner=None, _on_created=None
+    ):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check or operation already owns the bench")
+            self.require_available_bench(_owner)
             node = self.physical[role]
             if not node.connected or not node.identity or node.wire_profile != "node_control":
                 raise ValueError("Connect matching main-node benchmark firmware first")
@@ -285,7 +303,9 @@ class Host:
             if node.health.state != "idle" or node.health.node_role != role:
                 raise ValueError("Node must be owned and idle")
             args = crypto_benchmark_v2.Arguments(iterations=iterations, payload_bytes=payload_bytes)
-            return await self.diagnostics.start(role, binding, args.model_dump())
+            return await self.diagnostics.start(
+                role, binding, args.model_dump(), on_created=_on_created
+            )
 
     def crypto_benchmark_evidence(self, role, operation_id, include_records=False):
         records = self.store.node_operation_records(role, operation_id)
@@ -338,10 +358,9 @@ class Host:
                 raise ValueError(f"Operation cleanup unconfirmed: {cleanup['error']}")
             return {**result, "cleanup": cleanup}
 
-    async def start_serial(self, request):
+    async def start_serial(self, request, *, _owner=None):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check already owns the bench")
+            self.require_available_bench(_owner)
             readiness = self.preflight("IF-01", request.roles)
             if not readiness["ready"]:
                 raise ValueError("; ".join(readiness["blockers"]))
@@ -363,10 +382,9 @@ class Host:
             result["ready"] = False
         return result
 
-    async def start_radio(self, request):
+    async def start_radio(self, request, *, _owner=None):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check or operation owns the bench")
+            self.require_available_bench(_owner)
             return await self.radio.start(request)
 
     def voice_preflight(self, request):
@@ -376,13 +394,14 @@ class Host:
             ready["blockers"].append("Another operation owns the bench")
         return ready
 
-    async def start_voice(self, request):
+    async def start_voice(self, request, *, _owner=None):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check or operation owns the bench")
+            self.require_available_bench(_owner)
             return await self.voice.start(request)
 
     async def stop(self):
+        if self.physical_campaigns.busy:
+            return await self.physical_campaigns.cancel(self.physical_campaigns.current["id"])
         async with self.lock:
             if self.voice.busy:
                 return await self.voice.stop()
@@ -398,13 +417,13 @@ class Host:
                 raise RuntimeError("Another check, operation or file transfer owns the bench")
             return await getattr(self.artifacts, action)(role, *args, **kwargs)
 
-    async def audio_action(self, role, action, **kwargs):
+    async def audio_action(self, role, action, *, _owner=None, **kwargs):
         async with self.lock:
-            if self.busy:
-                raise RuntimeError("Another check, file transfer or audio operation owns the bench")
+            self.require_available_bench(_owner)
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.physical_campaigns.close()
         await self.observations.close()
         await self.diagnostics.close()
         await self.voice.close()
