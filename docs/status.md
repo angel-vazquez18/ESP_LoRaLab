@@ -4,6 +4,36 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Pinned Codec 2 mode 3200 (#29)
+
+The main image now builds the pinned 1.2.0 codec/DSP subset and queries its actual
+160-sample/64-bit/8-byte frame format once at startup. Safe capability metadata
+reports the dependency version/revision/options and library readiness; codec
+operations remain unavailable pending #36/#41. A recorded local patch corrects
+partial-constructor leaks/asserts without changing signal processing/codebooks.
+All eleven actual allocation failures release temporary state, then permit a
+fresh query. Sources, codebook generation and LGPL/KISS FFT notices are retained.
+
+Final `make check` passed 604 cases without skips plus lint/frontend/contracts/
+repository/resource-hash checks; focused codec/control checks passed 94. The
+selected-board IDF build passed: image 0x6c970, 58% app partition free, 29,936 bytes
+above #63. Whole-image static DIRAM use is 73,841 bytes; native constructor peak
+is not target heap evidence. No flash. See [Codec 2 review and checks](codec2_dependency.md).
+The target compiler reports an 8272-byte constructor frame; the default main-task
+stack is now 32 KiB with an enabled-codec build guard. The old 8192-byte cached
+profile correctly fails; the 32 KiB V4.2 rebuild passes with unchanged image size.
+The attempted 16 MiB backup failed twice at12,288 bytes, so no image was installed;
+B reconnected at boot104 with the original audio fingerprint.
+
+Static transport/workload bounds and codec source details are now enrolled only
+in hello, keeping configured audio+RF health within 4096 bytes. Current flags,
+operative profiles, applied settings, errors and measurements remain in health.
+The direct missing-reply regression and full 604-case suite pass.
+
+Physical backend8000 now identifies B `esp-f85b1ba27744:104` running the original
+local-audio build (`a5ecf08a…`), with RF disabled. A has not appeared in USB inventory;
+printed PCB revisions remain unknown. No physical RF/codec qualification claimed.
+
 ## November 23 — Protected host sessions (#63)
 
 The shared GUI/CLI backend now provisions fresh independent source keys, retires

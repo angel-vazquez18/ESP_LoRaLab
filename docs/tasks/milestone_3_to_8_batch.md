@@ -194,3 +194,35 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   currently exposes only `esp-f85b1ba27744`. Physical backend is stopped; neither
   port has been opened or flashed. Printed PCB revisions remain unobserved.
   Next: M6 #29, pinned Codec 2 mode 3200 dependency/provenance.
+
+- #29 implemented: pinned official Codec 2 1.2.0 subset, reproducible retained
+  codebook/resources/notices, actual frame queries and metadata with codec commands
+  still unavailable. Allocator probing reproduced an upstream 4480-byte partial-
+  construction leak; the recorded local cleanup patch passes all eleven actual
+  failure positions and a following fresh query. Final `make check`: 603 cases,
+  no skips, lint/frontend/contracts/repository/resource hashes pass. Focused codec/
+  control: 93. IDF: 0x6c950, 58% app free, +29,904 bytes over #63; no flash.
+  Physical backend restored at8000 and B identified on14601 (boot101, original
+  local-audio build a5ecf08a…); A not enumerated, PCB revision still unknown.
+  Preparing this issue's scoped commits/PR before M6 #36.
+
+- #29: PR #182 (`chore/codec2-mode3200` → `feat/private-host-sessions`)
+  is ready for review with four scoped commits, 603 passing checks and the selected-
+  board build. Issue status is Testing; no merge. Starting #36 for finite committed-
+  PCM encoding, fresh state and a separate immutable encoded artifact.
+
+- #29 follow-up while starting #36: exact target stack reports exposed an 8272-byte
+  constructor frame, larger than the old 8192-byte task. Added 32 KiB defaults and
+  a codec-enabled build guard. Actual old-profile build fails; explicit 32 KiB V4.2
+  rebuild passes (same 0x6c950 image). Native 16 cases/contracts pass. Required
+  full-flash backup failed twice after 12,288 streamed bytes; no flash. B is back
+  on 8000 at boot104 with unchanged original audio image. Earlier temporary binary
+  is marked superseded. #36 WIP is saved in a named stash while this parent fix
+  is published, then will be reapplied on the corrected base.
+
+- #29 bounded-report follow-up: reproduced a configured audio+RF missing health
+  reply directly in C. Constant enrollment metadata now stays in hello; current
+  profiles/flags/settings/errors/measurements remain in health. Focused 94 and full
+  604 cases pass, plus selected 32 KiB IDF build (0x6c970, 58% app free). Existing
+  schema identities/4096-byte limit remain unchanged. Publishing the parent fix
+  before reapplying the saved #36 implementation. No flash.

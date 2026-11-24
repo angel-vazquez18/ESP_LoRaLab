@@ -24,3 +24,11 @@ config LORALAB_RADIO_HELTEC_V43
     bool "Standard Heltec V4.3 R2 with KCT8103L front end"
 endchoice
 endmenu
+
+menu "LoRaLab speech codec dependency"
+config LORALAB_CODEC2
+    bool "Probe the pinned Codec 2 mode 3200 dependency at startup"
+    default y
+    help
+        Queries real frame dimensions once; encode/decode operations are separate.
+endmenu

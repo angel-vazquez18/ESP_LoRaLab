@@ -243,3 +243,9 @@ stages without inferring rejection from silence. Persistence/export/API guards
 independently reject secret-bearing metadata. Immutable schema digest caches keep
 state polling responsive without caching live health/capability snapshots. See
 [protected host sessions](protected_host_sessions.md).
+
+`firmware/lora_node/components/loralab_codec2` is the concrete pinned dependency
+component shared with native builds. It owns mode selection, retained upstream
+resources/notices and the frame-dimension query. Portable control caches the
+startup query for metadata; the ESP32 platform selects the configured mode. It
+does not yet expose encode/decode operations. See [Codec 2](codec2_dependency.md).

@@ -32,6 +32,7 @@ typedef struct {
     node_radio *radio;
     uint32_t cpu_frequency_mhz;
     bool hardware_aes, dynamic_frequency;
+    unsigned codec2_mode;
 } node_platform;
 
 typedef struct node_control node_control;
