@@ -1,0 +1,724 @@
+{
+  "audited_at": "2026-11-23T18:44:59.385492+00:00",
+  "run_folder": "C:\\Users\\Homar\\Documents\\Arduino\\esp32-audio-chunker-test\\captures\\20261123-lora-consistency-run01",
+  "scope": "Independent saved-evidence audit; no serial access or imports from bench/report code",
+  "checks": 14133,
+  "passed": true,
+  "issues": [],
+  "source_pcm": {
+    "bytes": 48000,
+    "crc32": "46248425",
+    "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+  },
+  "direction_counts": {
+    "COM6->COM7": 5,
+    "COM7->COM6": 5
+  },
+  "trial_count": 10,
+  "total_retries": 7,
+  "total_received_audio_bytes": 480000,
+  "sender_duration_seconds": {
+    "min": 28.401122,
+    "max": 29.848166,
+    "mean": 28.9197487
+  },
+  "memory_observations": {
+    "COM6": [
+      {
+        "trial": 1,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337708
+      },
+      {
+        "trial": 2,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 3,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 4,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 5,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 6,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 7,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 8,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 9,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 10,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      }
+    ],
+    "COM7": [
+      {
+        "trial": 1,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337708
+      },
+      {
+        "trial": 2,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337704
+      },
+      {
+        "trial": 3,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 4,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 5,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 6,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 7,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 8,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 9,
+        "role": "RX",
+        "allocation_requested_bytes": 48036,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      },
+      {
+        "trial": 10,
+        "role": "TX",
+        "allocation_requested_bytes": 48000,
+        "allocation_actual_bytes": 48116,
+        "psram_before_bytes": 2093472,
+        "psram_free_bytes": 2045340,
+        "internal_heap_before_bytes": 339176,
+        "internal_heap_free_bytes": 339176,
+        "internal_heap_min_free_bytes": 337620
+      }
+    ]
+  },
+  "memory_ranges": {
+    "COM6": {
+      "psram_before_bytes": {
+        "min": 2093472,
+        "max": 2093472,
+        "last_minus_first": 0
+      },
+      "psram_free_bytes": {
+        "min": 2045340,
+        "max": 2045340,
+        "last_minus_first": 0
+      },
+      "internal_heap_free_bytes": {
+        "min": 339176,
+        "max": 339176,
+        "last_minus_first": 0
+      },
+      "internal_heap_min_free_bytes": {
+        "min": 337620,
+        "max": 337708,
+        "last_minus_first": -88
+      }
+    },
+    "COM7": {
+      "psram_before_bytes": {
+        "min": 2093472,
+        "max": 2093472,
+        "last_minus_first": 0
+      },
+      "psram_free_bytes": {
+        "min": 2045340,
+        "max": 2045340,
+        "last_minus_first": 0
+      },
+      "internal_heap_free_bytes": {
+        "min": 339176,
+        "max": 339176,
+        "last_minus_first": 0
+      },
+      "internal_heap_min_free_bytes": {
+        "min": 337620,
+        "max": 337708,
+        "last_minus_first": -88
+      }
+    }
+  },
+  "traffic_totals": {
+    "data_tx_attempts": 2007,
+    "successful_data_tx_calls": 2007,
+    "accepted_rx_packets_including_duplicates": 2001,
+    "receiver_duplicates": 1,
+    "successful_ack_tx_calls": 2001,
+    "acks_received": 2000,
+    "data_rf_payload_bytes_sent": 503757,
+    "ack_rf_payload_bytes_sent": 28014,
+    "ack_rf_payload_bytes_received": 28000,
+    "receiver_phy_crc_errors": 6,
+    "receiver_application_errors": 0
+  },
+  "final_states": {
+    "COM6": {
+      "role": "RX",
+      "state": "IDLE",
+      "test_current": 10,
+      "test_total": 10,
+      "armed": false,
+      "transmitting": false,
+      "oled_ready": true,
+      "oled_layout_ok": true,
+      "tx_runs_started": 5,
+      "rf_tx_calls_total": 2005,
+      "allocation_requested_bytes": 48036,
+      "allocation_actual_bytes": 48116,
+      "payload_capacity_bytes": 48000,
+      "packet_scratch_bytes": 767,
+      "internal_heap_free_bytes": 339176,
+      "internal_heap_min_free_bytes": 337620,
+      "psram_free_bytes": 2045340,
+      "psram_total_bytes": 2097152,
+      "flash_total_bytes": 16777216
+    },
+    "COM7": {
+      "role": "TX",
+      "state": "IDLE",
+      "test_current": 10,
+      "test_total": 10,
+      "armed": false,
+      "transmitting": false,
+      "oled_ready": true,
+      "oled_layout_ok": true,
+      "tx_runs_started": 5,
+      "rf_tx_calls_total": 2003,
+      "allocation_requested_bytes": 48000,
+      "allocation_actual_bytes": 48116,
+      "payload_capacity_bytes": 48000,
+      "packet_scratch_bytes": 767,
+      "internal_heap_free_bytes": 339176,
+      "internal_heap_min_free_bytes": 337620,
+      "psram_free_bytes": 2045340,
+      "psram_total_bytes": 2097152,
+      "flash_total_bytes": 16777216
+    }
+  },
+  "run_recorded_duration_seconds": 297.23,
+  "cumulative_rf_calls": {
+    "COM6": 2005,
+    "COM7": 2003
+  },
+  "cumulative_tx_runs": {
+    "COM6": 5,
+    "COM7": 5
+  },
+  "serial_log_audit": {
+    "COM6": {
+      "records": 3458,
+      "command_counts": {
+        "HELLO": 1,
+        "STOP": 21,
+        "TEST": 10,
+        "ROLE": 10,
+        "LOAD": 5,
+        "DUMP": 10,
+        "TIME": 160,
+        "TX": 5,
+        "STATUS": 10,
+        "ARM": 5
+      },
+      "serial_bytes": 876628
+    },
+    "COM7": {
+      "records": 3458,
+      "command_counts": {
+        "HELLO": 1,
+        "STOP": 21,
+        "TEST": 10,
+        "ROLE": 10,
+        "TIME": 160,
+        "ARM": 5,
+        "STATUS": 10,
+        "DUMP": 10,
+        "LOAD": 5,
+        "TX": 5
+      },
+      "serial_bytes": 876358
+    }
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "id": 59251,
+      "direction": "COM6->COM7",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 201,
+      "retries": 1,
+      "receiver_duplicates": 1,
+      "sender_transaction_seconds": 29.222122,
+      "sender_start_to_final_ack_seconds": 29.216946,
+      "receiver_span_seconds": 29.078923,
+      "host_trial_seconds": 29.95,
+      "clock_stable": {
+        "COM6": true,
+        "COM7": true
+      },
+      "rssi_min_dbm": -82.0,
+      "rssi_max_dbm": -70.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 13.75
+    },
+    {
+      "trial": 2,
+      "id": 60483,
+      "direction": "COM7->COM6",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 202,
+      "retries": 2,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 29.848166,
+      "sender_start_to_final_ack_seconds": 29.84333,
+      "receiver_span_seconds": 29.704851,
+      "host_trial_seconds": 30.574,
+      "clock_stable": {
+        "COM7": true,
+        "COM6": true
+      },
+      "rssi_min_dbm": -79.0,
+      "rssi_max_dbm": -69.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 13.75
+    },
+    {
+      "trial": 3,
+      "id": 51058,
+      "direction": "COM6->COM7",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 201,
+      "retries": 1,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 29.028169,
+      "sender_start_to_final_ack_seconds": 29.023847,
+      "receiver_span_seconds": 28.885918,
+      "host_trial_seconds": 29.75,
+      "clock_stable": {
+        "COM6": true,
+        "COM7": true
+      },
+      "rssi_min_dbm": -76.0,
+      "rssi_max_dbm": -69.0,
+      "snr_min_db": 9.5,
+      "snr_max_db": 14.0
+    },
+    {
+      "trial": 4,
+      "id": 30421,
+      "direction": "COM7->COM6",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 200,
+      "retries": 0,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 28.600154,
+      "sender_start_to_final_ack_seconds": 28.595423,
+      "receiver_span_seconds": 28.456836,
+      "host_trial_seconds": 29.319,
+      "clock_stable": {
+        "COM7": true,
+        "COM6": true
+      },
+      "rssi_min_dbm": -87.0,
+      "rssi_max_dbm": -70.0,
+      "snr_min_db": 11.5,
+      "snr_max_db": 14.0
+    },
+    {
+      "trial": 5,
+      "id": 52338,
+      "direction": "COM6->COM7",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 201,
+      "retries": 1,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 29.026145,
+      "sender_start_to_final_ack_seconds": 29.021746,
+      "receiver_span_seconds": 28.883923,
+      "host_trial_seconds": 29.744,
+      "clock_stable": {
+        "COM6": true,
+        "COM7": true
+      },
+      "rssi_min_dbm": -75.0,
+      "rssi_max_dbm": -69.0,
+      "snr_min_db": 6.0,
+      "snr_max_db": 14.0
+    },
+    {
+      "trial": 6,
+      "id": 13184,
+      "direction": "COM7->COM6",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 200,
+      "retries": 0,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 28.594128,
+      "sender_start_to_final_ack_seconds": 28.589521,
+      "receiver_span_seconds": 28.450823,
+      "host_trial_seconds": 29.319,
+      "clock_stable": {
+        "COM7": true,
+        "COM6": true
+      },
+      "rssi_min_dbm": -75.0,
+      "rssi_max_dbm": -71.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 14.0
+    },
+    {
+      "trial": 7,
+      "id": 52407,
+      "direction": "COM6->COM7",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 201,
+      "retries": 1,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 29.02716,
+      "sender_start_to_final_ack_seconds": 29.02264,
+      "receiver_span_seconds": 28.884944,
+      "host_trial_seconds": 29.74,
+      "clock_stable": {
+        "COM6": true,
+        "COM7": true
+      },
+      "rssi_min_dbm": -74.0,
+      "rssi_max_dbm": -69.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 14.25
+    },
+    {
+      "trial": 8,
+      "id": 41236,
+      "direction": "COM7->COM6",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 200,
+      "retries": 0,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 28.410161,
+      "sender_start_to_final_ack_seconds": 28.40562,
+      "receiver_span_seconds": 28.267856,
+      "host_trial_seconds": 29.134,
+      "clock_stable": {
+        "COM7": true,
+        "COM6": true
+      },
+      "rssi_min_dbm": -74.0,
+      "rssi_max_dbm": -72.0,
+      "snr_min_db": 7.5,
+      "snr_max_db": 13.75
+    },
+    {
+      "trial": 9,
+      "id": 18950,
+      "direction": "COM6->COM7",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 201,
+      "retries": 1,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 29.04016,
+      "sender_start_to_final_ack_seconds": 29.035537,
+      "receiver_span_seconds": 28.897934,
+      "host_trial_seconds": 29.744,
+      "clock_stable": {
+        "COM6": true,
+        "COM7": true
+      },
+      "rssi_min_dbm": -75.0,
+      "rssi_max_dbm": -66.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 14.0
+    },
+    {
+      "trial": 10,
+      "id": 34817,
+      "direction": "COM7->COM6",
+      "audit_passed": true,
+      "source_equals_sender": true,
+      "source_equals_receiver": true,
+      "receiver_pcm": {
+        "bytes": 48000,
+        "crc32": "46248425",
+        "sha256": "1f658cb596716d1b0d34426dd0d0a9f3aa561f8eee385b1788d4e438b44ba2ac"
+      },
+      "different_samples": 0,
+      "max_abs_sample_difference": 0,
+      "chunks_received": 200,
+      "chunks_acked": 200,
+      "attempts": 200,
+      "retries": 0,
+      "receiver_duplicates": 0,
+      "sender_transaction_seconds": 28.401122,
+      "sender_start_to_final_ack_seconds": 28.396705,
+      "receiver_span_seconds": 28.258828,
+      "host_trial_seconds": 29.116,
+      "clock_stable": {
+        "COM7": true,
+        "COM6": true
+      },
+      "rssi_min_dbm": -75.0,
+      "rssi_max_dbm": -71.0,
+      "snr_min_db": 11.75,
+      "snr_max_db": 14.25
+    }
+  ],
+  "limits": [
+    "Distance is user-reported; OLED readiness is firmware evidence, not a visual inspection.",
+    "CRC/SHA and byte equality verify this recording's transfer, not range or real-time speech quality.",
+    "Cross-device clocks are unsynchronized; only local durations are reported as exact device-clock intervals."
+  ]
+}
