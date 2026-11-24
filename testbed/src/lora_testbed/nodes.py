@@ -16,6 +16,7 @@ from . import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    memory_observation_v2,
     oled_status_v2,
     physical_wire_v2,
     ptt_contract_v2,
@@ -83,6 +84,9 @@ class NodeSession:
         self.wire_profile = None
         self.active_operation = None
         self.operation_results = deque(maxlen=16)
+        self.memory_samples = deque(maxlen=512)
+        self.memory_retention_drops = 0
+        self.last_memory = None
 
     def accept_health(self, data):
         self.health = v2.Health.model_validate(data)
@@ -163,6 +167,45 @@ class NodeSession:
         except ValueError as exc:
             return {"commands": [], "limits": None, "blocked": {"ptt.arm": str(exc)}}
 
+    def memory_availability(self):
+        try:
+            if (
+                not self.connected
+                or self.connection_state != "connected"
+                or self.wire_profile != "node_control"
+                or self.last_health is None
+                or health_freshness(monotonic() - self.last_health) in ("stale", "unresponsive")
+            ):
+                raise ValueError("Connect a node with fresh memory observation health")
+            limits = memory_observation_v2.require_capability(
+                self.identity.capabilities if self.identity else None,
+                self.health.capability_availability if self.health else None,
+            )
+            return {
+                "commands": list(memory_observation_v2.ARGUMENTS),
+                "limits": {**limits.model_dump(), **memory_observation_v2.POLICY},
+                "blocked": {},
+            }
+        except ValueError as exc:
+            return {
+                "commands": [],
+                "limits": None,
+                "blocked": {name: str(exc) for name in memory_observation_v2.ARGUMENTS},
+            }
+
+    def memory_observation(self):
+        return {
+            "fresh": bool(
+                self.memory_availability()["commands"]
+                and self.last_memory is not None
+                and monotonic() - self.last_memory <= 1
+            ),
+            "last_sample": self.memory_samples[-1] if self.memory_samples else None,
+            "retained_samples": len(self.memory_samples),
+            "retained_limit": self.memory_samples.maxlen,
+            "retention_drops": self.memory_retention_drops,
+        }
+
     def codec_availability(self):
         commands, blocked, limits = [], {}, None
         for name in codec_contract_v2.ARGUMENTS:
@@ -210,6 +253,8 @@ class NodeSession:
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
             "ptt_support": self.ptt_availability(),
+            "memory_support": self.memory_availability(),
+            "memory_observation": self.memory_observation(),
             "display": self.display_observation(),
             "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
@@ -242,6 +287,9 @@ class NodeSession:
         self.wire_profile = None
         self.active_operation = None
         self.operation_results.clear()
+        self.memory_samples.clear()
+        self.memory_retention_drops = 0
+        self.last_memory = None
         self.samples.clear()
         self.diagnostics.clear()
         self.connection_state = "connecting"
@@ -328,6 +376,13 @@ class NodeSession:
                         raise ValueError("Invalid key set identity") from None
                 if name.startswith(("run.", "session.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
+            if name in memory_observation_v2.ARGUMENTS:
+                available = self.memory_availability()
+                if name not in available["commands"]:
+                    raise ValueError(available["blocked"][name])
+                if run_id is not None:
+                    raise ValueError("Memory observation commands require null run_id")
+                args = memory_observation_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
             if name in codec_contract_v2.ARGUMENTS:
                 availability = self.codec_availability()
                 if name not in availability["commands"]:
@@ -461,6 +516,12 @@ class NodeSession:
                             ).model_dump()
                         if name == "session.close":
                             self.rf_run_id = None
+                        if name in memory_observation_v2.RESULTS:
+                            return (
+                                memory_observation_v2.RESULTS[name]
+                                .model_validate(reply.result)
+                                .model_dump()
+                            )
                         if execution_command:
                             return (
                                 run_protocol_v2.RESULTS[name]
@@ -531,7 +592,15 @@ class NodeSession:
                         if entry and entry[0] == record.command_seq and not entry[1].done():
                             entry[1].set_result(record)
                     elif self.identity:
-                        if record.name == "crypto.benchmark":
+                        if record.name == "memory.sample":
+                            if self.wire_profile != "node_control" or not self.health:
+                                raise ValueError(
+                                    "Memory observation outside negotiated main profile"
+                                )
+                            memory_observation_v2.require_capability(
+                                self.identity.capabilities, self.health.capability_availability
+                            )
+                        elif record.name == "crypto.benchmark":
                             if self.wire_profile != "node_control" or not self.health:
                                 raise ValueError("Benchmark event outside negotiated main profile")
                             crypto_benchmark_v2.require_capability(
@@ -557,7 +626,12 @@ class NodeSession:
                         if self.event_seq:
                             self.event_gaps += record.event_seq - self.event_seq - 1
                         self.event_seq = record.event_seq
-                        if record.name == "health":
+                        if record.name == "memory.sample":
+                            if len(self.memory_samples) == self.memory_samples.maxlen:
+                                self.memory_retention_drops += 1
+                            self.memory_samples.append(record.data.model_dump())
+                            self.last_memory = monotonic()
+                        elif record.name == "health":
                             self.accept_health(record.data)
                             self.samples.append(
                                 {
