@@ -547,3 +547,38 @@ def test_older_peer_blocks_multi_fragment_work_before_session_or_configuration(
             await host.close()
 
     asyncio.run(scenario())
+
+
+def test_database_failure_does_not_prevent_radio_cleanup(tmp_path, native_library, monkeypatch):
+    import sqlite3
+
+    async def scenario():
+        host, _ = await connected_bench(tmp_path, native_library)
+        try:
+            run = await host.start_radio(RadioRunRequest())
+            async with asyncio.timeout(3):
+                while host.radio.current and host.radio.current["stage"] != "transmitting":
+                    await asyncio.sleep(0.005)
+            active = host.radio.current
+            assert active is not None
+            assert all(node.rf_run_id == run["id"] for node in host.physical.values())
+
+            def fail_save(record):
+                raise sqlite3.OperationalError("fixture database is unavailable")
+
+            with monkeypatch.context() as patch:
+                patch.setattr(host.radio, "save", fail_save)
+                with pytest.raises(sqlite3.OperationalError, match="database is unavailable"):
+                    await host.radio.stop(run["id"])
+            assert active["cleanup"]["confirmed"]
+            assert not host.radio.busy and not host.busy
+            assert all(
+                node.health.state == "idle"
+                and node.rf_run_id is None
+                and not node.health.security_ready
+                for node in host.physical.values()
+            )
+        finally:
+            await host.close()
+
+    asyncio.run(scenario())
