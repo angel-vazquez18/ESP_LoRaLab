@@ -9,6 +9,7 @@ from .catalog import catalog, required_nodes
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .procedure_runs import ProcedureService
+from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
 from .storage import Store
 
@@ -23,15 +24,18 @@ class Host:
         self.procedures = ProcedureService(self.store, self.physical)
         self.artifacts = ArtifactTransfers(self.store, self.physical)
         self.audio = NodeAudio(self.store, self.physical, self.artifacts)
+        self.radio = RadioRuns(self.store, self.physical, self.artifacts)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
         self.audio.observe(role, event)
+        self.radio.observe(role, event)
 
     @property
     def busy(self) -> bool:
         return (
             self.procedures.busy
+            or self.radio.busy
             or self.audio.busy
             or self.artifacts.busy
             or any(n.active_operation is not None for n in self.physical.values())
@@ -42,6 +46,7 @@ class Host:
         return {
             "version": __version__,
             "mode": "hardware",
+            "bench_busy": self.busy,
             "nodes": nodes,
             "hardware_nodes": nodes,
             "connected_node_count": sum(node.connected for node in self.physical.values()),
@@ -60,6 +65,7 @@ class Host:
             "references": self.store.references(),
             "artifact_transfers": self.artifacts.snapshot(),
             "audio_operations": self.audio.snapshot(),
+            "radio_runs": self.radio.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -177,7 +183,7 @@ class Host:
 
     async def stop_node_operation(self, role, operation_id):
         async with self.lock:
-            if self.procedures.busy or self.audio.busy:
+            if self.procedures.busy or self.audio.busy or self.radio.busy:
                 raise RuntimeError("Stop the active procedure/audio job through its own controls")
             node = self.physical[role]
             if node.wire_profile != "node_control":
@@ -206,8 +212,23 @@ class Host:
                 raise ValueError("Use the IF-01 diagnostic check controls")
             raise ValueError("; ".join(readiness["blockers"]))
 
+    def radio_preflight(self, request):
+        result = self.radio.preflight(request)
+        if self.busy:
+            result["blockers"].append("Another check or operation owns the bench")
+            result["ready"] = False
+        return result
+
+    async def start_radio(self, request):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation owns the bench")
+            return await self.radio.start(request)
+
     async def stop(self):
         async with self.lock:
+            if self.radio.busy:
+                return await self.radio.stop()
             return await self.procedures.stop()
 
     async def artifact_action(self, action, role, *args, **kwargs):
@@ -223,6 +244,7 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.radio.close()
         await self.audio.close()
         await self.artifacts.close()
         await self.procedures.stop(shutdown=True)

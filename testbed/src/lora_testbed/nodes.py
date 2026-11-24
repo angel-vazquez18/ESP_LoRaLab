@@ -259,6 +259,14 @@ class NodeSession:
                 run_id=run_id,
                 args=args or {},
             )
+            if execution_command:
+                run_protocol_v2.Command.model_validate(command.model_dump())
+            if name == "session.open":
+                if self.rf_run_id and self.rf_run_id != run_id:
+                    raise ValueError("Close the existing RF session before opening another")
+                # Track attempted ownership before writing; a lost reply may still mean open.
+                self.rf_run_id = run_id
+                self.rf_runs.append(run_id)
             future = asyncio.get_running_loop().create_future()
             self.pending[command.command_id] = (command.command_seq, future)
             try:
@@ -295,10 +303,7 @@ class NodeSession:
                             return artifact_contract_v2.validate_result(
                                 name, command.args, reply.result, artifact_limits
                             ).model_dump()
-                        if name == "session.open":
-                            self.rf_run_id = run_id
-                            self.rf_runs.append(run_id)
-                        elif name == "session.close":
+                        if name == "session.close":
                             self.rf_run_id = None
                         if execution_command:
                             return (
@@ -312,7 +317,13 @@ class NodeSession:
                             raise ValueError(
                                 f"No v2 reply to {name}; compatible firmware is required"
                             ) from None
-                        if name in ("hello", "status.get", "artifact.list", "artifact.get"):
+                        if name in (
+                            "hello",
+                            "status.get",
+                            "run.summary",
+                            "artifact.list",
+                            "artifact.get",
+                        ):
                             self.pending.pop(command.command_id, None)
                             future.cancel()
                             self.sequence += 1

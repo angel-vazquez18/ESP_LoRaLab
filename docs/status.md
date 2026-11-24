@@ -75,6 +75,19 @@ Full `make check` passed 408 tests with no skips; ESP-IDF built successfully.
 The original checkout's 19 preserved files still match their saved SHA-256 values.
 No ESP was connected.
 
+## November 22 — Receiver-first host radio workflow (#27)
+
+Added a shared physical backend/API/CLI for one-message known-data bring-up. It
+requires distinct compatible peers, matching applied settings and complete
+preparation, arms RX before TX, retrieves actual files and independently verifies
+bytes/hashes. Raw records, summaries, source fingerprints, linked readback traces
+and hashed exports preserve partial outcomes. Verified bytes and missing telemetry
+remain distinct. Stop/cleanup races and uncertain session-open recovery are covered;
+restart never resumes. `make check` passed 424 tests without skips, including 16
+new host-radio cases, lint/frontend/contracts/repository checks. No board access
+occurred; physical qualification and dashboard controls remain pending. See
+[operating/review guide](physical_radio_runs.md).
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones

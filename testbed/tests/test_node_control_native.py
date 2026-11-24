@@ -168,11 +168,13 @@ def native_library(tmp_path_factory):
 
 
 class NativeNode:
-    def __init__(self, lib, realtime=False, boot=1, audio=None, radio=None):
+    def __init__(
+        self, lib, realtime=False, boot=1, audio=None, radio=None, device="esp-001122334455"
+    ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
         self.origin = monotonic()
-        self.boot_id = f"esp-001122334455:{boot}"
+        self.boot_id = f"{device}:{boot}"
         self.client = str(uuid4())
         self.sequence = 0
         self.allocations = {}
@@ -188,7 +190,7 @@ class NativeNode:
         self.platform = Platform(
             None,
             *self.callbacks,
-            b"esp-001122334455",
+            device.encode(),
             self.boot_id.encode(),
             b"native-test",
             b"a" * 64,
@@ -521,8 +523,8 @@ def test_allocation_failure_has_no_operation_effect(native):
 class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
-    def __init__(self, lib, radio=None):
-        self.core = NativeNode(lib, realtime=True, radio=radio)
+    def __init__(self, lib, radio=None, device="esp-001122334455"):
+        self.core = NativeNode(lib, realtime=True, radio=radio, device=device)
         self.lock = threading.RLock()
         self.queue = queue.Queue()
         self.closed = False

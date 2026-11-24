@@ -60,3 +60,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   finite one-message node execution implemented. Radio limits deliberately remain
   one message/fragment, <=215 bytes, <=30 s until later transport work. Next #27
   serial-backed receiver-first host workflow, then #34 dashboard.
+
+- #25: PR #167 (`feat/single-fragment-data` → `feat/finite-radio-rx`), 408 checks
+  and IDF build passed. One-message node lifecycle now implemented; source/recovered
+  artifacts are verified. Original 19 file hashes still match.
+- #27: receiver-first host/API/CLI, independent exact readback, bounded snapshots/
+  traces/hashed export and cancel/restart/disconnect recovery complete. 424 checks
+  passed. A deterministic test fixed stop cancelling a worker already in cleanup;
+  caller cancellation is shielded. Next #34 dashboard, then M4 #28/#35/#40/#43/#47.
