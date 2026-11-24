@@ -538,6 +538,7 @@ class NodeSession:
                             "hello",
                             "status.get",
                             "run.summary",
+                            "run.source",
                             "artifact.list",
                             "artifact.get",
                         ):

@@ -1,5 +1,5 @@
 {
-  "description": "Public independent command/result examples for finite_message_execution_v2; not a complete two-node transcript or observed hardware evidence.",
+  "description": "Public independent command/result examples for finite_message_execution_v3; not a complete two-node transcript or observed hardware evidence.",
   "records": [
     {
       "command": {
@@ -254,6 +254,35 @@
       },
       "result": {
         "state": "idle"
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000009",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 9,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.source",
+        "args": {
+          "view": "status",
+          "offset": 0,
+          "limit": 1
+        }
+      },
+      "result": {
+        "status": null,
+        "delivered_message_ids": [],
+        "archive_artifact_id": null,
+        "archive_sha256": null,
+        "view": "status",
+        "offset": 0,
+        "next_offset": 0,
+        "eof": true,
+        "frames": [],
+        "samples": []
       }
     }
   ],

@@ -1807,11 +1807,12 @@
           "items": {
             "enum": [
               "RADIO_STOP_FAILED",
-              "KEY_RETIRE_FAILED"
+              "KEY_RETIRE_FAILED",
+              "SOURCE_STOP_FAILED"
             ],
             "type": "string"
           },
-          "maxItems": 2,
+          "maxItems": 3,
           "title": "Cleanup Errors",
           "type": "array"
         },

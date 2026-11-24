@@ -8,10 +8,11 @@ from typing import Annotated, Literal
 from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 
 from . import rf_events_v2 as rf
+from . import source_protocol_v2 as source_protocol
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "finite_message_execution_v2"
+EXECUTION_PROFILE = "finite_message_execution_v3"
 ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
@@ -22,6 +23,7 @@ ExecutionName = Literal[
     "run.start",
     "run.stop",
     "run.summary",
+    "run.source",
 ]
 EXECUTION_COMMANDS = (
     "session.open",
@@ -32,14 +34,15 @@ EXECUTION_COMMANDS = (
     "run.start",
     "run.stop",
     "run.summary",
+    "run.source",
 )
-CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary")
+CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source")
 
 
 class Capabilities(ContractModel):
-    profile: Literal["finite_message_execution_v2"]
+    profile: Literal["finite_message_execution_v3"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    commands: list[ExecutionName] = Field(min_length=1, max_length=8)
+    commands: list[ExecutionName] = Field(min_length=1, max_length=9)
 
     @model_validator(mode="after")
     def unique_commands(self):
@@ -104,8 +107,18 @@ class EncodedSourceSpec(KnownDataSpec):
         return self
 
 
+class FixedRateSourceSpec(EncodedSourceSpec):
+    catalog_id: Literal["VOICE-03"] = "VOICE-03"
+    source: Literal["fixed_rate_encoded"] = "fixed_rate_encoded"
+    message_count: Literal[20] = 20
+    message_bytes: Literal[1200] = 1200
+    sample_count: Literal[24000] = 24000
+    source_duration_ms: Literal[60000] = 60000
+    max_duration_ms: int = Field(default=90000, ge=60000, le=90000)
+
+
 class Prepare(ContractModel):
-    spec: KnownDataSpec | EncodedSourceSpec
+    spec: KnownDataSpec | EncodedSourceSpec | FixedRateSourceSpec
     budget: Budget
 
 
@@ -137,6 +150,7 @@ ARGUMENTS = {
     "run.start": Revision,
     "run.stop": Stop,
     "run.summary": Empty,
+    "run.source": source_protocol.Query,
     "artifact.list": Empty,
     "artifact.get": ArtifactGet,
 }
@@ -222,6 +236,7 @@ RESULTS = {
     "run.start": Accepted,
     "run.stop": Idle,
     "run.summary": rf.SummaryData,
+    "run.source": source_protocol.Report,
     "artifact.list": ArtifactList,
     "artifact.get": ArtifactChunk,
 }
@@ -262,6 +277,7 @@ def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
         "scope": "finite_message_execution",
+        "fixed_source_policy": source_protocol.POLICY,
         "lifecycle": {"arm_window_us": ARM_WINDOW_US, "sender_arm_required": True},
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),
