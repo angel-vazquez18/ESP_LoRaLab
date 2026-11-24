@@ -410,3 +410,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   DIRAM. Original 19 files unchanged; no flash/physical qualification. Source
   procedure/assessment is #105 and physical acceptance #136; #75 is the common
   host lifecycle and must not be mistaken for the source procedure.
+
+- #74: PR #197 (`feat/fixed-rate-encoded-source` →
+  `feat/stage-memory-observations`) is ready with scoped Conventional Commits,
+  walkthrough, expected checks and physical limits. GitHub issue/card Testing;
+  no agent merge. Full 845 cases and shared checks pass; final controller 77 and
+  source/memory 32 cases pass, target build remains 0x73c50. Next #75 integrates
+  common physical host lifecycle/error/recovery rules across existing data,
+  audio and diagnostic workflows; it is not the VOICE-03 procedure (#105).
