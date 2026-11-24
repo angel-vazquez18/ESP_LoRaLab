@@ -1,0 +1,55 @@
+{
+  "created_at": "2026-11-23T18:29:35.231719+00:00",
+  "purpose": "readiness_only_no_radio_test",
+  "firmware": "lora-integrity-2-oled",
+  "files": {
+    "platformio.ini": {
+      "bytes": 3222,
+      "sha256": "51c25046c898313a1fa573068a1e963586519ceb10608a8856988338591c509b"
+    },
+    "src/lora_bench.cpp": {
+      "bytes": 23142,
+      "sha256": "86dd8f92e75326dd7e4b94e9361abc6fa3ee1a21d049219113a3031868d90d10"
+    },
+    "include/radio_frame.h": {
+      "bytes": 4091,
+      "sha256": "f7b96f38373932a610a979263a1a2993c84dd630fa932ea0faa95af7d16781f8"
+    },
+    "include/lora_display_model.h": {
+      "bytes": 3026,
+      "sha256": "ff82aa1c246e9916433a0a23926119ddeafb371ff4a7a52da1c948865bf86b3a"
+    },
+    "lib/lora_bench_display/lora_bench_display.h": {
+      "bytes": 585,
+      "sha256": "6812e2ca6d963eb53ad5270cf65ff2f7ddc9cc97caa0e6a51e0e4b2af1507459"
+    },
+    "lib/lora_bench_display/lora_bench_display.cpp": {
+      "bytes": 5743,
+      "sha256": "aae3ac96877ba11fd931b9da0039dc9e2e334ed495375e9225a761e0f324a507"
+    },
+    "tools/lora_transfer_bench.py": {
+      "bytes": 41785,
+      "sha256": "b4c719d36ba1a7eb5c8b9d217df2def03ee06a96f6dbde2c557dc3a533841501"
+    },
+    "tools/prepare_lora_consistency.py": {
+      "bytes": 4342,
+      "sha256": "9c635a88cb544e53879c8cc01e500d42b5c73cb4f8a71cf234dd912fd11ac135"
+    },
+    "tools/create_lora_consistency_pdf.py": {
+      "bytes": 33737,
+      "sha256": "1b39c5c4bbd911fd2b236c42dc487a1ed1cfe17fb17b289c76b3e438f01c8040"
+    },
+    "tools/run_lora_consistency.ps1": {
+      "bytes": 2018,
+      "sha256": "d505b30e58662ea201aa90a2a3fa1ffc2a5555e3cd288e7cbf2dde1101b6ba5d"
+    },
+    ".pio/build/heltec_lora_com6/firmware.bin": {
+      "bytes": 467264,
+      "sha256": "1e8625eb2c536c23418ed5968a016652f1a5a3502343191aec74daec73c3be5f"
+    },
+    ".pio/build/heltec_lora_com7/firmware.bin": {
+      "bytes": 467264,
+      "sha256": "1edf39afa6fe93d78ec1ad42169621085f63c3eb6c930a776229244c109f6a93"
+    }
+  }
+}
