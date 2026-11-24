@@ -96,6 +96,16 @@ class DisplayPort(C.Structure):
     _fields_ = [("post", DISPLAY_POST), ("status", DISPLAY_STATUS)]
 
 
+SOURCE_RESERVE = C.CFUNCTYPE(C.c_void_p, C.c_void_p, C.c_void_p)
+SOURCE_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_int64)
+SOURCE_STOP = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p)
+
+
+class SourceWorkerPort(C.Structure):
+    _fields_ = [("context", C.c_void_p), ("reserve", SOURCE_RESERVE),
+                ("start", SOURCE_START), ("stop", SOURCE_STOP)]
+
+
 class Platform(C.Structure):
     _fields_ = (
         [
@@ -130,6 +140,7 @@ class Platform(C.Structure):
             ("ptt_pressed", PTT),
             ("display", DisplayPort),
             ("memory_region", REGION),
+            ("source_worker", SourceWorkerPort),
         ]
     )
 
@@ -170,6 +181,7 @@ def native_library(tmp_path_factory):
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(main / "memory/observations.c"),
+            str(main / "source/encoded_source.c"),
             str(main / "input/ptt_gate.c"),
             str(main / "display/node_view.c"),
             str(main / "display/oled_panel.c"),
@@ -241,6 +253,7 @@ class NativeNode:
         ptt=None,
         display=None,
         display_status=None,
+        source_worker=None,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -280,6 +293,7 @@ class NativeNode:
         self.platform.display = DisplayPort(self.display_callback, self.display_status)
         self.region_callback = REGION(lambda _, pointer: 1 if pointer in self.allocations else 0)
         self.platform.memory_region = self.region_callback
+        self.platform.source_worker = source_worker or SourceWorkerPort()
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -617,6 +631,7 @@ class NativeSerial:
         ptt=None,
         display=None,
         display_status=None,
+        source_worker=None,
     ):
         self.core = NativeNode(
             lib,
