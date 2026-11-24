@@ -344,3 +344,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   0x6e930, 57% app free, static DIRAM 73,841. PTT supplement 547a3d…; other wire
   hashes unchanged. No flash or physical GPIO/PCB acceptance; original user
   checkout remains separate. Next #37 optional OLED views of actual node state.
+
+- #30: PR #193 (`feat/host-armed-ptt` → `feat/voice-stage-dashboard`) is ready
+  for review with six scoped commits and 729 full passing cases, no skips; both
+  IDF configurations pass, normal PTT stays off. Issue Testing, no merge/flash.
+  PCB/GPIO47 physical prerequisite #1 remains open; PR does not auto-close it.
+  Starting #37 on its own dependent branch for optional bounded OLED status
+  derived from real state, with absence/failure isolated from serial control.
