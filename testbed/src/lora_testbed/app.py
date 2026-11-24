@@ -17,6 +17,7 @@ from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from . import control_v2, rf_events_v2, run_protocol_v2, v2
+from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .catalog import catalog
 from .comparison import campaign_summary, compare
@@ -52,6 +53,15 @@ class MemoryProbeRequest(StrictModel):
 
 class StopOperationRequest(StrictModel):
     operation_id: str = Field(pattern=r"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$")
+
+
+class ArtifactUploadRequest(StrictModel):
+    data_b64: str = Field(min_length=1, max_length=174764)
+    format: Literal["known_data", "pcm_s16le_8000_mono"] = "known_data"
+    kind: Literal["source", "recovered"] = "source"
+    name: str = Field(
+        default="source.bin", min_length=1, max_length=128, pattern=r"^[^\x00-\x1f\x7f]+$"
+    )
 
 
 class ComparisonRequest(StrictModel):
@@ -132,6 +142,57 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/nodes/{role}/operation/stop")
     async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):
         return await app.state.host.stop_node_operation(role, body.operation_id)
+
+    @app.get("/api/nodes/{role}/artifacts")
+    async def node_artifacts(role: Literal["A", "B"]):
+        return await app.state.host.artifact_action("list", role)
+
+    @app.post("/api/nodes/{role}/artifacts", status_code=202)
+    async def artifact_upload(role: Literal["A", "B"], request: Request):
+        data = bytearray()
+        async for chunk in request.stream():
+            if len(data) + len(chunk) > 196608:
+                raise ValueError("File upload request exceeds the bounded JSON limit")
+            data.extend(chunk)
+        try:
+            body = ArtifactUploadRequest.model_validate_json(bytes(data))
+        except RecursionError as exc:
+            raise ValueError("Invalid file upload JSON") from exc
+        return await app.state.host.artifact_action(
+            "start_upload",
+            role,
+            decode_upload(body.data_b64),
+            format=body.format,
+            kind=body.kind,
+            name=body.name,
+        )
+
+    @app.delete("/api/nodes/{role}/artifacts/{artifact_id}")
+    async def artifact_delete(role: Literal["A", "B"], artifact_id: str):
+        return await app.state.host.artifact_action("delete", role, artifact_id)
+
+    @app.post("/api/nodes/{role}/artifacts/{artifact_id}/download", status_code=202)
+    async def artifact_download(role: Literal["A", "B"], artifact_id: str):
+        return await app.state.host.artifact_action("start_download", role, artifact_id)
+
+    @app.get("/api/artifact-transfers")
+    async def artifact_transfers():
+        return app.state.host.artifacts.snapshot()
+
+    @app.get("/api/artifact-transfers/{transfer_id}")
+    async def artifact_transfer(transfer_id: str):
+        return app.state.host.artifacts.get(transfer_id)
+
+    @app.post("/api/artifact-transfers/{transfer_id}/cancel")
+    async def artifact_cancel(transfer_id: str):
+        return await app.state.host.artifacts.cancel(transfer_id)
+
+    @app.get("/api/artifact-transfers/{transfer_id}/content")
+    async def artifact_content(transfer_id: str):
+        path = app.state.host.artifacts.content(transfer_id)
+        return FileResponse(
+            path, media_type="application/octet-stream", filename=f"{transfer_id}.bin"
+        )
 
     @app.get("/api/protocol/v2/known-data")
     async def known_data_protocol():

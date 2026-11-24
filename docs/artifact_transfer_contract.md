@@ -2,8 +2,9 @@
 
 Issue [#2](https://github.com/angel-vazquez18/ESP_LoRaLab/issues/2), November 15, 2026.
 This defines the file-transfer interface and host validation. Issue #11 adds real
-RAM reservations, listing and deletion to the portable main firmware. Chunk uploads (#14) and final commit (#18) are implemented. Readback (#22) is also implemented. Host workflows (#26) and audio drivers remain
-follow-up work. Native checks exercise the production C store;
+RAM reservations, listing and deletion to the portable main firmware. Chunk uploads (#14) and final commit (#18) are implemented. Readback (#22) is also implemented. Host workflows (#26) are implemented separately in the
+[shared transfer service](artifact_workflows.md); dashboard controls and audio
+drivers remain follow-up work. Native checks exercise the production C store;
 they do not establish physical board behavior.
 
 An artifact is a named block of bytes in the node's RAM. It is not a filesystem
@@ -300,3 +301,18 @@ esp-f85b1ba27744. The new image's device/schema/ELF fingerprint matched, and ini
 physical round trips at 1/1024/1025/48000/131072 bytes matched exactly. Raw rejection,
 capacity and recovery checks continue; their finalized evidence is recorded in
 the batch handoff. This does not close audio or all Milestone 1 hardware checks.
+
+## Physical artifact checkpoint — November 16
+
+The cumulative #14/#18/#22 image passed physical 1/1024/1025/48000/131072-byte
+round trips, exact bytes/hashes, raw-wire CRC/gap/conflict/identical-retry cases,
+wrong final hash/read rejection, four slots/fifth rejection and full 262144-byte
+reservation budget on esp-f85b1ba27744, boot 55. Device/schema/ELF matched, with
+zero framing errors/event gaps. Both original and fresh complete flash backups
+were verified before installation; NVS/eFuses were not erased or modified by
+flash commands. The normal boot counter advanced. Raw evidence is retained in
+ignored local/m2-batch/artifact-hardware-report.json.
+
+The #26 host workflow also passed physical boundary round trips plus cancellation
+and recovery. See [host workflow checks](artifact_workflows.md). These observations
+do not establish physical audio or close the remaining M1 procedure matrices.

@@ -43,10 +43,22 @@ class Store:
                 id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT NOT NULL,
                 received_at TEXT NOT NULL, document TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS artifact_transfers (
+                id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS campaigns (
                 id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL
             );
         """)
+        for transfer in self.transfers():
+            if transfer["status"] == "running":
+                transfer.update(
+                    status="interrupted",
+                    finished_at=utc_now(),
+                    error="Host restarted",
+                    cleanup="unconfirmed; unfinished node files clear on ownership loss",
+                )
+                self.save_transfer(transfer)
         for run in self.runs():
             if run["status"] in ("preparing", "running", "stopping"):
                 metrics = Metrics()
@@ -137,6 +149,28 @@ class Store:
             json.loads(row[0])
             for row in self.db.execute("SELECT document FROM references_audio ORDER BY rowid DESC")
         ]
+
+    def save_transfer(self, transfer):
+        self.db.execute(
+            "INSERT INTO artifact_transfers VALUES (?, ?, ?) "
+            "ON CONFLICT(id) DO UPDATE SET document=excluded.document",
+            (transfer["id"], transfer["created_at"], json.dumps(transfer)),
+        )
+        self.db.commit()
+
+    def transfers(self):
+        return [
+            json.loads(row[0])
+            for row in self.db.execute(
+                "SELECT document FROM artifact_transfers ORDER BY created_at DESC LIMIT 50"
+            )
+        ]
+
+    def transfer(self, transfer_id):
+        row = self.db.execute(
+            "SELECT document FROM artifact_transfers WHERE id=?", (transfer_id,)
+        ).fetchone()
+        return json.loads(row[0]) if row else None
 
     def close(self):
         self.db.close()

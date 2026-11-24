@@ -107,6 +107,8 @@ audio and other future modules are added only when implementing real behavior.
   that declaration before sending file commands. Main firmware implements only
   begin/list/delete so far; chunk/commit/read and complete host workflows remain
   follow-up work. Existing wire schemas remain unchanged.
+- `artifact_transfers.py`: bounded physical file upload/download lifecycle, independently
+  verified persistence, cancellation and raw evidence shared by API/CLI.
 - `catalog.py`: all 23 procedures, local/pair node requirements and capability blockers.
 - `procedure_runs.py`, `serial_validation.py`: bounded physical diagnostic checks,
   cancellation, partial qualification scope and durable procedure evidence.
