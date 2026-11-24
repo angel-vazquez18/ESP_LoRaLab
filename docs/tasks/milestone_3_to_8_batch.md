@@ -431,3 +431,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   63-case recovery/provenance checks pass. Host-only; no wire/build/flash change.
   Procedure provenance includes actual shared modules. Next #81 persists physical
   campaign plans/order/case links; execution remains the separate #87 scope.
+
+- #75: PR #199 (`feat/common-physical-lifecycle` →
+  `feat/fixed-rate-encoded-source`) is ready with scoped commits, code reading
+  order, checks and remaining physical validation. Issue/card Testing; no merge.
+  Final full 866 cases and all shared checks pass; final 63 focused cases and
+  UI formatting pass. Original 19 files unchanged. Beginning #81 on a separate
+  branch: persist physical plans, seeded order, requirements and linked bounded
+  batches. Do not restore historical simulator execution; #87 owns execution.
