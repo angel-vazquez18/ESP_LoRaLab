@@ -16,6 +16,7 @@ from . import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    oled_status_v2,
     physical_wire_v2,
     ptt_contract_v2,
     run_protocol_v2,
@@ -117,6 +118,32 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def display_observation(self):
+        value = (
+            self.health.capability_availability.resource_limits.get("oled") if self.health else None
+        )
+        if value is None:
+            return {"configured": False, "state": "not_advertised", "ready": False}
+        try:
+            observed = oled_status_v2.Status.model_validate(value)
+            if observed.schema_sha256 != oled_status_v2.schema_digest():
+                raise ValueError("OLED observation fingerprint does not match")
+            fresh = (
+                self.connected
+                and self.connection_state == "connected"
+                and self.last_health is not None
+                and health_freshness(monotonic() - self.last_health)
+                not in ("stale", "unresponsive")
+            )
+            return {
+                **observed.model_dump(),
+                "configured": True,
+                "fresh": fresh,
+                "ready": fresh and observed.state == "ready",
+            }
+        except ValueError as exc:
+            return {"configured": True, "state": "incompatible", "ready": False, "error": str(exc)}
+
     def ptt_availability(self):
         try:
             audio = self.audio_availability()
@@ -183,6 +210,7 @@ class NodeSession:
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
             "ptt_support": self.ptt_availability(),
+            "display": self.display_observation(),
             "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
