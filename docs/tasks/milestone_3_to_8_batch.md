@@ -449,7 +449,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   API/CLI preview/save/list/reload and verified nine-case offline example work.
   Full 889 cases without skips and all shared checks pass; final 24 planner and
   86 integration cases pass, plus final lint/contracts/repository/UI formatting.
-  Host-only, no wire/build/flash change. Execution is #87, UI #88. Next #82 is
+  Host-only, no wire/build/flash change. Execution is #87, campaign UI #115. Next #82 is
   host memory-observation procedure/evidence integration; inspect its live scope.
 
 - #81: PR #200 (`feat/physical-campaign-plans` →
@@ -480,3 +480,18 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   commits, walkthrough, expected checks and physical instructions. Issue/card
   Testing; no agent merge. Full 915 cases, 25 dedicated cases and all shared
   checks pass. Starting #87 on a fresh branch based on this reviewed stack.
+
+
+- #87 implemented on #201: atomic separate execution/case ledger, saved seeded
+  order/batch links, shared local/data/voice child runners, exclusive ownership
+  through pause/resume, partial cancellation, fail-stop and independent peer
+  cleanup. Missing acceptance retains a durable child reference; late stop cannot
+  leave completed work cancelling. Active/paused restart never opens ports or
+  resumes RF. Final 13 campaign cases pass; full 928 cases without skips and all
+  shared checks/UI formatting pass. Final stronger tests verify actual shuffled
+  payload requests 2048/512/1024 and nondefault radio source settings. Original
+  19 files unchanged; no firmware/build/flash/physical validation.
+
+- Live issue verification corrected an earlier handoff: #88 is memory/source
+  history plots, #107 is restart/selected-case reruns/exports, and #115 is campaign
+  UI. Follow #88 next, then #107/#115 and physical #132; retain all 23 procedures.

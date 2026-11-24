@@ -4,6 +4,39 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Owned physical campaign execution (#87)
+
+Saved plans now execute through the existing diagnostic, partial serial, audio,
+known-data and secure-voice services, with a separate atomic execution/case ledger
+and exact saved order/batch/child links. Local work supports B alone. The campaign
+holds one bench owner across active and paused states; other runs and connection
+changes reject. Pause finishes the current case, resume retains its queue, and
+cancel/failure preserves partial children and reason-codes unstarted cases.
+Connections are enrolled by device/boot/host connection ID; same-boot reconnect
+cannot resume old work or let old cleanup close the replacement.
+
+Diagnostic reservations are linked before acceptance, and actual stopped results
+remain available. Missing acceptance can expire the lease and force disconnect;
+that produces interrupted/unconfirmed evidence, never an invented accepted ID or
+idle claim. Final outcomes stay pending until cleanup finishes. A stop during
+final cleanup waits rather than leaving a finished campaign cancelling. Startup
+interrupts unfinished records without opening ports or automatically resuming RF.
+All 23 full procedure references remain recorded as blocked while unavailable.
+
+Full check passes 928 cases without skips and all lint/frontend/contracts/
+repository/vendor checks; final 13 campaign cases, UI formatting and CLI help
+pass. The final cases independently check actual payload order 2048/512/1024 for
+the saved shuffle and nondefault reverse-direction data settings, plus local/
+voice byte readback, lifecycle faults and restart/shutdown. Existing Starlette/
+httpx deprecation remains. All 19 original files are unchanged. Host-only: no
+wire/firmware/profile change, new IDF build, physical port, reset or flash.
+See [controller walkthrough, commands and physical checks](physical_campaign_execution.md).
+
+The verified next issue is #88, memory/source-history plots. Selected-case reruns
+and exports are #107, and campaign dashboard controls are #115; earlier handoffs
+that called #88 the campaign UI had the wrong issue number. Physical campaign
+qualification and all full CDR matrices remain open.
+
 ## November 24 — Observed workload assessments (#82)
 
 The host now saves typed raw source/queue and stage-memory evidence with immutable
@@ -49,7 +82,7 @@ API/CLI preview/save/list/reload work offline and preserve historical interrupte
 blocked campaigns in their original storage. Historical campaign expansion and
 matched-seed rules were inspected; artificial packet-pacing estimates/execution
 are not imported. The verified mixed example expands nine cases and a 600-second
-planning reserve. Execution is still #87 and dashboard integration #88; saving a
+planning reserve. Execution is still #87 and campaign dashboard integration #115; saving a
 plan starts no hardware work.
 
 Full check passes 889 cases without skips and all lint/frontend/contract/repository/

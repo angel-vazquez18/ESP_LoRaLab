@@ -3,7 +3,8 @@
 A saved plan records intent before any case runs: exact settings, repetitions,
 directions, source seeds, order, node requirements and linked batches. Creating,
 previewing or loading a plan opens no ports and starts no work. Campaign execution
-is the separate #87 issue; dashboard controls follow #88. Capability workflows
+is implemented by the separate [#87 controller](physical_campaign_execution.md);
+dashboard controls follow #115. Capability workflows
 are not full CDR procedure qualification.
 
 ## Try the documented plan
@@ -142,3 +143,9 @@ seed wrap; time/count splitting without missing cases; local node B sufficiency;
 duplicate RF identities blocked; all 23 references retained; typed audio/voice/
 diagnostics; invalid/private input rejected before persistence; and historical
 interrupted/blocked records preserved. No fixture qualifies physical hardware.
+
+
+New plans record that the execution service is available; readiness stays a
+per-case cached snapshot and never authorizes physical work. Older plan documents
+retain their original availability flag and hash. Execution creates a separate
+ledger and does not mutate a plan's case order, batch links or future run IDs.

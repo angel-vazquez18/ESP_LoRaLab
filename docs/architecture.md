@@ -127,6 +127,10 @@ evidence independently of byte readback.
 - `diagnostic_jobs.py`: durable local diagnostic lifecycle and restart interruption.
 - `campaign_plans.py`: immutable typed physical intent, seeded expansion/order,
   bounded linked batches and cached capability readiness. It starts no work.
+- `physical_campaigns.py`: exclusive physical execution of that saved order,
+  durable child/case links, pause/cancel, bounded child cleanup and interruption
+  on restart. It reuses the existing domain runners and never resumes hardware.
+
 - `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
   stage-memory reconciliation, immutable evidence and bound readback; imported
   traces never establish physical qualification.
