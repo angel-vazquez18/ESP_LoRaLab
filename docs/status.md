@@ -4,6 +4,22 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Voice stage dashboard (#72)
+
+The Voice page now controls the common reference/microphone workflow and inspects
+verified source/encoded/recovered/decoded files, waveform/identity/counts, local
+stage clocks, protected RF findings, comparisons and physical listening notes.
+One-way latency and absent stage intervals remain unavailable. Saved-file
+integrity is checked separately from historical delivery. Failed/cancelled work
+retains its errors and never claims partial receiver playback.
+
+Three new API inspection cases pass. Full `make check` passes 709 cases without
+skips plus shared checks. Final file-identity/duration presentation changes also
+pass the three inspection cases and frontend build/formatting. Browser acceptance with isolated native nodes covered both sources/
+directions, loss/stop, navigation/refresh, notes, both themes and a 390 px layout
+without page overflow. No console warnings/errors. No firmware/wire/build/flash
+change or physical qualification. See [dashboard checks](secure_voice_workflows.md).
+
 ## November 23 — Shared secure voice workflows (#68)
 
 Host/API/CLI now compose reference upload or microphone capture, verified local

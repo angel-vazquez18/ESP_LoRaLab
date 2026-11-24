@@ -278,3 +278,9 @@ Reference/microphone preparation, receiver decode/play, explicitly based data
 comparisons and job-owned artifact retirement share the host bench lock. Compact
 voice snapshots reference full child evidence. See
 [secure voice workflow](secure_voice_workflows.md).
+
+The Voice page uses `VoiceRuns.tsx` for common backend controls and saved clip
+inspection. `VoiceRuns.inspect` composes linked records with current verified
+file hashes/waveforms and boot-qualified local timings. Browser state retains
+only selection/edit inputs; serial ownership, jobs and listening records stay
+in the backend. One-way latency has no value without workflow calibration.

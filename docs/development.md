@@ -209,3 +209,12 @@ Run it with local audio and common-radio cases, then full `make check`; the exac
 command and physical acceptance steps are in
 [secure voice workflow](secure_voice_workflows.md). Host-only changes reuse #64's
 matching firmware and do not qualify hardware.
+
+Voice dashboard inspection and incomplete-state checks:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_voice_inspection.py -q
+npm --prefix testbed/frontend run format:check
+```
+
+Browser steps and expected findings are in `secure_voice_workflows.md`.

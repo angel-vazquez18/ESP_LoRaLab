@@ -313,3 +313,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   full passing cases, no skips. Status Testing, no merge/flash. Starting #72 on
   its own dependent branch for shared controls, clip inspection, clock labels,
   integrity, listening and accurate incomplete states.
+
+- #72 implemented: shared reference/microphone controls, linked verified four-file
+  inspection/waveforms, local clocks, explicit unavailable one-way latency and
+  persistent clip/listening identity. Three public API cases cover successful,
+  corrupted, cancelled and incomplete files. Full 709 checks passed; final
+  file-identity/duration presentation passes the focused cases and UI build. Browser native fixtures passed
+  reference A→B/comparisons, microphone B→A, loss/stop, navigation/refresh/notes,
+  both themes and 390 px width with no overflow or console warnings/errors.
+  Screenshot saved in the session visualization directory. No physical ports,
+  firmware build, flash or qualification. Next #30 PTT remains hardware gated by
+  unobserved PCB/wiring; implement/test the explicit opt-in portable input path.
