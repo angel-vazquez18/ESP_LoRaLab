@@ -1,8 +1,246 @@
 # Consolidated implementation status
 
-Updated November 15, 2026. The host is now physical-only by user decision, replacing
+Updated November 23, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 23 — Voice stage dashboard (#72)
+
+The Voice page now controls the common reference/microphone workflow and inspects
+verified source/encoded/recovered/decoded files, waveform/identity/counts, local
+stage clocks, protected RF findings, comparisons and physical listening notes.
+One-way latency and absent stage intervals remain unavailable. Saved-file
+integrity is checked separately from historical delivery. Failed/cancelled work
+retains its errors and never claims partial receiver playback.
+
+Three new API inspection cases pass. Full `make check` passes 709 cases without
+skips plus shared checks. Final file-identity/duration presentation changes also
+pass the three inspection cases and frontend build/formatting. Browser acceptance with isolated native nodes covered both sources/
+directions, loss/stop, navigation/refresh, notes, both themes and a 390 px layout
+without page overflow. No console warnings/errors. No firmware/wire/build/flash
+change or physical qualification. See [dashboard checks](secure_voice_workflows.md).
+
+## November 23 — Shared secure voice workflows (#68)
+
+Host/API/CLI now compose reference upload or microphone capture, verified local
+codec preparation, common protected receiver-first transfer, separate receiver
+decode/play and two labelled data comparison bases (equal encoded bytes versus
+standard 64 bytes). Common radio readbacks occur after observed RF completion;
+each RF child provisions fresh source keys through the existing private owner.
+Job-created node artifacts retire after evidence retention; preexisting files are
+preserved. Child-owner release and terminal-after-cleanup ordering prevent stage
+races, and a cancelled stop caller cannot prematurely release the bench.
+
+Twelve dedicated cases include both source types/directions, unavailable speaker,
+source/RF failures and following-work recovery, API/CLI integrity/listening and
+active shutdown without resume. Full `make check` passes 706 cases without skips,
+plus lint/frontend/contracts/repository/dependency checks. Host-only;
+no firmware/wire change or flash. See [secure voice workflow](secure_voice_workflows.md)
+for reading order, comparison interpretation, commands and physical checks.
+Dedicated dashboard follows #72; physical voice qualification remains #80.
+
+## November 23 — Protected encoded message content (#64)
+
+Committed encoded artifacts now use the existing protected message/retry/replay
+path, with exact source metadata preflight, immutable borrowing, private receiver
+output and complete hash-gated publication. Received codec manifests preserve
+source ID/sample/frame metadata. Explicit decode/play remain separate; incomplete,
+tampered and hash-mismatched content cannot publish playable input. Both-direction
+lost-ACK retry delivers one complete clip. Source borrow and transfer/decode/play
+cancellation recover cleanly.
+
+Nineteen dedicated cases and final full `make check` pass: 694 total cases, no
+skips, plus lint/frontend/contracts/repository/dependency checks. Selected V4.2/
+32 KiB IDF build is 0x6e520, 57% app free; static DIRAM remains 73,841 bytes.
+Execution SHA changes to b029707…; other wire identities stay unchanged. See
+[protected voice content](protected_voice_content.md) for reading order, migration
+and physical checks. No flash/physical acceptance. Next #68 adds common host voice
+orchestration and clearly labelled matched data comparisons; #72 adds its UI.
+
+## November 23 — Local codec provenance workflow (#45)
+
+Shared host/API/CLI now retrieve and verify source, encoded and decoded artifacts
+under one bench owner, retaining node stage results/timings and linked transfer
+records. Explicit playback links require the same role/device/boot and full source
+manifest; source-capture links also require hash agreement under artifact ID reuse.
+Cancellation/failure preserves verified earlier files without round-trip success.
+Codec results stay separate from existing audio DMA result fields.
+
+Full `make check` passed 675 cases without skips, plus lint/frontend/contracts/
+repository/dependency checks. Coverage includes 13 new codec and 25 existing audio
+cases. No firmware source/build/flash changes in this issue. Matching #41
+codec firmware remains required; physical voice, RF and instrument checks remain
+open. See [workflow, reading order and physical checks](codec_provenance.md).
+
+## November 23 — Complete-artifact codec decoding (#41)
+
+Added finite fresh-state decoding into a separate hash-published recovered PCM,
+explicit final-padding trimming, typed host tracking and before/ready/after heap
+snapshots. A reproduced upstream process-global phase generator now belongs to
+each codec context through a recorded vendor patch; repeated/interleaved contexts
+are independent. Cancellation, ownership loss, timeout, allocation/final-hash
+failure and duplicate commands preserve bounded cleanup and a following valid
+clip. No implicit playback or lossless PCM comparison.
+
+Focused 152 and full 662 cases pass without skips; selected V4.2/32 KiB IDF build
+0x6def0, 57% app free. Exact codec supplement changed; other wire digests remain
+unchanged from #36. See [decoding walkthrough and checks](codec_decoding.md).
+No flash or physical codec/voice qualification. B remains on its original audio
+image; A/printed PCB revisions and a successful deployment backup remain pending.
+Next #45 adds shared API/CLI codec workflow with saved three-file provenance.
+
+## November 23 — Finite committed-PCM encoding (#36)
+
+Added a portable one-frame-per-step encoder with fresh Codec 2 state, immutable
+source borrowing, separate hash-published output, partial counts/timing and bounded
+stop/lease/disconnect/deadline/acceptance-failure cleanup. The shared serial session
+negotiates the new compact codec profile and tracks its typed terminal result;
+GUI/CLI workflow controls and decoding remain separate issues. Full/partial
+reference clips match a separate public-library encoder; 24,000 samples produce
+150 frames/1200 bytes and repeated fresh-state clips match.
+
+Final `make check` passed 625 cases without skips plus lint/frontend/contracts/
+repository/dependency checks; the focused command passes 141. Selected V4.2/32 KiB
+IDF build: 0x6d870 bytes, 57% app free, +3840 bytes above corrected #29. Artifact
+manifest compatibility changes; codec uses its own exact supplement fingerprint.
+Existing control/diagnostic/audio/RF identities remain unchanged. See
+[encoding review and physical checks](codec_encoding.md). No flash or physical
+codec/voice qualification. B remains on the original audio image after the failed
+backup attempts; A and printed PCB revisions remain unobserved.
+
+## November 23 — Pinned Codec 2 mode 3200 (#29)
+
+The main image now builds the pinned 1.2.0 codec/DSP subset and queries its actual
+160-sample/64-bit/8-byte frame format once at startup. Safe capability metadata
+reports the dependency version/revision/options and library readiness; codec
+operations remain unavailable pending #36/#41. A recorded local patch corrects
+partial-constructor leaks/asserts without changing signal processing/codebooks.
+All eleven actual allocation failures release temporary state, then permit a
+fresh query. Sources, codebook generation and LGPL/KISS FFT notices are retained.
+
+Final `make check` passed 604 cases without skips plus lint/frontend/contracts/
+repository/resource-hash checks; focused codec/control checks passed 94. The
+selected-board IDF build passed: image 0x6c970, 58% app partition free, 29,936 bytes
+above #63. Whole-image static DIRAM use is 73,841 bytes; native constructor peak
+is not target heap evidence. No flash. See [Codec 2 review and checks](codec2_dependency.md).
+The target compiler reports an 8272-byte constructor frame; the default main-task
+stack is now 32 KiB with an enabled-codec build guard. The old 8192-byte cached
+profile correctly fails; the 32 KiB V4.2 rebuild passes with unchanged image size.
+The attempted 16 MiB backup failed twice at12,288 bytes, so no image was installed;
+B reconnected at boot104 with the original audio fingerprint.
+
+Static transport/workload bounds and codec source details are now enrolled only
+in hello, keeping configured audio+RF health within 4096 bytes. Current flags,
+operative profiles, applied settings, errors and measurements remain in health.
+The direct missing-reply regression and full 604-case suite pass.
+
+Physical backend8000 now identifies B `esp-f85b1ba27744:104` running the original
+local-audio build (`a5ecf08a…`), with RF disabled. A has not appeared in USB inventory;
+printed PCB revisions remain unknown. No physical RF/codec qualification claimed.
+
+## November 23 — Protected host sessions (#63)
+
+The shared GUI/CLI backend now provisions fresh independent source keys, retires
+its private owner after setup, records allowlisted setup facts and rejects
+secret-bearing metadata at storage/export/API boundaries. Protected messages use
+the existing receiver-first/readback/cleanup path. Observed RF arrivals, node
+reported authenticated fragments, rejection stages and accepted ACKs remain
+separate. Explicit accepted-ACK events require the new execution fingerprint.
+
+Full `make check` passed 587 cases without skips, lint, production frontend,
+contract and repository checks; formatting passed. The selected-board ESP-IDF
+image built (0x65480 bytes, 60% app free), without flashing. Isolated native-C
+browser acceptance verified A→B 321 bytes with three authenticated fragments and
+three accepted ACKs, B→A 161 bytes without ACKs, exact readback and idle cleanup.
+Mobile width 390 had no horizontal overflow; the console had no warnings/errors.
+These are software fixtures, not physical RF results. The delivered-drain clock
+race and repeated schema generation during live polling were reproduced and
+fixed through public regressions. See [review and checks](protected_host_sessions.md).
+Physical #67 and board revision/installation checks remain pending.
+
+## November 21 — Radio execution contract (#3)
+
+The selected execution commands now have explicit per-command capability metadata,
+exact host compatibility checks, shared literal lifecycle/settings/timestamp
+examples and generated firmware metadata. New work requires current radio-ready
+health; declared cleanup remains available after failure. Existing control,
+diagnostic, artifact and audio digests remain unchanged. RF handlers are not yet
+advertised. See [radio execution](radio_execution.md) and
+[batch handoff](tasks/milestone_3_to_8_batch.md). No board is connected; physical
+RF acceptance remains open. `make check` passed 366 tests with no skips, lint,
+frontend build, generated-contract and repository checks.
+
+## November 21 — SX1262 initialization (#12)
+
+Added the pinned Semtech driver, bounded portable GPIO/SPI/time boundary, explicit
+V4.2/V4.3 board selection, real status-based availability and standby/front-end
+shutdown on failure. Default builds leave RF pins untouched. V4.3 plus the old
+GPIO5 microphone capture profile fails at build time. Native checks cover actual
+driver calls, absent/stuck/failing buses and repeated recovery; physical radio
+qualification remains pending. See [driver details](radio_driver.md). Full `make check` passed 373 tests without
+skips; an additional command-rejection native case passed afterward. Default and
+V4.3 ESP-IDF builds passed; V4.2 selection is also checked before publishing.
+
+## November 21 — Applied modem settings (#15)
+
+Firmware now advertises only `config.set` from the execution profile. Strict
+radio/link validation precedes all SPI effects; status-confirmed settings and a
+revision are returned and reported in health. Exact sync-word/type readback,
+invalid-request atomicity, duplicate handling, allocation-failure safety and
+failed-driver availability withdrawal are covered through the real C core. Host
+requests require fresh advertised support and typed applied results. Full
+`make check` passed 378 tests without skips; the ESP-IDF build passed. No RF hardware or radiated-power measurement was
+performed. [Details and later checks](radio_driver.md#modem-configuration-15).
+
+## November 21 — Finite transmit driver (#19)
+
+Added bounded exact-byte frame transmission, copied original/attempt references,
+node-local command/TX-done observation times, finite chip/software deadlines,
+retained one-shot terminal results and standby/front-end cleanup. Native cases
+cover completion, missing/unexpected/timeout IRQs, I/O failure, cancellation,
+consumer pressure and following transmission. Full `make check` passed 384 tests
+without skips; ESP-IDF build passed. These are driver boundaries; operator
+`run.start` is still unavailable pending RX and message integration. No board or
+RF measurement was used. See [finite transmission](radio_driver.md#finite-transmission-19).
+
+## November 21 — Finite receive driver (#20)
+
+Added finite RX windows, exact valid FIFO bytes/offsets, RX-done polling observation,
+PHY CRC/header state and fractional RSSI/SNR. Bad/oversized/empty frames remain
+failed observations; missing frames have no signal values. Timeout/cancel,
+retained-result pressure and rearm are covered; SPI failure withdraws readiness
+until reinitialization. Native radio cases passed 24 scenarios and the ESP-IDF
+build passed (0x4d630-byte image, 70% app headroom). Full `make check` passed 393
+tests without skips, lint/frontend/contracts/repository checks. No board was
+connected. Operator RF run support is still unavailable pending frame/execution
+integration. See [finite reception](radio_driver.md#finite-reception-20).
+
+## November 21 — Single-fragment DATA and finite node lifecycle (#25)
+
+Added explicit-endian header/source-vector matching and exact once-only known-data
+validation, plus real session/prepare/arm/start/stop/summary routing. The initial
+node limit is one unprotected known-data message, one fragment (at most configured
+capacity, 215-byte ceiling), within 30 seconds. Source/recovered artifacts reuse
+verified RAM storage; bad frames cannot publish a delivery. Ownership loss clears
+incomplete work and sessions. The physical serial reader accepts only negotiated,
+known-run RF observations. [Current behavior and checks](radio_execution.md#implemented-single-message-subset-25)
+explain the limits; host workflow/dashboard and physical qualification are pending.
+Full `make check` passed 408 tests with no skips; ESP-IDF built successfully.
+The original checkout's 19 preserved files still match their saved SHA-256 values.
+No ESP was connected.
+
+## November 22 — Receiver-first host radio workflow (#27)
+
+Added a shared physical backend/API/CLI for one-message known-data bring-up. It
+requires distinct compatible peers, matching applied settings and complete
+preparation, arms RX before TX, retrieves actual files and independently verifies
+bytes/hashes. Raw records, summaries, source fingerprints, linked readback traces
+and hashed exports preserve partial outcomes. Verified bytes and missing telemetry
+remain distinct. Stop/cleanup races and uncertain session-open recovery are covered;
+restart never resumes. `make check` passed 424 tests without skips, including 16
+new host-radio cases, lint/frontend/contracts/repository checks. No board access
+occurred; physical qualification and dashboard controls remain pending. See
+[operating/review guide](physical_radio_runs.md).
 
 ## Current source capabilities
 
@@ -334,3 +572,234 @@ Screenshot: Codex visualization m2-file-inspector.png. Next is #23 playback.
 - November 16 #38: node inspector now exposes shared local capture/play/stop, verified waveform/count/hash/silence/clipping findings, file playback/WAV inspection and separate listening notes/laptop preview. Busy/unsupported/previous-boot controls gate explicitly; reconnect starts with fresh health age. Full checks passed 361 tests (25 host audio), no skips, plus final frontend build/format. Real-board browser capture/play/cancel/error/recovery and actual disabled-firmware gates/history passed; audio image restored and port released. WAV endpoint bytes verified; in-app download location, light/mobile visual QA and acoustic/electrical qualification remain unconfirmed. See [UI check steps](local_audio_ui.md).
 
 - November 16 #42 partial qualification: prepared a deterministic quiet PCM/WAV and operator packet, read-only bounded evidence collection/consistency checks, attended procedure and compact source evidence manifest. Full checks passed 383 tests (22 packet checks), no skips, plus lint/frontend/contracts/repository. Actual current-image bad CRC/SHA, odd PCM and unfinished-play rejection plus valid playback/capture recovery passed on boot69; all microphone samples/raw slots remain zero. Actual automated recovery evidence is copied into the ignored packet. Operator listening/speech response, printed revision, instrument observations/limitations and physical USB recovery #21 remain pending. #42 stays open/draft; no complete hardware qualification is claimed. See [physical audio review](milestone_2_audio_review.md).
+
+This November 16 entry records the historical checkpoint, including its then-open/draft qualification status. The November 22 soldered-protoboard follow-up below records later nonzero microphone response for that assembly; it does not erase the earlier evidence or establish full qualification. Issues #42 (physical audio qualification) and #21 (physical USB recovery) remain open. Merging the preparation tooling is not hardware qualification.
+
+## November 22 — Radio dashboard (#34)
+
+Experiments → IF-02 now exposes the shared one-message radio backend with live
+preflight, start/stop, direction/modem settings, exact byte/hash findings, actual
+receiver signal, retained history and evidence downloads. Missing peers, occupied
+bench and invalid settings disable start. Full IF-02 and hardware qualification
+remain pending. Browser checks used isolated real C cores with test-only serial/
+SPI boundaries; both directions, missing observation versus verified bytes,
+shared ownership, cancellation/idle cleanup, missing peer and light/dark/mobile
+layout passed. Corrected a narrow-screen experiment grid overflow. No physical
+port was opened.
+
+`make check` passed 424 tests without skips plus lint, production frontend build,
+generated contracts and repository checks; frontend format check passed.
+
+## November 22 — Fragment planning (#28)
+
+Added bounded, allocation-free packet planning and exact 40-byte header/body
+encoding at 65,536 useful bytes/4,096 fragments, with sequence exhaustion checks
+and 199-byte protected capacity. Existing single-frame encoding uses this public
+module. Protected headers reserve a full tag; complete protected output remains
+unavailable until GCM exists. Boundary/max/rejection checks compare independent
+wire vectors and exact reconstructed bytes. Operator execution is still limited
+to one fragment pending reconstruction and scheduling. No board is connected.
+See [limits and checks](radio_fragments.md).
+
+`make check` passed 435 tests without skips, lint, frontend build, contracts and
+repository checks. The selected-board ESP-IDF build passed (0x51100-byte image,
+68% app partition free); no flash or physical serial access occurred.
+
+## November 22 — Bounded receiver reconstruction (#35)
+
+Added opaque one-message reconstruction with fixed session/roles/expected hash,
+bounded allocation/deadline, exact missing-index pages, reorder/duplicate handling
+and once-only hash-verified output. Failures/cancel scrub and release bytes while
+retaining missing indexes; old IDs cannot restart. Late conflicting packets leave
+already borrowed delivered bytes valid. Existing single-frame reception now uses
+the canonical multi-fragment parser. Multi-fragment scheduling/advertisement and
+physical RF acceptance remain pending. See [reconstruction](radio_fragments.md).
+
+`make check` passed 447 tests without skips plus lint, production frontend build,
+contract and repository checks. Selected-board ESP-IDF build passed (0x511e0-byte
+image, 68% app partition free). No physical port was opened.
+
+## November 22 — Referenced ACKs (#40)
+
+Added canonical ACK matching and a bounded receiver scheduler with fresh ACK
+sequences, one pending response, 16 exact frame-hash cache entries and a declared
+retry horizon. Wrong/unknown/stale references cannot match; replay classification
+never schedules ACK. An eligible identical retry re-ACKs without another insertion
+or delivery. Protected ACKs and full operator ACK/retry support remain unavailable
+until security/scheduler integration. See [reliability](radio_reliability.md).
+
+`make check` passed 452 tests without skips plus lint, production frontend build,
+contract and repository checks. Five ACK-focused cases also passed after aligning
+the cache test's timestamps monotonically. Selected-board ESP-IDF build passed;
+no flash or physical serial access occurred.
+
+## November 22 — Bounded stop-and-wait sender (#43)
+
+Added a real-radio-backed sender that copies immutable originals, applies
+applied-modem airtime deadlines and zero/one/two retry limits, validates exact ACK
+references and reports attempts separately from originals. Cancellation at every
+phase stops further work; exhaustion leaves the radio reusable. Source/session
+sequence high-water state rejects restarts, and both undrained TX/RX observations
+remain readable after bounded deadline cleanup. Nineteen focused public cases
+pass. Multi-fragment execution/capability wiring and physical acceptance follow
+in #47; no ESP is connected. See [reliability](radio_reliability.md).
+
+`make check` passed 471 tests without skips, lint, production frontend build,
+contract and repository checks. Selected-board ESP-IDF build passed. All 19 hashes
+from the original checkout's preserved local changes still match; no flash or
+physical port access occurred.
+
+## November 22 — Soldered protoboard audio follow-up
+
+The user connected Node A (`esp-a4cb8fa21878`, boot 25) after soldering the
+protoboard and confirmed the original GPIO map. Using its existing
+`b96c0ca-dirty` audio image (build `a5ecf08a0ce76daf85ae05f49464c549c2b094cb7a241048bd5bb5e35acf3041`),
+with no flash/reset, three-second capture/readback produced 24,000 varying
+signed-16 samples at configured 8 kHz. PCM length/hash matched independently;
+RMS was 2375.69, extrema -5865/7213, with no clipping or reported overflows.
+The user confirmed recognizable speech in laptop playback. This replaces the
+earlier all-zero microphone response finding for this assembly.
+
+The user then found an unsoldered amplifier VIN-to-3V3 connection and repaired
+it with USB disconnected. On reconnect (boot 27), the lower-level reference was
+not heard, but a three-second 2 kHz reference with source peak 24,000 was clearly
+audible. Fresh raw speech was recognizable on the laptop, yet inaudible on the
+node. A separate high-pass/boosted/soft-limited diagnostic copy produced audible
+but faint or distorted speech. This supports the local audio path; intelligible
+node playback and full audio qualification remain pending. DSP processing may
+contribute to the diagnostic copy’s distortion.
+
+Retaining four 48,000-byte artifacts reproduced two driver-start allocation
+failures: the largest internal block was 90,112 bytes versus a 96,000-byte output
+buffer. After removing three independently backed-up older test files, the same
+recording played to completion with zero underflows. This is an operational
+workaround; bounded playback buffering/level control still needs improvement.
+Raw jobs, metrics and private recordings remain ignored under the original
+checkout’s `local/audio-qualification/2026-11-22-protoboard-01`. No new RF image
+was installed and no physical RF result is claimed.
+
+## November 22 — Multi-fragment shared runs (#47)
+
+One-message radio execution now composes the bounded packet modules and supports
+up to 65,536 bytes/4,096 fragments, optional stop-and-wait with zero/one/two
+retries, explicit preparation budgets and safe terminal cleanup. The shared
+API/CLI/dashboard independently verify source/recovered bytes and reconcile DATA
+originals, attempts, accepted fragments, delivery and ACK traffic. Telemetry gaps
+leave byte verification visible but dependent accounting incomplete; missing-index
+reports require every numbered part and matching receiver totals. See
+[review commands and hardware obligations](physical_radio_runs.md).
+
+`make check` passed 501 tests without skips, lint, production frontend build,
+generated contracts and repository checks. The only warning is the existing
+Starlette/httpx deprecation. Physical RF qualification remains pending.
+
+Selected-board ESP-IDF build passed (0x53300-byte image, 68% app partition free);
+frontend formatting passed. Browser checks on isolated C serial/SPI fixtures
+verified both directions, a three-fragment ACK/retry run, exact missing index 0
+after dropped DATA, over-limit rejection, history, light/dark appearance and
+390-pixel layout without horizontal page overflow. No console errors or warnings
+were observed. The final screenshot is an ignored Codex visualization named
+`multi-fragment-radio-software-fixture.png`; it is not physical RF evidence.
+
+## November 22 — Session-security contract (#44)
+
+[Session security](security_sessions.md) now maps the selected key/nonce/header
+contract to existing APIs, inventories secret fields and future persistence
+guards, separates retry duplicates from replay, and defines cancellation/
+exhaustion/retirement behavior. Protected DATA/ACK/ECHO and final-sequence public
+examples have independent AES-GCM encryption/decryption checks, including every
+AAD byte, ciphertext/tag mutation and wrong nonce/source key. The test oracle
+is dev-only Cryptography 50.0.2; fixed public keys are not production provisioning.
+
+A new public NodeSession regression reproduced rejected key values appearing in
+validation-error text. Session argument errors now omit supplied values before
+trace/error persistence; the regression passed after the fix. This does not
+implement successful protected provisioning. Current schema/capability gates
+still accept only unprotected sessions with null keys.
+
+`make check` passed 511 tests without skips, lint, frontend build, generated
+contracts and repository checks; the existing Starlette/httpx deprecation remains.
+No firmware behavior or wire digest changed, so no new IDF build or physical
+access was needed. GCM/session lifecycle/replay/host provisioning and physical
+security qualification remain the following issues.
+
+## November 22 — Authenticated-frame primitive (#48)
+
+`security/frame_crypto` now imports volatile non-exportable AES-128 PSA handles,
+seals exact protected frames and verifies into private scratch before returning
+plaintext. Full 40-byte AAD, 12-byte header-derived nonce and 16-byte tag are
+explicit. Temporary buffers are scrubbed; failed output is unchanged with zero
+written bytes, and failed key destruction preserves ownership for recovery.
+No public test key is built into the primitive. See [frame cipher](frame_crypto.md).
+
+Ten native checks link the actual pinned IDF crypto source and cover all public
+DATA/ACK/ECHO/max-sequence vectors, every changed frame byte, wrong source key,
+valid recovery, empty ACK and buffer/key-owner bounds, plus 200 import/destroy
+cycles. The first known-answer check was observed red before implementation.
+The complete suite passed 521 tests without skips. A lint-only CMake-string
+line length was corrected; the focused cipher checks and remaining lint/
+frontend/contracts/repository stages then passed. The selected-board IDF build
+passed (0x53300 bytes, 68% app partition free), without flashing.
+
+Current sessions still accept only unprotected mode and report `security_gcm`
+false. Key/nonce ownership, replay, host provisioning and physical acceptance
+remain pending; native software crypto does not validate ESP acceleration/timing.
+
+## November 22 — Owned keys and nonce lifetime (#52)
+
+Firmware now binds separate private source key handles and monotonic sequence
+reservations to owned run/session/role state. Close, stop, lease loss, disconnect
+and controller reset retire readiness and keys; stale cached setup success cannot
+recreate old state. Final-sequence reservation/encryption cannot wrap or repeat.
+Temporary decoded keys, raw records and all owned JSON allocations are wiped,
+including parser rejection, allocation failure and unfinished input at lease loss.
+See [session lifecycle](session_key_lifecycle.md).
+
+Public-boundary regressions were observed failing before their fixes for nonce/
+setup ownership, parser deallocation and retained partial input. The focused
+lifecycle/owner/host-gate checks pass 19 cases; 160 allocation-failure positions
+and a real exhausted native key store exercise cleanup. The final `make check`
+passed 539 cases without skips, lint, frontend build, contracts and repository
+checks. The existing Starlette/httpx deprecation remains. Selected-board IDF
+build passed (0x5b830 bytes, 64% app partition free), without flashing.
+
+The execution vocabulary/digest changed with the selected protected setup shape;
+main-control/diagnostic/artifact/audio digests did not. Protected RF and ordinary
+host provisioning remain explicitly blocked; `security_gcm` stays false. Key
+byte freshness is the trusted host’s OS-CSPRNG responsibility in #63, not a claim
+that the node proves randomness or detects every cross-boot reuse. Physical
+security, resource headroom and timing remain pending. Original 19 local-file
+hashes still match the preservation snapshot.
+
+## November 22 — Checked local crypto measurements (#53)
+
+Added a bounded public-vector single-node benchmark with separately checked first
+calls, 50 warm-ups and requested timed samples for encryption, decryption, invalid
+tags and copy baseline at 16/64/160/199 bytes. Actual platform timestamps enclose
+one-shot PSA calls; setup, output checks and USB/RF stay outside. The additive
+profile, shared API/CLI, raw evidence and independent completeness assessment
+preserve partial counts and block distributions after cancellation/sample loss.
+Full `make check` passed 556 cases without skips, lint/frontend/generated-contract/
+repository checks; the selected-board IDF image is 0x641a0 bytes with 61% app free.
+No flash or physical benchmark occurred. Three batches per size per physical node
+and target acceleration/resource qualification remain pending. All 19 preserved
+files in the original checkout still match their hashes. See
+[review and physical instructions](crypto_benchmark.md).
+
+## November 22 — Protected replay and retry acceptance (#60)
+
+The owned source-key context now authenticates before a 128-frame replay window
+and commits only successful metadata/insertion policy. A 16-entry accepted-DATA
+hash cache allows fixed-horizon exact retry re-ACKs, without second insertion or
+delivery. Protected node execution retains sealed DATA for exact retries and
+creates fresh referenced ACKs using the local source owner. Structural header
+inspection never exposes ciphertext as plaintext; budgets/RX limits include tag
+overhead and 56-byte ACKs. Available selected radios now advertise node GCM
+support; shared host provisioning remains gated pending #63.
+
+Full `make check` passed 562 cases without skips, lint/frontend/contracts/repository
+checks; selected-board IDF build passed (0x65390 bytes, 60% app free). Six focused
+window/node cases include a two-C-node lost-ACK exchange with one delivery and
+independently identical recovered bytes/hash. No physical port or flash was used.
+All 19 preserved original-checkout files still match. Physical #67 and protected
+host provisioning remain open; see [review and validation](protected_replay.md).

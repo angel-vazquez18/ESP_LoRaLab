@@ -204,3 +204,16 @@ def test_previews_are_read_only_and_diagnostic_compatibility_is_preserved(tmp_pa
         assert client.get("/api/state").json() == before
         client.post("/api/bench/mode", json={"mode": "hardware"})
         assert client.post("/api/runs", json={}).status_code == 400
+
+
+def test_slow_modem_drain_retains_ack_eligibility_through_final_retry_horizon():
+    plan = KnownDataPlan.model_validate(
+        {
+            "radio": {"spreading_factor": 12},
+            "link": {"ack_mode": "stop_wait", "max_retries": 2},
+            "spec": {"message_count": 1, "message_bytes": 160},
+        }
+    )
+    budget = preview(plan)["timing"]["budget"]
+    # 7,217,152 us DATA + 2,074,272 us ACK wait + 50,000 us guard, three attempts.
+    assert budget["drain_us"] == 28_024_272

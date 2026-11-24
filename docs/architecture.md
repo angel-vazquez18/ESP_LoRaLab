@@ -76,7 +76,8 @@ main/
 ├── audio/
 │   ├── esp32_audio.c          Real bounded I2S DMA input/output
 │   ├── audio_port.h           Portable driver seam
-│   └── pcm_samples.c          Explicit sample conversion and attenuation
+│   ├── pcm_samples.c          Explicit sample conversion and attenuation
+│   └── codec_clip.c           Finite immutable artifact transforms and cleanup
 └── generated/
     ├── contract_schema.h       Main-control schema digest
     └── artifact_profile.h      Generated artifact digest and resource ceilings
@@ -95,6 +96,23 @@ qualified includes identify cross-directory dependencies. The generator and nati
 compiler fixture use these same paths. This is directory organization within one
 ESP-IDF main component, not a collection of premature shared components. Radio,
 audio and other future modules are added only when implementing real behavior.
+
+The `radio/` module now isolates SX1262 command encoding, finite initialization and
+revision-specific ESP-IDF GPIO/SPI. A pinned, licensed Semtech driver lives under
+`radio/vendor/`; generated board metadata comes from the radio-variant reference.
+Main control reports actual initialization availability without promising execution
+handlers. See [radio driver](radio_driver.md).
+
+`radio/rf_frames.c` validates fixed header/source bytes; `radio/rf_execution.c`
+composes fragment planning, reconstruction, referenced ACKs and the bounded sender
+for one finite message lifecycle and verified artifact delivery.
+Both use the real radio port and existing owner/serial writer. The physical host
+`radio_runs.py` shares bench ownership with audio/files/procedures, coordinates
+receiver-first work and separates verified bytes from evidence completeness. Its
+compact live snapshots avoid repeatedly sending raw records; detailed evidence
+and linked readback traces remain accessible separately. `radio_accounting.py`
+reconciles originals, attempts, accepted fragments, deliveries and paged missing
+evidence independently of byte readback.
 
 ## Important existing host modules
 
@@ -163,3 +181,106 @@ relevant context without treating every historical plan as current behavior.
 Versioned interface changes require coordinated producers, consumers, generated
 outputs and conformance checks. A missing firmware feature remains capability-gated;
 a simulation result never establishes hardware support.
+
+`radio/rf_fragments` owns bounded message planning and canonical indexed DATA
+encoding; `rf_frames` retains source generation and the initial single-fragment
+acceptance adapter. Protected header generation reserves tag capacity without
+claiming encryption. See [fragment behavior](radio_fragments.md).
+
+`radio/rf_reassembly` owns one bounded peer/session message buffer, missing-index
+bitmap and hash-gated once-only delivery. Allocation/hash are platform boundaries;
+wire parser validation precedes insertion. Scheduler integration is separate.
+
+`radio/rf_ack` owns referenced ACK bytes, matching and receiver turnaround/cache
+state. Receive validation/replay classification precedes scheduling; DATA insertion
+and delivery remain in reconstruction. Packet modules share the allocation/hash
+platform boundary declared as `rf_packet_port`.
+
+`radio/rf_sender` owns one immutable outstanding DATA frame, airtime-aware
+stop-and-wait states, bounded attempts and retained radio observations. It drives
+the existing real radio API; execution owns stop/lease/shutdown integration and
+message-level aggregation. ACK observations never inflate original DATA counts.
+
+The session-security contract maps key-bearing fields and provisioning
+persistence boundaries in [security_sessions.md](security_sessions.md). Firmware
+composes owned private setup, protected RF and replay checks. Shared-host setup
+uses a private ephemeral owner and allowlisted callback records; rejection errors
+omit input values before trace/error persistence. Public protected-frame fixtures are
+independently checked with a dev-only cryptographic oracle, separate from
+firmware GCM and physical security qualification.
+
+`security/frame_crypto` imports a volatile PSA key handle and provides bounded
+protected-frame seal/open/destroy. Caller output is exposed only after verified
+authentication; temporary buffers are scrubbed. The actual pinned crypto source
+is used in native checks, with a separate independent vector oracle. Session
+key/sequence/replay orchestration remains the owner’s responsibility; see
+[frame cipher](frame_crypto.md) and the following integration issues.
+
+`security/session_crypto` binds separate private TX/RX handles and reserved
+monotonic source sequences to a session/role. Execution owns its setup/retirement;
+control owns secret setup-cache invalidation and raw-input cleanup.
+`protocol/secure_json` installs startup-only cJSON allocation hooks that wipe
+owned blocks even on parser rejection or failed allocation. Native core and
+primitive checks share the pinned PSA builder in `tests/native_crypto.py`.
+The shared host rejects missing GCM capability before trace callbacks; see
+[session key lifetime and migration](session_key_lifecycle.md).
+
+`security/crypto_benchmark.c` owns the separate public-vector local diagnostic,
+fixed working buffers, actual PSA call timestamps and bounded pending sample page.
+Control owns its serial operation/cancellation lifecycle. `crypto_benchmark_v2.py`
+owns the additive schema and independent raw-page assessment; Host/API/CLI use
+that same path and the existing observation store. This never borrows an ordinary
+session key or radio path. See [measurement details](crypto_benchmark.md).
+
+The private session owner now also contains the 128-frame replay bitmap and
+16 accepted-DATA hashes. `rf_secure_receive` authenticates before a trusted
+metadata/insertion callback and commits only its success. Protected radio execution
+uses this boundary for DATA and referenced ACKs; raw header inspection never
+exposes ciphertext as plaintext. The sender retains a single sealed DATA frame
+for exact retries, while receivers seal new ACKs with fresh local sequences.
+See [protected replay](protected_replay.md). #63 implements safe host provisioning
+in `session_keys.py`; `radio_security.py` classifies retained RF/authentication
+stages without inferring rejection from silence. Persistence/export/API guards
+independently reject secret-bearing metadata. Immutable schema digest caches keep
+state polling responsive without caching live health/capability snapshots. See
+[protected host sessions](protected_host_sessions.md).
+
+`firmware/lora_node/components/loralab_codec2` is the concrete pinned dependency
+component shared with native builds. It owns mode selection, retained upstream
+resources/notices and the frame-dimension query. Portable control caches the
+startup query for metadata; the ESP32 platform selects the configured mode. It
+now exposes finite encoding/decoding through `audio/codec_clip`; a recorded local
+patch keeps phase randomisation within each context.
+See [Codec 2](codec2_dependency.md) and [clip encoding](codec_encoding.md).
+
+See [decoding](codec_decoding.md) for typed PCM publication and stage memory.
+The codec clip worker owns fresh state, one-frame slices and derived artifact
+publication; control composes its generic operation/ownership lifecycle. The
+`codec_io_v1` supplement separates enrolled immutable codec facts from compact
+current availability. `NodeSession` gates the profile/freshness and tracks results;
+operator host/UI orchestration follows its own issues.
+
+`NodeAudio` now also owns the local codec three-file job. It reuses the existing
+transfer service and bench lock, stores separate codec child results and never
+starts playback implicitly. Same-content capture/playback references preserve
+provenance under node artifact ID reuse. See [codec workflow](codec_provenance.md).
+
+Encoded voice now uses `rf_execution` as ordinary authenticated message content.
+The sender borrows an existing committed codec artifact; the receiver publishes a
+private recovered encoded artifact only after complete authenticated/hash-verified
+reconstruction. Existing explicit decode/play operations remain separate. See
+[protected content](protected_voice_content.md) for boundaries and compatibility.
+
+`voice_runs.py` owns a finite secure clip composition over existing `NodeAudio`,
+`ArtifactTransfers` and `RadioRuns`; it does not duplicate session key policy or
+radio scheduling. Common radio requests now accept committed encoded sources.
+Reference/microphone preparation, receiver decode/play, explicitly based data
+comparisons and job-owned artifact retirement share the host bench lock. Compact
+voice snapshots reference full child evidence. See
+[secure voice workflow](secure_voice_workflows.md).
+
+The Voice page uses `VoiceRuns.tsx` for common backend controls and saved clip
+inspection. `VoiceRuns.inspect` composes linked records with current verified
+file hashes/waveforms and boot-qualified local timings. Browser state retains
+only selection/edit inputs; serial ownership, jobs and listening records stay
+in the backend. One-way latency has no value without workflow calibration.

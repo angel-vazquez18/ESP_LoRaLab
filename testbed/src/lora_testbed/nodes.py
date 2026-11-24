@@ -7,10 +7,26 @@ from time import monotonic
 from uuid import uuid4
 
 import serial
+from pydantic import ValidationError
 from serial.tools.list_ports import comports
 
-from . import artifact_contract_v2, audio_contract_v2, control_v2, v2
-from .adapters import health_freshness, require_artifact_compatible, require_control_compatible
+from . import (
+    artifact_contract_v2,
+    audio_contract_v2,
+    codec_contract_v2,
+    control_v2,
+    crypto_benchmark_v2,
+    physical_wire_v2,
+    run_protocol_v2,
+    v2,
+)
+from .adapters import (
+    health_freshness,
+    require_artifact_compatible,
+    require_control_compatible,
+    require_execution_compatible,
+)
+from .session_keys import require_public_metadata, setup_facts, setup_reply
 
 
 def discover_ports() -> list[dict]:
@@ -60,6 +76,8 @@ class NodeSession:
         self.tasks = []
         self.pending = {}
         self.command_lock = asyncio.Lock()
+        self.rf_run_id = None
+        self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
         self.active_operation = None
         self.operation_results = deque(maxlen=16)
@@ -98,6 +116,28 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def codec_availability(self):
+        commands, blocked, limits = [], {}, None
+        for name in codec_contract_v2.ARGUMENTS:
+            try:
+                if (
+                    not self.connected
+                    or self.connection_state != "connected"
+                    or self.last_health is None
+                    or health_freshness(monotonic() - self.last_health) in ("stale", "unresponsive")
+                    or self.wire_profile != "node_control"
+                ):
+                    raise ValueError("Connect a node with fresh codec health")
+                limits = codec_contract_v2.require_capability(
+                    self.identity.capabilities if self.identity else None,
+                    self.health.capability_availability if self.health else None,
+                    name,
+                ).model_dump()
+                commands.append(name)
+            except ValueError as exc:
+                blocked[name] = str(exc)
+        return {"commands": commands, "blocked": blocked, "limits": limits}
+
     def artifact_availability(self):
         commands, blocked, limits = [], {}, None
         for name in artifact_contract_v2.ARGUMENTS:
@@ -122,6 +162,7 @@ class NodeSession:
             "wire_profile": self.wire_profile,
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
+            "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,
@@ -147,6 +188,8 @@ class NodeSession:
         self.last_health = None
         self.event_seq = self.event_gaps = self.framing_errors = 0
         self.startup_records = 0
+        self.rf_run_id = None
+        self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
         self.active_operation = None
         self.operation_results.clear()
@@ -187,10 +230,62 @@ class NodeSession:
             raise asyncio.CancelledError
         return written
 
-    async def request(self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None):
+    async def request(
+        self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None, key_set_id=None
+    ):
         async with self.command_lock:
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
+            execution_command = name in run_protocol_v2.EXECUTION_COMMANDS
+            if execution_command:
+                if self.identity is None or self.health is None:
+                    raise ValueError("MISSING_CAPABILITY: Execution identity/health unavailable")
+                if name not in run_protocol_v2.CLEANUP_COMMANDS and (
+                    self.last_health is None or monotonic() - self.last_health > 3
+                ):
+                    raise ValueError("MISSING_CAPABILITY: Execution needs fresh health")
+                require_execution_compatible(
+                    self.identity.model_dump(),
+                    name,
+                    self.health.capability_availability.model_dump(),
+                )
+                try:
+                    args = run_protocol_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+                except ValidationError:
+                    if name == "session.open":
+                        # Pydantic errors can echo rejected key values.
+                        raise ValueError(
+                            "INVALID_ARGUMENT: Invalid session.open arguments"
+                        ) from None
+                    raise
+                if name == "session.open" and args["security"] != "none":
+                    if not all(
+                        caps.security_gcm
+                        for caps in (
+                            self.identity.capabilities,
+                            self.health.capability_availability,
+                        )
+                    ):
+                        raise ValueError(
+                            "MISSING_CAPABILITY: Protected node support is unavailable"
+                        )
+                    key_set_id = key_set_id or str(uuid4())
+                    try:
+                        from uuid import UUID
+
+                        if str(UUID(key_set_id)) != key_set_id:
+                            raise ValueError()
+                    except (ValueError, TypeError, AttributeError):
+                        raise ValueError("Invalid key set identity") from None
+                if name.startswith(("run.", "session.")) and run_id is None:
+                    raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
+            if name in codec_contract_v2.ARGUMENTS:
+                availability = self.codec_availability()
+                if name not in availability["commands"]:
+                    raise ValueError(
+                        availability["blocked"].get(name, "Codec command is unavailable")
+                    )
+                args = codec_contract_v2.ARGUMENTS[name].model_validate(args).model_dump()
             artifact_limits = None
             if name in artifact_contract_v2.ARGUMENTS:
                 if self.identity is None:
@@ -217,6 +312,16 @@ class NodeSession:
                     self.identity.capabilities, self.health.capability_availability, name
                 )
                 args = audio_contract_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
+            if name == "diag.run" and (args or {}).get("kind") == "crypto_benchmark":
+                if self.wire_profile != "node_control" or not self.identity or not self.health:
+                    raise ValueError("Matching main-node benchmark identity and health required")
+                crypto_benchmark_v2.require_capability(
+                    self.identity.capabilities, self.health.capability_availability
+                )
+                args = crypto_benchmark_v2.Arguments.model_validate(args).model_dump()
+            protected_setup = (
+                name == "session.open" and (args or {}).get("security") == "aes128_gcm"
+            )
             self.sequence += 1
             command = v2.Command(
                 command_id=str(uuid4()),
@@ -227,25 +332,61 @@ class NodeSession:
                 run_id=run_id,
                 args=args or {},
             )
+            if execution_command:
+                run_protocol_v2.Command.model_validate(command.model_dump())
+            if name == "session.open":
+                if self.rf_run_id and self.rf_run_id != run_id:
+                    raise ValueError("Close the existing RF session before opening another")
+                # Track attempted ownership before writing; a lost reply may still mean open.
+                self.rf_run_id = run_id
+                self.rf_runs.append(run_id)
             future = asyncio.get_running_loop().create_future()
             self.pending[command.command_id] = (command.command_seq, future)
             try:
                 for attempt in range(retries + 1):
                     wire = v2.encode(command)
                     if on_record:
-                        on_record({"direction": "host_to_node", "record": command.model_dump()})
-                    written = await self.write_wire(wire)
+                        snapshot = (
+                            setup_facts(command, self.role, key_set_id)
+                            if protected_setup
+                            else command.model_dump()
+                        )
+                        require_public_metadata(snapshot)
+                        on_record({"direction": "host_to_node", "record": snapshot})
+                    try:
+                        written = await self.write_wire(wire)
+                    except Exception:
+                        if protected_setup:
+                            raise ValueError(
+                                "Protected session write failed; cleanup is required"
+                            ) from None
+                        raise
                     if written != len(wire):
                         raise ValueError("Incomplete serial write")
                     try:
                         reply = await asyncio.wait_for(asyncio.shield(future), timeout)
+                        safe_reply = (
+                            setup_reply(command, reply, self.role, key_set_id)
+                            if protected_setup
+                            else reply.model_dump()
+                        )
                         if on_record:
-                            on_record({"direction": "node_to_host", "record": reply.model_dump()})
+                            require_public_metadata(safe_reply)
+                            on_record({"direction": "node_to_host", "record": safe_reply})
                         if not reply.ok:
+                            if protected_setup:
+                                raise ValueError(
+                                    f"{safe_reply['error']['code']}: "
+                                    "Protected session setup rejected"
+                                ) from None
                             raise ValueError(f"{reply.error.code}: {reply.error.message}")
                         if name == "status.get":
                             self.accept_health(reply.result)
-                        if name == "diag.run" or name in audio_contract_v2.ARGUMENTS:
+                        if (
+                            name == "diag.run"
+                            or name in audio_contract_v2.ARGUMENTS
+                            or name in codec_contract_v2.ARGUMENTS
+                        ):
                             operation = control_v2.AcceptedOperation.model_validate(
                                 reply.result
                             ).model_dump()
@@ -263,13 +404,27 @@ class NodeSession:
                             return artifact_contract_v2.validate_result(
                                 name, command.args, reply.result, artifact_limits
                             ).model_dump()
+                        if name == "session.close":
+                            self.rf_run_id = None
+                        if execution_command:
+                            return (
+                                run_protocol_v2.RESULTS[name]
+                                .model_validate(reply.result)
+                                .model_dump()
+                            )
                         return reply.result
                     except TimeoutError:
                         if attempt == retries:
                             raise ValueError(
                                 f"No v2 reply to {name}; compatible firmware is required"
                             ) from None
-                        if name in ("hello", "status.get", "artifact.list", "artifact.get"):
+                        if name in (
+                            "hello",
+                            "status.get",
+                            "run.summary",
+                            "artifact.list",
+                            "artifact.get",
+                        ):
                             self.pending.pop(command.command_id, None)
                             future.cancel()
                             self.sequence += 1
@@ -284,7 +439,7 @@ class NodeSession:
                     future.cancel()
 
     async def read_loop(self):
-        decoder = v2.Decoder(adapter=control_v2.ADAPTER)
+        decoder = v2.Decoder(adapter=physical_wire_v2.ADAPTER)
         try:
             while self.connected:
                 data = await asyncio.to_thread(self.serial.read, 1024)
@@ -321,6 +476,22 @@ class NodeSession:
                         if entry and entry[0] == record.command_seq and not entry[1].done():
                             entry[1].set_result(record)
                     elif self.identity:
+                        if record.name == "crypto.benchmark":
+                            if self.wire_profile != "node_control" or not self.health:
+                                raise ValueError("Benchmark event outside negotiated main profile")
+                            crypto_benchmark_v2.require_capability(
+                                self.identity.capabilities, self.health.capability_availability
+                            )
+                        elif record.name not in ("health", "diagnostic", "operation.result"):
+                            require_execution_compatible(
+                                self.identity.model_dump(),
+                                "run.summary",
+                                self.health.capability_availability.model_dump()
+                                if self.health
+                                else None,
+                            )
+                            if record.run_id not in self.rf_runs:
+                                raise ValueError("RF event belongs to another run")
                         if (
                             record.name == "operation.result"
                             and self.wire_profile != "node_control"
@@ -340,7 +511,7 @@ class NodeSession:
                                 }
                             )
                         elif record.name == "operation.result":
-                            self.operation_results.append(record.data)
+                            self.operation_results.append(record.model_dump()["data"])
                             if (
                                 self.active_operation
                                 and self.active_operation["operation_id"]
@@ -379,6 +550,19 @@ class NodeSession:
 
     async def close(self, release=True):
         if release and self.connected and self.identity:
+            if self.rf_run_id:
+                with suppress(OSError, ValueError):
+                    await self.request(
+                        "run.stop",
+                        {"reason": "host_shutdown"},
+                        run_id=self.rf_run_id,
+                        timeout=0.5,
+                        retries=0,
+                    )
+                with suppress(OSError, ValueError):
+                    await self.request(
+                        "session.close", run_id=self.rf_run_id, timeout=0.5, retries=0
+                    )
             if self.active_operation:
                 with suppress(OSError, ValueError):
                     await self.request(

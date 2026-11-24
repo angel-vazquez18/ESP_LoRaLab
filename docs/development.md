@@ -132,3 +132,89 @@ Expected at #26: 23 focused cases, no skips. Use `make check` for the full suite
 See [file workflows](artifact_workflows.md) for API/CLI commands, expected hashes,
 cancellation and physical evidence boundaries. The node firmware is unchanged
 from #22, so this host-only slice needs no additional flash/build.
+
+## Pinned frame-crypto checks
+
+`testbed/tests/test_frame_crypto_native.py` requires CMake, a host C compiler
+and the exact ESP-IDF v6.0.2 crypto sources. Set `IDF_PATH` if the SDK is outside
+`~/.espressif/v6.0.2/esp-idf`. The fixture verifies the pinned clean crypto commit,
+compiles the actual PSA source into ignored local cache and never fetches code
+or opens a physical port. Missing/wrong sources fail rather than skip. See
+[frame cipher](frame_crypto.md) for source versions, native-profile limitations
+and focused commands.
+
+The main-control native fixture now links that same pinned crypto build, so its
+checks also need CMake and `IDF_PATH`/the default SDK source location. The shared
+helper is `testbed/tests/native_crypto.py`. Session lifecycle/erasure checks and
+the execution-schema migration are documented in
+[session key lifetime](session_key_lifecycle.md).
+
+For #53's single-node crypto measurement, run
+`uv run --project testbed pytest testbed/tests/test_crypto_benchmark_native.py -q`.
+The real pinned PSA provider and C serial/API seams check four sizes, exact
+first/warm-up/timed counts, partial evidence, timer failures and cleanup. No physical
+port is opened. [Physical repetition and evidence commands](crypto_benchmark.md)
+remain later checks, not target timing results from a native fixture.
+
+For #60, run the two native files listed in [protected replay](protected_replay.md).
+They check real PSA/C node acceptance and a paired SPI/IRQ fixture with a lost
+protected ACK. Missing/old/bad-tag frames cannot enter application delivery;
+protected fixture results do not qualify physical RF.
+
+## Protected sessions (#63)
+
+The same receiver-first backend now supports AES-128-GCM with fresh per-source/run
+keys, safe setup evidence, verified readback and separate RF/authentication/ACK
+observations. Follow [protected host sessions](protected_host_sessions.md) for the
+31-case focused command, matching execution fingerprint, GUI/CLI review and
+remaining physical checks. Keys are never operator inputs or saved evidence.
+
+## Pinned speech codec (#29)
+
+Run `uv run --project testbed pytest testbed/tests/test_codec2_dependency.py -q`
+for real library geometry/mode exclusion, public metadata and partial-constructor
+cleanup. `make check` also verifies retained dependency hashes without downloading
+sources. The native fixture requires CMake/a host compiler; missing prerequisites
+fail instead of substituting a codec. [Reimport, build/size and review notes](codec2_dependency.md)
+record the target impact and distinguish library readiness from codec operations.
+
+Codec-enabled target builds require a 32 KiB main-task stack. Existing cached
+configurations fail clearly below that budget; update the active `SDKCONFIG` via
+`idf.py -C firmware/lora_node menuconfig`. See the measured
+[constructor stack requirement](codec2_dependency.md#required-task-stack).
+
+For #36, run the focused four-file command in [finite encoding](codec_encoding.md).
+It checks production C output against a separate public-library reference, exact
+frame/sample/hash relationships, interruption/allocation/publication cleanup and
+current host gates. Match both artifact and codec fingerprints after rebuilding;
+keep historical records unchanged. Encoding needs no microphone/speaker pins.
+
+Finite codec decoding and its target-memory limitations are covered by
+[the decoder walkthrough](codec_decoding.md). Run the focused command there before
+full checks when changing the worker, codec supplement or cleanup.
+
+For local codec orchestration/API/CLI changes, run
+`uv run --project testbed pytest testbed/tests/test_local_codec_host.py testbed/tests/test_node_audio_host.py -q`
+and `make check`. See [codec provenance](codec_provenance.md) for expected results
+and physical acceptance. Host-only changes require no flash.
+
+Protected encoded transport has dedicated native coverage in
+`testbed/tests/test_protected_voice_native.py`. Run it, main control checks, full
+`make check` and the affected IDF target. See
+[protected voice checks](protected_voice_content.md); fixtures do not qualify RF
+or audible output.
+
+Secure voice composition checks are in `testbed/tests/test_voice_workflows.py`.
+Run it with local audio and common-radio cases, then full `make check`; the exact
+command and physical acceptance steps are in
+[secure voice workflow](secure_voice_workflows.md). Host-only changes reuse #64's
+matching firmware and do not qualify hardware.
+
+Voice dashboard inspection and incomplete-state checks:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_voice_inspection.py -q
+npm --prefix testbed/frontend run format:check
+```
+
+Browser steps and expected findings are in `secure_voice_workflows.md`.

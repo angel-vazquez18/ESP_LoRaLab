@@ -1,13 +1,16 @@
 """Generate shared schemas and diagnostic metadata, or detect drift without writes."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
 from lora_testbed import (
     artifact_contract_v2,
     audio_contract_v2,
+    codec_contract_v2,
     control_v2,
+    crypto_benchmark_v2,
     rf_events_v2,
     run_protocol_v2,
 )
@@ -24,7 +27,64 @@ def outputs(root: Path) -> dict[Path, str]:
     )
     pins = board["amplifier"]["gpio"]
     mic = board["microphone"]["gpio"]
+    radio_file = root / "hardware/boards/heltec_v4_radio_variants.json"
+    radio = json.loads(radio_file.read_text())
+    radio_header = "#pragma once\n"
+    radio_header += f'#define RADIO_BOARD_REFERENCE_SHA256 "{hashlib.sha256(radio_file.read_bytes()).hexdigest()}"\n'
+    for name, gpio in radio["common_gpio"].items():
+        radio_header += f"#define RADIO_GPIO_{name.upper()} {gpio}\n"
+    radio_header += f"#define RADIO_GPIO_V42_MODE {radio['variants']['heltec_v4_2_gc1109']['fem_mode_gpio']}\n"
+    radio_header += f"#define RADIO_GPIO_V43_MODE {radio['variants']['heltec_v4_3_kct8103l']['fem_mode_gpio']}\n"
+    vector_file = root / "contracts/v2/crypto_benchmark_vectors.json"
+    vectors = json.loads(vector_file.read_text())
+
+    def array(value):
+        return ",".join(f"0x{byte:02x}" for byte in bytes.fromhex(value))
+
+    vector_header = "#pragma once\n#include <stdint.h>\n"
+    vector_header += "typedef struct { unsigned bytes; uint8_t header[40], plain[199], protected_bytes[215]; } crypto_benchmark_vector;\n"
+    vector_header += (
+        "static const uint8_t crypto_benchmark_public_key[16] = {"
+        + array(vectors["key_hex"])
+        + "};\n"
+    )
+    vector_header += (
+        "static const crypto_benchmark_vector crypto_benchmark_vectors[4] = {\n"
+    )
+    for v in vectors["vectors"]:
+        vector_header += (
+            "{"
+            + str(v["payload_bytes"])
+            + ",{"
+            + array(v["header_hex"])
+            + "},{"
+            + array(v["plaintext_hex"])
+            + "},{"
+            + array(v["protected_hex"])
+            + "}},\n"
+        )
+    vector_header += "};\n"
     return {
+        root / "contracts/v2/codec_io.schema.json": document(
+            codec_contract_v2.schema()
+        ),
+        root / "firmware/lora_node/main/generated/codec_profile.h": (
+            "#pragma once\n"
+            f'#define CODEC_PROFILE "{codec_contract_v2.PROFILE}"\n'
+            f'#define CODEC_SCHEMA_SHA256 "{codec_contract_v2.schema_digest()}"\n'
+        ),
+        root / "contracts/v2/crypto_benchmark.schema.json": document(
+            crypto_benchmark_v2.schema()
+        ),
+        root
+        / "firmware/lora_node/main/generated/crypto_benchmark_vectors.h": vector_header,
+        root / "firmware/lora_node/main/generated/crypto_benchmark_profile.h": (
+            "#pragma once\n"
+            f'#define CRYPTO_BENCH_PROFILE "{crypto_benchmark_v2.PROFILE}"\n'
+            f'#define CRYPTO_BENCH_SCHEMA_SHA256 "{crypto_benchmark_v2.schema_digest()}"\n'
+            f'#define CRYPTO_BENCH_VECTOR_SHA256 "{hashlib.sha256(vector_file.read_bytes()).hexdigest()}"\n'
+        ),
+        root / "firmware/lora_node/main/generated/radio_board.h": radio_header,
         root / "contracts/v2/audio.schema.json": document(audio_contract_v2.schema()),
         root / "firmware/lora_node/main/generated/audio_profile.h": (
             "#pragma once\n"
@@ -67,6 +127,11 @@ def outputs(root: Path) -> dict[Path, str]:
             rf_events_v2.schema()
         ),
         root / "contracts/v2/execution.schema.json": document(run_protocol_v2.schema()),
+        root / "firmware/lora_node/main/generated/execution_profile.h": (
+            "#pragma once\n"
+            f'#define EXECUTION_PROFILE "{run_protocol_v2.EXECUTION_PROFILE}"\n'
+            f'#define EXECUTION_SCHEMA_SHA256 "{run_protocol_v2.schema_digest()}"\n'
+        ),
     }
 
 

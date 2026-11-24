@@ -135,6 +135,31 @@ def memory_probe(
 
 
 @app.command()
+def crypto_benchmark(
+    role: str,
+    iterations: Annotated[int, typer.Option(min=1, max=10000)] = 1000,
+    payload_bytes: int = 160,
+):
+    """Start a public-vector local benchmark, with USB/RF outside each timed call."""
+    if role.upper() not in ("A", "B") or payload_bytes not in (16, 64, 160, 199):
+        raise typer.BadParameter("Role must be A/B; payload must be 16, 64, 160 or 199")
+    request(
+        f"/api/nodes/{role.upper()}/crypto-benchmark",
+        {"iterations": iterations, "payload_bytes": payload_bytes},
+    )
+
+
+@app.command()
+def crypto_benchmark_result(role: str, operation_id: str, records: bool = False):
+    """Read retained local measurements; incomplete evidence has no distribution."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(
+        f"/api/nodes/{role.upper()}/crypto-benchmark/{operation_id}?include_records={str(records).lower()}"
+    )
+
+
+@app.command()
 def operation_stop(role: str, operation_id: str):
     """Cancel the selected node operation without disconnecting the node."""
     if role.upper() not in ("A", "B"):
@@ -227,6 +252,43 @@ def audio_retrieve(role: str, artifact_id: str):
 
 
 @app.command()
+def audio_codec(role: str, artifact_id: str):
+    """Encode/decode one committed PCM file and retain all three verified files."""
+    request(f"/api/nodes/{role.upper()}/audio/codec", {"artifact_id": artifact_id})
+
+
+@app.command()
+def audio_link_playback(identifier: str, operation_id: str, stage: str = "decoded"):
+    """Link a completed source/decoded playback and its listening observations."""
+    if stage not in ("source", "decoded"):
+        raise typer.BadParameter("Use source or decoded")
+    request(
+        f"/api/audio/operations/{identifier}/playback",
+        {"operation_id": operation_id, "stage": stage},
+    )
+
+
+@app.command()
+def audio_codec_save(identifier: str, stage: str, output: Path, wav: bool = False):
+    """Save a verified codec stage; optional WAV wrapping applies only to PCM."""
+    if stage not in ("source", "encoded", "decoded") or (wav and stage == "encoded"):
+        raise typer.BadParameter("Choose source/encoded/decoded; WAV needs source or decoded")
+    try:
+        suffix = "?as_wav=true" if wav else ""
+        with urlopen(
+            BASE_URL + f"/api/audio/operations/{identifier}/artifacts/{stage}{suffix}", timeout=20
+        ) as response:
+            data = response.read(48045)
+        if not data or len(data) > 48044:
+            raise ValueError("Unexpected codec artifact size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+
+
+@app.command()
 def audio_status(identifier: str):
     """Inspect audio progress, errors, gain and retained signal findings."""
     request(f"/api/audio/operations/{identifier}")
@@ -254,6 +316,151 @@ def audio_save(identifier: str, output: Path):
             data = response.read(48045)
         if len(data) > 48044:
             raise ValueError("Unexpected WAV size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+
+
+@app.command()
+def voice_start(
+    source: str = "microphone",
+    reference_id: str | None = None,
+    direction: str = "A_TO_B",
+    samples: Annotated[int, typer.Option(min=1, max=24000)] = 24000,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 30000,
+    comparisons: bool = True,
+    check: bool = False,
+    sf: Annotated[int, typer.Option(min=7, max=12)] = 7,
+    bandwidth: int = 125000,
+    coding_rate: int = 5,
+    power: Annotated[int, typer.Option(min=2, max=20)] = 2,
+    ack: str = "none",
+    retries: int | None = None,
+    guard_us: int = 50000,
+):
+    """Run a protected clip, or check readiness, with labelled data comparisons."""
+    if source not in ("reference", "microphone"):
+        raise typer.BadParameter("Use reference or microphone")
+    if (source == "reference") != (reference_id is not None):
+        raise typer.BadParameter("Select a reference ID only for a reference source")
+    link = {"ack_mode": ack, "guard_us": guard_us}
+    if retries is not None:
+        link["max_retries"] = retries
+    request(
+        "/api/voice/preflight" if check else "/api/voice/runs",
+        {
+            "source": source,
+            "reference_id": reference_id,
+            "direction": direction,
+            "sample_count": samples,
+            "timeout_ms": timeout_ms,
+            "include_comparisons": comparisons,
+            "security": "aes128_gcm",
+            "link": link,
+            "radio": {
+                "spreading_factor": sf,
+                "bandwidth_hz": bandwidth,
+                "coding_rate_denominator": coding_rate,
+                "tx_power_dbm": power,
+            },
+        },
+    )
+
+
+@app.command()
+def voice_status(identifier: str):
+    """Inspect voice stages, verified files, comparison bases and observations."""
+    request(f"/api/voice/runs/{identifier}")
+
+
+@app.command()
+def voice_stop(identifier: str):
+    """Stop the whole voice job and retain bounded child cleanup."""
+    request(f"/api/voice/runs/{identifier}/stop", {})
+
+
+@app.command()
+def voice_listening(identifier: str, heard: str = "not_checked", notes: str = ""):
+    """Record receiver listening separately from delivery and driver completion."""
+    if heard not in ("not_checked", "heard", "not_heard"):
+        raise typer.BadParameter("Use not_checked, heard or not_heard")
+    request(f"/api/voice/runs/{identifier}/listening", {"heard": heard, "notes": notes})
+
+
+@app.command()
+def voice_save(identifier: str, kind: str, output: Path, wav: bool = False):
+    """Save a verified voice stage without overwriting an existing target."""
+    if kind not in ("source", "encoded", "recovered", "decoded") or (
+        wav and kind not in ("source", "decoded")
+    ):
+        raise typer.BadParameter(
+            "Choose source/encoded/recovered/decoded; WAV needs source or decoded"
+        )
+    try:
+        suffix = "?as_wav=true" if wav else ""
+        with urlopen(
+            BASE_URL + f"/api/voice/runs/{identifier}/artifacts/{kind}{suffix}", timeout=20
+        ) as response:
+            data = response.read(48045)
+        if not data or len(data) > 48044:
+            raise ValueError("Unexpected voice artifact size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+
+
+@app.command()
+def radio_start(
+    direction: str = "A_TO_B",
+    security: str = "none",
+    message_bytes: Annotated[int, typer.Option(min=1, max=65536)] = 64,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 10000,
+    config: Path | None = None,
+    preview: bool = False,
+):
+    """Run one known-data message using the shared physical backend."""
+    try:
+        body = (
+            json.loads(config.read_text())
+            if config
+            else {
+                "direction": direction.upper(),
+                "security": security,
+                "message_bytes": message_bytes,
+                "timeout_ms": timeout_ms,
+            }
+        )
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/radio/preflight" if preview else "/api/radio/runs", body)
+
+
+@app.command()
+def radio_status(identifier: str | None = None):
+    """Show active/saved physical bring-up and its byte/evidence findings."""
+    request("/api/radio/runs" + (f"/{identifier}" if identifier else ""))
+
+
+@app.command()
+def radio_stop(identifier: str):
+    """Stop the finite radio job and confirm both node sessions close."""
+    request(f"/api/radio/runs/{identifier}/stop", {})
+
+
+@app.command()
+def radio_export(identifier: str, output: Path):
+    """Save the hashed radio evidence bundle without overwriting a file."""
+    try:
+        with urlopen(BASE_URL + f"/api/radio/runs/{identifier}/export", timeout=20) as response:
+            data = response.read(128 * 1024 * 1024 + 1)
+        if len(data) > 128 * 1024 * 1024:
+            raise ValueError("Radio export exceeds 128 MiB limit")
         with output.open("xb") as target:
             target.write(data)
     except (HTTPError, URLError, OSError, ValueError) as exc:

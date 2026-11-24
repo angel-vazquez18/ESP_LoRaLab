@@ -175,6 +175,8 @@ def airtime_us(radio: Radio, frame_bytes: int) -> int:
 def preview(plan: KnownDataPlan) -> dict:
     """Prepare bounded calculations without connecting nodes or creating a run."""
     spec, radio, link = plan.spec, plan.radio, plan.link
+    encoded = spec.source == "encoded_source"
+    codec_allowance = 5000000 if encoded else 0
     tag_bytes = 16 if spec.security == "aes128_gcm" else 0
     fragments = ceil_div(spec.message_bytes, link.fragment_payload_bytes)
     last_bytes = spec.message_bytes - (fragments - 1) * link.fragment_payload_bytes
@@ -189,9 +191,15 @@ def preview(plan: KnownDataPlan) -> dict:
     attempts = packets * attempts_per_packet
     ack_airtime = airtime_us(radio, 40 + tag_bytes) if reliable else 0
     ack_timeout = link.ack_turnaround_us + ack_airtime + link.ack_margin_us if reliable else 0
-    drain = max(2_000_000, ack_timeout + link.guard_us)
+    # Keep the receiver available for the final original's complete retry horizon.
+    retry_horizon = (
+        (max(full_airtime, last_airtime) + ack_timeout + link.guard_us) * attempts_per_packet
+        if reliable
+        else 0
+    )
+    drain = max(2_000_000, retry_horizon)
     # Provisional contract allowances; not measured CPU or hardware performance.
-    processing = 10000 * (spec.message_count + attempts)
+    processing = 10000 * (spec.message_count + attempts) + codec_allowance * spec.message_count
     worst_rf = data_us_per_message * spec.message_count * attempts_per_packet
     worst_wait = attempts * ack_timeout
     guards = max(0, attempts - 1) * link.guard_us
@@ -201,6 +209,7 @@ def preview(plan: KnownDataPlan) -> dict:
         + fragments * attempts_per_packet * ack_timeout
         + max(0, fragments * attempts_per_packet - 1) * link.guard_us
         + 10000 * (1 + fragments * attempts_per_packet)
+        + codec_allowance
         + 2_000_000
     )
     nominal = (
@@ -208,6 +217,7 @@ def preview(plan: KnownDataPlan) -> dict:
         + packets * (link.ack_turnaround_us + ack_airtime if reliable else 0)
         + max(0, packets - 1) * link.guard_us
         + 10000 * (spec.message_count + packets)
+        + codec_allowance * spec.message_count
         + drain
     )
     required_ms = ceil_div(worst_total, 1000) + 1000
@@ -232,7 +242,9 @@ def preview(plan: KnownDataPlan) -> dict:
         required.append("clock_sync")
     canonical = json.dumps(plan.model_dump(), sort_keys=True, separators=(",", ":")).encode()
     return {
-        "scope": "known_data_calculated_preview",
+        "scope": "encoded_message_calculated_preview"
+        if encoded
+        else "known_data_calculated_preview",
         "execution_available": False,
         "hardware_validated": False,
         "execution_blocker": "The v2 run adapter and RF firmware are not implemented",
@@ -241,10 +253,10 @@ def preview(plan: KnownDataPlan) -> dict:
         "required_capabilities": required,
         "source_role": "A" if spec.direction == "A_TO_B" else "B",
         "destination_role": "B" if spec.direction == "A_TO_B" else "A",
-        "source_recipe": "sha256_blocks_be32_v2",
-        "first_message_sha256": hashlib.sha256(
-            known_data(spec.source_seed, 1, spec.message_bytes)
-        ).hexdigest(),
+        "source_recipe": "committed_codec2_artifact" if encoded else "sha256_blocks_be32_v2",
+        "first_message_sha256": spec.expected_sha256
+        if encoded
+        else hashlib.sha256(known_data(spec.source_seed, 1, spec.message_bytes)).hexdigest(),
         "fragmentation": {
             "fragments_per_message": fragments,
             "full_fragments_per_message": fragments - 1,
@@ -275,7 +287,9 @@ def preview(plan: KnownDataPlan) -> dict:
             "assumptions": [
                 "Requested modem settings; applied radio settings are not yet verified",
                 "Processing allowance: 10000 us per message plus 10000 us per maximum attempt",
-                "No controlled injections, codec, capture or playback in this preview",
+                "Encoded source adds 5000000 us codec allowance; capture/playback are separate"
+                if encoded
+                else "No controlled injections, codec, capture or playback in this preview",
                 "Worst case includes every permitted ACK timeout and inter-attempt guard",
                 "Airtime predictions do not predict delivery, RSSI/SNR or measured goodput",
             ],

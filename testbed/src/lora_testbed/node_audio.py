@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from uuid import uuid4
 
-from . import __version__, audio_contract_v2
+from . import __version__, audio_contract_v2, codec_contract_v2
 from .artifact_contract_v2 import Manifest
 from .audio import inspect_pcm, pcm_wav
 from .storage import utc_now
@@ -63,7 +63,7 @@ class NodeAudio:
     async def start(self, role, action, artifact_id=None, sample_count=24000):
         if self.busy:
             raise RuntimeError("Another audio operation owns the bench")
-        if action not in ("capture", "play", "retrieve"):
+        if action not in ("capture", "play", "retrieve", "codec", "decode"):
             raise ValueError("Unknown audio action")
         command = f"audio.{action}"
         if action == "capture":
@@ -77,7 +77,12 @@ class NodeAudio:
         )
         if node.wire_profile != "node_control":
             raise ValueError("Matching main-node control firmware is required")
-        if action != "retrieve":
+        if action in ("codec", "decode"):
+            for name in codec_contract_v2.ARGUMENTS if action == "codec" else ("audio.decode",):
+                codec_contract_v2.require_capability(
+                    node.identity.capabilities, node.health.capability_availability, name
+                )
+        elif action != "retrieve":
             audio_contract_v2.require_capability(
                 node.identity.capabilities, node.health.capability_availability, command
             )
@@ -88,16 +93,20 @@ class NodeAudio:
             if (
                 manifest is None
                 or manifest["state"] != "committed"
-                or manifest["format"] != "pcm_s16le_8000_mono"
+                or manifest["format"]
+                != ("codec2_3200_v1" if action == "decode" else "pcm_s16le_8000_mono")
                 or manifest["in_use"]
             ):
-                raise ValueError("Choose an unused committed PCM file")
+                raise ValueError(
+                    "Choose an unused committed file with the required PCM/codec format"
+                )
             sample_count = manifest["sample_count"]
         record = {
             "id": str(uuid4()),
             "role": role,
             "action": action,
             "artifact_id": args["artifact_id"],
+            "source_manifest": manifest,
             "sample_count": sample_count,
             "status": "running",
             "stage": "starting",
@@ -119,6 +128,32 @@ class NodeAudio:
             "listening": {"heard": "not_checked", "notes": "", "recorded_at": None},
             "hardware_qualified": False,
         }
+        if action in ("codec", "decode"):
+            record.update(
+                codec_schema_sha256=codec_contract_v2.schema_digest(),
+                codec_configuration=node.identity.capabilities.resource_limits["codec_io"],
+                source_artifact_id=args["artifact_id"],
+                source_audio_operation_id=next(
+                    (
+                        old["id"]
+                        for old in self.store.audio_operations()
+                        if old["role"] == role
+                        and old["action"] == "capture"
+                        and old["status"] == "completed"
+                        and old["artifact_id"] == args["artifact_id"]
+                        and old["identity"]["boot_id"] == node.identity.boot_id
+                        and (old.get("clip") or {}).get("pcm_sha256") == manifest["sha256"]
+                    ),
+                    None,
+                ),
+                codec_artifacts={},
+                codec_operations={},
+                verified_roundtrip=False,
+                verified_codec_stage=False,
+                planned_output_ids={},
+                assessment={"lossless_pcm_comparison": "not_applicable_lossy_codec"},
+                playback_observations=[],
+            )
         self.record = record
         self.save(record)
         self.task = asyncio.create_task(self.run(node, record, args, manifest))
@@ -154,31 +189,116 @@ class NodeAudio:
                     return event
                 await asyncio.sleep(0.02)
 
-    async def retrieve(self, node, record, manifest):
-        record["stage"] = "retrieving"
+    async def download(self, node, record, manifest, stage=None):
+        record["stage"] = f"retrieving_{stage}" if stage else "retrieving"
+        expected = Manifest.model_validate(manifest).model_dump()
+        entry = None
+        if stage:
+            entry = {"manifest": expected, "transfer_id": None, "verified": False}
+            record["codec_artifacts"][stage] = entry
         self.save(record)
-        transfer = await self.artifacts.start_download(record["role"], record["artifact_id"])
+        transfer = await self.artifacts.start_download(record["role"], expected["artifact_id"])
         record["transfer_id"] = transfer["id"]
+        if entry is not None:
+            entry["transfer_id"] = transfer["id"]
         self.save(record)
         while self.artifacts.busy:
             self.same_boot(node, record)
             await asyncio.sleep(0.02)
         transfer = self.artifacts.get(transfer["id"])
         if transfer["status"] != "completed":
-            raise ValueError(f"PCM retrieval failed: {transfer['error']}")
+            raise ValueError(f"Artifact retrieval failed: {transfer['error']}")
         actual = Manifest.model_validate(transfer["manifest"]).model_dump()
-        if actual != Manifest.model_validate(manifest).model_dump():
-            raise ValueError("Retrieved PCM manifest differs from the completed capture/source")
+        if actual != expected:
+            raise ValueError(
+                "Retrieved artifact manifest differs from the completed capture/source"
+            )
+        data = self.artifacts.content(transfer["id"]).read_bytes()
         if (
-            actual["format"] != "pcm_s16le_8000_mono"
-            or actual["sample_count"] != record["sample_count"]
+            len(data) != expected["length_bytes"]
+            or hashlib.sha256(data).hexdigest() != expected["sha256"]
         ):
-            raise ValueError("Retrieved PCM format/count is inconsistent")
-        pcm = self.artifacts.content(transfer["id"]).read_bytes()
+            raise ValueError("Saved artifact bytes differ from the completed manifest")
+        if entry is not None:
+            entry["verified"] = True
+            self.save(record)
+        return data
+
+    def save_pcm(self, record, pcm):
         record["clip"] = inspect_pcm(pcm, record["sample_count"])
         content = pcm_wav(pcm, record["sample_count"])
         (self.directory / f"{record['id']}.wav").write_bytes(content)
         record["wav_sha256"] = hashlib.sha256(content).hexdigest()
+
+    async def retrieve(self, node, record, manifest):
+        if (
+            manifest["format"] != "pcm_s16le_8000_mono"
+            or manifest["sample_count"] != record["sample_count"]
+        ):
+            raise ValueError("Retrieved PCM format/count is inconsistent")
+        self.save_pcm(record, await self.download(node, record, manifest))
+
+    async def transform(self, node, record, source, action, output_id, stage):
+        record["stage"] = action
+        accepted = await self.command(
+            node,
+            record,
+            f"audio.{action}",
+            {"source_artifact_id": source["artifact_id"], "artifact_id": output_id},
+        )
+        record["operation_id"] = accepted["operation_id"]
+        record["codec_operations"][action] = {
+            "operation_id": accepted["operation_id"],
+            "terminal": None,
+        }
+        self.save(record)
+        terminal = await self.wait_result(node, record)
+        record["codec_operations"][action] = terminal
+        self.save(record)
+        if terminal["status"] != "completed":
+            raise ValueError(f"Node codec {terminal['status']}: {terminal.get('error')}")
+        model = codec_contract_v2.Result if action == "encode" else codec_contract_v2.DecodeResult
+        result = model.model_validate(terminal["result"]).model_dump()
+        manifest = result["artifact"]
+        if (
+            result["source_artifact_id"] != source["artifact_id"]
+            or result["source_sha256"] != source["sha256"]
+            or result["artifact_id"] != output_id
+            or manifest is None
+            or manifest["state"] != "committed"
+            or manifest["sample_count"] != record["sample_count"]
+        ):
+            raise ValueError("Codec completion differs from requested source/output metadata")
+        return manifest, await self.download(node, record, manifest, stage)
+
+    async def roundtrip(self, node, record, source):
+        identifiers = [source["artifact_id"], str(uuid4()), str(uuid4())]
+        if len(set(identifiers)) != 3:
+            raise ValueError("Codec source, encoded and decoded IDs must be distinct")
+        record["planned_output_ids"] = {"encoded": identifiers[1], "decoded": identifiers[2]}
+        self.save(record)
+        await self.download(node, record, source, "source")
+        encoded, _ = await self.transform(node, record, source, "encode", identifiers[1], "encoded")
+        decoded, content = await self.transform(
+            node, record, encoded, "decode", identifiers[2], "decoded"
+        )
+        record["artifact_id"] = decoded["artifact_id"]
+        self.save_pcm(record, content)
+        record["verified_roundtrip"] = record["verified_codec_stage"] = True
+
+    async def decode_clip(self, node, record, source):
+        output_id = str(uuid4())
+        if output_id == source["artifact_id"]:
+            raise ValueError("Decoding requires separate source/output IDs")
+        record["planned_output_ids"] = {"decoded": output_id}
+        self.save(record)
+        await self.download(node, record, source, "encoded")
+        decoded, content = await self.transform(
+            node, record, source, "decode", output_id, "decoded"
+        )
+        record["artifact_id"] = decoded["artifact_id"]
+        self.save_pcm(record, content)
+        record["verified_codec_stage"] = True
 
     async def cleanup(self, node, record):
         notes = []
@@ -192,6 +312,14 @@ class NodeAudio:
                     node, record, "operation.stop", {"operation_id": status["operation_id"]}
                 )
                 notes.append("node operation stopped")
+                if (
+                    record["action"] in ("codec", "decode")
+                    and status["operation_id"] == record["operation_id"]
+                ):
+                    terminal = await self.wait_result(node, record)
+                    for action, child in record["codec_operations"].items():
+                        if child["operation_id"] == terminal["operation_id"]:
+                            record["codec_operations"][action] = terminal
             if record["action"] == "capture":
                 files = (await self.command(node, record, "artifact.list"))["artifacts"]
                 if any(m["artifact_id"] == record["artifact_id"] for m in files):
@@ -207,7 +335,11 @@ class NodeAudio:
     async def run(self, node, record, args, manifest):
         try:
             async with asyncio.timeout(220):
-                if record["action"] != "retrieve":
+                if record["action"] == "codec":
+                    await self.roundtrip(node, record, manifest)
+                elif record["action"] == "decode":
+                    await self.decode_clip(node, record, manifest)
+                if record["action"] in ("capture", "play"):
                     record["stage"] = "capturing" if record["action"] == "capture" else "playing"
                     accepted = await self.command(node, record, f"audio.{record['action']}", args)
                     record["operation_id"] = accepted["operation_id"]
@@ -255,6 +387,8 @@ class NodeAudio:
             )
         finally:
             if record["status"] != "completed":
+                if record["action"] in ("codec", "decode"):
+                    record["verified_roundtrip"] = record["verified_codec_stage"] = False
                 (self.directory / f"{record['id']}.wav").unlink(missing_ok=True)
                 record["clip"] = None
                 try:
@@ -274,6 +408,67 @@ class NodeAudio:
         if value is None:
             raise ValueError("Unknown audio operation")
         return value
+
+    def codec_content(self, identifier, stage, as_wav=False):
+        if stage not in ("source", "encoded", "decoded"):
+            raise ValueError("Unknown codec artifact stage")
+        record = self.get(identifier)
+        entry = record.get("codec_artifacts", {}).get(stage)
+        if not entry or not entry["verified"]:
+            raise ValueError("Codec stage has no independently verified saved file")
+        data = self.artifacts.content(entry["transfer_id"]).read_bytes()
+        manifest = entry["manifest"]
+        if (
+            len(data) != manifest["length_bytes"]
+            or hashlib.sha256(data).hexdigest() != manifest["sha256"]
+        ):
+            raise ValueError("Saved codec artifact failed integrity verification")
+        if as_wav:
+            if manifest["format"] != "pcm_s16le_8000_mono":
+                raise ValueError("Only source/decoded PCM can be wrapped as WAV")
+            return pcm_wav(data, manifest["sample_count"])
+        return data
+
+    def link_playback(self, identifier, operation_id, stage="decoded"):
+        record = self.get(identifier)
+        if record["status"] == "running":
+            raise RuntimeError("Link playback after the codec operation finishes")
+        entry = record.get("codec_artifacts", {}).get(stage)
+        if stage not in ("source", "decoded") or not entry or not entry["verified"]:
+            raise ValueError("Choose a verified source or decoded codec artifact")
+        played = self.get(operation_id)
+        if (
+            played["action"] != "play"
+            or played["status"] != "completed"
+            or played["artifact_id"] != entry["manifest"]["artifact_id"]
+            or played["role"] != record["role"]
+            or played["identity"]["boot_id"] != record["identity"]["boot_id"]
+            or played["identity"]["device_id"] != record["identity"]["device_id"]
+        ):
+            raise ValueError("Playback must be completed for this artifact, role, device and boot")
+        if played.get("source_manifest") != entry["manifest"]:
+            raise ValueError("Playback content/manifest must match the saved codec stage")
+        observations = record["playback_observations"]
+        observations = [
+            value
+            for value in observations
+            if (value["stage"], value["operation_id"]) != (stage, operation_id)
+        ]
+        if len(observations) >= 32:
+            raise ValueError("Codec playback observation limit is 32")
+        observations.append(
+            {
+                "stage": stage,
+                "operation_id": operation_id,
+                "artifact_id": played["artifact_id"],
+                "node_result": played["node_result"],
+                "listening": played["listening"],
+                "linked_at": utc_now(),
+            }
+        )
+        record["playback_observations"] = observations
+        self.save(record)
+        return record
 
     def wav(self, identifier):
         record = self.get(identifier)

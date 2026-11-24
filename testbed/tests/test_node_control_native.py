@@ -10,13 +10,17 @@ import queue
 import shutil
 import subprocess
 import threading
+from pathlib import Path
 from time import monotonic
 from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from native_codec2 import COMPONENT as CODEC_COMPONENT
+from native_codec2 import build_codec2
+from native_crypto import load_frame_cipher
 
-from lora_testbed import control_v2
+from lora_testbed import control_v2, crypto_benchmark_v2, rf_events_v2
 from lora_testbed.app import create_app
 from lora_testbed.nodes import NodeSession
 from lora_testbed.paths import REPOSITORY_ROOT as REPO_ROOT
@@ -89,7 +93,14 @@ class Platform(C.Structure):
                 "reset_cause",
             )
         ]
-        + [("audio", AudioPort)]
+        + [
+            ("audio", AudioPort),
+            ("radio", C.c_void_p),
+            ("cpu_frequency_mhz", C.c_uint32),
+            ("hardware_aes", C.c_bool),
+            ("dynamic_frequency", C.c_bool),
+            ("codec2_mode", C.c_uint),
+        ]
     )
 
 
@@ -100,6 +111,8 @@ def native_library(tmp_path_factory):
     cjson = REPO_ROOT / "firmware/lora_node/managed_components/espressif__cjson/cJSON"
     if compiler is None or not (cjson / "cJSON.c").exists():
         pytest.skip("Native firmware checks require a C compiler and IDF-managed cJSON sources")
+    crypto = load_frame_cipher()
+    codec = build_codec2()
     output = tmp_path_factory.mktemp("firmware-core") / "node_control.so"
     toolchain = [compiler]
     if platform.system() == "Darwin":
@@ -120,13 +133,33 @@ def native_library(tmp_path_factory):
             str(main),
             "-I",
             str(cjson),
+            "-I",
+            str(CODEC_COMPONENT),
             str(main / "protocol/strict_json.c"),
+            str(main / "protocol/secure_json.c"),
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(main / "audio/pcm_samples.c"),
+            str(main / "audio/codec_clip.c"),
+            str(main / "radio/node_radio.c"),
+            str(main / "radio/radio_config_json.c"),
+            str(main / "radio/rf_frames.c"),
+            str(main / "radio/rf_fragments.c"),
+            str(main / "radio/rf_reassembly.c"),
+            str(main / "radio/rf_ack.c"),
+            str(main / "radio/rf_sender.c"),
+            str(main / "radio/rf_execution.c"),
+            str(main / "radio/vendor/sx126x/sx126x.c"),
+            str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),
+            "-I",
+            str(main / "radio/vendor/sx126x"),
             str(main / "artifacts/artifact_store.c"),
             str(cjson / "cJSON.c"),
             str(REPO_ROOT / "testbed/tests/native/cjson_allocator.c"),
+            str(crypto._name),
+            str(codec),
+            "-Wl,-dead_strip" if platform.system() == "Darwin" else "-Wl,--gc-sections",
+            "-Wl,-rpath," + str(Path(crypto._name).parent),
             "-lm",
             "-o",
             str(output),
@@ -141,6 +174,13 @@ def native_library(tmp_path_factory):
     lib.native_allocator_install()
     lib.native_allocator_fail_after.argtypes = [C.c_long]
     lib.native_allocations_live.restype = C.c_long
+    lib.native_radio_create.restype = C.c_void_p
+    lib.native_radio_transfers.restype = C.c_uint
+    lib.native_radio_time.argtypes = [C.c_void_p, C.c_int64]
+    lib.native_radio_inject.argtypes = [C.c_void_p, C.c_void_p, C.c_uint, C.c_uint]
+    lib.native_radio_sent.argtypes = [C.c_void_p, C.c_void_p]
+    lib.native_radio_sent.restype = C.c_uint
+    lib.native_radio_tx_done.argtypes = [C.c_void_p]
     lib.node_control_create.argtypes = [C.POINTER(Platform)]
     lib.node_control_create.restype = C.c_void_p
     lib.node_control_destroy.argtypes = [C.c_void_p]
@@ -153,10 +193,20 @@ def native_library(tmp_path_factory):
 
 
 class NativeNode:
-    def __init__(self, lib, realtime=False, boot=1, audio=None):
+    def __init__(
+        self,
+        lib,
+        realtime=False,
+        boot=1,
+        audio=None,
+        radio=None,
+        device="esp-001122334455",
+        codec2_mode=3200,
+    ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
+        self.radio = radio
         self.origin = monotonic()
-        self.boot_id = f"esp-001122334455:{boot}"
+        self.boot_id = f"{device}:{boot}"
         self.client = str(uuid4())
         self.sequence = 0
         self.allocations = {}
@@ -172,7 +222,7 @@ class NativeNode:
         self.platform = Platform(
             None,
             *self.callbacks,
-            b"esp-001122334455",
+            device.encode(),
             self.boot_id.encode(),
             b"native-test",
             b"a" * 64,
@@ -181,7 +231,9 @@ class NativeNode:
             control_v2.schema_digest().encode(),
             b"test_fixture",
             audio or AudioPort(),
+            radio,
         )
+        self.platform.codec2_mode = codec2_mode
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -231,6 +283,8 @@ class NativeNode:
         }
 
     def feed(self, data):
+        if self.radio:
+            self.lib.native_radio_time(self.radio, self.now())
         self.lib.node_control_feed(self.node, data, len(data))
 
     def drain(self):
@@ -240,7 +294,12 @@ class NativeNode:
             wire = output.raw[:length]
             assert wire.endswith(b"\n") and len(wire) <= 4096
             record = json.loads(wire)
-            control_v2.ADAPTER.validate_python(record)
+            if record.get("name") == "crypto.benchmark":
+                crypto_benchmark_v2.Event.model_validate(record)
+            elif record.get("name") not in (None, "health", "diagnostic", "operation.result"):
+                rf_events_v2.ADAPTER.validate_python(record)
+            else:
+                control_v2.ADAPTER.validate_python(record)
             records.append(record)
         return records
 
@@ -257,6 +316,8 @@ class NativeNode:
 
     def tick(self, advance=0):
         self.time += advance
+        if self.radio:
+            self.lib.native_radio_time(self.radio, self.now())
         self.lib.node_control_tick(self.node)
 
     def close(self):
@@ -497,8 +558,18 @@ def test_allocation_failure_has_no_operation_effect(native):
 class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
-    def __init__(self, lib):
-        self.core = NativeNode(lib, realtime=True)
+    def __init__(
+        self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1, audio=None
+    ):
+        self.core = NativeNode(
+            lib,
+            realtime=True,
+            radio=radio,
+            device=device,
+            boot=boot,
+            codec2_mode=codec2_mode,
+            audio=audio,
+        )
         self.lock = threading.RLock()
         self.queue = queue.Queue()
         self.closed = False
@@ -718,3 +789,95 @@ def test_duplicate_probe_acceptance_never_allocates_or_starts_twice(native):
     allocation = next(iter(native.allocations))
     assert native.send(command)[0] == reply
     assert list(native.allocations) == [allocation]
+
+
+def test_modem_settings_are_applied_once_and_bad_requests_preserve_revision(native_library):
+    from copy import deepcopy
+
+    from lora_testbed import run_protocol_v2
+
+    node = NativeNode(native_library, radio=native_library.native_radio_create())
+    try:
+        node.claim()
+        request = {"radio": {}, "link": {}}
+        command = node.command("config.set", request)
+        first = node.send(command)[0]
+        assert first["ok"], first
+        applied = run_protocol_v2.AppliedConfiguration.model_validate(first["result"])
+        assert applied.config_revision == 1
+        assert applied.radio.coding_rate_denominator == 5
+        count = native_library.native_radio_transfers()
+        assert node.send(command)[0] == first
+        assert native_library.native_radio_transfers() == count
+        for field, invalid in [
+            ("frequency_hz", 2400000000),
+            ("tx_power_dbm", 21),
+            ("coding_rate_denominator", 1),
+            ("crc_enabled", False),
+            ("spreading_factor", 7.0),
+            ("unknown", 1),
+        ]:
+            bad = deepcopy(request)
+            bad["radio"][field] = invalid
+            assert node.request("config.set", bad)["error"]["code"] == "INVALID_ARGUMENT"
+        status = node.request("status.get")["result"]
+        assert status["config_revision"] == 1
+        assert status["radio"]["frequency_hz"] == 915000000
+        assert native_library.native_radio_transfers() == count
+        native_library.native_radio_fail()
+        assert node.request("config.set", request)["error"]["code"] == "INTERNAL_ERROR"
+        status = node.request("status.get")["result"]
+        assert not status["capability_availability"]["radio"]
+        assert status["radio"] is None and status["config_revision"] == 1
+    finally:
+        node.close()
+
+
+def test_radio_configuration_allocations_fail_before_hardware_effects(native_library):
+    for position in range(220):
+        node = NativeNode(native_library, radio=native_library.native_radio_create())
+        try:
+            node.claim()
+            count = native_library.native_radio_transfers()
+            command = node.command("config.set", {"radio": {}, "link": {}})
+            native_library.native_allocator_fail_after(position)
+            node.feed(json.dumps(command).encode() + b"\n")
+            native_library.native_allocator_fail_after(-1)
+            replies = [r for r in node.drain() if r["kind"] == "reply"]
+            if not replies or not replies[0]["ok"]:
+                assert native_library.native_radio_transfers() == count
+            else:
+                assert replies[0]["result"]["config_revision"] == 1
+            assert native_library.native_allocations_live() == 0
+        finally:
+            native_library.native_allocator_fail_after(-1)
+            node.close()
+
+
+def test_host_radio_configuration_requires_current_support_and_validates_applied_result(
+    native_library,
+):
+    async def scenario():
+        serial = NativeSerial(native_library, radio=native_library.native_radio_create())
+        session = NodeSession("A", lambda *_: None, lambda _: serial)
+        await session.connect("isolated-native-radio")
+        try:
+            result = await session.request(
+                "config.set", {"radio": {"spreading_factor": 12}, "link": {}}
+            )
+            assert result["radio"]["ldro_enabled"] and result["config_revision"] == 1
+            with pytest.raises(ValueError, match="INVALID_STATE"):
+                await session.request("run.start", {"config_revision": 1}, run_id=str(uuid4()))
+            session.last_health -= 4
+            with pytest.raises(ValueError, match="fresh health"):
+                await session.request("config.set", {"radio": {}, "link": {}})
+            await session.request("status.get")
+            native_library.native_radio_fail()
+            with pytest.raises(ValueError, match="INTERNAL_ERROR"):
+                await session.request("config.set", {"radio": {}, "link": {}})
+            await session.request("status.get")
+            assert not session.health.capability_availability.radio
+        finally:
+            await session.close()
+
+    asyncio.run(scenario())

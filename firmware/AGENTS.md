@@ -28,7 +28,8 @@ changing device behavior. Follow `docs/node_development_plan.md` for feature ord
 
 From repository root, activate ESP-IDF and run `idf.py -C firmware/lora_node build`.
 Build `firmware/diagnostic` only if affected. Native core checks are in
-`testbed/tests/test_node_control_native.py`; they require a host C compiler and
-locked managed cJSON sources. A skipped native check is not a pass.
+`testbed/tests/test_node_control_native.py`; they require a host C compiler,
+CMake, locked managed cJSON and the pinned IDF crypto sources. See
+`docs/development.md` for `IDF_PATH`. A skipped native check is not a pass.
 For manual framing tests, use `esp_idf_monitor --eol LF`: ESP32's CR default also
 converts Ctrl+J to CR. See `docs/milestone_1_review.md` for physical acceptance.

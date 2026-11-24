@@ -1,0 +1,131 @@
+--- a/src/codec2_internal.h
++++ b/src/codec2_internal.h
+@@ -36,6 +36,7 @@
+ 
+ struct CODEC2 {
+   int mode;
++  unsigned long random_state;
+   C2CONST c2const;
+   int Fs;
+   int n_samp;
+--- a/src/codec2.c
++++ b/src/codec2.c
+@@ -127,6 +127,7 @@
+   if (c2 == NULL) return NULL;
+ 
+   c2->mode = mode;
++  c2->random_state = 1;
+ 
+   /* store constants in a few places for convenience */
+ 
+@@ -1645,15 +1646,15 @@
+   if (CODEC2_MODE_ACTIVE(CODEC2_MODE_700C, c2->mode)) {
+     /* newamp1, we've already worked out rate L phase */
+     COMP *H = Aw;
+-    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H);
++    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H, &c2->random_state);
+   } else {
+     /* LPC based phase synthesis */
+     COMP H[MAX_AMP + 1];
+     sample_phase(model, H, Aw);
+-    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H);
+-  }
+-
+-  postfilter(model, &c2->bg_est);
++    phase_synth_zero_order(c2->n_samp, model, &c2->ex_phase, H, &c2->random_state);
++  }
++
++  postfilter(model, &c2->bg_est, &c2->random_state);
+   synthesise(c2->n_samp, c2->fftr_inv_cfg, c2->Sn_, model, c2->Pn, 1);
+ 
+   for (i = 0; i < c2->n_samp; i++) {
+--- a/src/sine.h
++++ b/src/sine.h
+@@ -47,6 +47,6 @@
+                 MODEL *model, float Pn[], int shift);
+ 
+ #define CODEC2_RAND_MAX 32767
+-int codec2_rand(void);
++int codec2_rand(unsigned long *state);
+ 
+ #endif
+--- a/src/sine.c
++++ b/src/sine.c
+@@ -648,10 +648,8 @@
+       Sn_[i] += sw_[j] * Pn[i] * FFTI_FACTOR;
+ }
+ 
+-/* todo: this should probably be in some states rather than a static */
+-static unsigned long next = 1;
+-
+-int codec2_rand(void) {
+-  next = next * 1103515245 + 12345;
+-  return ((unsigned)(next / 65536) % 32768);
+-}
++/* Keep phase randomisation in its decoder, preserving the original sequence. */
++int codec2_rand(unsigned long *state) {
++  *state = *state * 1103515245 + 12345;
++  return ((unsigned)(*state / 65536) % 32768);
++}
+--- a/src/phase.h
++++ b/src/phase.h
+@@ -33,7 +33,7 @@
+ 
+ void sample_phase(MODEL *model, COMP filter_phase[], COMP A[]);
+ void phase_synth_zero_order(int n_samp, MODEL *model, float *ex_phase,
+-                            COMP filter_phase[]);
++                            COMP filter_phase[], unsigned long *random_state);
+ 
+ void mag_to_phase(float phase[], float Gdbfk[], int Nfft,
+                   codec2_fft_cfg fwd_cfg, codec2_fft_cfg inv_cfg);
+--- a/src/phase.c
++++ b/src/phase.c
+@@ -159,7 +159,8 @@
+ void phase_synth_zero_order(
+     int n_samp, MODEL *model,
+     float *ex_phase, /* excitation phase of fundamental        */
+-    COMP H[]         /* L synthesis filter freq domain samples */
++    COMP H[],        /* L synthesis filter freq domain samples */
++    unsigned long *random_state
+ 
+ ) {
+   int m;
+@@ -190,7 +191,7 @@
+          phase is not needed in the unvoiced case, but no harm in
+          keeping it.
+       */
+-      float phi = TWO_PI * (float)codec2_rand() / CODEC2_RAND_MAX;
++      float phi = TWO_PI * (float)codec2_rand(random_state) / CODEC2_RAND_MAX;
+       Ex[m].real = cosf(phi);
+       Ex[m].imag = sinf(phi);
+     }
+--- a/src/postfilter.h
++++ b/src/postfilter.h
+@@ -30,6 +30,6 @@
+ 
+ #include "defines.h"
+ 
+-void postfilter(MODEL *model, float *bg_est);
++void postfilter(MODEL *model, float *bg_est, unsigned long *random_state);
+ 
+ #endif
+--- a/src/postfilter.c
++++ b/src/postfilter.c
+@@ -100,7 +100,7 @@
+ 
+ \*---------------------------------------------------------------------------*/
+ 
+-void postfilter(MODEL *model, float *bg_est) {
++void postfilter(MODEL *model, float *bg_est, unsigned long *random_state) {
+   int m, uv;
+   float e, thresh;
+ 
+@@ -128,7 +128,7 @@
+   if (model->voiced)
+     for (m = 1; m <= model->L; m++)
+       if (model->A[m] < thresh) {
+-        model->phi[m] = (TWO_PI / CODEC2_RAND_MAX) * (float)codec2_rand();
++        model->phi[m] = (TWO_PI / CODEC2_RAND_MAX) * (float)codec2_rand(random_state);
+         uv++;
+       }
+ 

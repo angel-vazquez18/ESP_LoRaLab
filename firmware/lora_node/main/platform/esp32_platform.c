@@ -15,6 +15,7 @@
 #include "psa/crypto.h"
 
 #include "audio/esp32_audio.h"
+#include "radio/esp32_radio.h"
 #include "generated/contract_schema.h"
 #include "platform/esp32_platform.h"
 
@@ -109,6 +110,17 @@ void esp32_platform_init(node_platform *platform)
     const esp_app_desc_t *app = esp_app_get_description();
     *platform = (node_platform){
         .audio = esp32_audio_port(),
+        .radio = esp32_radio_init(),
+        .cpu_frequency_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
+#ifdef CONFIG_LORALAB_CODEC2
+        .codec2_mode = 3200,
+#endif
+#ifdef CONFIG_MBEDTLS_HARDWARE_AES
+        .hardware_aes = true,
+#endif
+#ifdef CONFIG_PM_ENABLE
+        .dynamic_frequency = true,
+#endif
         .now_us = uptime,
         .sha256 = hash,
         .random_bytes = random_bytes,

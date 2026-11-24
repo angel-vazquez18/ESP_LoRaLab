@@ -303,7 +303,8 @@
         "format": {
           "enum": [
             "known_data",
-            "pcm_s16le_8000_mono"
+            "pcm_s16le_8000_mono",
+            "codec2_3200_v1"
           ],
           "title": "Format",
           "type": "string"
@@ -324,8 +325,16 @@
           "type": "boolean"
         },
         "codec": {
-          "title": "Codec",
-          "type": "null"
+          "anyOf": [
+            {
+              "const": "codec2_3200_v1",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Codec"
         },
         "sample_rate_hz": {
           "anyOf": [
@@ -354,8 +363,17 @@
           "title": "Sample Count"
         },
         "frame_count": {
-          "title": "Frame Count",
-          "type": "null"
+          "anyOf": [
+            {
+              "maximum": 150,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Count"
         },
         "source_artifact_id": {
           "anyOf": [
@@ -420,7 +438,8 @@
             "format": {
               "enum": [
                 "known_data",
-                "pcm_s16le_8000_mono"
+                "pcm_s16le_8000_mono",
+                "codec2_3200_v1"
               ],
               "title": "Format",
               "type": "string"
@@ -445,8 +464,16 @@
               "type": "boolean"
             },
             "codec": {
-              "title": "Codec",
-              "type": "null"
+              "anyOf": [
+                {
+                  "const": "codec2_3200_v1",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Codec"
             },
             "sample_rate_hz": {
               "anyOf": [
@@ -475,8 +502,17 @@
               "title": "Sample Count"
             },
             "frame_count": {
-              "title": "Frame Count",
-              "type": "null"
+              "anyOf": [
+                {
+                  "maximum": 150,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Frame Count"
             },
             "source_artifact_id": {
               "anyOf": [

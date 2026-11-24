@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "audio/audio_port.h"
+#include "radio/node_radio.h"
 
 #define NODE_RECORD_BYTES 4096
 #define NODE_REPLY_SLOTS 4
@@ -28,6 +29,10 @@ typedef struct {
     const char *device_id, *boot_id, *firmware_version, *firmware_build_id;
     const char *idf_version, *board_manifest_hash, *schema_sha256, *reset_cause;
     node_audio_port audio;
+    node_radio *radio;
+    uint32_t cpu_frequency_mhz;
+    bool hardware_aes, dynamic_frequency;
+    unsigned codec2_mode;
 } node_platform;
 
 typedef struct node_control node_control;

@@ -257,12 +257,31 @@ class OperationResult(Envelope):
     data: OperationData
 
 
+class AckData(StrictModel):
+    acked_frame_seq: Sequence
+    ack_frame_seq: Sequence | None
+    attempt_index: int = Field(ge=1, le=6)
+    status: Literal["received", "timeout", "repeat_sent"]
+
+    @model_validator(mode="after")
+    def observed_sequence(self):
+        if (self.ack_frame_seq is None) != (self.status == "timeout"):
+            raise ValueError("Only timeout ACK results have no observed ACK sequence")
+        return self
+
+
+class AckResult(Envelope):
+    name: Literal["ack.result"]
+    data: AckData
+
+
 RFEvent = Annotated[
     RunState
     | RunPrepared
     | Attempt
     | Received
     | Accepted
+    | AckResult
     | Rejected
     | Missing
     | MessageResult

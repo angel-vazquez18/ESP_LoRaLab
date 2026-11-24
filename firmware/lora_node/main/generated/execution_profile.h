@@ -1,0 +1,3 @@
+#pragma once
+#define EXECUTION_PROFILE "known_data_execution_v1"
+#define EXECUTION_SCHEMA_SHA256 "b029707a7d0c0056e808f07034e70e0a0575654772d0856695be8acc55024602"

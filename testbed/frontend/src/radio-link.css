@@ -1,0 +1,214 @@
+.radio-link {
+  padding: 24px;
+  margin-bottom: 24px;
+  min-width: 0;
+}
+.radio-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+.radio-heading h2,
+.radio-heading h3 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+.radio-link p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 13px;
+}
+.radio-mode {
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.radio-link fieldset {
+  border: 0;
+  padding: 0;
+  margin: 20px 0 0;
+  min-width: 0;
+}
+.radio-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.radio-fields label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.radio-fields input,
+.radio-fields select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.radio-settings {
+  margin: 16px 0;
+  font-size: 12px;
+}
+.radio-settings summary {
+  cursor: pointer;
+  color: var(--text);
+  padding: 6px 0;
+}
+.radio-settings .radio-fields {
+  margin-top: 12px;
+}
+.radio-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.radio-actions a {
+  color: var(--accent);
+  font-size: 12px;
+}
+.radio-actions a.button {
+  color: var(--text);
+  text-decoration: none;
+}
+.radio-readiness {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.radio-readiness ul {
+  margin: 0;
+  padding-left: 20px;
+  max-height: 150px;
+  overflow: auto;
+}
+.radio-results {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.radio-history {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  padding-bottom: 12px;
+}
+.radio-history button {
+  display: grid;
+  gap: 5px;
+  min-width: 160px;
+  text-align: left;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px;
+  cursor: pointer;
+}
+.radio-history button.selected {
+  border-color: var(--accent);
+  background: var(--accent-surface);
+}
+.radio-history small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.radio-record {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  min-width: 0;
+}
+.radio-record .radio-byte-result {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: var(--text);
+}
+.radio-record code {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.radio-record pre {
+  max-height: 300px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--surface-soft);
+  font-size: 11px;
+}
+.radio-signal {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 16px;
+  background: var(--surface-soft);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.radio-signal span {
+  color: var(--muted);
+}
+.radio-record .radio-error {
+  padding: 10px;
+  border-left: 3px solid #dc5858;
+  background: var(--surface-soft);
+  color: var(--text);
+}
+.radio-qualification {
+  font-size: 11px !important;
+}
+@media (max-width: 680px) {
+  .radio-link {
+    padding: 16px;
+  }
+  .radio-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .radio-heading {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 400px) {
+  .radio-fields {
+    grid-template-columns: 1fr;
+  }
+  .radio-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.radio-accounting {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+.radio-accounting > div {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: var(--surface-soft);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.radio-accounting span {
+  color: var(--muted);
+  font-size: 11px;
+}

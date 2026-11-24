@@ -4,6 +4,9 @@
   gap: 24px;
   align-items: start;
 }
+.physical-experiments > * {
+  min-width: 0;
+}
 .physical-check {
   padding: 24px;
   margin-bottom: 24px;
@@ -80,6 +83,10 @@
 }
 @media (max-width: 900px) {
   .physical-experiments {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .physical-catalog {
+    max-height: 320px;
+    overflow: auto;
   }
 }

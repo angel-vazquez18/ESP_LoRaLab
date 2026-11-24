@@ -3,14 +3,16 @@
 import asyncio
 from pathlib import Path
 
-from . import __version__
+from . import __version__, crypto_benchmark_v2
 from .artifact_transfers import ArtifactTransfers
 from .catalog import catalog, required_nodes
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .procedure_runs import ProcedureService
+from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
 from .storage import Store
+from .voice_runs import VoiceRuns
 
 
 class Host:
@@ -23,15 +25,20 @@ class Host:
         self.procedures = ProcedureService(self.store, self.physical)
         self.artifacts = ArtifactTransfers(self.store, self.physical)
         self.audio = NodeAudio(self.store, self.physical, self.artifacts)
+        self.radio = RadioRuns(self.store, self.physical, self.artifacts)
+        self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
         self.audio.observe(role, event)
+        self.radio.observe(role, event)
 
     @property
     def busy(self) -> bool:
         return (
             self.procedures.busy
+            or self.voice.busy
+            or self.radio.busy
             or self.audio.busy
             or self.artifacts.busy
             or any(n.active_operation is not None for n in self.physical.values())
@@ -42,6 +49,7 @@ class Host:
         return {
             "version": __version__,
             "mode": "hardware",
+            "bench_busy": self.busy,
             "nodes": nodes,
             "hardware_nodes": nodes,
             "connected_node_count": sum(node.connected for node in self.physical.values()),
@@ -60,6 +68,8 @@ class Host:
             "references": self.store.references(),
             "artifact_transfers": self.artifacts.snapshot(),
             "audio_operations": self.audio.snapshot(),
+            "radio_runs": self.radio.snapshot(),
+            "voice_runs": self.voice.snapshot(),
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
@@ -175,9 +185,38 @@ class Host:
                 on_record=lambda record: self.store.append_node_event(role, record),
             )
 
+    async def crypto_benchmark(self, role, iterations, payload_bytes):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation already owns the bench")
+            node = self.physical[role]
+            if not node.connected or not node.identity or node.wire_profile != "node_control":
+                raise ValueError("Connect matching main-node benchmark firmware first")
+            await node.request("status.get")
+            crypto_benchmark_v2.require_capability(
+                node.identity.capabilities, node.health.capability_availability
+            )
+            if node.health.state != "idle" or node.health.node_role != role:
+                raise ValueError("Node must be owned and idle")
+            args = crypto_benchmark_v2.Arguments(iterations=iterations, payload_bytes=payload_bytes)
+            return await node.request(
+                "diag.run",
+                args.model_dump(),
+                on_record=lambda record: self.store.append_node_event(role, record),
+            )
+
+    def crypto_benchmark_evidence(self, role, operation_id, include_records=False):
+        records = self.store.node_operation_records(role, operation_id)
+        return {
+            "operation_id": operation_id,
+            "role": role,
+            "assessment": crypto_benchmark_v2.assess(records),
+            "records": records if include_records else None,
+        }
+
     async def stop_node_operation(self, role, operation_id):
         async with self.lock:
-            if self.procedures.busy or self.audio.busy:
+            if self.procedures.busy or self.audio.busy or self.radio.busy:
                 raise RuntimeError("Stop the active procedure/audio job through its own controls")
             node = self.physical[role]
             if node.wire_profile != "node_control":
@@ -206,8 +245,38 @@ class Host:
                 raise ValueError("Use the IF-01 diagnostic check controls")
             raise ValueError("; ".join(readiness["blockers"]))
 
+    def radio_preflight(self, request):
+        result = self.radio.preflight(request)
+        if self.busy:
+            result["blockers"].append("Another check or operation owns the bench")
+            result["ready"] = False
+        return result
+
+    async def start_radio(self, request):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation owns the bench")
+            return await self.radio.start(request)
+
+    def voice_preflight(self, request):
+        ready = self.voice.preflight(request)
+        if self.busy:
+            ready["ready"] = False
+            ready["blockers"].append("Another operation owns the bench")
+        return ready
+
+    async def start_voice(self, request):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation owns the bench")
+            return await self.voice.start(request)
+
     async def stop(self):
         async with self.lock:
+            if self.voice.busy:
+                return await self.voice.stop()
+            if self.radio.busy:
+                return await self.radio.stop()
             return await self.procedures.stop()
 
     async def artifact_action(self, action, role, *args, **kwargs):
@@ -223,6 +292,8 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.voice.close()
+        await self.radio.close()
         await self.audio.close()
         await self.artifacts.close()
         await self.procedures.stop(shutdown=True)

@@ -89,3 +89,12 @@ checks. See [development workflow](docs/development.md) for exact commands.
 - [Current status](docs/status.md) and [23-experiment implementation checklist](docs/experiment_implementation_checklist.md)
 - [Hardware wiring](hardware/README.md)
 - [Migration and retained local artifacts](docs/migration.md)
+
+The shared local codec API/CLI now preserves source, encoded and decoded files
+with independent verification and playback provenance. See
+[local codec workflow](docs/codec_provenance.md) for commands and physical checks.
+
+Secure finite voice from a reference or microphone is now available through the
+shared host API/CLI, with labelled equal-encoded-size and standard64 comparisons.
+See [secure voice workflows](docs/secure_voice_workflows.md) for readiness,
+commands, retained files and remaining physical acceptance.

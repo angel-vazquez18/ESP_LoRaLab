@@ -11,7 +11,7 @@ import pytest
 from pydantic import ValidationError
 
 from lora_testbed import artifact_contract_v2 as artifacts
-from lora_testbed import control_v2, run_protocol_v2, v2
+from lora_testbed import control_v2, v2
 
 ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES = json.loads((ROOT / "contracts/v2/artifact_examples.json").read_text())
@@ -233,8 +233,8 @@ def test_profile_limits_match_selected_baseline_without_changing_other_profiles(
     assert artifacts.CHUNK_BYTES == resources["artifact_chunk_bytes"]
     assert v2.schema_digest() == "769ba12d1d83969065f7b482890b0a26c5d51586bcf8badab200f47bd8e15002"
     assert (
-        run_protocol_v2.schema_digest()
-        == "9bce021bb91e9c3bea8ba2a71925e90dd06cf49bb37f8837b2795b5c49d9c381"
+        control_v2.schema_digest()
+        == "ea836540f956cd4c6748453aaa0dd94d76b6d151166c53a42c570842db5a5cbd"
     )
     header = (ROOT / "firmware/lora_node/main/generated/contract_schema.h").read_text()
     assert f'"{control_v2.schema_digest()}"' in header

@@ -5,11 +5,46 @@ import json
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from pydantic import Field, TypeAdapter, model_validator
+from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 
 from . import rf_events_v2 as rf
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
+
+EXECUTION_PROFILE = "known_data_execution_v1"
+ExecutionName = Literal[
+    "session.open",
+    "session.close",
+    "config.set",
+    "run.prepare",
+    "run.arm",
+    "run.start",
+    "run.stop",
+    "run.summary",
+]
+EXECUTION_COMMANDS = (
+    "session.open",
+    "session.close",
+    "config.set",
+    "run.prepare",
+    "run.arm",
+    "run.start",
+    "run.stop",
+    "run.summary",
+)
+CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary")
+
+
+class Capabilities(ContractModel):
+    profile: Literal["known_data_execution_v1"]
+    schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    commands: list[ExecutionName] = Field(min_length=1, max_length=8)
+
+    @model_validator(mode="after")
+    def unique_commands(self):
+        if len(self.commands) != len(set(self.commands)):
+            raise ValueError("Duplicate execution command")
+        return self
 
 
 class Empty(ContractModel):
@@ -24,9 +59,25 @@ class Session(ContractModel):
     session_id: rf.SessionID
     peer_device_id: v2.Identifier
     peer_boot_id: v2.Identifier
-    security: Literal["none"]
-    tx_key_hex: None
-    rx_key_hex: None
+    model_config = ConfigDict(hide_input_in_errors=True)
+    security: Literal["none", "aes128_gcm"]
+    tx_key_hex: str | None = Field(
+        pattern=r"^[0-9a-f]{32}$", repr=False, json_schema_extra={"writeOnly": True}
+    )
+    rx_key_hex: str | None = Field(
+        pattern=r"^[0-9a-f]{32}$", repr=False, json_schema_extra={"writeOnly": True}
+    )
+
+    @model_validator(mode="after")
+    def source_keys(self):
+        if self.security == "none":
+            if self.tx_key_hex is not None or self.rx_key_hex is not None:
+                raise ValueError("Unprotected sessions require null keys")
+        elif (
+            self.tx_key_hex is None or self.rx_key_hex is None or self.tx_key_hex == self.rx_key_hex
+        ):
+            raise ValueError("Protected sessions require distinct source keys")
+        return self
 
 
 class Configuration(ContractModel):
@@ -34,8 +85,26 @@ class Configuration(ContractModel):
     link: Link
 
 
+class EncodedSourceSpec(KnownDataSpec):
+    catalog_id: Literal["VOICE-02"] = "VOICE-02"
+    source: Literal["encoded_source"] = "encoded_source"
+    message_count: Literal[1] = 1
+    message_bytes: int = Field(ge=8, le=1200, multiple_of=8)
+    source_seed: None = None
+    source_artifact_id: rf.RunID
+    sample_count: int = Field(ge=1, le=24000)
+    security: Literal["aes128_gcm"] = "aes128_gcm"
+    expected_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @model_validator(mode="after")
+    def exact_encoded_frames(self):
+        if self.message_bytes != ((self.sample_count + 159) // 160) * 8:
+            raise ValueError("Encoded message length differs from its complete mode-3200 frames")
+        return self
+
+
 class Prepare(ContractModel):
-    spec: KnownDataSpec
+    spec: KnownDataSpec | EncodedSourceSpec
     budget: Budget
 
 
@@ -150,6 +219,7 @@ RESULTS = {
 
 
 class Command(v2.Command, ContractModel):
+    model_config = ConfigDict(hide_input_in_errors=True)
     command_id: rf.RunID
     client_id: rf.RunID
     run_id: rf.RunID | None = None
@@ -182,8 +252,9 @@ ADAPTER = TypeAdapter(WireRecord)
 def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
-        "scope": "virtual_known_data_execution",
+        "scope": "finite_message_execution",
         "wire": ADAPTER.json_schema(),
+        "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},
         "command_results": {name: model.model_json_schema() for name, model in RESULTS.items()},
     }

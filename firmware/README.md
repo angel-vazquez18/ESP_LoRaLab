@@ -4,7 +4,7 @@ Two standalone ESP-IDF v6.0.2 projects live here:
 
 | Project | Current behavior | Purpose |
 | --- | --- | --- |
-| `lora_node/` | Main-control NDJSON, identity/health, ownership, memory probe | Main node development, one image for A/B |
+| `lora_node/` | Main control, artifacts/audio, selected-board finite RF/security and codec dependency | Main node development, one image for A/B |
 | `diagnostic/` | v2 diagnostic serial/health subset | Existing hardware diagnostic reference |
 
 The original scaffold was relocated from root `lora_node/` without replacing its C source.
@@ -12,9 +12,11 @@ Old build output and sdkconfig were preserved under ignored `local/migration/`.
 The old sdkconfig selected only 2 MiB flash; the new tracked defaults select the
 confirmed ESP32-S3 / 16 MiB flash, 2 MiB PSRAM and USB Serial/JTAG. The main
 target now uses one NDJSON writer and suppresses ordinary application logs after
-initialization. No RF/audio peripheral driver is initialized. The new control
-image is not flashed or physically accepted yet; see
-[Milestone 1 review](../docs/milestone_1_review.md).
+initialization. Audio and RF initialization follow explicit wiring/board settings;
+RF stays untouched when no variant is selected. Current capability and physical
+acceptance limits are recorded in [status](../docs/status.md). The main target now
+has a pinned [Codec 2 component](../docs/codec2_dependency.md); finite PCM encoding is implemented, with decoding still pending. See
+[encoding behavior and checks](../docs/codec_encoding.md).
 
 From repository root, activate ESP-IDF then build either target:
 
@@ -39,3 +41,13 @@ owns ESP-IDF callbacks and persistent identity; `transport/` owns USB I/O;
 `control/` owns the portable state machine; `protocol/` owns strict JSON parsing.
 The root generator maintains `generated/contract_schema.h`. These remain source
 modules inside one main component; see root `docs/architecture.md` for the tree.
+
+Finite `audio.decode` creates a separate recovered PCM artifact with trimmed final
+padding and stage heap snapshots. Review [decoding](../docs/codec_decoding.md) for
+the matching codec profile, cleanup, checks and pending hardware qualification.
+
+Committed Codec 2 output can now travel as protected message content with the
+existing fragmentation/replay/retry path. Receiver publication is complete/hash
+gated; local decode/play stay explicit. See
+[protected voice content](../docs/protected_voice_content.md) for the matching
+execution profile and remaining hardware checks.

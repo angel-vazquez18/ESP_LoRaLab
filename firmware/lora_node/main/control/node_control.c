@@ -3,17 +3,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "codec2_dependency.h"
+#include "audio/codec_clip.h"
+#include "generated/codec_profile.h"
+
 #include "node_control.h"
+#include "radio/radio_config_json.h"
+#include "radio/rf_execution.h"
+#include "generated/execution_profile.h"
 #include "generated/audio_profile.h"
+#include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
 #include "protocol/strict_json.h"
+#include "protocol/secure_json.h"
 #include "protocol/chunk_bytes.h"
+#include "security/crypto_benchmark.h"
+#include "generated/crypto_benchmark_profile.h"
 
 typedef struct {
     uint32_t sequence;
     uint8_t hash[32];
     char client[37], command[37], reply[1024];
-    bool valid;
+    bool valid, key_setup;
 } cached_reply;
 
 typedef struct {
@@ -30,21 +41,33 @@ typedef struct {
 } record_queue;
 
 typedef struct {
-    bool active, verifying, audio, capture;
+    node_heap internal, psram;
+    uint32_t allocation_failures;
+} codec_memory;
+
+typedef struct {
+    codec_memory codec_before, codec_ready, codec_after;
+    bool active, verifying, audio, capture, benchmark, codec;
+    codec_clip *clip;
+    codec_clip_status codec_status;
+    crypto_benchmark *crypto;
+    crypto_benchmark_status crypto_status;
     char artifact_id[37];
     node_audio_progress audio_progress;
     char id[37], run_id[37];
     uint8_t *buffer;
     uint32_t iterations, completed, bytes, offset;
-    int64_t started, deadline;
+    int64_t started, deadline, finished;
 } operation;
 
 struct node_control {
     node_platform port;
+    codec2_frame_format codec2_format;
+    bool codec2_library_ready;
     artifact_store *artifacts;
     char owner[37], role[2];
     int64_t lease_until, next_health, next_diagnostic;
-    bool linked, oom, discard;
+    bool linked, oom, discard, dispatching;
     size_t used;
     char line[NODE_RECORD_BYTES], encoded[NODE_RECORD_BYTES];
     record_queue replies, events;
@@ -52,6 +75,10 @@ struct node_control {
     unsigned cache_next;
     client_watermark clients[16]; // Never evict a sequence fence within a boot.
     operation op;
+    rf_execution rf;
+    node_link_settings link;
+    uint32_t config_revision;
+    char config_failure[1024], mutation_success[1024];
     char last_operation[37];
     uint64_t event_sequence, telemetry_drops, reply_drops;
     uint64_t rx_records, oversized, rejected_json, rejected_envelope, backpressure;
@@ -61,6 +88,17 @@ struct node_control {
 
 static int64_t now(node_control *n) { return n->port.now_us(n->port.context); }
 static bool eq(const char *a, const char *b) { return a && b && !strcmp(a, b); }
+static void wipe_bytes(void *bytes, size_t length)
+{
+    volatile uint8_t *p = bytes;
+    while (length--) *p++ = 0;
+}
+static void retire_key_cache(node_control *n)
+{
+    if (rf_execution_security_ready(&n->rf)) return;
+    for (unsigned i = 0; i < NODE_CACHE_SLOTS; i++)
+        if (n->cache[i].key_setup) wipe_bytes(&n->cache[i], sizeof(n->cache[i]));
+}
 static const cJSON *item(const cJSON *o, const char *key)
 {
     return cJSON_GetObjectItemCaseSensitive(o, key);
@@ -202,29 +240,93 @@ static cJSON *error(node_control *n, const char *code, const char *message, cons
     boolean(n, o, "retryable", false);
     return o;
 }
-static cJSON *capabilities(node_control *n)
+static cJSON *command_reply(node_control *n, const cJSON *cmd, uint32_t sequence,
+                            cJSON *result, const char *code, const char *message, const char *field)
+{
+    cJSON *reply = object(n);
+    number(n, reply, "v", 2); string(n, reply, "kind", "reply");
+    string(n, reply, "command_id", text(cmd,"command_id")); number(n, reply,"command_seq",sequence);
+    string(n, reply,"device_id",n->port.device_id); string(n,reply,"boot_id",n->port.boot_id);
+    number(n,reply,"uptime_us",now(n)); boolean(n,reply,"ok",code == NULL);
+    add(n,reply,"result",result ? result : cJSON_CreateNull());
+    add(n,reply,"error",error(n,code,message,field));
+    return reply;
+}
+static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "radio",         "codec2_3200", "security_gcm",
-        "fragmentation", "ack_retry",     "echo",           "clock_sync",  "fault_injection"};
+        "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "codec2_3200", n->codec2_library_ready);
+    boolean(n, o, "security_gcm", n->port.radio && n->port.radio->available);
+    boolean(n, o, "radio", n->port.radio && n->port.radio->available);
+    boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
+    boolean(n, o, "ack_retry", n->port.radio && n->port.radio->available);
     boolean(n, o, "audio_capture", n->port.audio.capture);
     boolean(n, o, "audio_playback", n->port.audio.playback);
     boolean(n, o, "memory_stats", true);
-    add(n, o, "radio_limits", object(n));
-    number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
-    number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
-    number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);
-    number(n, limits, "duplicate_cache_records", NODE_CACHE_SLOTS);
-    number(n, limits, "max_clients_per_boot", 16);
-    number(n, limits, "diag_max_iterations", 10000);
-    number(n, limits, "diag_max_payload_bytes", NODE_PROBE_BYTES);
-    number(n, limits, "operation_timeout_us", NODE_OPERATION_US);
-    number(n, limits, "operation_slice_bytes", 512);
-    cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe"}, 1);
+    cJSON *radio = object(n);
+    if (n->port.radio) {
+        const char *variant = n->port.radio->variant == RADIO_HELTEC_V42_GC1109 ? "heltec_v4_2_gc1109" :
+            n->port.radio->variant == RADIO_HELTEC_V43_KCT8103L ? "heltec_v4_3_kct8103l" : "unselected";
+        string(n, radio, "selected_board_variant", variant);
+        string(n, radio, "board_reference_sha256", RADIO_BOARD_REFERENCE_SHA256);
+        string(n, radio, "initialization_error", n->port.radio->error);
+        boolean(n, radio, "physical_qualified", false);
+    }
+    add(n, o, "radio_limits", radio);
+    if (enrollment) {
+        number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
+        number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
+        number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);
+        number(n, limits, "duplicate_cache_records", NODE_CACHE_SLOTS);
+        number(n, limits, "max_clients_per_boot", 16);
+        number(n, limits, "diag_max_iterations", 10000);
+        number(n, limits, "diag_max_payload_bytes", NODE_PROBE_BYTES);
+        number(n, limits, "operation_timeout_us", NODE_OPERATION_US);
+        number(n, limits, "operation_slice_bytes", 512);
+    }
+    cJSON *kinds = cJSON_CreateStringArray((const char *[]){"memory_probe", "crypto_benchmark"}, 2);
     add(n, limits, "diag_kinds", kinds);
+    cJSON *benchmark = object(n);
+    string(n, benchmark, "profile", CRYPTO_BENCH_PROFILE);
+    string(n, benchmark, "schema_sha256", CRYPTO_BENCH_SCHEMA_SHA256);
+    string(n, benchmark, "vector_sha256", CRYPTO_BENCH_VECTOR_SHA256);
+    number(n, benchmark, "max_iterations", CRYPTO_BENCH_MAX_ITERATIONS);
+    number(n, benchmark, "warmup_operations", CRYPTO_BENCH_WARMUPS);
+    number(n, benchmark, "page_samples", CRYPTO_BENCH_PAGE);
+    add(n, limits, "crypto_benchmark", benchmark);
+    if (enrollment) {
+        cJSON *codec = object(n);
+        string(n, codec, "version", codec2_dependency_version());
+        string(n, codec, "source_commit", codec2_dependency_revision());
+        boolean(n, codec, "library_ready", n->codec2_library_ready);
+        number(n, codec, "mode", n->codec2_library_ready ? 3200 : 0);
+        number(n, codec, "samples_per_frame", n->codec2_format.samples);
+        number(n, codec, "bits_per_frame", n->codec2_format.bits);
+        number(n, codec, "bytes_per_frame", n->codec2_format.bytes);
+        number(n, codec, "sample_rate_hz", n->codec2_format.sample_rate_hz);
+        string(n, codec, "build_options", "mode3200_only;kiss_fft;float;O2;no_fast_math");
+        if (n->codec2_library_ready) {
+            string(n, codec, "profile", CODEC_PROFILE);
+            string(n, codec, "schema_sha256", CODEC_SCHEMA_SHA256);
+            add(n, codec, "commands", cJSON_CreateStringArray((const char *[]){"audio.encode", "audio.decode"}, 2));
+            string(n, codec, "codec", "codec2_3200_v1");
+            string(n, codec, "decoder_phase_state", "per_clip_seed1");
+            number(n, codec, "max_samples", 24000);
+            number(n, codec, "max_frames_per_step", 1);
+            number(n, codec, "operation_timeout_us", NODE_OPERATION_US);
+            add(n, limits, "codec_io", codec);
+        } else add(n, limits, "codec2_library", codec);
+    } else if (n->codec2_library_ready) {
+        cJSON *io = object(n);
+        string(n, io, "profile", CODEC_PROFILE);
+        string(n, io, "schema_sha256", CODEC_SCHEMA_SHA256);
+        add(n, io, "commands", cJSON_CreateStringArray((const char *[]){"audio.encode", "audio.decode"}, 2));
+        add(n, limits, "codec_io", io);
+    }
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
@@ -235,6 +337,20 @@ static cJSON *capabilities(node_control *n)
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
     number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
     add(n, limits, "artifact_transfer", files);
+    if (n->port.radio) {
+        cJSON *execution = object(n);
+        string(n, execution, "profile", EXECUTION_PROFILE);
+        string(n, execution, "schema_sha256", EXECUTION_SCHEMA_SHA256);
+        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary"},8));
+        add(n, limits, "execution", execution);
+        cJSON *execution_limits=object(n);
+        number(n,execution_limits,"max_message_bytes",65536);number(n,execution_limits,"max_messages_per_run",1);
+        number(n,execution_limits,"max_fragments_per_message",4096);number(n,execution_limits,"max_duration_ms",3600000);
+        number(n,execution_limits,"max_retries",2);
+        boolean(n,execution_limits,"encoded_source",true);
+        string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
+        add(n,limits,"execution_limits",execution_limits);
+    }
     if (n->port.audio.playback || n->port.audio.capture) {
         cJSON *audio = object(n);
         string(n, audio, "profile", AUDIO_PROFILE);
@@ -273,6 +389,20 @@ static cJSON *heap(node_control *n, const node_heap *h)
     number(n, o, "largest_free_bytes", h->largest_free_bytes);
     return o;
 }
+static codec_memory codec_memory_sample(node_control *n)
+{
+    codec_memory sample = {0};
+    n->port.memory(n->port.context, &sample.internal, &sample.psram, &sample.allocation_failures);
+    return sample;
+}
+static cJSON *codec_memory_record(node_control *n, const codec_memory *sample)
+{
+    cJSON *result = object(n);
+    add(n, result, "internal", heap(n, &sample->internal));
+    add(n, result, "psram", heap(n, &sample->psram));
+    number(n, result, "allocation_failures", sample->allocation_failures);
+    return result;
+}
 static size_t queued_bytes(const record_queue *q)
 {
     size_t bytes = 0;
@@ -287,20 +417,21 @@ static cJSON *health(node_control *n)
     n->port.memory(n->port.context, &internal, &psram, &failures);
     cJSON *o = object(n), *memory = object(n), *buffers = object(n), *traffic = object(n);
     string(n, o, "node_role", n->role[0] ? n->role : NULL);
-    string(n, o, "state", n->op.active ? "running" : "idle");
-    string(n, o, "run_id", n->op.active && n->op.run_id[0] ? n->op.run_id : NULL);
-    string(n, o, "operation_id", n->op.active ? n->op.id : NULL);
+    string(n, o, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
+    string(n, o, "run_id", n->op.active && n->op.run_id[0] ? n->op.run_id : rf_execution_busy(&n->rf)?n->rf.plan.run:NULL);
+    string(n, o, "operation_id", n->op.active ? n->op.id : (n->rf.phase==RF_PREPARING||n->rf.phase==RF_RUNNING)?n->rf.plan.operation:NULL);
     number(n, o, "uptime_us", now(n));
     string(n, o, "reset_cause", n->port.reset_cause);
-    string(n, o, "radio", NULL);
-    string(n, o, "link", NULL);
-    number(n, o, "config_revision", 0);
-    add(n, o, "capability_availability", capabilities(n));
+    bool configured = n->port.radio && n->port.radio->available && n->port.radio->configured;
+    add(n, o, "radio", configured ? radio_config_radio(&n->port.radio->applied, n->port.radio->ldro_enabled) : cJSON_CreateNull());
+    add(n, o, "link", configured ? radio_config_link(&n->link) : cJSON_CreateNull());
+    number(n, o, "config_revision", n->config_revision);
+    add(n, o, "capability_availability", capabilities(n, false));
     add(n, memory, "internal", heap(n, &internal));
     add(n, memory, "psram", heap(n, &psram));
     number(n, buffers, "serial_rx", n->used);
     number(n, buffers, "serial_tx_queued", queued_bytes(&n->replies) + queued_bytes(&n->events));
-    number(n, buffers, "diagnostic", n->op.active && !n->op.audio ? n->op.bytes : 0);
+    number(n, buffers, "diagnostic", n->op.active && n->op.benchmark ? crypto_benchmark_bytes() : n->op.active && !n->op.audio ? n->op.bytes : 0);
     number(n, buffers, "artifacts_reserved", artifact_store_reserved_bytes(n->artifacts));
     add(n, memory, "buffers", buffers);
     number(n, memory, "allocation_failures", failures);
@@ -315,8 +446,8 @@ static cJSON *health(node_control *n)
     number(n, traffic, "completed_operations", n->completed_operations);
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
-    boolean(n, o, "security_ready", false);
-    string(n, o, "audio_state", n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
+    boolean(n, o, "security_ready", rf_execution_security_ready(&n->rf));
+    string(n, o, "audio_state", n->op.active && n->op.codec ? (n->op.codec_status.decoding ? "decoding" : "encoding") : n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
         error(n, n->error_code[0] ? n->error_code : NULL, n->error_message, NULL));
@@ -341,12 +472,12 @@ static cJSON *hello(node_control *n)
     add(n, o, "supported_wire_versions", versions);
     string(n, o, "contract_version", "2.0.0");
     string(n, o, "schema_sha256", n->port.schema_sha256);
-    add(n, o, "capabilities", capabilities(n));
+    add(n, o, "capabilities", capabilities(n, true));
     boolean(n, o, "claimed", n->owner[0] != 0);
-    string(n, o, "state", n->op.active ? "running" : "idle");
+    string(n, o, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
     return o;
 }
-static void emit(node_control *n, const char *name, cJSON *data, const char *run_id)
+static bool emit(node_control *n, const char *name, cJSON *data, const char *run_id)
 {
     uint64_t sequence = ++n->event_sequence;
     cJSON *o = object(n);
@@ -360,15 +491,108 @@ static void emit(node_control *n, const char *name, cJSON *data, const char *run
     string(n, o, "run_id", run_id);
     string(n, o, "name", name);
     add(n, o, "data", data);
-    if (!encode(n, o) || !enqueue(&n->events, n->encoded))
-        n->telemetry_drops++;
+    if (!encode(n, o) || !enqueue(&n->events, n->encoded)) { n->telemetry_drops++; return false; }
+    return true;
 }
 static void remember_error(node_control *n, const char *code, const char *message)
 {
     snprintf(n->error_code, sizeof(n->error_code), "%s", code);
     snprintf(n->error_message, sizeof(n->error_message), "%s", message);
 }
+static const char *const benchmark_paths[] = {"encrypt", "decrypt", "invalid_tag", "copy"};
+static const char *const benchmark_phases[] = {"first_call", "warmup", "timed"};
+static bool benchmark_page(node_control *n)
+{
+    const crypto_benchmark_page *page = crypto_benchmark_pending(n->op.crypto);
+    if (!page) return true;
+    cJSON *data = object(n), *samples = cJSON_CreateArray();
+    string(n, data, "operation_id", n->op.id);
+    string(n, data, "path", benchmark_paths[page->path]);
+    string(n, data, "phase", benchmark_phases[page->phase]);
+    number(n, data, "first_index", page->first_index);
+    number(n, data, "page_index", crypto_benchmark_progress(n->op.crypto).pages_emitted);
+    number(n, data, "payload_bytes", n->op.bytes);
+    for (unsigned i = 0; i < page->count; i++) {
+        cJSON *sample = cJSON_CreateArray();
+        if (!sample || !cJSON_AddItemToArray(sample, cJSON_CreateNumber(page->samples[i].start_us)) ||
+            !cJSON_AddItemToArray(sample, cJSON_CreateNumber(page->samples[i].end_us)) ||
+            !cJSON_AddItemToArray(sample, cJSON_CreateBool(page->samples[i].checked)) ||
+            !cJSON_AddItemToArray(samples, sample)) { cJSON_Delete(sample); n->oom = true; break; }
+    }
+    add(n, data, "samples", samples);
+    if (!emit(n, "crypto.benchmark", data, n->op.run_id[0] ? n->op.run_id : NULL)) return false;
+    crypto_benchmark_ack(n->op.crypto);
+    return true;
+}
+static void benchmark_result(node_control *n, cJSON *result)
+{
+    operation *op = &n->op;
+    string(n, result, "kind", "crypto_benchmark");
+    string(n, result, "profile", CRYPTO_BENCH_PROFILE);
+    string(n, result, "schema_sha256", CRYPTO_BENCH_SCHEMA_SHA256);
+    string(n, result, "vector_sha256", CRYPTO_BENCH_VECTOR_SHA256);
+    number(n, result, "payload_bytes", op->bytes);
+    number(n, result, "iterations_requested", op->iterations);
+    number(n, result, "pages_emitted", op->crypto_status.pages_emitted);
+    number(n, result, "samples_lost", op->crypto_status.samples_lost);
+    boolean(n, result, "checked_complete", op->crypto_status.finished && !op->crypto_status.failed && !op->crypto_status.samples_lost);
+    cJSON *counts = object(n);
+    for (unsigned path = 0; path < 4; path++) {
+        cJSON *phases = object(n);
+        for (unsigned phase = 0; phase < 3; phase++)
+            number(n, phases, benchmark_phases[phase], op->crypto_status.checked[path][phase]);
+        add(n, counts, benchmark_paths[path], phases);
+    }
+    add(n, result, "checked_counts", counts);
+    string(n, result, "implementation", "PSA_GCM_MbedTLS_4.1.0_TFPSA_1.1.0");
+    string(n, result, "timer", "platform_monotonic_us");
+    number(n, result, "timestamp_resolution_us", 1);
+    number(n, result, "configured_cpu_frequency_mhz", n->port.cpu_frequency_mhz);
+    boolean(n, result, "dynamic_frequency_enabled", n->port.dynamic_frequency);
+    boolean(n, result, "hardware_aes_configured", n->port.hardware_aes);
+    string(n, result, "buffer_policy", "fixed_nonoverlap_215B_output_16_sample_page");
+    string(n, result, "measurement", "one_shot_PSA_call_including_provider_internal_work");
+    string(n, result, "first_call_scope", "first_per_path_in_this_batch_not_cold_boot");
+    string(n, result, "copy_baseline", "memcpy_payload_plus_16_tag_bytes_no_authentication");
+    boolean(n, result, "public_vector_material_only", true);
+}
 static cJSON *manifest(node_control *n, const artifact_manifest *m);
+static void codec_result(node_control *n, cJSON *result)
+{
+    operation *op = &n->op;
+    codec_clip_status *state = &op->codec_status;
+    string(n, result, "kind", state->decoding ? "audio_decode" : "audio_encode");
+    string(n, result, "codec", "codec2_3200_v1");
+    string(n, result, "source_artifact_id", state->source_id);
+    string(n, result, "source_sha256", state->source_sha256);
+    string(n, result, "artifact_id", state->output_id);
+    if (state->decoding) {
+        number(n, result, "sample_count", state->input_samples);
+        number(n, result, "samples_completed", state->samples_completed);
+        number(n, result, "decoded_bytes", state->samples_completed * 2);
+        number(n, result, "trimmed_samples", state->padded_samples);
+        cJSON *memory = object(n);
+        string(n, memory, "scope", "platform_heap_snapshots_not_peak");
+        add(n, memory, "before", codec_memory_record(n, &op->codec_before));
+        add(n, memory, "ready", codec_memory_record(n, &op->codec_ready));
+        add(n, memory, "after", codec_memory_record(n, &op->codec_after));
+        add(n, result, "memory", memory);
+    } else {
+        number(n, result, "input_samples", state->input_samples);
+        number(n, result, "encoded_bytes", state->encoded_bytes);
+        number(n, result, "padded_samples", state->padded_samples);
+    }
+    number(n, result, "frame_count", state->frame_count);
+    number(n, result, "frames_completed", state->frames_completed);
+    number(n, result, "setup_us", state->setup_us);
+    number(n, result, "conversion_us", state->conversion_us);
+    number(n, result, "codec_us", state->codec_us);
+    number(n, result, "finalize_us", state->finalize_us);
+    number(n, result, "started_us", op->started);
+    number(n, result, "finished_us", op->finished);
+    const artifact_manifest *m = state->complete ? artifact_store_find(n->artifacts, state->output_id) : NULL;
+    add(n, result, "artifact", m ? manifest(n, m) : cJSON_CreateNull());
+}
 static void finish_operation(node_control *n, const char *status, const char *code,
                              const char *message)
 {
@@ -376,6 +600,22 @@ static void finish_operation(node_control *n, const char *status, const char *co
         return;
     operation *op = &n->op;
     char audio_error[161];
+    if (op->codec) {
+        op->codec_status = codec_clip_progress(op->clip);
+        codec_clip_destroy(&op->clip);
+        if (op->codec_status.decoding) op->codec_after = codec_memory_sample(n);
+    } else if (op->benchmark) {
+        unsigned lost = 0;
+        const crypto_benchmark_page *page = crypto_benchmark_pending(op->crypto);
+        if (page && !benchmark_page(n)) lost = page->count;
+        op->crypto_status = crypto_benchmark_progress(op->crypto);
+        op->crypto_status.samples_lost += lost;
+        if (!crypto_benchmark_destroy(&op->crypto)) {
+            op->crypto_status.failed = true;
+            status = "failed"; code = "INTERNAL_ERROR"; message = "Benchmark key retirement failed";
+        }
+        if (code) op->crypto_status.failed = true;
+    }
     if (op->audio) {
         n->port.audio.stop(n->port.context);
         n->port.audio.poll(n->port.context, &op->audio_progress);
@@ -396,15 +636,18 @@ static void finish_operation(node_control *n, const char *status, const char *co
     } else if (op->buffer) n->port.deallocate(n->port.context, op->buffer);
     op->buffer = NULL;
     op->active = false;
+    op->finished = now(n);
     snprintf(n->last_operation, sizeof(n->last_operation), "%s", op->id);
     if (eq(status, "completed"))
         n->completed_operations++;
     if (code)
         remember_error(n, code, message);
     n->oom = false;
-    cJSON *data = object(n), *result = code ? cJSON_CreateNull() : object(n);
-    if (!code) {
-        if (op->audio) {
+    cJSON *data = object(n), *result = code && !op->benchmark && !op->codec ? cJSON_CreateNull() : object(n);
+    if (!code || op->benchmark || op->codec) {
+        if (op->codec) codec_result(n, result);
+        else if (op->benchmark) benchmark_result(n, result);
+        else if (op->audio) {
             string(n, result, "kind", op->capture ? "audio.capture" : "audio.play");
             string(n, result, "artifact_id", op->artifact_id);
             number(n, result, "sample_rate_hz", AUDIO_SAMPLE_RATE);
@@ -437,7 +680,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
         number(n, result, "payload_bytes", op->bytes);
         number(n, result, "verified_bytes", (uint64_t)op->completed * op->bytes);
         }
-        number(n, result, "duration_us", now(n) - op->started);
+        number(n, result, "duration_us", (op->codec ? op->finished : now(n)) - op->started);
         string(n, result, "stop_reason", message);
     }
     string(n, data, "operation_id", op->id);
@@ -449,9 +692,15 @@ static void finish_operation(node_control *n, const char *status, const char *co
 static void lose_owner(node_control *n, const char *reason)
 {
     finish_operation(n, "cancelled", NULL, reason);
+    rf_execution_abort(&n->rf,"peer_failure",true);
     artifact_store_release_owner(n->artifacts, n->owner);
     n->owner[0] = n->role[0] = 0;
     n->lease_until = 0;
+    if (!n->dispatching && n->used) {
+        wipe_bytes(n->line, sizeof(n->line));
+        n->used = 0;
+        n->discard = true; // Discard the rest of this interrupted record through LF.
+    }
     memset(n->cache, 0, sizeof(n->cache));
     n->cache_next = 0;
 }
@@ -504,12 +753,17 @@ static cJSON *manifest(node_control *n, const artifact_manifest *m)
     const char *const states[] = {"uploading", "failed", "committed"};
     string(n, o, "state", states[m->state]);
     boolean(n, o, "in_use", m->in_use);
-    string(n, o, "codec", NULL);
-    string(n, o, "frame_count", NULL);
-    string(n, o, "source_artifact_id", NULL);
+    bool encoded = eq(m->format, "codec2_3200_v1");
+    string(n, o, "codec", encoded ? "codec2_3200_v1" : NULL);
+    if (encoded) number(n, o, "frame_count", m->frame_count);
+    else string(n, o, "frame_count", NULL);
+    string(n, o, "source_artifact_id", m->source_artifact_id[0] ? m->source_artifact_id : NULL);
     if (eq(m->format, "pcm_s16le_8000_mono")) {
         number(n, o, "sample_rate_hz", 8000);
         number(n, o, "sample_count", m->length_bytes / 2);
+    } else if (encoded) {
+        number(n, o, "sample_rate_hz", 8000);
+        number(n, o, "sample_count", m->sample_count);
     } else {
         string(n, o, "sample_rate_hz", NULL);
         string(n, o, "sample_count", NULL);
@@ -535,10 +789,11 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, BENCHMARK, CODEC, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
+    retire_key_cache(n);
     if (n->replies.count == n->replies.capacity) {
         n->backpressure++;
         n->diagnostics_pending++;
@@ -567,7 +822,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -609,14 +864,20 @@ static void process(node_control *n, size_t length)
         code = "COMMAND_EXPIRED";
         message = "Command sequence is older than the boot high-water mark";
     }
-    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) &&
+    if (!code && !eq(name, "diag.run") && !eq(name, "audio.play") && !eq(name, "audio.capture") && !artifact_command(name) && !rf_execution_command(name) &&
         !cJSON_IsNull(item(cmd, "run_id"))) {
         code = "INVALID_ARGUMENT";
         field = "run_id";
         message = "Control commands require null run_id";
     }
     enum action action = NONE;
+    rf_plan radio_plan;
+    cJSON *radio_result=NULL;
+    node_radio_settings radio_settings;
+    node_link_settings link_settings;
     uint8_t *probe = NULL;
+    codec_clip *pending_clip = NULL;
+    codec_memory codec_before = {0}, codec_ready = {0};
     const void *play_bytes = NULL;
     size_t play_length = 0;
     bool play_acquired = false, capture_reserved = false;
@@ -633,7 +894,22 @@ static void process(node_control *n, size_t length)
     n->oom = false;
     cJSON *result = NULL;
     if (!code) {
-        if (eq(name, "control.claim")) {
+        if (rf_execution_command(name)) {
+            if(n->op.active) {code="BUSY";message="Another operation is active";}
+            else {
+                uint8_t id[16];n->port.random_bytes(n->port.context,id,sizeof(id));id[6]=(id[6]&15)|64;id[8]=(id[8]&63)|128;
+                snprintf(operation_id,sizeof(operation_id),"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",id[0],id[1],id[2],id[3],id[4],id[5],id[6],id[7],id[8],id[9],id[10],id[11],id[12],id[13],id[14],id[15]);
+                code=rf_execution_check(&n->rf,name,args,text(cmd,"run_id"),n->owner,n->role,n->port.device_id,n->config_revision,&n->link,operation_id,&radio_plan,&radio_result);
+                if(!code) {action=RF_COMMAND;if(!radio_result)n->oom=true;}
+                else message="Radio command rejected for this session, state or limit";
+            }
+        } else if (eq(name, "config.set")) {
+            if (!n->port.radio || !n->port.radio->available) { code="MISSING_CAPABILITY"; message="Radio is unavailable"; }
+            else if (n->op.active || rf_execution_busy(&n->rf)) { code="BUSY"; message="Configuration requires idle"; }
+            else if (n->config_revision == UINT32_MAX) { code="RESOURCE_LIMIT"; message="Configuration revision exhausted"; }
+            else if (!radio_config_parse(args,&radio_settings,&link_settings)) { code="INVALID_ARGUMENT"; message="Unsupported radio or link configuration"; field="args"; }
+            else action=CONFIGURE;
+        } else if (eq(name, "control.claim")) {
             const char *const keys[] = {"node_role"};
             if (!exact_keys(args, keys, 1) ||
                 (!eq(text(args, "node_role"), "A") && !eq(text(args, "node_role"), "B"))) {
@@ -643,7 +919,7 @@ static void process(node_control *n, size_t length)
             } else if (n->owner[0] && !owned) {
                 code = "BUSY";
                 message = "Another client owns this node";
-            } else if (n->op.active && !eq(text(args, "node_role"), n->role)) {
+            } else if ((n->op.active || n->rf.plan.session) && !eq(text(args, "node_role"), n->role)) {
                 code = "INVALID_STATE";
                 message = "Role changes require an idle node";
             } else if (!(mark = watermark(n, client, true))) {
@@ -655,7 +931,7 @@ static void process(node_control *n, size_t length)
             }
         } else if (artifact_command(name)) {
             const char *id = text(args, "artifact_id");
-            if (n->op.active) {
+            if (n->op.active || rf_execution_busy(&n->rf)) {
                 code = "BUSY";
                 message = "File access requires an idle node";
             } else if (eq(name, "artifact.list")) {
@@ -749,13 +1025,31 @@ static void process(node_control *n, size_t length)
                         action = DELETE_FILE;
                 }
             }
+        } else if (eq(name, "audio.encode") || eq(name, "audio.decode")) {
+            const char *const keys[] = {"artifact_id", "source_artifact_id"};
+            if (!n->codec2_library_ready) { code = "MISSING_CAPABILITY"; message = "Codec dependency is unavailable"; }
+            else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
+                !uuid(text(args, "source_artifact_id")) || eq(text(args, "artifact_id"), text(args, "source_artifact_id"))) {
+                code = "INVALID_ARGUMENT"; message = "Codec work requires separate source/output UUIDs";
+            } else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
+            else {
+                if (eq(name, "audio.decode")) codec_before = codec_memory_sample(n);
+                artifact_status prepared = codec_clip_create(n->artifacts, client,
+                    text(args, "source_artifact_id"), text(args, "artifact_id"), eq(name, "audio.decode"),
+                    (codec_clip_port){n->port.context, n->port.allocate, n->port.deallocate,
+                                      n->port.sha256, n->port.now_us}, &pending_clip);
+                if (eq(name, "audio.decode")) codec_ready = codec_memory_sample(n);
+                code = artifact_error(prepared);
+                if (code) message = "Codec work requires a committed matching source and available resources";
+                else action = CODEC;
+            }
         } else if (eq(name, "audio.capture")) {
             const char *const keys[] = {"artifact_id", "sample_count"};
             if (!n->port.audio.capture) { code = "MISSING_CAPABILITY"; message = "Capture is not configured for this board"; }
             else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
                 !uint32_value(item(args, "sample_count"), 1, AUDIO_MAX_SAMPLES)) {
                 code = "INVALID_ARGUMENT"; message = "Capture requires a UUID and 1-24000 samples";
-            } else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            } else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
             else {
                 void *destination = NULL;
                 bytes = (uint32_t)item(args, "sample_count")->valuedouble * 2;
@@ -769,7 +1063,7 @@ static void process(node_control *n, size_t length)
             const artifact_manifest *m = uuid(id) ? artifact_store_find(n->artifacts, id) : NULL;
             if (!n->port.audio.playback) { code = "MISSING_CAPABILITY"; message = "Playback is not configured for this board"; }
             else if (!exact_keys(args, keys, 1) || !uuid(id)) { code = "INVALID_ARGUMENT"; message = "A file UUID is required"; }
-            else if (n->op.active) { code = "BUSY"; message = "Another operation is active"; }
+            else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
             else if (!m) { code = "ARTIFACT_NOT_FOUND"; message = "File not found"; }
             else if (!eq(m->format, "pcm_s16le_8000_mono") || m->length_bytes % 2 || m->length_bytes > AUDIO_MAX_SAMPLES * 2) {
                 code = "INVALID_ARGUMENT"; message = "Playback requires complete 8 kHz signed-16-bit mono PCM";
@@ -786,10 +1080,18 @@ static void process(node_control *n, size_t length)
                 code = "INVALID_ARGUMENT";
                 field = "args";
                 message = "Invalid diagnostic kind or bounded workload";
+            } else if (eq(text(args, "kind"), "crypto_benchmark")) {
+                bytes = (uint32_t)item(args, "payload_bytes")->valuedouble;
+                iterations = (uint32_t)item(args, "iterations")->valuedouble;
+                if (bytes != 16 && bytes != 64 && bytes != 160 && bytes != 199) {
+                    code = "INVALID_ARGUMENT"; message = "Benchmark payload must be 16, 64, 160 or 199 bytes";
+                } else if (n->op.active || n->op.crypto || rf_execution_busy(&n->rf)) {
+                    code = "BUSY"; message = "Another operation or cleanup is active";
+                } else action = BENCHMARK;
             } else if (!eq(text(args, "kind"), "memory_probe")) {
                 code = "MISSING_CAPABILITY";
-                message = "Only memory_probe diagnostics are implemented";
-            } else if (n->op.active) {
+                message = "Diagnostic kind is not implemented";
+            } else if (n->op.active || rf_execution_busy(&n->rf)) {
                 code = "BUSY";
                 message = "Another operation is active";
             } else {
@@ -821,7 +1123,7 @@ static void process(node_control *n, size_t length)
                 code = "INVALID_ARGUMENT";
                 field = "args";
                 message = "This command accepts no arguments";
-            } else if (eq(name, "control.release") && n->op.active) {
+            } else if (eq(name, "control.release") && (n->op.active || rf_execution_busy(&n->rf))) {
                 code = "INVALID_STATE";
                 message = "Stop the active operation before releasing ownership";
             } else if (eq(name, "control.release"))
@@ -833,7 +1135,7 @@ static void process(node_control *n, size_t length)
             message = "Command is unavailable in this firmware";
         }
     }
-    if (!code && (action == PROBE || action == PLAY || action == CAPTURE)) {
+    if (!code && (action == PROBE || action == BENCHMARK || action == CODEC || action == PLAY || action == CAPTURE)) {
                     uint8_t id[16];
                     n->port.random_bytes(n->port.context, id, sizeof(id));
                     id[6] = (id[6] & 15) | 64;
@@ -843,8 +1145,19 @@ static void process(node_control *n, size_t length)
                              id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7], id[8], id[9],
                              id[10], id[11], id[12], id[13], id[14], id[15]);
     }
+    if (!code && (action == CONFIGURE || (action == RF_COMMAND && !read))) {
+        cJSON *failure = command_reply(n,cmd,sequence,NULL,"INTERNAL_ERROR",action==CONFIGURE?"Radio configuration failed":"Radio operation failed",NULL);
+        if (!encode(n,failure) || strlen(n->encoded) >= sizeof(n->config_failure)) {
+            n->reply_drops++; cJSON_Delete(radio_result); cJSON_Delete(cmd); return;
+        }
+        strcpy(n->config_failure,n->encoded);
+    }
     if (!code) {
-        if (eq(name, "hello"))
+        if(action==RF_COMMAND)result=radio_result;
+        else if (action == CONFIGURE) {
+            result = radio_config_result(&radio_settings,&link_settings,n->config_revision+1);
+            if (!result) n->oom = true;
+        } else if (eq(name, "hello"))
             result = hello(n);
         else if (eq(name, "status.get"))
             result = health(n);
@@ -859,9 +1172,10 @@ static void process(node_control *n, size_t length)
             result = object(n);
             if (action == CLAIM || action == KEEPALIVE)
                 number(n, result, "lease_expires_us", lease);
+            if (action == CLAIM) number(n,result,"config_revision",n->config_revision);
             if (action == CLAIM || action == RELEASE)
-                string(n, result, "state", n->op.active ? "running" : "idle");
-            if (action == PROBE || action == PLAY || action == CAPTURE) {
+                string(n, result, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
+            if (action == PROBE || action == BENCHMARK || action == CODEC || action == PLAY || action == CAPTURE) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
@@ -890,20 +1204,11 @@ static void process(node_control *n, size_t length)
             }
         }
     }
-    cJSON *reply = object(n);
-    number(n, reply, "v", 2);
-    string(n, reply, "kind", "reply");
-    string(n, reply, "command_id", text(cmd, "command_id"));
-    number(n, reply, "command_seq", sequence);
-    string(n, reply, "device_id", n->port.device_id);
-    string(n, reply, "boot_id", n->port.boot_id);
-    number(n, reply, "uptime_us", now(n));
-    boolean(n, reply, "ok", code == NULL);
-    add(n, reply, "result", result ? result : cJSON_CreateNull());
-    add(n, reply, "error", error(n, code, message, field));
+    cJSON *reply = command_reply(n,cmd,sequence,result,code,message,field);
     if (!encode(n, reply)) {
         if (action == RESERVE_FILE)
             artifact_store_delete(n->artifacts, file_spec.artifact_id);
+        if (pending_clip) codec_clip_destroy(&pending_clip);
         if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
         if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
         if (probe)
@@ -920,13 +1225,25 @@ static void process(node_control *n, size_t length)
         if (strlen(n->encoded) >= sizeof(n->cache[0].reply)) {
             if (action == RESERVE_FILE)
                 artifact_store_delete(n->artifacts, file_spec.artifact_id);
+            if (pending_clip) codec_clip_destroy(&pending_clip);
             if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-        if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
+            if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
             if (probe)
                 n->port.deallocate(n->port.context, probe);
             n->reply_drops++;
             cJSON_Delete(cmd);
             return; // No effects without a replayable acceptance.
+        }
+        if(!code && action==RF_COMMAND) {
+            strcpy(n->mutation_success,n->encoded);
+            if(!rf_execution_apply(&n->rf,&radio_plan)) {code="INTERNAL_ERROR";message="Radio operation failed";strcpy(n->encoded,n->config_failure);}
+            else strcpy(n->encoded,n->mutation_success);
+        }
+        if (!code && action == CONFIGURE) {
+            if (!node_radio_configure(n->port.radio,&radio_settings)) {
+                code="INTERNAL_ERROR"; message="Radio configuration failed";
+                strcpy(n->encoded,n->config_failure);
+            } else { n->link=link_settings; n->config_revision++; }
         }
         if (fresh_claim || action == RELEASE) {
             memset(n->cache, 0, sizeof(n->cache));
@@ -934,6 +1251,7 @@ static void process(node_control *n, size_t length)
         }
         cached_reply *c = &n->cache[n->cache_next++ % NODE_CACHE_SLOTS];
         c->valid = true;
+        c->key_setup = !code && eq(name, "session.open") && radio_plan.protected_mode;
         c->sequence = sequence;
         memcpy(c->hash, fingerprint, sizeof(c->hash));
         snprintf(c->client, sizeof(c->client), "%s", client);
@@ -963,6 +1281,7 @@ static void process(node_control *n, size_t length)
     } else if (action == KEEPALIVE)
         n->lease_until = lease;
     else if (action == RELEASE) {
+        rf_execution_abort(&n->rf,"host_shutdown",true);
         artifact_store_release_owner(n->artifacts, n->owner);
         n->owner[0] = n->role[0] = 0;
         n->lease_until = 0;
@@ -971,7 +1290,7 @@ static void process(node_control *n, size_t length)
                            chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-    } else if (action == PROBE || action == PLAY || action == CAPTURE) {
+    } else if (action == PROBE || action == BENCHMARK || action == CODEC || action == PLAY || action == CAPTURE) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
         n->op.buffer = probe;
@@ -983,6 +1302,20 @@ static void process(node_control *n, size_t length)
         const char *run_id = text(cmd, "run_id");
         if (run_id)
             snprintf(n->op.run_id, sizeof(n->op.run_id), "%s", run_id);
+        if (action == CODEC) {
+            n->op.codec = true;
+            n->op.codec_before = codec_before;
+            n->op.codec_ready = codec_ready;
+            n->op.clip = pending_clip;
+            pending_clip = NULL;
+            n->op.codec_status = codec_clip_progress(n->op.clip);
+            n->op.started = (int64_t)n->op.codec_status.started_us;
+        }
+        if (action == BENCHMARK) {
+            n->op.benchmark = true;
+            n->op.crypto = crypto_benchmark_create(bytes, iterations, n->port.context, n->port.now_us);
+            if (!n->op.crypto) finish_operation(n, "failed", "ALLOCATION_FAILED", "Benchmark public key setup failed");
+        }
         if (action == PLAY || action == CAPTURE) {
             n->op.capture = action == CAPTURE;
             n->op.audio = true;
@@ -995,6 +1328,14 @@ static void process(node_control *n, size_t length)
     cJSON_Delete(cmd);
 }
 
+static void *radio_allocate(void *context, size_t size) {node_control *n=context;return n->port.allocate(n->port.context,size);}
+static void radio_release(void *context, void *bytes) {node_control *n=context;n->port.deallocate(n->port.context,bytes);}
+static int64_t radio_now(void *context) {return now(context);}
+static bool radio_hash(void *context,const void *bytes,size_t count,uint8_t out[32]) {node_control *n=context;return n->port.sha256(n->port.context,bytes,count,out);}
+static void radio_random(void *context,void *bytes,size_t count) {node_control *n=context;n->port.random_bytes(n->port.context,bytes,count);}
+static bool radio_emit(void *context,const char *name,cJSON *data,const char *run) {return emit(context,name,data,run);}
+static uint64_t radio_drops(void *context) {return ((node_control *)context)->telemetry_drops;}
+static bool radio_room(void *context,unsigned count) {node_control *n=context;return n->events.capacity-n->events.count>=count;}
 node_control *node_control_create(const node_platform *platform)
 {
     if (!platform || ((platform->audio.playback || platform->audio.capture) && (!platform->audio.start || !platform->audio.poll || !platform->audio.stop)) || !platform->now_us || !platform->sha256 || !platform->random_bytes ||
@@ -1003,15 +1344,18 @@ node_control *node_control_create(const node_platform *platform)
         !platform->idf_version || !platform->reset_cause || !platform->board_manifest_hash ||
         !platform->schema_sha256)
         return NULL;
+    secure_json_ensure();
     node_control *n = calloc(1, sizeof(*n));
     if (!n)
         return NULL;
     n->port = *platform;
+    n->codec2_library_ready = codec2_dependency_query(platform->codec2_mode, &n->codec2_format);
     n->artifacts = artifact_store_create(platform->context, platform->allocate, platform->deallocate);
     if (!n->artifacts) {
         free(n);
         return NULL;
     }
+    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release});
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;
     n->events.capacity = NODE_EVENT_SLOTS;
@@ -1023,7 +1367,10 @@ void node_control_destroy(node_control *n)
     if (!n)
         return;
     if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
+    rf_execution_abort(&n->rf,"host_shutdown",true);
+    if (!crypto_benchmark_destroy(&n->op.crypto)) return; // Retain failed cleanup for retry.
     artifact_store_destroy(n->artifacts);
+    wipe_bytes(n, sizeof(*n));
     free(n);
 }
 void node_control_link(node_control *n, bool connected)
@@ -1031,6 +1378,7 @@ void node_control_link(node_control *n, bool connected)
     if (n->linked && !connected) {
         n->link_losses++;
         lose_owner(n, "disconnect");
+        wipe_bytes(n->line, sizeof(n->line));
         n->used = 0;
         n->discard = false;
         n->replies.count = n->events.count = 0;
@@ -1045,9 +1393,31 @@ void node_control_tick(node_control *n)
         lose_owner(n, "lease_expired");
     if (!n->linked)
         return;
+    n->oom=false;
+    rf_execution_tick(&n->rf);
     operation *op = &n->op;
+    if (!op->active && op->crypto) crypto_benchmark_destroy(&op->crypto);
     if (op->active && time >= op->deadline) {
         finish_operation(n, "failed", "TIMEOUT", "Operation deadline expired");
+    } else if (op->active && op->benchmark) {
+        // Pause at bounded queue pressure; never include serial work in a call sample.
+        if (n->events.count + 2 <= n->events.capacity) {
+            int64_t slice_start = now(n);
+            for (unsigned i = 0; i < CRYPTO_BENCH_PAGE; i++) {
+                crypto_benchmark_step(op->crypto);
+                if (now(n) - slice_start >= 2000) break;
+            }
+            benchmark_page(n);
+            crypto_benchmark_status progress = crypto_benchmark_progress(op->crypto);
+            if (progress.failed) finish_operation(n, "failed", "INTERNAL_ERROR", "Benchmark output or timer verification failed");
+            else if (progress.finished) finish_operation(n, "completed", NULL, NULL);
+        }
+    } else if (op->active && op->codec) {
+        codec_clip_step(op->clip);
+        op->codec_status = codec_clip_progress(op->clip);
+        op->completed = op->codec_status.frames_completed;
+        if (op->codec_status.error) finish_operation(n, "failed", artifact_error(op->codec_status.error), "Codec work failed before publication");
+        else if (op->codec_status.complete) finish_operation(n, "completed", NULL, NULL);
     } else if (op->active && op->audio) {
         n->port.audio.poll(n->port.context, &op->audio_progress);
         if (op->audio_progress.failed)
@@ -1086,7 +1456,7 @@ void node_control_tick(node_control *n)
     if (time >= n->next_health) {
         n->oom = false;
         cJSON *data = health(n);
-        emit(n, "health", data, n->op.active && n->op.run_id[0] ? n->op.run_id : NULL);
+        emit(n, "health", data, n->op.active && n->op.run_id[0] ? n->op.run_id : rf_execution_busy(&n->rf)?n->rf.plan.run:NULL);
         n->next_health = time + 1000000;
     }
     if (n->diagnostics_pending && time >= n->next_diagnostic) {
@@ -1117,15 +1487,19 @@ void node_control_feed(node_control *n, const uint8_t *bytes, size_t length)
                 if (n->used && n->line[n->used - 1] == '\r')
                     n->used--;
                 n->line[n->used] = '\0';
+                n->dispatching = true;
                 node_control_tick(n); // Expire ownership before dispatch.
                 process(n, n->used);
+                n->dispatching = false;
             }
+            wipe_bytes(n->line, sizeof(n->line));
             n->used = 0;
             n->discard = false;
         } else if (!n->discard) {
             if (n->used < sizeof(n->line) - 1)
                 n->line[n->used++] = (char)byte;
             else {
+                wipe_bytes(n->line, sizeof(n->line));
                 n->used = 0;
                 n->discard = true;
                 n->oversized++;

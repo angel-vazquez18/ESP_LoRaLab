@@ -192,7 +192,9 @@ are errors. Read commands are marked R; all others are mutating commands.
 audio preparation and clock calibration may occur outside a run with null run ID.
 Single-board `diag.run` is allowed without an RF session. Its crypto self-test/
 benchmark uses explicitly public test-vector material from the diagnostic build,
-never ordinary session keys, and cannot transmit RF. Radio runs require both peer
+never ordinary session keys, and cannot transmit RF. The main image implements this through the separately fingerprinted
+[local crypto measurement supplement](crypto_benchmark.md), with checked bounded
+sample pages and explicit partial results. Radio runs require both peer
 identities in `session.open`; health/serial/memory checks do not invent a peer.
 Every run command must match the active run; summaries of an old run return
 `UNKNOWN_RUN`. Session setup never arms or transmits. `run.prepare`/`run.arm`
@@ -397,6 +399,16 @@ sequence under the responder's key. Echo payloads are limited to one fragment.
 
 ## 8. Security, replay and reliable retransmission
 
+The current API mapping, secret-bearing field inventory, lifecycle walkthroughs
+and public protected examples are in [session security](security_sessions.md).
+That document distinguishes the specified protected path from current capability
+gates; its examples do not enable encryption on installed nodes. The shared
+[protected-session workflow](protected_host_sessions.md) now implements fresh host
+keys and safe setup evidence. Accepted ACKs are recorded as `ack.result` only
+after authentication, replay and outstanding-reference checks; raw `rx.frame`
+arrival alone is not acceptance. Rebuild both sides against its current execution
+fingerprint, preserving older records as historical evidence.
+
 Use the ESP-IDF-supplied Mbed TLS authenticated GCM interface with AES-128 keys,
 12-byte nonce and full 16-byte tag. Never release decryption output until tag
 verification succeeds. The two profiles are `none` and `aes128_gcm`; no custom
@@ -496,8 +508,8 @@ of saved evidence. Do not infer authentication correctness from a CRC failure.
 
 Pin Codec 2 release **1.2.0**, mode **3200**, with unmodified packed codec frame
 bytes and default codec settings. Record release, resolved source commit and
-build flags in the firmware manifest; the lockfile captures the exact downloaded
-source digest. Use a fresh encoder/decoder state per message. Its mode uses 160
+build flags in the firmware manifest; the dependency manifest captures the exact
+upstream revision, retained/generated resource hashes and local constructor patch. Use a fresh encoder/decoder state per message. Its mode uses 160
 samples per frame and 64 encoded bits: at 8 kHz, 20 ms → 8 bytes. A three-second
 clip is 150 frames → **1200 encoded bytes** before the RF header/tag overhead.
 At the default fragment size this is eight DATA packets. These are format
@@ -688,3 +700,49 @@ project's own wire format and operational policy.
 - [Heltec hardware documentation](https://wiki.heltec.org/docs/devices/open-source-hardware/esp32-series/lora-32/wifi-lora-32-v4/)
   for the eventual identified revision; generic diagnostic firmware cannot assume
   this radio, USB route, pin map or RAM configuration.
+
+### Main-control enrollment and health bounds
+
+The main image enrolls fixed transport/workload bounds and codec source metadata
+in hello. Health repeats current capability flags and operative profile
+declarations, plus applied configuration, errors and actual memory/traffic values.
+Missing immutable enrollment fields in health do not make a capability unavailable;
+use the same-boot identity for those fixed limits. Command-specific current profile
+and availability checks still apply. Both correlated replies and periodic events
+remain within 4096 bytes, including configured radio/audio and a retained error.
+The separate diagnostic image and existing schema fingerprints are unchanged by
+this metadata-packing correction.
+
+### Implemented finite encoding supplement (#36)
+
+`codec_io_v1` adds owned `audio.encode` with source/output artifact UUIDs, fresh
+per-clip mode-3200 state and a separate immutable encoded result. A partial final
+frame is zero-padded with original sample count preserved; odd-byte PCM rejects.
+Full codec/build details are enrolled in hello and current profile/hash/commands
+are retained in health. Typed results link IDs/hashes/counts and node-local stage
+times, including partial cancellation/failure without a published artifact. The
+artifact manifest schema revision changes to represent encoded output; existing
+control/diagnostic/audio/RF identities are unchanged. See
+[the exact migration, developer command and verification](codec_encoding.md).
+Decoding and host operator workflows remain later issues.
+
+### Complete encoded artifact decoding (#41)
+
+The exact `codec_io_v1` supplement now advertises `audio.encode` and `audio.decode`.
+The latter requires a committed mode-3200 encoded artifact with exact eight-byte
+frame geometry and retained original sample count, and publishes separate trimmed
+PCM only on success. There is no implicit playback or lossy source-byte equality.
+Its result retains partial counters/timing and platform heap snapshots even on
+failure/cancel. Current fingerprint/migration and phase-state patch are documented
+in [codec decoding](codec_decoding.md); historical evidence is not rewritten.
+
+### Protected committed encoded content (#64)
+
+`run.prepare` now admits the finite `VOICE-02` / `encoded_source` variant with
+required source UUID, original sample count, exact encoded length and SHA, one
+message and AES-GCM only. Playback is false; decode/play are subsequent explicit
+operations. Common header content type 1, framing, authentication, replay and
+reconstruction apply. No encoded file becomes a consumer input until complete
+verified publication. The exact execution supplement changes; see
+[protected voice content](protected_voice_content.md) for schema migration,
+processing allowance, source/receiver ownership and acceptance instructions.
