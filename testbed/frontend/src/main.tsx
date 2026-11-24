@@ -2,7 +2,6 @@ import { StrictMode, useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Activity,
-  ArrowRight,
   ArrowUpRight,
   AudioLines,
   BarChart3,
@@ -31,6 +30,8 @@ import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
 import RadioLink from "./RadioLink";
 import type { RadioState } from "./RadioLink";
+import VoiceRuns from "./VoiceRuns";
+import type { VoiceState } from "./VoiceRuns";
 import RunComparison from "./RunComparison";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
@@ -120,6 +121,7 @@ type State = {
   artifact_transfers: ArtifactState;
   audio_operations: AudioState;
   radio_runs: RadioState;
+  voice_runs: VoiceState;
   bench_busy: boolean;
   catalog: Entry[];
   procedures: {
@@ -139,6 +141,7 @@ const empty: State = {
   artifact_transfers: { active_id: null, transfers: [] },
   audio_operations: { active_id: null, operations: [] },
   radio_runs: { active_id: null, active: null, runs: [] },
+  voice_runs: { active_id: null, runs: [] },
   bench_busy: false,
   catalog: [],
   procedures: { active_run: null, runs: [] },
@@ -600,39 +603,15 @@ function Voice({ host }: { host: Host }) {
         title="Voice workspace"
         description="Prepare repeatable references and follow the full node-to-node audio path."
       />
-      <div className="voice-pipeline">
-        {[
-          "Capture",
-          "Encode",
-          "RF transfer",
-          "Reassemble",
-          "Decode & play",
-        ].map((stage, i) => (
-          <div key={stage}>
-            <span className="stage-number">0{i + 1}</span>
-            <strong>{stage}</strong>
-            <span>
-              {i === 0
-                ? "Local capture in node inspector"
-                : "RF voice support pending"}
-            </span>
-            {i < 4 && <ArrowRight size={15} />}
-          </div>
-        ))}
-      </div>
-      <div className="notice">
-        <AudioLines size={20} />
-        <div>
-          <strong>Voice is in scope.</strong>
-          <span>
-            {" "}
-            Reference preparation works now. Local node capture and playback
-            controls are in Bench overview → Inspect node → Local audio.
-            Microphone response and heard output still need physical validation.
-            Codec and RF voice remain unavailable; RF voice needs two nodes.
-          </span>
-        </div>
-      </div>
+      <VoiceRuns
+        state={state.voice_runs}
+        nodes={state.hardware_nodes}
+        referenceId={reference?.id}
+        benchBusy={state.bench_busy}
+        online={host.online}
+        request={request}
+        pending={pending}
+      />
       <div className="workspace-grid voice-grid">
         <section className="panel">
           <div className="panel-heading">
@@ -740,7 +719,7 @@ function Voice({ host }: { host: Host }) {
               buffer size.
             </p>
             <span className="badge neutral">
-              CODEC 2 · MODE 3200 · INTEGRATION PENDING
+              CODEC 2 · MODE 3200 · PHYSICAL CHECKS PENDING
             </span>
           </div>
         </section>
