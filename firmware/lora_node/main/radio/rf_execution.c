@@ -567,8 +567,9 @@ static void release_buffers(rf_execution *r)
 static bool prepare_failed(rf_execution *r)
 {
     release_buffers(r);
-    if (r->artifact_id[0] && !(r->plan.encoded && r->sender))
+    if (r->artifact_reserved)
         artifact_store_delete(r->artifacts, r->artifact_id);
+    r->artifact_reserved = false;
     r->used = false;
     r->phase = RF_IDLE;
     return false;
@@ -686,6 +687,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->missing_cursor = 0;
         r->failure_result_reported = r->missing_evidence_incomplete = false;
         r->artifact_id[0] = 0;
+        r->artifact_reserved = false;
         r->ack_pending = r->ack_transmitting = false;
         if (p->encoded && r->sender) {
             const void *source = NULL;
@@ -745,6 +747,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                 status = artifact_store_begin(r->artifacts, p->owner, &spec);
             }
             if (status != ARTIFACT_OK) { return prepare_failed(r); }
+            r->artifact_reserved = true;
         }
         rf_packet_port port = {r->port.context, r->port.allocate, r->port.release, r->port.hash};
         if (r->sender)

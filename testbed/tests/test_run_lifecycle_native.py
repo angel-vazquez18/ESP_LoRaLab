@@ -312,3 +312,59 @@ def test_full_telemetry_queue_cannot_extend_the_receiver_resource_deadline(nativ
         assert "missing_range_evidence_incomplete" in summary["validity_reasons"]
     finally:
         node.close()
+
+
+def test_prepare_identifier_collision_cannot_delete_a_preexisting_file(native_library):
+    import ctypes as C
+    from uuid import UUID, uuid4
+
+    from test_codec_encode_native import readback
+    from test_node_audio_native import pcm_file
+
+    from lora_testbed.experiments_v2 import KnownDataPlan, KnownDataSpec, preview
+
+    class CollisionNode(NativeNode):
+        forced_id = None
+
+        def random(self, context, target, length):
+            if self.forced_id and length == 16:
+                C.memmove(target, UUID(self.forced_id).bytes, 16)
+            else:
+                super().random(context, target, length)
+
+    node = CollisionNode(native_library, radio=native_library.native_radio_create())
+    try:
+        node.claim()
+        file = pcm_file(node, samples=16)
+        identifier = file["artifact_id"]
+        original = readback(node, identifier, 32)
+        run = str(uuid4())
+        assert node.request(
+            "session.open",
+            {
+                "session_id": "0102030405060708",
+                "peer_device_id": "esp-aabbccddeeff",
+                "peer_boot_id": "esp-aabbccddeeff:1",
+                "security": "none",
+                "tx_key_hex": None,
+                "rx_key_hex": None,
+            },
+            run_id=run,
+        )["ok"]
+        assert node.request("config.set", {"radio": {}, "link": {}})["ok"]
+        node.forced_id = identifier
+        plan = KnownDataPlan(spec=KnownDataSpec(message_count=1, max_duration_ms=3000))
+        rejected = node.request(
+            "run.prepare",
+            {
+                "spec": plan.spec.model_dump(),
+                "budget": preview(plan)["timing"]["budget"],
+            },
+            run_id=run,
+        )
+        assert not rejected["ok"]
+        files = node.request("artifact.list")["result"]["artifacts"]
+        assert len(files) == 1 and files[0]["artifact_id"] == identifier
+        assert readback(node, identifier, 32) == original
+    finally:
+        node.close()

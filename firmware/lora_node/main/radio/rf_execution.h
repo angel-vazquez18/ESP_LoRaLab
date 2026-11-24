@@ -68,7 +68,7 @@ typedef struct
     char artifact_id[37], sha_hex[65];
     const uint8_t *payload;
     uint8_t *generated, *recovered_output, expected_hash[32];
-    bool source_borrowed;
+    bool source_borrowed, artifact_reserved;
     rf_reassembly *receiver;
     rf_secure_session *security;
     rf_sender *transmitter;
