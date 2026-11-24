@@ -127,6 +127,9 @@ evidence independently of byte readback.
 - `diagnostic_jobs.py`: durable local diagnostic lifecycle and restart interruption.
 - `campaign_plans.py`: immutable typed physical intent, seeded expansion/order,
   bounded linked batches and cached capability readiness. It starts no work.
+- `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
+  stage-memory reconciliation, immutable evidence and bound readback; imported
+  traces never establish physical qualification.
 - `nodes.py`: physical serial sessions for the exact diagnostic or main-control
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original

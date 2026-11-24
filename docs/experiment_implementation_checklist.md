@@ -183,7 +183,12 @@ Existing support: historical records and exports. Physical campaign execution is
 
 ### 17 MEM-01 Stage and buffer memory behavior
 
-Existing support: idle internal-heap/PSRAM reporting and history.
+Existing support: finite typed 10 Hz/stage memory observations, named requested
+buffers and observed lifetimes (#73), plus durable collection and independent
+sample/stage assessment (#82). Imported and physical-readback evidence remain
+distinct; missing observations are inconclusive and true peaks unavailable.
+Full procedure cases, recovery criteria, plots and physical acceptance below
+remain open; see [assessment scope](workload_assessments.md).
 
 - [ ] Add named buffer allocations/lifetimes, stage entry/exit observations and
   10 Hz internal/PSRAM samples during RF, codec, artifacts and audio workloads.
@@ -221,6 +226,13 @@ procedure items below stay unchecked until all their requirements are fulfilled.
   artifacts. Delayed clip delivery does not establish sustained voice.
 
 ### 20 VOICE-03 Sustained encoded-source feasibility
+
+Existing support: reserved fixed-rate source, bounded whole-message queue,
+protected multi-message execution and paged actual-time/audit evidence (#74).
+Host assessment/readback (#82) reconciles startup/[3,60)/drain cohorts and optional
+independent receiver archive bytes, with explicit gaps and clock limits. The full
+parent procedure runner (#105), plots and declared physical repetitions below
+remain separate. See [source assessments](workload_assessments.md).
 
 - [ ] Implement a fixed 8-byte/20 ms producer, 1200-byte messages and bounded
   4800-byte source queue with occupancy/drop/underflow telemetry.

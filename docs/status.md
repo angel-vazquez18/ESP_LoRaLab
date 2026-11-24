@@ -4,6 +4,35 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Observed workload assessments (#82)
+
+The host now saves typed raw source/queue and stage-memory evidence with immutable
+hashes and source/schema fingerprints. Byte balances, complete-message masks and
+actual frame traces reconcile independently. Startup, nominal [3,60)-second
+cohort and bounded drain remain distinct; sent bytes never become delivery.
+Optional receiver reference/archive verification checks every delivered slot and
+zero hole. Cross-node delivery bitrate remains unavailable without calibration.
+Missing frames/audits, pacing failures, telemetry loss and inconsistent counters
+prevent a capacity pass; a completed overloaded source can retain a valid
+infeasibility finding. Partial overflow bytes do not invent complete drops.
+
+Memory reports retain actual preparation/workload/idle segments, sampled heap/
+block minima, separate boot/window minima and observed buffer lifetimes. True
+peaks and exact frees remain unknown, absent PSRAM stays unavailable and sampled
+recovery deltas do not automatically qualify leak behavior. Shared API/CLI save
+imports as unverified, collect durable observer events and read owned terminal
+source pages before close. Bound readback retains partial failures/cancellation;
+shutdown joins collectors before database close. Observation can surround an
+existing local workload without taking its bench ownership.
+
+Full check passes 915 cases without skips, plus lint/frontend/contracts/repository/
+vendor checks. All 25 dedicated native/ASGI assessment cases pass, UI formatting
+and CLI help pass; the existing Starlette/httpx deprecation remains. Host-only:
+no wire/profile/firmware change, new IDF build, physical port or flash. All 19
+original-checkout files remain unchanged. Full procedure execution, plots and
+physical qualification remain separate; see [policy, commands, code walkthrough
+and physical checks](workload_assessments.md). Next #87 executes saved campaigns.
+
 ## November 24 — Persistent physical campaign plans (#81)
 
 Typed physical plans now save selected workloads, exact settings, repetitions,

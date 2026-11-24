@@ -461,3 +461,16 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   independently reconciled totals, distinct startup/3–60s/drain assessments,
   inconclusive gaps and unavailable unsampled memory peaks. #105 remains the
   full sustained-source procedure; #82 is assessment, not its qualification.
+
+
+- #82 implemented on #200: immutable source/queue and stage-memory evidence,
+  independently reconciled byte/message identities, startup/[3,60)/drain cohorts,
+  optional exact receiver archive verification and honest clock/peak limits.
+  Completed overload is a valid negative finding; partial drops are not complete
+  messages. Actual bound readback, API/CLI, concurrent memory observation and
+  partial timeout/reconnect/shutdown evidence work through shared sessions.
+  Twenty-five dedicated cases and full 915 cases pass without skips, all shared
+  checks and UI formatting pass. Original 19 files unchanged. Host-only: no
+  wire/firmware/build/flash change or physical qualification. #105 remains the
+  full source procedure, #88 plots/UI. Next #87 executes saved physical campaign
+  cases with pause/cancel and exclusive ownership, reusing existing runners.
