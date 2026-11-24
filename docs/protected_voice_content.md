@@ -136,7 +136,7 @@ ready:
 1. Capture or upload a finite source and encode it; retain complete source and
    encoded manifests. Configure both nodes identically with fresh protected keys.
 2. Prepare receiver first with the same source ID/hash/sample metadata, then arm
-   it and start the sender. Expect eight originals for the 1200-byte baseline.
+   it, arm the sender and start within the five-second arm bounds. Expect eight originals for the 1200-byte baseline.
 3. Wait for bounded RF summaries/idle, then retrieve complete encoded bytes from
    both nodes outside the RF timing interval. Independently compare exact bytes,
    hashes, lengths and frame counts.

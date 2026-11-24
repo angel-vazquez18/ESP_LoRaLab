@@ -165,7 +165,7 @@ are errors. Read commands are marked R; all others are mutating commands.
 | `session.close` | `{}` | Idle only; zeroize keys, replay state and retained injection frames |
 | `config.set` | `radio, link` | Atomic validation/application; return applied values and `config_revision` (incrementing u32) |
 | `run.prepare` | `spec,budget` | Reserve buffers, validate capabilities, stage source; accepted operation, then prepared event with applied budget and expected lengths/digests if known |
-| `run.arm` | `config_revision` | Receiver ready for this run/session, returns `receiver_ready`; refuse stale revision |
+| `run.arm` | `config_revision` | Prepared role arms locally; returns `role`, `receiver_ready`, `arm_deadline_us`; refuse stale revision/rearm |
 | `run.start` | `config_revision` | Sender operation accepted; both nodes must already be prepared and receiver armed |
 | `run.stop` | `reason` | Idempotent stop request; `reason` is `operator`, `host_shutdown` or `peer_failure` |
 | `run.summary` R | `{}` | Last run summary; available until the next prepare or reset |
@@ -204,7 +204,8 @@ prove that a peer has acknowledged a USB command.
 
 Device activity states: `idle`, `preparing`, `prepared`, `armed`, `running`,
 `draining`, `stopping`, `faulted`. Asynchronous preparation emits readiness;
-start is allowed only after it completes. Configuration and role changes are
+sender start is allowed only after preparation and its fresh local arm.
+Configuration and role changes are
 forbidden after arming. Connection state, compatibility and activity are separate.
 On node reset, peer loss or host lease loss, the host records `interrupted`,
 requests peer stop and requires a new session. After final summary, activity is
@@ -325,8 +326,14 @@ benchmarking. Fault budget includes planned injected airtime and host barriers.
 Host computes the expanded worst case; nodes validate its inputs and limits
 before preparation and return the applied budget. A disagreement rejects prepare.
 All work fits `max_duration_ms` from sender start acceptance to final summary.
-Host issues start within five seconds after receiver arm; the receiver's bounded
-arm/run deadline is its arm time plus five seconds plus `max_duration_ms`.
+The `finite_message_execution_v2` profile requires both receiver and sender arm.
+Only the sender accepts start, strictly before its own five-second arm deadline.
+The host includes receiver arm request/reply time in its five-second sequencing
+check and checks before sender arm/start and after the start reply. Independent
+node clocks do not prove remote readiness. The receiver's bounded arm/run deadline
+is its arm time plus five seconds plus `max_duration_ms`; reassembly includes the
+same allowance. See [reserved lifecycle](run_lifecycle.md) for reservation rollback,
+prepare expiry, retained evidence and separate initiating/cleanup errors.
 For `node_microphone`, prepare reserves memory; capture begins on run start so
 capture/encode time remains part of the voice transaction.
 

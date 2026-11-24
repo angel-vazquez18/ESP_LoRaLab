@@ -4,6 +4,29 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Reserved finite run lifecycle (#69)
+
+Known data and committed encoded voice now reserve source/artifact/sender/
+reassembly/ACK work before preparation completes. Receiver arm does not allocate
+another work buffer. Both roles arm explicitly; sender start requires a fresh
+five-second local arm, and the host checks receiver-first sequencing on its own
+conservative clock. Preparation/run/reporting deadlines release resources even
+under full telemetry. Failed driver arm/start retires the session. Stop/close/
+lease/disconnect retire working buffers and keys while preserving committed files.
+Initiating timeout/error/cancellation and cleanup errors remain distinct. Forced
+ID-collision rollback now preserves an existing file it did not create.
+
+Thirty-seven dedicated native/host cases pass. Final `make check` passes 808 cases
+without skips, plus lint/frontend/contracts/repository/vendor checks and frontend
+formatting. Selected V4.2 / 32 KiB-main-stack IDF build passes: 0x6f000 bytes,
+57% app free, 73,841 static DIRAM bytes. Execution becomes the breaking
+`finite_message_execution_v2` profile, SHA 04f50ab…; other wire identities stay
+unchanged. No flash or physical qualification. All 19 original user files retain
+their hashes. Clock calibration remains unavailable, with no retained calibration
+state to claim invalidated; its later implementation must bind session cleanup.
+See [lifecycle walkthrough and physical procedure](run_lifecycle.md). Named memory
+observations and fixed-rate source remain following work under #73/#74.
+
 ## November 23 — Optional actual-state OLED (#37)
 
 A fixed nonsecret node view now follows ownership/USB, finite capture/codec/play/

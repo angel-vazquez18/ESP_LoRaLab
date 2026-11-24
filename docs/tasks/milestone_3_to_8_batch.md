@@ -367,3 +367,16 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   under the port lock; production USB behavior is unchanged. PR #194 is ready
   against main, issue Testing, no agent merge. Next #69 resource/arm transitions
   before #73.
+
+- #69 implemented on #194: transactional run reservations, allocation-free
+  receiver arm, both-role five-second start checks and finite preparation/run/
+  reporting cleanup independent of telemetry space. Stop/close/lease/disconnect
+  retire buffers/keys; committed files and borrowed voice sources survive.
+  Initiating timeout remains distinct from cleanup errors. Forced ID collision
+  reproduced deletion of an unowned preexisting file; rollback now tracks actual
+  successful reservation ownership. Final full check: 808 cases, no skips, all
+  shared checks and formatting; 37 dedicated lifecycle cases. V4.2/32 KiB IDF
+  build 0x6f000/57% app free/73,841 static DIRAM. Execution profile becomes
+  finite_message_execution_v2/04f50ab…; unrelated profiles and original 19 user
+  files unchanged. No flash; calibration and physical acceptance remain open.
+  Preparing one issue-scoped PR, then #73 named stage memory observations.

@@ -1,7 +1,7 @@
 # One-message physical radio bring-up
 
 The shared backend now configures two owned, compatible physical nodes, prepares
-both, waits for receiver-ready, starts the sender and verifies actual source and
+both, waits for receiver-ready, arms and starts the sender and verifies actual source and
 recovered bytes. This workflow checks one unencrypted known-data message with
 bounded fragmentation and optional stop-and-wait retries. Full IF-02, GCM and
 voice-over-radio qualification remain separate. The node's advertised limits and exact execution/artifact
@@ -62,9 +62,11 @@ Each run preserves device/boot identities, firmware and host source fingerprints
 session ID, requested/applied settings, calculated budget, raw command/reply/event
 records, node summaries, readback manifests and independently compared files.
 Events retain node-local clocks; host timing only establishes command order.
-Receiver-ready must precede sender start, whose reply must arrive within one
-second. Applied settings, session/revision attribution and expected source hashes
-must agree before successful completion is reported.
+Receiver-ready must precede sender arm/start; the conservative host interval
+from receiver arm request through sender start reply must stay below five seconds.
+The sender also enforces its own five-second local arm. See
+[run lifecycle](run_lifecycle.md). Applied settings, session/revision attribution
+and expected source hashes must agree before successful completion is reported.
 
 `verification.bytes_equal` proves that actual retrieved source/recovered bytes
 match the independent source recipe. Evidence completeness is checked separately:

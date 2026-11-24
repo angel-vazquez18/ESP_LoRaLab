@@ -104,6 +104,7 @@ Main control reports actual initialization availability without promising execut
 handlers. See [radio driver](radio_driver.md).
 
 `radio/rf_frames.c` validates fixed header/source bytes; `radio/rf_execution.c`
+owns prepare reservations, both-role arm/start deadlines, bounded cleanup and
 composes fragment planning, reconstruction, referenced ACKs and the bounded sender
 for one finite message lifecycle and verified artifact delivery.
 Both use the real radio port and existing owner/serial writer. The physical host

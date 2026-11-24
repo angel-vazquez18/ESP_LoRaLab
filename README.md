@@ -107,3 +107,8 @@ printed board revision and GPIO47-to-GND wiring before enabling a physical image
 Optional [OLED status](docs/oled_status.md) shows real node phases through an
 isolated worker. It defaults off and requires a verified standard V4 R2
 OLED/power map; its USB observation does not qualify physical screen output.
+
+Data and committed encoded voice share the [reserved run lifecycle](docs/run_lifecycle.md):
+prepare reserves working memory, both roles arm, sender start has a five-second
+window, and cleanup preserves original errors and committed evidence. New RF work
+requires matching `finite_message_execution_v2` host/firmware profiles.
