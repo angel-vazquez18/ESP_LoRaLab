@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .analysis import Metrics
 from .models import NodeEvent
+from .session_keys import require_public_metadata
 
 
 def utc_now() -> str:
@@ -91,6 +92,7 @@ class Store:
                 self.save_campaign(campaign)
 
     def save_campaign(self, campaign: dict):
+        require_public_metadata(campaign)
         self.db.execute(
             "INSERT INTO campaigns VALUES (?, ?, ?) "
             "ON CONFLICT(id) DO UPDATE SET document=excluded.document",
@@ -111,6 +113,7 @@ class Store:
         return json.loads(row[0]) if row else None
 
     def save_run(self, run: dict):
+        require_public_metadata(run)
         self.db.execute(
             "INSERT INTO runs VALUES (?, ?, ?) "
             "ON CONFLICT(id) DO UPDATE SET document=excluded.document",
@@ -119,6 +122,7 @@ class Store:
         self.db.commit()
 
     def append_node_event(self, role: str, event: dict):
+        require_public_metadata(event)
         self.db.execute(
             "INSERT INTO node_observations(role,received_at,document) VALUES (?,?,?)",
             (role, utc_now(), json.dumps(event)),
@@ -147,6 +151,7 @@ class Store:
         return json.loads(row[0]) if row else None
 
     def append_event(self, run_id: str, event: dict):
+        require_public_metadata(event)
         self.db.execute(
             "INSERT INTO events(run_id, received_at, document) VALUES (?, ?, ?)",
             (run_id, utc_now(), json.dumps(event)),
@@ -162,6 +167,7 @@ class Store:
         ]
 
     def save_reference(self, reference: dict):
+        require_public_metadata(reference)
         self.db.execute(
             "INSERT INTO references_audio VALUES (?, ?)", (reference["id"], json.dumps(reference))
         )
@@ -174,6 +180,7 @@ class Store:
         ]
 
     def save_audio(self, record):
+        require_public_metadata(record)
         self.db.execute(
             "INSERT INTO audio_operations VALUES (?, ?, ?) "
             "ON CONFLICT(id) DO UPDATE SET document=excluded.document",
@@ -196,6 +203,7 @@ class Store:
         return json.loads(row[0]) if row else None
 
     def save_transfer(self, transfer):
+        require_public_metadata(transfer)
         self.db.execute(
             "INSERT INTO artifact_transfers VALUES (?, ?, ?) "
             "ON CONFLICT(id) DO UPDATE SET document=excluded.document",

@@ -307,7 +307,13 @@ def test_incomplete_runs_preserve_reason_and_cleanup(tmp_path, native_library, m
                         serial.core.tick(advance=4_001_000)
                 await finish_run(host)
             record = host.radio.get(run["id"])
-            assert record["status"] == ("cancelled" if action == "cancel" else "failed")
+            assert record["status"] == (
+                "cancelled"
+                if action == "cancel"
+                else "interrupted"
+                if action == "disconnect"
+                else "failed"
+            )
             assert record["error"] and not host.busy and not record["hardware_qualified"]
             if action != "disconnect":
                 assert record["cleanup"]["confirmed"], record["cleanup"]
@@ -379,8 +385,16 @@ def test_radio_http_and_cli_share_the_backend_contract(tmp_path, monkeypatch):
         == 0
     )
     assert calls == [
-        ("/api/radio/preflight", {"direction": "B_TO_A", "message_bytes": 159, "timeout_ms": 10000})
+        (
+            "/api/radio/preflight",
+            {"direction": "B_TO_A", "security": "none", "message_bytes": 159, "timeout_ms": 10000},
+        )
     ]
+    assert (
+        runner.invoke(cli.app, ["radio-start", "--preview", "--security", "aes128_gcm"]).exit_code
+        == 0
+    )
+    assert calls[-1][0] == "/api/radio/preflight" and calls[-1][1]["security"] == "aes128_gcm"
 
 
 def test_duplicate_device_identity_blocks_radio_start(tmp_path, native_library):

@@ -11,6 +11,7 @@ from uuid import uuid4
 from . import __version__
 from . import artifact_contract_v2 as contract
 from .adapters import require_artifact_compatible
+from .session_keys import require_public_metadata
 from .storage import utc_now
 
 MAX_REQUESTS = 4096
@@ -141,6 +142,7 @@ class ArtifactTransfers:
         self.store.save_transfer(record)
 
     def wire(self, record, value):
+        require_public_metadata(value)
         encoded = (
             json.dumps({"recorded_at": utc_now(), **value}, separators=(",", ":")) + "\n"
         ).encode()

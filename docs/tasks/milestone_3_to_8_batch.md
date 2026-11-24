@@ -170,3 +170,27 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   `feat/local-crypto-benchmark`) is ready for review, 562 checks and final IDF
   build passed. No merge or physical RF claim. Starting #63's private host key
   owner, allowlisted setup traces and persistence guards.
+
+- #63 in progress: fresh private host source pairs, allowlisted setup callbacks,
+  independent metadata/trace/export/API guards, protected GUI/CLI runs and
+  observed-stage assessment implemented. Source/role/run freshness and actual
+  disk/export scans pass; host mismatch, wrong-key RF arrival, uncertain setup,
+  cancel/disconnect/fresh reconnect are covered. A real completed-drain clock
+  race was reproduced (one of nine crossings), fixed without wider deadlines,
+  and locked down alongside an unfinished-ACK failure case. Explicit accepted
+  ACK events change execution SHA to 3e3073993d76a7133d3ef594d2147967936c1bdb6c4a770aebe9d5444f48e6a1.
+  Thirty-one focused cases and the IDF build (0x65480, 60% app free) passed.
+  Final `make check` passed 587 cases without skips plus lint/frontend/contracts/
+  repository checks. Isolated browser acceptance verified both protected directions,
+  exact bytes, authenticated fragments/ACKs, idle cleanup and mobile width 390.
+  Repeated immutable schema generation was profiled and fixed without caching
+  live state. No physical port or flash; physical #67 remains pending.
+
+- #63: PR #181 (`feat/private-host-sessions` →
+  `feat/authenticated-replay-window`) is ready for review with scoped Conventional
+  Commits, 587 checks, IDF build and isolated desktop/mobile browser evidence.
+  Issue status is Testing; no merge. Original checkout's 19 saved files still
+  match their hashes. User reports both nodes wired/connected; USB inventory
+  currently exposes only `esp-f85b1ba27744`. Physical backend is stopped; neither
+  port has been opened or flashed. Printed PCB revisions remain unobserved.
+  Next: M6 #29, pinned Codec 2 mode 3200 dependency/provenance.

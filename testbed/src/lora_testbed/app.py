@@ -11,6 +11,8 @@ from typing import Literal
 from urllib.parse import urlsplit
 
 from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
@@ -32,6 +34,7 @@ from .reports import campaign_csv, evidence_bundle
 from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
 from .serial_validation import SerialValidationRequest, serial_plan
+from .session_keys import require_public_metadata
 
 
 class PreflightRequest(StrictModel):
@@ -114,6 +117,18 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         if not local_origin(request.headers.get("origin"), request.url.port):
             return JSONResponse(status_code=403, content={"detail": "Local clients only"})
         return await call_next(request)
+
+    @app.exception_handler(RequestValidationError)
+    async def private_input_rejection(request: Request, exc: RequestValidationError):
+        try:
+            if isinstance(exc.body, (dict, list, str)):
+                require_public_metadata(exc.body)
+        except ValueError:
+            return JSONResponse(
+                status_code=422,
+                content={"detail": "Session key material is not accepted by this API"},
+            )
+        return await request_validation_exception_handler(request, exc)
 
     @app.exception_handler(ValueError)
     async def invalid_request(request: Request, exc: ValueError):

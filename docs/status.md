@@ -1,8 +1,28 @@
 # Consolidated implementation status
 
-Updated November 22, 2026. The host is now physical-only by user decision, replacing
+Updated November 23, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 23 — Protected host sessions (#63)
+
+The shared GUI/CLI backend now provisions fresh independent source keys, retires
+its private owner after setup, records allowlisted setup facts and rejects
+secret-bearing metadata at storage/export/API boundaries. Protected messages use
+the existing receiver-first/readback/cleanup path. Observed RF arrivals, node
+reported authenticated fragments, rejection stages and accepted ACKs remain
+separate. Explicit accepted-ACK events require the new execution fingerprint.
+
+Full `make check` passed 587 cases without skips, lint, production frontend,
+contract and repository checks; formatting passed. The selected-board ESP-IDF
+image built (0x65480 bytes, 60% app free), without flashing. Isolated native-C
+browser acceptance verified A→B 321 bytes with three authenticated fragments and
+three accepted ACKs, B→A 161 bytes without ACKs, exact readback and idle cleanup.
+Mobile width 390 had no horizontal overflow; the console had no warnings/errors.
+These are software fixtures, not physical RF results. The delivered-drain clock
+race and repeated schema generation during live polling were reproduced and
+fixed through public regressions. See [review and checks](protected_host_sessions.md).
+Physical #67 and board revision/installation checks remain pending.
 
 ## November 21 — Radio execution contract (#3)
 

@@ -13,7 +13,7 @@ from lora_testbed.experiments_v2 import KnownDataPlan, KnownDataSpec, Link, know
 from lora_testbed.frames_v2 import data_frame
 
 
-def protected_setup(node, *, ack=False, sender=False, role="A", run=None):
+def protected_setup(node, *, ack=False, sender=False, role="A", run=None, length=32):
     assert node.request("control.claim", {"node_role": role})["ok"]
     run = run or str(uuid4())
     peer = "esp-66778899aabb" if role == "A" else "esp-001122334455"
@@ -40,7 +40,7 @@ def protected_setup(node, *, ack=False, sender=False, role="A", run=None):
         link=link,
         spec=KnownDataSpec(
             message_count=1,
-            message_bytes=32,
+            message_bytes=length,
             security="aes128_gcm",
             direction="A_TO_B" if sender == (role == "A") else "B_TO_A",
             max_duration_ms=10000,
@@ -236,7 +236,13 @@ def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequen
         node.drain()
         native_library.native_radio_inject(node.radio, good, len(good), 2)
         node.tick()
-        node.drain()
+        ack_records = node.drain()
+        assert any(
+            r.get("name") == "ack.result"
+            and r["data"]["status"] == "received"
+            and r["data"]["acked_frame_seq"] == 1
+            for r in ack_records
+        )
         node.tick(50001)
         node.drain()
         final = sent(node)
@@ -331,3 +337,78 @@ def test_two_c_nodes_recover_a_lost_protected_ack_without_duplicate_delivery(nat
     finally:
         for node in nodes.values():
             node.close()
+
+
+@pytest.mark.parametrize("cutoff", range(9))
+def test_successful_receiver_drain_boundary_is_not_a_failed_receive_timeout(native_library, cutoff):
+    node = NativeNode(native_library, radio=native_library.native_radio_create())
+    try:
+        run, revision = protected_setup(node, ack=True, length=16)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
+        payload = known_data(743, 1, 16)
+        header = bytearray(data_frame("0102030405060708", 1, 1, 0, 1, 16, "B", "A", payload)[:40])
+        header[4] = 3
+        raw = bytes(header) + AESGCM(KEY_B).encrypt(bytes(header[8:20]), payload, bytes(header))
+        native_library.native_radio_inject(node.radio, raw, len(raw), 2)
+        node.tick()
+        events = node.drain()
+        completed = next(
+            r["data"]["complete_us"] for r in events if r.get("name") == "message.result"
+        )
+        node.tick(20001)
+        node.drain()
+        native_library.native_radio_tx_done(node.radio)
+        node.tick()
+        node.drain()
+        plan = KnownDataPlan(
+            link=Link(fragment_payload_bytes=16, ack_mode="stop_wait"),
+            spec=KnownDataSpec(
+                message_count=1, message_bytes=16, security="aes128_gcm", max_duration_ms=10000
+            ),
+        )
+        boundary = completed + preview(plan)["timing"]["budget"]["drain_us"]
+        native_library.native_radio_listening.argtypes = [C.c_void_p]
+        native_library.native_radio_listening.restype = C.c_bool
+        assert native_library.native_radio_listening(node.radio)
+        assert node.request("run.summary", run_id=run)["result"]["delivered_messages"] == 1
+        calls = 0
+
+        def clock_crosses_during_poll():
+            nonlocal calls
+            calls += 1
+            return boundary - 1 if calls <= cutoff else boundary + 1
+
+        node.now = clock_crosses_during_poll
+        native_library.native_radio_inject(node.radio, b"", 0, 512)  # Hardware RX timeout.
+        node.tick()
+        records = node.drain()
+        node.now = lambda: boundary + 1
+        node.tick()
+        records += node.drain()
+        terminal = next(r["data"] for r in records if r.get("name") == "run.summary")
+        assert terminal["delivered_messages"] == 1
+        assert terminal["stop_reason"] == "completed", terminal["stop_reason"]
+    finally:
+        node.close()
+
+
+def test_delivered_receiver_with_unfinished_ack_still_fails_at_drain_deadline(native_library):
+    node = NativeNode(native_library, radio=native_library.native_radio_create())
+    try:
+        run, revision = protected_setup(node, ack=True, length=16)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
+        payload = known_data(743, 1, 16)
+        header = bytearray(data_frame("0102030405060708", 1, 1, 0, 1, 16, "B", "A", payload)[:40])
+        header[4] = 3
+        raw = bytes(header) + AESGCM(KEY_B).encrypt(bytes(header[8:20]), payload, bytes(header))
+        native_library.native_radio_inject(node.radio, raw, len(raw), 2)
+        node.tick()
+        node.drain()
+        node.tick(20001)
+        node.drain()  # ACK starts, but its completion is never supplied.
+        node.tick(2100000)
+        summary = next(r["data"] for r in node.drain() if r.get("name") == "run.summary")
+        assert summary["delivered_messages"] == 1
+        assert summary["stop_reason"] == "timeout"
+    finally:
+        node.close()

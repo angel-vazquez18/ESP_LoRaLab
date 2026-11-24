@@ -138,6 +138,127 @@
       "title": "AcceptedData",
       "type": "object"
     },
+    "AckData": {
+      "additionalProperties": false,
+      "properties": {
+        "acked_frame_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Acked Frame Seq",
+          "type": "integer"
+        },
+        "ack_frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ack Frame Seq"
+        },
+        "attempt_index": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Attempt Index",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "received",
+            "timeout",
+            "repeat_sent"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "acked_frame_seq",
+        "ack_frame_seq",
+        "attempt_index",
+        "status"
+      ],
+      "title": "AckData",
+      "type": "object"
+    },
+    "AckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "ack.result",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/AckData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "AckResult",
+      "type": "object"
+    },
     "Attempt": {
       "additionalProperties": false,
       "properties": {
@@ -1727,6 +1848,7 @@
   },
   "discriminator": {
     "mapping": {
+      "ack.result": "#/$defs/AckResult",
       "message.missing": "#/$defs/Missing",
       "message.result": "#/$defs/MessageResult",
       "operation.result": "#/$defs/OperationResult",
@@ -1755,6 +1877,9 @@
     },
     {
       "$ref": "#/$defs/Accepted"
+    },
+    {
+      "$ref": "#/$defs/AckResult"
     },
     {
       "$ref": "#/$defs/Rejected"

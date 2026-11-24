@@ -55,9 +55,23 @@ export type RadioRun = {
   plan: {
     radio: Record<string, unknown>;
     link: Record<string, unknown>;
-    spec: { message_bytes: number; direction: string };
+    spec: { message_bytes: number; direction: string; security?: string };
   };
   identities: Record<string, Identity>;
+  security?: {
+    profile: "none" | "aes128_gcm";
+    key_set_id: string | null;
+    keys_retired_on_host: boolean;
+    assessment: {
+      classification: string;
+      receiver_data_arrivals: number;
+      node_reported_authenticated_fragments: number;
+      authentication_rejections: number;
+      replay_rejections: number;
+      sender_ack_authentication_rejections: number;
+      accepted_ack_results: number;
+    } | null;
+  } | null;
   verification: Verification | null;
   accounting?: Accounting | null;
   missing_evidence?: MissingEvidence | null;
@@ -121,6 +135,7 @@ export default function RadioLink({
 }) {
   const [form, setForm] = useState({
     direction: "A_TO_B",
+    security: "none",
     message_bytes: "64",
     timeout_ms: "10000",
     frequency_hz: "915000000",
@@ -147,6 +162,7 @@ export default function RadioLink({
     () =>
       JSON.stringify({
         direction: form.direction,
+        security: form.security,
         message_bytes: number(form.message_bytes),
         source_seed: number(form.source_seed),
         timeout_ms: number(form.timeout_ms),
@@ -318,9 +334,11 @@ export default function RadioLink({
           <h2>
             <Radio size={20} /> Known-data radio link
           </h2>
-          <p>Send one unencrypted message and compare the recovered bytes.</p>
+          <p>Send one known-data message and compare the recovered bytes.</p>
         </div>
-        <span className="radio-mode">Unencrypted</span>
+        <span className="radio-mode">
+          {form.security === "aes128_gcm" ? "AES-128-GCM" : "Unprotected"}
+        </span>
       </div>
       <form
         onSubmit={(event) => {
@@ -344,6 +362,17 @@ export default function RadioLink({
               >
                 <option value="A_TO_B">A → B</option>
                 <option value="B_TO_A">B → A</option>
+              </select>
+            </label>
+            <label>
+              Security
+              <select
+                aria-label="Radio security"
+                value={form.security}
+                onChange={(e) => update("security", e.target.value)}
+              >
+                <option value="none">Unprotected</option>
+                <option value="aes128_gcm">AES-128-GCM</option>
               </select>
             </label>
             {input("message_bytes", "Message bytes", 1, 65536)}
@@ -378,7 +407,12 @@ export default function RadioLink({
                 (value) => `4/${value}`,
               )}
               {input("tx_power_dbm", "SX1262 power (dBm)", 2, 20)}
-              {input("fragment_payload_bytes", "Fragment capacity", 16, 215)}
+              {input(
+                "fragment_payload_bytes",
+                "Fragment capacity",
+                16,
+                form.security === "aes128_gcm" ? 199 : 215,
+              )}
               <label>
                 Acknowledgments
                 <select
@@ -583,6 +617,49 @@ export default function RadioLink({
                       <p>{record.missing_evidence.reason}</p>
                     )}
                   </details>
+                )}
+                {record.security?.profile === "aes128_gcm" && (
+                  <div
+                    className="radio-signal"
+                    aria-label="Security observations"
+                  >
+                    <strong>AES-128-GCM observations</strong>
+                    {record.security.assessment ? (
+                      <>
+                        <span>
+                          Receiver DATA arrivals:{" "}
+                          {record.security.assessment.receiver_data_arrivals}
+                        </span>
+                        <span>
+                          Authenticated fragments reported by node:{" "}
+                          {
+                            record.security.assessment
+                              .node_reported_authenticated_fragments
+                          }
+                        </span>
+                        <span>
+                          Authentication rejections:{" "}
+                          {record.security.assessment.authentication_rejections}
+                        </span>
+                        <span>
+                          Replay rejections:{" "}
+                          {record.security.assessment.replay_rejections}
+                        </span>
+                        <span>
+                          Accepted ACKs:{" "}
+                          {record.security.assessment.accepted_ack_results}
+                        </span>
+                        <span>
+                          {record.security.assessment.classification.replaceAll(
+                            "_",
+                            " ",
+                          )}
+                        </span>
+                      </>
+                    ) : (
+                      <span>Waiting for retained security observations.</span>
+                    )}
+                  </div>
                 )}
                 <div className="radio-signal">
                   <strong>Observed receive signal</strong>

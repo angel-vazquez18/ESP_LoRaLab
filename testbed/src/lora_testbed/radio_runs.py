@@ -19,6 +19,8 @@ from .artifact_contract_v2 import SHA256, ArtifactID
 from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
 from .models import StrictModel
 from .radio_accounting import failed_ranges, reconcile
+from .radio_security import assess as assess_security
+from .session_keys import EphemeralKeySet, require_public_metadata
 from .storage import utc_now
 
 TERMINAL = ("completed", "failed", "cancelled", "interrupted")
@@ -27,6 +29,7 @@ MAX_RADIO_EVENTS = 65568
 
 
 class RadioRunRequest(StrictModel):
+    security: Literal["none", "aes128_gcm"] = "none"
     direction: Literal["A_TO_B", "B_TO_A"] = "A_TO_B"
     message_bytes: int = Field(default=64, ge=1, le=65536)
     source_seed: int = Field(default=743, ge=0, le=2**32 - 1)
@@ -40,6 +43,7 @@ class RadioRunRequest(StrictModel):
             link=self.link,
             spec=KnownDataSpec(
                 direction=self.direction,
+                security=self.security,
                 message_count=1,
                 message_bytes=self.message_bytes,
                 source_seed=self.source_seed,
@@ -98,6 +102,7 @@ class RadioRuns:
         return self.current is not None
 
     def save(self, r):
+        require_public_metadata(r)
         r["updated_at"] = utc_now()
         self.store.db.execute(
             "INSERT INTO radio_runs_v1 VALUES (?,?,?) ON CONFLICT(id) "
@@ -135,6 +140,7 @@ class RadioRuns:
             "receiver",
             "plan",
             "session_id",
+            "security",
             "verification",
             "accounting",
             "missing_evidence",
@@ -180,6 +186,7 @@ class RadioRuns:
         return path
 
     def wire(self, r, value):
+        require_public_metadata(value)
         data = (
             json.dumps(
                 {"recorded_at": utc_now(), "host_monotonic_ns": monotonic_ns(), **value},
@@ -271,7 +278,7 @@ class RadioRuns:
             "ready": not blockers,
             "blockers": list(dict.fromkeys(blockers)),
             "required_nodes": 2,
-            "scope": "one unprotected known-data message; physical bring-up only",
+            "scope": "one known-data message with selected security; physical bring-up only",
             "hardware_qualified": False,
         }
 
@@ -297,6 +304,14 @@ class RadioRuns:
             "receiver": receiver,
             "plan": request.plan().model_dump(),
             "session_id": session,
+            "failure_stage": None,
+            "security": {
+                "profile": request.security,
+                "key_set_id": None,
+                "provisioned": {},
+                "keys_retired_on_host": True,
+                "assessment": None,
+            },
             "identities": {r: n.identity.model_dump() for r, n in self.nodes.items()},
             "host_version": __version__,
             "host_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -305,6 +320,11 @@ class RadioRuns:
                 for name in (
                     "radio_runs.py",
                     "radio_accounting.py",
+                    "radio_security.py",
+                    "session_keys.py",
+                    "rf_events_v2.py",
+                    "control_v2.py",
+                    "v2.py",
                     "nodes.py",
                     "artifact_transfers.py",
                     "adapters.py",
@@ -356,7 +376,7 @@ class RadioRuns:
             raise ValueError(r["evidence_error"])
         return node
 
-    async def command(self, r, role, name, args=None, *, cleanup=False):
+    async def command(self, r, role, name, args=None, *, cleanup=False, key_set_id=None):
         node = self.same_boot(r, role, cleanup=cleanup)
         kwargs = {"timeout": 0.75, "retries": 0} if cleanup else {}
         return await node.request(
@@ -364,6 +384,7 @@ class RadioRuns:
             args,
             run_id=r["id"] if name.startswith(("session.", "run.")) else None,
             on_record=lambda value: self.trace_command(r, role, value, cleanup),
+            key_set_id=key_set_id,
             **kwargs,
         )
 
@@ -464,7 +485,11 @@ class RadioRuns:
                 )
                 await self.command(r, role, "session.close", cleanup=True)
                 status = await self.command(r, role, "status.get", cleanup=True)
-                if status["state"] != "idle" or status["run_id"] is not None:
+                if (
+                    status["state"] != "idle"
+                    or status["run_id"] is not None
+                    or status["security_ready"]
+                ):
                     raise ValueError("Node did not confirm idle")
                 notes[role] = "session closed and idle confirmed"
             except (OSError, ValueError, TimeoutError) as exc:
@@ -495,21 +520,52 @@ class RadioRuns:
                     }
                     if applied["radio"] != expected or applied["link"] != plan.link.model_dump():
                         raise ValueError(f"Node {role} applied settings differ from the request")
-                for role, peer in [("A", "B"), ("B", "A")]:
-                    identity = r["identities"][peer]
-                    await self.command(
-                        r,
-                        role,
-                        "session.open",
-                        {
-                            "session_id": r["session_id"],
-                            "peer_device_id": identity["device_id"],
-                            "peer_boot_id": identity["boot_id"],
-                            "security": "none",
-                            "tx_key_hex": None,
-                            "rx_key_hex": None,
-                        },
-                    )
+                r["stage"] = "provisioning"
+                key_set = EphemeralKeySet() if request.security == "aes128_gcm" else None
+                if key_set:
+                    r["security"].update(key_set_id=key_set.key_set_id, keys_retired_on_host=False)
+                try:
+                    for role, peer in [("A", "B"), ("B", "A")]:
+                        identity = r["identities"][peer]
+                        args = (
+                            key_set.arguments(
+                                role, r["session_id"], identity["device_id"], identity["boot_id"]
+                            )
+                            if key_set
+                            else {
+                                "session_id": r["session_id"],
+                                "peer_device_id": identity["device_id"],
+                                "peer_boot_id": identity["boot_id"],
+                                "security": "none",
+                                "tx_key_hex": None,
+                                "rx_key_hex": None,
+                            }
+                        )
+                        try:
+                            await self.command(
+                                r,
+                                role,
+                                "session.open",
+                                args,
+                                key_set_id=key_set.key_set_id if key_set else None,
+                            )
+                        finally:
+                            args.clear()  # Drop hex-string references as soon as the request ends.
+                        status = await self.command(r, role, "status.get")
+                        if (
+                            status["security_ready"] != bool(key_set)
+                            or status["node_role"] != role
+                            or status["state"] != "idle"
+                            or status["run_id"] not in (None, r["id"])
+                        ):
+                            raise ValueError(
+                                f"Node {role} did not confirm the selected owned security state"
+                            )
+                        r["security"]["provisioned"][role] = True
+                finally:
+                    if key_set:
+                        key_set.close()
+                    r["security"]["keys_retired_on_host"] = True
                 r["stage"] = "preparing"
                 self.save(r)
                 for role in (r["receiver"], r["sender"]):
@@ -597,10 +653,19 @@ class RadioRuns:
                         )
                 r["status"] = "completed"
         except asyncio.CancelledError:
+            r["failure_stage"] = r["stage"]
             r["status"] = "interrupted" if self.shutting_down else "cancelled"
             r["error"] = "Host shutdown" if self.shutting_down else "Operator stopped the radio run"
         except Exception as exc:
-            r["status"] = "failed"
+            r["failure_stage"] = r["stage"]
+            interrupted = any(
+                not node.connected
+                or node.identity is None
+                or (node.identity.device_id, node.identity.boot_id)
+                != (r["identities"][role]["device_id"], r["identities"][role]["boot_id"])
+                for role, node in self.nodes.items()
+            )
+            r["status"] = "interrupted" if interrupted else "failed"
             r["error"] = str(exc) or type(exc).__name__
         finally:
             self.cleaning_up = True
@@ -624,6 +689,7 @@ class RadioRuns:
                 r["error"] = (
                     "Telemetry became incomplete during cleanup; verified bytes are retained"
                 )
+            r["security"]["assessment"] = assess_security(r)
             r["missing_evidence"] = failed_ranges(r)
             r["finished_at"] = utc_now()
             r["stage"] = "finished"
@@ -688,6 +754,7 @@ class RadioRuns:
 
     def export(self, identifier):
         record = self.get(identifier)
+        require_public_metadata(record)
         members = {"run.json": json.dumps(record, indent=2).encode()}
         for kind in ("source", "recovered", "wire"):
             try:
@@ -702,6 +769,17 @@ class RadioRuns:
             trace = self.artifacts.directory / f"{transfer_id}.ndjson"
             if trace.is_file():
                 members[f"transfers/{role}.ndjson"] = trace.read_bytes()
+        for name, data in members.items():
+            if name.endswith((".json", ".ndjson")):
+                for line in (
+                    data.decode().splitlines() if name.endswith(".ndjson") else [data.decode()]
+                ):
+                    try:
+                        require_public_metadata(json.loads(line))
+                    except (ValueError, UnicodeError):
+                        raise ValueError(
+                            "Unsafe or malformed metadata cannot be exported"
+                        ) from None
         if sum(len(data) for data in members.values()) > 128 * 1024 * 1024:
             raise ValueError(
                 "Radio export exceeds 128 MiB; retrieve linked file-transfer evidence separately"

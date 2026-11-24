@@ -3,8 +3,8 @@
 The main node now composes the source-key owner, real PSA frame cipher and finite
 radio/reassembly path. With an available selected radio it advertises
 `security_gcm`; `security_ready` still means a usable **owned** key pair has been
-loaded. The shared host continues to reject protected provisioning until #63
-adds its ephemeral-key and persistence guards. Software fixtures can exercise
+loaded. #63 now adds fresh shared-host provisioning, safe setup records and
+independent persistence guards; see [protected host sessions](protected_host_sessions.md). Software fixtures can exercise
 this node slice without enabling an operator simulator or opening a physical port.
 
 ## Receive decisions
@@ -81,7 +81,9 @@ proof. `rx.rejected` distinguishes framing, session, authentication and replay
 failures. `rx.accepted`, once-only `message.result`, summaries and actual committed
 readback remain separate observations. No new schema shape is needed: current
 execution/profile fields already define protection and these stages. Existing
-main-control, diagnostic, artifact, audio and execution hashes are unchanged.
+main-control, diagnostic, artifact, audio and execution hashes were unchanged
+by #60. #63 subsequently adds explicit accepted-ACK events and updates the execution
+fingerprint; follow its migration when rebuilding the protected operator stack.
 
 Read these files for review:
 

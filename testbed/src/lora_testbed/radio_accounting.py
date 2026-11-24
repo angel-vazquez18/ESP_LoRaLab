@@ -6,6 +6,8 @@ import hashlib
 def reconcile(record, expected):
     sender, receiver = record["sender"], record["receiver"]
     link = record["plan"]["link"]
+    protected = record["plan"]["spec"].get("security", "none") == "aes128_gcm"
+    tag_bytes = 16 if protected else 0
     capacity = link["fragment_payload_bytes"]
     count = (len(expected) + capacity - 1) // capacity
 
@@ -34,7 +36,7 @@ def reconcile(record, expected):
     groups = {}
     for row in transmissions:
         i, size = bound(row)
-        if row["frame_type"] != "data" or row["frame_bytes"] != 40 + size:
+        if row["frame_type"] != "data" or row["frame_bytes"] != 40 + size + tag_bytes:
             invalid("DATA type or final body length")
         sequence = row["frame_seq"]
         if i in sequences and sequences[i] != sequence:
@@ -96,7 +98,7 @@ def reconcile(record, expected):
         bound(row)
         if (
             row["frame_type"] != "ack"
-            or row["frame_bytes"] != 40
+            or row["frame_bytes"] != 40 + tag_bytes
             or row["attempt_index"] != 1
             or row["status"] != "completed"
         ):
@@ -107,14 +109,31 @@ def reconcile(record, expected):
     ack_rx = [
         row for row in rows(sender, "rx.frame") if row["crc_ok"] and row["frame_type"] == "ack"
     ]
+    accepted_ack_rows = [row for row in rows(sender, "ack.result") if row["status"] == "received"]
+    if protected or accepted_ack_rows:
+        if len({row["acked_frame_seq"] for row in accepted_ack_rows}) != len(accepted_ack_rows):
+            invalid("multiple ACK acceptances for one DATA original")
+        accepted_ack_sequences = set()
+        for row in accepted_ack_rows:
+            original = row["acked_frame_seq"]
+            attempts = groups.get(original, [])
+            if not attempts or row["attempt_index"] not in {a["attempt_index"] for a in attempts}:
+                invalid("accepted ACK lacks its outstanding DATA attempt")
+            if row["ack_frame_seq"] in accepted_ack_sequences:
+                invalid("accepted ACK sequence reused")
+            accepted_ack_sequences.add(row["ack_frame_seq"])
+        raw_sequences = {row["frame_seq"] for row in ack_rx}
+        if not accepted_ack_sequences <= raw_sequences:
+            invalid("accepted ACK lacks its raw RF observation")
+        ack_rx = [row for row in ack_rx if row["frame_seq"] in accepted_ack_sequences]
     for row in ack_rx:
         bound(row)
         if (
             row["source_role"] != receiver
-            or row["frame_bytes"] != 40
+            or row["frame_bytes"] != 40 + tag_bytes
             or identity(row) not in ack_identities
         ):
-            invalid("ACK receive observation lacks its transmission")
+            invalid("accepted ACK lacks its peer transmission")
     reliable = link["ack_mode"] == "stop_wait"
     if (reliable and len(ack_rx) != count) or (not reliable and (ack_tx or ack_rx)):
         invalid("ACK observations do not reconcile with selected policy")

@@ -151,9 +151,8 @@ physical checks](physical_radio_runs.md#multi-fragment-accounting-and-review-47)
 Firmware `session.open` now accepts the selected protected key variant and
 imports a private role/session-bound owner. Close/stop/ownership loss retires it,
 and readiness reports actual loaded keys. This expands the generated execution
-digest; rebuild matching RF stacks. Protected `run.prepare`, `security_gcm`
-advertisement and ordinary host provisioning remain blocked until their replay/
-transport and safe provisioning implementation. See
+digest; rebuild matching RF stacks. #60 supplies protected preparation/replay
+and GCM capability; #63 supplies fresh host provisioning and safe recording. See
 [session key lifetime](session_key_lifecycle.md) for exact limits, erasure checks
 and compatibility migration.
 
@@ -164,5 +163,5 @@ owned private setup. GCM authentication/replay checks precede insertion, DATA
 retries reuse exact bytes, and eligible duplicate DATA produces a fresh referenced
 protected ACK without second delivery. Timing budgets include tag bytes and
 56-byte ACKs. Node GCM capability reflects selected radio availability; ordinary
-host provisioning remains gated pending #63. See [review, checks and physical
+host provisioning is implemented in [protected host sessions](protected_host_sessions.md). See [review, checks and physical
 limits](protected_replay.md). No physical RF/security qualification is established.
