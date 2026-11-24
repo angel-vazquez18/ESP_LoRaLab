@@ -53,6 +53,14 @@ class PreflightRequest(StrictModel):
     workload: Literal["default", "local", "rf"] = "default"
 
 
+class CampaignExecutionRequest(StrictModel):
+    plan_id: control_v2.UUID
+
+
+class CampaignCancelRequest(StrictModel):
+    reason: str = Field(default="Stopped by operator", min_length=1, max_length=240)
+
+
 class PhysicalRunRequest(PreflightRequest):
     catalog_id: str = Field(default="IF-02", min_length=1, max_length=32)
 
@@ -293,6 +301,30 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/nodes/{role}/source-observation/{run_id}/collect", status_code=201)
     async def source_observation_collect(role: Literal["A", "B"], run_id: control_v2.UUID):
         return await app.state.host.observations.collect_source(role, run_id)
+
+    @app.post("/api/physical-campaigns/executions", status_code=202)
+    async def physical_campaign_execute(body: CampaignExecutionRequest):
+        return await app.state.host.start_campaign(body.plan_id)
+
+    @app.get("/api/physical-campaigns/executions")
+    async def physical_campaign_executions():
+        return app.state.host.physical_campaigns.snapshot()
+
+    @app.get("/api/physical-campaigns/executions/{identifier}")
+    async def physical_campaign_execution(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.get(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/pause", status_code=202)
+    async def physical_campaign_pause(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.pause(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/resume", status_code=202)
+    async def physical_campaign_resume(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.resume(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/cancel")
+    async def physical_campaign_cancel(identifier: control_v2.UUID, body: CampaignCancelRequest):
+        return await app.state.host.physical_campaigns.cancel(identifier, body.reason)
 
     @app.post("/api/physical-campaigns/plans/preview")
     async def physical_campaign_preview(body: CampaignSpec):

@@ -42,7 +42,7 @@ def test_save_reload_preserves_seeded_order_case_links_and_single_vs_pair_requir
         assert preview.status_code == 200, preview.text
         document = preview.json()
         assert document["case_count"] == 6
-        assert document["mode"] == "hardware" and not document["execution_available"]
+        assert document["mode"] == "hardware" and document["execution_available"]
         for case in document["cases"]:
             if case["case"]["kind"] == "memory_probe":
                 assert case["required_nodes"] == 1 and case["roles"] == ["B"]
@@ -180,7 +180,7 @@ def test_all_23_procedures_remain_in_plan_and_case_count_splits_at_64(tmp_path):
             assert any(
                 "procedure" in reason.lower() for reason in case["hardware_preflight"]["blockers"]
             )
-        assert not plan["execution_available"] and not plan["hardware_qualified"]
+        assert plan["execution_available"] and not plan["hardware_qualified"]
 
 
 def test_existing_audio_voice_and_diagnostic_settings_are_typed_and_preserved(tmp_path):
@@ -213,7 +213,7 @@ def test_existing_audio_voice_and_diagnostic_settings_are_typed_and_preserved(tm
         crypto = next(case for case in plan["cases"] if case["case"]["kind"] == "crypto_benchmark")
         assert crypto["case"]["request"] == {"iterations": 2, "payload_bytes": 64}
         assert all(not case["hardware_preflight"]["ready"] for case in plan["cases"])
-        assert not plan["execution_available"]
+        assert plan["execution_available"]
 
 
 def test_plan_listing_cli_and_hashes_use_the_same_saved_physical_intent(tmp_path, monkeypatch):
@@ -442,4 +442,4 @@ def test_documented_example_is_a_valid_nine_case_offline_plan(tmp_path):
         assert response.status_code == 200, response.text
         assert response.json()["case_count"] == 9
         assert response.json()["duration_bound_s"] == 600
-        assert not response.json()["execution_available"]
+        assert response.json()["execution_available"]

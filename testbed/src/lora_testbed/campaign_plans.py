@@ -272,8 +272,8 @@ class CampaignPlans:
             "policy": POLICY,
             "mode": "hardware",
             "status": "planned",
-            "execution_available": False,
-            "execution_blocker": "Campaign execution follows issue #87",
+            "execution_available": True,
+            "execution_blocker": None,
             "hardware_qualified": False,
             "spec": spec.model_dump(),
             "spec_sha256": digest(spec.model_dump()),
@@ -321,13 +321,20 @@ class CampaignPlans:
             "json_extract(document,'$.case_count') AS case_count, "
             "json_extract(document,'$.batch_count') AS batch_count, "
             "json_extract(document,'$.duration_bound_s') AS duration_bound_s, "
-            "json_extract(document,'$.plan_sha256') AS plan_sha256 "
+            "json_extract(document,'$.plan_sha256') AS plan_sha256, "
+            "json_extract(document,'$.execution_available') AS execution_available "
             "FROM physical_campaign_plans_v1 ORDER BY created_at DESC LIMIT ?",
             (limit,),
         )
         return {
             "plans": [
-                {**dict(row), "mode": "hardware", "status": "planned", "execution_available": False}
+                {
+                    **dict(row),
+                    "mode": "hardware",
+                    "status": "planned",
+                    "execution_available": bool(row["execution_available"]),
+                    "current_execution_available": True,
+                }
                 for row in rows
             ]
         }
