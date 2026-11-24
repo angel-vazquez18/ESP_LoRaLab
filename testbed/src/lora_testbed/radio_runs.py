@@ -218,7 +218,7 @@ class RadioRuns:
             with path.open("rb") as stream:
                 actual = hashlib.file_digest(stream, "sha256").hexdigest()
             if path.stat().st_size != expected["length_bytes"] or actual != expected["sha256"]:
-                raise ValueError("Saved radio file failed its length/hash check")
+                raise ValueError("Saved radio file failed integrity verification (length/hash)")
         return path
 
     def wire(self, r, value):
