@@ -38,3 +38,41 @@ advertises one message/one fragment until receiver reconstruction and transport
 scheduling are integrated. No physical fragmentation result is claimed. Later
 qualification must compare actual recovered bytes/hashes and retained metadata
 across boundary lengths, both directions, loss, cancellation and recovery.
+
+## Receiver reconstruction
+
+`rf_reassembly` owns one message buffer per peer/session. Its opaque interface
+uses the platform's allocation/release and SHA-256 callbacks. Creation binds the
+session, roles and fragment capacity. Begin fixes a nonzero increasing message
+ID, content, complete length, expected SHA-256 and absolute node-local deadline;
+all limits reject before message allocation. The initial implementation accepts
+unprotected DATA only. Protected frames reject before plaintext insertion.
+
+Accept validates framing, session, direction and consistent metadata. A bitmap
+tracks exact missing indexes while duplicate slices do not add bytes. Reordering
+within the message is supported. Completion hashes the actual reconstructed
+buffer and compares the expected hash before `take` exposes a borrowed pointer.
+Take succeeds once; the pointer lasts until begin/cancel/destroy. A late
+conflicting duplicate cannot revoke or free a buffer already delivered.
+
+Timeout, conflicting metadata/content, hash failure and cancellation scrub/release
+the incomplete buffer. Missing indexes remain queryable in ascending pages after
+failure; a failed/delivered message ID cannot restart in the same context. A new
+higher ID can use the released resources. An active message must be explicitly
+cancelled/expired before beginning its replacement. Caller-supplied expected
+hashes are trusted local run context, not authentication of an RF peer.
+
+`rf_data_decode` is the canonical unprotected multi-fragment parser. Existing
+single-fragment execution now uses it through its narrow compatibility adapter.
+The reconstruction module is ready for the reliability scheduler; operator
+execution still does not advertise multi-fragment transport in this PR.
+
+Run `uv run --project testbed pytest testbed/tests/test_rf_reassembly_native.py -q`.
+Expected: 12 cases pass without skips. They cover reordered/duplicate exact
+once-only delivery, missing middle fragment/deadline, conflicting metadata and
+content, wrong final hash, cancellation and fresh-message recovery, late conflict
+without freeing a borrowed result, 65,536 bytes at 16/160/215-byte capacities,
+paged missing indexes, maximum-plus-one/preflight before allocation, allocation
+failure and malformed/session/role/protected frame rejection. Tracked heap
+boundaries must be empty after destruction. Physical loss/reorder, board memory,
+RF delivery and full transport integration remain separate checks.

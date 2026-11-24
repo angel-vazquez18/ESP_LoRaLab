@@ -80,3 +80,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #28: allocation-free 65,536-byte/4,096-fragment planning and exact unprotected
   encoding, sequence-range preflight and protected tag reservation implemented.
   Execution remains single-fragment until receiver/scheduler integration.
+
+- #28: PR #170 (`feat/bounded-message-fragments` → `feat/radio-link-dashboard`),
+  435 checks and selected-board ESP-IDF build passed.
+- #35: bounded reconstruction, missing indexes, once-only hash verification and
+  cleanup/recovery implemented; 12 new public-API cases pass. Canonical parser is
+  used by current single-frame execution. Reliability scheduling follows.

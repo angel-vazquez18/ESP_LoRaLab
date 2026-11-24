@@ -182,3 +182,7 @@ a simulation result never establishes hardware support.
 encoding; `rf_frames` retains source generation and the initial single-fragment
 acceptance adapter. Protected header generation reserves tag capacity without
 claiming encryption. See [fragment behavior](radio_fragments.md).
+
+`radio/rf_reassembly` owns one bounded peer/session message buffer, missing-index
+bitmap and hash-gated once-only delivery. Allocation/hash are platform boundaries;
+wire parser validation precedes insertion. Scheduler integration is separate.
