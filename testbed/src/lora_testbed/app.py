@@ -21,6 +21,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from . import audio_contract_v2, control_v2, crypto_benchmark_v2, rf_events_v2, run_protocol_v2, v2
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
+from .campaign_plans import CampaignSpec
 from .catalog import catalog
 from .comparison import campaign_summary, compare
 from .experiments_v2 import KnownDataPlan
@@ -257,6 +258,22 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         role: Literal["A", "B"], operation_id: control_v2.UUID, include_records: bool = False
     ):
         return app.state.host.crypto_benchmark_evidence(role, operation_id, include_records)
+
+    @app.post("/api/physical-campaigns/plans/preview")
+    async def physical_campaign_preview(body: CampaignSpec):
+        return app.state.host.campaign_plans.preview(body)
+
+    @app.post("/api/physical-campaigns/plans", status_code=201)
+    async def physical_campaign_save(body: CampaignSpec):
+        return app.state.host.campaign_plans.create(body)
+
+    @app.get("/api/physical-campaigns/plans")
+    async def physical_campaign_plans(limit: int = Query(20, ge=1, le=100)):
+        return app.state.host.campaign_plans.list(limit)
+
+    @app.get("/api/physical-campaigns/plans/{plan_id}")
+    async def physical_campaign_plan(plan_id: control_v2.UUID):
+        return app.state.host.campaign_plans.get(plan_id)
 
     @app.get("/api/diagnostic-runs/{run_id}")
     async def diagnostic_run(run_id: control_v2.UUID):

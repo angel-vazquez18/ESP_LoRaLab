@@ -120,6 +120,30 @@ def preflight(experiment: str, role: str | None = None, workload: str = "default
 
 
 @app.command()
+def campaign_plan(path: Path, preview: bool = False):
+    """Preview or save physical campaign intent; this command does not start work."""
+    document = json.loads(path.read_text())
+    request("/api/physical-campaigns/plans" + ("/preview" if preview else ""), document)
+
+
+@app.command()
+def campaign_plans():
+    """List retained physical campaign plan summaries."""
+    request("/api/physical-campaigns/plans")
+
+
+@app.command()
+def campaign_plan_result(plan_id: str):
+    """Read the exact saved cases, seeded order, batches and readiness snapshot."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(plan_id)
+    request(f"/api/physical-campaigns/plans/{plan_id}")
+
+
+@app.command()
 def memory_probe(
     role: str,
     iterations: Annotated[int, typer.Option(min=1, max=10000)] = 10,
