@@ -2,8 +2,8 @@
 
 The shared host now coordinates a complete protected clip workflow from an uploaded
 reference or microphone capture. It reuses the existing artifact, local-audio and
-radio owners. API and CLI call that same workflow; the dedicated dashboard follows
-in #72. No operator simulator is added.
+radio owners. API, CLI and the Voice dashboard call that same workflow. No operator simulator
+is added.
 
 ## Reading order
 
@@ -191,3 +191,51 @@ peer and failure recovery and confirm only job-owned RAM files were retired.
 Record rail/clock/memory/stack evidence as required. Physical audio, RF and complete
 voice qualification remain open (#42/#39/#51/#67/#80); no flash or physical
 performance/quality claim was made here.
+
+## Voice dashboard (#72)
+
+Open **Voice workspace**. Upload/select a reference below the workflow controls,
+or choose the sender microphone; select the direction and finite duration. Radio
+settings and optional equal-byte/64-byte comparisons use the shared backend
+request. Missing capabilities and invalid budgets disable start with their actual
+blockers. Stop owns the entire workflow, including child cleanup.
+
+Select a saved clip to inspect source PCM, sent/recovered Codec 2 and receiver PCM.
+Available files show their node artifact IDs, derivation, hashes, byte/frame/sample
+counts, PCM waveforms, exact-byte/WAV downloads and explicit laptop previews.
+Previews never automatically play or confirm the receiver speaker. Current saved
+file hashes are checked separately from historical successful delivery; a changed
+file hides its download/preview without rewriting the earlier observation.
+
+The backend `GET /api/voice/runs/{id}/inspection` composes these verified files,
+linked audio stages and protected radio/comparison records. No serial operation
+is issued by inspection. Stage clocks show role/device/boot and measured local
+codec endpoints/components where present. Capture/playback report local duration
+without inventing absent endpoints; missing timing remains unavailable. Host job timestamps and the RF-completion
+observation are labelled separately. One-way latency is always unavailable until
+a future workflow supplies valid cross-node calibration.
+
+Listening notes require completed receiver playback. The selected clip persists
+in the browser tab across navigation/refresh; records and notes remain owned by
+the backend. Failed/cancelled clips retain earlier source findings, show actual
+errors/cleanup and provide no partial receiver playback claim. Settings are new-job
+inputs, separate from the selected historical record.
+
+Automated acceptance:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_voice_inspection.py -q
+make check
+npm --prefix testbed/frontend run format:check
+```
+
+The three inspection cases cover completed files/local clocks/listening reload,
+saved-file corruption, cancelled RF and incomplete RF. Browser acceptance on
+November 23 used isolated native C nodes with real codec/security/reassembly and
+fixture serial/SPI/IRQ/DMA, on temporary port 8032. Reference A→B with both data
+comparisons and microphone B→A completed; loss and UI stop produced failed and
+cancelled clips with unavailable receiver output. Navigation/refresh preserved the
+selected ID and saved notes. Both themes rendered; a 390-pixel layout had document
+width 390 and no page overflow; no browser console warnings/errors were recorded.
+This is software UI acceptance, not physical voice/RF or performance qualification.
+The original physical backend on port 8000 was left untouched.

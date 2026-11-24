@@ -182,6 +182,10 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     async def voice_run(identifier: str):
         return app.state.host.voice.get(identifier)
 
+    @app.get("/api/voice/runs/{identifier}/inspection")
+    async def voice_inspection(identifier: str):
+        return app.state.host.voice.inspect(identifier)
+
     @app.post("/api/voice/runs/{identifier}/stop")
     async def voice_stop(identifier: str):
         return await app.state.host.voice.stop(identifier)

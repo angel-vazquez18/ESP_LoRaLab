@@ -743,31 +743,33 @@ class RadioRuns:
         finally:
             self.cleaning_up = True
             r["stage"] = "stopping"
-            self.save(r)
-            for transfer in r["transfers"].values():
-                if self.artifacts.busy:
-                    await self.artifacts.cancel(transfer)
-            r["cleanup"] = await self.cleanup(r)
-            if not r["cleanup"]["confirmed"] and r["status"] == "completed":
-                r["status"] = "failed"
-                r["error"] = "Radio cleanup did not confirm both nodes idle"
-            if r["status"] == "completed" and any(
-                n.event_gaps != r["baseline"][role]["event_gaps"]
-                or n.framing_errors != r["baseline"][role]["framing_errors"]
-                or n.health is None
-                or n.health.telemetry_drops != r["baseline"][role]["telemetry_drops"]
-                for role, n in self.nodes.items()
-            ):
-                r["status"] = "failed"
-                r["error"] = (
-                    "Telemetry became incomplete during cleanup; verified bytes are retained"
-                )
-            r["security"]["assessment"] = assess_security(r)
-            r["missing_evidence"] = failed_ranges(r)
-            r["finished_at"] = utc_now()
-            r["stage"] = "finished"
-            self.save(r)
-            self.current = None
+            # Persistence must not prevent the physical sessions from being closed.
+            try:
+                for transfer in r["transfers"].values():
+                    if self.artifacts.busy:
+                        await self.artifacts.cancel(transfer)
+                r["cleanup"] = await self.cleanup(r)
+                if not r["cleanup"]["confirmed"] and r["status"] == "completed":
+                    r["status"] = "failed"
+                    r["error"] = "Radio cleanup did not confirm both nodes idle"
+                if r["status"] == "completed" and any(
+                    n.event_gaps != r["baseline"][role]["event_gaps"]
+                    or n.framing_errors != r["baseline"][role]["framing_errors"]
+                    or n.health is None
+                    or n.health.telemetry_drops != r["baseline"][role]["telemetry_drops"]
+                    for role, n in self.nodes.items()
+                ):
+                    r["status"] = "failed"
+                    r["error"] = (
+                        "Telemetry became incomplete during cleanup; verified bytes are retained"
+                    )
+                r["security"]["assessment"] = assess_security(r)
+                r["missing_evidence"] = failed_ranges(r)
+                r["finished_at"] = utc_now()
+                r["stage"] = "finished"
+                self.save(r)
+            finally:
+                self.current = None
 
     async def required_evidence(self, r, expected):
         # Byte verification remains visible even when a required observation is absent.

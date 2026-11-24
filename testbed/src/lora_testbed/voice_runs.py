@@ -13,6 +13,7 @@ from pydantic import Field, model_validator
 
 from . import __version__, audio_contract_v2, codec_contract_v2
 from .artifact_contract_v2 import ArtifactID
+from .audio import inspect_pcm
 from .experiments_v2 import Link, Radio
 from .models import StrictModel
 from .radio_runs import EncodedRadioRunRequest, RadioRunRequest
@@ -563,6 +564,136 @@ class VoiceRuns:
         raise ValueError(
             "Choose a verified source/encoded/recovered/decoded file; WAV requires PCM"
         )
+
+    def inspect(self, identifier):
+        record = self.get(identifier)
+        files = {}
+        for kind in ("source", "encoded", "recovered", "decoded"):
+            try:
+                content = self.content(identifier, kind)
+                if kind == "recovered":
+                    manifest = self.radio.get(record["radio_run_id"])["readback_manifests"][
+                        record["receiver"]
+                    ]
+                else:
+                    job = record["jobs"]["decode" if kind == "decoded" else "codec"]
+                    manifest = self.audio.get(job)["codec_artifacts"][kind]["manifest"]
+                files[kind] = {
+                    "manifest": manifest,
+                    "available": True,
+                    "length_bytes": len(content),
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                    "pcm": inspect_pcm(content, record["sample_count"])
+                    if kind in ("source", "decoded")
+                    else None,
+                }
+            except (ValueError, OSError) as exc:
+                files[kind] = {"available": False, "error": str(exc)}
+
+        stages = []
+        for name, job, transform in (
+            ("capture", "source_audio", None),
+            ("encode", "codec", "encode"),
+            ("sender_decode_check", "codec", "decode"),
+            ("receiver_decode", "decode", "decode"),
+            ("playback", "playback", None),
+        ):
+            child_id = record["jobs"].get(job)
+            child = self.audio.get(child_id) if child_id else None
+            terminal = (
+                child.get("codec_operations", {}).get(transform)
+                if transform and child
+                else child.get("node_result")
+                if child
+                else None
+            ) or {}
+            result = terminal.get("result") or {}
+            role = (
+                child["role"]
+                if child
+                else (record["receiver"] if job in ("decode", "playback") else record["sender"])
+            )
+            identity = record["identities"][role]
+            timed = "duration_us" in result
+            status = (
+                terminal.get("status") or child["status"]
+                if child and (not transform or terminal)
+                else "not_started"
+            )
+            stages.append(
+                {
+                    "name": name,
+                    "job_id": child_id,
+                    "status": status,
+                    "error": child.get("error") if child and status != "completed" else None,
+                    "result": result or None,
+                    "timing": {
+                        "basis": "node_monotonic_us" if timed else "unavailable",
+                        "role": role,
+                        "device_id": identity["device_id"],
+                        "boot_id": identity["boot_id"],
+                        "started_us": result.get("started_us"),
+                        "finished_us": result.get("finished_us"),
+                        "duration_us": result.get("duration_us"),
+                        "components_us": {
+                            key: result[key]
+                            for key in ("setup_us", "conversion_us", "codec_us", "finalize_us")
+                            if key in result
+                        },
+                    },
+                    "host_created_at": child.get("created_at") if child else None,
+                    "host_finished_at": child.get("finished_at") if child else None,
+                }
+            )
+
+        def radio_view(run_id):
+            if not run_id:
+                return None
+            run = self.radio.get(run_id)
+            return {
+                key: run.get(key)
+                for key in (
+                    "id",
+                    "status",
+                    "stage",
+                    "plan",
+                    "verification",
+                    "accounting",
+                    "security",
+                    "summaries",
+                    "signal",
+                    "applied_settings",
+                    "error",
+                    "cleanup",
+                    "rf_window_closed_at",
+                )
+            }
+
+        return {
+            "record": record,
+            "files": files,
+            "stages": stages,
+            "radio": radio_view(record["radio_run_id"]),
+            "comparisons": {
+                basis: {**entry, "run": radio_view(entry["radio_run_id"])}
+                for basis, entry in record["comparisons"].items()
+            },
+            "encoded_integrity": {
+                "verified": bool(
+                    record["delivery_verified"]
+                    and files["encoded"]["available"]
+                    and files["recovered"]["available"]
+                    and files["encoded"]["sha256"] == files["recovered"]["sha256"]
+                    and files["encoded"]["length_bytes"] == files["recovered"]["length_bytes"]
+                ),
+                "basis": "historical_exact_readback_and_current_saved_file_hashes",
+            },
+            "one_way_latency": {
+                "valid": False,
+                "value_us": None,
+                "reason": "Valid cross-node clock calibration is not available for this workflow",
+            },
+        }
 
     def listening(self, identifier, heard, notes):
         record = self.get(identifier)
