@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "node_control.h"
+#include "radio/radio_config_json.h"
+#include "generated/execution_profile.h"
 #include "generated/audio_profile.h"
 #include "generated/radio_board.h"
 #include "artifacts/artifact_store.h"
@@ -53,6 +55,9 @@ struct node_control {
     unsigned cache_next;
     client_watermark clients[16]; // Never evict a sequence fence within a boot.
     operation op;
+    node_link_settings link;
+    uint32_t config_revision;
+    char config_failure[1024];
     char last_operation[37];
     uint64_t event_sequence, telemetry_drops, reply_drops;
     uint64_t rx_records, oversized, rejected_json, rejected_envelope, backpressure;
@@ -203,6 +208,18 @@ static cJSON *error(node_control *n, const char *code, const char *message, cons
     boolean(n, o, "retryable", false);
     return o;
 }
+static cJSON *command_reply(node_control *n, const cJSON *cmd, uint32_t sequence,
+                            cJSON *result, const char *code, const char *message, const char *field)
+{
+    cJSON *reply = object(n);
+    number(n, reply, "v", 2); string(n, reply, "kind", "reply");
+    string(n, reply, "command_id", text(cmd,"command_id")); number(n, reply,"command_seq",sequence);
+    string(n, reply,"device_id",n->port.device_id); string(n,reply,"boot_id",n->port.boot_id);
+    number(n,reply,"uptime_us",now(n)); boolean(n,reply,"ok",code == NULL);
+    add(n,reply,"result",result ? result : cJSON_CreateNull());
+    add(n,reply,"error",error(n,code,message,field));
+    return reply;
+}
 static cJSON *capabilities(node_control *n)
 {
     cJSON *o = object(n), *limits = object(n);
@@ -246,6 +263,13 @@ static cJSON *capabilities(node_control *n)
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
     number(n, files, "artifact_chunk_bytes", ARTIFACT_CHUNK_BYTES);
     add(n, limits, "artifact_transfer", files);
+    if (n->port.radio && n->port.radio->available) {
+        cJSON *execution = object(n);
+        string(n, execution, "profile", EXECUTION_PROFILE);
+        string(n, execution, "schema_sha256", EXECUTION_SCHEMA_SHA256);
+        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set"},1));
+        add(n, limits, "execution", execution);
+    }
     if (n->port.audio.playback || n->port.audio.capture) {
         cJSON *audio = object(n);
         string(n, audio, "profile", AUDIO_PROFILE);
@@ -303,9 +327,10 @@ static cJSON *health(node_control *n)
     string(n, o, "operation_id", n->op.active ? n->op.id : NULL);
     number(n, o, "uptime_us", now(n));
     string(n, o, "reset_cause", n->port.reset_cause);
-    string(n, o, "radio", NULL);
-    string(n, o, "link", NULL);
-    number(n, o, "config_revision", 0);
+    bool configured = n->port.radio && n->port.radio->available && n->port.radio->configured;
+    add(n, o, "radio", configured ? radio_config_radio(&n->port.radio->applied, n->port.radio->ldro_enabled) : cJSON_CreateNull());
+    add(n, o, "link", configured ? radio_config_link(&n->link) : cJSON_CreateNull());
+    number(n, o, "config_revision", n->config_revision);
     add(n, o, "capability_availability", capabilities(n));
     add(n, memory, "internal", heap(n, &internal));
     add(n, memory, "psram", heap(n, &psram));
@@ -546,7 +571,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -627,6 +652,8 @@ static void process(node_control *n, size_t length)
         message = "Control commands require null run_id";
     }
     enum action action = NONE;
+    node_radio_settings radio_settings;
+    node_link_settings link_settings;
     uint8_t *probe = NULL;
     const void *play_bytes = NULL;
     size_t play_length = 0;
@@ -644,7 +671,13 @@ static void process(node_control *n, size_t length)
     n->oom = false;
     cJSON *result = NULL;
     if (!code) {
-        if (eq(name, "control.claim")) {
+        if (eq(name, "config.set")) {
+            if (!n->port.radio || !n->port.radio->available) { code="MISSING_CAPABILITY"; message="Radio is unavailable"; }
+            else if (n->op.active) { code="BUSY"; message="Configuration requires idle"; }
+            else if (n->config_revision == UINT32_MAX) { code="RESOURCE_LIMIT"; message="Configuration revision exhausted"; }
+            else if (!radio_config_parse(args,&radio_settings,&link_settings)) { code="INVALID_ARGUMENT"; message="Unsupported radio or link configuration"; field="args"; }
+            else action=CONFIGURE;
+        } else if (eq(name, "control.claim")) {
             const char *const keys[] = {"node_role"};
             if (!exact_keys(args, keys, 1) ||
                 (!eq(text(args, "node_role"), "A") && !eq(text(args, "node_role"), "B"))) {
@@ -854,8 +887,18 @@ static void process(node_control *n, size_t length)
                              id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7], id[8], id[9],
                              id[10], id[11], id[12], id[13], id[14], id[15]);
     }
+    if (!code && action == CONFIGURE) {
+        cJSON *failure = command_reply(n,cmd,sequence,NULL,"INTERNAL_ERROR","Radio configuration failed",NULL);
+        if (!encode(n,failure) || strlen(n->encoded) >= sizeof(n->config_failure)) {
+            n->reply_drops++; cJSON_Delete(cmd); return;
+        }
+        strcpy(n->config_failure,n->encoded);
+    }
     if (!code) {
-        if (eq(name, "hello"))
+        if (action == CONFIGURE) {
+            result = radio_config_result(&radio_settings,&link_settings,n->config_revision+1);
+            if (!result) n->oom = true;
+        } else if (eq(name, "hello"))
             result = hello(n);
         else if (eq(name, "status.get"))
             result = health(n);
@@ -901,17 +944,7 @@ static void process(node_control *n, size_t length)
             }
         }
     }
-    cJSON *reply = object(n);
-    number(n, reply, "v", 2);
-    string(n, reply, "kind", "reply");
-    string(n, reply, "command_id", text(cmd, "command_id"));
-    number(n, reply, "command_seq", sequence);
-    string(n, reply, "device_id", n->port.device_id);
-    string(n, reply, "boot_id", n->port.boot_id);
-    number(n, reply, "uptime_us", now(n));
-    boolean(n, reply, "ok", code == NULL);
-    add(n, reply, "result", result ? result : cJSON_CreateNull());
-    add(n, reply, "error", error(n, code, message, field));
+    cJSON *reply = command_reply(n,cmd,sequence,result,code,message,field);
     if (!encode(n, reply)) {
         if (action == RESERVE_FILE)
             artifact_store_delete(n->artifacts, file_spec.artifact_id);
@@ -938,6 +971,12 @@ static void process(node_control *n, size_t length)
             n->reply_drops++;
             cJSON_Delete(cmd);
             return; // No effects without a replayable acceptance.
+        }
+        if (!code && action == CONFIGURE) {
+            if (!node_radio_configure(n->port.radio,&radio_settings)) {
+                code="INTERNAL_ERROR"; message="Radio configuration failed";
+                strcpy(n->encoded,n->config_failure);
+            } else { n->link=link_settings; n->config_revision++; }
         }
         if (fresh_claim || action == RELEASE) {
             memset(n->cache, 0, sizeof(n->cache));

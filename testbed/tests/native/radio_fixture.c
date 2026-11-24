@@ -3,24 +3,7 @@
 #include <string.h>
 #include "radio/node_radio.h"
 
-typedef struct {
-    int64_t time;
-    bool pins[6], busy, absent, fail, gpio_fail, reject;
-    unsigned transfers;
-    uint8_t opcodes[128];
-} fixture;
-static int64_t now(void *p) { return ((fixture *)p)->time; }
-static void delay(void *p, uint32_t us) { ((fixture *)p)->time += us; }
-static bool set(void *p, node_radio_signal pin, bool value) { ((fixture *)p)->pins[pin] = value; return !((fixture *)p)->gpio_fail; }
-static int get(void *p, node_radio_signal pin) { return pin == RADIO_BUSY ? ((fixture *)p)->busy : 0; }
-static bool transfer(void *p, const uint8_t *tx, uint8_t *rx, size_t count) {
-    fixture *f = p;
-    assert(f->transfers < 128);
-    f->opcodes[f->transfers++] = tx[0];
-    memset(rx, 0, count);
-    if (tx[0] == 0xc0) rx[count - 1] = f->absent ? 0xff : (f->reject ? 0x28 : 0x24);
-    return !f->fail;
-}
+#include "radio_bus_fixture.h"
 int main(int argc, char **argv) {
     assert(argc == 2);
     fixture f = {0};
@@ -45,6 +28,44 @@ int main(int argc, char **argv) {
         assert(memchr(f.opcodes, 0x9d, f.transfers)); // DIO2 RF switch.
         assert(memchr(f.opcodes, 0x8a, f.transfers)); // LoRa packet type.
         assert(!memchr(f.opcodes, 0x83, f.transfers));
+        if (!strcmp(argv[1], "settings")) {
+            node_radio_settings config = {915000000, 125000, 7, 5, 2, 8};
+            assert(node_radio_configure(&radio, &config));
+            assert(radio.configured && !radio.ldro_enabled);
+            assert(f.modulation[0] == 7 && f.modulation[1] == 4 && f.modulation[2] == 1);
+            assert(f.registers[0x740] == 0x14 && f.registers[0x741] == 0x24);
+            for (int sf = 7; sf <= 12; sf++) {
+                for (unsigned bw = 125000; bw <= 500000; bw *= 2) {
+                    config.spreading_factor = sf; config.bandwidth_hz = bw;
+                    config.coding_rate_denominator = 8;
+                    assert(node_radio_configure(&radio, &config));
+                    assert(radio.applied.spreading_factor == sf);
+                    assert(radio.applied.bandwidth_hz == bw && f.modulation[2] == 4);
+                }
+            }
+            config.spreading_factor=11; config.bandwidth_hz=125000;
+            assert(node_radio_configure(&radio,&config) && f.modulation[3] == 1);
+            config.spreading_factor=12; config.bandwidth_hz=250000;
+            assert(node_radio_configure(&radio,&config) && f.modulation[3] == 1);
+            config.bandwidth_hz=500000; config.frequency_hz=928000000; config.tx_power_dbm=20; config.preamble_symbols=32;
+            assert(node_radio_configure(&radio,&config) && f.modulation[3] == 0);
+            config.frequency_hz=902000000; config.tx_power_dbm=2; config.preamble_symbols=8;
+            assert(node_radio_configure(&radio,&config));
+            config = radio.applied; unsigned previous = f.transfers;
+            config.frequency_hz = 2400000000U;
+            assert(!node_radio_configure(&radio, &config));
+            assert(f.transfers == previous && radio.available && radio.configured);
+            config = radio.applied; config.coding_rate_denominator = 1;
+            assert(!node_radio_configure(&radio, &config));
+            config = radio.applied; config.tx_power_dbm = 21;
+            assert(!node_radio_configure(&radio, &config));
+            assert(f.transfers == previous);
+            config = radio.applied; f.fail = true;
+            assert(!node_radio_configure(&radio, &config));
+            assert(!radio.available && !radio.configured);
+            f.fail = false;
+            assert(node_radio_init(&radio, &bus, variant));
+        }
         if (!strcmp(argv[1], "stop")) {
             assert(node_radio_stop(&radio));
             assert(node_radio_stop(&radio));

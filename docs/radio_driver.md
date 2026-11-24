@@ -64,3 +64,39 @@ board has an external amplifier. No radio or audio hardware was accessed here.
 - [Pinned Heltec board definitions](https://github.com/HelTecAutomation/Heltec_ESP32/blob/6ab5cf916e01b0930eaa2245323c728f849705c4/src/driver/board-config.h).
 - [Pinned official Semtech driver](https://github.com/Lora-net/sx126x_driver/tree/a10c5dfdf89788c6ac805e9fe98889de44175aa2).
   Its full Clear BSD license is retained in every vendored file; see `radio/vendor/README.md`.
+
+## Modem configuration (#15)
+
+`config.set` is now the first advertised execution command. It requires ownership,
+an initialized idle radio and a non-exhausted configuration revision. Its radio
+object uses the shared v2 names/defaults: 902–928 MHz in 1 kHz steps, bandwidth
+125/250/500 kHz, SF7–12, coding-rate denominators 5–8, configured SX1262 power
+2–20 dBm, preamble 8–32 symbols, explicit header, PHY CRC on, normal IQ, sync word
+0x1424 and automatic LDRO (symbol duration at least 16 ms). The initial link accepts
+ACK disabled/zero retries only, fragment capacity 16–215 bytes and guard 0–1 s.
+Unsupported values, fields and JSON types reject before any SPI transfer.
+
+The driver confirms command status and reads back the LoRa packet type and exact
+sync-word register bytes. Other returned fields are a committed record of
+successfully applied commands: SX1262 does not offer a general getter for all
+modem parameters. They are not measured frequency, bandwidth, antenna power or
+RF performance. Applied power refers to the SX1262 setting before the board's
+external front end. Physical verification must characterize that complete path.
+
+Success increments `config_revision`; health reports the applied radio/link
+objects. Duplicate commands return their cached reply without applying again.
+Both success and failure replies are allocated/encoded before touching hardware;
+allocation failure cannot silently apply settings. A driver failure invalidates
+configuration and withdraws radio readiness, retains the revision, and reports
+`INTERNAL_ERROR`. It never claims that a partially applied setting is active.
+Reinitialize/reconnect after a fault before issuing new work.
+
+The host requires exact advertised `config.set` support and fresh health, normalizes
+typed arguments and validates the applied result. It still refuses arm/start,
+fragmentation, retries and security until those handlers are implemented.
+
+Additional checks: `pytest` native cases cover NDJSON round trips and duplicates,
+invalid requests preserving revision and SPI count, all 220 pre-acceptance JSON
+allocation positions, coding 4/5 → driver enum 1, sync word 14/24, frequency/power/
+preamble bounds, representative LDRO boundaries and host stale-health/radio-loss
+handling. Physical parameter/antenna measurements remain pending.

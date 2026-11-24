@@ -27,6 +27,17 @@ qualification remains pending. See [driver details](radio_driver.md). Full `make
 skips; an additional command-rejection native case passed afterward. Default and
 V4.3 ESP-IDF builds passed; V4.2 selection is also checked before publishing.
 
+## November 21 — Applied modem settings (#15)
+
+Firmware now advertises only `config.set` from the execution profile. Strict
+radio/link validation precedes all SPI effects; status-confirmed settings and a
+revision are returned and reported in health. Exact sync-word/type readback,
+invalid-request atomicity, duplicate handling, allocation-failure safety and
+failed-driver availability withdrawal are covered through the real C core. Host
+requests require fresh advertised support and typed applied results. Full
+`make check` passed 378 tests without skips; the ESP-IDF build passed. No RF hardware or radiated-power measurement was
+performed. [Details and later checks](radio_driver.md#modem-configuration-15).
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones

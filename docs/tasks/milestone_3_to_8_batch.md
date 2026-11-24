@@ -41,3 +41,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #12: portable/ESP-IDF initialization, explicit revision references, native
   failure/recovery coverage, default and selected-board builds. Physical #1 remains
   a qualification prerequisite; no board revision has been inferred.
+
+- #12: PR #163 (`feat/sx1262-init` → `docs/radio-execution-contract`).
+- #15: strict real `config.set`, status/readback record, atomic rejection, no
+  hardware effect before reply reservation and host fresh-health gating. Full
+  checks and IDF build passed; physical parameter verification is pending.
