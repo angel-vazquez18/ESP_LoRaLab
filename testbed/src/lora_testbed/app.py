@@ -59,6 +59,10 @@ class CampaignExecutionRequest(StrictModel):
     plan_id: control_v2.UUID
 
 
+class CampaignRerunRequest(StrictModel):
+    case_ids: list[control_v2.UUID] = Field(min_length=1, max_length=4096)
+
+
 class CampaignCancelRequest(StrictModel):
     reason: str = Field(default="Stopped by operator", min_length=1, max_length=240)
 
@@ -335,6 +339,24 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.get("/api/physical-campaigns/executions")
     async def physical_campaign_executions():
         return app.state.host.physical_campaigns.snapshot()
+
+    @app.get("/api/physical-campaigns/executions/{identifier}/export")
+    async def physical_campaign_export(identifier: control_v2.UUID):
+        from .physical_campaign_evidence import CampaignBundle
+
+        content = CampaignBundle(app.state.host).build(identifier)
+        return Response(
+            content,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f'attachment; filename="campaign-{identifier}.zip"',
+                "X-Content-SHA256": hashlib.sha256(content).hexdigest(),
+            },
+        )
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/rerun", status_code=202)
+    async def physical_campaign_rerun(identifier: control_v2.UUID, body: CampaignRerunRequest):
+        return await app.state.host.rerun_campaign(identifier, body.case_ids)
 
     @app.get("/api/physical-campaigns/executions/{identifier}")
     async def physical_campaign_execution(identifier: control_v2.UUID):
