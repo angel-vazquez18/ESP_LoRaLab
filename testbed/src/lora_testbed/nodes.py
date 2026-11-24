@@ -72,6 +72,7 @@ class NodeSession:
         self.last_health = None
         self.connected = False
         self.connection_state = "disconnected"
+        self.connection_id = None
         self.active_operation = None
         self.error = None
         self.samples = deque(maxlen=90)
@@ -260,6 +261,7 @@ class NodeSession:
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,
+            "connection_id": self.connection_id,
             "port": self.port,
             "connection_state": health_freshness(age)
             if self.connected and health_freshness(age) in ("stale", "unresponsive")
@@ -293,6 +295,7 @@ class NodeSession:
         self.samples.clear()
         self.diagnostics.clear()
         self.connection_state = "connecting"
+        self.connection_id = str(uuid4())
         try:
             self.serial = await asyncio.to_thread(self.opener, port)
             self.connected = True
@@ -507,6 +510,12 @@ class NodeSession:
                                 self.active_operation = {
                                     **operation,
                                     "accepted_at_us": reply.uptime_us,
+                                    "physical_binding": {
+                                        "role": self.role,
+                                        "device_id": self.identity.device_id,
+                                        "boot_id": self.identity.boot_id,
+                                        "connection_id": self.connection_id,
+                                    },
                                 }
                         elif name == "operation.stop":
                             self.active_operation = None
