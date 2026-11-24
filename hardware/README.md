@@ -37,8 +37,10 @@ The optional GNSS interface shares GPIO 38/39/40 used by the amplifier plan.
 `reference/node-wiring.mmd` is the matching Mermaid source. It records planned
 wiring; GPIO labels are not physical header positions. L/R, SD/MODE and 6 dB
 GAIN straps are user-confirmed; actual electrical/audio operation remains unverified.
-The main-node build embeds the profile file's SHA-256 for provenance. GPIO driver
-bindings and host capability detection do not yet consume its settings.
+The main-node build embeds the profile file's SHA-256 for provenance. Generated
+audio GPIO bindings now consume this profile. Per-board Kconfig enables only the
+connected audio paths; exact live capabilities gate the host. Driver completion
+is separate from physical hearing/clock/rail qualification; see [finite audio](../docs/node_audio.md).
 
 ## Open hardware checks
 

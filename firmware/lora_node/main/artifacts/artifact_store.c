@@ -8,7 +8,7 @@ typedef struct {
     artifact_manifest manifest;
     char owner[37];
     void *bytes;
-    bool commit_prepared;
+    bool commit_prepared, producing;
     artifact_status commit_result;
 } artifact_slot;
 
@@ -180,7 +180,7 @@ artifact_status artifact_store_check_put(artifact_store *s, const char *id, size
     artifact_slot *slot = find(s, id);
     if (!slot) return ARTIFACT_NOT_FOUND;
     artifact_manifest *m = &slot->manifest;
-    if (m->state != ARTIFACT_UPLOADING) return ARTIFACT_INVALID_STATE;
+    if (slot->producing || m->state != ARTIFACT_UPLOADING) return ARTIFACT_INVALID_STATE;
     if (chunk_crc32(bytes, length) != crc) return ARTIFACT_CHECKSUM_MISMATCH;
     if (offset > m->next_offset || offset > m->length_bytes || length > m->length_bytes - offset)
         return ARTIFACT_OFFSET_MISMATCH;
@@ -211,7 +211,7 @@ artifact_status artifact_store_prepare_commit(artifact_store *s, const char *id,
     slot->commit_prepared = false;
     artifact_manifest *m = &slot->manifest;
     if (m->state == ARTIFACT_COMMITTED) return ARTIFACT_OK;
-    if (m->state != ARTIFACT_UPLOADING || m->next_offset != m->length_bytes)
+    if (slot->producing || m->state != ARTIFACT_UPLOADING || m->next_offset != m->length_bytes)
         return ARTIFACT_INVALID_STATE;
     uint8_t digest[32];
     if (!sha256 || !sha256(context, slot->bytes, m->length_bytes, digest))
@@ -254,4 +254,37 @@ artifact_status artifact_store_get(const artifact_store *s, const char *id, size
         return ARTIFACT_OK;
     }
     return ARTIFACT_NOT_FOUND;
+}
+
+artifact_status artifact_store_capture_begin(artifact_store *s, const char *owner,
+    const char *id, uint32_t samples, void **destination)
+{
+    if (!destination || !samples || samples > 24000) return ARTIFACT_INVALID_ARGUMENT;
+    artifact_spec spec = {.artifact_id = id, .kind = "source", .format = "pcm_s16le_8000_mono",
+        .length_bytes = samples * 2, .sha256 = "0000000000000000000000000000000000000000000000000000000000000000"};
+    artifact_status status = artifact_store_begin(s, owner, &spec);
+    if (status != ARTIFACT_OK) return status;
+    artifact_slot *slot = find(s, id);
+    slot->producing = true;
+    *destination = slot->bytes;
+    return ARTIFACT_OK;
+}
+artifact_status artifact_store_capture_finish(artifact_store *s, const char *id,
+    uint32_t samples, bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
+{
+    artifact_slot *slot = find(s, id);
+    if (!sha256 || !samples || samples > 24000 || !slot || !slot->producing || slot->manifest.state != ARTIFACT_UPLOADING ||
+        samples * 2 != slot->manifest.length_bytes) return ARTIFACT_INVALID_STATE;
+    uint8_t digest[32];
+    if (!sha256(context, slot->bytes, slot->manifest.length_bytes, digest)) return ARTIFACT_INTERNAL_ERROR;
+    static const char hex[] = "0123456789abcdef";
+    for (unsigned i = 0; i < 32; i++) {
+        slot->manifest.sha256[i * 2] = hex[digest[i] >> 4];
+        slot->manifest.sha256[i * 2 + 1] = hex[digest[i] & 15];
+    }
+    slot->manifest.sha256[64] = 0;
+    slot->manifest.next_offset = slot->manifest.length_bytes;
+    slot->manifest.state = ARTIFACT_COMMITTED;
+    slot->producing = false;
+    return ARTIFACT_OK;
 }
