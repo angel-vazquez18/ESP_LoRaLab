@@ -11,6 +11,7 @@ from lora_testbed import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    ptt_contract_v2,
     rf_events_v2,
     run_protocol_v2,
 )
@@ -25,6 +26,11 @@ def outputs(root: Path) -> dict[Path, str]:
     board = json.loads(
         (root / "hardware/boards/heltec_wifi_lora32_v4.json").read_text()
     )
+    if any(
+        board["ptt"][key] != ptt_contract_v2.POLICY[key]
+        for key in ("gpio", "active_level", "internal_pullup")
+    ):
+        raise ValueError("PTT wiring differs from the selected supplement policy")
     pins = board["amplifier"]["gpio"]
     mic = board["microphone"]["gpio"]
     radio_file = root / "hardware/boards/heltec_v4_radio_variants.json"
@@ -65,6 +71,14 @@ def outputs(root: Path) -> dict[Path, str]:
         )
     vector_header += "};\n"
     return {
+        root / "contracts/v2/ptt_capture.schema.json": document(ptt_contract_v2.schema()),
+        root / "firmware/lora_node/main/generated/ptt_profile.h": (
+            "#pragma once\n"
+            f'#define PTT_PROFILE "{ptt_contract_v2.PROFILE}"\n'
+            f'#define PTT_SCHEMA_SHA256 "{ptt_contract_v2.schema_digest()}"\n'
+            f"#define PTT_GPIO {board['ptt']['gpio']}\n"
+            f"#define PTT_DEBOUNCE_US {ptt_contract_v2.DEBOUNCE_US}LL\n"
+        ),
         root / "contracts/v2/codec_io.schema.json": document(
             codec_contract_v2.schema()
         ),

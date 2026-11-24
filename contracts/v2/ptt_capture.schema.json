@@ -1,0 +1,126 @@
+{
+  "scope": "host_armed_finite_capture",
+  "profile": "ptt_capture_v1",
+  "policy": {
+    "gpio": 47,
+    "internal_pullup": true,
+    "active_level": 0,
+    "debounce_us": 50000,
+    "release_after_arm_required": true,
+    "action": "one_finite_capture",
+    "max_samples": 24000,
+    "deadline_us": 30000000
+  },
+  "arguments": {
+    "ptt.arm": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "sample_count": {
+          "maximum": 24000,
+          "minimum": 1,
+          "title": "Sample Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "sample_count"
+      ],
+      "title": "Capture",
+      "type": "object"
+    }
+  },
+  "accepted": {
+    "additionalProperties": false,
+    "properties": {
+      "operation_id": {
+        "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "state": {
+        "const": "accepted",
+        "title": "State",
+        "type": "string"
+      },
+      "deadline_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Deadline Us",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "operation_id",
+      "state",
+      "deadline_us"
+    ],
+    "title": "AcceptedOperation",
+    "type": "object"
+  },
+  "capability": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "ptt_capture_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "commands": {
+        "items": {
+          "const": "ptt.arm",
+          "type": "string"
+        },
+        "title": "Commands",
+        "type": "array"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "commands"
+    ],
+    "title": "Availability",
+    "type": "object"
+  },
+  "availability": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "ptt_capture_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "commands": {
+        "items": {
+          "const": "ptt.arm",
+          "type": "string"
+        },
+        "title": "Commands",
+        "type": "array"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "commands"
+    ],
+    "title": "Availability",
+    "type": "object"
+  }
+}
