@@ -451,3 +451,13 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   86 integration cases pass, plus final lint/contracts/repository/UI formatting.
   Host-only, no wire/build/flash change. Execution is #87, UI #88. Next #82 is
   host memory-observation procedure/evidence integration; inspect its live scope.
+
+- #81: PR #200 (`feat/physical-campaign-plans` →
+  `feat/common-physical-lifecycle`) is ready with scoped commits, planner/API/CLI
+  walkthrough, verified example, checks and explicit execution/qualification
+  limits. Issue/card Testing; no merge. Full 889 cases and all shared checks
+  pass; final 24 planner cases (added example) and 86 integration cases pass.
+  Original 19 files unchanged. Starting #82: actual stage/queue evidence,
+  independently reconciled totals, distinct startup/3–60s/drain assessments,
+  inconclusive gaps and unavailable unsampled memory peaks. #105 remains the
+  full sustained-source procedure; #82 is assessment, not its qualification.
