@@ -252,6 +252,43 @@ def audio_retrieve(role: str, artifact_id: str):
 
 
 @app.command()
+def audio_codec(role: str, artifact_id: str):
+    """Encode/decode one committed PCM file and retain all three verified files."""
+    request(f"/api/nodes/{role.upper()}/audio/codec", {"artifact_id": artifact_id})
+
+
+@app.command()
+def audio_link_playback(identifier: str, operation_id: str, stage: str = "decoded"):
+    """Link a completed source/decoded playback and its listening observations."""
+    if stage not in ("source", "decoded"):
+        raise typer.BadParameter("Use source or decoded")
+    request(
+        f"/api/audio/operations/{identifier}/playback",
+        {"operation_id": operation_id, "stage": stage},
+    )
+
+
+@app.command()
+def audio_codec_save(identifier: str, stage: str, output: Path, wav: bool = False):
+    """Save a verified codec stage; optional WAV wrapping applies only to PCM."""
+    if stage not in ("source", "encoded", "decoded") or (wav and stage == "encoded"):
+        raise typer.BadParameter("Choose source/encoded/decoded; WAV needs source or decoded")
+    try:
+        suffix = "?as_wav=true" if wav else ""
+        with urlopen(
+            BASE_URL + f"/api/audio/operations/{identifier}/artifacts/{stage}{suffix}", timeout=20
+        ) as response:
+            data = response.read(48045)
+        if not data or len(data) > 48044:
+            raise ValueError("Unexpected codec artifact size")
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+
+
+@app.command()
 def audio_status(identifier: str):
     """Inspect audio progress, errors, gain and retained signal findings."""
     request(f"/api/audio/operations/{identifier}")

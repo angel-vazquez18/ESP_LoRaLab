@@ -166,3 +166,6 @@ qualification is unavailable, and keep the required 32 KiB stack setting.
 Actual microphone input, decoding, speaker quality and protected RF voice remain
 separate work and physical qualification. A successful encode/readback does not
 qualify those stages or close #80.
+
+The shared local API/CLI workflow and three-file provenance are now implemented in
+[#45](codec_provenance.md). RF voice and its dedicated dashboard remain separate.

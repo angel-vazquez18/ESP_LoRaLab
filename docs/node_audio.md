@@ -156,3 +156,10 @@ signals when an operator/equipment is available. Do not change the wiring profil
 or claim microphone qualification based on speculation. Raw slot counts are
 retained in capture results for future checks. A silent file can be byte-valid
 while providing no evidence of microphone response.
+
+## Local codec three-file workflow (#45)
+
+The existing audio owner now exposes a shared API/CLI codec job with separate
+source, encoded and decoded files, retained stage timing/errors and exact playback
+provenance. It does not start playback or qualify hearing automatically. See
+[codec workflow and commands](codec_provenance.md); detailed codec UI remains #72.

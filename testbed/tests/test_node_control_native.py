@@ -559,7 +559,9 @@ class NativeSerial:
     """Test-only transport joining NodeSession to the production C core."""
 
     def __init__(self, lib, radio=None, device="esp-001122334455", codec2_mode=3200, boot=1):
-        self.core = NativeNode(lib, realtime=True, radio=radio, device=device, boot=boot)
+        self.core = NativeNode(
+            lib, realtime=True, radio=radio, device=device, boot=boot, codec2_mode=codec2_mode
+        )
         self.lock = threading.RLock()
         self.queue = queue.Queue()
         self.closed = False

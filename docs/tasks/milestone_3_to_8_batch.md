@@ -261,3 +261,20 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   checks and the selected-board build. Status Testing; no merge or flash. Original
   19 files remain unchanged. Next #45 preserves three-file local codec provenance
   through the existing shared audio service, API and CLI.
+
+- #45 implemented: shared local audio owner/API/CLI now preserve three distinct
+  independently retrieved files, node stage results/timings, partial failures and
+  verified playback/source references. Same-boot artifact-ID reuse cannot link
+  changed capture/playback contents. Codec child results preserve existing audio
+  client compatibility. Thirteen new plus 25 existing audio cases are included in
+  the passing 675-case full check; lint/frontend/contracts/repository/dependency
+  checks pass, no skips. Host-only change; no firmware build/flash. Original 19
+  saved files still match. Preparing PR on #186; next #64 protected encoded bytes
+  through the common message path, then #68 host voice and #72 UI.
+
+- #45: PR #187 (`feat/local-codec-provenance` → `feat/finite-codec-decoding`)
+  is ready for review with five scoped commits and 675 full passing checks, no
+  skips. Issue Testing, no merge or flash. Starting #64 on the dependent branch
+  for committed encoded bytes through authenticated reconstruction and guarded
+  decode/playback. Local job API/CLI reading/test instructions are in
+  `docs/codec_provenance.md`.
