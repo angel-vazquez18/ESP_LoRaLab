@@ -1,6 +1,7 @@
 """Generate shared schemas and diagnostic metadata, or detect drift without writes."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -24,7 +25,16 @@ def outputs(root: Path) -> dict[Path, str]:
     )
     pins = board["amplifier"]["gpio"]
     mic = board["microphone"]["gpio"]
+    radio_file = root / "hardware/boards/heltec_v4_radio_variants.json"
+    radio = json.loads(radio_file.read_text())
+    radio_header = "#pragma once\n"
+    radio_header += f'#define RADIO_BOARD_REFERENCE_SHA256 "{hashlib.sha256(radio_file.read_bytes()).hexdigest()}"\n'
+    for name, gpio in radio["common_gpio"].items():
+        radio_header += f"#define RADIO_GPIO_{name.upper()} {gpio}\n"
+    radio_header += f"#define RADIO_GPIO_V42_MODE {radio['variants']['heltec_v4_2_gc1109']['fem_mode_gpio']}\n"
+    radio_header += f"#define RADIO_GPIO_V43_MODE {radio['variants']['heltec_v4_3_kct8103l']['fem_mode_gpio']}\n"
     return {
+        root / "firmware/lora_node/main/generated/radio_board.h": radio_header,
         root / "contracts/v2/audio.schema.json": document(audio_contract_v2.schema()),
         root / "firmware/lora_node/main/generated/audio_profile.h": (
             "#pragma once\n"

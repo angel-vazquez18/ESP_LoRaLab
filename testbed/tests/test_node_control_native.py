@@ -89,7 +89,7 @@ class Platform(C.Structure):
                 "reset_cause",
             )
         ]
-        + [("audio", AudioPort)]
+        + [("audio", AudioPort), ("radio", C.c_void_p)]
     )
 
 
