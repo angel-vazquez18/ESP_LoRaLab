@@ -144,6 +144,69 @@ def campaign_plan_result(plan_id: str):
 
 
 @app.command()
+def campaign_execute(plan_id: str):
+    """Execute a saved physical plan in its original order."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(plan_id)
+    request("/api/physical-campaigns/executions", {"plan_id": plan_id})
+
+
+@app.command()
+def campaign_executions():
+    """Show the active physical campaign and recent execution summaries."""
+    request("/api/physical-campaigns/executions")
+
+
+@app.command()
+def campaign_result(identifier: str):
+    """Read saved child links and outcomes for a physical campaign."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}")
+
+
+@app.command()
+def campaign_pause(identifier: str):
+    """Finish the current case, then pause while keeping bench ownership."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}/pause", {})
+
+
+@app.command()
+def campaign_resume(identifier: str):
+    """Resume the exact queued order on the original enrolled connections."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}/resume", {})
+
+
+@app.command()
+def campaign_cancel(identifier: str, reason: str = "Stopped by operator"):
+    """Stop the active child, retain partial evidence and reason-code skipped cases."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(
+        f"/api/physical-campaigns/executions/{identifier}/cancel", {"reason": reason}, timeout=90
+    )
+
+
+@app.command()
 def workload_assess(path: Path):
     """Save an assessment of an imported source/memory trace; never hardware qualification."""
     if path.stat().st_size > 12 * 1024 * 1024:
