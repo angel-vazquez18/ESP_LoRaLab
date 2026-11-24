@@ -233,3 +233,25 @@ void artifact_store_accept_commit(artifact_store *s, const char *id)
         slot->commit_prepared = false;
     }
 }
+
+artifact_status artifact_store_get(const artifact_store *s, const char *id, size_t offset,
+                                   void *output, size_t requested, size_t *length, bool *eof)
+{
+    if (!output || !length || !eof || !requested || requested > ARTIFACT_CHUNK_BYTES)
+        return ARTIFACT_INVALID_ARGUMENT;
+    *length = 0;
+    *eof = false;
+    for (unsigned i = 0; i < ARTIFACT_SLOTS; i++) {
+        const artifact_slot *slot = &s->slots[i];
+        if (!slot->bytes || !equal(slot->manifest.artifact_id, id)) continue;
+        const artifact_manifest *m = &slot->manifest;
+        if (m->state != ARTIFACT_COMMITTED) return ARTIFACT_INVALID_STATE;
+        if (offset > m->length_bytes) return ARTIFACT_OFFSET_MISMATCH;
+        *length = m->length_bytes - offset;
+        if (*length > requested) *length = requested;
+        memcpy(output, (const uint8_t *)slot->bytes + offset, *length);
+        *eof = offset + *length == m->length_bytes;
+        return ARTIFACT_OK;
+    }
+    return ARTIFACT_NOT_FOUND;
+}

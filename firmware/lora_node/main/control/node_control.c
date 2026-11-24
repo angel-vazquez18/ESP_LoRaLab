@@ -224,7 +224,7 @@ static cJSON *capabilities(node_control *n)
     string(n, files, "profile", ARTIFACT_PROFILE);
     string(n, files, "schema_sha256", ARTIFACT_SCHEMA_SHA256);
     add(n, files, "commands", cJSON_CreateStringArray(
-        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete", "artifact.put", "artifact.commit"}, 5));
+        (const char *[]){"artifact.begin", "artifact.list", "artifact.delete", "artifact.put", "artifact.commit", "artifact.get"}, 6));
     number(n, files, "max_artifact_bytes", ARTIFACT_MAX_BYTES);
     number(n, files, "node_total_artifact_bytes", ARTIFACT_TOTAL_BYTES);
     number(n, files, "node_artifact_slots", ARTIFACT_SLOTS);
@@ -394,7 +394,7 @@ static bool known_unavailable(const char *name)
     static const char *const commands[] = {
         "session.open",    "session.close", "config.set",    "run.prepare",     "run.arm",
         "run.start",       "run.stop",      "run.summary",
-        "artifact.get",  "audio.capture",
+        "audio.capture",
         "audio.encode",    "audio.decode",  "audio.play",    "fault.set",       "fault.fire",
         "clock.arm",       "clock.emit",    "clock.install", "clock.stop"};
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
@@ -406,7 +406,7 @@ static bool known_unavailable(const char *name)
 static bool artifact_command(const char *name)
 {
     return eq(name, "artifact.begin") || eq(name, "artifact.list") || eq(name, "artifact.delete") ||
-           eq(name, "artifact.put") || eq(name, "artifact.commit");
+           eq(name, "artifact.put") || eq(name, "artifact.commit") || eq(name, "artifact.get");
 }
 static const char *artifact_error(artifact_status status)
 {
@@ -458,7 +458,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE };
+enum action { NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, STOP, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -490,7 +490,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -544,6 +544,7 @@ static void process(node_control *n, size_t length)
     uint8_t chunk[ARTIFACT_CHUNK_BYTES];
     size_t chunk_length = 0, chunk_offset = 0;
     uint32_t chunk_crc = 0;
+    bool chunk_eof = false;
     uint32_t iterations = 0, bytes = 0;
     int64_t lease = now(n) + 5000000;
     int64_t operation_deadline = now(n) + NODE_OPERATION_US;
@@ -582,6 +583,22 @@ static void process(node_control *n, size_t length)
                     code = "INVALID_ARGUMENT";
                     field = "args";
                     message = "Listing accepts no arguments";
+                }
+            } else if (eq(name, "artifact.get")) {
+                const char *const keys[] = {"artifact_id", "offset", "length_bytes"};
+                if (!exact_keys(args, keys, 3) || !uuid(id) ||
+                    !uint32_value(item(args, "offset"), 0, ARTIFACT_MAX_BYTES) ||
+                    !uint32_value(item(args, "length_bytes"), 1, ARTIFACT_CHUNK_BYTES)) {
+                    code = "INVALID_ARGUMENT";
+                    field = "args";
+                    message = "Invalid bounded file read";
+                } else {
+                    chunk_offset = (size_t)item(args, "offset")->valuedouble;
+                    code = artifact_error(artifact_store_get(n->artifacts, id, chunk_offset,
+                        chunk, (size_t)item(args, "length_bytes")->valuedouble,
+                        &chunk_length, &chunk_eof));
+                    if (code) message = "Reads require a committed file and valid range";
+                    else action = GET_FILE;
                 }
             } else if (eq(name, "artifact.commit")) {
                 const char *const keys[] = {"artifact_id"};
@@ -737,6 +754,17 @@ static void process(node_control *n, size_t length)
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
+            }
+            if (action == GET_FILE) {
+                char encoded[((ARTIFACT_CHUNK_BYTES + 2) / 3) * 4 + 1], crc[9];
+                chunk_base64_encode(chunk, chunk_length, encoded, sizeof(encoded));
+                snprintf(crc, sizeof(crc), "%08" PRIx32, chunk_crc32(chunk, chunk_length));
+                string(n, result, "artifact_id", text(args, "artifact_id"));
+                number(n, result, "offset", chunk_offset);
+                number(n, result, "length_bytes", chunk_length);
+                string(n, result, "data_b64", encoded);
+                string(n, result, "crc32", crc);
+                boolean(n, result, "eof", chunk_eof);
             }
             if (action == RESERVE_FILE || action == DELETE_FILE || action == PUT_FILE) {
                 string(n, result, "artifact_id", text(args, "artifact_id"));

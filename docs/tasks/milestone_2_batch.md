@@ -30,7 +30,12 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
   started a fresh 16 MiB snapshot before the first batch flash.
 - #18: implemented real SHA-256 commit, immutable/failed transitions and real
   consumer lifecycle tests. 10 new cases; full checks 250 passed. ESP-IDF build
-  passed (0x3c2c0 bytes, 76% partition free). PR publishing next.
+  passed (0x3c2c0 bytes, 76% partition free). PR #153 open, based on #152.
+- #22: committed readback/CRC/EOF implemented. 17 new cases; full checks 267
+  passed. ESP-IDF build passed (0x3c890 bytes, 76% partition free). Fresh full
+  flash backup verified and cumulative artifact image flashed, NVS retained.
+  Device/schema/ELF matched; initial real 1/1024/1025/48000/131072-byte round trips
+  passed. Negative/capacity hardware evidence is being finalized.
 - Later issues: pending.
 
 Each PR includes its code walkthrough, verification commands/expected outcomes,
