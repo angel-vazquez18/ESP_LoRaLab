@@ -324,3 +324,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Screenshot saved in the session visualization directory. No physical ports,
   firmware build, flash or qualification. Next #30 PTT remains hardware gated by
   unobserved PCB/wiring; implement/test the explicit opt-in portable input path.
+
+- #72: PR #192 (`feat/voice-stage-dashboard` → `feat/secure-voice-workflows`)
+  is ready for review with four scoped implementation/test/docs commits and 709
+  full passing cases, no skips, plus final focused/build/format checks. Status
+  Testing; no merge/flash. Browser proof is
+  `secure-voice-dashboard-software-fixture.jpg` in the session visualization root.
+  Starting #30 on its own dependent branch; input remains opt-in and unqualified
+  until PCB/GPIO47 wiring acceptance.
