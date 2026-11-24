@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS
         "lora_node.c"
+        "audio/esp32_audio.c"
+        "audio/pcm_samples.c"
         "platform/esp32_platform.c"
         "transport/usb_transport.c"
         "control/node_control.c"
@@ -9,6 +11,7 @@ idf_component_register(
         "protocol/chunk_bytes.c"
     INCLUDE_DIRS "."
     REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support
+             esp_driver_i2s
              nvs_flash espressif__cjson mbedtls heap esp_app_format
 )
 

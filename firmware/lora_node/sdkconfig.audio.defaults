@@ -1,0 +1,2 @@
+# Fully wired first bench board only. Default builds keep audio disabled.
+CONFIG_LORALAB_AUDIO_PLAYBACK=y

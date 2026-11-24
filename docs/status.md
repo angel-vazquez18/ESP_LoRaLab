@@ -322,3 +322,5 @@ QA server stopped and port released. Artifact image ran with advancing health an
 zero observed gaps/framing errors through roughly six hours before intentional
 reconnect; this is limited observed control evidence, not full M1/audio closure.
 Screenshot: Codex visualization m2-file-inspector.png. Next is #23 playback.
+
+- November 16 #23: implemented explicit per-board finite local PCM playback, committed-file pinning, fixed 1/8 software amplitude, configured 6 dB hardware gain, DMA completion/source counts and bounded stop/ownership cleanup. Separate audio supplement preserves existing schema digests. Full checks passed 310 tests with no skips, lint/frontend/contracts/repository checks; audio-enabled IDF build passed. Physical hearing, printed revision and instruments remain unobserved. See [audio behavior and checks](node_audio.md).

@@ -4,7 +4,13 @@ import argparse
 import json
 from pathlib import Path
 
-from lora_testbed import artifact_contract_v2, control_v2, rf_events_v2, run_protocol_v2
+from lora_testbed import (
+    artifact_contract_v2,
+    audio_contract_v2,
+    control_v2,
+    rf_events_v2,
+    run_protocol_v2,
+)
 from lora_testbed.experiments_v2 import KnownDataPlan
 from lora_testbed.v2 import schema, schema_digest
 
@@ -13,10 +19,27 @@ def outputs(root: Path) -> dict[Path, str]:
     def document(value):
         return json.dumps(value, indent=2) + "\n"
 
+    board = json.loads(
+        (root / "hardware/boards/heltec_wifi_lora32_v4.json").read_text()
+    )
+    pins = board["amplifier"]["gpio"]
     return {
+        root / "contracts/v2/audio.schema.json": document(audio_contract_v2.schema()),
+        root / "firmware/lora_node/main/generated/audio_profile.h": (
+            "#pragma once\n"
+            f'#define AUDIO_PROFILE "{audio_contract_v2.PROFILE}"\n'
+            f'#define AUDIO_SCHEMA_SHA256 "{audio_contract_v2.schema_digest()}"\n'
+            f"#define AUDIO_MAX_SAMPLES {audio_contract_v2.MAX_SAMPLES}U\n"
+            f"#define AUDIO_SAMPLE_RATE {audio_contract_v2.SAMPLE_RATE}U\n"
+            f"#define AUDIO_OUTPUT_BCLK {pins['bclk']}\n"
+            f"#define AUDIO_OUTPUT_WS {pins['lrc']}\n"
+            f"#define AUDIO_OUTPUT_DIN {pins['din']}\n"
+        ),
         root / "contracts/v2/diagnostic.schema.json": document(schema()),
         root / "contracts/v2/control.schema.json": document(control_v2.schema()),
-        root / "contracts/v2/artifact.schema.json": document(artifact_contract_v2.schema()),
+        root / "contracts/v2/artifact.schema.json": document(
+            artifact_contract_v2.schema()
+        ),
         root / "firmware/lora_node/main/generated/artifact_profile.h": (
             "#pragma once\n"
             f'#define ARTIFACT_PROFILE "{artifact_contract_v2.PROFILE}"\n'
@@ -32,15 +55,21 @@ def outputs(root: Path) -> dict[Path, str]:
         root / "firmware/diagnostic/main/contract_schema.h": (
             f'#pragma once\n#define CONTRACT_SCHEMA_SHA256 "{schema_digest()}"\n'
         ),
-        root / "contracts/v2/known_data.schema.json": document(KnownDataPlan.model_json_schema()),
-        root / "contracts/v2/known_data_events.schema.json": document(rf_events_v2.schema()),
+        root / "contracts/v2/known_data.schema.json": document(
+            KnownDataPlan.model_json_schema()
+        ),
+        root / "contracts/v2/known_data_events.schema.json": document(
+            rf_events_v2.schema()
+        ),
         root / "contracts/v2/execution.schema.json": document(run_protocol_v2.schema()),
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true", help="Fail on drift without writing files")
+    parser.add_argument(
+        "--check", action="store_true", help="Fail on drift without writing files"
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     stale = []

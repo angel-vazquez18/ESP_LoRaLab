@@ -36,28 +36,53 @@ FREE = C.CFUNCTYPE(None, C.c_void_p, C.c_void_p)
 MEMORY = C.CFUNCTYPE(None, C.c_void_p, C.POINTER(Heap), C.POINTER(Heap), C.POINTER(C.c_uint32))
 
 
-class Platform(C.Structure):
-    _fields_ = [
-        ("context", C.c_void_p),
-        ("now_us", NOW),
-        ("sha256", HASH),
-        ("random_bytes", RANDOM),
-        ("allocate", ALLOC),
-        ("deallocate", FREE),
-        ("memory", MEMORY),
-    ] + [
-        (name, C.c_char_p)
-        for name in (
-            "device_id",
-            "boot_id",
-            "firmware_version",
-            "firmware_build_id",
-            "idf_version",
-            "board_manifest_hash",
-            "schema_sha256",
-            "reset_cause",
-        )
+class AudioProgress(C.Structure):
+    _fields_ = [(k, C.c_uint32) for k in ("samples", "dma_frames", "underflows")] + [
+        ("done", C.c_bool),
+        ("failed", C.c_bool),
     ]
+
+
+AUDIO_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_uint32)
+AUDIO_POLL = C.CFUNCTYPE(None, C.c_void_p, C.POINTER(AudioProgress))
+AUDIO_STOP = C.CFUNCTYPE(None, C.c_void_p)
+
+
+class AudioPort(C.Structure):
+    _fields_ = [
+        ("playback", C.c_bool),
+        ("start", AUDIO_START),
+        ("poll", AUDIO_POLL),
+        ("stop", AUDIO_STOP),
+    ]
+
+
+class Platform(C.Structure):
+    _fields_ = (
+        [
+            ("context", C.c_void_p),
+            ("now_us", NOW),
+            ("sha256", HASH),
+            ("random_bytes", RANDOM),
+            ("allocate", ALLOC),
+            ("deallocate", FREE),
+            ("memory", MEMORY),
+        ]
+        + [
+            (name, C.c_char_p)
+            for name in (
+                "device_id",
+                "boot_id",
+                "firmware_version",
+                "firmware_build_id",
+                "idf_version",
+                "board_manifest_hash",
+                "schema_sha256",
+                "reset_cause",
+            )
+        ]
+        + [("audio", AudioPort)]
+    )
 
 
 @pytest.fixture(scope="session")
@@ -90,6 +115,7 @@ def native_library(tmp_path_factory):
             str(main / "protocol/strict_json.c"),
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
+            str(main / "audio/pcm_samples.c"),
             str(main / "artifacts/artifact_store.c"),
             str(cjson / "cJSON.c"),
             str(REPO_ROOT / "testbed/tests/native/cjson_allocator.c"),
@@ -119,7 +145,7 @@ def native_library(tmp_path_factory):
 
 
 class NativeNode:
-    def __init__(self, lib, realtime=False, boot=1):
+    def __init__(self, lib, realtime=False, boot=1, audio=None):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.origin = monotonic()
         self.boot_id = f"esp-001122334455:{boot}"
@@ -146,6 +172,7 @@ class NativeNode:
             b"b" * 64,
             control_v2.schema_digest().encode(),
             b"test_fixture",
+            audio or AudioPort(),
         )
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
