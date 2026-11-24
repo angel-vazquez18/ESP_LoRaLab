@@ -364,5 +364,6 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   OLED supplement e57d4c…; other wire hashes unchanged. No flash or PCB/screen
   qualification. User merged #192/#193 while work continued; rebased OLED onto
   main. A reproduced native fixture write-after-close crash now raises OSError
-  under the port lock; production USB behavior is unchanged. Preparing PR, then
-  #69 resource/arm transitions before #73.
+  under the port lock; production USB behavior is unchanged. PR #194 is ready
+  against main, issue Testing, no agent merge. Next #69 resource/arm transitions
+  before #73.
