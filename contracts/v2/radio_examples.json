@@ -1,0 +1,292 @@
+{
+  "description": "Public interface examples, not observed hardware evidence.",
+  "records": [
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 1,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "session.open",
+        "args": {
+          "session_id": "0000000000000001",
+          "peer_device_id": "esp-f85b1ba27744",
+          "peer_boot_id": "esp-f85b1ba27744:1",
+          "security": "none",
+          "tx_key_hex": null,
+          "rx_key_hex": null
+        }
+      },
+      "result": {
+        "state": "idle",
+        "session_id": "0000000000000001"
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000002",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 2,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "config.set",
+        "args": {
+          "radio": {
+            "frequency_hz": 915000000,
+            "bandwidth_hz": 125000,
+            "spreading_factor": 7,
+            "coding_rate_denominator": 5,
+            "tx_power_dbm": 2,
+            "preamble_symbols": 8,
+            "header_mode": "explicit",
+            "crc_enabled": true,
+            "iq_inverted": false,
+            "sync_word": 5156,
+            "ldro_mode": "auto"
+          },
+          "link": {
+            "fragment_payload_bytes": 160,
+            "ack_mode": "none",
+            "max_retries": 0,
+            "guard_us": 50000,
+            "ack_turnaround_us": 20000,
+            "ack_margin_us": 80000
+          }
+        }
+      },
+      "result": {
+        "radio": {
+          "frequency_hz": 915000000,
+          "bandwidth_hz": 125000,
+          "spreading_factor": 7,
+          "coding_rate_denominator": 5,
+          "tx_power_dbm": 2,
+          "preamble_symbols": 8,
+          "header_mode": "explicit",
+          "crc_enabled": true,
+          "iq_inverted": false,
+          "sync_word": 5156,
+          "ldro_mode": "auto",
+          "ldro_enabled": false
+        },
+        "link": {
+          "fragment_payload_bytes": 160,
+          "ack_mode": "none",
+          "max_retries": 0,
+          "guard_us": 50000,
+          "ack_turnaround_us": 20000,
+          "ack_margin_us": 80000
+        },
+        "config_revision": 1
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000003",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 3,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.prepare",
+        "args": {
+          "spec": {
+            "catalog_id": "IF-02",
+            "source": "known_data",
+            "direction": "A_TO_B",
+            "message_count": 1,
+            "message_bytes": 16,
+            "source_seed": 1,
+            "security": "none",
+            "max_duration_ms": 10000,
+            "instrumentation": {}
+          },
+          "budget": {
+            "ack_timeout_us": 0,
+            "reassembly_timeout_us": 1000000,
+            "drain_us": 1000000,
+            "processing_budget_us": 0,
+            "capture_budget_us": 0,
+            "playback_budget_us": 0,
+            "fault_budget_us": 0,
+            "model_version": "sx126x_lora_v1"
+          }
+        }
+      },
+      "result": {
+        "operation_id": "33333333-3333-4333-8333-333333333333",
+        "state": "accepted",
+        "deadline_us": 10000000
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000004",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 4,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.arm",
+        "args": {
+          "config_revision": 1
+        }
+      },
+      "result": {
+        "receiver_ready": true
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000005",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 5,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.start",
+        "args": {
+          "config_revision": 1
+        }
+      },
+      "result": {
+        "operation_id": "44444444-4444-4444-8444-444444444444",
+        "state": "accepted",
+        "deadline_us": 10000000
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000006",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 6,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.stop",
+        "args": {
+          "reason": "operator"
+        }
+      },
+      "result": {
+        "state": "idle"
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000007",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 7,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "run.summary",
+        "args": {}
+      },
+      "result": {
+        "role": "sender",
+        "session_id": "0000000000000001",
+        "config_revision": 1,
+        "intended_messages": 1,
+        "started_messages": 1,
+        "finished_messages": 1,
+        "original_packets": 1,
+        "tx_attempts": 1,
+        "radio_observations": 0,
+        "accepted_fragments": 0,
+        "duplicates": 0,
+        "delivered_messages": 0,
+        "failed_messages": 0,
+        "useful_source_bytes": 16,
+        "useful_delivered_bytes": 0,
+        "first_tx_command_us": 100000,
+        "last_tx_done_us": 200000,
+        "first_rx_us": null,
+        "last_rx_us": null,
+        "stop_reason": "completed",
+        "telemetry_drops": 0,
+        "validity_reasons": []
+      }
+    },
+    {
+      "command": {
+        "v": 2,
+        "kind": "command",
+        "command_id": "00000000-0000-4000-8000-000000000008",
+        "client_id": "22222222-2222-4222-8222-222222222222",
+        "command_seq": 8,
+        "target_boot_id": "esp-a4cb8fa21878:1",
+        "run_id": "11111111-1111-4111-8111-111111111111",
+        "name": "session.close",
+        "args": {}
+      },
+      "result": {
+        "state": "idle"
+      }
+    }
+  ],
+  "tx_attempt": {
+    "session_id": "0000000000000001",
+    "frame_seq": 1,
+    "message_id": 1,
+    "fragment_index": 0,
+    "attempt_index": 1,
+    "frame_type": "data",
+    "frame_bytes": 56,
+    "tx_command_us": 100000,
+    "tx_done_us": 200000,
+    "status": "completed"
+  },
+  "rejected_configurations": [
+    {
+      "frequency_hz": 2400000000,
+      "bandwidth_hz": 125000,
+      "spreading_factor": 7,
+      "coding_rate_denominator": 5,
+      "tx_power_dbm": 2,
+      "preamble_symbols": 8,
+      "header_mode": "explicit",
+      "crc_enabled": true,
+      "iq_inverted": false,
+      "sync_word": 5156,
+      "ldro_mode": "auto"
+    },
+    {
+      "frequency_hz": 915000000,
+      "bandwidth_hz": 125000,
+      "spreading_factor": 7,
+      "coding_rate_denominator": 1,
+      "tx_power_dbm": 2,
+      "preamble_symbols": 8,
+      "header_mode": "explicit",
+      "crc_enabled": true,
+      "iq_inverted": false,
+      "sync_word": 5156,
+      "ldro_mode": "auto"
+    },
+    {
+      "frequency_hz": 915000000,
+      "bandwidth_hz": 125000,
+      "spreading_factor": 7,
+      "coding_rate_denominator": 5,
+      "tx_power_dbm": 21,
+      "preamble_symbols": 8,
+      "header_mode": "explicit",
+      "crc_enabled": true,
+      "iq_inverted": false,
+      "sync_word": 5156,
+      "ldro_mode": "auto"
+    }
+  ],
+  "unavailable_command": "run.start"
+}
