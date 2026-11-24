@@ -474,3 +474,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   wire/firmware/build/flash change or physical qualification. #105 remains the
   full source procedure, #88 plots/UI. Next #87 executes saved physical campaign
   cases with pause/cancel and exclusive ownership, reusing existing runners.
+
+- #82: PR #201 (`feat/memory-source-assessment` →
+  `feat/physical-campaign-plans`) is ready with five implementation/test/doc
+  commits, walkthrough, expected checks and physical instructions. Issue/card
+  Testing; no agent merge. Full 915 cases, 25 dedicated cases and all shared
+  checks pass. Starting #87 on a fresh branch based on this reviewed stack.
