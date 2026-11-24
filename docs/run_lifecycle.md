@@ -87,12 +87,13 @@ and/or KEY_RETIRE_FAILED. Host run errors and per-node cleanup confirmation are
 also retained separately; unconfirmed cleanup disconnects ownership and cannot
 be reported as successful completion.
 
-The breaking execution profile is `finite_message_execution_v2`, SHA
-`04f50ab80df33d76b53191a081d207a6338654d02d0afadb42f046041d43eca9`.
-It replaces `known_data_execution_v1` for new RF work: deploy matching firmware
-and host together. Identity and fresh health must advertise the exact profile/hash;
-old peers remain unavailable. Historical records are preserved. Main-control,
-diagnostic, artifact, audio, codec, PTT and OLED identities are unchanged.
+The lifecycle originally introduced `finite_message_execution_v2`. New work uses
+`finite_message_execution_v3`, which adds the fixed VOICE-03 source and bounded
+`run.source` evidence. Deploy matching host/firmware together and require the
+exact generated profile/hash in identity and current health. Old peers remain
+unavailable; historical records are preserved. Main-control, diagnostic,
+artifact, audio, codec, PTT and OLED identities remain separate. See
+[fixed source](fixed_rate_source.md) for the source variant and current digest.
 
 ## Reproduce software checks
 

@@ -4,7 +4,7 @@ The main-control envelope remains NDJSON v2. RF work reuses the selected executi
 vocabulary in `run_protocol_v2.py`; there is no second `radio.*` command family.
 A control-schema match alone does not enable RF. The host requires both identity
 and current health to advertise `resource_limits.execution`, profile
-`finite_message_execution_v2`, the exact generated execution digest and the requested
+`finite_message_execution_v3`, the exact generated execution digest and the requested
 command. New work also requires `capabilities.radio = true`. Cleanup commands
 (`run.stop`, `session.close`, `run.summary`) remain callable after radio failure.
 Only implemented handlers belong in the declaration; the generated C header
@@ -53,7 +53,7 @@ must be independently checked by the host.
 session, prepare, receiver-ready, start, stop, summary and TX phase timestamps,
 plus rejected configurations. They are interface fixtures, not measurements.
 `make contracts-check` checks generated schema/header drift. New RF work uses the
-exact `finite_message_execution_v2` profile; older execution identities remain
+exact `finite_message_execution_v3` profile; older execution identities remain
 incompatible. Historical records are preserved. This changes the execution digest,
 not diagnostic/control, artifact or audio compatibility.
 

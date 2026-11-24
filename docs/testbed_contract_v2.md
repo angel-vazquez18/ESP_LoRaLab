@@ -550,6 +550,14 @@ post-startup interval after three seconds, plus all startup/drain durations.
 This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
+The implemented finite source uses the exact `finite_message_execution_v3`
+policy and bounded `run.source` readback. It starts at nominal elapsed zero,
+retains actual wake times, uses a 0–30 second declared source drain, and keeps
+sender transmission distinct from receiver delivery. See
+[fixed-rate source](fixed_rate_source.md) for queue masks, interval boundaries,
+archive holes, wire limits and cleanup. Host procedure/assessment follows #105;
+software evidence does not qualify physical sustained throughput.
+
 `VOICE-04` uses the same three fixed reference clips across configurations and a
 five-point listening rubric: 1 unintelligible, 2 occasional words, 3 meaning with
 effort, 4 mostly clear, 5 clear. Save listener identifier, clip order and notes.

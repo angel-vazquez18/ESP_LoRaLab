@@ -396,3 +396,17 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   (`feat/stage-memory-observations` → `feat/reserved-run-lifecycle`), issue Testing,
   no agent merge. Next #74 fixed-rate encoded producer, bounded whole-message
   queue and actual consumer accounting.
+
+- #74 implemented on #196: independent reserved producer task, 4,800-byte total
+  encoded payload queue, actual frame/5 Hz evidence, whole-message outcome masks,
+  bounded drain and quiescent payload retirement. Twenty-message protected RF
+  reuses fresh sequences, exact retries and one reserved reassembly buffer;
+  incomplete/hash-invalid messages leave explicit receiver archive holes.
+  Failed worker joins retain dependencies and block new operations. Exact
+  finite_message_execution_v3/08e34008… adds bounded run.source readback; general
+  one-message limits remain explicit. Seventeen dedicated cases and 845 full
+  cases pass without skips, all shared checks and UI formatting. Final 32-case
+  source/memory checks pass. V4.2/32 KiB IDF 0x73c50/55% app free/74,097 static
+  DIRAM. Original 19 files unchanged; no flash/physical qualification. Source
+  procedure/assessment is #105 and physical acceptance #136; #75 is the common
+  host lifecycle and must not be mistaken for the source procedure.

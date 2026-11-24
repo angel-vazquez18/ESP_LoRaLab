@@ -4,6 +4,35 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Independent encoded source and bounded RF queue (#74)
+
+A dedicated reserved task now produces eight encoded bytes per 20 ms for sixty
+seconds, independently of RF/USB work. Four payload slots include partial and
+active immutable borrows within 4,800 bytes. Whole-message overflow masks, actual
+frame times, 5 Hz snapshots, missed intervals and bounded drain/discard accounting
+remain readable until close. Terminal cleanup retires payload memory while
+retaining bounded evidence metadata; an unjoined worker retains all dependencies,
+reports SOURCE_STOP_FAILED and blocks new work until cleanup succeeds.
+
+The same owned protected session carries up to twenty real 1,200-byte messages
+with fresh sequences and retained exact retries. Receiver reassembly reuses its
+prepared reservation after per-message failures. Sender completion and independent
+receiver delivery remain distinct. A hashed 24,000-byte known-data evidence
+archive preserves explicit holes; it is never a playable incomplete codec file.
+The exact finite_message_execution_v3/08e34008… profile adds typed run.source
+readback. Current numeric limits and immutable enrollment declarations keep fully
+configured records within the existing 4 KiB bound.
+
+Seventeen dedicated source cases and the full 845-case check pass without skips,
+plus lint/frontend/contracts/repository/vendor checks and UI formatting. A final
+32-case source/memory check covers the pre-release inventory ordering. Selected
+V4.2/32 KiB IDF build passes: 0x73c50 bytes, 55% app free, 74,097 static DIRAM
+bytes. The existing Starlette/httpx deprecation remains. All 19 original user
+files still match their saved hashes. No physical port or flash was used.
+Common host lifecycle #75, sustained-source procedure/assessment #105 and physical
+qualification #136 remain distinct following work. See
+[source walkthrough, accounting and physical instructions](fixed_rate_source.md).
+
 ## November 24 — Named sampled memory observations (#73)
 
 A finite optional observer now records actual 100 ms periodic and additional
