@@ -106,7 +106,7 @@ class DiagnosticJobs:
             else None,
         }
 
-    async def start(self, role, binding, args):
+    async def start(self, role, binding, args, on_created=None):
         if self.busy:
             raise RuntimeError("Another diagnostic job owns the bench")
         record = {
@@ -135,6 +135,8 @@ class DiagnosticJobs:
         self.starting_task = asyncio.current_task()
         self.started = self.stop_requested = self.cleaning_up = False
         try:
+            if on_created:
+                on_created(record["id"])
             accepted = await self.adapter.request(
                 binding, "diag.run", args, on_record=lambda value: self.trace(record, value)
             )
@@ -211,6 +213,16 @@ class DiagnosticJobs:
                 local_work=True,
                 on_record=lambda value: self.trace(record, value),
             )
+            if record["node_result"] is None and record["operation_id"]:
+                for event in self.store.node_operation_records(
+                    record["role"], record["operation_id"]
+                ):
+                    if (
+                        event.get("name") == "operation.result"
+                        and event.get("device_id") == record["physical_binding"]["device_id"]
+                        and event.get("boot_id") == record["physical_binding"]["boot_id"]
+                    ):
+                        record["node_result"] = event["data"]
             if record["status"] == "completed" and any(
                 error["command"] == "evidence" for error in record["cleanup"]["errors"]
             ):
