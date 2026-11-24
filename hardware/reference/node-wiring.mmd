@@ -7,7 +7,7 @@ flowchart TB
     BTN["Normally open<br/>push-to-talk button<br/>Pressed = LOW"]
     GND["Heltec GND"]
     RADIO["Onboard SX1262 / RF front end<br/>NSS 8 · SCK 9<br/>MOSI 10 · MISO 11<br/>RESET 12 · BUSY 13 · DIO1 14<br/>GPIO 7 reserved: VFEM_Ctrl"]
-    OLED["Onboard OLED<br/>SDA 17 · SCL 18 · RESET 21"]
+    OLED["Onboard SSD1315 OLED (standard V4 R2)<br/>SDA 17 · SCL 18 · RESET 21<br/>Vext supply · GPIO 36 LOW enables power<br/>Driver off until board verified"]
     HOST <-->|"USB: power + serial"| ESP
     ESP -->|"GPIO 4 → SCK / BCLK<br/>GPIO 5 → WS / LRCLK"| MIC
     MIC -->|"SD → GPIO 6"| ESP

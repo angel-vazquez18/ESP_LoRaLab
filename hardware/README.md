@@ -26,6 +26,7 @@ See `boards/heltec_wifi_lora32_v4.json` for machine-readable planning data.
 | Onboard SX1262 | RESET / BUSY / DIO1 | GPIO 12 / 13 / 14 |
 | Onboard RF front end | VFEM_Ctrl | GPIO 7 reserved; never use for PTT |
 | Onboard OLED | SDA / SCL / RESET | GPIO 17 / 18 / 21 |
+| Onboard OLED / Ve rail | Vext enable | GPIO36 LOW enables; standard V4.2/V4.3 R2 reference |
 
 The board also has RF-front-end controls shown in the manufacturer's pin map
 (GPIO 2 FEM_EN and GPIO 46 FEM_PA); preserve these when writing the board/radio
@@ -85,3 +86,12 @@ finite capture. It defaults off; no PCB revision, soldering or button operation
 was verified by its software/build checks. GPIO7 remains reserved. See
 [PTT configuration and physical acceptance](../docs/host_armed_ptt.md). Existing
 wiring table/diagram assignments are unchanged.
+
+## Optional OLED status
+
+The standard V4.2/V4.3 R2 references use an SSD1315 128x64 OLED on Vext; GPIO36
+LOW enables the rail. Source schematics were inspected; the user's PCB remains
+unverified. Profile version 3, table and Mermaid/PNG include that reserved onboard
+control. Microphone/amplifier/speaker/PTT wiring stays the same.
+[The OLED driver](../docs/oled_status.md) defaults off, reports bounded worker
+failures through USB and does not infer physical pixel qualification.

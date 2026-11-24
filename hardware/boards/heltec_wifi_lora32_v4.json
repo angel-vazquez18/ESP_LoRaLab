@@ -1,5 +1,5 @@
 {
-  "profile_version": 2,
+  "profile_version": 3,
   "profile_id": "heltec_wifi_lora32_v4_audio_plan",
   "status": "planned_not_hardware_validated",
   "target": "esp32s3",
@@ -83,6 +83,9 @@
     "native_usb_gpio": {
       "d_minus": 19,
       "d_plus": 20
+    },
+    "power_gpio": {
+      "vext_ctrl": 36
     }
   },
   "remaining_checks": [
@@ -100,5 +103,19 @@
     "speaker": "not_explicitly_confirmed",
     "ptt": "not_explicitly_confirmed",
     "independently_verified": false
+  },
+  "oled": {
+    "controller": "SSD1315",
+    "width": 128,
+    "height": 64,
+    "i2c_address": 60,
+    "supply": "onboard_vext",
+    "power_on_level": 0,
+    "reference_scope": "standard_v4_2_and_v4_3_r2_not_r8_not_physical_validation",
+    "sources": [
+      "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.2.0.pdf",
+      "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/WiFi_LoRa_32_V4.2.pdf",
+      "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/HTIT-WB32LAF_V4.3.pdf"
+    ]
   }
 }
