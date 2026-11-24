@@ -8,6 +8,13 @@
 typedef bool (*rf_hash)(void *, const void *, size_t, uint8_t[32]);
 typedef struct
 {
+    void *context;
+    void *(*allocate)(void *, size_t);
+    void (*release)(void *, void *);
+    rf_hash hash;
+} rf_packet_port;
+typedef struct
+{
     uint64_t session;
     uint32_t seed, message_count, message_bytes, highest_message, highest_sequence;
     uint8_t source, destination;

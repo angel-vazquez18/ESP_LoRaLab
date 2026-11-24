@@ -460,3 +460,17 @@ physical RF acceptance remain pending. See [reconstruction](radio_fragments.md).
 `make check` passed 447 tests without skips plus lint, production frontend build,
 contract and repository checks. Selected-board ESP-IDF build passed (0x511e0-byte
 image, 68% app partition free). No physical port was opened.
+
+## November 22 — Referenced ACKs (#40)
+
+Added canonical ACK matching and a bounded receiver scheduler with fresh ACK
+sequences, one pending response, 16 exact frame-hash cache entries and a declared
+retry horizon. Wrong/unknown/stale references cannot match; replay classification
+never schedules ACK. An eligible identical retry re-ACKs without another insertion
+or delivery. Protected ACKs and full operator ACK/retry support remain unavailable
+until security/scheduler integration. See [reliability](radio_reliability.md).
+
+`make check` passed 452 tests without skips plus lint, production frontend build,
+contract and repository checks. Five ACK-focused cases also passed after aligning
+the cache test's timestamps monotonically. Selected-board ESP-IDF build passed;
+no flash or physical serial access occurred.

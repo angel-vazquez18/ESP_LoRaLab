@@ -2,13 +2,7 @@
 #include "radio/rf_frames.h"
 
 typedef struct rf_reassembly rf_reassembly;
-typedef struct
-{
-    void *context;
-    void *(*allocate)(void *, size_t);
-    void (*release)(void *, void *);
-    rf_hash hash;
-} rf_reassembly_port;
+typedef rf_packet_port rf_reassembly_port;
 typedef enum
 {
     RF_REASSEMBLY_REJECTED,

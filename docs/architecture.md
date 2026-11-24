@@ -186,3 +186,8 @@ claiming encryption. See [fragment behavior](radio_fragments.md).
 `radio/rf_reassembly` owns one bounded peer/session message buffer, missing-index
 bitmap and hash-gated once-only delivery. Allocation/hash are platform boundaries;
 wire parser validation precedes insertion. Scheduler integration is separate.
+
+`radio/rf_ack` owns referenced ACK bytes, matching and receiver turnaround/cache
+state. Receive validation/replay classification precedes scheduling; DATA insertion
+and delivery remain in reconstruction. Packet modules share the allocation/hash
+platform boundary declared as `rf_packet_port`.
