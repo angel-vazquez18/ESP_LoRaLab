@@ -29,6 +29,8 @@ class ProcedureService:
             "testbed/src/lora_testbed/nodes.py",
             "testbed/src/lora_testbed/serial_validation.py",
             "testbed/src/lora_testbed/host.py",
+            "testbed/src/lora_testbed/physical_adapter.py",
+            "testbed/src/lora_testbed/diagnostic_jobs.py",
             "testbed/src/lora_testbed/catalog.py",
             "testbed/src/lora_testbed/v2.py",
             "testbed/src/lora_testbed/control_v2.py",

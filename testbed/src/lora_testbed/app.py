@@ -258,6 +258,14 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     ):
         return app.state.host.crypto_benchmark_evidence(role, operation_id, include_records)
 
+    @app.get("/api/diagnostic-runs/{run_id}")
+    async def diagnostic_run(run_id: control_v2.UUID):
+        return app.state.host.diagnostics.get(run_id)
+
+    @app.get("/api/diagnostic-runs/{run_id}/evidence")
+    async def diagnostic_run_evidence(run_id: control_v2.UUID, include_records: bool = False):
+        return app.state.host.diagnostics.evidence(run_id, include_records)
+
     @app.post("/api/nodes/{role}/operation/stop")
     async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):
         return await app.state.host.stop_node_operation(role, body.operation_id)

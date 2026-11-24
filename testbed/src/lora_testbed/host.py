@@ -6,8 +6,10 @@ from pathlib import Path
 from . import __version__, crypto_benchmark_v2
 from .artifact_transfers import ArtifactTransfers
 from .catalog import catalog, required_nodes
+from .diagnostic_jobs import DiagnosticJobs
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
+from .physical_adapter import PhysicalAdapter
 from .procedure_runs import ProcedureService
 from .radio_runs import RadioRuns
 from .run_records_v2 import RunRecords
@@ -21,11 +23,13 @@ class Host:
         self.lock = asyncio.Lock()
         self.mode = "hardware"
         self.physical = {role: NodeSession(role, self.node_event) for role in "AB"}
+        self.adapter = PhysicalAdapter(self.physical)
+        self.diagnostics = DiagnosticJobs(self.store, self.physical, self.adapter)
         self.records = RunRecords(self.store)  # Retain access to historical evidence.
         self.procedures = ProcedureService(self.store, self.physical)
-        self.artifacts = ArtifactTransfers(self.store, self.physical)
-        self.audio = NodeAudio(self.store, self.physical, self.artifacts)
-        self.radio = RadioRuns(self.store, self.physical, self.artifacts)
+        self.artifacts = ArtifactTransfers(self.store, self.physical, self.adapter)
+        self.audio = NodeAudio(self.store, self.physical, self.artifacts, self.adapter)
+        self.radio = RadioRuns(self.store, self.physical, self.artifacts, self.adapter)
         self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
 
     def node_event(self, role, event):
@@ -37,6 +41,7 @@ class Host:
     def busy(self) -> bool:
         return (
             self.procedures.busy
+            or self.diagnostics.busy
             or self.voice.busy
             or self.radio.busy
             or self.audio.busy
@@ -69,6 +74,7 @@ class Host:
             "artifact_transfers": self.artifacts.snapshot(),
             "audio_operations": self.audio.snapshot(),
             "radio_runs": self.radio.snapshot(),
+            "diagnostic_runs": self.diagnostics.snapshot(),
             "voice_runs": self.voice.snapshot(),
         }
 
@@ -172,17 +178,18 @@ class Host:
                 "diag_kinds", []
             ):
                 raise ValueError("Matching main-node memory_probe firmware is required")
-            status = await node.request("status.get")
+            binding = self.adapter.bind(role)
+            status = await self.adapter.request(binding, "status.get")
             if status["state"] != "idle" or status["node_role"] != role:
                 raise ValueError("Node must be owned and idle")
             if not 1 <= iterations <= limits.get("diag_max_iterations", 0):
                 raise ValueError("Iterations exceed the node's negotiated limit")
             if not 1 <= payload_bytes <= limits.get("diag_max_payload_bytes", 0):
                 raise ValueError("Payload exceeds the node's negotiated limit")
-            return await node.request(
-                "diag.run",
+            return await self.diagnostics.start(
+                role,
+                binding,
                 {"kind": "memory_probe", "iterations": iterations, "payload_bytes": payload_bytes},
-                on_record=lambda record: self.store.append_node_event(role, record),
             )
 
     async def crypto_benchmark(self, role, iterations, payload_bytes):
@@ -192,18 +199,15 @@ class Host:
             node = self.physical[role]
             if not node.connected or not node.identity or node.wire_profile != "node_control":
                 raise ValueError("Connect matching main-node benchmark firmware first")
-            await node.request("status.get")
+            binding = self.adapter.bind(role)
+            await self.adapter.request(binding, "status.get")
             crypto_benchmark_v2.require_capability(
                 node.identity.capabilities, node.health.capability_availability
             )
             if node.health.state != "idle" or node.health.node_role != role:
                 raise ValueError("Node must be owned and idle")
             args = crypto_benchmark_v2.Arguments(iterations=iterations, payload_bytes=payload_bytes)
-            return await node.request(
-                "diag.run",
-                args.model_dump(),
-                on_record=lambda record: self.store.append_node_event(role, record),
-            )
+            return await self.diagnostics.start(role, binding, args.model_dump())
 
     def crypto_benchmark_evidence(self, role, operation_id, include_records=False):
         records = self.store.node_operation_records(role, operation_id)
@@ -218,14 +222,43 @@ class Host:
         async with self.lock:
             if self.procedures.busy or self.audio.busy or self.radio.busy:
                 raise RuntimeError("Stop the active procedure/audio job through its own controls")
+            if self.diagnostics.current and self.diagnostics.current["role"] == role:
+                return await self.diagnostics.stop(operation_id)
             node = self.physical[role]
             if node.wire_profile != "node_control":
                 raise ValueError("Matching main-node control firmware is required")
-            return await node.request(
-                "operation.stop",
-                {"operation_id": operation_id},
+            active = node.active_operation or {}
+            binding = active.get("physical_binding") or self.adapter.bind(role)
+            original = result = None
+            try:
+                result = await self.adapter.request(
+                    binding,
+                    "operation.stop",
+                    {"operation_id": operation_id},
+                    on_record=lambda record: self.store.append_node_event(role, record),
+                )
+            except (OSError, ValueError, TimeoutError) as exc:
+                original = exc
+            cleanup = await self.adapter.cleanup(
+                binding,
+                operation_id=operation_id,
                 on_record=lambda record: self.store.append_node_event(role, record),
             )
+            self.store.append_node_event(
+                role,
+                {
+                    "kind": "host_cleanup",
+                    "operation_id": operation_id,
+                    "physical_binding": binding,
+                    "original_error": str(original) if original else None,
+                    "cleanup": cleanup,
+                },
+            )
+            if original:
+                raise original
+            if not cleanup["confirmed"]:
+                raise ValueError(f"Operation cleanup unconfirmed: {cleanup['error']}")
+            return {**result, "cleanup": cleanup}
 
     async def start_serial(self, request):
         async with self.lock:
@@ -277,6 +310,8 @@ class Host:
                 return await self.voice.stop()
             if self.radio.busy:
                 return await self.radio.stop()
+            if self.diagnostics.busy:
+                return await self.diagnostics.stop()
             return await self.procedures.stop()
 
     async def artifact_action(self, action, role, *args, **kwargs):
@@ -292,6 +327,7 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        await self.diagnostics.close()
         await self.voice.close()
         await self.radio.close()
         await self.audio.close()
