@@ -632,6 +632,8 @@ class NativeSerial:
 
     def write(self, wire):
         with self.lock:
+            if self.closed:
+                raise OSError("Native serial fixture is closed")
             self.core.feed(wire)
             self._pump()
         return len(wire)
