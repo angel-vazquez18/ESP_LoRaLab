@@ -97,3 +97,31 @@ download at 1/1024/1025/48000 bytes, independent hashes, cancellation/cleanup an
 following valid transfer. Raw evidence and the isolated store remain in ignored
 local/m2-batch. This is local file evidence; listening, microphone response and
 full M1/audio qualification remain separate physical checks.
+
+## Node inspector (#33)
+
+Open Bench overview → Inspect node → Node files. Upload a raw binary/PCM file,
+watch transfer and verification progress, inspect committed size/hash, retrieve
+it, and save verified host bytes. Files in use cannot be deleted; unfinished or
+failed files cannot be retrieved. Exact compatibility/current support comes from
+the backend snapshot, not a browser copy of protocol hashes.
+
+Recent completed/failed/cancelled findings remain visible after disconnect or
+refresh. Disconnected/unsupported node actions are disabled, while verified host
+copies remain available. Reconnect resets current RAM-file observations and keeps
+transfer identity/boot provenance. File list refresh uses its own bounded request
+state, ignores stale responses and refreshes after fast transfers complete.
+
+Review: upload a known file, retrieve/save it, compare SHA-256, cancel a larger
+transfer, inspect its retained progress/error/cleanup, then disconnect/reconnect.
+Confirm unsupported/in-use actions stay disabled. `make check` and frontend build/
+formatting passed at this checkpoint: 293 total tests (three new exact-readiness
+cases). The focused host file suite now has 26 cases.
+
+November 16 browser verification used the actual connected node in an isolated
+data store: 1025-byte upload/retrieve/save matched exact bytes and SHA-256; an
+invalid-ID request stayed visibly failed/unusable; cancelling a disposable
+131072-byte upload retained 4096-byte progress and removed its node reservation.
+Deletion, disabled disconnected controls, retained findings and fresh-boot
+reconnect all passed. A screenshot is retained in the Codex visualization folder.
+No speaker/microphone operation is established by these checks.

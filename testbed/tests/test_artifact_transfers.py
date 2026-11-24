@@ -376,3 +376,25 @@ def test_cancel_waits_for_serial_write_before_sending_cleanup(native_library, tm
             assert (await finished(host.artifacts, job["id"]))["status"] == "completed"
 
     asyncio.run(scenario())
+
+
+@pytest.mark.parametrize("change", ["missing", "schema", "command"])
+def test_inspector_readiness_uses_exact_current_capabilities(native_library, tmp_path, change):
+    async def scenario():
+        async with bench(native_library, tmp_path) as (host, _):
+            node = host.physical["A"]
+            assert len(node.snapshot()["artifact_support"]["commands"]) == 6
+            resource = node.health.capability_availability.resource_limits
+            if change == "missing":
+                resource.pop("artifact_transfer")
+            elif change == "schema":
+                resource["artifact_transfer"]["schema_sha256"] = "0" * 64
+            else:
+                resource["artifact_transfer"]["commands"].remove("artifact.put")
+            support = node.snapshot()["artifact_support"]
+            assert "artifact.put" not in support["commands"]
+            assert "artifact.put" in support["blocked"]
+            if change != "command":
+                assert not support["commands"]
+
+    asyncio.run(scenario())

@@ -307,3 +307,18 @@ checks passed. Firmware unchanged from #22. Physical host workflows passed at
 checks also passed full 131072-byte readback, raw negative/retry/hash/capacity
 cases with zero framing errors/event gaps. Raw reports/stores/backups stay ignored
 under local/m2-batch. Full audio/M1 physical qualification remains open.
+
+## November 16 — Node file inspector (#33)
+
+Added upload/list/retrieve/delete and verified host-byte saving in the node detail
+view, with live progress, hashes, retained failure/cancel findings and exact
+server-computed readiness. Disconnected, unsupported, busy, incomplete and in-use
+actions are gated. Fixed a browser-observed fast-completion refresh race and
+ignore stale list responses. `make check`: 293 passed; frontend build/format and
+repository checks passed. Actual browser/node upload/retrieve/save at 1025 bytes
+matched exact hash/bytes; invalid-ID failure, 131072-byte upload cancellation at
+4096 bytes with cleanup, deletion, offline gating/history and reconnect passed.
+QA server stopped and port released. Artifact image ran with advancing health and
+zero observed gaps/framing errors through roughly six hours before intentional
+reconnect; this is limited observed control evidence, not full M1/audio closure.
+Screenshot: Codex visualization m2-file-inspector.png. Next is #23 playback.

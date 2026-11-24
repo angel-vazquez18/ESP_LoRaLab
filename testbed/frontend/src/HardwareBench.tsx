@@ -12,6 +12,8 @@ import {
   X,
 } from "lucide-react";
 import "./hardware.css";
+import NodeArtifacts from "./NodeArtifacts";
+import type { ArtifactState } from "./NodeArtifacts";
 
 type Heap = {
   free_bytes: number;
@@ -23,6 +25,11 @@ export type HardwareNode = {
   id: "A" | "B";
   wire_profile: "diagnostic" | "node_control" | null;
   active_operation: { operation_id: string; deadline_us: number } | null;
+  artifact_support?: {
+    commands: string[];
+    blocked: Record<string, string>;
+    limits: { max_artifact_bytes: number } | null;
+  };
   operation_results: {
     operation_id: string;
     status: string;
@@ -172,12 +179,14 @@ function Details({
   request,
   pending,
   error: hostError,
+  transfers,
 }: {
   node: HardwareNode;
   close: () => void;
   request: Request;
   pending: boolean;
   error: string;
+  transfers: ArtifactState;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [iterations, setIterations] = useState(10);
@@ -377,6 +386,13 @@ function Details({
             )}
           </section>
         )}
+      <NodeArtifacts
+        node={node}
+        transfers={transfers}
+        request={request}
+        pending={pending}
+        hostError={hostError}
+      />
       <h3>Session diagnostics</h3>
       <div className="hw-diagnostics">
         {node.diagnostics.length ? (
@@ -399,11 +415,13 @@ export default function HardwareBench({
   pending,
   request,
   error,
+  transfers,
 }: {
   nodes: HardwareNode[];
   pending: boolean;
   request: Request;
   error: string;
+  transfers: ArtifactState;
 }) {
   const [ports, setPorts] = useState<Port[]>([]);
   const [selected, setSelected] = useState<Record<string, string>>({});
@@ -667,6 +685,7 @@ export default function HardwareBench({
       </div>
       {focused && (
         <Details
+          transfers={transfers}
           node={focused}
           close={() => setDetail(null)}
           request={request}

@@ -24,25 +24,29 @@ verifying the retained flash backup. No eFuse changes or NVS erase.
 
 ## Progress
 
-- #14: implemented and verified: 20 new native cases; full checks 240 passed;
-  ESP-IDF main build passed (0x3c0c0 bytes, 77% partition free). PR #152 open.
-  Existing board still ran the old log-only image; verified original backup and
-  started a fresh 16 MiB snapshot before the first batch flash.
-- #18: implemented real SHA-256 commit, immutable/failed transitions and real
-  consumer lifecycle tests. 10 new cases; full checks 250 passed. ESP-IDF build
-  passed (0x3c2c0 bytes, 76% partition free). PR #153 open, based on #152.
-- #22: committed readback/CRC/EOF implemented. 17 new cases; full checks 267
-  passed. ESP-IDF build passed (0x3c890 bytes, 76% partition free). Fresh full
-  flash backup verified and cumulative artifact image flashed, NVS retained.
-  Device/schema/ELF matched; initial real 1/1024/1025/48000/131072-byte round trips
-  passed. Negative/capacity hardware evidence is being finalized.
-- #26: shared host service/API/CLI implemented; 23 focused cases, full checks
-  290 passed. Real host upload/download at 1/1024/1025/48000 bytes and cancellation,
-  cleanup and valid recovery passed. Evidence: local/m2-batch/host-transfer-hardware-report.json.
-  PR publishing next, based on #154.
-- Later issues: pending.
+- #14: PR #152, branch feat/artifact-chunks, base main. 20 new native cases.
+- #18: PR #153, branch feat/artifact-commit, base feat/artifact-chunks. 10 new
+  cases; replaced seeded consumer tests with real upload/commit.
+- #22: PR #154, branch feat/artifact-readback, base feat/artifact-commit. 17 new
+  cases. Firmware build 0x3c890, 76% partition free. Fresh full flash snapshot
+  verified and image flashed, NVS retained.
+- Physical artifact check passed at 1/1024/1025/48000/131072 bytes, raw CRC/offset/
+  retry/hash/capacity/recovery, zero gaps/framing errors. Evidence:
+  local/m2-batch/artifact-hardware-report.json; boot 55, matched schema/ELF.
+- #26: PR #155, branch feat/host-artifact-transfers, base feat/artifact-readback.
+  23 new host cases; 290 total tests. Real host roundtrips, cancellation, cleanup
+  and recovery passed. Evidence: local/m2-batch/host-transfer-hardware-report.json.
+- #33: implemented node inspector files/progress/history and exact server readiness.
+  Full checks 293 passed; frontend build/format passed. Real browser upload,
+  retrieve/save byte/hash verification, visible invalid request, cancel/delete,
+  disconnected gating and reconnect passed. Screenshot in visualization folder:
+  m2-file-inspector.png. QA server stopped; node port released. PR publishing next.
+- Next: #23 playback → #24 capture → #32 host audio → #38 UI audio → #42 physical
+  qualification. Printed revision, operator listening/speech and instruments are
+  still unobserved; user is away and asked to prepare those checks for later.
 
 Each PR includes its code walkthrough, verification commands/expected outcomes,
-dependency and remaining physical evidence. Current status/evidence goes in
-this document, docs/status.md and the linked issue; software fixtures never
-qualify physical audio.
+dependency and remaining physical evidence. The ignored state map contains exact
+PR/branch heads. Preserve seven prior local edits. Software fixtures never qualify
+physical audio. All source changes/commits/pushes/PRs and required board builds,
+flashes and tests are authorized; do not merge any PR.
