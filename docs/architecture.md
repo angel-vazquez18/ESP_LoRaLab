@@ -223,3 +223,10 @@ owned blocks even on parser rejection or failed allocation. Native core and
 primitive checks share the pinned PSA builder in `tests/native_crypto.py`.
 The shared host still blocks protected provisioning before trace callbacks; see
 [session key lifetime and migration](session_key_lifecycle.md).
+
+`security/crypto_benchmark.c` owns the separate public-vector local diagnostic,
+fixed working buffers, actual PSA call timestamps and bounded pending sample page.
+Control owns its serial operation/cancellation lifecycle. `crypto_benchmark_v2.py`
+owns the additive schema and independent raw-page assessment; Host/API/CLI use
+that same path and the existing observation store. This never borrows an ordinary
+session key or radio path. See [measurement details](crypto_benchmark.md).

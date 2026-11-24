@@ -612,3 +612,18 @@ byte freshness is the trusted host’s OS-CSPRNG responsibility in #63, not a cl
 that the node proves randomness or detects every cross-boot reuse. Physical
 security, resource headroom and timing remain pending. Original 19 local-file
 hashes still match the preservation snapshot.
+
+## November 22 — Checked local crypto measurements (#53)
+
+Added a bounded public-vector single-node benchmark with separately checked first
+calls, 50 warm-ups and requested timed samples for encryption, decryption, invalid
+tags and copy baseline at 16/64/160/199 bytes. Actual platform timestamps enclose
+one-shot PSA calls; setup, output checks and USB/RF stay outside. The additive
+profile, shared API/CLI, raw evidence and independent completeness assessment
+preserve partial counts and block distributions after cancellation/sample loss.
+Full `make check` passed 556 cases without skips, lint/frontend/generated-contract/
+repository checks; the selected-board IDF image is 0x641a0 bytes with 61% app free.
+No flash or physical benchmark occurred. Three batches per size per physical node
+and target acceleration/resource qualification remain pending. All 19 preserved
+files in the original checkout still match their hashes. See
+[review and physical instructions](crypto_benchmark.md).

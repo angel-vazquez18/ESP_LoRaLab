@@ -3,7 +3,7 @@
 import asyncio
 from pathlib import Path
 
-from . import __version__
+from . import __version__, crypto_benchmark_v2
 from .artifact_transfers import ArtifactTransfers
 from .catalog import catalog, required_nodes
 from .node_audio import NodeAudio
@@ -180,6 +180,35 @@ class Host:
                 {"kind": "memory_probe", "iterations": iterations, "payload_bytes": payload_bytes},
                 on_record=lambda record: self.store.append_node_event(role, record),
             )
+
+    async def crypto_benchmark(self, role, iterations, payload_bytes):
+        async with self.lock:
+            if self.busy:
+                raise RuntimeError("Another check or operation already owns the bench")
+            node = self.physical[role]
+            if not node.connected or not node.identity or node.wire_profile != "node_control":
+                raise ValueError("Connect matching main-node benchmark firmware first")
+            await node.request("status.get")
+            crypto_benchmark_v2.require_capability(
+                node.identity.capabilities, node.health.capability_availability
+            )
+            if node.health.state != "idle" or node.health.node_role != role:
+                raise ValueError("Node must be owned and idle")
+            args = crypto_benchmark_v2.Arguments(iterations=iterations, payload_bytes=payload_bytes)
+            return await node.request(
+                "diag.run",
+                args.model_dump(),
+                on_record=lambda record: self.store.append_node_event(role, record),
+            )
+
+    def crypto_benchmark_evidence(self, role, operation_id, include_records=False):
+        records = self.store.node_operation_records(role, operation_id)
+        return {
+            "operation_id": operation_id,
+            "role": role,
+            "assessment": crypto_benchmark_v2.assess(records),
+            "records": records if include_records else None,
+        }
 
     async def stop_node_operation(self, role, operation_id):
         async with self.lock:

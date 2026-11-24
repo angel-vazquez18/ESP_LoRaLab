@@ -192,7 +192,9 @@ are errors. Read commands are marked R; all others are mutating commands.
 audio preparation and clock calibration may occur outside a run with null run ID.
 Single-board `diag.run` is allowed without an RF session. Its crypto self-test/
 benchmark uses explicitly public test-vector material from the diagnostic build,
-never ordinary session keys, and cannot transmit RF. Radio runs require both peer
+never ordinary session keys, and cannot transmit RF. The main image implements this through the separately fingerprinted
+[local crypto measurement supplement](crypto_benchmark.md), with checked bounded
+sample pages and explicit partial results. Radio runs require both peer
 identities in `session.open`; health/serial/memory checks do not invent a peer.
 Every run command must match the active run; summaries of an old run return
 `UNKNOWN_RUN`. Session setup never arms or transmits. `run.prepare`/`run.arm`

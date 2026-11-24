@@ -30,6 +30,8 @@ typedef struct {
     const char *idf_version, *board_manifest_hash, *schema_sha256, *reset_cause;
     node_audio_port audio;
     node_radio *radio;
+    uint32_t cpu_frequency_mhz;
+    bool hardware_aes, dynamic_frequency;
 } node_platform;
 
 typedef struct node_control node_control;

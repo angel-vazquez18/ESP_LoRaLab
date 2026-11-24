@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import audio_contract_v2, control_v2, rf_events_v2, run_protocol_v2, v2
+from . import audio_contract_v2, control_v2, crypto_benchmark_v2, rf_events_v2, run_protocol_v2, v2
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .catalog import catalog
@@ -183,6 +183,16 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/nodes/{role}/memory-probe")
     async def memory_probe(role: Literal["A", "B"], body: MemoryProbeRequest):
         return await app.state.host.memory_probe(role, body.iterations, body.payload_bytes)
+
+    @app.post("/api/nodes/{role}/crypto-benchmark")
+    async def crypto_benchmark(role: Literal["A", "B"], body: crypto_benchmark_v2.Request):
+        return await app.state.host.crypto_benchmark(role, body.iterations, body.payload_bytes)
+
+    @app.get("/api/nodes/{role}/crypto-benchmark/{operation_id}")
+    async def crypto_benchmark_evidence(
+        role: Literal["A", "B"], operation_id: control_v2.UUID, include_records: bool = False
+    ):
+        return app.state.host.crypto_benchmark_evidence(role, operation_id, include_records)
 
     @app.post("/api/nodes/{role}/operation/stop")
     async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):

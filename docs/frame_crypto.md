@@ -100,3 +100,7 @@ verify actual protected DATA/ACK exchange and once-only delivery, exercise bad
 authentication/old sessions and demonstrate close, lease-loss, reset, exhaustion
 and failed-provisioning cleanup. Export only safe setup facts and observed
 counts/timestamps, never session key material.
+
+The separate [local benchmark](crypto_benchmark.md) measures checked one-shot PSA
+API calls using only public diagnostic vectors. It does not time this wrapper's
+framing/copy logic or enable protected RF operation.

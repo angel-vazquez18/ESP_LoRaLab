@@ -148,3 +148,10 @@ checks also need CMake and `IDF_PATH`/the default SDK source location. The share
 helper is `testbed/tests/native_crypto.py`. Session lifecycle/erasure checks and
 the execution-schema migration are documented in
 [session key lifetime](session_key_lifecycle.md).
+
+For #53's single-node crypto measurement, run
+`uv run --project testbed pytest testbed/tests/test_crypto_benchmark_native.py -q`.
+The real pinned PSA provider and C serial/API seams check four sizes, exact
+first/warm-up/timed counts, partial evidence, timer failures and cleanup. No physical
+port is opened. [Physical repetition and evidence commands](crypto_benchmark.md)
+remain later checks, not target timing results from a native fixture.

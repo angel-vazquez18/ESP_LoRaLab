@@ -39,8 +39,14 @@ class OperationResult(StrictModel):
 
     @model_validator(mode="after")
     def consistent_outcome(self):
+        if self.result is not None and self.result.get("kind") == "crypto_benchmark":
+            from .crypto_benchmark_v2 import Result
+
+            self.result = Result.model_validate(self.result).model_dump()
         if self.status == "failed":
-            if self.result is not None or self.error is None:
+            if self.error is None or (
+                self.result is not None and self.result.get("kind") != "crypto_benchmark"
+            ):
                 raise ValueError("Failed operation requires an error and null result")
         elif self.result is None or self.error is not None:
             raise ValueError("Completed/cancelled operation requires a result and null error")

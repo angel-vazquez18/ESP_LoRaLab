@@ -18,7 +18,7 @@ import pytest
 from fastapi.testclient import TestClient
 from native_crypto import load_frame_cipher
 
-from lora_testbed import control_v2, rf_events_v2
+from lora_testbed import control_v2, crypto_benchmark_v2, rf_events_v2
 from lora_testbed.app import create_app
 from lora_testbed.nodes import NodeSession
 from lora_testbed.paths import REPOSITORY_ROOT as REPO_ROOT
@@ -91,7 +91,13 @@ class Platform(C.Structure):
                 "reset_cause",
             )
         ]
-        + [("audio", AudioPort), ("radio", C.c_void_p)]
+        + [
+            ("audio", AudioPort),
+            ("radio", C.c_void_p),
+            ("cpu_frequency_mhz", C.c_uint32),
+            ("hardware_aes", C.c_bool),
+            ("dynamic_frequency", C.c_bool),
+        ]
     )
 
 
@@ -271,7 +277,9 @@ class NativeNode:
             wire = output.raw[:length]
             assert wire.endswith(b"\n") and len(wire) <= 4096
             record = json.loads(wire)
-            if record.get("name") not in (None, "health", "diagnostic", "operation.result"):
+            if record.get("name") == "crypto.benchmark":
+                crypto_benchmark_v2.Event.model_validate(record)
+            elif record.get("name") not in (None, "health", "diagnostic", "operation.result"):
                 rf_events_v2.ADAPTER.validate_python(record)
             else:
                 control_v2.ADAPTER.validate_python(record)

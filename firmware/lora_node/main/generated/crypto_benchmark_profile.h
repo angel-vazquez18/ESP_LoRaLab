@@ -1,0 +1,4 @@
+#pragma once
+#define CRYPTO_BENCH_PROFILE "local_crypto_benchmark_v1"
+#define CRYPTO_BENCH_SCHEMA_SHA256 "0e0578bbf6b2bd1ca8abef7a3a9d976fc54d82cfa99768665a7d21a3ed10a8a6"
+#define CRYPTO_BENCH_VECTOR_SHA256 "7da3ea1883ee3b7f00bb71214b244e5c5956ed417979faf09da9dc3a86d6f94c"

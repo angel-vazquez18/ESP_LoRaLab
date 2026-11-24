@@ -12,6 +12,7 @@ idf_component_register(
         "radio/rf_execution.c"
         "security/frame_crypto.c"
         "security/session_crypto.c"
+        "security/crypto_benchmark.c"
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
         "audio/pcm_samples.c"
