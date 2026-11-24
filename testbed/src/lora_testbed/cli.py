@@ -207,6 +207,60 @@ def campaign_cancel(identifier: str, reason: str = "Stopped by operator"):
 
 
 @app.command()
+def campaign_rerun(identifier: str, case_ids: Annotated[list[str], typer.Argument()]):
+    """Create a linked execution for selected original case IDs in saved order."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    for value in [identifier, *case_ids]:
+        TypeAdapter(UUID).validate_python(value)
+    request(f"/api/physical-campaigns/executions/{identifier}/rerun", {"case_ids": case_ids})
+
+
+@app.command()
+def campaign_export(identifier: str, output: Path):
+    """Verify and save the complete campaign bundle without overwriting a file."""
+    import hashlib
+
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+    from .physical_campaign_evidence import MAX_BYTES, verify_campaign_bundle
+
+    TypeAdapter(UUID).validate_python(identifier)
+    try:
+        with urlopen(
+            BASE_URL + f"/api/physical-campaigns/executions/{identifier}/export", timeout=90
+        ) as response:
+            data = response.read(MAX_BYTES + 1)
+            expected = response.headers.get("X-Content-SHA256")
+        if not expected or hashlib.sha256(data).hexdigest() != expected:
+            raise ValueError("Campaign download hash differs or is missing")
+        checked = verify_campaign_bundle(data)
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+    typer.echo(json.dumps({"saved": str(output), **checked}, indent=2))
+
+
+@app.command()
+def campaign_verify(path: Path):
+    """Verify a downloaded campaign archive offline, without opening node ports."""
+    from .physical_campaign_evidence import MAX_BYTES, verify_campaign_bundle
+
+    try:
+        with path.open("rb") as stream:
+            checked = verify_campaign_bundle(stream.read(MAX_BYTES + 1))
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+    typer.echo(json.dumps(checked, indent=2))
+
+
+@app.command()
 def workload_assess(path: Path):
     """Save an assessment of an imported source/memory trace; never hardware qualification."""
     if path.stat().st_size > 12 * 1024 * 1024:
