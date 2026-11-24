@@ -495,3 +495,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - Live issue verification corrected an earlier handoff: #88 is memory/source
   history plots, #107 is restart/selected-case reruns/exports, and #115 is campaign
   UI. Follow #88 next, then #107/#115 and physical #132; retain all 23 procedures.
+
+- #87: PR #202 (`feat/physical-campaign-execution` →
+  `feat/memory-source-assessment`) is ready with scoped commits, code walkthrough,
+  expected checks and hardware instructions. Issue/card Testing; no merge. Full
+  928 cases and final 13 strengthened campaign cases pass; all shared checks and
+  UI formatting pass. Starting #88 memory/source-history plots on a fresh branch.
