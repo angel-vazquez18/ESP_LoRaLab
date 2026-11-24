@@ -228,6 +228,9 @@ class SummaryData(StrictModel):
     stop_reason: Literal[
         "completed", "operator", "host_shutdown", "peer_failure", "timeout", "error"
     ]
+    cleanup_errors: list[Literal["RADIO_STOP_FAILED", "KEY_RETIRE_FAILED"]] = Field(
+        default_factory=list, max_length=2
+    )
     telemetry_drops: Counter
     validity_reasons: list[str] = Field(max_length=16)
 

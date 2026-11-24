@@ -1803,6 +1803,18 @@
           "title": "Stop Reason",
           "type": "string"
         },
+        "cleanup_errors": {
+          "items": {
+            "enum": [
+              "RADIO_STOP_FAILED",
+              "KEY_RETIRE_FAILED"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "title": "Cleanup Errors",
+          "type": "array"
+        },
         "telemetry_drops": {
           "maximum": 9007199254740991,
           "minimum": 0,

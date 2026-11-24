@@ -160,6 +160,7 @@ def outputs(root: Path) -> dict[Path, str]:
             "#pragma once\n"
             f'#define EXECUTION_PROFILE "{run_protocol_v2.EXECUTION_PROFILE}"\n'
             f'#define EXECUTION_SCHEMA_SHA256 "{run_protocol_v2.schema_digest()}"\n'
+            f'#define RUN_ARM_WINDOW_US {run_protocol_v2.ARM_WINDOW_US}LL\n'
         ),
     }
 

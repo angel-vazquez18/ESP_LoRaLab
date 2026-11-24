@@ -2,7 +2,7 @@
 
 import pytest
 
-from lora_testbed import control_v2
+from lora_testbed import control_v2, run_protocol_v2
 from lora_testbed.adapters import NodeFailure, require_execution_compatible
 
 
@@ -28,7 +28,7 @@ def advertised():
     node = identity()
     node["capabilities"]["radio"] = True
     node["capabilities"]["resource_limits"]["execution"] = {
-        "profile": "known_data_execution_v1",
+        "profile": run_protocol_v2.EXECUTION_PROFILE,
         "schema_sha256": execution.schema_digest(),
         "commands": ["config.set", "run.start", "run.stop", "run.summary"],
     }

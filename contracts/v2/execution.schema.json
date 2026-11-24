@@ -1,6 +1,10 @@
 {
   "contract_version": "2.0.0",
   "scope": "finite_message_execution",
+  "lifecycle": {
+    "arm_window_us": 5000000,
+    "sender_arm_required": true
+  },
   "wire": {
     "$defs": {
       "Accepted": {
@@ -2060,6 +2064,18 @@
             "title": "Stop Reason",
             "type": "string"
           },
+          "cleanup_errors": {
+            "items": {
+              "enum": [
+                "RADIO_STOP_FAILED",
+                "KEY_RETIRE_FAILED"
+              ],
+              "type": "string"
+            },
+            "maxItems": 2,
+            "title": "Cleanup Errors",
+            "type": "array"
+          },
           "telemetry_drops": {
             "maximum": 9007199254740991,
             "minimum": 0,
@@ -2174,7 +2190,7 @@
     "additionalProperties": false,
     "properties": {
       "profile": {
-        "const": "known_data_execution_v1",
+        "const": "finite_message_execution_v2",
         "title": "Profile",
         "type": "string"
       },
@@ -3734,14 +3750,28 @@
     "run.arm": {
       "additionalProperties": false,
       "properties": {
+        "role": {
+          "enum": [
+            "sender",
+            "receiver"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
         "receiver_ready": {
-          "const": true,
           "title": "Receiver Ready",
           "type": "boolean"
+        },
+        "arm_deadline_us": {
+          "minimum": 0,
+          "title": "Arm Deadline Us",
+          "type": "integer"
         }
       },
       "required": [
-        "receiver_ready"
+        "role",
+        "receiver_ready",
+        "arm_deadline_us"
       ],
       "title": "Armed",
       "type": "object"
@@ -3948,6 +3978,18 @@
           ],
           "title": "Stop Reason",
           "type": "string"
+        },
+        "cleanup_errors": {
+          "items": {
+            "enum": [
+              "RADIO_STOP_FAILED",
+              "KEY_RETIRE_FAILED"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "title": "Cleanup Errors",
+          "type": "array"
         },
         "telemetry_drops": {
           "maximum": 9007199254740991,

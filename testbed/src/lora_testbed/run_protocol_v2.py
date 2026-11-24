@@ -11,7 +11,8 @@ from . import rf_events_v2 as rf
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "known_data_execution_v1"
+EXECUTION_PROFILE = "finite_message_execution_v2"
+ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
     "session.close",
@@ -36,7 +37,7 @@ CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary")
 
 
 class Capabilities(ContractModel):
-    profile: Literal["known_data_execution_v1"]
+    profile: Literal["finite_message_execution_v2"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     commands: list[ExecutionName] = Field(min_length=1, max_length=8)
 
@@ -174,7 +175,15 @@ class Accepted(ContractModel):
 
 
 class Armed(ContractModel):
-    receiver_ready: Literal[True]
+    role: Literal["sender", "receiver"]
+    receiver_ready: bool
+    arm_deadline_us: int = Field(ge=0)
+
+    @model_validator(mode="after")
+    def ready_role(self):
+        if self.receiver_ready != (self.role == "receiver"):
+            raise ValueError("Receiver readiness disagrees with the armed role")
+        return self
 
 
 class ArtifactManifest(ContractModel):
@@ -253,6 +262,7 @@ def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
         "scope": "finite_message_execution",
+        "lifecycle": {"arm_window_us": ARM_WINDOW_US, "sender_arm_required": True},
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},
