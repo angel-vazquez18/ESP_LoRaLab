@@ -635,15 +635,27 @@ class RadioRuns:
                     r["prepared"][role] = await self.prepared(r, role, accepted)
                 r["stage"] = "arming"
                 self.save(r)
+                armed = monotonic()  # Conservative: include the receiver arm request/reply.
                 ready = await self.command(
                     r,
                     r["receiver"],
                     "run.arm",
                     {"config_revision": r["applied_settings"][r["receiver"]]["config_revision"]},
                 )
-                if ready["receiver_ready"] is not True:
+                if ready["receiver_ready"] is not True or ready["role"] != "receiver":
                     raise ValueError("Receiver did not confirm readiness")
-                armed = monotonic()
+                if (monotonic() - armed) * 1_000_000 >= run_protocol_v2.ARM_WINDOW_US:
+                    raise ValueError("Receiver arm window expired before sender arm")
+                sender_ready = await self.command(
+                    r,
+                    r["sender"],
+                    "run.arm",
+                    {"config_revision": r["applied_settings"][r["sender"]]["config_revision"]},
+                )
+                if sender_ready["receiver_ready"] or sender_ready["role"] != "sender":
+                    raise ValueError("Sender did not confirm its prepared arm")
+                if (monotonic() - armed) * 1_000_000 >= run_protocol_v2.ARM_WINDOW_US:
+                    raise ValueError("Receiver arm window expired before sender start")
                 r["stage"] = "transmitting"
                 await self.command(
                     r,
@@ -652,10 +664,12 @@ class RadioRuns:
                     {"config_revision": r["applied_settings"][r["sender"]]["config_revision"]},
                 )
                 r["arm_to_start_reply_ms"] = (monotonic() - armed) * 1000
-                if r["arm_to_start_reply_ms"] > 1000:
-                    raise ValueError("Sender did not start within one second of receiver readiness")
+                if r["arm_to_start_reply_ms"] >= run_protocol_v2.ARM_WINDOW_US / 1000:
+                    raise ValueError("Sender start reply exceeded the receiver arm window")
                 self.save(r)
-                async with asyncio.timeout(request.timeout_ms / 1000 + 3):
+                async with asyncio.timeout(
+                    request.timeout_ms / 1000 + run_protocol_v2.ARM_WINDOW_US / 1_000_000 + 3
+                ):
                     while True:
                         for role in "AB":
                             self.same_boot(r, role)
