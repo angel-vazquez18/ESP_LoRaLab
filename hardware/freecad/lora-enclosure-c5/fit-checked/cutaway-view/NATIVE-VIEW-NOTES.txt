@@ -1,0 +1,34 @@
+Assembled enclosure cutaway with actual project models
+
+LoRa-Enclosure-C5-Assembled-Cutaway.FCStd is a separate presentation document.
+The lid remains at Z24..27.6 and the actual component mounting datum is Z8.
+All exploded offsets have been removed. The original manufacturing files and
+the earlier exploded view are unchanged.
+
+The overview removes selected roof, front-wall and right-wall material. Amber
+surfaces in the KiCad renders identify enclosure section faces. The cup,
+plunger, screws and nuts are cut at the Y9 centre plane. This exposes the
+stop mechanism; it does not change the underlying manufactured geometry.
+The actual PCB and all project-assigned electronics models remain complete
+in the overview. Fastener threads and drive details are representative.
+
+ptt-assembled-section.png is a front section through the installed mechanism.
+Orange: plunger. Green: stop cup. Light gray: lid. Gray: M2 screws/nuts and
+the actual assigned SW1 model. Purple: actual carrier substrate, pads and masks.
+Dark blue: a local section of the case floor. PCB supports are outside this
+local section; the full overview shows the mounting structure.
+
+The PCB detail comes from actual imported indices889..1067 and2947/2948,
+translated +6.4814 mm and clipped to X38..64, Y9..22. The switch is the actual
+project-assigned SW1 model at that same mounted datum. Its section is valid.
+PCB mask layers include open visualization surfaces, as in the source model.
+
+The nominal CAD pose has a 0.20 mm foot-to-switch gap and 0.45 mm flange-to-stop
+gap. The nominal 0.25 mm switch depression setting remains the comparable-part
+assumption documented in the parent FIT-REVIEW.txt; this view adds no new
+physical travel or strength validation.
+
+To show the saved local detail in FreeCAD, hide CutawayBase, CutawayLid and
+KiCadAssembly; show PTTDetailPCB, PTTDetailSwitch, PTTDetailFloor and PTTDetailLid;
+keep the six CutawayPTT/fastener objects visible, choose Front, then Fit All.
+All detail objects are hidden in the saved overview.

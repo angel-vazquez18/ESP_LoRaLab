@@ -1,0 +1,1312 @@
+{
+  "checks": [
+    {
+      "name": "guided mode initially off with native checkbox",
+      "data": {
+        "guidedMode": "false",
+        "guideStep": "0",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.4]",
+        "dimensionLowerScreen": "[254.33690611599013,154.19381499462762]",
+        "dimensionUpperScreen": "[254.33690611599013,151.95221117497422]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "0.000000",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "checked": false,
+      "guideType": "checkbox",
+      "detail": "Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "enable starts at flange and preserves pose/camera",
+      "before": {
+        "data": {
+          "guidedMode": "false",
+          "guideStep": "0",
+          "guideElapsedMs": "0.000",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "nuts",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.275]",
+          "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+          "dimensionUpperScreen": "[255.00475827476475,159.91423401171343]",
+          "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.125000",
+          "gapMm": "0.125000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.715585",
+          "pitch": "0.418879",
+          "zoom": "0.850000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "674.999999",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "checked": false,
+        "guideType": "checkbox",
+        "detail": "Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+        "detailLive": "polite",
+        "status": "Paused with animation",
+        "overflow": false,
+        "webglError": 0,
+        "buttons": [
+          {
+            "id": "lid",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 667.609375
+          },
+          {
+            "id": "screws",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 691.53125
+          },
+          {
+            "id": "flange",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 690.21875
+          },
+          {
+            "id": "stop_cup",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 704
+          },
+          {
+            "id": "nuts",
+            "pressed": "true",
+            "x": 623.375,
+            "right": 678.46875
+          }
+        ],
+        "innerWidth": 704
+      },
+      "s": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "0.000",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "flange",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.275]",
+          "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+          "dimensionUpperScreen": "[255.00475827476475,159.91423401171343]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.125000",
+          "gapMm": "0.125000",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.715585",
+          "pitch": "0.418879",
+          "zoom": "0.850000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "674.999999",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "checked": true,
+        "guideType": "checkbox",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "detailLive": "polite",
+        "status": "Repeating in load-path order",
+        "overflow": false,
+        "webglError": 0,
+        "buttons": [
+          {
+            "id": "lid",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 667.609375
+          },
+          {
+            "id": "screws",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 691.53125
+          },
+          {
+            "id": "flange",
+            "pressed": "true",
+            "x": 623.375,
+            "right": 690.21875
+          },
+          {
+            "id": "stop_cup",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 704
+          },
+          {
+            "id": "nuts",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 678.46875
+          }
+        ],
+        "innerWidth": 704
+      }
+    },
+    {
+      "name": "pause freezes motion and guided reading clock",
+      "paused": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "92.800",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "flange",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.268558093372178]",
+          "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+          "dimensionUpperScreen": "[255.00475827476475,159.96067109012802]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.131442",
+          "gapMm": "0.118558",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.715585",
+          "pitch": "0.418879",
+          "zoom": "0.850000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "698.199999",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "checked": true,
+        "guideType": "checkbox",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "detailLive": "polite",
+        "status": "Paused with animation",
+        "overflow": false,
+        "webglError": 0,
+        "buttons": [
+          {
+            "id": "lid",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 667.609375
+          },
+          {
+            "id": "screws",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 691.53125
+          },
+          {
+            "id": "flange",
+            "pressed": "true",
+            "x": 623.375,
+            "right": 690.21875
+          },
+          {
+            "id": "stop_cup",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 704
+          },
+          {
+            "id": "nuts",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 678.46875
+          }
+        ],
+        "innerWidth": 704
+      },
+      "after": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "92.800",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "flange",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.268558093372178]",
+          "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+          "dimensionUpperScreen": "[255.00475827476475,159.96067109012802]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.131442",
+          "gapMm": "0.118558",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.715585",
+          "pitch": "0.418879",
+          "zoom": "0.850000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "698.199999",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "checked": true,
+        "guideType": "checkbox",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "detailLive": "polite",
+        "status": "Paused with animation",
+        "overflow": false,
+        "webglError": 0,
+        "buttons": [
+          {
+            "id": "lid",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 667.609375
+          },
+          {
+            "id": "screws",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 691.53125
+          },
+          {
+            "id": "flange",
+            "pressed": "true",
+            "x": 623.375,
+            "right": 690.21875
+          },
+          {
+            "id": "stop_cup",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 704
+          },
+          {
+            "id": "nuts",
+            "pressed": "false",
+            "x": 623.375,
+            "right": 678.46875
+          }
+        ],
+        "innerWidth": 704
+      }
+    },
+    {
+      "name": "play resumes guide without restarting step",
+      "guidedMode": "true",
+      "guideStep": "1",
+      "guideElapsedMs": "115.900",
+      "forceVisible": "false",
+      "forceCount": "0",
+      "highlightedForceIds": "[]",
+      "forceVisibleCount": "0",
+      "selectedPart": "flange",
+      "contactHighlighted": "false",
+      "dimensionVisible": "true",
+      "dimensionLowerWorld": "[46.5,9,22.15]",
+      "dimensionUpperWorld": "[46.5,9,22.26695633261104]",
+      "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+      "dimensionUpperScreen": "[255.00475827476475,159.97221753039233]",
+      "highlightedMeshes": "[\"plunger\"]",
+      "highlightedFlangeLocalBounds": "[22.4,23.6]",
+      "strokeMm": "0.133044",
+      "gapMm": "0.116956",
+      "view": "mechanism",
+      "playing": "true",
+      "yaw": "0.715585",
+      "pitch": "0.418879",
+      "zoom": "0.850000",
+      "activePointers": "0",
+      "speed": "0.25",
+      "cycleTime": "703.974999",
+      "phase": "press",
+      "transparentShell": "false"
+    },
+    {
+      "name": "turning guide off leaves animation running",
+      "guidedMode": "false",
+      "guideStep": "0",
+      "guideElapsedMs": "0.000",
+      "forceVisible": "false",
+      "forceCount": "0",
+      "highlightedForceIds": "[]",
+      "forceVisibleCount": "0",
+      "selectedPart": "flange",
+      "contactHighlighted": "false",
+      "dimensionVisible": "true",
+      "dimensionLowerWorld": "[46.5,9,22.15]",
+      "dimensionUpperWorld": "[46.5,9,22.25968015410331]",
+      "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+      "dimensionUpperScreen": "[255.00475827476475,160.02466853464358]",
+      "highlightedMeshes": "[\"plunger\"]",
+      "highlightedFlangeLocalBounds": "[22.4,23.6]",
+      "strokeMm": "0.140320",
+      "gapMm": "0.109680",
+      "view": "mechanism",
+      "playing": "true",
+      "yaw": "0.715585",
+      "pitch": "0.418879",
+      "zoom": "0.850000",
+      "activePointers": "0",
+      "speed": "0.25",
+      "cycleTime": "730.274999",
+      "phase": "press",
+      "transparentShell": "false"
+    },
+    {
+      "name": "full guided order repeats with contact and reading dwell",
+      "events": [
+        {
+          "part": "flange",
+          "time": 1577.9000000953674,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "1",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "flange",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.4]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.01315997615458]",
+            "highlightedMeshes": "[\"plunger\"]",
+            "highlightedFlangeLocalBounds": "[22.4,23.6]",
+            "strokeMm": "0.000000",
+            "gapMm": "0.250000",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "0.000000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        },
+        {
+          "part": "stop_cup",
+          "time": 8032.700000047684,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "2",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "stop_cup",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.39994681959945]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.01354333197966]",
+            "highlightedMeshes": "[\"stop_cup\"]",
+            "highlightedFlangeLocalBounds": "null",
+            "strokeMm": "0.000053",
+            "gapMm": "0.249947",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "11.400000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        },
+        {
+          "part": "nuts",
+          "time": 14502.299999952316,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "3",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "nuts",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.399012386310215]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.0202792805788]",
+            "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+            "highlightedFlangeLocalBounds": "null",
+            "strokeMm": "0.000988",
+            "gapMm": "0.249012",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "49.600000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        },
+        {
+          "part": "screws",
+          "time": 20938.700000047684,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "4",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "screws",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.399777270518516]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.01476554217632]",
+            "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+            "highlightedFlangeLocalBounds": "null",
+            "strokeMm": "0.000223",
+            "gapMm": "0.249777",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "23.400000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        },
+        {
+          "part": "lid",
+          "time": 27408.799999952316,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "5",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "lid",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.398495616835643]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.02400446102604]",
+            "highlightedMeshes": "[\"lid\"]",
+            "highlightedFlangeLocalBounds": "null",
+            "strokeMm": "0.001504",
+            "gapMm": "0.248496",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "61.400000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        },
+        {
+          "part": "flange",
+          "time": 33844.90000009537,
+          "data": {
+            "guidedMode": "true",
+            "guideStep": "1",
+            "guideElapsedMs": "0.000",
+            "forceVisible": "false",
+            "forceCount": "0",
+            "highlightedForceIds": "[]",
+            "forceVisibleCount": "0",
+            "selectedPart": "flange",
+            "contactHighlighted": "false",
+            "dimensionVisible": "true",
+            "dimensionLowerWorld": "[46.5,9,22.15]",
+            "dimensionUpperWorld": "[46.5,9,22.399481900464764]",
+            "dimensionLowerScreen": "[255.00475827476475,160.81530804727228]",
+            "dimensionUpperScreen": "[255.00475827476475,159.01689474446684]",
+            "highlightedMeshes": "[\"plunger\"]",
+            "highlightedFlangeLocalBounds": "[22.4,23.6]",
+            "strokeMm": "0.000518",
+            "gapMm": "0.249482",
+            "view": "mechanism",
+            "playing": "true",
+            "yaw": "0.715585",
+            "pitch": "0.418879",
+            "zoom": "0.850000",
+            "activePointers": "0",
+            "speed": "2",
+            "cycleTime": "35.800000",
+            "phase": "press",
+            "transparentShell": "false"
+          }
+        }
+      ],
+      "contacts": {
+        "flange": [
+          "left_flange_on_cup",
+          "right_flange_on_cup"
+        ],
+        "stop_cup": [
+          "left_cup_on_nut",
+          "left_flange_on_cup",
+          "right_cup_on_nut",
+          "right_flange_on_cup"
+        ],
+        "nuts": [
+          "left_cup_on_nut",
+          "left_nut_on_screw",
+          "right_cup_on_nut",
+          "right_nut_on_screw"
+        ],
+        "screws": [
+          "left_head_on_lid",
+          "left_lid_on_screw",
+          "left_nut_on_screw",
+          "right_head_on_lid",
+          "right_lid_on_screw",
+          "right_nut_on_screw"
+        ],
+        "lid": [
+          "left_head_on_lid",
+          "left_lid_on_screw",
+          "right_head_on_lid",
+          "right_lid_on_screw"
+        ]
+      },
+      "details": {
+        "flange": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "stop_cup": "Step 2 of 5 · Stop cup — At the stop, the shelf carries the flange’s downward load to the mounting ears, which bear down on the nuts.",
+        "nuts": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+        "screws": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+        "lid": "Step 5 of 5 · Lid — At the stop, the screw heads bear downward on the lid. The lid provides an upward reaction and carries the load toward its enclosure attachments."
+      }
+    },
+    {
+      "name": "camera transparency and speed preserve active guide",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "110.100",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.37643993618859]",
+        "dimensionLowerScreen": "[291.548520553275,120.83148904484699]",
+        "dimensionUpperScreen": "[291.548520553275,118.46689458602988]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.023560",
+        "gapMm": "0.226440",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "256.000000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "detailLive": "polite",
+      "status": "Repeating in load-path order",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "manual selection exits guide without stopping loop",
+      "data": {
+        "guidedMode": "false",
+        "guideStep": "0",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "screws",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.359574695727275]",
+        "dimensionLowerScreen": "[291.548520553275,120.83148904484699]",
+        "dimensionUpperScreen": "[291.548520553275,118.64300951881376]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.040425",
+        "gapMm": "0.209575",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "344.000000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "checked": false,
+      "guideType": "checkbox",
+      "detail": "Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "detailLive": "polite",
+      "status": "Repeating in load-path order",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "endpoint pauses tour and resets reading time",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[291.548520553275,120.83148904484699]",
+        "dimensionUpperScreen": "[291.548520553275,120.83148904484699]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "scrubber pauses guide without disabling it",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.299999999999997]",
+        "dimensionLowerScreen": "[291.548520553275,120.83148904484699]",
+        "dimensionUpperScreen": "[291.548520553275,119.26511707534083]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.100000",
+        "gapMm": "0.150000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "584.456954",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "version 6 persists guided mode and step reading state",
+      "modelContent": {
+        "depression_mm": 0.1,
+        "flange_gap_mm": 0.15,
+        "view": "complete mechanism",
+        "reference_travel_mm": 0.25,
+        "playback_speed": 0.25,
+        "looping": true,
+        "transparent_lid_and_stop_cup": true,
+        "selected_load_part": "flange",
+        "guided_load_path": true,
+        "guide_step": 1,
+        "camera": {
+          "rotation_deg": -29,
+          "tilt_deg": -12,
+          "zoom": 1.15
+        }
+      },
+      "privateContent": {
+        "version": 6,
+        "t": 0.4,
+        "closeup": false,
+        "speed": 0.25,
+        "cycleTime": 584.4569542212412,
+        "transparentShell": true,
+        "selectedPart": "flange",
+        "guided": true,
+        "guideElapsed": 0,
+        "guideSawContact": false,
+        "camera": {
+          "yaw": -0.506145483078356,
+          "pitch": -0.20943951023931953,
+          "zoom": 1.15
+        },
+        "origin": "ptt-wjwrthuhdv",
+        "revision": 30
+      }
+    },
+    {
+      "name": "external version 6 restores guide paused at selected step",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "2300.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[291.548520553275,120.83148904484699]",
+        "dimensionUpperScreen": "[291.548520553275,120.83148904484699]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "guided layout 736 light",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "2300.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[254.16724901710404,154.11030566182453]",
+        "dimensionUpperScreen": "[254.16724901710404,154.11030566182453]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 667.609375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 691.53125
+        },
+        {
+          "id": "flange",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 690.21875
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 623.375,
+          "right": 704
+        },
+        {
+          "id": "nuts",
+          "pressed": "true",
+          "x": 623.375,
+          "right": 678.46875
+        }
+      ],
+      "innerWidth": 704
+    },
+    {
+      "name": "guided layout 320 dark",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "2300.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,112.18126035179012]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "checked": true,
+      "guideType": "checkbox",
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 0,
+          "right": 44.234375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 52.234375,
+          "right": 120.390625
+        },
+        {
+          "id": "flange",
+          "pressed": "false",
+          "x": 128.390625,
+          "right": 195.234375
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 203.234375,
+          "right": 283.859375
+        },
+        {
+          "id": "nuts",
+          "pressed": "true",
+          "x": 0,
+          "right": 55.09375
+        }
+      ],
+      "innerWidth": 288
+    },
+    {
+      "name": "legacy version 5 restores manual selection without guide",
+      "data": {
+        "guidedMode": "false",
+        "guideStep": "0",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[132.88029393553734,89.25232466077433]",
+        "dimensionUpperScreen": "[132.88029393553734,89.25232466077433]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.506145",
+        "pitch": "-0.209440",
+        "zoom": "1.150000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "checked": false,
+      "guideType": "checkbox",
+      "detail": "Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "detailLive": "polite",
+      "status": "Paused with animation",
+      "overflow": false,
+      "webglError": 0,
+      "buttons": [
+        {
+          "id": "lid",
+          "pressed": "false",
+          "x": 0,
+          "right": 44.234375
+        },
+        {
+          "id": "screws",
+          "pressed": "false",
+          "x": 52.234375,
+          "right": 120.390625
+        },
+        {
+          "id": "flange",
+          "pressed": "false",
+          "x": 128.390625,
+          "right": 195.234375
+        },
+        {
+          "id": "stop_cup",
+          "pressed": "false",
+          "x": 203.234375,
+          "right": 283.859375
+        },
+        {
+          "id": "nuts",
+          "pressed": "true",
+          "x": 0,
+          "right": 55.09375
+        }
+      ],
+      "innerWidth": 288
+    },
+    {
+      "name": "no JavaScript or WebGL errors"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\guided-preview\\guided-nuts-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\guided-preview\\guided-nuts-320-dark.png"
+  ]
+}

@@ -1,0 +1,10 @@
+# Preserve bytes recorded by ARCHIVE-MANIFEST.json across platforms.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.FCStd binary
+*.step binary
+*.stl binary
+*.3mf binary
+*.pdf binary
+*.png binary
+*.xlsx binary
+*.zip binary

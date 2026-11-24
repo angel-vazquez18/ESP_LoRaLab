@@ -1,0 +1,27 @@
+LoRa enclosure C5-R1. Please quote one complete prototype set: one base, one
+lid, one PTT plunger and one PTT stop cup. Units mm; scale 1:1. Primary request:
+unfilled HP MJF PA12, standard cleaned/depowdered natural-gray finish. No
+coating, plating, polishing or vapor smoothing. No hardware or electronics.
+
+These parts mate and operate together. Review the final PDF drawing set and
+the listed model dimensions before production. Please confirm achievable
+tolerances and any measured finishing required for the guide/shaft sliding
+fit, base/lid locating lip, cup seating, flange and stop shelf, display bezel,
+microphone holes, and insert/fastener holes. General catalog tolerance alone
+does not establish fit: the nominal PTT stroke is 0.25 mm, guide clearance is
+0.40 mm radial (8.8 mm bore / 8.0 mm shaft), and lip clearance is 0.40 mm per side.
+
+Do not change the stop shelf/flange heights, close small holes, scale the part,
+or install unspecified inserts without an agreed revised drawing. Remove all
+loose powder and retain unobstructed acoustic holes. Identify the delivered
+material and finishing process. Advise if this request requires special
+tolerances, secondary machining, or a geometry revision before manufacture.
+
+Insert seats are for ruthex RX-M3x5x4 brass inserts (OD 5.0 mm, length 4.0 mm).
+Nominal printed pilot is diameter 4.4 mm, depth 5.0 mm. Inserts are installed
+after printing; this four-part print request does not include their supply or
+installation. Retain the drawing's surrounding material and insertion access.
+
+Final filenames, dimensions and SHA256 values are in order-manifest.json.
+Upload the four C5-R1-*-mm STL files OR their four 3MF alternatives, never both.
+This text is prepared for the quote/order notes; it has not been sent.

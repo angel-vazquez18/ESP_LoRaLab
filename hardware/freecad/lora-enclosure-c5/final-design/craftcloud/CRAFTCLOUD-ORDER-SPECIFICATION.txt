@@ -1,0 +1,126 @@
+LoRa enclosure C5-R1 - Craftcloud prototype specification
+Prepared 24 November 2026. Draft configuration; no upload, quote or purchase made.
+
+ORDER CONFIGURATION
+Order one complete set: 1 base, 1 lid, 1 PTT plunger, 1 PTT stop cup.
+Four separate parts, each uploaded as its own manufacturing STL. Alternatively
+use the four neutral 3MF files. Upload ONE format per part, never both. Units mm.
+Scale 1:1 (100%). No customer shrinkage scaling. Compare the upload's displayed
+dimensions with order-manifest.json before proceeding. Do not upload the PCB,
+electronics, screws/nuts, cutaway models, exploded models or animation meshes.
+
+READY-TO-UPLOAD FILES (in craftcloud/upload)
+C5-R1-enclosure-base-mm.stl     78.80 x 98.80 x 21.00 mm, quantity 1
+C5-R1-enclosure-lid-mm.stl      78.80 x 98.80 x 16.60 mm, quantity 1
+C5-R1-ptt-plunger-mm.stl        11.99 x 12.00 x 10.20 mm, quantity 1
+C5-R1-ptt-stop-cup-mm.stl       24.00 x 16.59 x  3.85 mm, quantity 1
+These are tessellated-mesh bounding boxes, rounded to 0.01 mm, not nominal
+feature dimensions. Use drawings for nominal diameters and critical fits.
+Each file has an alternative .3mf with the same stem and physical size.
+The models were translated to the origin only; no rotation or scaling.
+Neutral 3MF geometry is not a slicer profile or a machine G-code program.
+
+Primary selection: HP MJF Nylon PA12, unfilled; standard depowdered finish.
+Natural gray is the preferred first prototype finish. Black dye is optional if
+the chosen manufacturer confirms the critical dimensions after finishing.
+Do not substitute glass/carbon-filled nylon, resin, PLA or metal automatically.
+No paint, plating, coating, polishing or vapor smoothing on this first set.
+Keep the plunger guide, flange, stop shelf, locating lip and insert seats clean.
+Printed solid walls/features as modeled. No sparse FDM-style infill for MJF.
+Ask one manufacturer to produce all four parts together when feasible.
+
+WHY THIS MATERIAL
+MJF PA12 is the primary engineering recommendation for the handheld enclosure
+and its small mechanism: powder-bed support avoids removal scars, and the
+material offers useful impact/heat resistance and similar strength across
+build directions. Craftcloud lists 0.08 mm nominal layers and 0.8 mm minimum
+walls. These catalog values are not guarantees for this particular geometry.
+The actual quotation must confirm the chosen shop's process and tolerances.
+Source: https://craftcloud3d.com/en/material-guide/hp-mjf-nylon-pa12
+
+ALTERNATIVES FOR COMPARISON
+SLS unfilled PA12 is an acceptable alternative for quotation. It is a tough
+engineering plastic with a matte/grainy surface and no sacrificial supports.
+Craftcloud lists 0.1 mm layers and 0.8 mm minimum walls. Select it if the shop
+offers a better confirmed fit/finish plan or delivered price for this set.
+Source: https://craftcloud3d.com/en/material-guide/sls-nylon-pa12
+
+PETG FDM is a useful comparison for a functional fit prototype. Craftcloud
+lists good impact resistance, 0.2 mm layers, 1 mm minimum walls and 20% default
+infill. If chosen, request the engineering print settings and support plan
+in the final printing instructions, rather than accepting default 20% infill
+for the small loaded plunger/cup. Confirm underside surface finish, small
+acoustic holes, screw holes and support removal at the quoted shop. This
+option needs more attention to build direction and sliding-surface cleanup.
+Source: https://craftcloud3d.com/en/material-guide/petg
+
+CRITICAL FIT REVIEW BEFORE PRODUCTION
+The nominal design has a 0.25 mm switch depression to the stop, a 0.40 mm radial
+plunger-guide clearance and 0.40 mm per-side locating-lip clearance. These are
+CAD nominal values, not demonstrated manufacturing capability or switch limits.
+
+Craftcloud publishes the same general accuracy for MJF and SLS PA12:
++/-0.3% with a lower limit of +/-0.3 mm. PETG is listed as +/-0.3%, with a
+lower limit of +/-0.2 mm. Those tolerances are too broad to guarantee this
+mechanism's nominal stroke and mating fits without additional control.
+For example, an 8.8 mm guide and 8.0 mm shaft, each at +/-0.3 mm, can retain
+only 0.2 mm diametral clearance in the worst opposing size condition; surface
+roughness and shape error can reduce the useful sliding clearance further.
+
+Have the selected manufacturer review the final dimensioned drawings and
+state achievable tolerances or a measured finishing plan for:
+1. Guide bore and plunger shaft: free sliding after finishing.
+2. Flange-to-stop-shelf axial relation and cup-to-lid seating: retain the
+   specified geometry and document the actual dimensions; do not simply sand
+   the stop surfaces until the button moves.
+3. Locating lip and enclosure seat: lid closes without forcing or bowing.
+4. Display bezel and PCB support datums: retain the final designed screen gap.
+   The enclosure must not clamp the display glass.
+5. Microphone openings: all holes open, clean and free of powder or support.
+6. M3 insert seats and M2 fastener holes: match ruthex RX-M3x5x4 inserts (5.0 mm
+   outside diameter, 4.0 mm length), with nominal 4.4 mm pilots 5.0 mm deep,
+   and the final drawing. Manufacturer minimum surrounding wall is 1.3 mm.
+   Hardware installation is not part of this four-print order
+   unless a separate service and exact insert specification are agreed.
+
+Insert source: https://www.igo3d.com/mediafiles/Sonstiges/Ruthex/ruthex_Datenblatt_RX-Serie.pdf
+
+The actual installed PTT switch has not been identified by a measured travel
+specification. The comparable-switch 0.25 mm value remains provisional.
+Vendor dimensional control does not establish safe overtravel of that switch.
+Inspect and record the delivered dimensions before any rework. Then dry-fit
+the parts and verify gentle electrical actuation and reliable release with
+the actual switch. Adjust via an approved shim/cup revision if required.
+
+FILE AND QUOTE HANDOFF
+Craftcloud accepts STL, OBJ, 3MF, STEP and STP; its upload limit is 500 MB/file.
+Use the four individual STLs listed in order-manifest.json. Retain the final
+STEP geometry and PDF drawing set as supporting engineering information.
+If the vendor proposes a geometry change, obtain the revised file/dimension
+for review before manufacturing. Do not replace the final design with an
+automatic repair that changes its mounting, acoustic or stop features.
+Source: https://craftcloud3d.com/en/upload
+
+The manufacturer chooses build orientation for MJF/SLS. Request protection
+of the defined mating faces and straightness of the lid/base, rather than
+forcing an FDM bed orientation on a powder-bed process. These are separate
+open parts and must be fully depowdered before delivery. The first set is for
+physical fit and functional verification; no waterproof or IP rating is claimed.
+Source: https://support.craftcloud3d.com/en/articles/173-what-to-expect-from-your-3d-print
+
+CNC SHOP QUOTE OPTION
+Craftcloud also offers CNC machining. Use the final neutral STEP files and
+the matching dimensioned PDF drawings to request a machinability/price review.
+The printed enclosure includes features whose tool access, internal corner
+radii and workholding need shop review. A CNC supplier creates the machine-
+specific CAM and G-code after approving material, tools, datums and setup.
+The STEP package is a CNC quote handoff, not a ready-to-run machine program.
+Source: https://craftcloud3d.com/en/p/cnc-machining-services
+Drawing guidance: https://blog.craftcloud3d.com/from-cad-to-cnc-how-to-prepare-technical-drawings-for-cnc-machining/
+
+ORDER STATUS
+No account action, files uploaded, external messages or payment performed.
+Destination, manufacturer, delivered price, lead time and acceptance of
+critical dimensions remain unselected. Final mesh filenames, dimensions and
+hashes are recorded in order-manifest.json against upload-manifest.json.
+This file check does not replace the manufacturer's critical-fit review.

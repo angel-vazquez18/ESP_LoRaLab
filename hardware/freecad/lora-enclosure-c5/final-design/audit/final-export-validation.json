@@ -1,0 +1,690 @@
+{
+  "native_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cad\\LoRa-Enclosure-C5-R1.FCStd",
+  "native_sha256": "d49a5fefe43be4ee6bb0f2487b88604709aff937187822a041833feb73cbcad9",
+  "step_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cad\\LoRa-Enclosure-C5-R1.step",
+  "step_sha256": "2b153a44979ede7a96ff85efcde0019c8b6a9ed0b9a6a5a8781fa7d1e150c945",
+  "scope": "Read-only saved file validation. No native document saved or exported by this checker.",
+  "parts": {
+    "EnclosureBase": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 33773.931667349985,
+        "bounds_mm": [
+          -4.400000000000001,
+          -4.400000000000001,
+          0.0,
+          74.39999999999999,
+          94.39999999999999,
+          21.000000000000004
+        ]
+      },
+      "step_comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "absolute_volume_difference_mm3": 1.1641532182693481e-10,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      },
+      "mesh_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\enclosure-base.stl",
+      "mesh_sha256": "80ec68aba7c5a5e3b39387c33558248b92e63bd03a1ae0aa5eb8e1818c21cfd9",
+      "mesh_topology": {
+        "file": "enclosure-base.stl",
+        "ok": true,
+        "bytes": 182084,
+        "format": "binary",
+        "triangles": 3640,
+        "unique_vertices_after_rounding": 1818,
+        "bbox_mm": {
+          "min": [
+            -4.400000095367432,
+            -4.400000095367432,
+            0.0
+          ],
+          "max": [
+            74.4000015258789,
+            94.4000015258789,
+            21.0
+          ],
+          "size": [
+            78.80000162124634,
+            98.80000162124634,
+            21.0
+          ]
+        },
+        "undirected_edges": 5460,
+        "edge_incidence_histogram": {
+          "2": 5460
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          3640
+        ],
+        "signed_volume_mm3": 33771.596322713434,
+        "absolute_volume_mm3": 33771.596322713434,
+        "failures": []
+      },
+      "mesh_sorted_span_difference_mm": 1.621246340732796e-06,
+      "mesh_relative_volume_error": 6.401789762828838e-05
+    },
+    "EnclosureLid": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 27932.69820168637,
+        "bounds_mm": [
+          -4.400000000000001,
+          -4.400000000000001,
+          8.0,
+          74.39999999999999,
+          94.39999999999999,
+          24.6
+        ]
+      },
+      "step_comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "absolute_volume_difference_mm3": 1.0913936421275139e-11,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      },
+      "mesh_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\enclosure-lid.stl",
+      "mesh_sha256": "6e971c1f09717404f0c1c594ed57dde162fd08f1e33802f9eb5f11298dce241c",
+      "mesh_topology": {
+        "file": "enclosure-lid.stl",
+        "ok": true,
+        "bytes": 181684,
+        "format": "binary",
+        "triangles": 3632,
+        "unique_vertices_after_rounding": 1784,
+        "bbox_mm": {
+          "min": [
+            -4.400000095367432,
+            -4.400000095367432,
+            8.0
+          ],
+          "max": [
+            74.4000015258789,
+            94.4000015258789,
+            24.600000381469727
+          ],
+          "size": [
+            78.80000162124634,
+            98.80000162124634,
+            16.600000381469727
+          ]
+        },
+        "undirected_edges": 5448,
+        "edge_incidence_histogram": {
+          "2": 5448
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          3632
+        ],
+        "signed_volume_mm3": 27931.84902744029,
+        "absolute_volume_mm3": 27931.84902744029,
+        "failures": []
+      },
+      "mesh_sorted_span_difference_mm": 1.621246340732796e-06,
+      "mesh_relative_volume_error": 3.3596326949638324e-05
+    },
+    "PTTPlunger": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 459.9291644855457,
+        "bounds_mm": [
+          45.0,
+          3.0,
+          16.2,
+          57.0,
+          15.0,
+          26.400000000000002
+        ]
+      },
+      "step_comparison": {
+        "max_bounds_difference_mm": 3.552713678800501e-15,
+        "absolute_volume_difference_mm3": 1.1368683772161603e-13,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      },
+      "mesh_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\ptt-plunger.stl",
+      "mesh_sha256": "7ec78932fe45c13f351e8086e0d637c3c218f46431078ca2384442b95609fa86",
+      "mesh_topology": {
+        "file": "ptt-plunger.stl",
+        "ok": true,
+        "bytes": 30284,
+        "format": "binary",
+        "triangles": 604,
+        "unique_vertices_after_rounding": 304,
+        "bbox_mm": {
+          "min": [
+            45.0074577331543,
+            3.0018649101257324,
+            16.200000762939453
+          ],
+          "max": [
+            57.0,
+            14.998135566711426,
+            26.399999618530273
+          ],
+          "size": [
+            11.992542266845703,
+            11.996270656585693,
+            10.19999885559082
+          ]
+        },
+        "undirected_edges": 906,
+        "edge_incidence_histogram": {
+          "2": 906
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          604
+        ],
+        "signed_volume_mm3": 458.8146982242149,
+        "absolute_volume_mm3": 458.8146982242149,
+        "failures": []
+      },
+      "mesh_sorted_span_difference_mm": 0.007457733154296875,
+      "mesh_relative_volume_error": 0.0024346069947288884
+    },
+    "PTTStopCup": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 650.9008562343834,
+        "bounds_mm": [
+          39.0,
+          0.6999999999999993,
+          17.15,
+          63.0,
+          17.3,
+          21.0
+        ]
+      },
+      "step_comparison": {
+        "max_bounds_difference_mm": 0.0,
+        "absolute_volume_difference_mm3": 2.091837814077735e-11,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      },
+      "mesh_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\ptt-stop-cup.stl",
+      "mesh_sha256": "7ca20c816ad1d272a70bdb7187ec16fd80c83f2caa69822bc22bcd1b557e8117",
+      "mesh_topology": {
+        "file": "ptt-stop-cup.stl",
+        "ok": true,
+        "bytes": 56484,
+        "format": "binary",
+        "triangles": 1128,
+        "unique_vertices_after_rounding": 560,
+        "bbox_mm": {
+          "min": [
+            39.0,
+            0.7074844837188721,
+            17.149999618530273
+          ],
+          "max": [
+            63.0,
+            17.29251480102539,
+            21.0
+          ],
+          "size": [
+            24.0,
+            16.58503031730652,
+            3.8500003814697266
+          ]
+        },
+        "undirected_edges": 1692,
+        "edge_incidence_histogram": {
+          "2": 1692
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          1128
+        ],
+        "signed_volume_mm3": 650.4762342527949,
+        "absolute_volume_mm3": 650.4762342527949,
+        "failures": []
+      },
+      "mesh_sorted_span_difference_mm": 0.014969682693482866,
+      "mesh_relative_volume_error": 0.0006472614188348791
+    }
+  },
+  "parameters": {
+    "B8": {
+      "value": 13.0,
+      "expected": 13,
+      "stored": "13",
+      "matches": true
+    },
+    "B12": {
+      "value": 4.4,
+      "expected": 4.4,
+      "stored": "4.4",
+      "matches": true
+    },
+    "B13": {
+      "value": 5.0,
+      "expected": 5,
+      "stored": "5",
+      "matches": true
+    },
+    "B17": {
+      "value": 0.4,
+      "expected": 0.4,
+      "stored": "0.4",
+      "matches": true
+    },
+    "B24": {
+      "value": 1.6,
+      "expected": 1.6,
+      "stored": "1.6",
+      "matches": true
+    },
+    "B29": {
+      "value": 0.4,
+      "expected": 0.4,
+      "stored": "0.4",
+      "matches": true
+    },
+    "B37": {
+      "value": 9.5,
+      "expected": 9.5,
+      "stored": "=B8 - B36",
+      "matches": true
+    },
+    "B44": {
+      "value": 21.0,
+      "expected": 21,
+      "stored": "=B43 + B8",
+      "matches": true
+    },
+    "B47": {
+      "value": 24.6,
+      "expected": 24.6,
+      "stored": "=B44 + B9",
+      "matches": true
+    },
+    "B59": {
+      "value": 0.25,
+      "expected": 0.25,
+      "stored": "0.25",
+      "matches": true
+    },
+    "B67": {
+      "value": 19.150000000000002,
+      "expected": 19.15,
+      "stored": "=B44 - 0.2 - B31 - B33 - B59",
+      "matches": true
+    },
+    "B68": {
+      "value": 17.150000000000002,
+      "expected": 17.15,
+      "stored": "=B67 - B60",
+      "matches": true
+    },
+    "B71": {
+      "value": 4.0,
+      "expected": 4,
+      "stored": "4",
+      "matches": true
+    },
+    "B72": {
+      "value": 22.0,
+      "expected": 22,
+      "stored": "22",
+      "matches": true
+    }
+  },
+  "failures": [],
+  "step_solid_count": 4,
+  "recompute": {
+    "EnclosureBase": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "independent_final_parameter_rebuild": {
+    "EnclosureBase": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 7.275957614183426e-12,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 1.1368683772161603e-13,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "source_unchanged": true,
+  "normalized_upload_meshes": [
+    {
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-base-mm.stl",
+      "sha256": "f1968e216942993e6f97ff66b21d2d97cbeb8eb6f935162cd1cacd944d130635",
+      "topology": {
+        "file": "C5-R1-enclosure-base-mm.stl",
+        "ok": true,
+        "bytes": 182084,
+        "format": "binary",
+        "triangles": 3640,
+        "unique_vertices_after_rounding": 1818,
+        "bbox_mm": {
+          "min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max": [
+            78.80000305175781,
+            98.80000305175781,
+            21.0
+          ],
+          "size": [
+            78.80000305175781,
+            98.80000305175781,
+            21.0
+          ]
+        },
+        "undirected_edges": 5460,
+        "edge_incidence_histogram": {
+          "2": 5460
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          3640
+        ],
+        "signed_volume_mm3": 33771.59727486459,
+        "absolute_volume_mm3": 33771.59727486459,
+        "failures": []
+      },
+      "maximum_translation_round_trip_error_mm": 2.384185791015625e-06,
+      "ok": true
+    },
+    {
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-lid-mm.stl",
+      "sha256": "9f127c82d33d244d278dad135412b3b1dec5a66c91461c409c0d7e5837282466",
+      "topology": {
+        "file": "C5-R1-enclosure-lid-mm.stl",
+        "ok": true,
+        "bytes": 181684,
+        "format": "binary",
+        "triangles": 3632,
+        "unique_vertices_after_rounding": 1784,
+        "bbox_mm": {
+          "min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max": [
+            78.80000305175781,
+            98.80000305175781,
+            16.600000381469727
+          ],
+          "size": [
+            78.80000305175781,
+            98.80000305175781,
+            16.600000381469727
+          ]
+        },
+        "undirected_edges": 5448,
+        "edge_incidence_histogram": {
+          "2": 5448
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          3632
+        ],
+        "signed_volume_mm3": 27931.85029000159,
+        "absolute_volume_mm3": 27931.85029000159,
+        "failures": []
+      },
+      "maximum_translation_round_trip_error_mm": 2.384185791015625e-06,
+      "ok": true
+    },
+    {
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-plunger-mm.stl",
+      "sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41",
+      "topology": {
+        "file": "C5-R1-ptt-plunger-mm.stl",
+        "ok": true,
+        "bytes": 30284,
+        "format": "binary",
+        "triangles": 604,
+        "unique_vertices_after_rounding": 304,
+        "bbox_mm": {
+          "min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max": [
+            11.992542266845703,
+            11.996271133422852,
+            10.19999885559082
+          ],
+          "size": [
+            11.992542266845703,
+            11.996271133422852,
+            10.19999885559082
+          ]
+        },
+        "undirected_edges": 906,
+        "edge_incidence_histogram": {
+          "2": 906
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          604
+        ],
+        "signed_volume_mm3": 458.8146958267419,
+        "absolute_volume_mm3": 458.8146958267419,
+        "failures": []
+      },
+      "maximum_translation_round_trip_error_mm": 4.76837158203125e-07,
+      "ok": true
+    },
+    {
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-stop-cup-mm.stl",
+      "sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f",
+      "topology": {
+        "file": "C5-R1-ptt-stop-cup-mm.stl",
+        "ok": true,
+        "bytes": 56484,
+        "format": "binary",
+        "triangles": 1128,
+        "unique_vertices_after_rounding": 560,
+        "bbox_mm": {
+          "min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max": [
+            24.0,
+            16.58502960205078,
+            3.8500003814697266
+          ],
+          "size": [
+            24.0,
+            16.58502960205078,
+            3.8500003814697266
+          ]
+        },
+        "undirected_edges": 1692,
+        "edge_incidence_histogram": {
+          "2": 1692
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          1128
+        ],
+        "signed_volume_mm3": 650.4762235515112,
+        "absolute_volume_mm3": 650.4762235515112,
+        "failures": []
+      },
+      "maximum_translation_round_trip_error_mm": 7.152557373046875e-07,
+      "ok": true
+    }
+  ],
+  "three_mf": [
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-base-mm.3mf",
+      "sha256": "1dfa4bc02b912351f5352d2f42bb346180ece971ca181302fd8f4f85ad4bb3c2",
+      "unit": "millimeter",
+      "mesh_objects": 1,
+      "build_items": 1,
+      "vertices": 1818,
+      "triangles": 3640
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-lid-mm.3mf",
+      "sha256": "593a865b21f21b27a8c40d1baea97b0f2a6e39da81ed2c2d57294cbd955f80de",
+      "unit": "millimeter",
+      "mesh_objects": 1,
+      "build_items": 1,
+      "vertices": 1784,
+      "triangles": 3632
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-plunger-mm.3mf",
+      "sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f",
+      "unit": "millimeter",
+      "mesh_objects": 1,
+      "build_items": 1,
+      "vertices": 304,
+      "triangles": 604
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-stop-cup-mm.3mf",
+      "sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0",
+      "unit": "millimeter",
+      "mesh_objects": 1,
+      "build_items": 1,
+      "vertices": 560,
+      "triangles": 1128
+    }
+  ],
+  "limitations": [
+    "Mesh equivalence uses bounding spans and volume plus manifold topology, not a pointwise distance proof.",
+    "Electronics interference is checked by the separate final-clearance audit.",
+    "Geometric validity does not establish printer calibration, material strength or physical fit."
+  ],
+  "ok": true,
+  "individual_cnc_step": [
+    {
+      "native_part": "EnclosureBase",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cnc\\C5-R1-enclosure-base.step",
+      "sha256": "7549b539c2c896410eae8d4c3ba89665eb5e8ce00bb4d7a48ef52493e7aec201",
+      "valid": true,
+      "closed": true,
+      "solid_count": 1,
+      "volume_difference_mm3": 1.1641532182693481e-10,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    {
+      "native_part": "EnclosureLid",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cnc\\C5-R1-enclosure-lid.step",
+      "sha256": "7ec6807924a03443353a72db7eadb06d0c2254e260d3f828916c58c0250522e9",
+      "valid": true,
+      "closed": true,
+      "solid_count": 1,
+      "volume_difference_mm3": 1.0913936421275139e-11,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    {
+      "native_part": "PTTPlunger",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cnc\\C5-R1-ptt-plunger.step",
+      "sha256": "02bc35b621c7167f2f1c793e5e0c0105bf96950718da2e363a1bd4dde362b196",
+      "valid": true,
+      "closed": true,
+      "solid_count": 1,
+      "volume_difference_mm3": 1.1368683772161603e-13,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    {
+      "native_part": "PTTStopCup",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cnc\\C5-R1-ptt-stop-cup.step",
+      "sha256": "1a0b2516697f7312f24e61da046d9b7f87bc15726aac9a4d1770b6bf817079d2",
+      "valid": true,
+      "closed": true,
+      "solid_count": 1,
+      "volume_difference_mm3": 2.091837814077735e-11,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    }
+  ]
+}

@@ -1,0 +1,2824 @@
+{
+  "checks": [
+    {
+      "name": "actual shader uses local flange band",
+      "bounds": [
+        22.4,
+        23.6
+      ],
+      "boundaryEpsilon": 0.00001
+    },
+    {
+      "name": "opaque flange mesh and force selection",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+          "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "0.000000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "gpu": {
+        "selectedOpaqueMeshes": [
+          "plunger"
+        ],
+        "edgeCalls": 1,
+        "edgeVertices": 312
+      },
+      "pixels": {
+        "hash": 781462689,
+        "width": 615,
+        "height": 418,
+        "samples": {
+          "flange": {
+            "point": [
+              55.5,
+              9,
+              22.75
+            ],
+            "pixel": [
+              349,
+              280
+            ],
+            "rgba": [
+              42,
+              128,
+              209,
+              255
+            ]
+          },
+          "shaft": {
+            "point": [
+              51,
+              9,
+              25.75
+            ],
+            "pixel": [
+              307,
+              307
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "foot": {
+            "point": [
+              51,
+              9,
+              18.75
+            ],
+            "pixel": [
+              307,
+              242
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "stop_cup": {
+            "point": [
+              55.5,
+              9,
+              21.15
+            ],
+            "pixel": [
+              349,
+              265
+            ],
+            "rgba": [
+              188,
+              143,
+              111,
+              255
+            ]
+          },
+          "left_nut": {
+            "point": [
+              40.4,
+              9,
+              19.35
+            ],
+            "pixel": [
+              209,
+              248
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_nut": {
+            "point": [
+              61.6,
+              9,
+              19.35
+            ],
+            "pixel": [
+              405,
+              248
+            ],
+            "rgba": [
+              138,
+              139,
+              140,
+              255
+            ]
+          },
+          "left_screw": {
+            "point": [
+              42,
+              9,
+              25.1
+            ],
+            "pixel": [
+              224,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_screw": {
+            "point": [
+              60,
+              9,
+              25.1
+            ],
+            "pixel": [
+              390,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "lid": {
+            "point": [
+              63,
+              9,
+              25.8
+            ],
+            "pixel": [
+              418,
+              308
+            ],
+            "rgba": [
+              164,
+              165,
+              165,
+              255
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "opaque stop_cup mesh and force selection",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"left_cup_on_nut\",\"right_flange_on_cup\",\"right_cup_on_nut\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "stop_cup",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+          "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+          "highlightedMeshes": "[\"stop_cup\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "0.000000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "gpu": {
+        "selectedOpaqueMeshes": [
+          "stop_cup"
+        ],
+        "edgeCalls": 1,
+        "edgeVertices": 628
+      },
+      "pixels": {
+        "hash": 3002951607,
+        "width": 615,
+        "height": 418,
+        "samples": {
+          "flange": {
+            "point": [
+              55.5,
+              9,
+              22.75
+            ],
+            "pixel": [
+              349,
+              280
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "shaft": {
+            "point": [
+              51,
+              9,
+              25.75
+            ],
+            "pixel": [
+              307,
+              307
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "foot": {
+            "point": [
+              51,
+              9,
+              18.75
+            ],
+            "pixel": [
+              307,
+              242
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "stop_cup": {
+            "point": [
+              55.5,
+              9,
+              21.15
+            ],
+            "pixel": [
+              349,
+              265
+            ],
+            "rgba": [
+              42,
+              128,
+              208,
+              255
+            ]
+          },
+          "left_nut": {
+            "point": [
+              40.4,
+              9,
+              19.35
+            ],
+            "pixel": [
+              209,
+              248
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_nut": {
+            "point": [
+              61.6,
+              9,
+              19.35
+            ],
+            "pixel": [
+              405,
+              248
+            ],
+            "rgba": [
+              138,
+              139,
+              140,
+              255
+            ]
+          },
+          "left_screw": {
+            "point": [
+              42,
+              9,
+              25.1
+            ],
+            "pixel": [
+              224,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_screw": {
+            "point": [
+              60,
+              9,
+              25.1
+            ],
+            "pixel": [
+              390,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "lid": {
+            "point": [
+              63,
+              9,
+              25.8
+            ],
+            "pixel": [
+              418,
+              308
+            ],
+            "rgba": [
+              164,
+              165,
+              165,
+              255
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "opaque nuts mesh and force selection",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "nuts",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+          "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+          "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "0.000000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "gpu": {
+        "selectedOpaqueMeshes": [
+          "left_nut",
+          "right_nut"
+        ],
+        "edgeCalls": 2,
+        "edgeVertices": 232
+      },
+      "pixels": {
+        "hash": 45410150,
+        "width": 615,
+        "height": 418,
+        "samples": {
+          "flange": {
+            "point": [
+              55.5,
+              9,
+              22.75
+            ],
+            "pixel": [
+              349,
+              280
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "shaft": {
+            "point": [
+              51,
+              9,
+              25.75
+            ],
+            "pixel": [
+              307,
+              307
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "foot": {
+            "point": [
+              51,
+              9,
+              18.75
+            ],
+            "pixel": [
+              307,
+              242
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "stop_cup": {
+            "point": [
+              55.5,
+              9,
+              21.15
+            ],
+            "pixel": [
+              349,
+              265
+            ],
+            "rgba": [
+              188,
+              143,
+              111,
+              255
+            ]
+          },
+          "left_nut": {
+            "point": [
+              40.4,
+              9,
+              19.35
+            ],
+            "pixel": [
+              209,
+              248
+            ],
+            "rgba": [
+              42,
+              128,
+              209,
+              255
+            ]
+          },
+          "right_nut": {
+            "point": [
+              61.6,
+              9,
+              19.35
+            ],
+            "pixel": [
+              405,
+              248
+            ],
+            "rgba": [
+              42,
+              128,
+              208,
+              255
+            ]
+          },
+          "left_screw": {
+            "point": [
+              42,
+              9,
+              25.1
+            ],
+            "pixel": [
+              224,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_screw": {
+            "point": [
+              60,
+              9,
+              25.1
+            ],
+            "pixel": [
+              390,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "lid": {
+            "point": [
+              63,
+              9,
+              25.8
+            ],
+            "pixel": [
+              418,
+              308
+            ],
+            "rgba": [
+              164,
+              165,
+              165,
+              255
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "opaque screws mesh and force selection",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "screws",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+          "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+          "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "0.000000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "gpu": {
+        "selectedOpaqueMeshes": [
+          "left_screw",
+          "right_screw"
+        ],
+        "edgeCalls": 2,
+        "edgeVertices": 508
+      },
+      "pixels": {
+        "hash": 3442631280,
+        "width": 615,
+        "height": 418,
+        "samples": {
+          "flange": {
+            "point": [
+              55.5,
+              9,
+              22.75
+            ],
+            "pixel": [
+              349,
+              280
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "shaft": {
+            "point": [
+              51,
+              9,
+              25.75
+            ],
+            "pixel": [
+              307,
+              307
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "foot": {
+            "point": [
+              51,
+              9,
+              18.75
+            ],
+            "pixel": [
+              307,
+              242
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "stop_cup": {
+            "point": [
+              55.5,
+              9,
+              21.15
+            ],
+            "pixel": [
+              349,
+              265
+            ],
+            "rgba": [
+              188,
+              143,
+              111,
+              255
+            ]
+          },
+          "left_nut": {
+            "point": [
+              40.4,
+              9,
+              19.35
+            ],
+            "pixel": [
+              209,
+              248
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_nut": {
+            "point": [
+              61.6,
+              9,
+              19.35
+            ],
+            "pixel": [
+              405,
+              248
+            ],
+            "rgba": [
+              138,
+              139,
+              140,
+              255
+            ]
+          },
+          "left_screw": {
+            "point": [
+              42,
+              9,
+              25.1
+            ],
+            "pixel": [
+              224,
+              301
+            ],
+            "rgba": [
+              42,
+              128,
+              209,
+              255
+            ]
+          },
+          "right_screw": {
+            "point": [
+              60,
+              9,
+              25.1
+            ],
+            "pixel": [
+              390,
+              301
+            ],
+            "rgba": [
+              42,
+              128,
+              209,
+              255
+            ]
+          },
+          "lid": {
+            "point": [
+              63,
+              9,
+              25.8
+            ],
+            "pixel": [
+              418,
+              308
+            ],
+            "rgba": [
+              164,
+              165,
+              165,
+              255
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "opaque lid mesh and force selection",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_head_on_lid\",\"left_lid_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "lid",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+          "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+          "highlightedMeshes": "[\"lid\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "0.000000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(235, 119, 177)",
+            "opacity": "0.3",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(51, 156, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "gpu": {
+        "selectedOpaqueMeshes": [
+          "lid"
+        ],
+        "edgeCalls": 1,
+        "edgeVertices": 312
+      },
+      "pixels": {
+        "hash": 3189834267,
+        "width": 615,
+        "height": 418,
+        "samples": {
+          "flange": {
+            "point": [
+              55.5,
+              9,
+              22.75
+            ],
+            "pixel": [
+              349,
+              280
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "shaft": {
+            "point": [
+              51,
+              9,
+              25.75
+            ],
+            "pixel": [
+              307,
+              307
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "foot": {
+            "point": [
+              51,
+              9,
+              18.75
+            ],
+            "pixel": [
+              307,
+              242
+            ],
+            "rgba": [
+              145,
+              170,
+              194,
+              255
+            ]
+          },
+          "stop_cup": {
+            "point": [
+              55.5,
+              9,
+              21.15
+            ],
+            "pixel": [
+              349,
+              265
+            ],
+            "rgba": [
+              188,
+              143,
+              111,
+              255
+            ]
+          },
+          "left_nut": {
+            "point": [
+              40.4,
+              9,
+              19.35
+            ],
+            "pixel": [
+              209,
+              248
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_nut": {
+            "point": [
+              61.6,
+              9,
+              19.35
+            ],
+            "pixel": [
+              405,
+              248
+            ],
+            "rgba": [
+              138,
+              139,
+              140,
+              255
+            ]
+          },
+          "left_screw": {
+            "point": [
+              42,
+              9,
+              25.1
+            ],
+            "pixel": [
+              224,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "right_screw": {
+            "point": [
+              60,
+              9,
+              25.1
+            ],
+            "pixel": [
+              390,
+              301
+            ],
+            "rgba": [
+              139,
+              139,
+              140,
+              255
+            ]
+          },
+          "lid": {
+            "point": [
+              63,
+              9,
+              25.8
+            ],
+            "pixel": [
+              418,
+              308
+            ],
+            "rgba": [
+              42,
+              128,
+              209,
+              255
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "actual canvas pixels change only in the selected flange band or parts",
+      "selectionHashes": {
+        "flange": 781462689,
+        "stop_cup": 3002951607,
+        "nuts": 45410150,
+        "screws": 3442631280,
+        "lid": 3189834267
+      },
+      "flange": {
+        "flange": {
+          "point": [
+            55.5,
+            9,
+            22.75
+          ],
+          "pixel": [
+            349,
+            280
+          ],
+          "rgba": [
+            42,
+            128,
+            209,
+            255
+          ]
+        },
+        "shaft": {
+          "point": [
+            51,
+            9,
+            25.75
+          ],
+          "pixel": [
+            307,
+            307
+          ],
+          "rgba": [
+            145,
+            170,
+            194,
+            255
+          ]
+        },
+        "foot": {
+          "point": [
+            51,
+            9,
+            18.75
+          ],
+          "pixel": [
+            307,
+            242
+          ],
+          "rgba": [
+            145,
+            170,
+            194,
+            255
+          ]
+        },
+        "stop_cup": {
+          "point": [
+            55.5,
+            9,
+            21.15
+          ],
+          "pixel": [
+            349,
+            265
+          ],
+          "rgba": [
+            188,
+            143,
+            111,
+            255
+          ]
+        },
+        "left_nut": {
+          "point": [
+            40.4,
+            9,
+            19.35
+          ],
+          "pixel": [
+            209,
+            248
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "right_nut": {
+          "point": [
+            61.6,
+            9,
+            19.35
+          ],
+          "pixel": [
+            405,
+            248
+          ],
+          "rgba": [
+            138,
+            139,
+            140,
+            255
+          ]
+        },
+        "left_screw": {
+          "point": [
+            42,
+            9,
+            25.1
+          ],
+          "pixel": [
+            224,
+            301
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "right_screw": {
+          "point": [
+            60,
+            9,
+            25.1
+          ],
+          "pixel": [
+            390,
+            301
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "lid": {
+          "point": [
+            63,
+            9,
+            25.8
+          ],
+          "pixel": [
+            418,
+            308
+          ],
+          "rgba": [
+            164,
+            165,
+            165,
+            255
+          ]
+        }
+      },
+      "comparison": {
+        "flange": {
+          "point": [
+            55.5,
+            9,
+            22.75
+          ],
+          "pixel": [
+            349,
+            280
+          ],
+          "rgba": [
+            145,
+            170,
+            194,
+            255
+          ]
+        },
+        "shaft": {
+          "point": [
+            51,
+            9,
+            25.75
+          ],
+          "pixel": [
+            307,
+            307
+          ],
+          "rgba": [
+            145,
+            170,
+            194,
+            255
+          ]
+        },
+        "foot": {
+          "point": [
+            51,
+            9,
+            18.75
+          ],
+          "pixel": [
+            307,
+            242
+          ],
+          "rgba": [
+            145,
+            170,
+            194,
+            255
+          ]
+        },
+        "stop_cup": {
+          "point": [
+            55.5,
+            9,
+            21.15
+          ],
+          "pixel": [
+            349,
+            265
+          ],
+          "rgba": [
+            188,
+            143,
+            111,
+            255
+          ]
+        },
+        "left_nut": {
+          "point": [
+            40.4,
+            9,
+            19.35
+          ],
+          "pixel": [
+            209,
+            248
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "right_nut": {
+          "point": [
+            61.6,
+            9,
+            19.35
+          ],
+          "pixel": [
+            405,
+            248
+          ],
+          "rgba": [
+            138,
+            139,
+            140,
+            255
+          ]
+        },
+        "left_screw": {
+          "point": [
+            42,
+            9,
+            25.1
+          ],
+          "pixel": [
+            224,
+            301
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "right_screw": {
+          "point": [
+            60,
+            9,
+            25.1
+          ],
+          "pixel": [
+            390,
+            301
+          ],
+          "rgba": [
+            139,
+            139,
+            140,
+            255
+          ]
+        },
+        "lid": {
+          "point": [
+            63,
+            9,
+            25.8
+          ],
+          "pixel": [
+            418,
+            308
+          ],
+          "rgba": [
+            42,
+            128,
+            209,
+            255
+          ]
+        }
+      }
+    },
+    {
+      "name": "isolated flange-band close-up",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "1",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[307.6873120190576,219.81425718031844]",
+        "dimensionUpperScreen": "[307.6873120190576,219.81425718031844]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "contact",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      }
+    },
+    {
+      "name": "moving flange highlight and force gate 0 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.4]",
+        "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+        "dimensionUpperScreen": "[265.91275650355965,141.23207000494003]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.000000",
+        "pitch": "0.000000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "0.000000",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "selectedCalls": 3
+    },
+    {
+      "name": "moving flange highlight and force gate 0.125 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.275]",
+        "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+        "dimensionUpperScreen": "[265.91275650355965,142.39247983312234]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.125000",
+        "gapMm": "0.125000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.000000",
+        "pitch": "0.000000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "674.999999",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "selectedCalls": 3
+    },
+    {
+      "name": "moving flange highlight and force gate 0.249 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "flange",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.151]",
+        "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+        "dimensionUpperScreen": "[265.91275650355965,143.5436063826792]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.249000",
+        "gapMm": "0.001000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.000000",
+        "pitch": "0.000000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1300.085968",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "selectedCalls": 3
+    },
+    {
+      "name": "moving flange highlight and force gate 0.25 mm",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[265.91275650355965,143.55288966130465]",
+        "dimensionUpperScreen": "[265.91275650355965,143.55288966130465]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.000000",
+        "pitch": "0.000000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "selectedCalls": 3
+    },
+    {
+      "name": "transparent stop_cup highlight and original opacity",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"left_cup_on_nut\",\"right_flange_on_cup\",\"right_cup_on_nut\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "stop_cup",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[254.16724901710404,154.11030566182453]",
+          "dimensionUpperScreen": "[254.16724901710404,154.11030566182453]",
+          "highlightedMeshes": "[\"stop_cup\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.296706",
+          "pitch": "0.261799",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "true"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "tint": {
+        "hash": 2658196293,
+        "alphas": [
+          0.14000000059604645,
+          0.23999999463558197
+        ],
+        "vertices": 2664
+      }
+    },
+    {
+      "name": "transparent lid highlight and original opacity",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_head_on_lid\",\"left_lid_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "lid",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[254.16724901710404,154.11030566182453]",
+          "dimensionUpperScreen": "[254.16724901710404,154.11030566182453]",
+          "highlightedMeshes": "[\"lid\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.296706",
+          "pitch": "0.261799",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "true"
+        },
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]"
+          },
+          {
+            "id": "left_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "highlighted": "false",
+            "related": "false",
+            "strokeWidth": "1.2px",
+            "stroke": "rgb(240, 143, 192)",
+            "opacity": "0.3",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]"
+          },
+          {
+            "id": "right_head_on_lid",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "highlighted": "true",
+            "related": "true",
+            "strokeWidth": "2.8px",
+            "stroke": "rgb(131, 195, 255)",
+            "opacity": "1",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]"
+          }
+        ],
+        "forceDisplay": "inline",
+        "overflow": false,
+        "webglError": 0,
+        "depthTest": true,
+        "depthWrite": true,
+        "blend": false
+      },
+      "tint": {
+        "hash": 1619009061,
+        "alphas": [
+          0.14000000059604645,
+          0.23999999463558197
+        ],
+        "vertices": 2664
+      }
+    },
+    {
+      "name": "transparent tint cache changes on label selection",
+      "stop_cup": {
+        "tint": {
+          "hash": 2658196293,
+          "alphas": [
+            0.14000000059604645,
+            0.23999999463558197
+          ],
+          "vertices": 2664
+        },
+        "pixels": {
+          "hash": 3649975688,
+          "width": 615,
+          "height": 418,
+          "samples": {
+            "flange": {
+              "point": [
+                55.5,
+                9,
+                22.75
+              ],
+              "pixel": [
+                333,
+                262
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "shaft": {
+              "point": [
+                51,
+                9,
+                25.75
+              ],
+              "pixel": [
+                293,
+                293
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "foot": {
+              "point": [
+                51,
+                9,
+                18.75
+              ],
+              "pixel": [
+                293,
+                230
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "stop_cup": {
+              "point": [
+                55.5,
+                9,
+                21.15
+              ],
+              "pixel": [
+                333,
+                248
+              ],
+              "rgba": [
+                48,
+                72,
+                94,
+                108
+              ]
+            },
+            "left_nut": {
+              "point": [
+                40.4,
+                9,
+                19.35
+              ],
+              "pixel": [
+                199,
+                243
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "right_nut": {
+              "point": [
+                61.6,
+                9,
+                19.35
+              ],
+              "pixel": [
+                387,
+                228
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "left_screw": {
+              "point": [
+                42,
+                9,
+                25.1
+              ],
+              "pixel": [
+                214,
+                293
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "right_screw": {
+              "point": [
+                60,
+                9,
+                25.1
+              ],
+              "pixel": [
+                373,
+                280
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "lid": {
+              "point": [
+                63,
+                9,
+                25.8
+              ],
+              "pixel": [
+                400,
+                285
+              ],
+              "rgba": [
+                22,
+                22,
+                22,
+                67
+              ]
+            }
+          }
+        }
+      },
+      "lid": {
+        "tint": {
+          "hash": 1619009061,
+          "alphas": [
+            0.14000000059604645,
+            0.23999999463558197
+          ],
+          "vertices": 2664
+        },
+        "pixels": {
+          "hash": 3944684306,
+          "width": 615,
+          "height": 418,
+          "samples": {
+            "flange": {
+              "point": [
+                55.5,
+                9,
+                22.75
+              ],
+              "pixel": [
+                333,
+                262
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "shaft": {
+              "point": [
+                51,
+                9,
+                25.75
+              ],
+              "pixel": [
+                293,
+                293
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "foot": {
+              "point": [
+                51,
+                9,
+                18.75
+              ],
+              "pixel": [
+                293,
+                230
+              ],
+              "rgba": [
+                60,
+                76,
+                90,
+                255
+              ]
+            },
+            "stop_cup": {
+              "point": [
+                55.5,
+                9,
+                21.15
+              ],
+              "pixel": [
+                333,
+                248
+              ],
+              "rgba": [
+                56,
+                38,
+                25,
+                108
+              ]
+            },
+            "left_nut": {
+              "point": [
+                40.4,
+                9,
+                19.35
+              ],
+              "pixel": [
+                199,
+                243
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "right_nut": {
+              "point": [
+                61.6,
+                9,
+                19.35
+              ],
+              "pixel": [
+                387,
+                228
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "left_screw": {
+              "point": [
+                42,
+                9,
+                25.1
+              ],
+              "pixel": [
+                214,
+                293
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "right_screw": {
+              "point": [
+                60,
+                9,
+                25.1
+              ],
+              "pixel": [
+                373,
+                280
+              ],
+              "rgba": [
+                90,
+                90,
+                90,
+                255
+              ]
+            },
+            "lid": {
+              "point": [
+                63,
+                9,
+                25.8
+              ],
+              "pixel": [
+                400,
+                285
+              ],
+              "rgba": [
+                30,
+                45,
+                58,
+                67
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "mobile selected parts and arrows fit",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,112.18126035179012]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      }
+    },
+    {
+      "name": "highlight selection preserves looping and camera",
+      "before": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "nuts",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.38828489843569]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,110.70909066435094]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.011715",
+        "gapMm": "0.238285",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "176.600000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "after": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "screws",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.355319707131372]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,110.91275592260878]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.044680",
+        "gapMm": "0.205320",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "363.800000",
+        "phase": "press",
+        "transparentShell": "true"
+      }
+    },
+    {
+      "name": "selected force arrows highlight during contact dwell",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "screws",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,112.18126035179012]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1364.800000",
+        "phase": "contact",
+        "transparentShell": "true"
+      }
+    },
+    {
+      "name": "force highlights disappear on release while part stays selected",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "screws",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.150002778321596]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,112.18124318678778]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.249997",
+        "gapMm": "0.000003",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "2302.600000",
+        "phase": "release",
+        "transparentShell": "true"
+      }
+    },
+    {
+      "name": "no JavaScript or WebGL errors"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-flange-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-stop_cup-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-nuts-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-screws-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-lid-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-flange-closeup-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-stop_cup-transparent-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-lid-transparent-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\highlight-preview\\selected-nuts-transparent-320-dark.png"
+  ]
+}

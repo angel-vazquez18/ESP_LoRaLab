@@ -1,0 +1,3403 @@
+{
+  "checks": [
+    {
+      "name": "smooth center and zoom preserve viewing angle",
+      "before": {
+        "data": {
+          "guidedMode": "false",
+          "guideStep": "0",
+          "guideElapsedMs": "0.000",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[268.2410271334229,172.31963195716963]",
+          "dimensionUpperScreen": "[268.2410271334229,172.31963195716963]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "cameraTarget": "[51,14,15.1]",
+          "cameraFitRadius": "22.513598024305224",
+          "cameraHalfHeight": "34.63630465277727",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "0.650000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.01618584804236889,
+          -0.005589934065937996,
+          -0.0035478912759572268,
+          0,
+          0.011073335073888302,
+          0.008170784451067448,
+          0.005185937974601984,
+          0,
+          0,
+          0.0271210428327322,
+          -0.002293630735948682,
+          0,
+          -0.9805049896240234,
+          -0.23883207142353058,
+          -0.061040282249450684,
+          1
+        ],
+        "pixelHash": 4073704661,
+        "guideChecked": false,
+        "guideStatus": "Paused with animation",
+        "detail": "Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": null
+      },
+      "first": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "0.000",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[268.2410271334229,172.31963195716963]",
+          "dimensionUpperScreen": "[268.2410271334229,172.31963195716963]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,14,15.1]",
+          "cameraFitRadius": "34.63630465277727",
+          "cameraHalfHeight": "34.63630465277727",
+          "cameraTransition": "true",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.01618584804236889,
+          -0.005589934065937996,
+          -0.0035478912759572268,
+          0,
+          0.011073335073888302,
+          0.008170784451067448,
+          0.005185937974601984,
+          0,
+          0,
+          0.0271210428327322,
+          -0.002293630735948682,
+          0,
+          -0.9805049896240234,
+          -0.23883207142353058,
+          -0.061040282249450684,
+          1
+        ],
+        "pixelHash": 4073704661,
+        "guideChecked": true,
+        "guideStatus": "Centering on flange",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1350,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "focusTween": {
+              "from": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "to": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "elapsed": 0,
+              "part": "flange"
+            },
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 1
+          }
+        }
+      },
+      "middle1": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "229.200",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[258.8598645647289,170.65532881026158]",
+          "dimensionUpperScreen": "[258.8598645647289,170.65532881026158]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.676935073064506,16.35591490346173]",
+          "cameraFitRadius": "27.20088161241658",
+          "cameraHalfHeight": "27.20088161241658",
+          "cameraTransition": "true",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1372.920000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.02061028592288494,
+          -0.007117955479770899,
+          -0.0035478912759572268,
+          0,
+          0.014100256375968456,
+          0.010404286906123161,
+          0.005185937974601984,
+          0,
+          0,
+          0.03453464433550835,
+          -0.002293630735948682,
+          0,
+          -1.243972897529602,
+          -0.34412869811058044,
+          -0.05648428201675415,
+          1
+        ],
+        "pixelHash": 2619216084,
+        "guideChecked": true,
+        "guideStatus": "Centering on flange",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1350,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "focusTween": {
+              "from": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "to": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "elapsed": 0,
+              "part": "flange"
+            },
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 1
+          }
+        }
+      },
+      "middle2": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "479.100",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[226.57257367833517,176.3273658324033]",
+          "dimensionUpperScreen": "[226.57257367833517,176.3273658324033]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,12.903135210656535,19.364061868572723]",
+          "cameraFitRadius": "15.247964403040323",
+          "cameraHalfHeight": "15.247964403040323",
+          "cameraTransition": "true",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1397.910000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.036766741424798965,
+          -0.012697737663984299,
+          -0.0035478912759572268,
+          0,
+          0.02515348233282566,
+          0.01856023259460926,
+          0.005185937974601984,
+          0,
+          0,
+          0.061606429517269135,
+          -0.002293630735948682,
+          0,
+          -2.199662446975708,
+          -0.7848513126373291,
+          -0.04557180404663086,
+          1
+        ],
+        "pixelHash": 4223158128,
+        "guideChecked": true,
+        "guideStatus": "Centering on flange",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1350,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "focusTween": {
+              "from": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "to": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "elapsed": 0,
+              "part": "flange"
+            },
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 1
+          }
+        }
+      },
+      "end": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "917.100",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[162.02352865808643,226.74481387399138]",
+          "dimensionUpperScreen": "[162.02352865808643,226.74481387399138]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,12,22.875]",
+          "cameraFitRadius": "7.759358160473069",
+          "cameraHalfHeight": "7.759358160473069",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1441.710000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.07225055992603302,
+          -0.02495240792632103,
+          -0.0035478912759572268,
+          0,
+          0.0494292713701725,
+          0.03647283464670181,
+          0.005185937974601984,
+          0,
+          0,
+          0.12106320261955261,
+          -0.002293630735948682,
+          0,
+          -4.277929782867432,
+          -1.9344218969345093,
+          -0.03283536434173584,
+          1
+        ],
+        "pixelHash": 3603266382,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1438.5600000047687,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 885.6000000476838,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 2
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 91.18506718687706,
+        "targetPixel": [
+          307.68750916980207,
+          208.99998442828655
+        ]
+      }
+    },
+    {
+      "name": "pause freezes and resume finishes camera motion",
+      "paused": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "313.600",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[250.64711043873103,170.54074092134834]",
+          "dimensionUpperScreen": "[250.64711043873103,170.54074092134834]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "false",
+          "cameraTarget": "[51,13.440742296343554,17.274114322964433]",
+          "cameraFitRadius": "22.79581256618788",
+          "cameraHalfHeight": "22.79581256618788",
+          "cameraTransition": "true",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1381.360000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.02459302358329296,
+          -0.00849343091249466,
+          -0.0035478912759572268,
+          0,
+          0.01682499423623085,
+          0.012414814904332161,
+          0.005185937974601984,
+          0,
+          0,
+          0.04120812565088272,
+          -0.002293630735948682,
+          0,
+          -1.4803847074508667,
+          -0.4455331861972809,
+          -0.05315333604812622,
+          1
+        ],
+        "pixelHash": 325155100,
+        "guideChecked": true,
+        "guideStatus": "Paused with animation",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.440742296343554,
+                  17.274114322964433
+                ],
+                "radius": 22.79581256618788
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1381.3599999904632,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 313.59999990463257,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                13.440742296343554,
+                17.274114322964433
+              ],
+              "radius": 22.79581256618788
+            },
+            "focusTween": {
+              "from": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "to": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "elapsed": 313.59999990463257,
+              "part": "flange"
+            },
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 4
+          }
+        }
+      },
+      "resumed": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "929.100",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[162.02352865808643,226.74481387399138]",
+          "dimensionUpperScreen": "[162.02352865808643,226.74481387399138]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,12,22.875]",
+          "cameraFitRadius": "7.759358160473069",
+          "cameraHalfHeight": "7.759358160473069",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1442.910000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.07225055992603302,
+          -0.02495240792632103,
+          -0.0035478912759572268,
+          0,
+          0.0494292713701725,
+          0.03647283464670181,
+          0.005185937974601984,
+          0,
+          0,
+          0.12106320261955261,
+          -0.002293630735948682,
+          0,
+          -4.277929782867432,
+          -1.9344218969345093,
+          -0.03283536434173584,
+          1
+        ],
+        "pixelHash": 3603266382,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1439.8499999952317,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 898.4999999523161,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "drag immediately takes camera control without stopping guide",
+      "dragged": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "330.000",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.3391254938324,178.81574925193564]",
+          "dimensionUpperScreen": "[265.3391254938324,178.81574925193564]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.736209109073393,16.125487088477183]",
+          "cameraFitRadius": "28.434023717002137",
+          "cameraHalfHeight": "28.434023717002137",
+          "cameraTransition": "false",
+          "manualCamera": "true",
+          "cameraFocusPart": "flange",
+          "yaw": "0.320000",
+          "pitch": "0.446000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1383.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.022676292806863785,
+          -0.0047721536830067635,
+          -0.0018982982728630304,
+          0,
+          0.007514682598412037,
+          0.014400440268218517,
+          0.005728301126509905,
+          0,
+          0,
+          0.03172888234257698,
+          -0.0028853530529886484,
+          0,
+          -1.259714126586914,
+          -0.46607130765914917,
+          -0.1393575668334961,
+          1
+        ],
+        "pixelHash": 659656534,
+        "guideChecked": true,
+        "guideStatus": "Manual view · refocus next step",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 18.33,
+              "tilt_deg": 25.55,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.736209109073393,
+                  16.125487088477183
+                ],
+                "radius": 28.434023717002137
+              },
+              "focus_part": "flange",
+              "manual_for_step": true
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1383.0000000047685,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 330.0000000476839,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                13.736209109073393,
+                16.125487088477183
+              ],
+              "radius": 28.434023717002137
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": true,
+            "camera": {
+              "yaw": 0.3199999999999985,
+              "pitch": 0.44600000000000006,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 8
+          }
+        }
+      },
+      "afterDrag": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "643.000",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[265.3391254938324,178.81574925193564]",
+          "dimensionUpperScreen": "[265.3391254938324,178.81574925193564]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.736209109073393,16.125487088477183]",
+          "cameraFitRadius": "28.434023717002137",
+          "cameraHalfHeight": "28.434023717002137",
+          "cameraTransition": "false",
+          "manualCamera": "true",
+          "cameraFocusPart": "flange",
+          "yaw": "0.320000",
+          "pitch": "0.446000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1414.300000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.022676292806863785,
+          -0.0047721536830067635,
+          -0.0018982982728630304,
+          0,
+          0.007514682598412037,
+          0.014400440268218517,
+          0.005728301126509905,
+          0,
+          0,
+          0.03172888234257698,
+          -0.0028853530529886484,
+          0,
+          -1.259714126586914,
+          -0.46607130765914917,
+          -0.1393575668334961,
+          1
+        ],
+        "pixelHash": 659656534,
+        "guideChecked": true,
+        "guideStatus": "Manual view · refocus next step",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 18.33,
+              "tilt_deg": 25.55,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.736209109073393,
+                  16.125487088477183
+                ],
+                "radius": 28.434023717002137
+              },
+              "focus_part": "flange",
+              "manual_for_step": true
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1383.0000000047685,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 330.0000000476839,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                13.736209109073393,
+                16.125487088477183
+              ],
+              "radius": 28.434023717002137
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": true,
+            "camera": {
+              "yaw": 0.3199999999999985,
+              "pitch": 0.44600000000000006,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "wheel zoom cancels current automatic move",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "301.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[244.90444538206793,162.85874184258282]",
+        "dimensionUpperScreen": "[244.90444538206793,162.85874184258282]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,13.568559881571044,16.77722346039257]",
+        "cameraFitRadius": "25.082856156656305",
+        "cameraHalfHeight": "20.950962564768837",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "flange",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.197217",
+        "activePointers": "0",
+        "speed": "0.1",
+        "cycleTime": "1380.100000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.026758577674627304,
+        -0.009241325780749321,
+        -0.0035478912759572268,
+        0,
+        0.01830652914941311,
+        0.013508008792996407,
+        0.005185937974601984,
+        0,
+        0,
+        0.04483673349022865,
+        -0.002293630735948682,
+        0,
+        -1.6130807399749756,
+        -0.4642125070095062,
+        -0.054955899715423584,
+        1
+      ],
+      "pixelHash": 930418588,
+      "guideChecked": true,
+      "guideStatus": "Manual view · refocus next step",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "focus_part": "flange",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 0.1,
+          "cycleTime": 1350,
+          "transparentShell": false,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              14,
+              15.1
+            ],
+            "radius": 34.63630465277727
+          },
+          "focusTween": {
+            "from": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "to": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "elapsed": 0,
+            "part": "flange"
+          },
+          "focusPart": "flange",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 9
+        }
+      }
+    },
+    {
+      "name": "native camera controls also take manual control",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "143.600",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[247.24705643614288,156.42949047805743]",
+        "dimensionUpperScreen": "[247.24705643614288,156.42949047805743]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,13.863499993808166,15.630643774070759]",
+        "cameraFitRadius": "31.274410430413973",
+        "cameraHalfHeight": "22.338864593152838",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "flange",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.400000",
+        "activePointers": "0",
+        "speed": "0.1",
+        "cycleTime": "1364.360000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.02509608119726181,
+        -0.008667166344821453,
+        -0.0035478912759572268,
+        0,
+        0.017169153317809105,
+        0.012668762356042862,
+        0.005185937974601984,
+        0,
+        0,
+        0.042051050812006,
+        -0.002293630735948682,
+        0,
+        -1.5179246664047241,
+        -0.3908928632736206,
+        -0.05911529064178467,
+        1
+      ],
+      "pixelHash": 495631246,
+      "guideChecked": true,
+      "guideStatus": "Manual view · refocus next step",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1.4,
+            "focus_frame": {
+              "target": [
+                51,
+                13.863499993808166,
+                15.630643774070759
+              ],
+              "radius": 31.274410430413973
+            },
+            "focus_part": "flange",
+            "manual_for_step": true
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 0.1,
+          "cycleTime": 1364.3599999952319,
+          "transparentShell": false,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 143.59999995231647,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              13.863499993808166,
+              15.630643774070759
+            ],
+            "radius": 31.274410430413973
+          },
+          "focusTween": null,
+          "focusPart": "flange",
+          "manualCamera": true,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1.4
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 12
+        }
+      }
+    },
+    {
+      "name": "turning guidance off stops camera drift and keeps loop",
+      "offBefore": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "175.500",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[262.7117832022486,171.1292891595047]",
+          "dimensionUpperScreen": "[262.7117832022486,171.1292891595047]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.801509499900197,15.871631819137981]",
+          "cameraFitRadius": "29.85735563522698",
+          "cameraHalfHeight": "29.85735563522698",
+          "cameraTransition": "true",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1367.550000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.01877654530107975,
+          -0.006484655197709799,
+          -0.0035478912759572268,
+          0,
+          0.012845725752413273,
+          0.009478594176471233,
+          0.005185937974601984,
+          0,
+          0,
+          0.03146202117204666,
+          -0.002293630735948682,
+          0,
+          -1.1348942518234253,
+          -0.29945507645606995,
+          -0.05824100971221924,
+          1
+        ],
+        "pixelHash": 3801235583,
+        "guideChecked": true,
+        "guideStatus": "Centering on flange",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1350,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "focusTween": {
+              "from": {
+                "target": [
+                  51,
+                  14,
+                  15.1
+                ],
+                "radius": 34.63630465277727
+              },
+              "to": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "elapsed": 0,
+              "part": "flange"
+            },
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 13
+          }
+        }
+      },
+      "off": {
+        "data": {
+          "guidedMode": "false",
+          "guideStep": "0",
+          "guideElapsedMs": "0.000",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "flange",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[255.2852960471646,170.46043713768015]",
+          "dimensionUpperScreen": "[255.2852960471646,170.46043713768015]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.569678932014805,16.77287315179245]",
+          "cameraFitRadius": "25.103860583357545",
+          "cameraHalfHeight": "25.103860583357545",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.1",
+          "cycleTime": "1378.060000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.02233194373548031,
+          -0.0077125453390181065,
+          -0.0035478912759572268,
+          0,
+          0.015278104692697525,
+          0.011273396201431751,
+          0.005185937974601984,
+          0,
+          0,
+          0.037419453263282776,
+          -0.002293630735948682,
+          0,
+          -1.3462481498718262,
+          -0.3872682750225067,
+          -0.05497163534164429,
+          1
+        ],
+        "pixelHash": 2008454055,
+        "guideChecked": false,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.25,
+            "flange_gap_mm": 0,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": false,
+            "guide_step": null,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.569678932014805,
+                  16.77287315179245
+                ],
+                "radius": 25.103860583357545
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 1,
+            "closeup": false,
+            "speed": 0.1,
+            "cycleTime": 1378.0600000143052,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": false,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                13.569678932014805,
+                16.77287315179245
+              ],
+              "radius": 25.103860583357545
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 14
+          }
+        }
+      }
+    },
+    {
+      "name": "automatic focus frames flange",
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "1",
+          "guideElapsedMs": "906.700",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "flange",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.20990892189353]",
+          "dimensionLowerScreen": "[162.02352865808643,226.74481387399138]",
+          "dimensionUpperScreen": "[162.02352865808643,225.2289857904591]",
+          "highlightedMeshes": "[\"plunger\"]",
+          "highlightedFlangeLocalBounds": "[22.4,23.6]",
+          "strokeMm": "0.190091",
+          "gapMm": "0.059909",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,12,22.875]",
+          "cameraFitRadius": "7.759358160473069",
+          "cameraHalfHeight": "7.759358160473069",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "flange",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "920.100000",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.07225055992603302,
+          -0.02495240792632103,
+          -0.0035478912759572268,
+          0,
+          0.0494292713701725,
+          0.03647283464670181,
+          0.005185937974601984,
+          0,
+          0,
+          0.12106320261955261,
+          -0.002293630735948682,
+          0,
+          -4.277929782867432,
+          -1.9344218969345093,
+          -0.03283536434173584,
+          1
+        ],
+        "pixelHash": 673383667,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.182,
+            "flange_gap_mm": 0.068,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "flange",
+            "guided_load_path": true,
+            "guide_step": 1,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  12,
+                  22.875
+                ],
+                "radius": 7.759358160473069
+              },
+              "focus_part": "flange",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 0.7297112845174966,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 888.8999999523166,
+            "transparentShell": false,
+            "selectedPart": "flange",
+            "guided": true,
+            "guideElapsed": 875.5,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focusTween": null,
+            "focusPart": "flange",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 17
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 91.18506718687706,
+        "targetPixel": [
+          307.68750916980207,
+          208.99998442828655
+        ]
+      }
+    },
+    {
+      "name": "automatic focus frames stop_cup",
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "2",
+          "guideElapsedMs": "906.900",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "stop_cup",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.21019852017118]",
+          "dimensionLowerScreen": "[221.96815529291052,212.293815621268]",
+          "dimensionUpperScreen": "[221.96815529291052,211.49356714736248]",
+          "highlightedMeshes": "[\"stop_cup\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.189801",
+          "gapMm": "0.060199",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.15,22.075]",
+          "cameraFitRadius": "14.768799724842234",
+          "cameraHalfHeight": "14.768799724842234",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "stop_cup",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "918.900000",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.037959616631269455,
+          -0.01310970913618803,
+          -0.0035478912759572268,
+          0,
+          0.025969572365283966,
+          0.019162409007549286,
+          0.005185937974601984,
+          0,
+          0,
+          0.06360521912574768,
+          -0.002293630735948682,
+          0,
+          -2.2774405479431152,
+          -0.9874756932258606,
+          -0.040634095668792725,
+          1
+        ],
+        "pixelHash": 2599469517,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 2 of 5 · Stop cup — At the stop, the shelf carries the flange’s downward load to the mounting ears, which bear down on the nuts.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.182,
+            "flange_gap_mm": 0.068,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "stop_cup",
+            "guided_load_path": true,
+            "guide_step": 2,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.15,
+                  22.075
+                ],
+                "radius": 14.768799724842234
+              },
+              "focus_part": "stop_cup",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 0.7277101346123996,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 886.8999999046328,
+            "transparentShell": false,
+            "selectedPart": "stop_cup",
+            "guided": true,
+            "guideElapsed": 874.9000000000005,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                13.15,
+                22.075
+              ],
+              "radius": 14.768799724842234
+            },
+            "focusTween": null,
+            "focusPart": "stop_cup",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 20
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 109.82994104698298,
+        "targetPixel": [
+          307.687431341107,
+          208.99999342095109
+        ]
+      }
+    },
+    {
+      "name": "automatic focus frames nuts",
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "3",
+          "guideElapsedMs": "906.800",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "nuts",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.2111669287838]",
+          "dimensionLowerScreen": "[239.3673263102537,157.60790035054092]",
+          "dimensionUpperScreen": "[239.3673263102537,156.6904197821936]",
+          "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.188833",
+          "gapMm": "0.061167",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,10,19.35]",
+          "cameraFitRadius": "13.088926379046521",
+          "cameraHalfHeight": "13.088926379046521",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "nuts",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "914.900000",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.04283147305250168,
+          -0.014792248606681824,
+          -0.0035478912759572268,
+          0,
+          0.02930258773267269,
+          0.021621771156787872,
+          0.005185937974601984,
+          0,
+          0,
+          0.07176850736141205,
+          -0.002293630735948682,
+          0,
+          -2.477430820465088,
+          -0.8505336046218872,
+          -0.030548512935638428,
+          1
+        ],
+        "pixelHash": 140036677,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.181,
+            "flange_gap_mm": 0.069,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "nuts",
+            "guided_load_path": true,
+            "guide_step": 3,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  10,
+                  19.35
+                ],
+                "radius": 13.088926379046521
+              },
+              "focus_part": "nuts",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 0.7244997123439365,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 883.6999999046329,
+            "transparentShell": false,
+            "selectedPart": "nuts",
+            "guided": true,
+            "guideElapsed": 875.6000000000004,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                10,
+                19.35
+              ],
+              "radius": 13.088926379046521
+            },
+            "focusTween": null,
+            "focusPart": "nuts",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 23
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 145.15764181688428,
+        "targetPixel": [
+          307.6875561650377,
+          208.99999050125476
+        ]
+      }
+    },
+    {
+      "name": "automatic focus frames screws",
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "4",
+          "guideElapsedMs": "906.000",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "screws",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.210827449383498]",
+          "dimensionLowerScreen": "[245.46694167307578,218.02520931921902]",
+          "dimensionUpperScreen": "[245.46694167307578,217.1939719632963]",
+          "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.189173",
+          "gapMm": "0.060827",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,9.997205000000001,23.437505]",
+          "cameraFitRadius": "14.36675822943362",
+          "cameraHalfHeight": "14.36675822943362",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "screws",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "916.300000",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.03902188688516617,
+          -0.013476572930812836,
+          -0.0035478912759572268,
+          0,
+          0.026696309447288513,
+          0.019698653370141983,
+          0.005185937974601984,
+          0,
+          0,
+          0.06538515537977219,
+          -0.002293630735948682,
+          0,
+          -2.257004499435425,
+          -1.0420912504196167,
+          -0.02115875482559204,
+          1
+        ],
+        "pixelHash": 4223583325,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.182,
+            "flange_gap_mm": 0.068,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "screws",
+            "guided_load_path": true,
+            "guide_step": 4,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  9.997205000000001,
+                  23.437505
+                ],
+                "radius": 14.36675822943362
+              },
+              "focus_part": "screws",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 0.7261062364185531,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 885.2999999523163,
+            "transparentShell": false,
+            "selectedPart": "screws",
+            "guided": true,
+            "guideElapsed": 875,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                9.997205000000001,
+                23.437505
+              ],
+              "radius": 14.36675822943362
+            },
+            "focusTween": null,
+            "focusPart": "screws",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 26
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 94.13941916301849,
+        "targetPixel": [
+          307.6875646131534,
+          209.0000183474064
+        ]
+      }
+    },
+    {
+      "name": "automatic focus frames lid",
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "5",
+          "guideElapsedMs": "906.400",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "lid",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.210150223962675]",
+          "dimensionLowerScreen": "[225.75334528076928,259.18260488025845]",
+          "dimensionUpperScreen": "[225.75334528076928,258.44245525134147]",
+          "highlightedMeshes": "[\"lid\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.189850",
+          "gapMm": "0.060150",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,13.5,25.8]",
+          "cameraFitRadius": "15.955188027723144",
+          "cameraHalfHeight": "15.955188027723144",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "lid",
+          "yaw": "0.600000",
+          "pitch": "0.350000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "919.100000",
+          "phase": "press",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 615.375,
+          "height": 418
+        },
+        "matrix": [
+          0.035137031227350235,
+          -0.01213490217924118,
+          -0.0035478912759572268,
+          0,
+          0.024038538336753845,
+          0.017737537622451782,
+          0.005185937974601984,
+          0,
+          0,
+          0.058875687420368195,
+          -0.002293630735948682,
+          0,
+          -2.116508960723877,
+          -1.1395695209503174,
+          -0.03390544652938843,
+          1
+        ],
+        "pixelHash": 926966462,
+        "guideChecked": true,
+        "guideStatus": "Repeating · automatic camera focus",
+        "detail": "Step 5 of 5 · Lid — At the stop, the screw heads bear downward on the lid. The lid provides an upward reaction and carries the load toward its enclosure attachments.",
+        "overflow": false,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.182,
+            "flange_gap_mm": 0.068,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "transparent_lid_and_stop_cup": false,
+            "selected_load_part": "lid",
+            "guided_load_path": true,
+            "guide_step": 5,
+            "camera": {
+              "rotation_deg": 34.38,
+              "tilt_deg": 20.05,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  13.5,
+                  25.8
+                ],
+                "radius": 15.955188027723144
+              },
+              "focus_part": "lid",
+              "manual_for_step": false
+            }
+          },
+          "privateContent": {
+            "version": 7,
+            "t": 0.7289113232476196,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 888.1000000476834,
+            "transparentShell": false,
+            "selectedPart": "lid",
+            "guided": true,
+            "guideElapsed": 875.3999999999996,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                13.5,
+                25.8
+              ],
+              "radius": 15.955188027723144
+            },
+            "focusTween": null,
+            "focusPart": "lid",
+            "manualCamera": false,
+            "camera": {
+              "yaw": 0.5999999999999996,
+              "pitch": 0.35,
+              "zoom": 1
+            },
+            "origin": "ptt-dtqg8cl4mtr",
+            "revision": 29
+          }
+        }
+      },
+      "coverage": {
+        "minimumMarginPx": 133.85793026676401,
+        "targetPixel": [
+          307.687469051918,
+          209.000008097291
+        ]
+      }
+    },
+    {
+      "name": "next guided step refocuses after manual interaction settles",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "2",
+        "guideElapsedMs": "906.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"left_cup_on_nut\",\"right_flange_on_cup\",\"right_cup_on_nut\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "stop_cup",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[221.4324348239461,205.2503441317007]",
+        "dimensionUpperScreen": "[221.4324348239461,205.2503441317007]",
+        "highlightedMeshes": "[\"stop_cup\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,13.15,22.075]",
+        "cameraFitRadius": "14.768799724842234",
+        "cameraHalfHeight": "14.768799724842234",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "stop_cup",
+        "yaw": "0.837758",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1867.600000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.030775289982557297,
+        -0.017254125326871872,
+        -0.004669498186558485,
+        0,
+        0.03417941927909851,
+        0.015535685233771801,
+        0.004204435274004936,
+        0,
+        0,
+        0.06360521912574768,
+        -0.002293630735948682,
+        0,
+        -2.0189990997314453,
+        -0.7284190058708191,
+        0.029474616050720215,
+        1
+      ],
+      "pixelHash": 52790116,
+      "guideChecked": true,
+      "guideStatus": "Repeating · automatic camera focus",
+      "detail": "Step 2 of 5 · Stop cup — At the stop, the shelf carries the flange’s downward load to the mounting ears, which bear down on the nuts.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "stop_cup",
+          "guided_load_path": true,
+          "guide_step": 2,
+          "camera": {
+            "rotation_deg": 48,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                13.15,
+                22.075
+              ],
+              "radius": 14.768799724842234
+            },
+            "focus_part": "stop_cup",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 1806.000000095366,
+          "transparentShell": false,
+          "selectedPart": "stop_cup",
+          "guided": true,
+          "guideElapsed": 875.1999999999989,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              13.15,
+              22.075
+            ],
+            "radius": 14.768799724842234
+          },
+          "focusTween": null,
+          "focusPart": "stop_cup",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.8377580409572776,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 33
+        }
+      }
+    },
+    {
+      "name": "active drag suppresses automatic framing at step boundary",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "2",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "stop_cup",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.399751996540704]",
+        "dimensionLowerScreen": "[268.2410271334229,172.31963195716963]",
+        "dimensionUpperScreen": "[268.2410271334229,170.90396322665978]",
+        "highlightedMeshes": "[\"stop_cup\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.000248",
+        "gapMm": "0.249752",
+        "view": "mechanism",
+        "playing": "true",
+        "cameraTarget": "[51,14,15.1]",
+        "cameraFitRadius": "22.513598024305224",
+        "cameraHalfHeight": "34.63630465277727",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "0.650000",
+        "activePointers": "1",
+        "speed": "1",
+        "cycleTime": "24.700000",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.01618584804236889,
+        -0.005589934065937996,
+        -0.0035478912759572268,
+        0,
+        0.011073335073888302,
+        0.008170784451067448,
+        0.005185937974601984,
+        0,
+        0,
+        0.0271210428327322,
+        -0.002293630735948682,
+        0,
+        -0.9805049896240234,
+        -0.23883207142353058,
+        -0.061040282249450684,
+        1
+      ],
+      "pixelHash": 3712990948,
+      "guideChecked": true,
+      "guideStatus": "Manual view · refocus next step",
+      "detail": "Step 2 of 5 · Stop cup — At the stop, the shelf carries the flange’s downward load to the mounting ears, which bear down on the nuts.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0,
+          "flange_gap_mm": 0.25,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "stop_cup",
+          "guided_load_path": true,
+          "guide_step": 2,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 0.65,
+            "focus_frame": null,
+            "focus_part": null,
+            "manual_for_step": true
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 0.0009920138371729496,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 24.69999995231592,
+          "transparentShell": false,
+          "selectedPart": "stop_cup",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": null,
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 0.65
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 35
+        }
+      }
+    },
+    {
+      "name": "focused layout 736 light",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[162.02352865808643,226.74481387399138]",
+        "dimensionUpperScreen": "[162.02352865808643,226.74481387399138]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,12,22.875]",
+        "cameraFitRadius": "7.759358160473069",
+        "cameraHalfHeight": "7.759358160473069",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "flange",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.07225055992603302,
+        -0.02495240792632103,
+        -0.0035478912759572268,
+        0,
+        0.0494292713701725,
+        0.03647283464670181,
+        0.005185937974601984,
+        0,
+        0,
+        0.12106320261955261,
+        -0.002293630735948682,
+        0,
+        -4.277929782867432,
+        -1.9344218969345093,
+        -0.03283536434173584,
+        1
+      ],
+      "pixelHash": 3106551603,
+      "guideChecked": true,
+      "guideStatus": "Paused with animation",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focus_part": "flange",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 1350,
+          "transparentShell": true,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              12,
+              22.875
+            ],
+            "radius": 7.759358160473069
+          },
+          "focusTween": null,
+          "focusPart": "flange",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 41
+        }
+      }
+    },
+    {
+      "name": "focused layout 736 dark",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "4",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "screws",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[245.46694167307578,218.02520931921902]",
+        "dimensionUpperScreen": "[245.46694167307578,218.02520931921902]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,9.997205000000001,23.437505]",
+        "cameraFitRadius": "14.36675822943362",
+        "cameraHalfHeight": "14.36675822943362",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "screws",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "canvas": {
+        "width": 615.375,
+        "height": 418
+      },
+      "matrix": [
+        0.03902188688516617,
+        -0.013476572930812836,
+        -0.0035478912759572268,
+        0,
+        0.026696309447288513,
+        0.019698653370141983,
+        0.005185937974601984,
+        0,
+        0,
+        0.06538515537977219,
+        -0.002293630735948682,
+        0,
+        -2.257004499435425,
+        -1.0420912504196167,
+        -0.02115875482559204,
+        1
+      ],
+      "pixelHash": 569122857,
+      "guideChecked": true,
+      "guideStatus": "Paused with animation",
+      "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "screws",
+          "guided_load_path": true,
+          "guide_step": 4,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                9.997205000000001,
+                23.437505
+              ],
+              "radius": 14.36675822943362
+            },
+            "focus_part": "screws",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 1350,
+          "transparentShell": true,
+          "selectedPart": "screws",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              9.997205000000001,
+              23.437505
+            ],
+            "radius": 14.36675822943362
+          },
+          "focusTween": null,
+          "focusPart": "screws",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 46
+        }
+      }
+    },
+    {
+      "name": "focused layout 320 dark",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[96.92771780490875,114.59108878858389]",
+        "dimensionUpperScreen": "[96.92771780490875,114.59108878858389]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,10,19.35]",
+        "cameraFitRadius": "13.088926379046521",
+        "cameraHalfHeight": "13.634298311506793",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "nuts",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.06305602192878723,
+        -0.014200558885931969,
+        -0.0035478912759572268,
+        0,
+        0.04313894361257553,
+        0.020756900310516357,
+        0.005185937974601984,
+        0,
+        0,
+        0.06889776885509491,
+        -0.002293630735948682,
+        0,
+        -3.6472463607788086,
+        -0.8165122866630554,
+        -0.030548512935638428,
+        1
+      ],
+      "pixelHash": 2777663250,
+      "guideChecked": true,
+      "guideStatus": "Paused with animation",
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                10,
+                19.35
+              ],
+              "radius": 13.088926379046521
+            },
+            "focus_part": "nuts",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 1350,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              10,
+              19.35
+            ],
+            "radius": 13.088926379046521
+          },
+          "focusTween": null,
+          "focusPart": "nuts",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 51
+        }
+      }
+    },
+    {
+      "name": "version 7 restores paused camera transition and resumes",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "249.700",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[109.15402230620384,123.49529178813101]",
+        "dimensionUpperScreen": "[109.15402230620384,123.49529178813101]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,13.623573091631119,16.563359606284024]",
+        "cameraFitRadius": "26.136545579447272",
+        "cameraHalfHeight": "27.225568311924242",
+        "cameraTransition": "true",
+        "manualCamera": "false",
+        "cameraFocusPart": "flange",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.1",
+        "cycleTime": "1374.970000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.031577836722135544,
+        -0.007111500948667526,
+        -0.0035478912759572268,
+        0,
+        0.02160356193780899,
+        0.010394852608442307,
+        0.005185937974601984,
+        0,
+        0,
+        0.03450332581996918,
+        -0.002293630735948682,
+        0,
+        -1.9047874212265015,
+        -0.3504194915294647,
+        -0.05573171377182007,
+        1
+      ],
+      "pixelHash": 112775676,
+      "guideChecked": true,
+      "guideStatus": "Paused with animation",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                13.623573091631119,
+                16.563359606284024
+              ],
+              "radius": 26.136545579447272
+            },
+            "focus_part": "flange",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 0.1,
+          "cycleTime": 1374.9700000047683,
+          "transparentShell": false,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 249.70000004768372,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              13.623573091631119,
+              16.563359606284024
+            ],
+            "radius": 26.136545579447272
+          },
+          "focusTween": {
+            "from": {
+              "target": [
+                51,
+                14,
+                15.1
+              ],
+              "radius": 34.63630465277727
+            },
+            "to": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "elapsed": 249.70000004768372,
+            "part": "flange"
+          },
+          "focusPart": "flange",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 53
+        }
+      }
+    },
+    {
+      "name": "legacy version 6 restores paused without autoplay",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_cup_on_nut\",\"left_nut_on_screw\",\"right_cup_on_nut\",\"right_nut_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "nuts",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[116.82157798111439,124.72740388009699]",
+        "dimensionUpperScreen": "[116.82157798111439,124.72740388009699]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "cameraTarget": "[51,14,15.1]",
+        "cameraFitRadius": "22.513598024305224",
+        "cameraHalfHeight": "36.07948401330966",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "0.650000",
+        "activePointers": "0",
+        "speed": "0.1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.023828627541661263,
+        -0.005366336554288864,
+        -0.0035478912759572268,
+        0,
+        0.016302041709423065,
+        0.007843952625989914,
+        0.005185937974601984,
+        0,
+        0,
+        0.026036201044917107,
+        -0.002293630735948682,
+        0,
+        -1.443488597869873,
+        -0.2292788028717041,
+        -0.061040282249450684,
+        1
+      ],
+      "pixelHash": 2963659755,
+      "guideChecked": true,
+      "guideStatus": "Paused with animation",
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focus_part": "flange",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 0.1,
+          "cycleTime": 1439.7500000000005,
+          "transparentShell": false,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 897.5,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              12,
+              22.875
+            ],
+            "radius": 7.759358160473069
+          },
+          "focusTween": null,
+          "focusPart": "flange",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 55
+        }
+      }
+    },
+    {
+      "name": "reduced motion uses immediate focus without camera flight",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "1",
+        "guideElapsedMs": "0.000",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_flange_on_cup\",\"right_flange_on_cup\"]",
+        "forceVisibleCount": "6",
+        "selectedPart": "flange",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[43.638251066207886,162.22609084099534]",
+        "dimensionUpperScreen": "[43.638251066207886,162.22609084099534]",
+        "highlightedMeshes": "[\"plunger\"]",
+        "highlightedFlangeLocalBounds": "[22.4,23.6]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,12,22.875]",
+        "cameraFitRadius": "7.759358160473069",
+        "cameraHalfHeight": "8.08266475049278",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "flange",
+        "yaw": "0.600000",
+        "pitch": "0.350000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.1",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.10636648535728455,
+        -0.02395430952310562,
+        -0.0035478912759572268,
+        0,
+        0.07276922464370728,
+        0.035013917833566666,
+        0.005185937974601984,
+        0,
+        0,
+        0.11622066795825958,
+        -0.002293630735948682,
+        0,
+        -6.297921180725098,
+        -1.8570449352264404,
+        -0.03283536434173584,
+        1
+      ],
+      "pixelHash": 2169420396,
+      "guideChecked": true,
+      "guideStatus": "Repeating · automatic camera focus",
+      "detail": "Step 1 of 5 · Flange — At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.",
+      "overflow": false,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.25,
+          "flange_gap_mm": 0,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": false,
+          "selected_load_part": "flange",
+          "guided_load_path": true,
+          "guide_step": 1,
+          "camera": {
+            "rotation_deg": 34.38,
+            "tilt_deg": 20.05,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                12,
+                22.875
+              ],
+              "radius": 7.759358160473069
+            },
+            "focus_part": "flange",
+            "manual_for_step": false
+          }
+        },
+        "privateContent": {
+          "version": 7,
+          "t": 1,
+          "closeup": false,
+          "speed": 0.1,
+          "cycleTime": 1350,
+          "transparentShell": false,
+          "selectedPart": "flange",
+          "guided": true,
+          "guideElapsed": 0,
+          "guideSawContact": true,
+          "focusFrame": {
+            "target": [
+              51,
+              12,
+              22.875
+            ],
+            "radius": 7.759358160473069
+          },
+          "focusTween": null,
+          "focusPart": "flange",
+          "manualCamera": false,
+          "camera": {
+            "yaw": 0.5999999999999996,
+            "pitch": 0.35,
+            "zoom": 1
+          },
+          "origin": "ptt-dtqg8cl4mtr",
+          "revision": 56
+        }
+      }
+    },
+    {
+      "name": "no JavaScript or WebGL errors"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\guided-camera-preview\\guided-camera-flange-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\guided-camera-preview\\guided-camera-screws-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\guided-camera-preview\\guided-camera-nuts-320-dark.png"
+  ]
+}

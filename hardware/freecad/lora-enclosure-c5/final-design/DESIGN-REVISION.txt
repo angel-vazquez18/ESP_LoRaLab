@@ -1,0 +1,71 @@
+LoRa enclosure C5 R1 - engineering revision record
+Date: 2026-11-24
+Units: millimetres. Source PCB revision remains C5, electrically unchanged.
+
+User requirements
+1. Bring the lid closer to the ESP32/Heltec display without loading its glass.
+2. Provide small direct microphone sound openings.
+3. Improve printability and prepare a Craftcloud prototype order.
+4. Supply actual-component assembly views, engineering drawings, BOM,
+   PCB Gerbers/drills, and a CNC-shop handoff.
+
+Native FreeCAD changes
+- Headroom above PCB top reduced from 16 to 13; PCB top Z8, seam Z21,
+  outer lid Z24.6. Main envelope 78.8 x 98.8 x 24.6.
+- OLED reference glass top Z19.998719: 1.001281 below lid underside plane.
+  Tallest modeled OLED screw leaves 0.698781 to actual lid geometry.
+  The glass remains unloaded; no window lens, gasket or glass preload added.
+- Existing central microphone hole changed from diameter 3 to 1.6.
+  Six parametric diameter-1.6 holes added at radius 2.6, 60-degree increments,
+  around (54.5,30.5). Seven holes total; minimum web 1.0; nominal open area
+  14.074 mm2. This is a clear air path, not a validated acoustic seal.
+- USB notch height now Headroom - USBBottomAbovePCB = 9.5, opening to seam
+  at Z21. The lid forms its roof, eliminating the base's former 16 mm bridge.
+- Lip clearance per side 0.3 -> 0.4; plunger guide radial clearance 0.3 -> 0.4
+  (diameter-8 shaft in diameter-8.8 hole). No universal fit guarantee implied.
+- Mounting insert selected: ruthex RX-M3x5x4, diameter 5 x length 4.
+  Its pilot is diameter 4.4 x depth 5, matching manufacturer's installation
+  diameter, length+1 depth and 1.3 minimum wall from the pilot in a diameter-7
+  boss. Pilot floor Z1.4; narrower screw relief floor remains Z1.2.
+- Closure screws changed from M3 x 25 to M3 x 22 ISO 4762 / DIN 912.
+  Under-head plane Z24.6, nominal tip Z2.6, 3.8 nominal insert engagement,
+  1.4 clearance above screw-relief floor. Standard heads are not recessed.
+- PTT stop, flange and M2 mounting hardware move with the lowered lid.
+  Nominal switch contact foot remains Z16.2 at release. Existing 0.2 free gap
+  plus provisional 0.25 switch depression gives 0.45 total movement to stop.
+  Stop shelf thickness remains 2; flange thickness remains 1.2.
+
+Parametric source
+cad/LoRa-Enclosure-C5-R1.FCStd contains native feature history and Parameters.
+Edit the parameter sheet and recompute; do not treat CSV as a live link.
+Core changed cells: B8=13, B12=4.4, B13=5, B17=0.4, B24=1.6, B29=0.4,
+B37=B8-B36. Added B70=2.6 microphone pattern radius, B71=4 actual insert
+length, B72=22 closure screw length (the latter two document hardware).
+Original sources were not overwritten. Original animation is a prior-revision
+educational visualization and is not a manufacturing reference for R1.
+
+Manufacturing decision
+Craftcloud primary: unfilled MJF PA12, standard cleaned/depowdered finish,
+one of each of four separate parts. No smoothing, coating or scaling without
+critical-fit review. PETG/FDM is an alternative requiring support/orientation
+review. The supplied neutral STL/3MF models contain no printer G-code.
+CNC alternative: per-part STEP and reference DXF drawings for shop quotation
+and process planning, with unfilled POM-C a candidate for shop review.
+No machine-specific toolpaths, speeds/feeds or workholding are asserted.
+
+Release scope
+Digital geometry and fabrication exports are checked. This is a first-article
+prototype order, not a physically qualified production assembly. Owned display
+mounting height, microphone port location, cable boots, switch actuation/travel,
+insert seating and delivered print tolerances must be checked on the prototype.
+Default service tolerances do not by themselves control the 0.25 mm stop travel.
+No load test, drop test, thermal qualification, RF test, acoustic performance,
+environmental sealing or ingress protection rating is claimed.
+
+Reference sources
+ruthex product: https://www.ruthex.de/en/products/ruthex-gewindeeinsatz-m3-100-stuck-made-for-voron-rx-m3x5x4-messing-gewindebuchsen-fur-3d-druck
+ruthex manufacturer drawing: https://www.igo3d.com/mediafiles/Sonstiges/Ruthex/ruthex_Datenblatt_RX-Serie.pdf
+M3 x 22 ISO4762 example: https://www.accu.co.uk/metric-cap-head-screws/2803-SSC-M3-22-A2
+Craftcloud PA12: https://craftcloud3d.com/en/material-guide/hp-mjf-nylon-pa12
+Craftcloud PETG: https://craftcloud3d.com/en/material-guide/petg
+POM machining: https://www.ensingerplastics.com/en/thermoplastic-materials/pom-acetal/pom-machining
