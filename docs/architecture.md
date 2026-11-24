@@ -297,3 +297,10 @@ and text/bitmap, `display/oled_panel` for bounded protocol writes and
 `platform/esp32_display` for an isolated one-slot worker. The control loop never
 performs or waits for display I/O. Current exact-profile worker health stays
 separate from physical pixel qualification. Board-derived pins/power are opt-in.
+
+`memory/observations` owns an opt-in finite 10 Hz observer with additional stage
+samples and distinct boot/measurement/workload minima. Each opaque module reports
+its own requested ranges through `memory/buffers`; composition classifies actual
+regions and avoids alias totals. NodeSession validates the independent supplement
+and keeps bounded recent evidence. See [named memory observations](memory_observations.md)
+for tracked/untracked scope and physical acceptance.

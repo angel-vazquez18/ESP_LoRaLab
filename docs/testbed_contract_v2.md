@@ -762,3 +762,13 @@ observation with exact supplement fingerprint, starting/ready/failure state and
 verified pixels. No display mutation command is added. Missing, incompatible or
 stale observations do not become ready. Static enrollment and existing wire
 profiles remain unchanged. See `oled_status.md` and `contracts/v2/oled_status.schema.json`.
+
+## Finite memory observation supplement
+
+`stage_memory_observation_v1` independently gates `memory.start`, `memory.status`
+and `memory.stop` plus typed `memory.sample` events. It reuses the control owner
+with bounded observation time; periodic 100 ms samples and additional stage
+samples preserve actual clocks, requested ownership, independent observed minima
+and missed/drop limitations. Read [memory observations](memory_observations.md)
+for exact fields, compatibility, untracked allocations and pending target checks.
+It does not imply support for the full execution run-spec memory flag.

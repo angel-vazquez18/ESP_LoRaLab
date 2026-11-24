@@ -1,8 +1,35 @@
 # Consolidated implementation status
 
-Updated November 23, 2026. The host is now physical-only by user decision, replacing
+Updated November 24, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 24 — Named sampled memory observations (#73)
+
+A finite optional observer now records actual 100 ms periodic and additional
+stage entry/exit snapshots, separate boot/measurement/workload minima, known
+nonoverlapping requested buffers and observed lifetimes. Actual address regions
+are classified as internal/PSRAM/unknown; addresses and payload bytes never enter
+JSON. Provider/DSP/DMA/task/JSON internals and between-sample peaks remain explicitly
+untracked. Missed periods, serialization/queue drops, allocation failures and host
+history truncation remain visible. Owner loss stops observation without resume;
+run close can leave it owned for a recovery window. Primary cleanup survives
+observation allocation failure.
+
+The independently gated stage_memory_observation_v1/4004d780… supplement adds
+memory.start/status/stop and typed events through NodeSession. Static radio board
+and IRQ references remain in enrollment, retaining current driver errors and
+exact typed gates within 4 KiB. Configured all-peripheral tests include active RF,
+a retained error and wide boot/clock fields. The procedure/plots follow #82/#88;
+the full execution run-spec memory flag remains unsupported.
+
+Twenty dedicated cases pass, including explicitly clocked 30-second idle/recovery
+windows; final full `make check` passes 828 cases without skips, lint/frontend/
+contracts/repository/vendor checks and frontend formatting. Selected V4.2/32 KiB
+IDF build passes: 0x711a0 bytes, 56% app free, 73,841 static DIRAM bytes. No flash,
+physical heap/stack/sampling-cost measurement or recovery qualification. Other
+wire hashes and all 19 original user files remain unchanged. See
+[memory reading order, limits and physical checks](memory_observations.md).
 
 ## November 23 — Reserved finite run lifecycle (#69)
 

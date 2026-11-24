@@ -112,3 +112,7 @@ Data and committed encoded voice share the [reserved run lifecycle](docs/run_lif
 prepare reserves working memory, both roles arm, sender start has a five-second
 window, and cleanup preserves original errors and committed evidence. New RF work
 requires matching `finite_message_execution_v2` host/firmware profiles.
+
+Optional [named memory observations](docs/memory_observations.md) collect bounded
+10 Hz and stage samples with separate observed minima, requested buffer ownership
+and explicit missed/dropped/untracked limits. Physical memory acceptance is pending.

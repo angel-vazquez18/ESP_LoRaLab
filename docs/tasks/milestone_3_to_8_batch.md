@@ -381,3 +381,16 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   files unchanged. No flash; calibration and physical acceptance remain open.
   PR #195 is ready (`feat/reserved-run-lifecycle` → `feat/actual-oled-status`),
   issue Testing, no agent merge. Next #73 named stage memory observations.
+
+- #73 implemented on #195: finite 10 Hz plus stage memory observations with
+  separate boot/measurement/workload minima, nonoverlapping requested ranges,
+  observed lifetimes, real internal/PSRAM classification and explicit unknown/
+  untracked scope. Drops/missed intervals and host retention loss stay distinct;
+  ownership loss/reconnect never resumes work. Primary audio/RF cleanup survives
+  observer failure. Static radio metadata remains in identity so full configured
+  health and live errors remain under 4 KiB. New independent memory profile
+  stage_memory_observation_v1/4004d780…; existing hashes unchanged. Full check 828
+  cases, no skips, all shared checks/formatting; 20 dedicated cases. V4.2/32 KiB
+  IDF 0x711a0/56% app free/73,841 static DIRAM. Original 19 files unchanged;
+  no flash or target memory qualification. Preparing PR, then #74 fixed-rate
+  encoded producer, bounded whole-message queue and actual consumer accounting.
