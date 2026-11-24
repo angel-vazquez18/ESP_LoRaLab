@@ -1,0 +1,19 @@
+C5 THROUGH-HOLE RESISTOR PROTOTYPE
+
+R8: EEEEE 1 kohm,0.5 W,5% carbon axial, horizontal.
+Reference body10x3.6mm; formed lead pitch15.24mm;1mm drills/2mm pads.
+The actual EEEEE body and lead dimensions remain unverified.
+SW1 is fitted. No other carrier passives or capacitor positions.
+
+ERC:0 violations. DRC:0 violations,0 unconnected,0 parity issues.
+Connectivity:518/518.
+Routing:26/26.
+BOM:52/52.
+116 track segments;38 vias.
+
+Top,bottom,isometric and combined3D PNG views regenerated from C5.
+Firmware remains unchanged: ENABLE_PTT=false.
+Physical component fit and assembled hardware operation remain untested.
+
+PCB SHA256:9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553
+SCH SHA256:221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6

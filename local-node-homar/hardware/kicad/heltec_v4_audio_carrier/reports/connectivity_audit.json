@@ -1,0 +1,4398 @@
+{
+  "checks_total": 518,
+  "checks_passed": 518,
+  "checks_failed": 0,
+  "source_sha256": {
+    "output\\heltec-v4-carrier-c5\\design\\electrical_manifest.json": "0753aa939866bb3899b8b8e908546fc2aad292d575f692d011a38ea5f0852389",
+    "output\\heltec-v4-carrier-c5\\design\\reports\\electrical.net.xml": "0b6c0859b961801219015633ef2f808b36f685b3dc08c3edeb4e49259a1e2b92",
+    "output\\heltec-v4-carrier-c5\\design\\heltec_v4_audio_carrier.kicad_pcb": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+    "output\\heltec-v4-carrier-c5\\design\\heltec_v4_audio_carrier.kicad_pro": "07af4ecf140bb01cadea140e10ed4ade6447a5c42611608bf7aaa03b1b89929f",
+    "output\\heltec-v4-carrier-c5\\design\\heltec_v4_audio_carrier.kicad_sch": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+    "output\\heltec-v4-carrier-c5\\design\\heltec_v4_audio_carrier.kicad_dru": "b46dcb26a4057ccf29bf3d3ee55f0f025343c75d60c4d9755e0509db14c6d1ed",
+    "output\\heltec-v4-carrier-c5\\design\\reports\\user_overrides.json": "aa78da67d8da879209856d44ebedde95f9a672ad1000fc6aef0db2e3e9526102",
+    "output\\heltec-v4-carrier-c5\\design\\reports\\user_measurements.json": "30f824be98b6ddf6124d53687443c12df18e83bb39685c5d07b1f95bea2333c1",
+    "output\\heltec-v4-carrier-c5\\design\\sources\\USER_OVERRIDES.md": "a24cbde252c7f809cb13d253ef4cdaa47b1ca8fa8dae7764b5bb16ca8792568c"
+  },
+  "independent_basis": "Original local design prompt and pins.h Heltec branch, independently viewed official V4 pinmap, subsequent module-image revisions, current C5 population and annotation requirements. R1-R7/R9-R11/C1-C5 remain absent; R8 and SW1 are fitted.",
+  "scope_limit": "Pass means audited electrical/serialized relationships only. Reference module pad locations are now present; exact owned-part fit, power margin, acoustic/RF clearance and hardware operation remain unverified.",
+  "pcb": {
+    "missing_module_pads": [],
+    "track_count": 116,
+    "zone_count": 6,
+    "zones": [
+      {
+        "name": "MIC_OPENING_REFERENCE_CLEARANCE",
+        "net": null,
+        "layers": [
+          "F.Cu",
+          "B.Cu",
+          "In1.Cu",
+          "In2.Cu"
+        ],
+        "is_keepout": true,
+        "filled_polygon_count": 0
+      },
+      {
+        "name": "PROVISIONAL_HELTEC_RF_PROJECTION",
+        "net": null,
+        "layers": [
+          "F.Cu",
+          "B.Cu",
+          "In1.Cu",
+          "In2.Cu"
+        ],
+        "is_keepout": true,
+        "filled_polygon_count": 0
+      },
+      {
+        "name": "DRAFT_GND_REFERENCE",
+        "net": "/GND",
+        "layers": [
+          "B.Cu"
+        ],
+        "is_keepout": false,
+        "filled_polygon_count": 1
+      },
+      {
+        "name": "DRAFT_GND_REFERENCE",
+        "net": "/GND",
+        "layers": [
+          "In1.Cu"
+        ],
+        "is_keepout": false,
+        "filled_polygon_count": 1
+      },
+      {
+        "name": "LOCAL_MIC_3V3",
+        "net": "/+3V3_MIC",
+        "layers": [
+          "In2.Cu"
+        ],
+        "is_keepout": false,
+        "filled_polygon_count": 1
+      },
+      {
+        "name": "DRAFT_GND_REFERENCE",
+        "net": "/GND",
+        "layers": [
+          "In2.Cu"
+        ],
+        "is_keepout": false,
+        "filled_polygon_count": 2
+      }
+    ],
+    "external_only_nets": [
+      "SPK_P",
+      "SPK_N"
+    ],
+    "reference_footprint_fit_pending": [
+      "U1 header/body registration and actual pin fit",
+      "U2 community-reference geometry and acoustic alignment",
+      "JAMP1 header/body datum and pin fit",
+      "SW1 generic reference contact pattern vs owned OCR part"
+    ],
+    "fabrication_status": "PHYSICAL FIT/RF HOLD: online-reference footprints provide routable geometry, but exact owned module/switch fit, acoustic alignment, standoff, USB clearance and engineering antenna reservation still require verification. Routing completion is assessed in routing_audit.json and native DRC. Speaker remains external with no carrier speaker copper."
+  },
+  "checks": [
+    {
+      "check": "Unique Heltec36pin IDs",
+      "passed": true,
+      "evidence": [
+        "J2_01",
+        "J2_02",
+        "J2_03",
+        "J2_04",
+        "J2_05",
+        "J2_06",
+        "J2_07",
+        "J2_08",
+        "J2_09",
+        "J2_10",
+        "J2_11",
+        "J2_12",
+        "J2_13",
+        "J2_14",
+        "J2_15",
+        "J2_16",
+        "J2_17",
+        "J2_18",
+        "J3_01",
+        "J3_02",
+        "J3_03",
+        "J3_04",
+        "J3_05",
+        "J3_06",
+        "J3_07",
+        "J3_08",
+        "J3_09",
+        "J3_10",
+        "J3_11",
+        "J3_12",
+        "J3_13",
+        "J3_14",
+        "J3_15",
+        "J3_16",
+        "J3_17",
+        "J3_18"
+      ]
+    },
+    {
+      "check": "U1 J2_01 intended net",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "U1 J2_02 intended net",
+      "passed": true,
+      "evidence": "+5V_AMP"
+    },
+    {
+      "check": "U1 J2_03 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_04 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_05 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_06 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_07 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_08 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_09 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_10 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_11 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_12 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_13 intended net",
+      "passed": true,
+      "evidence": "AMP_DATA"
+    },
+    {
+      "check": "U1 J2_14 intended net",
+      "passed": true,
+      "evidence": "AMP_SD"
+    },
+    {
+      "check": "U1 J2_15 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_16 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_17 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J2_18 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_01 intended net",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "U1 J3_02 intended net",
+      "passed": true,
+      "evidence": "+3V3_MIC"
+    },
+    {
+      "check": "U1 J3_03 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_04 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_05 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_06 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_07 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_08 intended net",
+      "passed": true,
+      "evidence": "AMP_WS"
+    },
+    {
+      "check": "U1 J3_09 intended net",
+      "passed": true,
+      "evidence": "AMP_BCLK"
+    },
+    {
+      "check": "U1 J3_10 intended net",
+      "passed": true,
+      "evidence": "PTT_N"
+    },
+    {
+      "check": "U1 J3_11 intended net",
+      "passed": true,
+      "evidence": "MIC_DATA"
+    },
+    {
+      "check": "U1 J3_12 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_13 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_14 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_15 intended net",
+      "passed": true,
+      "evidence": "MIC_BCLK"
+    },
+    {
+      "check": "U1 J3_16 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "U1 J3_17 intended net",
+      "passed": true,
+      "evidence": "MIC_WS"
+    },
+    {
+      "check": "U1 J3_18 intended net",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "check": "Official pin identity J3_01",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Official pin identity J3_02",
+      "passed": true,
+      "evidence": "3V3"
+    },
+    {
+      "check": "Official pin identity J3_03",
+      "passed": true,
+      "evidence": "3V3"
+    },
+    {
+      "check": "Official pin identity J3_04",
+      "passed": true,
+      "evidence": "GPIO37_ADC_CTRL"
+    },
+    {
+      "check": "Official pin identity J3_05",
+      "passed": true,
+      "evidence": "GPIO46"
+    },
+    {
+      "check": "Official pin identity J3_06",
+      "passed": true,
+      "evidence": "GPIO45"
+    },
+    {
+      "check": "Official pin identity J3_07",
+      "passed": true,
+      "evidence": "GPIO42_GNSS_RST"
+    },
+    {
+      "check": "Official pin identity J3_08",
+      "passed": true,
+      "evidence": "GPIO41"
+    },
+    {
+      "check": "Official pin identity J3_09",
+      "passed": true,
+      "evidence": "GPIO40"
+    },
+    {
+      "check": "Official pin identity J3_10",
+      "passed": true,
+      "evidence": "GPIO39"
+    },
+    {
+      "check": "Official pin identity J3_11",
+      "passed": true,
+      "evidence": "GPIO38"
+    },
+    {
+      "check": "Official pin identity J3_12",
+      "passed": true,
+      "evidence": "GPIO1_VBAT_READ"
+    },
+    {
+      "check": "Official pin identity J3_13",
+      "passed": true,
+      "evidence": "GPIO2_FEM_EN"
+    },
+    {
+      "check": "Official pin identity J3_14",
+      "passed": true,
+      "evidence": "GPIO3"
+    },
+    {
+      "check": "Official pin identity J3_15",
+      "passed": true,
+      "evidence": "GPIO4"
+    },
+    {
+      "check": "Official pin identity J3_16",
+      "passed": true,
+      "evidence": "GPIO5_FEM"
+    },
+    {
+      "check": "Official pin identity J3_17",
+      "passed": true,
+      "evidence": "GPIO6"
+    },
+    {
+      "check": "Official pin identity J3_18",
+      "passed": true,
+      "evidence": "GPIO7_FEM_CTRL"
+    },
+    {
+      "check": "Official pin identity J2_01",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Official pin identity J2_02",
+      "passed": true,
+      "evidence": "5V_USB"
+    },
+    {
+      "check": "Official pin identity J2_03",
+      "passed": true,
+      "evidence": "Ve"
+    },
+    {
+      "check": "Official pin identity J2_04",
+      "passed": true,
+      "evidence": "Ve"
+    },
+    {
+      "check": "Official pin identity J2_05",
+      "passed": true,
+      "evidence": "GPIO44_UART_RX"
+    },
+    {
+      "check": "Official pin identity J2_06",
+      "passed": true,
+      "evidence": "GPIO43_UART_TX"
+    },
+    {
+      "check": "Official pin identity J2_07",
+      "passed": true,
+      "evidence": "RST_CHIP_PU"
+    },
+    {
+      "check": "Official pin identity J2_08",
+      "passed": true,
+      "evidence": "GPIO0_BOOT"
+    },
+    {
+      "check": "Official pin identity J2_09",
+      "passed": true,
+      "evidence": "GPIO36_VEXT_CTRL"
+    },
+    {
+      "check": "Official pin identity J2_10",
+      "passed": true,
+      "evidence": "GPIO35_LED"
+    },
+    {
+      "check": "Official pin identity J2_11",
+      "passed": true,
+      "evidence": "GPIO34"
+    },
+    {
+      "check": "Official pin identity J2_12",
+      "passed": true,
+      "evidence": "GPIO33"
+    },
+    {
+      "check": "Official pin identity J2_13",
+      "passed": true,
+      "evidence": "GPIO47"
+    },
+    {
+      "check": "Official pin identity J2_14",
+      "passed": true,
+      "evidence": "GPIO48"
+    },
+    {
+      "check": "Official pin identity J2_15",
+      "passed": true,
+      "evidence": "GPIO26"
+    },
+    {
+      "check": "Official pin identity J2_16",
+      "passed": true,
+      "evidence": "GPIO21_OLED_RST"
+    },
+    {
+      "check": "Official pin identity J2_17",
+      "passed": true,
+      "evidence": "GPIO20_USB_D+"
+    },
+    {
+      "check": "Official pin identity J2_18",
+      "passed": true,
+      "evidence": "GPIO19_USB_D-"
+    },
+    {
+      "check": "MIC_BCLK direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "MIC_BCLK",
+        "endpoint": "MIC_BCLK"
+      }
+    },
+    {
+      "check": "MIC_WS direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "MIC_WS",
+        "endpoint": "MIC_WS"
+      }
+    },
+    {
+      "check": "MIC_DATA direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "MIC_DATA",
+        "endpoint": "MIC_DATA"
+      }
+    },
+    {
+      "check": "AMP_BCLK direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "AMP_BCLK",
+        "endpoint": "AMP_BCLK"
+      }
+    },
+    {
+      "check": "AMP_WS direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "AMP_WS",
+        "endpoint": "AMP_WS"
+      }
+    },
+    {
+      "check": "AMP_DATA direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "AMP_DATA",
+        "endpoint": "AMP_DATA"
+      }
+    },
+    {
+      "check": "AMP_SD direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "AMP_SD",
+        "endpoint": "AMP_SD"
+      }
+    },
+    {
+      "check": "PTT_N direct topology",
+      "passed": true,
+      "evidence": {
+        "Heltec": "PTT_N",
+        "endpoint": "PTT_N"
+      }
+    },
+    {
+      "check": "No unused optional or link components",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Only carrier resistor is R8; no carrier capacitors",
+      "passed": true,
+      "evidence": [
+        "R8"
+      ]
+    },
+    {
+      "check": "Common ground U1.J3_01",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground U1.J2_01",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground U2.GND",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground U2.LR",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground U3.GND",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground U3.GAIN",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Common ground SW1.2",
+      "passed": true,
+      "evidence": "GND"
+    },
+    {
+      "check": "Mic supply3V3",
+      "passed": true,
+      "evidence": "+3V3_MIC"
+    },
+    {
+      "check": "Amp supply5V direct from USB-derived header",
+      "passed": true,
+      "evidence": [
+        "+5V_AMP",
+        "+5V_AMP",
+        "+5V_AMP"
+      ]
+    },
+    {
+      "check": "Single SD pulldown",
+      "passed": true,
+      "evidence": {
+        "reference": "R8",
+        "symbol": "Carrier:R",
+        "value": "1k",
+        "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+        "dnp": false,
+        "on_board": true,
+        "in_bom": true,
+        "connection": "CARRIER",
+        "population": "FIT",
+        "rating": "EEEEE carbon axial; 0.5W; 5%",
+        "note": "EEEEE 1k 0.5W 5% carbon axial SD_MODE pulldown. Form leads to15.24mm pitch; representative10x3.6mm body,1.0mm drills. Verify actual fit.",
+        "datasheet": "",
+        "uuid": "9cd31427-2900-5f1f-892b-e01fbbe8ad49",
+        "pins": {
+          "1": "AMP_SD",
+          "2": "GND"
+        },
+        "pin_names": {
+          "1": "~",
+          "2": "~"
+        }
+      }
+    },
+    {
+      "check": "PTT switch fitted per user request",
+      "passed": true,
+      "evidence": "FIT"
+    },
+    {
+      "check": "Direct off-board bridge speaker outputP",
+      "passed": true,
+      "evidence": [
+        "SPK_P",
+        "SPK_P"
+      ]
+    },
+    {
+      "check": "Direct off-board bridge speaker outputN",
+      "passed": true,
+      "evidence": [
+        "SPK_N",
+        "SPK_N"
+      ]
+    },
+    {
+      "check": "No merged speaker outputs",
+      "passed": true,
+      "evidence": {
+        "1": "SPK_P",
+        "2": "SPK_N"
+      }
+    },
+    {
+      "check": "Removed carrier speaker and PTT connectors",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Speaker remains in BOM but off PCB",
+      "passed": true,
+      "evidence": {
+        "reference": "LS1",
+        "symbol": "Carrier:Speaker_External",
+        "value": "Existing speaker",
+        "footprint": "",
+        "dnp": false,
+        "on_board": false,
+        "in_bom": true,
+        "connection": "OFF-BOARD: DIRECT WIRES TO U3 SPEAKER TERMINALS",
+        "population": "EXISTING / EXTERNAL WIRES",
+        "rating": "8 ohm nominal; verify actual speaker power rating",
+        "note": "Existing off-board speaker. Direct insulated wires from U3 SPK+/SPK- terminals to LS1; no carrier connector, copper route or mounting reservation. Neither terminal is GND.",
+        "datasheet": "",
+        "uuid": "d63df815-ed35-54f4-a705-1ec959af15bf",
+        "pins": {
+          "1": "SPK_P",
+          "2": "SPK_N"
+        },
+        "pin_names": {
+          "1": "+",
+          "2": "-"
+        }
+      }
+    },
+    {
+      "check": "Amplifier daughterboard logical symbol off PCB and in BOM",
+      "passed": true,
+      "evidence": {
+        "reference": "U3",
+        "symbol": "Carrier:MAX98357A_PURPLE_MODULE",
+        "value": "Purple MAX98357A daughterboard",
+        "footprint": "",
+        "dnp": false,
+        "on_board": false,
+        "in_bom": true,
+        "connection": "DAUGHTERBOARD: SOLDERED TO CARRIER THROUGH JAMP1",
+        "population": "EXISTING / MOUNT VIA JAMP1",
+        "rating": "",
+        "note": "U3 is mechanically mounted on the carrier through soldered JAMP1. CAD off-board flag means daughterboard circuitry is not a separate carrier footprint. GAIN to GND retains RevB +12dB. Inspect actual module SD pull-up/straps and bypass; generic example R1 population is unverified. One external R8 pulldown only. Speaker wires attach directly to U3 terminals.",
+        "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf",
+        "uuid": "aa9ee4ab-bb6b-5622-864c-2cec85679b14",
+        "pins": {
+          "VIN": "+5V_AMP",
+          "BCLK": "AMP_BCLK",
+          "LRC": "AMP_WS",
+          "DIN": "AMP_DATA",
+          "SD_MODE": "AMP_SD",
+          "GAIN": "GND",
+          "GND": "GND",
+          "SPK_P": "SPK_P",
+          "SPK_N": "SPK_N"
+        },
+        "pin_names": {
+          "VIN": "VIN",
+          "BCLK": "BCLK",
+          "LRC": "LRC",
+          "DIN": "DIN",
+          "SD_MODE": "SD_MODE",
+          "GAIN": "GAIN",
+          "GND": "GND",
+          "SPK_P": "SPK+",
+          "SPK_N": "SPK-"
+        }
+      }
+    },
+    {
+      "check": "Only logical amplifier and external speaker excluded from PCB",
+      "passed": true,
+      "evidence": [
+        "LS1",
+        "U3"
+      ]
+    },
+    {
+      "check": "Amplifier carrier header has seven numeric pins",
+      "passed": true,
+      "evidence": {
+        "1": "+5V_AMP",
+        "2": "GND",
+        "3": "AMP_SD",
+        "4": "GND",
+        "5": "AMP_DATA",
+        "6": "AMP_BCLK",
+        "7": "AMP_WS"
+      }
+    },
+    {
+      "check": "JAMP1.1 matches pictured amp VIN",
+      "passed": true,
+      "evidence": {
+        "header": "+5V_AMP",
+        "module": "+5V_AMP"
+      }
+    },
+    {
+      "check": "JAMP1.2 matches pictured amp GND",
+      "passed": true,
+      "evidence": {
+        "header": "GND",
+        "module": "GND"
+      }
+    },
+    {
+      "check": "JAMP1.3 matches pictured amp SD_MODE",
+      "passed": true,
+      "evidence": {
+        "header": "AMP_SD",
+        "module": "AMP_SD"
+      }
+    },
+    {
+      "check": "JAMP1.4 matches pictured amp GAIN",
+      "passed": true,
+      "evidence": {
+        "header": "GND",
+        "module": "GND"
+      }
+    },
+    {
+      "check": "JAMP1.5 matches pictured amp DIN",
+      "passed": true,
+      "evidence": {
+        "header": "AMP_DATA",
+        "module": "AMP_DATA"
+      }
+    },
+    {
+      "check": "JAMP1.6 matches pictured amp BCLK",
+      "passed": true,
+      "evidence": {
+        "header": "AMP_BCLK",
+        "module": "AMP_BCLK"
+      }
+    },
+    {
+      "check": "JAMP1.7 matches pictured amp LRC",
+      "passed": true,
+      "evidence": {
+        "header": "AMP_WS",
+        "module": "AMP_WS"
+      }
+    },
+    {
+      "check": "SW1 represented as fitted onboard switch",
+      "passed": true,
+      "evidence": {
+        "reference": "SW1",
+        "symbol": "Carrier:SW_NO_Logical",
+        "value": "PTT 6x6x8mm",
+        "footprint": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING",
+        "dnp": false,
+        "on_board": true,
+        "in_bom": true,
+        "connection": "CARRIER",
+        "population": "FIT",
+        "rating": "Exact switch contact rating pending verification",
+        "note": "Normally-open 6x6x8mm PTT switch. GPIO39/PTT_N to GND; use INPUT_PULLUP. Reference contact grid 6.5x4.5mm; verify actual fit and contact pairing.",
+        "datasheet": "https://www.amazon.com/dp/B01MRP025V",
+        "uuid": "e1e9c26a-7696-5f15-a5ef-3298fed16b17",
+        "pins": {
+          "1": "PTT_N",
+          "2": "GND"
+        },
+        "pin_names": {
+          "1": "~",
+          "2": "~"
+        }
+      }
+    },
+    {
+      "check": "Only speaker bridge nets external-only",
+      "passed": true,
+      "evidence": [
+        "SPK_P",
+        "SPK_N"
+      ]
+    },
+    {
+      "check": "Required accessible test nets present",
+      "passed": true,
+      "evidence": [
+        "+3V3_MIC",
+        "+5V_AMP",
+        "AMP_BCLK",
+        "AMP_DATA",
+        "AMP_SD",
+        "AMP_WS",
+        "GND",
+        "MIC_BCLK",
+        "MIC_DATA",
+        "MIC_WS",
+        "PTT_N"
+      ]
+    },
+    {
+      "check": "No microphone/amplifier clock merging",
+      "passed": true,
+      "evidence": [
+        "MIC_BCLK",
+        "MIC_WS",
+        "AMP_BCLK",
+        "AMP_WS"
+      ]
+    },
+    {
+      "check": "No DNP components remain",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Native LS1 excluded from PCB but retained in BOM",
+      "passed": true,
+      "evidence": [
+        "Connection",
+        "Population",
+        "Rating",
+        "Sheetfile",
+        "Sheetname",
+        "exclude_from_board"
+      ]
+    },
+    {
+      "check": "Native U3 daughterboard excluded from PCB but retained in BOM",
+      "passed": true,
+      "evidence": [
+        "Connection",
+        "Population",
+        "Rating",
+        "Sheetfile",
+        "Sheetname",
+        "exclude_from_board"
+      ]
+    },
+    {
+      "check": "Native SW1 fitted and on PCB",
+      "passed": true,
+      "evidence": [
+        "Connection",
+        "Population",
+        "Rating",
+        "Sheetfile",
+        "Sheetname"
+      ]
+    },
+    {
+      "check": "Exported schematic U1.J3_01",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_02",
+      "passed": true,
+      "evidence": {
+        "expected": "+3V3_MIC",
+        "actual": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_03",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-3V3-PadJ3_03)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_04",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_05",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO46-PadJ3_05)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_06",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO45-PadJ3_06)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_07",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_08",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_WS",
+        "actual": "/AMP_WS"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_09",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_BCLK",
+        "actual": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_10",
+      "passed": true,
+      "evidence": {
+        "expected": "PTT_N",
+        "actual": "/PTT_N"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_11",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_DATA",
+        "actual": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_12",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_13",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_14",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO3-PadJ3_14)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_15",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_BCLK",
+        "actual": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_16",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO5_FEM-PadJ3_16)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_17",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_WS",
+        "actual": "/MIC_WS"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J3_18",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_01",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_02",
+      "passed": true,
+      "evidence": {
+        "expected": "+5V_AMP",
+        "actual": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_03",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-Ve-PadJ2_03)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_04",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-Ve-PadJ2_04)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_05",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO44_UART_RX-PadJ2_05)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_06",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO43_UART_TX-PadJ2_06)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_07",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-RST_CHIP_PU-PadJ2_07)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_08",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO0_BOOT-PadJ2_08)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_09",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_10",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO35_LED-PadJ2_10)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_11",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO34-PadJ2_11)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_12",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO33-PadJ2_12)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_13",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_DATA",
+        "actual": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_14",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_SD",
+        "actual": "/AMP_SD"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_15",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO26-PadJ2_15)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_16",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_17",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO20_USB_D+-PadJ2_17)"
+      }
+    },
+    {
+      "check": "Exported schematic U1.J2_18",
+      "passed": true,
+      "evidence": {
+        "expected": null,
+        "actual": "unconnected-(U1-GPIO19_USB_D--PadJ2_18)"
+      }
+    },
+    {
+      "check": "Exported schematic U2.VDD",
+      "passed": true,
+      "evidence": {
+        "expected": "+3V3_MIC",
+        "actual": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "Exported schematic U2.SCK",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_BCLK",
+        "actual": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic U2.WS",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_WS",
+        "actual": "/MIC_WS"
+      }
+    },
+    {
+      "check": "Exported schematic U2.SD",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_DATA",
+        "actual": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic U2.LR",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic U2.GND",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.1",
+      "passed": true,
+      "evidence": {
+        "expected": "+5V_AMP",
+        "actual": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.2",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.3",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_SD",
+        "actual": "/AMP_SD"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.4",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.5",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_DATA",
+        "actual": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.6",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_BCLK",
+        "actual": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic JAMP1.7",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_WS",
+        "actual": "/AMP_WS"
+      }
+    },
+    {
+      "check": "Exported schematic U3.VIN",
+      "passed": true,
+      "evidence": {
+        "expected": "+5V_AMP",
+        "actual": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "Exported schematic U3.BCLK",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_BCLK",
+        "actual": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic U3.LRC",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_WS",
+        "actual": "/AMP_WS"
+      }
+    },
+    {
+      "check": "Exported schematic U3.DIN",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_DATA",
+        "actual": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic U3.SD_MODE",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_SD",
+        "actual": "/AMP_SD"
+      }
+    },
+    {
+      "check": "Exported schematic U3.GAIN",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic U3.GND",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic U3.SPK_P",
+      "passed": true,
+      "evidence": {
+        "expected": "SPK_P",
+        "actual": "/SPK_P"
+      }
+    },
+    {
+      "check": "Exported schematic U3.SPK_N",
+      "passed": true,
+      "evidence": {
+        "expected": "SPK_N",
+        "actual": "/SPK_N"
+      }
+    },
+    {
+      "check": "Exported schematic LS1.1",
+      "passed": true,
+      "evidence": {
+        "expected": "SPK_P",
+        "actual": "/SPK_P"
+      }
+    },
+    {
+      "check": "Exported schematic LS1.2",
+      "passed": true,
+      "evidence": {
+        "expected": "SPK_N",
+        "actual": "/SPK_N"
+      }
+    },
+    {
+      "check": "Exported schematic R8.1",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_SD",
+        "actual": "/AMP_SD"
+      }
+    },
+    {
+      "check": "Exported schematic R8.2",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic SW1.1",
+      "passed": true,
+      "evidence": {
+        "expected": "PTT_N",
+        "actual": "/PTT_N"
+      }
+    },
+    {
+      "check": "Exported schematic SW1.2",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic TP1.1",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic TP2.1",
+      "passed": true,
+      "evidence": {
+        "expected": "+3V3_MIC",
+        "actual": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "Exported schematic TP3.1",
+      "passed": true,
+      "evidence": {
+        "expected": "+5V_AMP",
+        "actual": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "Exported schematic TP4.1",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_BCLK",
+        "actual": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic TP5.1",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_WS",
+        "actual": "/MIC_WS"
+      }
+    },
+    {
+      "check": "Exported schematic TP6.1",
+      "passed": true,
+      "evidence": {
+        "expected": "MIC_DATA",
+        "actual": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic TP7.1",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_BCLK",
+        "actual": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "Exported schematic TP8.1",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_WS",
+        "actual": "/AMP_WS"
+      }
+    },
+    {
+      "check": "Exported schematic TP9.1",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_DATA",
+        "actual": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "Exported schematic TP10.1",
+      "passed": true,
+      "evidence": {
+        "expected": "AMP_SD",
+        "actual": "/AMP_SD"
+      }
+    },
+    {
+      "check": "Exported schematic TP11.1",
+      "passed": true,
+      "evidence": {
+        "expected": "PTT_N",
+        "actual": "/PTT_N"
+      }
+    },
+    {
+      "check": "Exported schematic TP12.1",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "Exported schematic TP13.1",
+      "passed": true,
+      "evidence": {
+        "expected": "GND",
+        "actual": "/GND"
+      }
+    },
+    {
+      "check": "No unexpected exported components/pins except power flags",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "SPK_P solely amp-to-offboard speaker",
+      "passed": true,
+      "evidence": [
+        [
+          "LS1",
+          "1"
+        ],
+        [
+          "U3",
+          "SPK_P"
+        ]
+      ]
+    },
+    {
+      "check": "SPK_N solely amp-to-offboard speaker",
+      "passed": true,
+      "evidence": [
+        [
+          "LS1",
+          "2"
+        ],
+        [
+          "U3",
+          "SPK_N"
+        ]
+      ]
+    },
+    {
+      "check": "PCB all on-board schematic refs represented",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "PCB refs exactly match C5 electrical and mounting set",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "PCB deleted passive footprints absent",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "PCB omits logical U3 LS1 and removed carrier connectors",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "No carrier speaker pads tracks vias or zones",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Old25x25speaker reservation removed",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "PCB U1 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB U1 component side front",
+      "passed": true,
+      "evidence": [
+        "layer",
+        "F.Cu"
+      ]
+    },
+    {
+      "check": "PCB U1 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "J2_01",
+          "J2_02",
+          "J2_03",
+          "J2_04",
+          "J2_05",
+          "J2_06",
+          "J2_07",
+          "J2_08",
+          "J2_09",
+          "J2_10",
+          "J2_11",
+          "J2_12",
+          "J2_13",
+          "J2_14",
+          "J2_15",
+          "J2_16",
+          "J2_17",
+          "J2_18",
+          "J3_01",
+          "J3_02",
+          "J3_03",
+          "J3_04",
+          "J3_05",
+          "J3_06",
+          "J3_07",
+          "J3_08",
+          "J3_09",
+          "J3_10",
+          "J3_11",
+          "J3_12",
+          "J3_13",
+          "J3_14",
+          "J3_15",
+          "J3_16",
+          "J3_17",
+          "J3_18"
+        ],
+        "expected": [
+          "J2_01",
+          "J2_02",
+          "J2_03",
+          "J2_04",
+          "J2_05",
+          "J2_06",
+          "J2_07",
+          "J2_08",
+          "J2_09",
+          "J2_10",
+          "J2_11",
+          "J2_12",
+          "J2_13",
+          "J2_14",
+          "J2_15",
+          "J2_16",
+          "J2_17",
+          "J2_18",
+          "J3_01",
+          "J3_02",
+          "J3_03",
+          "J3_04",
+          "J3_05",
+          "J3_06",
+          "J3_07",
+          "J3_08",
+          "J3_09",
+          "J3_10",
+          "J3_11",
+          "J3_12",
+          "J3_13",
+          "J3_14",
+          "J3_15",
+          "J3_16",
+          "J3_17",
+          "J3_18"
+        ]
+      }
+    },
+    {
+      "check": "PCB U1.J2_01 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_01",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB U1.J2_02 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "expected": "+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_02",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "exported": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB U1.J2_03 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-Ve-PadJ2_03)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_03",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-Ve-PadJ2_03)",
+        "exported": "unconnected-(U1-Ve-PadJ2_03)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_04 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-Ve-PadJ2_04)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_04",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-Ve-PadJ2_04)",
+        "exported": "unconnected-(U1-Ve-PadJ2_04)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_05 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO44_UART_RX-PadJ2_05)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_05",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO44_UART_RX-PadJ2_05)",
+        "exported": "unconnected-(U1-GPIO44_UART_RX-PadJ2_05)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_06 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO43_UART_TX-PadJ2_06)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_06",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO43_UART_TX-PadJ2_06)",
+        "exported": "unconnected-(U1-GPIO43_UART_TX-PadJ2_06)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_07 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-RST_CHIP_PU-PadJ2_07)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_07",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-RST_CHIP_PU-PadJ2_07)",
+        "exported": "unconnected-(U1-RST_CHIP_PU-PadJ2_07)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_08 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO0_BOOT-PadJ2_08)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_08",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO0_BOOT-PadJ2_08)",
+        "exported": "unconnected-(U1-GPIO0_BOOT-PadJ2_08)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_09 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_09",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)",
+        "exported": "unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_10 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO35_LED-PadJ2_10)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_10",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO35_LED-PadJ2_10)",
+        "exported": "unconnected-(U1-GPIO35_LED-PadJ2_10)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_11 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO34-PadJ2_11)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_11",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO34-PadJ2_11)",
+        "exported": "unconnected-(U1-GPIO34-PadJ2_11)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_12 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO33-PadJ2_12)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_12",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO33-PadJ2_12)",
+        "exported": "unconnected-(U1-GPIO33-PadJ2_12)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_13 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "expected": "AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_13",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "exported": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB U1.J2_14 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "expected": "AMP_SD"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_14",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "exported": "/AMP_SD"
+      }
+    },
+    {
+      "check": "PCB U1.J2_15 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO26-PadJ2_15)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_15",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO26-PadJ2_15)",
+        "exported": "unconnected-(U1-GPIO26-PadJ2_15)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_16 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_16",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)",
+        "exported": "unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_17 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO20_USB_D+-PadJ2_17)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_17",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO20_USB_D+-PadJ2_17)",
+        "exported": "unconnected-(U1-GPIO20_USB_D+-PadJ2_17)"
+      }
+    },
+    {
+      "check": "PCB U1.J2_18 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO19_USB_D--PadJ2_18)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J2_18",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO19_USB_D--PadJ2_18)",
+        "exported": "unconnected-(U1-GPIO19_USB_D--PadJ2_18)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_01 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_01",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB U1.J3_02 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "expected": "+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_02",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "exported": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB U1.J3_03 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-3V3-PadJ3_03)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_03",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-3V3-PadJ3_03)",
+        "exported": "unconnected-(U1-3V3-PadJ3_03)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_04 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_04",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)",
+        "exported": "unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_05 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO46-PadJ3_05)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_05",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO46-PadJ3_05)",
+        "exported": "unconnected-(U1-GPIO46-PadJ3_05)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_06 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO45-PadJ3_06)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_06",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO45-PadJ3_06)",
+        "exported": "unconnected-(U1-GPIO45-PadJ3_06)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_07 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_07",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)",
+        "exported": "unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_08 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "expected": "AMP_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_08",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "exported": "/AMP_WS"
+      }
+    },
+    {
+      "check": "PCB U1.J3_09 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "expected": "AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_09",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "exported": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB U1.J3_10 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "expected": "PTT_N"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_10",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "exported": "/PTT_N"
+      }
+    },
+    {
+      "check": "PCB U1.J3_11 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "expected": "MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_11",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "exported": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB U1.J3_12 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_12",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)",
+        "exported": "unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_13 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_13",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)",
+        "exported": "unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_14 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO3-PadJ3_14)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_14",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO3-PadJ3_14)",
+        "exported": "unconnected-(U1-GPIO3-PadJ3_14)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_15 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "expected": "MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_15",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "exported": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB U1.J3_16 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO5_FEM-PadJ3_16)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_16",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO5_FEM-PadJ3_16)",
+        "exported": "unconnected-(U1-GPIO5_FEM-PadJ3_16)"
+      }
+    },
+    {
+      "check": "PCB U1.J3_17 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "expected": "MIC_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_17",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "exported": "/MIC_WS"
+      }
+    },
+    {
+      "check": "PCB U1.J3_18 net",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)",
+        "expected": null
+      }
+    },
+    {
+      "check": "PCB/export exact net name U1.J3_18",
+      "passed": true,
+      "evidence": {
+        "actual": "unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)",
+        "exported": "unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)"
+      }
+    },
+    {
+      "check": "PCB U2 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB U2 component side front",
+      "passed": true,
+      "evidence": [
+        "layer",
+        "F.Cu"
+      ]
+    },
+    {
+      "check": "U2 body reflects user image14mm diameter",
+      "passed": true,
+      "evidence": [
+        14.0
+      ]
+    },
+    {
+      "check": "Mic reference has six unique electrical pads",
+      "passed": true,
+      "evidence": 6
+    },
+    {
+      "check": "Mic reference location SCK",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          -2.54,
+          -3.81
+        ],
+        "actual": [
+          -2.54,
+          -3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic reference location WS",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          0,
+          -3.81
+        ],
+        "actual": [
+          0.0,
+          -3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic reference location LR",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          2.54,
+          -3.81
+        ],
+        "actual": [
+          2.54,
+          -3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic reference location SD",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          -2.54,
+          3.81
+        ],
+        "actual": [
+          -2.54,
+          3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic reference location VDD",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          0,
+          3.81
+        ],
+        "actual": [
+          0.0,
+          3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic reference location GND",
+      "passed": true,
+      "evidence": {
+        "expected": [
+          2.54,
+          3.81
+        ],
+        "actual": [
+          2.54,
+          3.81
+        ]
+      }
+    },
+    {
+      "check": "Mic central3mm acoustic opening",
+      "passed": true,
+      "evidence": [
+        {
+          "at": [
+            "at",
+            "0",
+            "0"
+          ],
+          "drill": [
+            "drill",
+            "3"
+          ]
+        }
+      ]
+    },
+    {
+      "check": "PCB U2 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "GND",
+          "LR",
+          "SCK",
+          "SD",
+          "VDD",
+          "WS"
+        ],
+        "expected": [
+          "GND",
+          "LR",
+          "SCK",
+          "SD",
+          "VDD",
+          "WS"
+        ]
+      }
+    },
+    {
+      "check": "PCB U2.GND net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.GND",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB U2.LR net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.LR",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB U2.SCK net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "expected": "MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.SCK",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "exported": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB U2.SD net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "expected": "MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.SD",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "exported": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB U2.VDD net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "expected": "+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.VDD",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "exported": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB U2.WS net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "expected": "MIC_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name U2.WS",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "exported": "/MIC_WS"
+      }
+    },
+    {
+      "check": "PCB JAMP1 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB JAMP1 component side front",
+      "passed": true,
+      "evidence": [
+        "layer",
+        "F.Cu"
+      ]
+    },
+    {
+      "check": "PCB JAMP1 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "expected": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ]
+      }
+    },
+    {
+      "check": "PCB JAMP1.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "expected": "+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "exported": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB JAMP1.2 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.2",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB JAMP1.3 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "expected": "AMP_SD"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.3",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "exported": "/AMP_SD"
+      }
+    },
+    {
+      "check": "PCB JAMP1.4 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.4",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB JAMP1.5 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "expected": "AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.5",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "exported": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB JAMP1.6 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "expected": "AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.6",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "exported": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB JAMP1.7 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "expected": "AMP_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name JAMP1.7",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "exported": "/AMP_WS"
+      }
+    },
+    {
+      "check": "PCB R8 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB R8 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1",
+          "2"
+        ],
+        "expected": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "check": "PCB R8.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "expected": "AMP_SD"
+      }
+    },
+    {
+      "check": "PCB/export exact net name R8.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "exported": "/AMP_SD"
+      }
+    },
+    {
+      "check": "PCB R8.2 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name R8.2",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB SW1 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB SW1 component side front",
+      "passed": true,
+      "evidence": [
+        "layer",
+        "F.Cu"
+      ]
+    },
+    {
+      "check": "SW1 nominal6x6mm body",
+      "passed": true,
+      "evidence": [
+        [
+          6.0,
+          6.0
+        ]
+      ]
+    },
+    {
+      "check": "Switch four physical legs paired across6.5mm on4.5mm rows",
+      "passed": true,
+      "evidence": {
+        "1": [
+          [
+            -3.25,
+            -2.25
+          ],
+          [
+            3.25,
+            -2.25
+          ]
+        ],
+        "2": [
+          [
+            -3.25,
+            2.25
+          ],
+          [
+            3.25,
+            2.25
+          ]
+        ]
+      }
+    },
+    {
+      "check": "PCB SW1 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1",
+          "2"
+        ],
+        "expected": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "check": "PCB SW1.1 physical1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "expected": "PTT_N"
+      }
+    },
+    {
+      "check": "PCB/export exact net name SW1.1 physical1",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "exported": "/PTT_N"
+      }
+    },
+    {
+      "check": "PCB SW1.1 physical2 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "expected": "PTT_N"
+      }
+    },
+    {
+      "check": "PCB/export exact net name SW1.1 physical2",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "exported": "/PTT_N"
+      }
+    },
+    {
+      "check": "PCB SW1.2 physical3 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name SW1.2 physical3",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB SW1.2 physical4 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name SW1.2 physical4",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB TP1 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP1 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP1.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP1.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB TP2 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP2 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP2.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "expected": "+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP2.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/+3V3_MIC",
+        "exported": "/+3V3_MIC"
+      }
+    },
+    {
+      "check": "PCB TP3 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP3 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP3.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "expected": "+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP3.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/+5V_AMP",
+        "exported": "/+5V_AMP"
+      }
+    },
+    {
+      "check": "PCB TP4 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP4 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP4.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "expected": "MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP4.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_BCLK",
+        "exported": "/MIC_BCLK"
+      }
+    },
+    {
+      "check": "PCB TP5 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP5 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP5.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "expected": "MIC_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP5.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_WS",
+        "exported": "/MIC_WS"
+      }
+    },
+    {
+      "check": "PCB TP6 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP6 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP6.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "expected": "MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP6.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/MIC_DATA",
+        "exported": "/MIC_DATA"
+      }
+    },
+    {
+      "check": "PCB TP7 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP7 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP7.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "expected": "AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP7.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_BCLK",
+        "exported": "/AMP_BCLK"
+      }
+    },
+    {
+      "check": "PCB TP8 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP8 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP8.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "expected": "AMP_WS"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP8.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_WS",
+        "exported": "/AMP_WS"
+      }
+    },
+    {
+      "check": "PCB TP9 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP9 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP9.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "expected": "AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP9.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_DATA",
+        "exported": "/AMP_DATA"
+      }
+    },
+    {
+      "check": "PCB TP10 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP10 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP10.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "expected": "AMP_SD"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP10.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/AMP_SD",
+        "exported": "/AMP_SD"
+      }
+    },
+    {
+      "check": "PCB TP11 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP11 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP11.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "expected": "PTT_N"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP11.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/PTT_N",
+        "exported": "/PTT_N"
+      }
+    },
+    {
+      "check": "PCB TP12 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP12 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP12.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP12.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "PCB TP13 DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "pcb_dnp": false,
+        "schematic_dnp": false
+      }
+    },
+    {
+      "check": "PCB TP13 pad IDs",
+      "passed": true,
+      "evidence": {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ]
+      }
+    },
+    {
+      "check": "PCB TP13.1 net",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "expected": "GND"
+      }
+    },
+    {
+      "check": "PCB/export exact net name TP13.1",
+      "passed": true,
+      "evidence": {
+        "actual": "/GND",
+        "exported": "/GND"
+      }
+    },
+    {
+      "check": "JAMP1.1 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.2 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.3 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.4 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.5 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.6 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "JAMP1.7 provisional1.1drill1.8pad",
+      "passed": true,
+      "evidence": {
+        "drill": [
+          "drill",
+          "1.1"
+        ],
+        "size": [
+          "size",
+          "1.8",
+          "1.8"
+        ]
+      }
+    },
+    {
+      "check": "Amp image orientation left LRC7 through right VIN1",
+      "passed": true,
+      "evidence": {
+        "1": [
+          162.12,
+          131.5
+        ],
+        "2": [
+          159.58,
+          131.5
+        ],
+        "3": [
+          157.04,
+          131.5
+        ],
+        "4": [
+          154.5,
+          131.5
+        ],
+        "5": [
+          151.96,
+          131.5
+        ],
+        "6": [
+          149.42,
+          131.5
+        ],
+        "7": [
+          146.88,
+          131.5
+        ]
+      }
+    },
+    {
+      "check": "Amp pictured header pitch7-6",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "Amp pictured header pitch6-5",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "Amp pictured header pitch5-4",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "Amp pictured header pitch4-3",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "Amp pictured header pitch3-2",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "Amp pictured header pitch2-1",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "Amp body reflects latest image17.7x19mm",
+      "passed": true,
+      "evidence": [
+        [
+          17.7,
+          19.0
+        ]
+      ]
+    },
+    {
+      "check": "USB-up row orientation J3 right of J2",
+      "passed": true,
+      "evidence": {
+        "J3_01": [
+          134.43,
+          104.0
+        ],
+        "J2_01": [
+          111.57,
+          104.0
+        ]
+      }
+    },
+    {
+      "check": "J3 pin1 toward top USB",
+      "passed": true,
+      "evidence": {
+        "pin1": [
+          134.43,
+          104.0
+        ],
+        "pin18": [
+          134.43,
+          147.18
+        ]
+      }
+    },
+    {
+      "check": "J3 pitch1-2",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch2-3",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch3-4",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch4-5",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch5-6",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch6-7",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch7-8",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch8-9",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch9-10",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch10-11",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J3 pitch11-12",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch12-13",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "J3 pitch13-14",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch14-15",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch15-16",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J3 pitch16-17",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "J3 pitch17-18",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pin1 toward top USB",
+      "passed": true,
+      "evidence": {
+        "pin1": [
+          111.57,
+          104.0
+        ],
+        "pin18": [
+          111.57,
+          147.18
+        ]
+      }
+    },
+    {
+      "check": "J2 pitch1-2",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch2-3",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch3-4",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch4-5",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch5-6",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch6-7",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch7-8",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch8-9",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch9-10",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch10-11",
+      "passed": true,
+      "evidence": 2.5400000000000063
+    },
+    {
+      "check": "J2 pitch11-12",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch12-13",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "J2 pitch13-14",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch14-15",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch15-16",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "J2 pitch16-17",
+      "passed": true,
+      "evidence": 2.5400000000000205
+    },
+    {
+      "check": "J2 pitch17-18",
+      "passed": true,
+      "evidence": 2.539999999999992
+    },
+    {
+      "check": "Heltec row spacing22.86",
+      "passed": true,
+      "evidence": 22.860000000000014
+    },
+    {
+      "check": "PCB four copper layers",
+      "passed": true,
+      "evidence": [
+        "F.Cu",
+        "In1.Cu",
+        "In2.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "check": "PCB pad_to_mask_clearance",
+      "passed": true,
+      "evidence": [
+        "pad_to_mask_clearance",
+        "0.0508"
+      ]
+    },
+    {
+      "check": "PCB solder_mask_min_width",
+      "passed": true,
+      "evidence": [
+        "solder_mask_min_width",
+        "0.1016"
+      ]
+    },
+    {
+      "check": "PCB thickness1.6mm",
+      "passed": true,
+      "evidence": [
+        "thickness",
+        "1.6"
+      ]
+    },
+    {
+      "check": "PCB closed70x90outline",
+      "passed": true,
+      "evidence": [
+        100.0,
+        100.0,
+        170.0,
+        190.0
+      ]
+    },
+    {
+      "check": "H3 hardware copper exclusion radius3.5mm",
+      "passed": true,
+      "evidence": {
+        "drill_mm": 3.2,
+        "local_clearance_mm": 1.9,
+        "radius_mm": 3.5
+      }
+    },
+    {
+      "check": "H2 hardware copper exclusion radius3.5mm",
+      "passed": true,
+      "evidence": {
+        "drill_mm": 3.2,
+        "local_clearance_mm": 1.9,
+        "radius_mm": 3.5
+      }
+    },
+    {
+      "check": "H4 hardware copper exclusion radius3.5mm",
+      "passed": true,
+      "evidence": {
+        "drill_mm": 3.2,
+        "local_clearance_mm": 1.9,
+        "radius_mm": 3.5
+      }
+    },
+    {
+      "check": "H1 hardware copper exclusion radius3.5mm",
+      "passed": true,
+      "evidence": {
+        "drill_mm": 3.2,
+        "local_clearance_mm": 1.9,
+        "radius_mm": 3.5
+      }
+    },
+    {
+      "check": "Four3.2NPTH mounting centers",
+      "passed": true,
+      "evidence": [
+        [
+          4.0,
+          86.0,
+          3.2
+        ],
+        [
+          66.0,
+          4.0,
+          3.2
+        ],
+        [
+          66.0,
+          86.0,
+          3.2
+        ],
+        [
+          4.0,
+          4.0,
+          3.2
+        ]
+      ]
+    },
+    {
+      "check": "Retain inner annular rings SW1.1",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings SW1.1",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings SW1.2",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings SW1.2",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.GND",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.LR",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.SCK",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.SD",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.VDD",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U2.WS",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.1",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.2",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.3",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.4",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.5",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.6",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings JAMP1.7",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings R8.1",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings R8.2",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_01",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_02",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_03",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_04",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_05",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_06",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_07",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_08",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_09",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_10",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_11",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_12",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_13",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_14",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_15",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_16",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_17",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J2_18",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_01",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_02",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_03",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_04",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_05",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_06",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_07",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_08",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_09",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_10",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_11",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_12",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_13",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_14",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_15",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_16",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_17",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Retain inner annular rings U1.J3_18",
+      "passed": true,
+      "evidence": [
+        "remove_unused_layers",
+        "no"
+      ]
+    },
+    {
+      "check": "Project minimum copper_edge_clearance",
+      "passed": true,
+      "evidence": {
+        "actual": 0.5,
+        "minimum": 0.5
+      }
+    },
+    {
+      "check": "Project minimum hole_clearance",
+      "passed": true,
+      "evidence": {
+        "actual": 0.254,
+        "minimum": 0.254
+      }
+    },
+    {
+      "check": "Project minimum hole_to_hole_min",
+      "passed": true,
+      "evidence": {
+        "actual": 0.127,
+        "minimum": 0.127
+      }
+    },
+    {
+      "check": "Project minimum min_silk_text_height",
+      "passed": true,
+      "evidence": {
+        "actual": 1.0,
+        "minimum": 1.0
+      }
+    },
+    {
+      "check": "Project minimum min_silk_text_thickness",
+      "passed": true,
+      "evidence": {
+        "actual": 0.127,
+        "minimum": 0.127
+      }
+    },
+    {
+      "check": "Project netclass I2S_LOGIC",
+      "passed": true,
+      "evidence": {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.2,
+        "diff_pair_via_gap": 0.2,
+        "diff_pair_width": 0.25,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "I2S_LOGIC",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      }
+    },
+    {
+      "check": "Project netclass MIC_3V3",
+      "passed": true,
+      "evidence": {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.2,
+        "diff_pair_via_gap": 0.2,
+        "diff_pair_width": 0.5,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "MIC_3V3",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      }
+    },
+    {
+      "check": "Project netclass AMP_POWER_SPK",
+      "passed": true,
+      "evidence": {
+        "bus_width": 12,
+        "clearance": 0.25,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 1.0,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "AMP_POWER_SPK",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      }
+    },
+    {
+      "check": "Project exact netclass assignment /+3V3_MIC",
+      "passed": true,
+      "evidence": "MIC_3V3"
+    },
+    {
+      "check": "Project exact netclass assignment /+5V_AMP",
+      "passed": true,
+      "evidence": "AMP_POWER_SPK"
+    }
+  ]
+}

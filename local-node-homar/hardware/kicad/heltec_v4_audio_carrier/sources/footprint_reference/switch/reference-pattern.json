@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-24",
+  "owned_part": {
+    "brand": "OCR",
+    "kit_part": "TPBS02",
+    "model": "10Value",
+    "ASIN": "B01MRP025V",
+    "selected_dimensions_mm": [
+      6,
+      6,
+      8
+    ],
+    "exact_pin_drawing_found": false
+  },
+  "recommendation": "Adopted reference footprint; owned-part fit and contact pairing unverified.",
+  "body_center_origin": true,
+  "view": "Top/component side, X right, Y down, rotation0",
+  "pads": [
+    {
+      "logical_number": "1",
+      "original_xy_mm": [
+        0.0,
+        0.0
+      ],
+      "centered_xy_mm": [
+        -3.25,
+        -2.25
+      ],
+      "pad_size_mm": [
+        2.0,
+        2.0
+      ],
+      "drill_mm": 1.1,
+      "net": "PTT_N"
+    },
+    {
+      "logical_number": "1",
+      "original_xy_mm": [
+        6.5,
+        0.0
+      ],
+      "centered_xy_mm": [
+        3.25,
+        -2.25
+      ],
+      "pad_size_mm": [
+        2.0,
+        2.0
+      ],
+      "drill_mm": 1.1,
+      "net": "PTT_N"
+    },
+    {
+      "logical_number": "2",
+      "original_xy_mm": [
+        0.0,
+        4.5
+      ],
+      "centered_xy_mm": [
+        -3.25,
+        2.25
+      ],
+      "pad_size_mm": [
+        2.0,
+        2.0
+      ],
+      "drill_mm": 1.1,
+      "net": "GND"
+    },
+    {
+      "logical_number": "2",
+      "original_xy_mm": [
+        6.5,
+        4.5
+      ],
+      "centered_xy_mm": [
+        3.25,
+        2.25
+      ],
+      "pad_size_mm": [
+        2.0,
+        2.0
+      ],
+      "drill_mm": 1.1,
+      "net": "GND"
+    }
+  ],
+  "reference_pairing": "Physical C&K terminals1/2 -> logical1; terminals3/4 -> logical2; same-contact direction spans6.5mm",
+  "reference_datasheet_hole_mm": 1.0,
+  "installed_kicad_reference_drill_mm": 1.1,
+  "owned_finished_hole_verified": false,
+  "fit_gates": [
+    "Actual6.5x4.5mm pin-center rectangle",
+    "Actual lead cross-section and finished-hole fit",
+    "At-rest permanent continuity within long horizontal pairs only",
+    "Groups close only while pressed",
+    "Actual installed actuator height/access"
+  ],
+  "source_urls": [
+    "https://www.amazon.com/dp/B01MRP025V?th=1",
+    "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts645-series-datasheet?assetguid=d58fc8a8-f6e1-4527-ab68-27635e632e39",
+    "https://asset.conrad.com/media10/add/160267/c1/-/gl/002580707DS00/tehnicni-podatki-2580707-c-k-switches-1-kos.pdf",
+    "https://gitlab.com/kicad/libraries/kicad-footprints/-/blob/master/Button_Switch_THT.pretty/SW_PUSH_6mm.kicad_mod"
+  ],
+  "files_sha256": {
+    "FINDINGS.txt": "736a23d8ee32227297fe7394a81d05f3df56a606f5d9e5ea27ece7254b4e3021",
+    "installed-SW_PUSH_6mm-reference.kicad_mod": "e284d5bbfb435ef0ad577512ffc7da06ea7cf5c87753287922d89e84c7f4a2a7",
+    "manufacturer-pts645-conrad-mirror.pdf": "e0a555e8a53597507a4ec0b11f206035167e36f309ae10ee063213c4ba9a3268",
+    "pts645-page2-reference.png": "483d120e66acd782bfb1efc62aac74cff361f7599204b8b44f55436eacf30578"
+  },
+  "revision": "C5",
+  "population": "FIT",
+  "footprint": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING",
+  "connection": "GPIO39 directly to PTT_N; opposite contact GND."
+}

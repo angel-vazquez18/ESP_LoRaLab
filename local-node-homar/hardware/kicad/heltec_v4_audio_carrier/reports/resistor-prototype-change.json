@@ -1,0 +1,45 @@
+{
+  "revision": "C5",
+  "component": "R8",
+  "value": "1k",
+  "brand": "EEEEE",
+  "rating_w": 0.5,
+  "tolerance_percent": 5,
+  "construction": "carbon axial through-hole",
+  "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+  "body_reference_mm": [
+    10,
+    3.6
+  ],
+  "pitch_mm": 15.24,
+  "drill_mm": 1,
+  "pad_diameter_mm": 2,
+  "native_position_mm": [
+    147,
+    145
+  ],
+  "native_pad_positions_mm": [
+    [
+      147,
+      145
+    ],
+    [
+      162.24,
+      145
+    ]
+  ],
+  "model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+  "model_status": "Representative geometry; actual EEEEE dimensions unverified",
+  "band_colors": [
+    "brown",
+    "black",
+    "red",
+    "gold"
+  ],
+  "electrical_topology_changed": false,
+  "pcb_routing_changed": "Added two AMP_SD segments to new R8.1. Removed old SMD ground track/via; THT R8.2 connects directly to GND planes.",
+  "sources": [
+    "https://www.amazon.com/dp/B0G4LVC5RY",
+    "https://www.tme.eu/Document/29f58ab8e2ccd3fbcb10a82637aa83de/cfr.pdf"
+  ]
+}

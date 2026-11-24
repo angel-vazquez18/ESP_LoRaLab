@@ -1,0 +1,1275 @@
+{
+  "outline_valid": true,
+  "outer_contours": 1,
+  "edge_graphics_count": 4,
+  "board_bbox_mm": {
+    "min": [
+      99.975,
+      99.975
+    ],
+    "size": [
+      70.05,
+      90.05
+    ]
+  },
+  "edge_graphics": [
+    {
+      "shape": "Line",
+      "start": [
+        100.0,
+        100.0
+      ],
+      "end": [
+        100.0,
+        190.0
+      ]
+    },
+    {
+      "shape": "Line",
+      "start": [
+        100.0,
+        190.0
+      ],
+      "end": [
+        170.0,
+        190.0
+      ]
+    },
+    {
+      "shape": "Line",
+      "start": [
+        170.0,
+        100.0
+      ],
+      "end": [
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "shape": "Line",
+      "start": [
+        170.0,
+        190.0
+      ],
+      "end": [
+        170.0,
+        100.0
+      ]
+    }
+  ],
+  "copper_layer_count": 4,
+  "segment_count": 116,
+  "track_min_width_mm": 0.25,
+  "track_widths_mm": {
+    "0.25": 80,
+    "0.5": 15,
+    "1.0": 21
+  },
+  "via_count": 38,
+  "via_types": {
+    "4": 38
+  },
+  "via_drill_mm": {
+    "0.4": 38
+  },
+  "via_diameter_mm": {
+    "0.8": 38
+  },
+  "via_min_annular_ring_mm": 0.2,
+  "via_layer_pairs": {
+    "F.Cu/B.Cu": 38
+  },
+  "pth_count": 55,
+  "npth_count": 5,
+  "pth_drill_mm": {
+    "[1.1, 1.1]": 53,
+    "[1.0, 1.0]": 2
+  },
+  "npth_drill_mm": {
+    "[3.0, 3.0]": 1,
+    "[3.2, 3.2]": 4
+  },
+  "pth_min_annular_mm": 0.35,
+  "slotted_pads": [],
+  "npth": [
+    {
+      "ref": "U2",
+      "num": "",
+      "xy": [
+        154.5,
+        159.5
+      ],
+      "type": 3,
+      "size": [
+        3.0,
+        3.0
+      ],
+      "drill": [
+        3.0,
+        3.0
+      ],
+      "drill_shape": 1,
+      "unconnected_layer_mode": 0,
+      "layers": [
+        "F.Cu",
+        "F.Mask",
+        "B.Cu",
+        "B.Mask",
+        "In1.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "In4.Cu",
+        "In5.Cu",
+        "In6.Cu",
+        "In7.Cu",
+        "In8.Cu",
+        "In9.Cu",
+        "In10.Cu",
+        "In11.Cu",
+        "In12.Cu",
+        "In13.Cu",
+        "In14.Cu",
+        "In15.Cu",
+        "In16.Cu",
+        "In17.Cu",
+        "In18.Cu",
+        "In19.Cu",
+        "In20.Cu",
+        "In21.Cu",
+        "In22.Cu",
+        "In23.Cu",
+        "In24.Cu",
+        "In25.Cu",
+        "In26.Cu",
+        "In27.Cu",
+        "In28.Cu",
+        "In29.Cu",
+        "In30.Cu"
+      ],
+      "net": ""
+    },
+    {
+      "ref": "H3",
+      "num": "",
+      "xy": [
+        104.0,
+        104.0
+      ],
+      "type": 3,
+      "size": [
+        3.2,
+        3.2
+      ],
+      "drill": [
+        3.2,
+        3.2
+      ],
+      "drill_shape": 1,
+      "unconnected_layer_mode": 0,
+      "layers": [
+        "F.Cu",
+        "B.Cu",
+        "In1.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "In4.Cu",
+        "In5.Cu",
+        "In6.Cu",
+        "In7.Cu",
+        "In8.Cu",
+        "In9.Cu",
+        "In10.Cu",
+        "In11.Cu",
+        "In12.Cu",
+        "In13.Cu",
+        "In14.Cu",
+        "In15.Cu",
+        "In16.Cu",
+        "In17.Cu",
+        "In18.Cu",
+        "In19.Cu",
+        "In20.Cu",
+        "In21.Cu",
+        "In22.Cu",
+        "In23.Cu",
+        "In24.Cu",
+        "In25.Cu",
+        "In26.Cu",
+        "In27.Cu",
+        "In28.Cu",
+        "In29.Cu",
+        "In30.Cu"
+      ],
+      "net": ""
+    },
+    {
+      "ref": "H2",
+      "num": "",
+      "xy": [
+        166.0,
+        186.0
+      ],
+      "type": 3,
+      "size": [
+        3.2,
+        3.2
+      ],
+      "drill": [
+        3.2,
+        3.2
+      ],
+      "drill_shape": 1,
+      "unconnected_layer_mode": 0,
+      "layers": [
+        "F.Cu",
+        "B.Cu",
+        "In1.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "In4.Cu",
+        "In5.Cu",
+        "In6.Cu",
+        "In7.Cu",
+        "In8.Cu",
+        "In9.Cu",
+        "In10.Cu",
+        "In11.Cu",
+        "In12.Cu",
+        "In13.Cu",
+        "In14.Cu",
+        "In15.Cu",
+        "In16.Cu",
+        "In17.Cu",
+        "In18.Cu",
+        "In19.Cu",
+        "In20.Cu",
+        "In21.Cu",
+        "In22.Cu",
+        "In23.Cu",
+        "In24.Cu",
+        "In25.Cu",
+        "In26.Cu",
+        "In27.Cu",
+        "In28.Cu",
+        "In29.Cu",
+        "In30.Cu"
+      ],
+      "net": ""
+    },
+    {
+      "ref": "H4",
+      "num": "",
+      "xy": [
+        166.0,
+        104.0
+      ],
+      "type": 3,
+      "size": [
+        3.2,
+        3.2
+      ],
+      "drill": [
+        3.2,
+        3.2
+      ],
+      "drill_shape": 1,
+      "unconnected_layer_mode": 0,
+      "layers": [
+        "F.Cu",
+        "B.Cu",
+        "In1.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "In4.Cu",
+        "In5.Cu",
+        "In6.Cu",
+        "In7.Cu",
+        "In8.Cu",
+        "In9.Cu",
+        "In10.Cu",
+        "In11.Cu",
+        "In12.Cu",
+        "In13.Cu",
+        "In14.Cu",
+        "In15.Cu",
+        "In16.Cu",
+        "In17.Cu",
+        "In18.Cu",
+        "In19.Cu",
+        "In20.Cu",
+        "In21.Cu",
+        "In22.Cu",
+        "In23.Cu",
+        "In24.Cu",
+        "In25.Cu",
+        "In26.Cu",
+        "In27.Cu",
+        "In28.Cu",
+        "In29.Cu",
+        "In30.Cu"
+      ],
+      "net": ""
+    },
+    {
+      "ref": "H1",
+      "num": "",
+      "xy": [
+        104.0,
+        186.0
+      ],
+      "type": 3,
+      "size": [
+        3.2,
+        3.2
+      ],
+      "drill": [
+        3.2,
+        3.2
+      ],
+      "drill_shape": 1,
+      "unconnected_layer_mode": 0,
+      "layers": [
+        "F.Cu",
+        "B.Cu",
+        "In1.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "In4.Cu",
+        "In5.Cu",
+        "In6.Cu",
+        "In7.Cu",
+        "In8.Cu",
+        "In9.Cu",
+        "In10.Cu",
+        "In11.Cu",
+        "In12.Cu",
+        "In13.Cu",
+        "In14.Cu",
+        "In15.Cu",
+        "In16.Cu",
+        "In17.Cu",
+        "In18.Cu",
+        "In19.Cu",
+        "In20.Cu",
+        "In21.Cu",
+        "In22.Cu",
+        "In23.Cu",
+        "In24.Cu",
+        "In25.Cu",
+        "In26.Cu",
+        "In27.Cu",
+        "In28.Cu",
+        "In29.Cu",
+        "In30.Cu"
+      ],
+      "net": ""
+    }
+  ],
+  "pth_unconnected_layer_modes": {
+    "0": 55
+  },
+  "nominal_outline_size_mm": [
+    70,
+    90
+  ],
+  "bbox_note": "KiCad graphics bounding box includes 0.05mm outline stroke; nominal routed edge follows line centers at x100..170,y100..190.",
+  "total_drill_hits": 98,
+  "plated_drill_hits": 93,
+  "nonplated_drill_hits": 5,
+  "visible_silk_text_min_thickness_mm": 0.15,
+  "pth_keep_all_annular_rings": true,
+  "expected_drill_hits": [
+    {
+      "x_mm": 154.5,
+      "y_mm": 159.5,
+      "diameter_mm": 3.0,
+      "plated": false,
+      "reference": "U2",
+      "pad_number": "",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 104.0,
+      "y_mm": 104.0,
+      "diameter_mm": 3.2,
+      "plated": false,
+      "reference": "H3",
+      "pad_number": "",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 104.0,
+      "y_mm": 186.0,
+      "diameter_mm": 3.2,
+      "plated": false,
+      "reference": "H1",
+      "pad_number": "",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 166.0,
+      "y_mm": 104.0,
+      "diameter_mm": 3.2,
+      "plated": false,
+      "reference": "H4",
+      "pad_number": "",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 166.0,
+      "y_mm": 186.0,
+      "diameter_mm": 3.2,
+      "plated": false,
+      "reference": "H2",
+      "pad_number": "",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 105.8,
+      "y_mm": 137.02,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 106.2,
+      "y_mm": 135.7,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 109.4,
+      "y_mm": 108.9,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 109.4,
+      "y_mm": 110.0875,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 112.0,
+      "y_mm": 102.8,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 130.0,
+      "y_mm": 140.829999,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 130.0,
+      "y_mm": 142.329999,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 134.0,
+      "y_mm": 152.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 136.5,
+      "y_mm": 103.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 136.75,
+      "y_mm": 140.95,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 137.5,
+      "y_mm": 148.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 139.0,
+      "y_mm": 154.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 139.5,
+      "y_mm": 131.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 140.0,
+      "y_mm": 140.829999,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 141.5,
+      "y_mm": 163.31,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 142.5,
+      "y_mm": 140.829999,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 142.5,
+      "y_mm": 180.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 143.0,
+      "y_mm": 125.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 143.0,
+      "y_mm": 163.31,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 144.0,
+      "y_mm": 180.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 144.5,
+      "y_mm": 125.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 144.5,
+      "y_mm": 130.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 144.5,
+      "y_mm": 132.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 147.0,
+      "y_mm": 148.75,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 149.0,
+      "y_mm": 158.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 150.5,
+      "y_mm": 135.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 150.5,
+      "y_mm": 136.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 151.0,
+      "y_mm": 169.7,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 154.85,
+      "y_mm": 166.85,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 157.0,
+      "y_mm": 175.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F092C0> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 157.7,
+      "y_mm": 166.8,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 159.8,
+      "y_mm": 110.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 160.0,
+      "y_mm": 136.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 160.0,
+      "y_mm": 158.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 160.5,
+      "y_mm": 170.5,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 164.0,
+      "y_mm": 137.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 167.0,
+      "y_mm": 130.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 167.0,
+      "y_mm": 160.0,
+      "diameter_mm": 0.4,
+      "plated": true,
+      "reference": "via",
+      "uuid": "<pcbnew.KIID; proxy of <Swig Object of type 'KIID *' at 0x000001C092F0B570> >",
+      "kind": "via"
+    },
+    {
+      "x_mm": 147.0,
+      "y_mm": 145.0,
+      "diameter_mm": 1.0,
+      "plated": true,
+      "reference": "R8",
+      "pad_number": "1",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 162.24,
+      "y_mm": 145.0,
+      "diameter_mm": 1.0,
+      "plated": true,
+      "reference": "R8",
+      "pad_number": "2",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 104.0,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_01",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 106.54,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_02",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 109.08,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_03",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 111.62,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_04",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 114.16,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_05",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 116.7,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_06",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 119.24,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_07",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 121.78,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_08",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 124.32,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_09",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 126.86,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_10",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 129.4,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_11",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 131.94,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_12",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 134.48,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_13",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 137.02,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_14",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 139.56,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_15",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 142.1,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_16",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 144.64,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_17",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 111.57,
+      "y_mm": 147.18,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J2_18",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 104.0,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_01",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 106.54,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_02",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 109.08,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_03",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 111.62,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_04",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 114.16,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_05",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 116.7,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_06",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 119.24,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_07",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 121.78,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_08",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 124.32,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_09",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 126.86,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_10",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 129.4,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_11",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 131.94,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_12",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 134.48,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_13",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 137.02,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_14",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 139.56,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_15",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 142.1,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_16",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 144.64,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_17",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 134.43,
+      "y_mm": 147.18,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U1",
+      "pad_number": "J3_18",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 146.88,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "7",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 147.75,
+      "y_mm": 178.75,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "SW1",
+      "pad_number": "1",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 147.75,
+      "y_mm": 183.25,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "SW1",
+      "pad_number": "2",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 149.42,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "6",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 151.96,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "5",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 151.96,
+      "y_mm": 155.69,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "SCK",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 151.96,
+      "y_mm": 163.31,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "SD",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 154.25,
+      "y_mm": 178.75,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "SW1",
+      "pad_number": "1",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 154.25,
+      "y_mm": 183.25,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "SW1",
+      "pad_number": "2",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 154.5,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "4",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 154.5,
+      "y_mm": 155.69,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "WS",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 154.5,
+      "y_mm": 163.31,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "VDD",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 157.04,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "3",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 157.04,
+      "y_mm": 155.69,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "LR",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 157.04,
+      "y_mm": 163.31,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "U2",
+      "pad_number": "GND",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 159.58,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "2",
+      "kind": "pad"
+    },
+    {
+      "x_mm": 162.12,
+      "y_mm": 131.5,
+      "diameter_mm": 1.1,
+      "plated": true,
+      "reference": "JAMP1",
+      "pad_number": "1",
+      "kind": "pad"
+    }
+  ],
+  "drill_coordinate_convention": "Native PCB coordinates in mm, +X right and +Y down. Absolute-origin Excellon output should have X=x_mm and Y=-y_mm.",
+  "native_pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "staged_native_copies": [
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-c5-oshpark\\design\\heltec_v4_audio_carrier.kicad_pcb",
+      "sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+      "matches_current": true
+    }
+  ]
+}

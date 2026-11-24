@@ -1,0 +1,8 @@
+{
+  "header_holes_compared": 36,
+  "match_precision_mm": 1e-06,
+  "all_reference_coordinates_match": true,
+  "BRep_valid": true,
+  "STEP_unchanged": true,
+  "physical_hardware_fit_tested": false
+}

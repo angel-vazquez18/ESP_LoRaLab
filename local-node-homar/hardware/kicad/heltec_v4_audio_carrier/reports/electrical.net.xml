@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\Users\Homar\Documents\ChatGPT\LoRa-Walkie-Talkies\output\heltec-v4-carrier-c5\design\heltec_v4_audio_carrier.kicad_sch</source>
+    <date>2026-11-24T09:03:39</date>
+    <tool>Eeschema 10.0.8</tool>
+    <textvar name="DESIGN_STATUS">PLACEMENT DRAFT / FAB HOLD</textvar>
+    <textvar name="KICAD_VERSION">10.0.8</textvar>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Heltec V4.3 R2 Audio Carrier</title>
+        <company>Module carrier / Rev B firmware map</company>
+        <rev>C5</rev>
+        <date>2026-11-24</date>
+        <source>heltec_v4_audio_carrier.kicad_sch</source>
+        <comment number="1" value="VERIFY ACTUAL FIT BEFORE FABRICATION"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="JAMP1">
+      <value>AMP 1x07 solder pins</value>
+      <footprint>Carrier:MAX98357A_H7_2p54_PROVISIONAL</footprint>
+      <description>Soldered pin interconnect between carrier and existing U3, not a wire cable or speaker connector. User drawing: 17.7x19mm body and 2.54mm pitch. Numeric pin1 VIN,2 GND,3 SD_MODE,4 GAIN,5 DIN,6 BCLK,7 LRC. Header-to-body datum and drill remain provisional.</description>
+      <fields>
+        <field name="Population">FIT / SOLDERED MODULE PINS</field>
+        <field name="Rating">2.54mm pitch soldered pin strip; supplied pin dimensions and current rating require verification</field>
+        <field name="Connection">CARRIER TO U3: SEVEN SOLDERED PINS</field>
+        <field name="Footprint">Carrier:MAX98357A_H7_2p54_PROVISIONAL</field>
+        <field name="Datasheet"/>
+        <field name="Description">Soldered pin interconnect between carrier and existing U3, not a wire cable or speaker connector. User drawing: 17.7x19mm body and 2.54mm pitch. Numeric pin1 VIN,2 GND,3 SD_MODE,4 GAIN,5 DIN,6 BCLK,7 LRC. Header-to-body datum and drill remain provisional.</field>
+      </fields>
+      <libsource lib="Carrier" part="AMP_Soldered_1x07" description="Seven soldered 2.54mm-pitch interconnect pins for U3; pin1 VIN through pin7 LRC; header-to-body datum and finished drill pending verification"/>
+      <property name="Population" value="FIT / SOLDERED MODULE PINS"/>
+      <property name="Rating" value="2.54mm pitch soldered pin strip; supplied pin dimensions and current rating require verification"/>
+      <property name="Connection" value="CARRIER TO U3: SEVEN SOLDERED PINS"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6b58dba2-0871-5585-80e4-142c2752e82c</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="LS1">
+      <value>Existing speaker</value>
+      <description>Existing off-board speaker. Direct insulated wires from U3 SPK+/SPK- terminals to LS1; no carrier connector, copper route or mounting reservation. Neither terminal is GND.</description>
+      <fields>
+        <field name="Population">EXISTING / EXTERNAL WIRES</field>
+        <field name="Rating">8 ohm nominal; verify actual speaker power rating</field>
+        <field name="Connection">OFF-BOARD: DIRECT WIRES TO U3 SPEAKER TERMINALS</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Existing off-board speaker. Direct insulated wires from U3 SPK+/SPK- terminals to LS1; no carrier connector, copper route or mounting reservation. Neither terminal is GND.</field>
+      </fields>
+      <libsource lib="Carrier" part="Speaker_External" description="Existing off-board speaker; direct insulated wires to U3 speaker terminals; no carrier pads or traces"/>
+      <property name="Population" value="EXISTING / EXTERNAL WIRES"/>
+      <property name="Rating" value="8 ohm nominal; verify actual speaker power rating"/>
+      <property name="Connection" value="OFF-BOARD: DIRECT WIRES TO U3 SPEAKER TERMINALS"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <property name="exclude_from_board"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d63df815-ed35-54f4-a705-1ec959af15bf</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R8">
+      <value>1k</value>
+      <footprint>Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal</footprint>
+      <description>EEEEE 1k 0.5W 5% carbon axial SD_MODE pulldown. Form leads to15.24mm pitch; representative10x3.6mm body,1.0mm drills. Verify actual fit.</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating">EEEEE carbon axial; 0.5W; 5%</field>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal</field>
+        <field name="Datasheet"/>
+        <field name="Description">EEEEE 1k 0.5W 5% carbon axial SD_MODE pulldown. Form leads to15.24mm pitch; representative10x3.6mm body,1.0mm drills. Verify actual fit.</field>
+      </fields>
+      <libsource lib="Carrier" part="R" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value="EEEEE carbon axial; 0.5W; 5%"/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9cd31427-2900-5f1f-892b-e01fbbe8ad49</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="SW1">
+      <value>PTT 6x6x8mm</value>
+      <footprint>Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING</footprint>
+      <datasheet>https://www.amazon.com/dp/B01MRP025V</datasheet>
+      <description>Normally-open 6x6x8mm PTT switch. GPIO39/PTT_N to GND; use INPUT_PULLUP. Reference contact grid 6.5x4.5mm; verify actual fit and contact pairing.</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating">Exact switch contact rating pending verification</field>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING</field>
+        <field name="Datasheet">https://www.amazon.com/dp/B01MRP025V</field>
+        <field name="Description">Normally-open 6x6x8mm PTT switch. GPIO39/PTT_N to GND; use INPUT_PULLUP. Reference contact grid 6.5x4.5mm; verify actual fit and contact pairing.</field>
+      </fields>
+      <libsource lib="Carrier" part="SW_NO_Logical" description="Normally-open tactile switch; pins1/2 are logical contact groups."/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value="Exact switch contact rating pending verification"/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e1e9c26a-7696-5f15-a5ef-3298fed16b17</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP1">
+      <value>GND</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5a719132-add0-5873-844f-73f6c6aa5f52</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP2">
+      <value>+3V3_MIC</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>15e2a1b5-94f2-5cec-9081-272df03814dd</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP3">
+      <value>+5V_AMP</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5d5d6c05-e207-5a22-8fde-c1c02b22c195</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP4">
+      <value>MIC_BCLK</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>94ecc67c-b694-5010-8050-b8df0c8aa02e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP5">
+      <value>MIC_WS</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1aacbb8d-830a-5827-ae5f-3b21dd96351d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP6">
+      <value>MIC_DATA</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>bc736539-110f-5c6d-b625-6b807fc925cd</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP7">
+      <value>AMP_BCLK</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7bf26419-a9df-5d85-9453-99dc9abeba93</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP8">
+      <value>AMP_WS</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>395b38b1-f388-5895-88be-3e6abf79703e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP9">
+      <value>AMP_DATA</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>dd493471-1deb-56c8-adff-028ff9d9c9b6</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP10">
+      <value>AMP_SD</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>085c9f76-b916-5485-a08a-b775d6951870</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP11">
+      <value>PTT_N</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f9afd82b-69c7-5c15-b9f3-83abfc3a9892</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP12">
+      <value>GND</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>34034cc9-98ef-5b5c-9d6a-e44e7842bd2e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="TP13">
+      <value>GND</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.5mm</footprint>
+      <description>Place ground pads near clock/data pads; use short probe ground</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">TestPoint:TestPoint_Pad_D1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Place ground pads near clock/data pads; use short probe ground</field>
+      </fields>
+      <libsource lib="Carrier" part="TestPoint" description=""/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1232d2f8-7494-56d7-aed7-fab62570f2cb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U1">
+      <value>Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2</value>
+      <footprint>Carrier:Heltec_V4_R2_2x18_PROVISIONAL</footprint>
+      <datasheet>https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf</datasheet>
+      <description>Standard R2 header identities; rotate whole footprint for USB at top. No carrier pads/connections for auxiliary GPIO15-18.</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">Carrier:Heltec_V4_R2_2x18_PROVISIONAL</field>
+        <field name="Datasheet">https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf</field>
+        <field name="Description">Standard R2 header identities; rotate whole footprint for USB at top. No carrier pads/connections for auxiliary GPIO15-18.</field>
+      </fields>
+      <libsource lib="Carrier" part="Heltec_V4_R2" description="Heltec WiFi LoRa 32 V4.3 ESP32-S3R2; official standard R2 side-header map; USB at bottom reference view"/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>70179980-84e5-5d91-a22d-cefb4fea3e25</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="J3_01"/>
+            <pin num="J3_02"/>
+            <pin num="J3_03"/>
+            <pin num="J3_04"/>
+            <pin num="J3_05"/>
+            <pin num="J3_06"/>
+            <pin num="J3_07"/>
+            <pin num="J3_08"/>
+            <pin num="J3_09"/>
+            <pin num="J3_10"/>
+            <pin num="J3_11"/>
+            <pin num="J3_12"/>
+            <pin num="J3_13"/>
+            <pin num="J3_14"/>
+            <pin num="J3_15"/>
+            <pin num="J3_16"/>
+            <pin num="J3_17"/>
+            <pin num="J3_18"/>
+            <pin num="J2_01"/>
+            <pin num="J2_02"/>
+            <pin num="J2_03"/>
+            <pin num="J2_04"/>
+            <pin num="J2_05"/>
+            <pin num="J2_06"/>
+            <pin num="J2_07"/>
+            <pin num="J2_08"/>
+            <pin num="J2_09"/>
+            <pin num="J2_10"/>
+            <pin num="J2_11"/>
+            <pin num="J2_12"/>
+            <pin num="J2_13"/>
+            <pin num="J2_14"/>
+            <pin num="J2_15"/>
+            <pin num="J2_16"/>
+            <pin num="J2_17"/>
+            <pin num="J2_18"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U2">
+      <value>Round INMP441 breakout</value>
+      <footprint>Carrier:INMP441_ROUND_2p54x7p62_REFERENCE</footprint>
+      <datasheet>https://product.tdk.com/system/files/dam/doc/product/sw_piezo/mic/mems-mic/data_sheet/inmp441.pdf</datasheet>
+      <description>14mm round module. Authored community KiCad reference supplies 2.54mm column pitch and 7.62mm row spacing; not validation of the owned module. Proposed acoustic/solder face UP matches user image: top SCK/WS/LR at x=-2.54/0/+2.54,y=-3.81mm; bottom SD/VDD/GND at y=+3.81mm. Provisional centered 3mm carrier opening and 3mm mounting standoff require actual acoustic-path, underside-component and contact fit verification.</description>
+      <fields>
+        <field name="Population">FIT</field>
+        <field name="Rating"/>
+        <field name="Connection">CARRIER</field>
+        <field name="Footprint">Carrier:INMP441_ROUND_2p54x7p62_REFERENCE</field>
+        <field name="Datasheet">https://product.tdk.com/system/files/dam/doc/product/sw_piezo/mic/mems-mic/data_sheet/inmp441.pdf</field>
+        <field name="Description">14mm round module. Authored community KiCad reference supplies 2.54mm column pitch and 7.62mm row spacing; not validation of the owned module. Proposed acoustic/solder face UP matches user image: top SCK/WS/LR at x=-2.54/0/+2.54,y=-3.81mm; bottom SD/VDD/GND at y=+3.81mm. Provisional centered 3mm carrier opening and 3mm mounting standoff require actual acoustic-path, underside-component and contact fit verification.</field>
+      </fields>
+      <libsource lib="Carrier" part="INMP441_ROUND_MODULE" description="Existing round INMP441 breakout; reference footprint geometry requires actual module fit verification"/>
+      <property name="Population" value="FIT"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="CARRIER"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>882909f3-4af4-5ae8-8a37-475823d98f4a</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="VDD"/>
+            <pin num="SCK"/>
+            <pin num="WS"/>
+            <pin num="SD"/>
+            <pin num="LR"/>
+            <pin num="GND"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U3">
+      <value>Purple MAX98357A daughterboard</value>
+      <datasheet>https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf</datasheet>
+      <description>U3 is mechanically mounted on the carrier through soldered JAMP1. CAD off-board flag means daughterboard circuitry is not a separate carrier footprint. GAIN to GND retains RevB +12dB. Inspect actual module SD pull-up/straps and bypass; generic example R1 population is unverified. One external R8 pulldown only. Speaker wires attach directly to U3 terminals.</description>
+      <fields>
+        <field name="Population">EXISTING / MOUNT VIA JAMP1</field>
+        <field name="Rating"/>
+        <field name="Connection">DAUGHTERBOARD: SOLDERED TO CARRIER THROUGH JAMP1</field>
+        <field name="Footprint"/>
+        <field name="Datasheet">https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf</field>
+        <field name="Description">U3 is mechanically mounted on the carrier through soldered JAMP1. CAD off-board flag means daughterboard circuitry is not a separate carrier footprint. GAIN to GND retains RevB +12dB. Inspect actual module SD pull-up/straps and bypass; generic example R1 population is unverified. One external R8 pulldown only. Speaker wires attach directly to U3 terminals.</field>
+      </fields>
+      <libsource lib="Carrier" part="MAX98357A_PURPLE_MODULE" description="Existing MAX98357A daughterboard on soldered JAMP1 pins; nine logical terminals, with speaker connections confined to the module"/>
+      <property name="Population" value="EXISTING / MOUNT VIA JAMP1"/>
+      <property name="Rating" value=""/>
+      <property name="Connection" value="DAUGHTERBOARD: SOLDERED TO CARRIER THROUGH JAMP1"/>
+      <property name="Sheetname" value="heltec_v4_audio_carrier"/>
+      <property name="Sheetfile" value="heltec_v4_audio_carrier.kicad_sch"/>
+      <property name="exclude_from_board"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>aa9ee4ab-bb6b-5622-864c-2cec85679b14</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="VIN"/>
+            <pin num="BCLK"/>
+            <pin num="LRC"/>
+            <pin num="DIN"/>
+            <pin num="SD_MODE"/>
+            <pin num="GAIN"/>
+            <pin num="GND"/>
+            <pin num="SPK_P"/>
+            <pin num="SPK_N"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Carrier" part="AMP_Soldered_1x07">
+      <description>Seven soldered 2.54mm-pitch interconnect pins for U3; pin1 VIN through pin7 LRC; header-to-body datum and finished drill pending verification</description>
+      <fields>
+        <field name="Reference">JAMP</field>
+        <field name="Value">AMP_Soldered_1x07</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Seven soldered 2.54mm-pitch interconnect pins for U3; pin1 VIN through pin7 LRC; header-to-body datum and finished drill pending verification</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VIN" type="passive"/>
+        <pin num="2" name="GND" type="passive"/>
+        <pin num="3" name="SD_MODE" type="passive"/>
+        <pin num="4" name="GAIN" type="passive"/>
+        <pin num="5" name="DIN" type="passive"/>
+        <pin num="6" name="BCLK" type="passive"/>
+        <pin num="7" name="LRC" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="Heltec_V4_R2">
+      <description>Heltec WiFi LoRa 32 V4.3 ESP32-S3R2; official standard R2 side-header map; USB at bottom reference view</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">Heltec_V4_R2</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Heltec WiFi LoRa 32 V4.3 ESP32-S3R2; official standard R2 side-header map; USB at bottom reference view</field>
+      </fields>
+      <pins>
+        <pin num="J2_01" name="GND" type="passive"/>
+        <pin num="J2_02" name="5V_USB" type="power_out"/>
+        <pin num="J2_03" name="Ve" type="passive"/>
+        <pin num="J2_04" name="Ve" type="passive"/>
+        <pin num="J2_05" name="GPIO44_UART_RX" type="passive"/>
+        <pin num="J2_06" name="GPIO43_UART_TX" type="passive"/>
+        <pin num="J2_07" name="RST_CHIP_PU" type="passive"/>
+        <pin num="J2_08" name="GPIO0_BOOT" type="passive"/>
+        <pin num="J2_09" name="GPIO36_VEXT_CTRL" type="passive"/>
+        <pin num="J2_10" name="GPIO35_LED" type="passive"/>
+        <pin num="J2_11" name="GPIO34" type="passive"/>
+        <pin num="J2_12" name="GPIO33" type="passive"/>
+        <pin num="J2_13" name="GPIO47" type="bidirectional"/>
+        <pin num="J2_14" name="GPIO48" type="bidirectional"/>
+        <pin num="J2_15" name="GPIO26" type="passive"/>
+        <pin num="J2_16" name="GPIO21_OLED_RST" type="passive"/>
+        <pin num="J2_17" name="GPIO20_USB_D+" type="passive"/>
+        <pin num="J2_18" name="GPIO19_USB_D-" type="passive"/>
+        <pin num="J3_01" name="GND" type="passive"/>
+        <pin num="J3_02" name="3V3" type="power_out"/>
+        <pin num="J3_03" name="3V3" type="power_out"/>
+        <pin num="J3_04" name="GPIO37_ADC_CTRL" type="passive"/>
+        <pin num="J3_05" name="GPIO46" type="passive"/>
+        <pin num="J3_06" name="GPIO45" type="passive"/>
+        <pin num="J3_07" name="GPIO42_GNSS_RST" type="passive"/>
+        <pin num="J3_08" name="GPIO41" type="bidirectional"/>
+        <pin num="J3_09" name="GPIO40" type="bidirectional"/>
+        <pin num="J3_10" name="GPIO39" type="bidirectional"/>
+        <pin num="J3_11" name="GPIO38" type="bidirectional"/>
+        <pin num="J3_12" name="GPIO1_VBAT_READ" type="passive"/>
+        <pin num="J3_13" name="GPIO2_FEM_EN" type="passive"/>
+        <pin num="J3_14" name="GPIO3" type="passive"/>
+        <pin num="J3_15" name="GPIO4" type="bidirectional"/>
+        <pin num="J3_16" name="GPIO5_FEM" type="passive"/>
+        <pin num="J3_17" name="GPIO6" type="bidirectional"/>
+        <pin num="J3_18" name="GPIO7_FEM_CTRL" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="INMP441_ROUND_MODULE">
+      <description>Existing round INMP441 breakout; reference footprint geometry requires actual module fit verification</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">INMP441_ROUND_MODULE</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Existing round INMP441 breakout; reference footprint geometry requires actual module fit verification</field>
+      </fields>
+      <pins>
+        <pin num="GND" name="GND" type="power_in"/>
+        <pin num="LR" name="L/R_=_LEFT" type="input"/>
+        <pin num="SCK" name="SCK" type="input"/>
+        <pin num="SD" name="SD" type="tri_state"/>
+        <pin num="VDD" name="VDD" type="power_in"/>
+        <pin num="WS" name="WS" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="MAX98357A_PURPLE_MODULE">
+      <description>Existing MAX98357A daughterboard on soldered JAMP1 pins; nine logical terminals, with speaker connections confined to the module</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MAX98357A_PURPLE_MODULE</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Existing MAX98357A daughterboard on soldered JAMP1 pins; nine logical terminals, with speaker connections confined to the module</field>
+      </fields>
+      <pins>
+        <pin num="BCLK" name="BCLK" type="input"/>
+        <pin num="DIN" name="DIN" type="input"/>
+        <pin num="GAIN" name="GAIN" type="input"/>
+        <pin num="GND" name="GND" type="power_in"/>
+        <pin num="LRC" name="LRC" type="input"/>
+        <pin num="SD_MODE" name="SD_MODE" type="input"/>
+        <pin num="SPK_N" name="SPK-" type="output"/>
+        <pin num="SPK_P" name="SPK+" type="output"/>
+        <pin num="VIN" name="VIN" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="R">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="SW_NO_Logical">
+      <description>Normally-open tactile switch; pins1/2 are logical contact groups.</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_NO_Logical</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Normally-open tactile switch; pins1/2 are logical contact groups.</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="Speaker_External">
+      <description>Existing off-board speaker; direct insulated wires to U3 speaker terminals; no carrier pads or traces</description>
+      <fields>
+        <field name="Reference">LS</field>
+        <field name="Value">Speaker_External</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Existing off-board speaker; direct insulated wires to U3 speaker terminals; no carrier pads or traces</field>
+      </fields>
+      <pins>
+        <pin num="1" name="+" type="passive"/>
+        <pin num="2" name="-" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Carrier" part="TestPoint">
+      <fields>
+        <field name="Reference">TP</field>
+        <field name="Value">TestPoint</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Carrier">
+      <uri>${KIPRJMOD}/symbols/Carrier.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/+3V3_MIC" class="MIC_3V3">
+      <node ref="TP2" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_02" pinfunction="3V3_J3_02" pintype="power_out"/>
+      <node ref="U2" pin="VDD" pinfunction="VDD_VDD" pintype="power_in"/>
+    </net>
+    <net code="2" name="/+5V_AMP" class="AMP_POWER_SPK">
+      <node ref="JAMP1" pin="1" pinfunction="VIN_1" pintype="passive"/>
+      <node ref="TP3" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J2_02" pinfunction="5V_USB_J2_02" pintype="power_out"/>
+      <node ref="U3" pin="VIN" pinfunction="VIN_VIN" pintype="power_in"/>
+    </net>
+    <net code="3" name="/AMP_BCLK" class="I2S_LOGIC">
+      <node ref="JAMP1" pin="6" pinfunction="BCLK_6" pintype="passive"/>
+      <node ref="TP7" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_09" pinfunction="GPIO40_J3_09" pintype="bidirectional"/>
+      <node ref="U3" pin="BCLK" pinfunction="BCLK_BCLK" pintype="input"/>
+    </net>
+    <net code="4" name="/AMP_DATA" class="I2S_LOGIC">
+      <node ref="JAMP1" pin="5" pinfunction="DIN_5" pintype="passive"/>
+      <node ref="TP9" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J2_13" pinfunction="GPIO47_J2_13" pintype="bidirectional"/>
+      <node ref="U3" pin="DIN" pinfunction="DIN_DIN" pintype="input"/>
+    </net>
+    <net code="5" name="/AMP_SD" class="I2S_LOGIC">
+      <node ref="JAMP1" pin="3" pinfunction="SD_MODE_3" pintype="passive"/>
+      <node ref="R8" pin="1" pintype="passive"/>
+      <node ref="TP10" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J2_14" pinfunction="GPIO48_J2_14" pintype="bidirectional"/>
+      <node ref="U3" pin="SD_MODE" pinfunction="SD_MODE_SD_MODE" pintype="input"/>
+    </net>
+    <net code="6" name="/AMP_WS" class="I2S_LOGIC">
+      <node ref="JAMP1" pin="7" pinfunction="LRC_7" pintype="passive"/>
+      <node ref="TP8" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_08" pinfunction="GPIO41_J3_08" pintype="bidirectional"/>
+      <node ref="U3" pin="LRC" pinfunction="LRC_LRC" pintype="input"/>
+    </net>
+    <net code="7" name="/GND" class="Default">
+      <node ref="JAMP1" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="JAMP1" pin="4" pinfunction="GAIN_4" pintype="passive"/>
+      <node ref="R8" pin="2" pintype="passive"/>
+      <node ref="SW1" pin="2" pintype="passive"/>
+      <node ref="TP1" pin="1" pintype="passive"/>
+      <node ref="TP12" pin="1" pintype="passive"/>
+      <node ref="TP13" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J2_01" pinfunction="GND_J2_01" pintype="passive"/>
+      <node ref="U1" pin="J3_01" pinfunction="GND_J3_01" pintype="passive"/>
+      <node ref="U2" pin="GND" pinfunction="GND_GND" pintype="power_in"/>
+      <node ref="U2" pin="LR" pinfunction="L/R_=_LEFT_LR" pintype="input"/>
+      <node ref="U3" pin="GAIN" pinfunction="GAIN_GAIN" pintype="input"/>
+      <node ref="U3" pin="GND" pinfunction="GND_GND" pintype="power_in"/>
+    </net>
+    <net code="8" name="/MIC_BCLK" class="I2S_LOGIC">
+      <node ref="TP4" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_15" pinfunction="GPIO4_J3_15" pintype="bidirectional"/>
+      <node ref="U2" pin="SCK" pinfunction="SCK_SCK" pintype="input"/>
+    </net>
+    <net code="9" name="/MIC_DATA" class="I2S_LOGIC">
+      <node ref="TP6" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_11" pinfunction="GPIO38_J3_11" pintype="bidirectional"/>
+      <node ref="U2" pin="SD" pinfunction="SD_SD" pintype="tri_state"/>
+    </net>
+    <net code="10" name="/MIC_WS" class="I2S_LOGIC">
+      <node ref="TP5" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_17" pinfunction="GPIO6_J3_17" pintype="bidirectional"/>
+      <node ref="U2" pin="WS" pinfunction="WS_WS" pintype="input"/>
+    </net>
+    <net code="11" name="/PTT_N" class="I2S_LOGIC">
+      <node ref="SW1" pin="1" pintype="passive"/>
+      <node ref="TP11" pin="1" pintype="passive"/>
+      <node ref="U1" pin="J3_10" pinfunction="GPIO39_J3_10" pintype="bidirectional"/>
+    </net>
+    <net code="12" name="/SPK_N" class="Default">
+      <node ref="LS1" pin="2" pinfunction="-_2" pintype="passive"/>
+      <node ref="U3" pin="SPK_N" pinfunction="SPK-_SPK_N" pintype="output"/>
+    </net>
+    <net code="13" name="/SPK_P" class="Default">
+      <node ref="LS1" pin="1" pinfunction="+_1" pintype="passive"/>
+      <node ref="U3" pin="SPK_P" pinfunction="SPK+_SPK_P" pintype="output"/>
+    </net>
+    <net code="14" name="unconnected-(U1-3V3-PadJ3_03)" class="Default">
+      <node ref="U1" pin="J3_03" pinfunction="3V3_J3_03" pintype="power_out+no_connect"/>
+    </net>
+    <net code="15" name="unconnected-(U1-GPIO0_BOOT-PadJ2_08)" class="Default">
+      <node ref="U1" pin="J2_08" pinfunction="GPIO0_BOOT_J2_08" pintype="passive+no_connect"/>
+    </net>
+    <net code="16" name="unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)" class="Default">
+      <node ref="U1" pin="J3_12" pinfunction="GPIO1_VBAT_READ_J3_12" pintype="passive+no_connect"/>
+    </net>
+    <net code="17" name="unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)" class="Default">
+      <node ref="U1" pin="J3_13" pinfunction="GPIO2_FEM_EN_J3_13" pintype="passive+no_connect"/>
+    </net>
+    <net code="18" name="unconnected-(U1-GPIO3-PadJ3_14)" class="Default">
+      <node ref="U1" pin="J3_14" pinfunction="GPIO3_J3_14" pintype="passive+no_connect"/>
+    </net>
+    <net code="19" name="unconnected-(U1-GPIO5_FEM-PadJ3_16)" class="Default">
+      <node ref="U1" pin="J3_16" pinfunction="GPIO5_FEM_J3_16" pintype="passive+no_connect"/>
+    </net>
+    <net code="20" name="unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)" class="Default">
+      <node ref="U1" pin="J3_18" pinfunction="GPIO7_FEM_CTRL_J3_18" pintype="passive+no_connect"/>
+    </net>
+    <net code="21" name="unconnected-(U1-GPIO19_USB_D--PadJ2_18)" class="Default">
+      <node ref="U1" pin="J2_18" pinfunction="GPIO19_USB_D-_J2_18" pintype="passive+no_connect"/>
+    </net>
+    <net code="22" name="unconnected-(U1-GPIO20_USB_D+-PadJ2_17)" class="Default">
+      <node ref="U1" pin="J2_17" pinfunction="GPIO20_USB_D+_J2_17" pintype="passive+no_connect"/>
+    </net>
+    <net code="23" name="unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)" class="Default">
+      <node ref="U1" pin="J2_16" pinfunction="GPIO21_OLED_RST_J2_16" pintype="passive+no_connect"/>
+    </net>
+    <net code="24" name="unconnected-(U1-GPIO26-PadJ2_15)" class="Default">
+      <node ref="U1" pin="J2_15" pinfunction="GPIO26_J2_15" pintype="passive+no_connect"/>
+    </net>
+    <net code="25" name="unconnected-(U1-GPIO33-PadJ2_12)" class="Default">
+      <node ref="U1" pin="J2_12" pinfunction="GPIO33_J2_12" pintype="passive+no_connect"/>
+    </net>
+    <net code="26" name="unconnected-(U1-GPIO34-PadJ2_11)" class="Default">
+      <node ref="U1" pin="J2_11" pinfunction="GPIO34_J2_11" pintype="passive+no_connect"/>
+    </net>
+    <net code="27" name="unconnected-(U1-GPIO35_LED-PadJ2_10)" class="Default">
+      <node ref="U1" pin="J2_10" pinfunction="GPIO35_LED_J2_10" pintype="passive+no_connect"/>
+    </net>
+    <net code="28" name="unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)" class="Default">
+      <node ref="U1" pin="J2_09" pinfunction="GPIO36_VEXT_CTRL_J2_09" pintype="passive+no_connect"/>
+    </net>
+    <net code="29" name="unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)" class="Default">
+      <node ref="U1" pin="J3_04" pinfunction="GPIO37_ADC_CTRL_J3_04" pintype="passive+no_connect"/>
+    </net>
+    <net code="30" name="unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)" class="Default">
+      <node ref="U1" pin="J3_07" pinfunction="GPIO42_GNSS_RST_J3_07" pintype="passive+no_connect"/>
+    </net>
+    <net code="31" name="unconnected-(U1-GPIO43_UART_TX-PadJ2_06)" class="Default">
+      <node ref="U1" pin="J2_06" pinfunction="GPIO43_UART_TX_J2_06" pintype="passive+no_connect"/>
+    </net>
+    <net code="32" name="unconnected-(U1-GPIO44_UART_RX-PadJ2_05)" class="Default">
+      <node ref="U1" pin="J2_05" pinfunction="GPIO44_UART_RX_J2_05" pintype="passive+no_connect"/>
+    </net>
+    <net code="33" name="unconnected-(U1-GPIO45-PadJ3_06)" class="Default">
+      <node ref="U1" pin="J3_06" pinfunction="GPIO45_J3_06" pintype="passive+no_connect"/>
+    </net>
+    <net code="34" name="unconnected-(U1-GPIO46-PadJ3_05)" class="Default">
+      <node ref="U1" pin="J3_05" pinfunction="GPIO46_J3_05" pintype="passive+no_connect"/>
+    </net>
+    <net code="35" name="unconnected-(U1-RST_CHIP_PU-PadJ2_07)" class="Default">
+      <node ref="U1" pin="J2_07" pinfunction="RST_CHIP_PU_J2_07" pintype="passive+no_connect"/>
+    </net>
+    <net code="36" name="unconnected-(U1-Ve-PadJ2_03)" class="Default">
+      <node ref="U1" pin="J2_03" pinfunction="Ve_J2_03" pintype="passive+no_connect"/>
+    </net>
+    <net code="37" name="unconnected-(U1-Ve-PadJ2_04)" class="Default">
+      <node ref="U1" pin="J2_04" pinfunction="Ve_J2_04" pintype="passive+no_connect"/>
+    </net>
+  </nets>
+</export>

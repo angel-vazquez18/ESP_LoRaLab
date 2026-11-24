@@ -1,0 +1,216 @@
+{
+  "revision": "C5",
+  "research_date": "2026-11-24",
+  "status": "REFERENCE_ROUTING_GEOMETRY_NOT_RELEASED_FOR_FABRICATION",
+  "actual_hardware_measured": false,
+  "reference_footprint_source": {
+    "author": "Rafael Bachmann (barafael)",
+    "commit": "816ee4424e4765e0214c96a88f26b3a16a51b17a",
+    "commit_date": "2021-12-03T21:20:00Z",
+    "repository": "https://github.com/barafael/inmp441-breakout-kicad",
+    "immutable_footprint_url": "https://github.com/barafael/inmp441-breakout-kicad/blob/816ee4424e4765e0214c96a88f26b3a16a51b17a/inmp441.pretty/inmp441.kicad_mod",
+    "license": "MIT; archived barafael-LICENSE.txt",
+    "classification": "PRIMARY_AUTHORED_COMMUNITY_CAD_NOT_MANUFACTURER_DRAWING",
+    "author_validation_scope": "Author reports physical dimensions work, but actual microphone was not used electrically. Exact identity with owned module is unverified.",
+    "original_drill_mm": 0.762,
+    "original_pad_diameter_mm": 1.524,
+    "original_drill_adopted": false
+  },
+  "sources": [
+    {
+      "id": "user_image",
+      "path": "../user-inmp441-dimension-image.png",
+      "classification": "USER_SUPPLIED_DIMENSION_IMAGE",
+      "facts": [
+        "Outer diameter explicitly14mm",
+        "Visible top rowSCK/WS/LR and lower rowSD/VDD/GND",
+        "Red12mm is not a contact-row dimension"
+      ],
+      "limitations": [
+        "Assembly-face identification inferred from appearance",
+        "No hole pitch, hole diameter, row separation or port datum dimensions"
+      ]
+    },
+    {
+      "id": "shillehtek",
+      "url": "https://shillehtek.com/blogs/shillehtek-product-manuals/inmp441-i2s-omnidirectional-microphone-module-with-soldering-manual",
+      "classification": "PRIMARY_SELLER_PRODUCT_FAMILY_REFERENCE",
+      "facts": [
+        "Six-pin header2.54mm",
+        "Round PCB approximately15mm"
+      ],
+      "limitations": [
+        "Nominal body differs from user14mm",
+        "No dimensioned row gap or port datum",
+        "Exact owned-module identity unproven"
+      ]
+    },
+    {
+      "id": "tdk_ic",
+      "url": "https://product.tdk.com/system/files/dam/doc/product/sw_piezo/mic/mems-mic/data_sheet/inmp441.pdf",
+      "page": 17,
+      "classification": "MANUFACTURER_BARE_IC_ONLY",
+      "facts": [
+        "Bare IC nominal port0.25mm",
+        "Suggested PCB acoustic hole0.5to1mm",
+        "Acoustic passage must remain unobstructed"
+      ],
+      "limitations": [
+        "Does not dimension six-contact round breakout or prescribe carrier hole"
+      ]
+    }
+  ],
+  "dimensions": [
+    {
+      "name": "module_outer_diameter",
+      "value_mm": 14,
+      "status": "USER_IMAGE_DIMENSION; CORROBORATED_COMMUNITY_CAD"
+    },
+    {
+      "name": "in_row_pitch",
+      "value_mm": 2.54,
+      "status": "REFERENCE_CAD_AND_SELLER_FAMILY; OWNED_PART_FIT_PENDING"
+    },
+    {
+      "name": "row_center_separation",
+      "value_mm": 7.62,
+      "status": "REFERENCE_CAD; OWNED_PART_FIT_PENDING"
+    },
+    {
+      "name": "carrier_finished_contact_drill",
+      "value_mm": 1.1,
+      "status": "ENGINEERING_SELECTION; ACTUAL_PIN_AND_TOLERANCE_PENDING"
+    },
+    {
+      "name": "carrier_contact_pad_diameter",
+      "value_mm": 1.8,
+      "status": "ENGINEERING_SELECTION"
+    },
+    {
+      "name": "carrier_central_NPTH",
+      "value_mm": 3,
+      "status": "ENGINEERING_CLEARANCE_AND_REFERENCE_CAD; NOT_MODULE_PORT_MEASUREMENT"
+    },
+    {
+      "name": "carrier_central_all_copper_keepout_radius",
+      "value_mm": 2,
+      "status": "ENGINEERING_SELECTION"
+    },
+    {
+      "name": "module_to_carrier_standoff",
+      "value_mm": 3,
+      "status": "PLANNING_ASSUMPTION; UNDERSIDE_CLEARANCE_AND_PIN_ENGAGEMENT_PENDING"
+    }
+  ],
+  "assembly_view": "Acoustic/solder face UP as supplied image; component can below module. Verify owned part terminal labels and standoff; mounting opposite face requires mirroring.",
+  "center_carrier_mm": [
+    54.5,
+    30.5
+  ],
+  "pads": [
+    {
+      "pad": "SCK",
+      "net": "MIC_BCLK",
+      "local_x_mm": -2.54,
+      "local_y_up_mm": 3.81,
+      "kicad_local_y_mm": -3.81,
+      "carrier_x_mm": 51.96,
+      "carrier_y_up_mm": 34.31,
+      "community_reference_pin": 6,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    },
+    {
+      "pad": "WS",
+      "net": "MIC_WS",
+      "local_x_mm": 0,
+      "local_y_up_mm": 3.81,
+      "kicad_local_y_mm": -3.81,
+      "carrier_x_mm": 54.5,
+      "carrier_y_up_mm": 34.31,
+      "community_reference_pin": 5,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    },
+    {
+      "pad": "LR",
+      "net": "GND",
+      "local_x_mm": 2.54,
+      "local_y_up_mm": 3.81,
+      "kicad_local_y_mm": -3.81,
+      "carrier_x_mm": 57.04,
+      "carrier_y_up_mm": 34.31,
+      "community_reference_pin": 4,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    },
+    {
+      "pad": "SD",
+      "net": "MIC_DATA",
+      "local_x_mm": -2.54,
+      "local_y_up_mm": -3.81,
+      "kicad_local_y_mm": 3.81,
+      "carrier_x_mm": 51.96,
+      "carrier_y_up_mm": 26.69,
+      "community_reference_pin": 3,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    },
+    {
+      "pad": "VDD",
+      "net": "+3V3_MIC",
+      "local_x_mm": 0,
+      "local_y_up_mm": -3.81,
+      "kicad_local_y_mm": 3.81,
+      "carrier_x_mm": 54.5,
+      "carrier_y_up_mm": 26.69,
+      "community_reference_pin": 2,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    },
+    {
+      "pad": "GND",
+      "net": "GND",
+      "local_x_mm": 2.54,
+      "local_y_up_mm": -3.81,
+      "kicad_local_y_mm": 3.81,
+      "carrier_x_mm": 57.04,
+      "carrier_y_up_mm": 26.69,
+      "community_reference_pin": 1,
+      "status": "REFERENCE_CAD_PENDING_OWNED_PART_FIT"
+    }
+  ],
+  "release_gates": [
+    "Actual two-row fit and pin cross-section",
+    "Actual terminal labeling and assembly face",
+    "Actual port datum, opening and unobstructed enclosure path",
+    "Module underside height and header solder engagement",
+    "Breakout bypass/pulldown population",
+    "Independent symbol-to-pad verification and final DRC after fit corrections"
+  ],
+  "archived_files": [
+    {
+      "path": "barafael-inmp441-reference.kicad_mod",
+      "sha256": "184f7686eafa6d9ec6fc3510dd406c3f502fc2e29648d331dc795747d6cab1ba"
+    },
+    {
+      "path": "barafael-inmp441-reference.lib",
+      "sha256": "8f37333ae7bcd83600a572569538d705c4aeb3cecc69f38ed486751fb907bc15"
+    },
+    {
+      "path": "barafael-README.md",
+      "sha256": "be0c0bcdcd3fa476704c313ad1e674ca38ecbf53c341da035dc1c552b79c33cd"
+    },
+    {
+      "path": "barafael-LICENSE.txt",
+      "sha256": "aa2977457f9c601e21549efe81b45681c2bed6db896411022e71a9dae1197d94"
+    },
+    {
+      "path": "barafael-commit.json",
+      "sha256": "8bdf8f241e2d847211632d90cb78848f177d2c7691306bba3c334c5ae53543ee"
+    },
+    {
+      "path": "INMP441_REFERENCE_FOOTPRINT.md",
+      "sha256": "cf451081c3fb1698f61f3a599d92e88ae308897e271b33fc0e551fe48118bce2"
+    },
+    {
+      "path": "inmp441_reference_pad_mapping.csv",
+      "sha256": "e743b71fdab0503a164653c8c2ebd9a0119926cebe09753eb172a7cfdd56ce20"
+    }
+  ]
+}

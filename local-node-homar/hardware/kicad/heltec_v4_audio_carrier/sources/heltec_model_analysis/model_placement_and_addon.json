@@ -1,0 +1,126 @@
+{
+  "source_step": "reference/heltec-v4_3_1-reference.step",
+  "step_is_unmodified": true,
+  "step_source_url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/3D/HTIT-WB32LAF_V4.3.1%281%29.step",
+  "step_transform": {
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "kicad_model_rotation_deg": [
+      0,
+      0,
+      90
+    ],
+    "offset_mm": [
+      0,
+      23.749,
+      6.55871926
+    ],
+    "right_handed_math_rotation_deg": [
+      0,
+      0,
+      -90
+    ],
+    "verification": "Parent native KiCad preview showed stored+90 rotation required for USB-up; KiCad model-rotation sign differs from right-handed mathematical rotation."
+  },
+  "transform_math": "Xlocal=Ysource; Ylocal=23.749-Xsource; Zlocal=6.55871926+Zsource. Local+Y points USB-up/native-Y. Use KiCad stored rotation+90deg, not mathematical-90deg.",
+  "actual_step_header_hole_axes": {
+    "source_x_first": 2.159,
+    "source_x_last": 45.339,
+    "source_pitch": 2.54,
+    "source_y_rows": [
+      -11.43,
+      11.43
+    ],
+    "count_per_row": 18
+  },
+  "mapping": "STEP JP4(source-Y) -> J2 left; STEP JP5(source+Y) -> J3 right; first x2.159 at USB end. V4.3 schematic JP4.2 VUSB corroborates J2.2.",
+  "assembly_gap": {
+    "pcb_underside_above_carrier_top_mm": 5,
+    "status": "VISUAL_ASSEMBLY_ASSUMPTION_NOT_MEASURED",
+    "lowest_nonheader_part_P3_clearance_mm": 1.399947492241112,
+    "header_tips_below_carrier_top_mm": 3.499999323981666,
+    "header_tips_below_1p6mm_carrier_bottom_mm": 1.899999323981666
+  },
+  "model_registration": {
+    "main_pcb_xy_local_bounds_mm": [
+      -12.7,
+      -26.669998718262,
+      12.7,
+      25.018999980927
+    ],
+    "body_center_y_local_mm": -0.8254993686675,
+    "USB_extreme_y_local_mm": 25.990342516963047,
+    "native_USB_edge_y_mm": 99.59965748303695,
+    "user_USB_edge_y_mm": 90.40034251696305,
+    "note": "Detailed model USB extends~0.400mm beyond carrier top edge; connector/cable sweep still unverified. No2D pad or outline edits."
+  },
+  "oled_addon": {
+    "file": "Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+    "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122",
+    "attach_scale": [
+      1,
+      1,
+      1
+    ],
+    "attach_rotation_deg": [
+      0,
+      0,
+      0
+    ],
+    "attach_offset_mm": [
+      0,
+      0,
+      0
+    ],
+    "frame_center_local_mm": [
+      0,
+      -6.36
+    ],
+    "outer_frame_mm": [
+      18.6,
+      33
+    ],
+    "window_mm": [
+      11.4,
+      22
+    ],
+    "frame_thickness_mm": 2.52,
+    "frame_top_above_module_pcb_mm": 5.5,
+    "top_with_assumed_screw_head_above_carrier_mm": 12.27871926,
+    "classification": "MANUFACTURER_DRAWING_ENVELOPE_WITH_VISUAL_APPROXIMATION_DETAILS",
+    "assumed_details": [
+      "Corner profile",
+      "Display/glass/backing thicknesses",
+      "Dark PC material/color approximation",
+      "Support-post and screw-head geometry",
+      "Simplified FPC side patch only; no RF conductor geometry",
+      "No display content; screen shown dark"
+    ]
+  },
+  "manufacturer_sources": [
+    {
+      "url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf",
+      "page": 15,
+      "used": "33x18.6 envelope,22x11.4 window,2.52 case height and5.5 height reference; exact assembly fit remains unverified"
+    },
+    {
+      "url": "https://heltec.org/project/wifi-lora-32-v4-r2",
+      "used": "OLED PC case and side-mounted FPC antenna; official R2 appearance"
+    },
+    {
+      "url": "https://static.heltec.org/media/6902d90379d845708966c8f3139aa860.png",
+      "local": "official-r2-product-front.png",
+      "used": "Black PC frame, dark heads, pale support posts and dark display face"
+    },
+    {
+      "url": "https://static.heltec.org/media/8658c441d5a14384ba32d74fca009150.png",
+      "local": "official-r2-product-detail.png",
+      "used": "Bare-board photo demonstrates omitted OLED/bracket structure"
+    }
+  ],
+  "conflicting_mechanics_note": "Official STEP retention bores are2.8mm diameter, whereas published drawing labels1.9mm; preserve source distinction and do not infer accepted mounting fit. No carrier retention holes added.",
+  "licensing": "Original official Heltec STEP and photos remain manufacturer references with source attribution. No explicit permissive license was identified; no relicense assertion. Generated supplement is project-authored approximate geometry."
+}

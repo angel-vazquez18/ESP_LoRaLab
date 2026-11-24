@@ -1,0 +1,25 @@
+(footprint "MAX98357A_H7_2p54_PROVISIONAL" (version 20260206) (generator "pcbnew") (layer "F.Cu")
+(descr "User drawing:17.7x19mm PCB and2.54mm header pitch; numeric1VIN2GND3SD4GAIN5DIN6BCLK7LRC. Header centered horizontally and2mm above lower edge are PROVISIONAL registration. 1.1mm drill/1.8mm pads are engineering choices requiring interconnect-pin fit verification. No speaker-output carrier pads.")
+(attr through_hole)
+(fp_text reference "REF**" (at 0 -3) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+(fp_text value "MAX98357A_H7_2p54_PROVISIONAL" (at 0 3) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+(fp_rect (start -8.85 -9.5) (end 8.85 9.5) (stroke (width 0.15) (type default)) (fill none) (layer "F.Fab"))
+(fp_rect (start -9.15 -9.8) (end 9.15 9.8) (stroke (width 0.05) (type default)) (fill none) (layer "F.CrtYd"))
+(fp_text user "U3 AMP / DATUM VERIFY" (at 0 0) (layer "F.Fab") (effects (font (size 1.1 1.1) (thickness 0.16))))
+(pad "1" thru_hole rect (at 7.62 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "2" thru_hole circle (at 5.08 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "3" thru_hole circle (at 2.54 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "4" thru_hole circle (at 0.0 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "5" thru_hole circle (at -2.54 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "6" thru_hole circle (at -5.08 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+(pad "7" thru_hole circle (at -7.62 7.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") (remove_unused_layers no))
+
+
+		
+	
+		(model "${KIPRJMOD}/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl"
+			(offset (xyz 0 0 0))
+			(scale (xyz 1 1 1))
+			(rotate (xyz 0 0 0))
+		)
+	)

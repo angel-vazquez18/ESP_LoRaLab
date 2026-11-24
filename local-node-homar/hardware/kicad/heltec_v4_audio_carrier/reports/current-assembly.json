@@ -1,0 +1,107 @@
+{
+  "revision": "C5",
+  "switch": {
+    "reference": "SW1",
+    "population": "FIT",
+    "value": "PTT 6x6x8mm",
+    "net": "GPIO39/PTT_N to GND, normally open",
+    "model": "SW_PUSH_6mm_H8mm.step",
+    "model_source": "C:\\Program Files\\KiCad\\10.0\\share\\kicad\\3dmodels\\Button_Switch_THT.3dshapes\\SW_PUSH_6mm_H8mm.step",
+    "model_sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969",
+    "model_offset_mm": [
+      -3.25,
+      2.25,
+      0
+    ]
+  },
+  "firmware_note": "ENABLE_PTT=false remains unchanged. Enabled firmware branch uses GPIO39 INPUT_PULLUP.",
+  "native_pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "native_schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+  "assembly": {
+    "carrier_passives": [
+      "R8"
+    ],
+    "carrier_capacitors": 0,
+    "dnp": [],
+    "ptt": "SW1 fitted, GPIO39/PTT_N to GND",
+    "power_and_signals": "Direct copper",
+    "module_circuitry": "Existing bypassing retained; actual population unverified."
+  },
+  "validation": {
+    "revision": "C5",
+    "pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+    "schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+    "erc_violations": 0,
+    "drc_violations": 0,
+    "unconnected_items": 0,
+    "schematic_parity": 0,
+    "checks": {
+      "connectivity": {
+        "passed": 518,
+        "total": 518
+      },
+      "routing": {
+        "passed": 26,
+        "total": 26
+      },
+      "bom": {
+        "passed": 52,
+        "total": 52
+      }
+    },
+    "track_count": 116,
+    "via_count": 38,
+    "report_sha256": {
+      "schematic-erc.json": "0e85b34d5f61eba82c1ed069e94d171620ba4d7263e1c5cb49d38e7eb1af8e04",
+      "pcb-drc.json": "f12a8d89fbe035315598354185b0c9cefd2f717fce6e3f7b3e075842013f9b86",
+      "connectivity_audit.json": "b7d6ff1a2a00609792fdfcebf0d458d7b0f7a072235b6426c931e0caeec2133e",
+      "routing_audit.json": "21db088849493a515ef41c7f7822b2acf81e62960cf219b372db3e340840b8e0",
+      "bom_audit.json": "1c9de4beddf03f207e78b59b09a78f3adcf9185bb002c7ae6f6ed399e091947f"
+    }
+  },
+  "resistor": {
+    "revision": "C5",
+    "component": "R8",
+    "value": "1k",
+    "brand": "EEEEE",
+    "rating_w": 0.5,
+    "tolerance_percent": 5,
+    "construction": "carbon axial through-hole",
+    "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+    "body_reference_mm": [
+      10,
+      3.6
+    ],
+    "pitch_mm": 15.24,
+    "drill_mm": 1,
+    "pad_diameter_mm": 2,
+    "native_position_mm": [
+      147,
+      145
+    ],
+    "native_pad_positions_mm": [
+      [
+        147,
+        145
+      ],
+      [
+        162.24,
+        145
+      ]
+    ],
+    "model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+    "model_status": "Representative geometry; actual EEEEE dimensions unverified",
+    "band_colors": [
+      "brown",
+      "black",
+      "red",
+      "gold"
+    ],
+    "electrical_topology_changed": false,
+    "pcb_routing_changed": "Added two AMP_SD segments to new R8.1. Removed old SMD ground track/via; THT R8.2 connects directly to GND planes.",
+    "sources": [
+      "https://www.amazon.com/dp/B0G4LVC5RY",
+      "https://www.tme.eu/Document/29f58ab8e2ccd3fbcb10a82637aa83de/cfr.pdf"
+    ]
+  }
+}
