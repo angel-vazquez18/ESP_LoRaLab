@@ -100,3 +100,35 @@ invalid requests preserving revision and SPI count, all 220 pre-acceptance JSON
 allocation positions, coding 4/5 → driver enum 1, sync word 14/24, frequency/power/
 preamble bounds, representative LDRO boundaries and host stale-health/radio-loss
 handling. Physical parameter/antenna measurements remain pending.
+
+## Finite transmission (#19)
+
+`node_radio_tx` accepts one 1–255-byte frame, a nonzero session/frame/message
+reference and attempt index 1–6, and a deadline of 1–30,000,000 microseconds.
+Acceptance is separate from completion. It programs the exact FIFO bytes, packet
+length and finite chip timeout, clears/maps IRQs, selects the transmit front-end
+path and records the node-local command time immediately before SetTx.
+
+`node_radio_poll` resolves TX-done, hardware timeout, software deadline or error
+once. TX-done time is the observation of DIO1 and the matching TX-done IRQ, not
+an assumed airtime or an ISR-edge timestamp. Completion requires standby cleanup;
+failed/absent completion never receives an invented TX-done timestamp. Stop emits
+cancellation and disables the front end. The hardware timeout is finite even if
+the control task is delayed; software observes outcomes on its next poll. BUSY/SPI
+cleanup has the separate bounded waits described above, so the deadline is not a
+promise of zero scheduling/cleanup latency.
+
+There is one retained terminal-result slot. Polling with a null result advances
+the state without consuming that slot; new work/configuration rejects until the
+consumer takes the result. This prevents silent loss under consumer backpressure.
+Frame identity and attempt index are copied, not regenerated on retry. Packet
+construction and retaining original bytes across retries belong above the driver.
+
+Run `uv run --project testbed pytest testbed/tests/test_radio_native.py -q`.
+Expected TX cases: exact FIFO bytes and attributed completion; empty/oversize/
+zero-timeout rejection; concurrent-start rejection; missing IRQ/deadline, chip
+IRQ timeout, unexpected IRQ, I/O failure, cancel, retained result and following TX.
+No direct radio-transmit operator command is introduced: `run.start` remains
+unadvertised until the finite message engine and receiver are integrated. Later
+physical validation must inspect actual IRQ/timestamp/stop behavior and delivered
+bytes on two identified nodes with matched antennas.

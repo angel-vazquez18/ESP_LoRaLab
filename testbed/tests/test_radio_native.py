@@ -48,6 +48,12 @@ def radio_fixture(tmp_path_factory):
     [
         "initialize",
         "settings",
+        "tx",
+        "tx_cancel",
+        "tx_timeout",
+        "tx_irq_timeout",
+        "tx_bad_irq",
+        "tx_io_failure",
         "busy",
         "absent",
         "command_rejected",

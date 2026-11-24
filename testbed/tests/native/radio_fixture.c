@@ -71,6 +71,44 @@ int main(int argc, char **argv) {
             assert(node_radio_stop(&radio));
             assert(!f.pins[RADIO_FEM_ENABLE]);
         }
+        if (!strncmp(argv[1], "tx", 2)) {
+            node_radio_settings config = {915000000,125000,7,5,2,8};
+            assert(node_radio_configure(&radio,&config));
+            uint8_t bytes[]={0x01,0x80,0xff};
+            node_radio_reference reference={1,7,3,0,2};
+            unsigned before=f.transfers;
+            assert(!node_radio_tx(&radio,bytes,0,&reference,100000));
+            assert(!node_radio_tx(&radio,bytes,256,&reference,100000));
+            assert(!node_radio_tx(&radio,bytes,sizeof(bytes),&reference,0));
+            assert(f.transfers==before);
+            assert(node_radio_tx(&radio,bytes,sizeof(bytes),&reference,100000));
+            assert(f.tx_length==3 && !memcmp(bytes,f.tx_bytes,3));
+            assert(!node_radio_tx(&radio,bytes,3,&reference,100000));
+            node_radio_event event;
+            assert(!node_radio_poll(&radio,&event));
+            if (!strcmp(argv[1],"tx_cancel")) assert(node_radio_stop(&radio));
+            else if (!strcmp(argv[1],"tx_timeout")) f.time += 100000;
+            else if (!strcmp(argv[1],"tx_irq_timeout")) f.irq=0x0200;
+            else if (!strcmp(argv[1],"tx_bad_irq")) f.irq=2;
+            else if (!strcmp(argv[1],"tx_io_failure")) { f.fail=true; f.irq=1; }
+            else { f.time+=50000; f.irq=1; }
+            assert(!node_radio_poll(&radio,NULL)); // Backpressure retains the terminal event.
+            assert(!node_radio_tx(&radio,bytes,3,&reference,100000));
+            assert(node_radio_poll(&radio,&event));
+            assert(event.reference.frame_seq==7 && event.reference.attempt_index==2);
+            assert(event.frame_bytes==3 && event.command_us >= 0);
+            assert(event.status==(!strcmp(argv[1],"tx") ? RADIO_DONE :
+                !strcmp(argv[1],"tx_cancel") ? RADIO_CANCELLED :
+                (!strcmp(argv[1],"tx_timeout") || !strcmp(argv[1],"tx_irq_timeout")) ? RADIO_TIMEOUT : RADIO_FAILED));
+            assert((event.done_us >= event.command_us) == (event.status==RADIO_DONE));
+            assert(!node_radio_poll(&radio,&event));
+            assert(!f.pins[RADIO_FEM_ENABLE] && !f.pins[RADIO_FEM_MODE]);
+            if (!f.fail) {
+                assert(node_radio_tx(&radio,bytes,3,&reference,100000));
+                f.irq=1; assert(node_radio_poll(&radio,&event) && event.status==RADIO_DONE);
+            }
+            f.fail=false;
+        }
         assert(node_radio_init(&radio, &bus, RADIO_HELTEC_V42_GC1109));
     }
     puts("radio boundary passed");

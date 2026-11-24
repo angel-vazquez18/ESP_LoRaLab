@@ -38,6 +38,17 @@ requests require fresh advertised support and typed applied results. Full
 `make check` passed 378 tests without skips; the ESP-IDF build passed. No RF hardware or radiated-power measurement was
 performed. [Details and later checks](radio_driver.md#modem-configuration-15).
 
+## November 21 — Finite transmit driver (#19)
+
+Added bounded exact-byte frame transmission, copied original/attempt references,
+node-local command/TX-done observation times, finite chip/software deadlines,
+retained one-shot terminal results and standby/front-end cleanup. Native cases
+cover completion, missing/unexpected/timeout IRQs, I/O failure, cancellation,
+consumer pressure and following transmission. Full `make check` passed 384 tests
+without skips; ESP-IDF build passed. These are driver boundaries; operator
+`run.start` is still unavailable pending RX and message integration. No board or
+RF measurement was used. See [finite transmission](radio_driver.md#finite-transmission-19).
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones
