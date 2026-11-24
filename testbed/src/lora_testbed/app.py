@@ -2,6 +2,7 @@
 
 import asyncio
 import csv
+import hashlib
 import io
 import json
 import os
@@ -46,6 +47,7 @@ from .serial_validation import SerialValidationRequest, serial_plan
 from .session_keys import require_public_metadata
 from .voice_runs import VoiceRunRequest
 from .workload_assessment import AssessmentRequest
+from .workload_plots import projection
 
 
 class PreflightRequest(StrictModel):
@@ -287,6 +289,30 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.get("/api/workload-assessments/{identifier}")
     async def workload_assessment_get(identifier: control_v2.UUID):
         return app.state.host.observations.get(identifier)
+
+    @app.get("/api/workload-assessments/{identifier}/plots")
+    async def workload_plots(
+        identifier: control_v2.UUID,
+        max_points: int = Query(480, ge=32, le=960),
+        buffer_offset: int = Query(0, ge=0, le=192000),
+        stage_offset: int = Query(0, ge=0, le=12000),
+    ):
+        return projection(
+            app.state.host.observations.get(identifier), max_points, buffer_offset, stage_offset
+        )
+
+    @app.get("/api/workload-assessments/{identifier}/export")
+    async def workload_export(identifier: control_v2.UUID):
+        record = app.state.host.observations.get(identifier)
+        content = (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
+        return Response(
+            content,
+            media_type="application/json",
+            headers={
+                "Content-Disposition": f'attachment; filename="workload-{identifier}.json"',
+                "X-Content-SHA256": hashlib.sha256(content).hexdigest(),
+            },
+        )
 
     @app.post("/api/nodes/{role}/memory-observation")
     async def memory_observation_start(role: Literal["A", "B"], body: memory_observation_v2.Start):
