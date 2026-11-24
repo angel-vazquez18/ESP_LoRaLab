@@ -90,19 +90,20 @@ def test_pause_finishes_current_child_holds_ownership_and_resumes_saved_order(
             "/api/physical-campaigns/plans",
             json={
                 "name": "Saved seeded order",
-                "repetitions": 3,
+                "repetitions": 1,
                 "order": "randomized",
                 "order_seed": 19,
                 "templates": [
                     {
-                        "label": "memory",
+                        "label": f"memory-{size}",
                         "case": {
                             "kind": "memory_probe",
                             "role": "B",
                             "iterations": 8,
-                            "payload_bytes": 4096,
+                            "payload_bytes": size,
                         },
                     }
+                    for size in (512, 1024, 2048)
                 ],
             },
         ).json()
@@ -139,6 +140,12 @@ def test_pause_finishes_current_child_holds_ownership_and_resumes_saved_order(
         ]
         assert all(case["status"] == "completed" for case in saved["cases"])
         assert len({case["child"]["id"] for case in saved["cases"]}) == 3
+
+        requests = [
+            client.get("/api/diagnostic-runs/" + case["child"]["id"]).json()["arguments"]
+            for case in saved["cases"]
+        ]
+        assert [args["payload_bytes"] for args in requests] == [2048, 512, 1024]
 
 
 def test_cancel_retains_active_child_and_reason_codes_unstarted_cases(native_library, tmp_path):
@@ -288,7 +295,10 @@ def test_campaign_runs_known_data_then_secure_voice_through_actual_pair(native_l
                         "templates": [
                             {
                                 "label": "data",
-                                "case": {"kind": "known_data", "request": {"message_bytes": 64}},
+                                "case": {
+                                    "kind": "known_data",
+                                    "request": {"message_bytes": 97, "source_seed": 17},
+                                },
                             },
                             {
                                 "label": "voice",
@@ -313,6 +323,8 @@ def test_campaign_runs_known_data_then_secure_voice_through_actual_pair(native_l
             assert [case["child"]["service"] for case in saved["cases"]] == ["radio", "voice"]
             radio = host.radio.get(saved["cases"][0]["child"]["id"])
             assert radio["sender"] == "B" and radio["verification"]["bytes_equal"]
+            assert radio["plan"]["spec"]["source_seed"] == 17
+            assert len(host.radio.content(radio["id"], "source").read_bytes()) == 97
             assert (
                 host.radio.content(radio["id"], "source").read_bytes()
                 == host.radio.content(radio["id"], "recovered").read_bytes()
