@@ -77,3 +77,11 @@ no serial port was opened, firmware queried, reset requested or flash written.
 The port previously appeared as `/dev/cu.usbmodem1201`; rediscover the port before
 future operations. USB enumeration does not establish the running firmware,
 printed board revision, memory bring-up or microphone/speaker operation.
+
+## Optional PTT implementation
+
+The planned GPIO47-to-GND input now has an opt-in firmware driver and host-armed
+finite capture. It defaults off; no PCB revision, soldering or button operation
+was verified by its software/build checks. GPIO7 remains reserved. See
+[PTT configuration and physical acceptance](../docs/host_armed_ptt.md). Existing
+wiring table/diagram assignments are unchanged.

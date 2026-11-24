@@ -4,6 +4,25 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Host-armed finite PTT capture (#30)
+
+Optional GPIO47 polling now starts only one explicitly host-armed fixed-length
+capture after a stable release and press. Stop/lease/disconnect/deadline outrank
+pending input; held rearm and duplicate commands cannot restart work. No DMA is
+started/stopped while only armed. API/CLI reuse the ordinary bench/audio ownership,
+PCM verification, WAV and cleanup. The exact `ptt_capture_v1` supplement is gated
+independently; its fixed policy is fingerprinted to keep bounded enrollment.
+
+Twenty dedicated native/API/CLI cases pass, including 80 admission allocation
+failure positions with recovery, mismatched current/identity fingerprints and a
+fully configured radio/audio/codec/PTT hello. The serial fixture no longer inflates
+compact records with whitespace. Full `make check` passes 729 cases without skips,
+plus lint/frontend/contracts/repository/vendor checks and frontend formatting. Both V4.2/
+32 KiB IDF profiles build: PTT disabled 0x6e880, isolated microphone/PTT enabled
+0x6e930, each 57% app free with static DIRAM 73,841 bytes. Normal configuration
+remains off. No flash; PCB/GPIO47 switch acceptance remains unverified under #1.
+Other wire fingerprints are unchanged. See [PTT walkthrough](host_armed_ptt.md).
+
 ## November 23 — Voice stage dashboard (#72)
 
 The Voice page now controls the common reference/microphone workflow and inspects

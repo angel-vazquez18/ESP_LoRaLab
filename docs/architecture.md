@@ -284,3 +284,9 @@ inspection. `VoiceRuns.inspect` composes linked records with current verified
 file hashes/waveforms and boot-qualified local timings. Browser state retains
 only selection/edit inputs; serial ownership, jobs and listening records stay
 in the backend. One-way latency has no value without workflow calibration.
+
+Optional PTT uses the portable allocation-free `input/ptt_gate` and a separate
+`platform/esp32_ptt` GPIO boundary. `ptt.arm` reserves one ordinary finite capture;
+existing serial ownership, operation stop/deadline and audio readback/cleanup stay
+shared. The independent fingerprinted supplement gates API/CLI capture; input is
+configured only by explicit per-board Kconfig. No button RF lifecycle is added.
