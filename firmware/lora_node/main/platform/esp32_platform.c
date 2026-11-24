@@ -19,6 +19,7 @@
 #include "radio/esp32_radio.h"
 #include "generated/contract_schema.h"
 #include "platform/esp32_platform.h"
+#include "source/esp32_source.h"
 #include "platform/esp32_ptt.h"
 #include "platform/esp32_display.h"
 
@@ -139,6 +140,7 @@ void esp32_platform_init(node_platform *platform)
         .deallocate = deallocate,
         .memory = memory,
         .memory_region = memory_region,
+        .source_worker = esp32_source_port(),
         .device_id = device_id,
         .boot_id = boot_id,
         .firmware_version = app->version,

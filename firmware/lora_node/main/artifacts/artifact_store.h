@@ -83,3 +83,8 @@ artifact_status artifact_store_encode_finish(artifact_store *store, const char *
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
 
 void artifact_store_memory(const artifact_store *s, node_memory_inventory *out);
+
+// Fixed-source evidence archive; zero holes are identified by run.source delivery IDs.
+artifact_status artifact_store_source_archive_begin(artifact_store *, const char *owner, const char *id, void **destination);
+artifact_status artifact_store_source_archive_finish(artifact_store *, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);

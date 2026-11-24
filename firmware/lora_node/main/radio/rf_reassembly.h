@@ -41,3 +41,9 @@ rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *, const u
                                                         int64_t now_us);
 
 void rf_reassembly_memory(const rf_reassembly *s, node_memory_inventory *out);
+
+// Trusted stream caller advances to a higher message using the existing reservation.
+bool rf_reassembly_next(rf_reassembly *, uint32_t message, int64_t now_us, int64_t deadline_us);
+
+// Finite stream retains its reservation across per-message validation failures.
+void rf_reassembly_stream(rf_reassembly *);

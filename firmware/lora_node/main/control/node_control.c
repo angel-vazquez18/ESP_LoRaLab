@@ -418,13 +418,16 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         cJSON *execution = object(n);
         string(n, execution, "profile", EXECUTION_PROFILE);
         string(n, execution, "schema_sha256", EXECUTION_SCHEMA_SHA256);
-        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary"},8));
+        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary","run.source"},9));
         add(n, limits, "execution", execution);
         cJSON *execution_limits=object(n);
+        if (!enrollment) {
         number(n,execution_limits,"max_message_bytes",65536);number(n,execution_limits,"max_messages_per_run",1);
         number(n,execution_limits,"max_fragments_per_message",4096);number(n,execution_limits,"max_duration_ms",3600000);
         number(n,execution_limits,"max_retries",2);
+        }
         boolean(n,execution_limits,"encoded_source",true);
+        if (enrollment) boolean(n,execution_limits,"fixed_rate_encoded",n->port.source_worker.reserve && n->port.source_worker.start && n->port.source_worker.stop);
         if (enrollment) string(n,execution_limits,"irq_timestamp_phase","task_observed_dio1");
         add(n,limits,"execution_limits",execution_limits);
     }
@@ -911,7 +914,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary") || eq(name, "memory.status");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary") || eq(name,"run.source") || eq(name, "memory.status");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -1516,7 +1519,7 @@ node_control *node_control_create(const node_platform *platform)
         free(n);
         return NULL;
     }
-    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release,observation_leave});
+    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release,observation_leave,n->port.source_worker});
     memory_observer_init(&n->memory_watch, (memory_observer_port){n, radio_now, observation_memory, observation_emit, observation_buffers});
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;
@@ -1530,7 +1533,7 @@ void node_control_destroy(node_control *n)
         return;
     memory_observer_stop(&n->memory_watch, "shutdown");
     if (n->op.active) finish_operation(n, "cancelled", NULL, "shutdown");
-    rf_execution_abort(&n->rf,"host_shutdown",true);
+    if (!rf_execution_abort(&n->rf,"host_shutdown",true)) return;
     if (!crypto_benchmark_destroy(&n->op.crypto)) return; // Retain failed cleanup for retry.
     artifact_store_destroy(n->artifacts);
     wipe_bytes(n, sizeof(*n));

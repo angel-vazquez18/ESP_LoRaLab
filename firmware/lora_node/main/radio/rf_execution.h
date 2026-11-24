@@ -7,6 +7,7 @@
 #include "radio/rf_reassembly.h"
 #include "radio/rf_sender.h"
 #include "security/session_crypto.h"
+#include "source/worker.h"
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef struct
     void *(*allocate)(void *, size_t);
     void (*release)(void *, void *);
     void (*before_release)(void *);
+    encoded_worker_port source_worker;
 } rf_execution_port;
 typedef enum
 {
@@ -39,7 +41,8 @@ typedef enum
     RF_ARM,
     RF_START,
     RF_STOP,
-    RF_SUMMARY
+    RF_SUMMARY,
+    RF_SOURCE
 } rf_action;
 typedef struct
 {
@@ -49,7 +52,7 @@ typedef struct
     uint32_t revision, seed, bytes, duration_ms;
     uint32_t ack_timeout, reassembly, drain, processing;
     node_link_settings link;
-    bool protected_mode, encoded;
+    bool protected_mode, encoded, fixed_source;
     char source_artifact_id[37], expected_sha256[65];
     uint32_t sample_count;
     const cJSON *provision_keys;
@@ -64,7 +67,12 @@ typedef struct
     rf_plan plan;
     rf_phase phase;
     bool used, sender, oom, finished, failed, started;
-    bool radio_cleanup_failed, key_cleanup_failed;
+    bool radio_cleanup_failed, key_cleanup_failed, source_cleanup_failed;
+    encoded_queue *queue;
+    void *source_worker;
+    uint32_t active_message, received_message, delivered_bitmap;
+    uint32_t source_finished_messages, received_messages;
+    char archive_sha[65];
     uint64_t drops_start;
     char artifact_id[37], sha_hex[65];
     const uint8_t *payload;

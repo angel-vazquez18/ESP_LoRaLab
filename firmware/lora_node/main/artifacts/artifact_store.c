@@ -371,3 +371,26 @@ void artifact_store_memory(const artifact_store *s, node_memory_inventory *out)
         node_memory_add(out, names[i], s->slots[i].bytes, s->slots[i].manifest.length_bytes);
     }
 }
+
+artifact_status artifact_store_source_archive_begin(artifact_store *s, const char *owner,
+    const char *id, void **destination)
+{
+    if (!destination) return ARTIFACT_INVALID_ARGUMENT;
+    artifact_spec spec = {id, "recovered",
+        "0000000000000000000000000000000000000000000000000000000000000000", "known_data", 24000};
+    artifact_status status = artifact_store_begin(s, owner, &spec);
+    if (status != ARTIFACT_OK) return status;
+    artifact_slot *slot = find(s, id);
+    memset(slot->bytes, 0, 24000);
+    slot->producing = true;
+    *destination = slot->bytes;
+    return ARTIFACT_OK;
+}
+artifact_status artifact_store_source_archive_finish(artifact_store *s, const char *id,
+    bool (*hash)(void *, const void *, size_t, uint8_t[32]), void *context)
+{
+    artifact_slot *slot = find(s, id);
+    if (!slot || !equal(slot->manifest.format, "known_data") || slot->manifest.length_bytes != 24000)
+        return ARTIFACT_INVALID_STATE;
+    return finish_producer(s, id, hash, context);
+}

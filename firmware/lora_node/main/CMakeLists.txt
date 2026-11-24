@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS
         "lora_node.c"
+        "source/encoded_source.c"
+        "source/esp32_source.c"
         "radio/esp32_radio.c"
         "radio/node_radio.c"
         "radio/radio_config_json.c"

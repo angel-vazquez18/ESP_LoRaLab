@@ -7,6 +7,7 @@
 #include "display/node_view.h"
 #include "radio/node_radio.h"
 #include "memory/observations.h"
+#include "source/worker.h"
 
 #define NODE_RECORD_BYTES 4096
 #define NODE_REPLY_SLOTS 4
@@ -33,6 +34,7 @@ typedef struct {
     bool (*ptt_pressed)(void *); // NULL leaves the physical input disabled.
     node_display_port display;
     node_memory_region (*memory_region)(void *, const void *);
+    encoded_worker_port source_worker;
 } node_platform;
 
 typedef struct node_control node_control;
