@@ -26,10 +26,13 @@ def prepare_voice(
     overrides=None,
     reject=False,
     omit=(),
+    budget_overrides=None,
+    radio=None,
 ):
     run = str(uuid4())
     link = Link(guard_us=0, ack_mode="stop_wait" if ack else "none", max_retries=2 if ack else 0)
     plan = KnownDataPlan(
+        radio=radio or {},
         link=link,
         spec=KnownDataSpec(
             message_count=1,
@@ -51,6 +54,7 @@ def prepare_voice(
     budget = preview(plan)["timing"]["budget"]
     budget["processing_budget_us"] += 5000000
     budget["reassembly_timeout_us"] += 5000000
+    budget.update(budget_overrides or {})
     revisions, reservations = {}, {}
     for role, node in nodes.items():
         assert node.request("control.claim", {"node_role": role})["ok"]
@@ -67,7 +71,7 @@ def prepare_voice(
             },
             run_id=run,
         )["ok"]
-        applied = node.request("config.set", {"radio": {}, "link": link.model_dump()})
+        applied = node.request("config.set", {"radio": radio or {}, "link": link.model_dump()})
         assert applied["ok"]
         revisions[role] = applied["result"]["config_revision"]
         selected = (
