@@ -1,0 +1,9 @@
+#pragma once
+#define OLED_PROFILE "oled_status_v1"
+#define OLED_SCHEMA_SHA256 "e57d4c95bcf81dcf33047296845e796635e84ac5764c8a1ae8d440b78188a8c7"
+#define OLED_SDA_GPIO 17
+#define OLED_SCL_GPIO 18
+#define OLED_RESET_GPIO 21
+#define OLED_POWER_GPIO 36
+#define OLED_POWER_ON_LEVEL 0
+#define OLED_I2C_ADDRESS 60

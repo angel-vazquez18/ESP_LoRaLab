@@ -1,0 +1,55 @@
+{
+  "scope": "passive_oled_worker_observation",
+  "profile": "oled_status_v1",
+  "status": {
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "const": "oled_status_v1",
+        "title": "Profile",
+        "type": "string"
+      },
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "state": {
+        "enum": [
+          "starting",
+          "ready",
+          "setup_failed",
+          "io_failed",
+          "allocation_failed"
+        ],
+        "title": "State",
+        "type": "string"
+      },
+      "physical_qualified": {
+        "const": false,
+        "title": "Physical Qualified",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "profile",
+      "schema_sha256",
+      "state",
+      "physical_qualified"
+    ],
+    "title": "Status",
+    "type": "object"
+  },
+  "policy": {
+    "controller": "SSD1315",
+    "width": 128,
+    "height": 64,
+    "frame_bytes": 1024,
+    "max_frame_writes": 10,
+    "io_timeout_ms": 5,
+    "worker_period_ms": 250,
+    "pending_views": 1,
+    "ready_basis": "complete_i2c_frame_acknowledgment_not_observed_pixels",
+    "failure_policy": "stop_worker_no_automatic_retry_keep_vext_on"
+  }
+}
