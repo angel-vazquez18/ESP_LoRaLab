@@ -207,12 +207,18 @@ class RadioRuns:
         }
 
     def content(self, identifier, kind):
-        self.get(identifier)
+        record = self.get(identifier)
         if kind not in ("source", "recovered", "wire"):
             raise ValueError("Unknown radio content")
         path = self.directory / f"{identifier}.{'ndjson' if kind == 'wire' else kind + '.bin'}"
         if not path.is_file():
             raise ValueError("This radio run has no requested content")
+        expected = record.get("saved_files", {}).get(kind)
+        if expected:
+            with path.open("rb") as stream:
+                actual = hashlib.file_digest(stream, "sha256").hexdigest()
+            if path.stat().st_size != expected["length_bytes"] or actual != expected["sha256"]:
+                raise ValueError("Saved radio file failed its length/hash check")
         return path
 
     def wire(self, r, value):
@@ -772,6 +778,29 @@ class RadioRuns:
                 r["missing_evidence"] = failed_ranges(r)
                 r["finished_at"] = utc_now()
                 r["stage"] = "finished"
+                r["saved_files"] = {}
+                for kind in ("source", "recovered", "wire"):
+                    path = (
+                        self.directory
+                        / f"{r['id']}.{'ndjson' if kind == 'wire' else kind + '.bin'}"
+                    )
+                    try:
+                        if path.is_file():
+                            with path.open("rb") as stream:
+                                checksum = hashlib.file_digest(stream, "sha256").hexdigest()
+                            r["saved_files"][kind] = {
+                                "length_bytes": path.stat().st_size,
+                                "sha256": checksum,
+                            }
+                    except OSError as exc:
+                        r.setdefault("saved_file_errors", {})[kind] = str(exc)
+                        r["evidence_error"] = (
+                            r.get("evidence_error") or "Saved file fingerprint unavailable"
+                        )
+                        r["error"] = r.get("error") or r["evidence_error"]
+                        if r["status"] == "completed":
+                            r["status"] = "failed"
+                r["wire_sha256"] = r["saved_files"].get("wire", {}).get("sha256")
                 self.save(r)
             finally:
                 self.current = None
@@ -837,11 +866,9 @@ class RadioRuns:
         require_public_metadata(record)
         members = {"run.json": json.dumps(record, indent=2).encode()}
         for kind in ("source", "recovered", "wire"):
-            try:
+            if kind in record["available_content"] or kind in record.get("saved_files", {}):
                 path = self.content(identifier, kind)
-            except ValueError:
-                continue
-            members[path.name] = path.read_bytes()
+                members[path.name] = path.read_bytes()
         for role, transfer_id in record["transfers"].items():
             members[f"transfers/{role}.json"] = json.dumps(
                 self.artifacts.get(transfer_id), indent=2
