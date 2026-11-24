@@ -235,3 +235,11 @@ done:
     mbedtls_platform_zeroize(digest, sizeof(digest));
     return result;
 }
+
+void rf_secure_memory(const rf_secure_session *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "session_security", s, sizeof(*s));
+    rf_crypto_memory(s->tx, "crypto_tx_owner", out);
+    rf_crypto_memory(s->rx, "crypto_rx_owner", out);
+}

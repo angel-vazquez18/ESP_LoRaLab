@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include "radio/rf_frames.h"
 
 typedef struct rf_reassembly rf_reassembly;
@@ -38,3 +39,5 @@ bool rf_reassembly_take(rf_reassembly *, const void **bytes, size_t *length, uin
 rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *, const uint8_t header[40],
                                                         const uint8_t *body, size_t body_bytes,
                                                         int64_t now_us);
+
+void rf_reassembly_memory(const rf_reassembly *s, node_memory_inventory *out);

@@ -152,3 +152,8 @@ rf_crypto_status rf_crypto_open(rf_crypto *context, const uint8_t *frame, size_t
     mbedtls_platform_zeroize(temporary, sizeof(temporary));
     return result;
 }
+
+void rf_crypto_memory(const rf_crypto *owner, const char *name, node_memory_inventory *out)
+{
+    if (owner) node_memory_add(out, name, owner, sizeof(*owner));
+}

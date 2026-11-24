@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <stdatomic.h>
+#include "esp_memory_utils.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -52,6 +53,14 @@ static void random_bytes(void *context, void *bytes, size_t length)
 {
     (void)context;
     esp_fill_random(bytes, length);
+}
+
+static node_memory_region memory_region(void *context, const void *pointer)
+{
+    (void)context;
+    if (esp_ptr_external_ram(pointer)) return MEMORY_PSRAM;
+    if (esp_ptr_internal(pointer)) return MEMORY_INTERNAL;
+    return MEMORY_UNKNOWN;
 }
 
 static void *allocate(void *context, size_t bytes)
@@ -129,6 +138,7 @@ void esp32_platform_init(node_platform *platform)
         .allocate = allocate,
         .deallocate = deallocate,
         .memory = memory,
+        .memory_region = memory_region,
         .device_id = device_id,
         .boot_id = boot_id,
         .firmware_version = app->version,

@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -80,3 +81,5 @@ artifact_status artifact_store_recover_encoded_begin(artifact_store *store, cons
     const char *id, const char *source_id, uint32_t samples, const char *sha256, void **destination);
 artifact_status artifact_store_encode_finish(artifact_store *store, const char *id,
     bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context);
+
+void artifact_store_memory(const artifact_store *s, node_memory_inventory *out);

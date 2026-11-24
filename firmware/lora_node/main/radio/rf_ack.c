@@ -152,3 +152,9 @@ bool rf_ack_header_matches(const uint8_t p[40], const uint8_t d[40])
         return false;
     return true;
 }
+
+void rf_ack_memory(const rf_ack_receiver *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "rf_ack", s, sizeof(*s));
+}

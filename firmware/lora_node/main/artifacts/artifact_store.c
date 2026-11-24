@@ -361,3 +361,13 @@ artifact_status artifact_store_encode_finish(artifact_store *s, const char *id,
     if (!slot || !equal(slot->manifest.format, "codec2_3200_v1")) return ARTIFACT_INVALID_STATE;
     return finish_producer(s, id, sha256, context);
 }
+
+void artifact_store_memory(const artifact_store *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "artifact_store", s, sizeof(*s));
+    for (unsigned i = 0; i < ARTIFACT_SLOTS; i++) {
+        const char *names[] = {"artifact_slot_0", "artifact_slot_1", "artifact_slot_2", "artifact_slot_3"};
+        node_memory_add(out, names[i], s->slots[i].bytes, s->slots[i].manifest.length_bytes);
+    }
+}

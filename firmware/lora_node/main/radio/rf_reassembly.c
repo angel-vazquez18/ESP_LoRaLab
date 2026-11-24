@@ -197,3 +197,10 @@ rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *r, const 
 {
     return accept(r, header, body, bytes, true, now);
 }
+
+void rf_reassembly_memory(const rf_reassembly *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "rf_reassembly", s, sizeof(*s));
+    node_memory_add(out, "rf_reassembled", s->data, s->bytes);
+}

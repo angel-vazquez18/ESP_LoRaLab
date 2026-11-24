@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include "security/frame_crypto.h"
 #include <stdbool.h>
 
@@ -30,3 +31,5 @@ typedef bool (*rf_secure_insert)(void *, const uint8_t header[40], const uint8_t
 rf_secure_acceptance rf_secure_receive(rf_secure_session *, const uint8_t *frame, size_t bytes,
                                        int64_t now_us, bool ack_mode, uint32_t retry_horizon_us,
                                        rf_secure_insert, void *context);
+
+void rf_secure_memory(const rf_secure_session *s, node_memory_inventory *out);

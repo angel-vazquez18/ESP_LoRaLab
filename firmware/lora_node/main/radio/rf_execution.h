@@ -19,6 +19,7 @@ typedef struct
     uint64_t (*drops)(void *);
     void *(*allocate)(void *, size_t);
     void (*release)(void *, void *);
+    void (*before_release)(void *);
 } rf_execution_port;
 typedef enum
 {
@@ -103,3 +104,5 @@ bool rf_execution_busy(const rf_execution *);
 const char *rf_execution_state(const rf_execution *);
 
 bool rf_execution_security_ready(const rf_execution *);
+
+void rf_execution_memory(const rf_execution *, node_memory_inventory *);

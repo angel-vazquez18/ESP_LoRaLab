@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
+#include "memory/buffers.h"
 
 typedef struct {
     uint32_t samples, dma_frames, underflows;
@@ -14,4 +15,5 @@ typedef struct {
     bool (*start)(void *context, uint8_t *pcm, uint32_t samples, bool capture);
     void (*poll)(void *context, node_audio_progress *progress);
     void (*stop)(void *context);
+    void (*memory_buffers)(void *context, node_memory_inventory *);
 } node_audio_port;

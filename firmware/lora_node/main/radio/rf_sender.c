@@ -275,3 +275,9 @@ void rf_sender_snapshot(const rf_sender *s, rf_sender_status *out)
     if (s && out)
         *out = s->status;
 }
+
+void rf_sender_memory(const rf_sender *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "rf_sender", s, sizeof(*s));
+}

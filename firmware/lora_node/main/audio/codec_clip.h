@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include "artifacts/artifact_store.h"
@@ -24,3 +25,5 @@ artifact_status codec_clip_create(artifact_store *store, const char *owner,
 void codec_clip_step(codec_clip *clip); // At most one 160-sample frame per call.
 codec_clip_status codec_clip_progress(const codec_clip *clip);
 void codec_clip_destroy(codec_clip **clip); // Discards uncommitted output and releases input.
+
+void codec_clip_memory(const codec_clip *s, node_memory_inventory *out);

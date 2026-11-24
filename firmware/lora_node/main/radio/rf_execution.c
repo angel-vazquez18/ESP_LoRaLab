@@ -547,6 +547,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
 }
 static void release_buffers(rf_execution *r)
 {
+    if (r->port.before_release) r->port.before_release(r->port.context);
     rf_ack_destroy(r->acknowledgments);
     r->acknowledgments = NULL;
     r->ack_pending = r->ack_transmitting = false;
@@ -1495,4 +1496,13 @@ void rf_execution_tick(rf_execution *r)
     if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || insertion == RF_REASSEMBLY_COMPLETE ||
         !node_radio_rx(r->radio, 255, remaining > 30000000 ? 30000000 : remaining))
         finish(r, "error", true);
+}
+
+void rf_execution_memory(const rf_execution *r, node_memory_inventory *out)
+{
+    node_memory_add(out, "rf_generated", r->generated, r->plan.bytes);
+    rf_sender_memory(r->transmitter, out);
+    rf_reassembly_memory(r->receiver, out);
+    rf_ack_memory(r->acknowledgments, out);
+    rf_secure_memory(r->security, out);
 }

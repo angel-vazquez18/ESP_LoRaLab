@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include "radio/rf_frames.h"
 
 typedef struct rf_ack_receiver rf_ack_receiver;
@@ -25,3 +26,5 @@ bool rf_ack_matches(const void *ack, size_t ack_bytes, const void *outstanding_d
 
 // Structural reference match only. Protected ACK authentication is the owner's responsibility.
 bool rf_ack_header_matches(const uint8_t ack[40], const uint8_t data[40]);
+
+void rf_ack_memory(const rf_ack_receiver *s, node_memory_inventory *out);
