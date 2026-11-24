@@ -14,8 +14,13 @@ while recorded error symbols remain distinct from current state. Passive exact-
 profile host observations reject incompatible/stale readiness; ready is an I2C
 completion fact, never physical pixel qualification.
 
-Eighteen dedicated C/serial/API cases and full `make check` pass: 747 total cases,
-no skips, plus lint/frontend/contracts/repository/vendor and frontend formatting. Both V4.2/32 KiB IDF builds pass: normal OLED disabled
+Eighteen dedicated C/serial/API cases cover the display. After rebasing onto
+current main, full `make check` passes 771 cases without skips, plus lint/frontend/
+contracts/repository/vendor and frontend formatting. The integration run exposed
+a native test-port write after close; a subprocess regression reproduced the
+crash, and the port now rejects writes under its lifetime lock before entering
+destroyed C state. This changes the isolated fixture, not production USB handling.
+Both V4.2/32 KiB IDF builds pass: normal OLED disabled
 0x6ed10 (57% app free, 73,841 static DIRAM bytes), isolated audio/PTT/OLED enabled
 0x73530 (55%, 75,661 bytes). Declared worker stack/queue are additional runtime
 resources; physical high-water/serial/bus measurements remain open. Board profile
