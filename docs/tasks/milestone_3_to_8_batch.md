@@ -135,3 +135,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #48: PR #176 (`feat/authenticated-radio-frames` →
   `docs/session-key-contract`) is ready for review. No merge. Next #52 binds
   private keys and nonce counters to session/ownership lifetime.
+
+- #52: private source key/nonce owner, owned firmware setup, retirement/readiness,
+  secret setup-cache invalidation and secure JSON/raw-input cleanup implemented.
+  Final checks passed 539 cases and selected-board IDF build; no flash. Protected
+  RF/host provisioning stay blocked pending #60/#63. Next #53 is a local public-
+  vector crypto measurement; full physical acceptance remains #67.
+
+- #52: PR #178 (`feat/ephemeral-session-keys` →
+  `feat/authenticated-radio-frames`) is ready for review, 539 passing checks
+  and the selected-board build. No merge or flash. Starting #53 for checked,
+  bounded node-local crypto measurements independent of serial/RF time.

@@ -12,10 +12,7 @@ static const char *text(const cJSON *o, const char *k)
 {
     return cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(o, k));
 }
-static bool eq(const char *a, const char *b)
-{
-    return a && b && !strcmp(a, b);
-}
+static bool eq(const char *a, const char *b) { return a && b && !strcmp(a, b); }
 static cJSON *object(rf_execution *r)
 {
     cJSON *v = cJSON_CreateObject();
@@ -84,6 +81,27 @@ static bool null_value(const cJSON *o, const char *k)
 {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, k);
     return !v || cJSON_IsNull(v);
+}
+static bool key_text(const char *key)
+{
+    if (!key || strlen(key) != 32)
+        return false;
+    for (unsigned i = 0; i < 32; i++)
+        if (!((key[i] >= '0' && key[i] <= '9') || (key[i] >= 'a' && key[i] <= 'f')))
+            return false;
+    return true;
+}
+static void decode_key(const char *key, uint8_t out[16])
+{
+    for (unsigned i = 0; i < 16; i++)
+    {
+        uint8_t a = key[i * 2], b = key[i * 2 + 1];
+        out[i] = ((a <= '9' ? a - '0' : a - 'a' + 10) << 4) | (b <= '9' ? b - '0' : b - 'a' + 10);
+    }
+}
+bool rf_execution_security_ready(const rf_execution *r)
+{
+    return r->plan.protected_mode && rf_secure_ready(r->security);
 }
 static bool boolean(const cJSON *o, const char *k, bool expected)
 {
@@ -236,10 +254,7 @@ bool rf_execution_command(const char *name)
             return true;
     return false;
 }
-bool rf_execution_busy(const rf_execution *r)
-{
-    return r->phase != RF_IDLE;
-}
+bool rf_execution_busy(const rf_execution *r) { return r->phase != RF_IDLE; }
 const char *rf_execution_state(const rf_execution *r)
 {
     return (const char *[]){"idle",    "preparing", "prepared", "armed",
@@ -277,8 +292,17 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             return "INVALID_STATE";
         if (!allowed(args, keys, 6) || cJSON_GetArraySize(args) != 6 || !session ||
             strlen(session) != 16 || !peer(pd, pb) || eq(pd, device) ||
-            !eq(text(args, "security"), "none") || !null_value(args, "tx_key_hex") ||
-            !null_value(args, "rx_key_hex"))
+            (!eq(text(args, "security"), "none") && !eq(text(args, "security"), "aes128_gcm")))
+            return "INVALID_ARGUMENT";
+        p->protected_mode = eq(text(args, "security"), "aes128_gcm");
+        p->provision_keys = p->protected_mode ? args : NULL;
+        if (p->protected_mode)
+        {
+            if (!key_text(text(args, "tx_key_hex")) || !key_text(text(args, "rx_key_hex")) ||
+                eq(text(args, "tx_key_hex"), text(args, "rx_key_hex")))
+                return "INVALID_ARGUMENT";
+        }
+        else if (!null_value(args, "tx_key_hex") || !null_value(args, "rx_key_hex"))
             return "INVALID_ARGUMENT";
         uint64_t id = 0;
         for (unsigned i = 0; i < 16; i++)
@@ -300,6 +324,8 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
     }
     else if (action == RF_PREPARE)
     {
+        if (r->plan.protected_mode)
+            return "MISSING_CAPABILITY"; // Replay/transport integration follows.
         const char *const outer[] = {"spec", "budget"};
         const char *const specs[] = {"catalog_id",
                                      "direction",
@@ -519,8 +545,27 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
     if (p->action == RF_OPEN)
     {
         r->plan = *p;
+        r->plan.provision_keys = NULL;
         r->used = false;
         r->finished = false;
+        if (p->protected_mode)
+        {
+            const char *tx = text(p->provision_keys, "tx_key_hex"),
+                       *rx = text(p->provision_keys, "rx_key_hex");
+            if (!key_text(tx) || !key_text(rx))
+                return false;
+            uint8_t tx_key[16], rx_key[16];
+            decode_key(tx, tx_key);
+            decode_key(rx, rx_key);
+            rf_crypto_status status =
+                rf_secure_create(p->session, p->role, tx_key, rx_key, &r->security);
+            for (unsigned i = 0; i < 16; i++)
+            {
+                ((volatile uint8_t *)tx_key)[i] = 0;
+                ((volatile uint8_t *)rx_key)[i] = 0;
+            }
+            return status == RF_CRYPTO_OK;
+        }
         return true;
     }
     if (p->action == RF_STOP)
@@ -783,11 +828,17 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
         r->missing_evidence_incomplete = true;
         finalize(r, reason, true);
     }
+    if (rf_secure_close(&r->security) != RF_CRYPTO_OK)
+        ok = false;
     if (close)
     {
         artifact_store_release_owner(r->artifacts, r->plan.owner);
         release_buffers(r);
-        r->plan.session = 0;
+        if (!r->security)
+        {
+            r->plan.session = 0;
+            r->plan.protected_mode = false;
+        }
         r->used = false;
         r->phase = RF_IDLE;
     }

@@ -11,6 +11,7 @@ idf_component_register(
         "radio/rf_sender.c"
         "radio/rf_execution.c"
         "security/frame_crypto.c"
+        "security/session_crypto.c"
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
         "audio/pcm_samples.c"
@@ -19,6 +20,7 @@ idf_component_register(
         "control/node_control.c"
         "artifacts/artifact_store.c"
         "protocol/strict_json.c"
+        "protocol/secure_json.c"
         "protocol/chunk_bytes.c"
     INCLUDE_DIRS "." "radio/vendor/sx126x"
     REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support

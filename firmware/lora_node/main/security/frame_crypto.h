@@ -16,7 +16,9 @@ typedef enum
     RF_CRYPTO_INVALID_FRAME,
     RF_CRYPTO_AUTH_FAILED,
     RF_CRYPTO_UNAVAILABLE,
-    RF_CRYPTO_NO_MEMORY
+    RF_CRYPTO_NO_MEMORY,
+    RF_CRYPTO_NONCE_EXHAUSTED,
+    RF_CRYPTO_SESSION_CLOSED
 } rf_crypto_status;
 
 // Keys are imported as volatile, non-exportable PSA handles; *owner starts NULL.

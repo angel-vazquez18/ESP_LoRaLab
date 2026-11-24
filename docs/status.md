@@ -586,3 +586,29 @@ passed (0x53300 bytes, 68% app partition free), without flashing.
 Current sessions still accept only unprotected mode and report `security_gcm`
 false. Key/nonce ownership, replay, host provisioning and physical acceptance
 remain pending; native software crypto does not validate ESP acceleration/timing.
+
+## November 22 — Owned keys and nonce lifetime (#52)
+
+Firmware now binds separate private source key handles and monotonic sequence
+reservations to owned run/session/role state. Close, stop, lease loss, disconnect
+and controller reset retire readiness and keys; stale cached setup success cannot
+recreate old state. Final-sequence reservation/encryption cannot wrap or repeat.
+Temporary decoded keys, raw records and all owned JSON allocations are wiped,
+including parser rejection, allocation failure and unfinished input at lease loss.
+See [session lifecycle](session_key_lifecycle.md).
+
+Public-boundary regressions were observed failing before their fixes for nonce/
+setup ownership, parser deallocation and retained partial input. The focused
+lifecycle/owner/host-gate checks pass 19 cases; 160 allocation-failure positions
+and a real exhausted native key store exercise cleanup. The final `make check`
+passed 539 cases without skips, lint, frontend build, contracts and repository
+checks. The existing Starlette/httpx deprecation remains. Selected-board IDF
+build passed (0x5b830 bytes, 64% app partition free), without flashing.
+
+The execution vocabulary/digest changed with the selected protected setup shape;
+main-control/diagnostic/artifact/audio digests did not. Protected RF and ordinary
+host provisioning remain explicitly blocked; `security_gcm` stays false. Key
+byte freshness is the trusted host’s OS-CSPRNG responsibility in #63, not a claim
+that the node proves randomness or detects every cross-boot reuse. Physical
+security, resource headroom and timing remain pending. Original 19 local-file
+hashes still match the preservation snapshot.

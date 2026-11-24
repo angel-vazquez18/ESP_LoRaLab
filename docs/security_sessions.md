@@ -2,12 +2,12 @@
 
 This document maps the selected v2 security contract to the current run APIs.
 It specifies the protected implementation that follows; it does not enable it.
-Current `run_protocol_v2.Session` and firmware `rf_execution` accept only
-`security = none` with null keys. `security_gcm` stays false. Protected sessions,
-replay enforcement, production provisioning and crypto measurements remain #52,
-#53, #60, #63 and their dependent work. #48 provides the isolated
-[authenticated-frame primitive](frame_crypto.md). Public vectors are conformance data,
-never evidence that installed firmware implements security.
+The firmware and typed vocabulary now support owned private key setup and
+[session-key retirement](session_key_lifecycle.md). `security_gcm` stays false;
+protected RF and ordinary host provisioning are blocked until #60/#63. Local
+crypto measurement follows in #53. #48 provides the isolated
+[authenticated-frame primitive](frame_crypto.md). Public vectors are conformance
+data, never evidence that installed firmware implements security.
 
 ## Provision one fresh key pair per run
 
@@ -46,15 +46,16 @@ anything from either key.
 
 | Existing boundary | Current behavior | Gate before protected provisioning |
 | --- | --- | --- |
-| `NodeSession.request` argument validation | Non-null key values reject before write; session errors now omit supplied values | Keep safe errors for malformed key/profile/peer input, with no chained input-bearing error |
+| `NodeSession.request` argument validation | Session errors omit supplied values; protected host setup is blocked before write | Keep safe errors for malformed key/profile/peer input, with no chained input-bearing error |
 | `NodeSession.request(..., on_record=...)` before serial write and after reply | Current valid session keys are null; command snapshots currently include args | Replace secret-bearing snapshots with allowlisted setup facts before invoking the trace callback |
 | `radio_runs.trace` and linked raw NDJSON | Persist callback rows; ordinary setup is unprotected | Reject raw key-bearing rows at the persistence boundary as a second guard |
 | `radio_runs.save`, snapshots, history and exports | Persist public run metadata | Keep keys in a private ephemeral owner, outside run dictionaries, models and artifacts |
-| Node reply/event/error serialization | Current session parser accepts no secrets | Never echo input values or keys; report only readiness/IDs/counts and static errors |
-| Firmware session/duplicate/serial buffers | Current implementation has no keys | Explicitly scrub keys, decoded/serialized temporary key bytes and secret-bearing input buffers on retirement; no secret-bearing cached reply |
+| Node reply/event/error serialization | Owned firmware setup accepts private keys; replies report no key values | Never echo input values or keys; report only readiness/IDs/counts and static errors |
+| Firmware session/duplicate/serial buffers | Private source handles and inputs are retired/wiped in #52 | Explicitly scrub keys, decoded/serialized temporary key bytes and secret-bearing input buffers on retirement; no secret-bearing cached reply |
 
-These provisioning/persistence guards are requirements for #52/#63, not claims
-that the protected path already exists. The current public-session regression
+Firmware retirement/input erasure is implemented in #52. Successful host
+provisioning and its persistence guards remain #63; protected operator execution
+is still blocked. The current public-session regression
 proves rejection errors and trace callbacks do not expose supplied key values.
 It does not qualify future successful key provisioning. Never persist
 `ValidationError.errors()` input/context or a raw provisioning request.
@@ -150,6 +151,7 @@ make check
 
 Expect all focused checks without skips, secret sentinels absent from serialized
 rejection/trace evidence, and no protected request sent to the current node.
-Later #48/#52/#60/#63 must repeat these boundaries through real firmware/session
-APIs, add successful-provisioning redaction/cleanup failure cases, then obtain
+The cipher and owned firmware lifecycle checks now exercise #48/#52 boundaries.
+#60/#63 must add protected transport/replay and successful host-provisioning
+redaction/cleanup failure cases, then obtain
 physical qualification under #67. This contract PR does not close those checks.

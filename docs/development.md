@@ -142,3 +142,9 @@ compiles the actual PSA source into ignored local cache and never fetches code
 or opens a physical port. Missing/wrong sources fail rather than skip. See
 [frame cipher](frame_crypto.md) for source versions, native-profile limitations
 and focused commands.
+
+The main-control native fixture now links that same pinned crypto build, so its
+checks also need CMake and `IDF_PATH`/the default SDK source location. The shared
+helper is `testbed/tests/native_crypto.py`. Session lifecycle/erasure checks and
+the execution-schema migration are documented in
+[session key lifetime](session_key_lifecycle.md).
