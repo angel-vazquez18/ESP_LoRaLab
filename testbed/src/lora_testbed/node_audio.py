@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from uuid import uuid4
 
-from . import __version__, audio_contract_v2, codec_contract_v2
+from . import __version__, audio_contract_v2, codec_contract_v2, ptt_contract_v2
 from .artifact_contract_v2 import Manifest
 from .audio import inspect_pcm, pcm_wav
 from .storage import utc_now
@@ -60,12 +60,14 @@ class NodeAudio:
             except (ValueError, OSError) as exc:
                 r["evidence_error"] = str(exc)
 
-    async def start(self, role, action, artifact_id=None, sample_count=24000):
+    async def start(self, role, action, artifact_id=None, sample_count=24000, wait_for_ptt=False):
         if self.busy:
             raise RuntimeError("Another audio operation owns the bench")
         if action not in ("capture", "play", "retrieve", "codec", "decode"):
             raise ValueError("Unknown audio action")
-        command = f"audio.{action}"
+        if wait_for_ptt and action != "capture":
+            raise ValueError("PTT can arm only one finite capture")
+        command = "ptt.arm" if wait_for_ptt else f"audio.{action}"
         if action == "capture":
             args = audio_contract_v2.Capture(
                 artifact_id=str(uuid4()), sample_count=sample_count
@@ -82,6 +84,10 @@ class NodeAudio:
                 codec_contract_v2.require_capability(
                     node.identity.capabilities, node.health.capability_availability, name
                 )
+        elif wait_for_ptt:
+            ptt_contract_v2.require_capability(
+                node.identity.capabilities, node.health.capability_availability
+            )
         elif action != "retrieve":
             audio_contract_v2.require_capability(
                 node.identity.capabilities, node.health.capability_availability, command
@@ -105,6 +111,8 @@ class NodeAudio:
             "id": str(uuid4()),
             "role": role,
             "action": action,
+            "trigger": "host_armed_ptt" if wait_for_ptt else "host",
+            "ptt_schema_sha256": ptt_contract_v2.schema_digest() if wait_for_ptt else None,
             "artifact_id": args["artifact_id"],
             "source_manifest": manifest,
             "sample_count": sample_count,
@@ -187,6 +195,17 @@ class NodeAudio:
                 )
                 if event:
                     return event
+                if (
+                    record.get("trigger") == "host_armed_ptt"
+                    and node.health
+                    and node.health.operation_id == record["operation_id"]
+                ):
+                    stage = (
+                        "waiting_ptt" if node.health.audio_state == "waiting_ptt" else "capturing"
+                    )
+                    if record["stage"] != stage:
+                        record["stage"] = stage
+                        self.save(record)
                 await asyncio.sleep(0.02)
 
     async def download(self, node, record, manifest, stage=None):
@@ -340,8 +359,15 @@ class NodeAudio:
                 elif record["action"] == "decode":
                     await self.decode_clip(node, record, manifest)
                 if record["action"] in ("capture", "play"):
-                    record["stage"] = "capturing" if record["action"] == "capture" else "playing"
-                    accepted = await self.command(node, record, f"audio.{record['action']}", args)
+                    ptt = record.get("trigger") == "host_armed_ptt"
+                    record["stage"] = (
+                        "waiting_ptt"
+                        if ptt
+                        else ("capturing" if record["action"] == "capture" else "playing")
+                    )
+                    accepted = await self.command(
+                        node, record, "ptt.arm" if ptt else f"audio.{record['action']}", args
+                    )
                     record["operation_id"] = accepted["operation_id"]
                     self.save(record)
                     terminal = await self.wait_result(node, record)
