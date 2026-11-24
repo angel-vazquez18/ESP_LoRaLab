@@ -513,3 +513,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   dark/light and 390-pixel layout; no hardware qualification. Original 19 files
   unchanged; no firmware/wire/build/flash/physical access. Next #107 linked reruns
   and verified campaign exports, then #115 campaign UI and physical #132.
+
+- #88: PR #203 (`feat/workload-observation-plots` →
+  `feat/physical-campaign-execution`) is ready with five scoped implementation/
+  test/doc commits and browser evidence. Issue/card Testing; no merge. Full 937
+  cases and all shared checks pass; nine dedicated cases/UI formatting pass.
+  Next #107 on a separate branch: linked subset reruns and verified campaign
+  bundles; never restore or automatically resume an interrupted RF execution.
