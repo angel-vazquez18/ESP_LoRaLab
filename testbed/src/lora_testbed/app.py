@@ -35,6 +35,7 @@ from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
 from .serial_validation import SerialValidationRequest, serial_plan
 from .session_keys import require_public_metadata
+from .voice_runs import VoiceRunRequest
 
 
 class PreflightRequest(StrictModel):
@@ -164,6 +165,45 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             "schema_sha256": control_v2.schema_digest(),
             "hardware_validated": False,
         }
+
+    @app.post("/api/voice/preflight")
+    async def voice_preflight(body: VoiceRunRequest):
+        return app.state.host.voice_preflight(body)
+
+    @app.post("/api/voice/runs", status_code=202)
+    async def voice_start(body: VoiceRunRequest):
+        return await app.state.host.start_voice(body)
+
+    @app.get("/api/voice/runs")
+    async def voice_runs():
+        return app.state.host.voice.snapshot()
+
+    @app.get("/api/voice/runs/{identifier}")
+    async def voice_run(identifier: str):
+        return app.state.host.voice.get(identifier)
+
+    @app.post("/api/voice/runs/{identifier}/stop")
+    async def voice_stop(identifier: str):
+        return await app.state.host.voice.stop(identifier)
+
+    @app.get("/api/voice/runs/{identifier}/artifacts/{kind}")
+    async def voice_artifact(
+        identifier: str,
+        kind: Literal["source", "encoded", "recovered", "decoded"],
+        as_wav: bool = False,
+    ):
+        extension = "wav" if as_wav else "pcm" if kind in ("source", "decoded") else "codec2"
+        return Response(
+            app.state.host.voice.content(identifier, kind, as_wav),
+            media_type="audio/wav" if as_wav else "application/octet-stream",
+            headers={
+                "Content-Disposition": f'attachment; filename="{identifier}-{kind}.{extension}"'
+            },
+        )
+
+    @app.post("/api/voice/runs/{identifier}/listening")
+    async def voice_listening(identifier: str, body: ListeningRequest):
+        return app.state.host.voice.listening(identifier, body.heard, body.notes)
 
     @app.post("/api/radio/preflight")
     async def radio_preflight(body: RadioRunRequest):

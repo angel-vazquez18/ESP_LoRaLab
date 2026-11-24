@@ -135,3 +135,9 @@ margin and any underflows/distortion. Stop a codec job and confirm a following
 job succeeds after clearing unused node artifacts. Secure two-node delivery and
 complete voice acceptance remain #64/#68/#80. Latest deployment remains blocked
 by unsuccessful backup attempts and unobserved PCB revisions; no flash occurred.
+
+The audio owner also supports a separate finite receiver decode job for the
+[#68 secure voice workflow](secure_voice_workflows.md). It retains planned output
+IDs, encoded input and verified decoded PCM without claiming a local round trip.
+Voice-owned temporary node copies can retire after host verification; saved
+audio files and listening/provenance records remain available.

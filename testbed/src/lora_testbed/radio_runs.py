@@ -61,6 +61,34 @@ class RadioRunRequest(StrictModel):
         return self
 
 
+class EncodedMessagePlan(KnownDataPlan):
+    spec: run_protocol_v2.EncodedSourceSpec
+
+
+class EncodedRadioRunRequest(RadioRunRequest):
+    security: Literal["aes128_gcm"] = "aes128_gcm"
+    source_seed: None = None
+    message_bytes: int = Field(ge=8, le=1200, multiple_of=8)
+    source_artifact_id: ArtifactID
+    sample_count: int = Field(ge=1, le=24000)
+    expected_sha256: SHA256
+    timeout_ms: int = Field(default=30000, ge=1000, le=3600000)
+
+    def plan(self):
+        return EncodedMessagePlan(
+            radio=self.radio,
+            link=self.link,
+            spec=run_protocol_v2.EncodedSourceSpec(
+                direction=self.direction,
+                message_bytes=self.message_bytes,
+                source_artifact_id=self.source_artifact_id,
+                sample_count=self.sample_count,
+                expected_sha256=self.expected_sha256,
+                max_duration_ms=self.timeout_ms,
+            ),
+        )
+
+
 class PreparedArtifact(StrictModel):
     artifact_id: ArtifactID
     artifact_state: Literal["committed", "reserved"]
@@ -250,6 +278,14 @@ class RadioRuns:
                     blockers.append(f"Node {role}: {exc}")
                     break
             limits = node.health.capability_availability.resource_limits.get("execution_limits", {})
+            if isinstance(request, EncodedRadioRunRequest) and (
+                limits.get("encoded_source") is not True
+                or node.identity.capabilities.resource_limits.get("execution_limits", {}).get(
+                    "encoded_source"
+                )
+                is not True
+            ):
+                blockers.append(f"Node {role} lacks committed encoded-source transport")
             needed = {
                 "max_message_bytes": request.message_bytes,
                 "max_messages_per_run": 1,
@@ -278,7 +314,9 @@ class RadioRuns:
             "ready": not blockers,
             "blockers": list(dict.fromkeys(blockers)),
             "required_nodes": 2,
-            "scope": "one known-data message with selected security; physical bring-up only",
+            "scope": "one protected encoded message; physical qualification separate"
+            if isinstance(request, EncodedRadioRunRequest)
+            else "one known-data message with selected security; physical bring-up only",
             "hardware_qualified": False,
         }
 
@@ -337,6 +375,7 @@ class RadioRuns:
             "applied_settings": {},
             "prepared": {},
             "summaries": {},
+            "rf_window_closed_at": None,
             "verification": None,
             "accounting": None,
             "missing_evidence": None,
@@ -412,11 +451,20 @@ class RadioRuns:
                     if event["status"] != "completed":
                         raise ValueError(f"Node {role} preparation failed: {event}")
                     value = PreparedArtifact.model_validate(event["result"]).model_dump()
-                    expected = hashlib.sha256(
-                        known_data(
-                            r["plan"]["spec"]["source_seed"], 1, r["plan"]["spec"]["message_bytes"]
-                        )
-                    ).hexdigest()
+                    spec = r["plan"]["spec"]
+                    expected = (
+                        spec["expected_sha256"]
+                        if spec["source"] == "encoded_source"
+                        else hashlib.sha256(
+                            known_data(spec["source_seed"], 1, spec["message_bytes"])
+                        ).hexdigest()
+                    )
+                    if (
+                        spec["source"] == "encoded_source"
+                        and role == r["sender"]
+                        and value["artifact_id"] != spec["source_artifact_id"]
+                    ):
+                        raise ValueError("Encoded sender substituted a different source artifact")
                     state = "committed" if role == r["sender"] else "reserved"
                     if (
                         value["artifact_state"] != state
@@ -457,13 +505,25 @@ class RadioRuns:
         if saved["status"] != "completed":
             raise ValueError(f"Node {role} readback failed: {saved.get('error')}")
         manifest = saved["manifest"]
+        spec = r["plan"]["spec"]
+        encoded = spec["source"] == "encoded_source"
+        expected_format = "codec2_3200_v1" if encoded else "known_data"
         if (
-            manifest["artifact_id"],
-            manifest["format"],
-            manifest["kind"],
-            manifest["length_bytes"],
-        ) != (prepared["artifact_id"], "known_data", kind, r["plan"]["spec"]["message_bytes"]):
+            manifest["artifact_id"] != prepared["artifact_id"]
+            or manifest["format"] != expected_format
+            or manifest["length_bytes"] != spec["message_bytes"]
+            or (not (encoded and role == r["sender"]) and manifest["kind"] != kind)
+        ):
             raise ValueError(f"Node {role} returned inconsistent RF artifact metadata")
+        if encoded and (
+            manifest["sha256"] != spec["expected_sha256"]
+            or manifest["sample_count"] != spec["sample_count"]
+            or (
+                role == r["receiver"]
+                and manifest["source_artifact_id"] != spec["source_artifact_id"]
+            )
+        ):
+            raise ValueError(f"Node {role} encoded provenance differs from the selected clip")
         r["readback_manifests"][role] = manifest
         data = self.artifacts.content(transfer["id"]).read_bytes()
         (self.directory / f"{r['id']}.{kind}.bin").write_bytes(data)
@@ -605,6 +665,7 @@ class RadioRuns:
                         if len(r["summaries"]) == 2:
                             break
                         await asyncio.sleep(0.01)
+                r["rf_window_closed_at"] = utc_now()
                 r["stage"] = "retrieving"
                 self.save(r)
                 # Confirm terminal summaries independently of event arrival/order.
@@ -626,7 +687,17 @@ class RadioRuns:
                     await self.command(r, role, "status.get")
                 source = await self.retrieve(r, r["sender"], "source")
                 recovered = await self.retrieve(r, r["receiver"], "recovered")
-                expected = known_data(request.source_seed, 1, request.message_bytes)
+                encoded = isinstance(request, EncodedRadioRunRequest)
+                expected = (
+                    source if encoded else known_data(request.source_seed, 1, request.message_bytes)
+                )
+                if encoded and (
+                    len(source) != request.message_bytes
+                    or hashlib.sha256(source).hexdigest() != request.expected_sha256
+                ):
+                    raise ValueError(
+                        "Encoded source readback differs from the declared committed clip"
+                    )
                 if source != expected or recovered != source:
                     raise ValueError(
                         "Actual source/recovered bytes differ from the independent source recipe"
@@ -636,7 +707,9 @@ class RadioRuns:
                     "length_bytes": len(recovered),
                     "sha256": hashlib.sha256(recovered).hexdigest(),
                     "sample_hex": recovered[:32].hex(),
-                    "method": "independent source recipe plus exact source/recovered readback",
+                    "method": "declared committed source hash plus exact source/recovered readback"
+                    if encoded
+                    else "independent source recipe plus exact source/recovered readback",
                 }
                 await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():

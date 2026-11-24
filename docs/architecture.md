@@ -270,3 +270,11 @@ The sender borrows an existing committed codec artifact; the receiver publishes 
 private recovered encoded artifact only after complete authenticated/hash-verified
 reconstruction. Existing explicit decode/play operations remain separate. See
 [protected content](protected_voice_content.md) for boundaries and compatibility.
+
+`voice_runs.py` owns a finite secure clip composition over existing `NodeAudio`,
+`ArtifactTransfers` and `RadioRuns`; it does not duplicate session key policy or
+radio scheduling. Common radio requests now accept committed encoded sources.
+Reference/microphone preparation, receiver decode/play, explicitly based data
+comparisons and job-owned artifact retirement share the host bench lock. Compact
+voice snapshots reference full child evidence. See
+[secure voice workflow](secure_voice_workflows.md).
