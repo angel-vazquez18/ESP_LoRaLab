@@ -379,4 +379,5 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   build 0x6f000/57% app free/73,841 static DIRAM. Execution profile becomes
   finite_message_execution_v2/04f50ab…; unrelated profiles and original 19 user
   files unchanged. No flash; calibration and physical acceptance remain open.
-  Preparing one issue-scoped PR, then #73 named stage memory observations.
+  PR #195 is ready (`feat/reserved-run-lifecycle` → `feat/actual-oled-status`),
+  issue Testing, no agent merge. Next #73 named stage memory observations.
