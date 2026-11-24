@@ -132,3 +132,34 @@ No direct radio-transmit operator command is introduced: `run.start` remains
 unadvertised until the finite message engine and receiver are integrated. Later
 physical validation must inspect actual IRQ/timestamp/stop behavior and delivered
 bytes on two identified nodes with matched antennas.
+
+## Finite reception (#20)
+
+`node_radio_rx` accepts a 1–255-byte software frame ceiling and a finite
+1–30,000,000 microsecond window. It programs a finite chip timeout, maps
+RX-done/CRC/header/timeout IRQs and enables the receive front-end path. Receive
+results use a distinct event kind; sender frame identities remain unknown until
+the received header is validated above the driver.
+
+An RX-done result keeps the actual FIFO length, copied valid bytes, observed
+RX-done time, PHY CRC state and the same packet's signal status together. RSSI
+retains half-dB and signed SNR quarter-dB precision from the raw chip response.
+CRC/header errors and oversized/empty input cannot produce a successful receive
+result or application bytes. Missing frames, header-only faults and timeout/cancel
+carry no invented signal measurement. A FIFO/SPI failure withdraws readiness;
+clearing the fault requires driver reinitialization and reconfiguration. Ordinary
+timeout/cancel and terminal-result consumption permit rearming directly.
+
+The ISR does no radio/JSON work: this initial driver observes DIO1 from polling
+and reads IRQ/FIFO/status in task context. Thus its times are polling observations,
+not exact interrupt-edge timestamps. The later timing milestone must measure or
+replace that latency before using it for precision timing claims. The retained
+result slot and finite hardware window still bound memory and radio activity if
+the event consumer is delayed.
+
+Run the native radio checks. Expected cases include valid bytes at a nonzero FIFO
+offset with RSSI -86.5 dBm/SNR -1.25 dB, CRC/header rejection, empty/oversize input,
+chip/software timeout, cancel, FIFO failure, held result and a subsequent receive.
+Physical validation still needs actual frame/IRQ traces and signal checks on two
+identified compatible nodes. The host cannot yet start an RF run: frame validation
+and execution integration follow in #25/#27.

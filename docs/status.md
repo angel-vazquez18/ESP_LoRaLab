@@ -49,6 +49,18 @@ without skips; ESP-IDF build passed. These are driver boundaries; operator
 `run.start` is still unavailable pending RX and message integration. No board or
 RF measurement was used. See [finite transmission](radio_driver.md#finite-transmission-19).
 
+## November 21 — Finite receive driver (#20)
+
+Added finite RX windows, exact valid FIFO bytes/offsets, RX-done polling observation,
+PHY CRC/header state and fractional RSSI/SNR. Bad/oversized/empty frames remain
+failed observations; missing frames have no signal values. Timeout/cancel,
+retained-result pressure and rearm are covered; SPI failure withdraws readiness
+until reinitialization. Native radio cases passed 24 scenarios and the ESP-IDF
+build passed (0x4d630-byte image, 70% app headroom). Full `make check` passed 393
+tests without skips, lint/frontend/contracts/repository checks. No board was
+connected. Operator RF run support is still unavailable pending frame/execution
+integration. See [finite reception](radio_driver.md#finite-reception-20).
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones

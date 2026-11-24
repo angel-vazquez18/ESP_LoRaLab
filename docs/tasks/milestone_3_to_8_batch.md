@@ -50,3 +50,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #15: PR #164 (`feat/radio-modem-settings` → `feat/sx1262-init`).
 - #19: finite transmit driver and native fault/recovery cases complete; operator
   run commands remain unadvertised until RX/message integration.
+
+- #19: PR #165 (`feat/finite-radio-tx` → `feat/radio-modem-settings`).
+- #20: finite RX, signal/CRC attribution, queue-pressure/timeout/cancel and
+  reinitialization-after-SPI-fault checks. Next #25 header/content acceptance.
