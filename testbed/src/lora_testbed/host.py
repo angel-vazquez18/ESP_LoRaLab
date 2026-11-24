@@ -5,6 +5,7 @@ from pathlib import Path
 
 from . import __version__, crypto_benchmark_v2
 from .artifact_transfers import ArtifactTransfers
+from .campaign_plans import CampaignPlans
 from .catalog import catalog, required_nodes
 from .diagnostic_jobs import DiagnosticJobs
 from .node_audio import NodeAudio
@@ -31,6 +32,7 @@ class Host:
         self.audio = NodeAudio(self.store, self.physical, self.artifacts, self.adapter)
         self.radio = RadioRuns(self.store, self.physical, self.artifacts, self.adapter)
         self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
+        self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
@@ -142,6 +144,80 @@ class Host:
             "ready": not blockers,
             "blockers": blockers,
             "scope": entry["scope"],
+        }
+
+    def campaign_case_preflight(self, case):
+        selected = case["case"]
+        if selected["kind"] == "procedure":
+            result = self.preflight(selected["catalog_id"], selected["roles"], selected["workload"])
+            result["blockers"].append(
+                "Full procedure matrix execution is unavailable; plan reference retained"
+            )
+            result["ready"] = False
+            result["scope"] = "required CDR procedure reference; no qualification claim"
+            return result
+        if selected["kind"] == "known_data":
+            from .radio_runs import RadioRunRequest
+
+            return self.radio.preflight(RadioRunRequest.model_validate(selected["request"]))
+        if selected["kind"] == "voice":
+            from .voice_runs import VoiceRunRequest
+
+            return self.voice.preflight(VoiceRunRequest.model_validate(selected["request"]))
+        if selected["kind"] == "serial_check":
+            return self.preflight("IF-01", [selected["role"]], "local")
+        node = self.physical[selected["role"]]
+        blockers = []
+        if not node.connected or node.identity is None:
+            blockers.append(f"Node {selected['role']} is disconnected")
+        else:
+            if node.snapshot()["connection_state"] != "connected":
+                blockers.append("Node health is not fresh")
+            if (
+                node.wire_profile != "node_control"
+                or not node.health
+                or node.health.state != "idle"
+                or node.health.node_role != selected["role"]
+            ):
+                blockers.append("Matching owned idle main node is required")
+            if selected["kind"] == "memory_probe":
+                limits = node.identity.capabilities.resource_limits
+                if "memory_probe" not in limits.get("diag_kinds", []):
+                    blockers.append("Node memory probe is unavailable")
+                if selected["iterations"] > limits.get("diag_max_iterations", 0) or selected[
+                    "payload_bytes"
+                ] > limits.get("diag_max_payload_bytes", 0):
+                    blockers.append("Memory probe exceeds negotiated limits")
+            elif selected["kind"] == "crypto_benchmark":
+                try:
+                    crypto_benchmark_v2.require_capability(
+                        node.identity.capabilities,
+                        node.health.capability_availability if node.health else None,
+                    )
+                except ValueError as exc:
+                    blockers.append(str(exc))
+            elif selected["kind"] == "audio":
+                action = selected["action"]
+                if action in ("codec", "decode"):
+                    support = node.codec_availability()
+                    needed = {"audio.decode"} | ({"audio.encode"} if action == "codec" else set())
+                elif selected["wait_for_ptt"]:
+                    support, needed = node.ptt_availability(), {"ptt.arm"}
+                elif action == "retrieve":
+                    support, needed = (
+                        node.artifact_availability(),
+                        {"artifact.list", "artifact.get"},
+                    )
+                else:
+                    support, needed = node.audio_availability(), {f"audio.{action}"}
+                if not needed <= set(support["commands"]):
+                    blockers.append("Node lacks the required local audio/file commands")
+
+        return {
+            "ready": not blockers,
+            "blockers": blockers,
+            "required_nodes": 1,
+            "scope": "local capability workflow; full procedure qualification remains separate",
         }
 
     async def connect_node(self, role: str, port: str | None):
