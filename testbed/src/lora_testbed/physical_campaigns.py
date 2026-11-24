@@ -11,6 +11,7 @@ from pathlib import Path
 from time import monotonic
 from uuid import uuid4
 
+from .campaign_plans import digest
 from .session_keys import require_public_metadata
 from .storage import utc_now
 
@@ -89,6 +90,8 @@ class PhysicalCampaigns:
     def save(self, record, case=None, *, commit=True):
         require_public_metadata(record)
         record["updated_at"] = utc_now()
+        record.pop("document_sha256", None)
+        record["document_sha256"] = digest(record)
         self.store.db.execute(
             "INSERT INTO physical_campaign_executions_v1 VALUES (?,?,?) ON CONFLICT(id) "
             "DO UPDATE SET document=excluded.document",
@@ -96,6 +99,8 @@ class PhysicalCampaigns:
         )
         if case is not None:
             require_public_metadata(case)
+            case.pop("document_sha256", None)
+            case["document_sha256"] = digest(case)
             self.store.db.execute(
                 "INSERT INTO physical_campaign_cases_v1 VALUES (?,?,?,?) "
                 "ON CONFLICT(execution_id,case_id) DO UPDATE SET document=excluded.document",
@@ -111,6 +116,7 @@ class PhysicalCampaigns:
         if row is None:
             raise ValueError("Unknown physical campaign execution")
         record = json.loads(row[0])
+        self.verify_document(record)
         record["cases"] = [
             json.loads(row[0])
             for row in self.store.db.execute(
@@ -119,7 +125,30 @@ class PhysicalCampaigns:
                 (identifier,),
             )
         ]
+        for case in record["cases"]:
+            self.verify_document(case)
+        if len(record["cases"]) != record["case_count"]:
+            raise ValueError("Saved campaign case count differs")
         return record
+
+    @staticmethod
+    def verify_document(document):
+        expected = document.get("document_sha256")
+        if (
+            expected
+            and digest({k: v for k, v in document.items() if k != "document_sha256"}) != expected
+        ):
+            raise ValueError("Saved campaign document hash differs")
+
+    async def rerun(self, identifier, case_ids):
+        parent = self.get(identifier)
+        if parent["status"] not in TERMINAL:
+            raise RuntimeError("Finish or interrupt the original campaign before rerunning cases")
+        if not case_ids or len(set(case_ids)) != len(case_ids):
+            raise ValueError("Select one or more distinct case IDs")
+        if set(case_ids) - {case["case_id"] for case in parent["cases"]}:
+            raise ValueError("A selected case does not belong to the original execution")
+        return await self.start(parent["plan_id"], _parent=parent, _case_ids=set(case_ids))
 
     def snapshot(self):
         rows = self.store.db.execute(
@@ -133,14 +162,21 @@ class PhysicalCampaigns:
             "executions": [dict(row) for row in rows],
         }
 
-    async def start(self, plan_id):
+    async def start(self, plan_id, *, _parent=None, _case_ids=None):
         if self.host.busy:
             raise RuntimeError("Another run or campaign owns the bench")
         plan = self.host.campaign_plans.get(plan_id)
+        selected_cases = [
+            case for case in plan["cases"] if _case_ids is None or case["id"] in _case_ids
+        ]
+        if not selected_cases or (_case_ids is not None and len(selected_cases) != len(_case_ids)):
+            raise ValueError("Selected cases are unavailable in the original saved plan")
+        if _parent and _parent["plan_sha256"] != plan["plan_sha256"]:
+            raise ValueError("The original execution and saved plan hashes differ")
         identifier = str(uuid4())
         bindings = {
             role: self.host.adapter.bind(role)
-            for role in {r for case in plan["cases"] for r in case["roles"]}
+            for role in {r for case in selected_cases for r in case["roles"]}
             if self.host.physical[role].connected
         }
         record = {
@@ -150,6 +186,9 @@ class PhysicalCampaigns:
             "plan_id": plan_id,
             "name": plan["name"],
             "plan_sha256": plan["plan_sha256"],
+            "parent_execution_id": _parent["id"] if _parent else None,
+            "parent_snapshot_sha256": digest(_parent) if _parent else None,
+            "selected_case_ids": [case["id"] for case in selected_cases],
             "status": "running",
             "stage": "queued",
             "active_case_id": None,
@@ -162,8 +201,8 @@ class PhysicalCampaigns:
             "hardware_qualified": False,
             "assessment": "not_assessed",
             "physical_bindings": bindings,
-            "case_count": plan["case_count"],
-            "case_counts": {"pending": plan["case_count"]},
+            "case_count": len(selected_cases),
+            "case_counts": {"pending": len(selected_cases)},
             "reason": None,
             "policy": "physical_campaign_execution_v1",
             "host_sources": {
@@ -185,7 +224,9 @@ class PhysicalCampaigns:
         runtime = [
             {
                 "case_id": case["id"],
-                "index": case["index"],
+                "index": index,
+                "saved_index": case["index"],
+                "parent_execution_id": _parent["id"] if _parent else None,
                 "status": "pending",
                 "reason_code": None,
                 "reason": None,
@@ -193,13 +234,13 @@ class PhysicalCampaigns:
                 "started_at": None,
                 "finished_at": None,
             }
-            for case in plan["cases"]
+            for index, case in enumerate(selected_cases)
         ]
         batch_ids = {
             case_id: batch["id"] for batch in plan["batches"] for case_id in batch["case_ids"]
         }
         with self.store.db:
-            for selected, case in zip(plan["cases"], runtime, strict=True):
+            for selected, case in zip(selected_cases, runtime, strict=True):
                 case.update(
                     batch_id=batch_ids[case["case_id"]],
                     label=selected["label"],
@@ -209,7 +250,9 @@ class PhysicalCampaigns:
                 )
                 self.save(record, case, commit=False)
         self.current = record
-        self.task = asyncio.create_task(self.run(record, plan, runtime))
+        self.task = asyncio.create_task(
+            self.run(record, {**plan, "cases": selected_cases}, runtime)
+        )
         return self.get(identifier)
 
     def transition(self, record, runtime, case, status, reason_code=None, reason=None):

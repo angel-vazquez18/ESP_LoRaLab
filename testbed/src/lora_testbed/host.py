@@ -261,6 +261,10 @@ class Host:
         async with self.lock:
             return await self.physical_campaigns.start(plan_id)
 
+    async def rerun_campaign(self, identifier, case_ids):
+        async with self.lock:
+            return await self.physical_campaigns.rerun(identifier, case_ids)
+
     async def memory_probe(self, role, iterations, payload_bytes, *, _owner=None, _on_created=None):
         async with self.lock:
             self.require_available_bench(_owner)
