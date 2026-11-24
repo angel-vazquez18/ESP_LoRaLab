@@ -1,11 +1,11 @@
 # Session keys and protected-frame boundaries (#44)
 
 This document maps the selected v2 security contract to the current run APIs.
-It specifies the protected implementation that follows; it does not enable it.
-The firmware and typed vocabulary now support owned private key setup and
-[session-key retirement](session_key_lifecycle.md). `security_gcm` stays false;
-protected RF and ordinary host provisioning are blocked until #60/#63. Local
-crypto measurement follows in #53. #48 provides the isolated
+The firmware now composes owned private key setup, [session-key retirement](session_key_lifecycle.md)
+and [protected DATA/replay/retry acceptance](protected_replay.md). Available selected
+radios advertise node GCM support; safe ordinary host provisioning remains blocked
+until #63. [Local crypto measurement](crypto_benchmark.md) is implemented in #53.
+#48 provides the isolated
 [authenticated-frame primitive](frame_crypto.md). Public vectors are conformance
 data, never evidence that installed firmware implements security.
 
@@ -109,9 +109,10 @@ resource/insertion failure must not poison a legitimate later retry.
 
 An attacker’s identical retransmission within the declared retry exception is
 indistinguishable from a legitimate retry. Both have zero new delivery. SEC-03
-therefore uses ACKs disabled. `rf_ack` currently supplies bounded hash-cache and
-classification seams; authentication/replay enforcement must precede it. Never
-label those unprotected seams as implemented cryptographic replay protection.
+therefore uses ACKs disabled. Protected execution now uses the session owner's
+128-frame window and 16-entry accepted-hash cache before trusted insertion/re-ACK.
+`rf_ack` continues to serve unprotected runs; its structural checks alone do not
+supply authentication or cryptographic replay protection.
 
 ## Retirement and restart
 
@@ -152,6 +153,6 @@ make check
 Expect all focused checks without skips, secret sentinels absent from serialized
 rejection/trace evidence, and no protected request sent to the current node.
 The cipher and owned firmware lifecycle checks now exercise #48/#52 boundaries.
-#60/#63 must add protected transport/replay and successful host-provisioning
-redaction/cleanup failure cases, then obtain
+#60 now supplies protected transport/replay checks. #63 must still add successful
+host-provisioning redaction/cleanup cases, then obtain
 physical qualification under #67. This contract PR does not close those checks.

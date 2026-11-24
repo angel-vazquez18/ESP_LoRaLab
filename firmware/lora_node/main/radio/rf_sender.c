@@ -7,6 +7,7 @@ struct rf_sender
 {
     rf_packet_port port;
     node_radio *radio;
+    rf_secure_session *security;
     rf_sender_status status;
     rf_data_view header;
     uint8_t frame[255], maximum_retries;
@@ -19,10 +20,7 @@ struct rf_sender
     bool used, pending, ack_requested;
     node_radio_event observation;
 };
-static uint64_t ceil_div(uint64_t n, uint64_t d)
-{
-    return (n + d - 1) / d;
-}
+static uint64_t ceil_div(uint64_t n, uint64_t d) { return (n + d - 1) / d; }
 uint32_t rf_radio_airtime_us(const node_radio_settings *s, size_t length)
 {
     if (!node_radio_valid_settings(s) || !length || length > 255)
@@ -46,10 +44,7 @@ rf_sender *rf_sender_create(rf_packet_port port, node_radio *radio)
     s->radio = radio;
     return s;
 }
-static bool active(const rf_sender *s)
-{
-    return s->used && s->status.state < RF_SENDER_COMPLETED;
-}
+static bool active(const rf_sender *s) { return s->used && s->status.state < RF_SENDER_COMPLETED; }
 static void finish(rf_sender *s, rf_sender_state state, const char *reason)
 {
     if (s->radio->operation || s->radio->event_pending)
@@ -97,7 +92,9 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
     if (!s || active(s) || s->pending || !s->radio->available || !s->radio->configured ||
         s->radio->operation || s->radio->event_pending || retries > 2 || guard > 1000000U ||
         turnaround > 1000000U || margin > 1000000U ||
-        !rf_data_decode(frame, length, fragment, &header) || (!(header.flags & 2) && retries) ||
+        !rf_data_inspect(frame, length, fragment, &header) ||
+        (!!(header.flags & 1) != (s->security != NULL)) ||
+        (s->security && !rf_secure_ready(s->security)) || (!(header.flags & 2) && retries) ||
         (s->session &&
          (header.session != s->session || header.source != s->source ||
           header.destination != s->destination || header.frame_sequence <= s->highest_sequence)))
@@ -107,7 +104,9 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
         return false;
     uint32_t airtime = rf_radio_airtime_us(&s->radio->applied, length);
     uint32_t ack =
-        header.flags & 2 ? turnaround + rf_radio_airtime_us(&s->radio->applied, 40) + margin : 0;
+        header.flags & 2
+            ? turnaround + rf_radio_airtime_us(&s->radio->applied, s->security ? 56 : 40) + margin
+            : 0;
     uint32_t tx = airtime + (margin > 1000U ? margin : 1000U);
     uint64_t worst = (uint64_t)(retries + 1) * (tx + ack + guard);
     if (!airtime || tx > 30000000U || ack > 30000000U || worst > (uint64_t)(deadline - now))
@@ -128,7 +127,8 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
     s->deadline = deadline;
     s->ack_requested = header.flags & 2;
     s->used = true;
-    s->status = (rf_sender_status){.state = RF_SENDER_READY};
+    s->status =
+        (rf_sender_status){.state = RF_SENDER_READY, .last_ack_acceptance = RF_SECURE_REJECTED};
     return true;
 }
 static void retry(rf_sender *s, int64_t now)
@@ -144,7 +144,28 @@ static void retry(rf_sender *s, int64_t now)
 static bool receive(rf_sender *s, int64_t now)
 {
     int64_t remaining = s->status.ack_deadline_us - now;
-    return remaining > 0 && node_radio_rx(s->radio, 40, remaining);
+    return remaining > 0 && node_radio_rx(s->radio, s->security ? 56 : 40, remaining);
+}
+bool rf_sender_security(rf_sender *s, rf_secure_session *owner)
+{
+    if (!s || s->used || !rf_secure_ready(owner))
+        return false;
+    s->security = owner;
+    return true;
+}
+static bool accept_ack(void *context, const uint8_t header[40], const uint8_t *body, size_t bytes)
+{
+    (void)body;
+    rf_sender *s = context;
+    return !bytes && rf_ack_header_matches(header, s->frame);
+}
+static bool matching_ack(rf_sender *s, const node_radio_event *event)
+{
+    if (!s->security)
+        return rf_ack_matches(event->bytes, event->frame_bytes, s->frame, s->length, s->fragment);
+    s->status.last_ack_acceptance = rf_secure_receive(s->security, event->bytes, event->frame_bytes,
+                                                      event->done_us, false, 0, accept_ack, s);
+    return s->status.last_ack_acceptance == RF_SECURE_ACCEPTED;
 }
 static void advance(rf_sender *s)
 {
@@ -216,12 +237,14 @@ static void advance(rf_sender *s)
     }
     else if (s->status.state == RF_SENDER_ACK)
     {
-        if (event.status == RADIO_DONE && event.crc_ok &&
-            rf_ack_matches(event.bytes, event.frame_bytes, s->frame, s->length, s->fragment))
+        s->status.last_ack_acceptance = RF_SECURE_REJECTED;
+        if (event.status == RADIO_DONE && event.crc_ok && matching_ack(s, &event))
         {
             s->status.acks++;
             finish(s, RF_SENDER_COMPLETED, "acknowledged");
         }
+        else if (s->security && s->status.last_ack_acceptance == RF_SECURE_UNAVAILABLE)
+            finish(s, RF_SENDER_FAILED, "crypto_unavailable");
         else if (event.status == RADIO_FAILED || !s->radio->available)
             finish(s, RF_SENDER_FAILED, "radio_rx_failed");
         else if (event.status == RADIO_TIMEOUT || now >= s->status.ack_deadline_us)

@@ -627,3 +627,21 @@ No flash or physical benchmark occurred. Three batches per size per physical nod
 and target acceleration/resource qualification remain pending. All 19 preserved
 files in the original checkout still match their hashes. See
 [review and physical instructions](crypto_benchmark.md).
+
+## November 22 — Protected replay and retry acceptance (#60)
+
+The owned source-key context now authenticates before a 128-frame replay window
+and commits only successful metadata/insertion policy. A 16-entry accepted-DATA
+hash cache allows fixed-horizon exact retry re-ACKs, without second insertion or
+delivery. Protected node execution retains sealed DATA for exact retries and
+creates fresh referenced ACKs using the local source owner. Structural header
+inspection never exposes ciphertext as plaintext; budgets/RX limits include tag
+overhead and 56-byte ACKs. Available selected radios now advertise node GCM
+support; shared host provisioning remains gated pending #63.
+
+Full `make check` passed 562 cases without skips, lint/frontend/contracts/repository
+checks; selected-board IDF build passed (0x65390 bytes, 60% app free). Six focused
+window/node cases include a two-C-node lost-ACK exchange with one delivery and
+independently identical recovered bytes/hash. No physical port or flash was used.
+All 19 preserved original-checkout files still match. Physical #67 and protected
+host provisioning remain open; see [review and validation](protected_replay.md).

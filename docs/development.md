@@ -155,3 +155,8 @@ The real pinned PSA provider and C serial/API seams check four sizes, exact
 first/warm-up/timed counts, partial evidence, timer failures and cleanup. No physical
 port is opened. [Physical repetition and evidence commands](crypto_benchmark.md)
 remain later checks, not target timing results from a native fixture.
+
+For #60, run the two native files listed in [protected replay](protected_replay.md).
+They check real PSA/C node acceptance and a paired SPI/IRQ fixture with a lost
+protected ACK. Missing/old/bad-tag frames cannot enter application delivery;
+protected fixture results do not qualify physical RF.

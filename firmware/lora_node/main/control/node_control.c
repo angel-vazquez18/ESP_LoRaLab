@@ -242,10 +242,11 @@ static cJSON *capabilities(node_control *n)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "codec2_3200", "security_gcm",
+        "codec2_3200",
         "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "security_gcm", n->port.radio && n->port.radio->available);
     boolean(n, o, "radio", n->port.radio && n->port.radio->available);
     boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
     boolean(n, o, "ack_retry", n->port.radio && n->port.radio->available);

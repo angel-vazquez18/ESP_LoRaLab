@@ -324,8 +324,10 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
     }
     else if (action == RF_PREPARE)
     {
-        if (r->plan.protected_mode)
-            return "MISSING_CAPABILITY"; // Replay/transport integration follows.
+        if (r->plan.protected_mode && !rf_secure_ready(r->security))
+            return "KEY_NOT_READY";
+        if (r->plan.protected_mode && link->fragment_payload_bytes > 199)
+            return "INVALID_ARGUMENT";
         const char *const outer[] = {"spec", "budget"};
         const char *const specs[] = {"catalog_id",
                                      "direction",
@@ -351,9 +353,10 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             return "INVALID_STATE";
         if (!allowed(args, outer, 2) || !allowed(s, specs, 14) || !allowed(b, budgets, 8) ||
             !literal(s, "catalog_id", "IF-02") || !literal(s, "source", "known_data") ||
-            !literal(s, "security", "none") || !boolean(s, "playback", false) ||
-            !null_value(s, "source_artifact_id") || !null_value(s, "sample_count") ||
-            !null_value(s, "source_duration_ms") || !null_value(s, "expected_sha256") ||
+            !literal(s, "security", p->protected_mode ? "aes128_gcm" : "none") ||
+            !boolean(s, "playback", false) || !null_value(s, "source_artifact_id") ||
+            !null_value(s, "sample_count") || !null_value(s, "source_duration_ms") ||
+            !null_value(s, "expected_sha256") ||
             !integer(s, "message_count", 1, 10000, 100, &count) ||
             !integer(s, "message_bytes", 1, 65536, 64, &p->bytes) ||
             !integer(s, "source_seed", 0, UINT32_MAX, 743, &p->seed) ||
@@ -394,12 +397,15 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         uint32_t fragments =
             (p->bytes + link->fragment_payload_bytes - 1) / link->fragment_payload_bytes;
         uint32_t last = p->bytes - (fragments - 1) * link->fragment_payload_bytes;
-        uint32_t last_air = rf_radio_airtime_us(&r->radio->applied, 40 + last);
-        uint32_t full_air = fragments > 1 ? rf_radio_airtime_us(&r->radio->applied,
-                                                                40 + link->fragment_payload_bytes)
-                                          : last_air;
-        uint32_t ack =
-            link->ack_requested ? 100000 + rf_radio_airtime_us(&r->radio->applied, 40) : 0;
+        uint32_t tag_bytes = p->protected_mode ? 16 : 0;
+        uint32_t last_air = rf_radio_airtime_us(&r->radio->applied, 40 + last + tag_bytes);
+        uint32_t full_air = fragments > 1
+                                ? rf_radio_airtime_us(&r->radio->applied,
+                                                      40 + link->fragment_payload_bytes + tag_bytes)
+                                : last_air;
+        uint32_t ack = link->ack_requested
+                           ? 100000 + rf_radio_airtime_us(&r->radio->applied, 40 + tag_bytes)
+                           : 0;
         uint32_t attempts = 1 + link->max_retries;
         uint64_t horizon =
             link->ack_requested ? (uint64_t)(full_air + ack + link->guard_us) * attempts : 0;
@@ -524,8 +530,21 @@ static void sender_counts(rf_execution *r, const rf_sender_status *s)
 static bool transmit(rf_execution *r)
 {
     uint8_t frame[255];
-    size_t length =
-        rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, frame);
+    size_t length = 0;
+    if (r->plan.protected_mode)
+    {
+        uint8_t header[40];
+        if (!rf_message_header(&r->fragments, r->tx_fragment, header))
+            return false;
+        size_t body_bytes = ((unsigned)header[32] << 8) | header[33];
+        if (rf_secure_seal(r->security, header,
+                           r->payload + (uint32_t)r->tx_fragment * r->fragments.fragment_bytes,
+                           body_bytes, frame, sizeof(frame), &length) != RF_CRYPTO_OK)
+            return false;
+    }
+    else
+        length =
+            rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, frame);
     if (!length || !rf_sender_begin(r->transmitter, frame, length,
                                     r->plan.link.fragment_payload_bytes, r->plan.link.max_retries,
                                     r->plan.link.guard_us, 20000, 80000, r->deadline))
@@ -594,13 +613,24 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->drops_start = r->port.drops(r->port.context);
         uint8_t digest[32];
         if (!rf_message_plan_init(&r->fragments, p->session, 1, 1, p->source,
-                                  p->source == 1 ? 2 : 1, 0, false, p->link.ack_requested, p->bytes,
+                                  p->source == 1 ? 2 : 1, 0, p->protected_mode,
+                                  p->link.ack_requested, p->bytes,
                                   p->link.fragment_payload_bytes) ||
             !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->payload, p->bytes) ||
             !r->port.hash(r->port.context, r->payload, p->bytes, digest))
         {
             release_buffers(r);
             return false;
+        }
+        if (r->sender && p->protected_mode)
+        {
+            uint32_t first = 0;
+            if (rf_secure_reserve(r->security, r->fragments.fragment_count, &first) != RF_CRYPTO_OK)
+            {
+                release_buffers(r);
+                return false;
+            }
+            r->fragments.first_sequence = first;
         }
         memcpy(r->expected_hash, digest, 32);
         hex(digest, r->sha_hex);
@@ -624,7 +654,8 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         if (r->sender)
         {
             r->transmitter = rf_sender_create(port, r->radio);
-            if (!r->transmitter)
+            if (!r->transmitter ||
+                (p->protected_mode && !rf_sender_security(r->transmitter, r->security)))
             {
                 r->used = false;
                 r->phase = RF_IDLE;
@@ -646,7 +677,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                 release_buffers(r);
                 return false;
             }
-            if (p->link.ack_requested)
+            if (p->link.ack_requested && !p->protected_mode)
             {
                 r->acknowledgments =
                     rf_ack_create(port, p->session, p->role, p->source,
@@ -669,8 +700,9 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         int64_t lifetime = p->reassembly < (uint64_t)p->duration_ms * 1000
                                ? p->reassembly
                                : (int64_t)p->duration_ms * 1000;
-        if (!rf_reassembly_begin(r->receiver, 1, 0, p->link.ack_requested ? 2 : 0, p->bytes,
-                                 r->expected_hash, now, now + lifetime))
+        if (!rf_reassembly_begin(r->receiver, 1, 0,
+                                 (p->protected_mode ? 1 : 0) | (p->link.ack_requested ? 2 : 0),
+                                 p->bytes, r->expected_hash, now, now + lifetime))
             return false;
         r->receive_deadline = now + lifetime;
         uint32_t slice = lifetime > 30000000 ? 30000000 : lifetime;
@@ -855,7 +887,11 @@ static void rejected(rf_execution *r, const char *reason)
     string(r, o, "stage",
            eq(reason, "wrong_session") || eq(reason, "wrong_source") ? "session"
            : eq(reason, "content_mismatch")                          ? "reassembly"
-                                                                     : "framing");
+           : eq(reason, "authentication_failed") || eq(reason, "protection_mismatch") ||
+                   eq(reason, "crypto_unavailable")
+               ? "authentication"
+           : eq(reason, "replay") || eq(reason, "too_old") ? "replay"
+                                                           : "framing");
     string(r, o, "reason", reason);
     string(r, o, "related_injection_id", NULL);
     send(r, "rx.rejected", o);
@@ -916,7 +952,38 @@ static bool receiver_ack_work(rf_execution *r)
     if (!r->ack_pending)
         return false;
     uint8_t frame[56];
-    size_t length = rf_ack_take(r->acknowledgments, now, frame);
+    size_t length = 0;
+    if (r->plan.protected_mode)
+    {
+        if (now < r->protected_ack_due)
+            return true;
+        uint8_t header[40];
+        memcpy(header, r->protected_ack_header, sizeof(header));
+        header[3] = 2;
+        header[4] = 1;
+        header[5] = r->plan.role;
+        header[6] = r->plan.source;
+        memcpy(header + 34, header + 16, 4);
+        uint32_t sequence = 0;
+        if (rf_secure_reserve(r->security, 1, &sequence) != RF_CRYPTO_OK)
+        {
+            finish(r, "error", true);
+            return true;
+        }
+        header[16] = sequence >> 24;
+        header[17] = sequence >> 16;
+        header[18] = sequence >> 8;
+        header[19] = sequence;
+        header[32] = header[33] = 0;
+        if (rf_secure_seal(r->security, header, NULL, 0, frame, sizeof(frame), &length) !=
+            RF_CRYPTO_OK)
+        {
+            finish(r, "error", true);
+            return true;
+        }
+    }
+    else
+        length = rf_ack_take(r->acknowledgments, now, frame);
     if (!length)
     {
         if (now >= r->deadline)
@@ -940,11 +1007,10 @@ static void received_ack(rf_execution *r, const node_radio_event *event)
 {
     if (!event->signal_valid)
         return;
-    uint8_t data[255];
-    size_t length =
-        rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, data);
-    bool decoded = event->crc_ok && rf_ack_matches(event->bytes, event->frame_bytes, data, length,
-                                                   r->plan.link.fragment_payload_bytes);
+    uint8_t data[40];
+    bool decoded = event->crc_ok && event->frame_bytes == (r->plan.protected_mode ? 56 : 40) &&
+                   rf_message_header(&r->fragments, r->tx_fragment, data) &&
+                   rf_ack_header_matches(event->bytes, data);
     r->observations++;
     if (r->first_rx < 0)
         r->first_rx = event->done_us;
@@ -971,6 +1037,46 @@ static void received_ack(rf_execution *r, const node_radio_event *event)
     add(r, o, "snr_db", cJSON_CreateNumber(event->snr_db));
     add(r, o, "crc_ok", cJSON_CreateBool(event->crc_ok));
     send(r, "rx.frame", o);
+}
+typedef struct
+{
+    rf_execution *execution;
+    rf_data_view *header;
+    int64_t received;
+    rf_reassembly_result insertion;
+    rf_acceptance accepted;
+} protected_insertion;
+static bool insert_protected(void *context, const uint8_t header[40], const uint8_t *body,
+                             size_t bytes)
+{
+    protected_insertion *call = context;
+    rf_execution *r = call->execution;
+    rf_data_view *h = call->header;
+    if (h->session != r->plan.session)
+        call->accepted = RF_WRONG_SESSION;
+    else if (h->source != r->plan.source || h->destination != r->plan.role)
+        call->accepted = RF_WRONG_ROLE;
+    else if (h->message_id != 1 || h->message_bytes != r->plan.bytes || h->content != 0 ||
+             h->fragment_count != r->fragments.fragment_count ||
+             h->flags != (unsigned)(1 | (r->plan.link.ack_requested ? 2 : 0)) ||
+             bytes != h->body_bytes)
+        call->accepted = RF_WRONG_MESSAGE;
+    else if (memcmp(body, r->payload + (uint32_t)h->fragment_index * r->fragments.fragment_bytes,
+                    bytes))
+        call->accepted = RF_CONTENT_MISMATCH;
+    else
+    {
+        call->insertion =
+            rf_reassembly_accept_authenticated(r->receiver, header, body, bytes, call->received);
+        if (call->insertion == RF_REASSEMBLY_ACCEPTED || call->insertion == RF_REASSEMBLY_COMPLETE)
+        {
+            call->accepted = RF_DELIVERED;
+            return true;
+        }
+        call->accepted =
+            call->insertion == RF_REASSEMBLY_DUPLICATE ? RF_WRONG_MESSAGE : RF_INTERNAL_ERROR;
+    }
+    return false;
 }
 void rf_execution_tick(rf_execution *r)
 {
@@ -1052,6 +1158,13 @@ void rf_execution_tick(rf_execution *r)
             received_ack(r, &event);
         rf_sender_status status;
         rf_sender_snapshot(r->transmitter, &status);
+        if (r->plan.protected_mode && event.kind == RADIO_EVENT_RX && event.signal_valid &&
+            event.crc_ok && status.last_ack_acceptance != RF_SECURE_ACCEPTED)
+            rejected(r, status.last_ack_acceptance == RF_SECURE_AUTH_FAILED
+                            ? "authentication_failed"
+                        : status.last_ack_acceptance == RF_SECURE_REPLAY  ? "replay"
+                        : status.last_ack_acceptance == RF_SECURE_TOO_OLD ? "too_old"
+                                                                          : "invalid_frame");
         if (status.state == RF_SENDER_COMPLETED)
         {
             r->tx_fragment++;
@@ -1067,7 +1180,7 @@ void rf_execution_tick(rf_execution *r)
     rf_data_view h;
     bool decoded =
         event.status == RADIO_DONE &&
-        rf_data_decode(event.bytes, event.frame_bytes, r->plan.link.fragment_payload_bytes, &h);
+        rf_data_inspect(event.bytes, event.frame_bytes, r->plan.link.fragment_payload_bytes, &h);
     if (event.signal_valid)
     {
         r->observations++;
@@ -1111,7 +1224,40 @@ void rf_execution_tick(rf_execution *r)
     uint8_t digest[32];
     rf_acceptance accepted = RF_INVALID_FRAME;
     rf_reassembly_result insertion = RF_REASSEMBLY_REJECTED;
-    if (decoded)
+    const char *security_rejection = NULL;
+    if (decoded && event.crc_ok && h.session != r->plan.session)
+        accepted = RF_WRONG_SESSION;
+    else if (decoded && event.crc_ok &&
+             (h.source != r->plan.source || h.destination != r->plan.role))
+        accepted = RF_WRONG_ROLE;
+    else if (decoded && event.crc_ok && !!(h.flags & 1) != r->plan.protected_mode)
+        security_rejection = "protection_mismatch";
+    else if (decoded && event.crc_ok && r->plan.protected_mode)
+    {
+        protected_insertion call = {r, &h, event.done_us, RF_REASSEMBLY_REJECTED, RF_INVALID_FRAME};
+        rf_secure_acceptance decision =
+            rf_secure_receive(r->security, event.bytes, event.frame_bytes, event.done_us,
+                              r->plan.link.ack_requested, r->plan.drain, insert_protected, &call);
+        insertion = call.insertion;
+        accepted = call.accepted;
+        if (decision == RF_SECURE_RETRY_DUPLICATE)
+        {
+            insertion = RF_REASSEMBLY_DUPLICATE;
+            accepted = RF_DUPLICATE;
+        }
+        else if (decision == RF_SECURE_AUTH_FAILED)
+            security_rejection = "authentication_failed";
+        else if (decision == RF_SECURE_REPLAY)
+            security_rejection = "replay";
+        else if (decision == RF_SECURE_TOO_OLD)
+            security_rejection = "too_old";
+        else if (decision == RF_SECURE_UNAVAILABLE)
+        {
+            accepted = RF_INTERNAL_ERROR;
+            security_rejection = "crypto_unavailable";
+        }
+    }
+    else if (decoded && event.crc_ok)
     {
         if (h.session != r->plan.session)
             accepted = RF_WRONG_SESSION;
@@ -1128,31 +1274,29 @@ void rf_execution_tick(rf_execution *r)
         {
             insertion =
                 rf_reassembly_accept(r->receiver, event.bytes, event.frame_bytes, event.done_us);
-            if (insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE)
-            {
-                r->accepted++;
-                if (r->first_fragment < 0)
-                    r->first_fragment = event.done_us;
-                cJSON *o = object(r);
-                string(r, o, "session_id", r->plan.session_text);
-                string(r, o, "source_role", r->plan.source == 1 ? "A" : "B");
-                number(r, o, "frame_seq", h.frame_sequence);
-                number(r, o, "message_id", 1);
-                number(r, o, "fragment_index", h.fragment_index);
-                number(r, o, "payload_bytes", h.body_bytes);
-                number(r, o, "accepted_us", r->port.now_us(r->port.context));
-                send(r, "rx.accepted", o);
-                accepted = RF_DELIVERED;
-            }
-            else if (insertion == RF_REASSEMBLY_DUPLICATE)
-            {
-                r->duplicates++;
-                accepted = RF_DUPLICATE;
-            }
-            else
-                accepted = RF_INTERNAL_ERROR;
+            accepted = insertion == RF_REASSEMBLY_DUPLICATE ? RF_DUPLICATE
+                       : insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE
+                           ? RF_DELIVERED
+                           : RF_INTERNAL_ERROR;
         }
     }
+    if (accepted == RF_DELIVERED)
+    {
+        r->accepted++;
+        if (r->first_fragment < 0)
+            r->first_fragment = event.done_us;
+        cJSON *o = object(r);
+        string(r, o, "session_id", r->plan.session_text);
+        string(r, o, "source_role", r->plan.source == 1 ? "A" : "B");
+        number(r, o, "frame_seq", h.frame_sequence);
+        number(r, o, "message_id", 1);
+        number(r, o, "fragment_index", h.fragment_index);
+        number(r, o, "payload_bytes", h.body_bytes);
+        number(r, o, "accepted_us", r->port.now_us(r->port.context));
+        send(r, "rx.accepted", o);
+    }
+    else if (accepted == RF_DUPLICATE)
+        r->duplicates++;
     const void *complete = NULL;
     size_t complete_bytes = 0;
     if (insertion == RF_REASSEMBLY_COMPLETE &&
@@ -1188,8 +1332,13 @@ void rf_execution_tick(rf_execution *r)
     {
         rf_ack_classification classification =
             insertion == RF_REASSEMBLY_DUPLICATE ? RF_ACK_RETRY_DUPLICATE : RF_ACK_NEW_DATA;
-        if (!rf_ack_offer(r->acknowledgments, event.bytes, event.frame_bytes, classification,
-                          event.done_us))
+        if (r->plan.protected_mode)
+        {
+            memcpy(r->protected_ack_header, event.bytes, 40);
+            r->protected_ack_due = event.done_us + 20000;
+        }
+        else if (!rf_ack_offer(r->acknowledgments, event.bytes, event.frame_bytes, classification,
+                               event.done_us))
         {
             finish(r, "error", true);
             return;
@@ -1198,11 +1347,12 @@ void rf_execution_tick(rf_execution *r)
         return;
     }
     if (accepted != RF_DELIVERED)
-        rejected(r, accepted == RF_CONTENT_MISMATCH ? "content_mismatch"
-                    : accepted == RF_WRONG_SESSION  ? "wrong_session"
-                    : accepted == RF_WRONG_ROLE     ? "wrong_source"
-                    : event.crc_ok                  ? "invalid_frame"
-                                                    : "phy_crc_or_header");
+        rejected(r, security_rejection                ? security_rejection
+                    : accepted == RF_CONTENT_MISMATCH ? "content_mismatch"
+                    : accepted == RF_WRONG_SESSION    ? "wrong_session"
+                    : accepted == RF_WRONG_ROLE       ? "wrong_source"
+                    : event.crc_ok                    ? "invalid_frame"
+                                                      : "phy_crc_or_header");
     int64_t until = r->delivered ? r->drain_deadline : r->receive_deadline;
     int64_t remaining = until - r->port.now_us(r->port.context);
     if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || insertion == RF_REASSEMBLY_COMPLETE ||

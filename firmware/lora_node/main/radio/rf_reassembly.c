@@ -73,10 +73,10 @@ bool rf_reassembly_begin(rf_reassembly *r, uint32_t message, uint8_t content, ui
                          uint32_t bytes, const uint8_t digest[32], int64_t now, int64_t deadline)
 {
     rf_message_plan p;
-    if (!r || r->active || !digest || message <= r->highest_message || flags & ~2U || now < 0 ||
+    if (!r || r->active || !digest || message <= r->highest_message || flags & ~3U || now < 0 ||
         deadline <= now || deadline - now > INT64_C(3600000000) ||
-        !rf_message_plan_init(&p, r->session, 1, message, r->source, r->destination, content, false,
-                              flags & 2, bytes, r->fragment))
+        !rf_message_plan_init(&p, r->session, 1, message, r->source, r->destination, content,
+                              flags & 1, flags & 2, bytes, r->fragment))
         return false;
     /* Release a previously delivered buffer before reserving the next one. */
     release(r);
@@ -106,13 +106,14 @@ rf_reassembly_result rf_reassembly_poll(rf_reassembly *r, int64_t now)
         return fail(r, RF_REASSEMBLY_EXPIRED);
     return r->outcome;
 }
-rf_reassembly_result rf_reassembly_accept(rf_reassembly *r, const void *input, size_t length,
-                                          int64_t now)
+static rf_reassembly_result accept(rf_reassembly *r, const uint8_t *p, const uint8_t *plain,
+                                   size_t body_bytes, bool authenticated, int64_t now)
 {
-    const uint8_t *p = input;
-    if (!r || !p || now < 0 || length <= 40 || length > 255 || memcmp(p, "LT", 2) || p[2] != 2 ||
-        p[3] != 1 || p[4] & ~2U || p[7] > 1 || !be(p + 16, 4) || !be(p + 20, 4) || be(p + 34, 4) ||
-        be(p + 38, 2))
+    size_t length = 40 + body_bytes + (authenticated ? 16 : 0);
+    if (!r || !p || !plain || body_bytes > (authenticated ? 199U : 215U) ||
+        !!(p[4] & 1) != authenticated || now < 0 || length <= 40 || length > 255 ||
+        memcmp(p, "LT", 2) || p[2] != 2 || p[3] != 1 || p[4] & ~3U || p[7] > 1 || !be(p + 16, 4) ||
+        !be(p + 20, 4) || be(p + 34, 4) || be(p + 38, 2))
         return RF_REASSEMBLY_REJECTED;
     if (be(p + 8, 8) != r->session || p[5] != r->source || p[6] != r->destination)
         return RF_REASSEMBLY_REJECTED;
@@ -127,16 +128,16 @@ rf_reassembly_result rf_reassembly_accept(rf_reassembly *r, const void *input, s
     if (p[4] != r->flags || p[7] != r->content || be(p + 28, 4) != r->bytes || count != r->count ||
         index >= count ||
         body != (index + 1 < count ? r->fragment : r->bytes - index * r->fragment) ||
-        length != 40 + body)
+        body_bytes != body)
         return r->complete ? RF_REASSEMBLY_CONFLICT : fail(r, RF_REASSEMBLY_CONFLICT);
     uint8_t *destination = r->data + index * r->fragment;
     if (present(r, index))
     {
-        if (memcmp(destination, p + 40, body))
+        if (memcmp(destination, plain, body))
             return r->complete ? RF_REASSEMBLY_CONFLICT : fail(r, RF_REASSEMBLY_CONFLICT);
         return RF_REASSEMBLY_DUPLICATE;
     }
-    memcpy(destination, p + 40, body);
+    memcpy(destination, plain, body);
     r->present[index / 8] |= 1U << (index % 8);
     r->received++;
     if (r->received < r->count)
@@ -172,4 +173,19 @@ bool rf_reassembly_take(rf_reassembly *r, const void **bytes, size_t *length, ui
     memcpy(digest, r->digest, 32);
     r->taken = true;
     return true;
+}
+
+rf_reassembly_result rf_reassembly_accept(rf_reassembly *r, const void *input, size_t length,
+                                          int64_t now)
+{
+    const uint8_t *frame = input;
+    if (!frame || length <= 40 || length > 255)
+        return RF_REASSEMBLY_REJECTED;
+    return accept(r, frame, frame + 40, length - 40, false, now);
+}
+rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *r, const uint8_t header[40],
+                                                        const uint8_t *body, size_t bytes,
+                                                        int64_t now)
+{
+    return accept(r, header, body, bytes, true, now);
 }

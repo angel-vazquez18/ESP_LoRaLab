@@ -20,6 +20,7 @@ class Status(C.Structure):
         ("ack_deadline_us", C.c_int64),
         ("retry_at_us", C.c_int64),
         ("reason", C.c_char_p),
+        ("last_ack_acceptance", C.c_uint32),
     ]
 
 
