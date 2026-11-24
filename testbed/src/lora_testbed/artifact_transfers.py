@@ -11,6 +11,7 @@ from uuid import uuid4
 from . import __version__
 from . import artifact_contract_v2 as contract
 from .adapters import require_artifact_compatible
+from .physical_adapter import PhysicalAdapter
 from .session_keys import require_public_metadata
 from .storage import utc_now
 
@@ -30,8 +31,9 @@ def decode_upload(text: str) -> bytes:
 
 
 class ArtifactTransfers:
-    def __init__(self, store, nodes):
+    def __init__(self, store, nodes, adapter=None):
         self.store, self.nodes = store, nodes
+        self.adapter = adapter or PhysicalAdapter(nodes)
         self.active = None
         self.task = None
         self.shutting_down = False
@@ -59,7 +61,8 @@ class ArtifactTransfers:
                 name,
                 node.health.capability_availability.model_dump() if node.health else None,
             )
-        health = await node.request("status.get")
+        binding = self.adapter.bind(role)
+        health = await self.adapter.request(binding, "status.get")
         if health["state"] != "idle" or health["node_role"] != role:
             raise RuntimeError("Node must be owned and idle")
         for name in commands:
@@ -70,12 +73,14 @@ class ArtifactTransfers:
 
     async def list(self, role):
         node, _ = await self.preflight(role, ["artifact.list"])
-        return await node.request("artifact.list")
+        return await self.adapter.request(self.adapter.bind(role), "artifact.list")
 
     async def delete(self, role, artifact_id):
         contract.ArtifactReference(artifact_id=artifact_id)
         node, _ = await self.preflight(role, ["artifact.delete"])
-        return await node.request("artifact.delete", {"artifact_id": artifact_id})
+        return await self.adapter.request(
+            self.adapter.bind(role), "artifact.delete", {"artifact_id": artifact_id}
+        )
 
     async def start_upload(self, role, data, format="known_data", kind="source", name="source.bin"):
         if format == "pcm_s16le_8000_mono" and data[:4] == b"RIFF" and data[8:12] == b"WAVE":
@@ -128,9 +133,14 @@ class ArtifactTransfers:
             "error": None,
             "cleanup": None,
             "identity": node.identity.model_dump(),
+            "physical_binding": self.adapter.bind(role),
             "host_version": __version__,
             "artifact_schema_sha256": contract.schema_digest(),
             "host_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "host_sources": {
+                name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                for name in ("artifact_transfers.py", "physical_adapter.py", "nodes.py")
+            },
         }
         self.store.save_transfer(record)
         self.active = transfer_id
@@ -163,9 +173,9 @@ class ArtifactTransfers:
             record["cleanup_evidence_error"] = str(exc)
 
     async def command(self, node, record, name, args=None):
-        if node.identity is None or node.identity.boot_id != record["identity"]["boot_id"]:
-            raise ValueError("Node boot changed during file transfer")
-        return await node.request(name, args, on_record=lambda value: self.wire(record, value))
+        return await self.adapter.request(
+            record["physical_binding"], name, args, on_record=lambda value: self.wire(record, value)
+        )
 
     async def read(self, node, record, manifest, chunk):
         self.check_budget(manifest["length_bytes"], chunk)
@@ -261,7 +271,10 @@ class ArtifactTransfers:
             )
         except Exception as exc:
             record.update(
-                status="failed" if node.connected else "interrupted",
+                status="failed"
+                if node.connected
+                and node.connection_id == record["physical_binding"]["connection_id"]
+                else "interrupted",
                 error=str(exc) or type(exc).__name__,
             )
         finally:
@@ -270,7 +283,8 @@ class ArtifactTransfers:
                 if source is not None:
                     try:
                         await asyncio.wait_for(
-                            node.request(
+                            self.adapter.request(
+                                record["physical_binding"],
                                 "artifact.delete",
                                 {"artifact_id": record["artifact_id"]},
                                 on_record=lambda value: self.cleanup_wire(record, value),
@@ -280,7 +294,12 @@ class ArtifactTransfers:
                         record["cleanup"] = "node reservation deleted"
                     except (ValueError, TimeoutError, OSError) as exc:
                         record["cleanup"] = f"unconfirmed: {exc}; disconnected to release ownership"
-                        await node.close()
+                        try:
+                            self.adapter.current(record["physical_binding"])
+                        except ValueError:
+                            pass
+                        else:
+                            await node.close()
             evidence = self.directory / f"{record['id']}.ndjson"
             if evidence.exists():
                 record["evidence_sha256"] = hashlib.sha256(evidence.read_bytes()).hexdigest()

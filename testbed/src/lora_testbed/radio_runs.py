@@ -18,6 +18,7 @@ from .adapters import require_execution_compatible
 from .artifact_contract_v2 import SHA256, ArtifactID
 from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
 from .models import StrictModel
+from .physical_adapter import PhysicalAdapter
 from .radio_accounting import failed_ranges, reconcile
 from .radio_security import assess as assess_security
 from .session_keys import EphemeralKeySet, require_public_metadata
@@ -97,8 +98,9 @@ class PreparedArtifact(StrictModel):
 
 
 class RadioRuns:
-    def __init__(self, store, nodes, artifacts):
+    def __init__(self, store, nodes, artifacts, adapter=None):
         self.store, self.nodes, self.artifacts = store, nodes, artifacts
+        self.adapter = adapter or PhysicalAdapter(nodes)
         self.current = self.task = None
         self.started = self.stop_requested = self.cleaning_up = False
         self.stop_lock = asyncio.Lock()
@@ -351,6 +353,7 @@ class RadioRuns:
                 "assessment": None,
             },
             "identities": {r: n.identity.model_dump() for r, n in self.nodes.items()},
+            "physical_bindings": {role: self.adapter.bind(role) for role in self.nodes},
             "host_version": __version__,
             "host_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             "host_sources": {
@@ -366,6 +369,7 @@ class RadioRuns:
                     "nodes.py",
                     "artifact_transfers.py",
                     "adapters.py",
+                    "physical_adapter.py",
                     "physical_wire_v2.py",
                     "experiments_v2.py",
                     "run_protocol_v2.py",
@@ -402,23 +406,16 @@ class RadioRuns:
         return record.copy()
 
     def same_boot(self, r, role, *, cleanup=False):
-        node = self.nodes[role]
-        expected = r["identities"][role]
-        if (
-            not node.connected
-            or node.identity is None
-            or (node.identity.device_id, node.identity.boot_id)
-            != (expected["device_id"], expected["boot_id"])
-        ):
-            raise ValueError(f"Node {role} disconnected or boot changed; radio work is not resumed")
+        node = self.adapter.current(r["physical_bindings"][role])
         if r["evidence_error"] and not cleanup:
             raise ValueError(r["evidence_error"])
         return node
 
     async def command(self, r, role, name, args=None, *, cleanup=False, key_set_id=None):
-        node = self.same_boot(r, role, cleanup=cleanup)
+        self.same_boot(r, role, cleanup=cleanup)
         kwargs = {"timeout": 0.75, "retries": 0} if cleanup else {}
-        return await node.request(
+        return await self.adapter.request(
+            r["physical_bindings"][role],
             name,
             args,
             run_id=r["id"] if name.startswith(("session.", "run.")) else None,
@@ -530,33 +527,23 @@ class RadioRuns:
         return data
 
     async def cleanup(self, r):
-        confirmed = True
-        notes = {}
-        for role, node in self.nodes.items():
-            if node.rf_run_id != r["id"]:
-                continue
-            try:
-                await self.command(
-                    r,
-                    role,
-                    "run.stop",
-                    {"reason": "host_shutdown" if self.shutting_down else "operator"},
-                    cleanup=True,
-                )
-                await self.command(r, role, "session.close", cleanup=True)
-                status = await self.command(r, role, "status.get", cleanup=True)
-                if (
-                    status["state"] != "idle"
-                    or status["run_id"] is not None
-                    or status["security_ready"]
-                ):
-                    raise ValueError("Node did not confirm idle")
-                notes[role] = "session closed and idle confirmed"
-            except (OSError, ValueError, TimeoutError) as exc:
-                confirmed = False
-                notes[role] = f"Unconfirmed: {exc}; ownership disconnected"
-                await node.close(release=False)
-        return {"confirmed": confirmed, "nodes": notes}
+        details = {}
+        for role in self.nodes:
+            details[role] = await self.adapter.cleanup(
+                r["physical_bindings"][role],
+                run_id=r["id"],
+                on_record=lambda value, selected=role: self.trace_command(r, selected, value, True),
+            )
+        return {
+            "confirmed": all(detail["confirmed"] for detail in details.values()),
+            "nodes": {
+                role: "; ".join(detail["steps"])
+                if detail["confirmed"]
+                else f"Unconfirmed: {detail['error']}"
+                for role, detail in details.items()
+            },
+            "details": details,
+        }
 
     async def run(self, r, request):
         try:
@@ -747,6 +734,7 @@ class RadioRuns:
             r["failure_stage"] = r["stage"]
             interrupted = any(
                 not node.connected
+                or node.connection_id != r["physical_bindings"][role]["connection_id"]
                 or node.identity is None
                 or (node.identity.device_id, node.identity.boot_id)
                 != (r["identities"][role]["device_id"], r["identities"][role]["boot_id"])
@@ -763,6 +751,9 @@ class RadioRuns:
                     if self.artifacts.busy:
                         await self.artifacts.cancel(transfer)
                 r["cleanup"] = await self.cleanup(r)
+                if r["status"] == "completed" and r["evidence_error"]:
+                    r["status"] = "failed"
+                    r["error"] = "Cleanup evidence incomplete; verified artifacts retained"
                 if not r["cleanup"]["confirmed"] and r["status"] == "completed":
                     r["status"] = "failed"
                     r["error"] = "Radio cleanup did not confirm both nodes idle"
