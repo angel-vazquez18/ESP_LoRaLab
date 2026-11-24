@@ -72,13 +72,14 @@ void artifact_store_destroy(artifact_store *s)
         clear(s, &s->slots[i]);
     free(s);
 }
-artifact_status artifact_store_begin(artifact_store *s, const char *owner,
-                                     const artifact_spec *spec)
+static artifact_status reserve(artifact_store *s, const char *owner,
+                                     const artifact_spec *spec, bool encoded)
 {
     if (!spec || !hex_string(owner, 36, true) ||
         !hex_string(spec->artifact_id, 36, true) || !hex_string(spec->sha256, 64, false) ||
         (!equal(spec->kind, "source") && !equal(spec->kind, "recovered")) ||
-        (!equal(spec->format, "known_data") && !equal(spec->format, "pcm_s16le_8000_mono")) ||
+        (!equal(spec->format, "known_data") && !equal(spec->format, "pcm_s16le_8000_mono") &&
+         !(encoded && equal(spec->format, "codec2_3200_v1"))) ||
         !spec->length_bytes)
         return ARTIFACT_INVALID_ARGUMENT;
     if (spec->length_bytes > ARTIFACT_MAX_BYTES)
@@ -115,6 +116,11 @@ artifact_status artifact_store_begin(artifact_store *s, const char *owner,
     slot->bytes = bytes;
     s->reserved_bytes += spec->length_bytes;
     return ARTIFACT_OK;
+}
+artifact_status artifact_store_begin(artifact_store *s, const char *owner,
+                                     const artifact_spec *spec)
+{
+    return reserve(s, owner, spec, false);
 }
 const artifact_manifest *artifact_store_find(const artifact_store *s, const char *id)
 {
@@ -269,12 +275,12 @@ artifact_status artifact_store_capture_begin(artifact_store *s, const char *owne
     *destination = slot->bytes;
     return ARTIFACT_OK;
 }
-artifact_status artifact_store_capture_finish(artifact_store *s, const char *id,
-    uint32_t samples, bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
+static artifact_status finish_producer(artifact_store *s, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
 {
     artifact_slot *slot = find(s, id);
-    if (!sha256 || !samples || samples > 24000 || !slot || !slot->producing || slot->manifest.state != ARTIFACT_UPLOADING ||
-        samples * 2 != slot->manifest.length_bytes) return ARTIFACT_INVALID_STATE;
+    if (!sha256 || !slot || !slot->producing || slot->manifest.state != ARTIFACT_UPLOADING)
+        return ARTIFACT_INVALID_STATE;
     uint8_t digest[32];
     if (!sha256(context, slot->bytes, slot->manifest.length_bytes, digest)) return ARTIFACT_INTERNAL_ERROR;
     static const char hex[] = "0123456789abcdef";
@@ -287,4 +293,39 @@ artifact_status artifact_store_capture_finish(artifact_store *s, const char *id,
     slot->manifest.state = ARTIFACT_COMMITTED;
     slot->producing = false;
     return ARTIFACT_OK;
+}
+
+artifact_status artifact_store_capture_finish(artifact_store *s, const char *id,
+    uint32_t samples, bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
+{
+    artifact_slot *slot = find(s, id);
+    if (!slot || !samples || samples > 24000 || samples * 2 != slot->manifest.length_bytes ||
+        !equal(slot->manifest.format, "pcm_s16le_8000_mono")) return ARTIFACT_INVALID_STATE;
+    return finish_producer(s, id, sha256, context);
+}
+artifact_status artifact_store_encode_begin(artifact_store *s, const char *owner,
+    const char *id, const char *source_id, uint32_t samples, void **destination)
+{
+    if (!destination || !samples || samples > 24000 || !hex_string(source_id, 36, true) ||
+        equal(source_id, id)) return ARTIFACT_INVALID_ARGUMENT;
+    uint32_t frames = (samples + 159) / 160;
+    artifact_spec spec = {.artifact_id = id, .kind = "source", .format = "codec2_3200_v1",
+        .length_bytes = frames * 8,
+        .sha256 = "0000000000000000000000000000000000000000000000000000000000000000"};
+    artifact_status status = reserve(s, owner, &spec, true);
+    if (status != ARTIFACT_OK) return status;
+    artifact_slot *slot = find(s, id);
+    slot->producing = true;
+    memcpy(slot->manifest.source_artifact_id, source_id, 37);
+    slot->manifest.sample_count = samples;
+    slot->manifest.frame_count = frames;
+    *destination = slot->bytes;
+    return ARTIFACT_OK;
+}
+artifact_status artifact_store_encode_finish(artifact_store *s, const char *id,
+    bool (*sha256)(void *, const void *, size_t, uint8_t[32]), void *context)
+{
+    artifact_slot *slot = find(s, id);
+    if (!slot || !equal(slot->manifest.format, "codec2_3200_v1")) return ARTIFACT_INVALID_STATE;
+    return finish_producer(s, id, sha256, context);
 }

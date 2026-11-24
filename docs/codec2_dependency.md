@@ -5,8 +5,9 @@ temporary context once during control initialization, queries the actual library
 frame dimensions, destroys that context and retains the result in public metadata.
 The checked frame is 160 samples / 64 bits / 8 bytes at 8 kHz (20 ms). A three-second
 reference therefore contains 150 codec frames and would occupy 1200 encoded bytes,
-before any artifact or RF framing. Encoding/decoding operations are separate work
-in #36/#41; this dependency alone keeps `codec2_3200:false`.
+before any artifact or RF framing. At the #29 tip, encoding/decoding operations were separate work and
+`codec2_3200` stayed false. [Finite encoding](codec_encoding.md) now adds the first
+operation; decoding remains #41.
 
 ## Source, build and notices
 
@@ -147,3 +148,9 @@ continue to require fresh matching profiles; no record limit or watchdog deadlin
 was widened. A combined-peripheral/configuration/error regression checks both
 correlated status and periodic health through the same bounded writer. Final
 verification passed 604 cases and the selected 32 KiB IDF build (0x6c970).
+
+With #36's working encoder, enrolled dependency details are combined under
+`resource_limits.codec_io`; health carries its current profile/hash/commands.
+An unavailable library still uses the `codec2_library` enrollment description.
+Consult the command declaration for operation support; the mode flag alone does
+not imply an implemented decoder.

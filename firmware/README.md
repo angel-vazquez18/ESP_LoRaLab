@@ -15,8 +15,8 @@ target now uses one NDJSON writer and suppresses ordinary application logs after
 initialization. Audio and RF initialization follow explicit wiring/board settings;
 RF stays untouched when no variant is selected. Current capability and physical
 acceptance limits are recorded in [status](../docs/status.md). The main target now
-has a pinned [Codec 2 component](../docs/codec2_dependency.md); encode/decode
-operations remain separate work.
+has a pinned [Codec 2 component](../docs/codec2_dependency.md); finite PCM encoding is implemented, with decoding still pending. See
+[encoding behavior and checks](../docs/codec_encoding.md).
 
 From repository root, activate ESP-IDF then build either target:
 

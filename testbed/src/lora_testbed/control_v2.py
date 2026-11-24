@@ -44,9 +44,16 @@ class OperationResult(StrictModel):
             from .crypto_benchmark_v2 import Result
 
             self.result = Result.model_validate(self.result).model_dump()
+        if self.result is not None and self.result.get("kind") == "audio_encode":
+            from .codec_contract_v2 import Result as CodecResult
+
+            self.result = CodecResult.model_validate(self.result).model_dump()
+            if (self.status == "completed") != (self.result["artifact"] is not None):
+                raise ValueError("Only a completed codec operation publishes an artifact")
         if self.status == "failed":
             if self.error is None or (
-                self.result is not None and self.result.get("kind") != "crypto_benchmark"
+                self.result is not None
+                and self.result.get("kind") not in ("crypto_benchmark", "audio_encode")
             ):
                 raise ValueError("Failed operation requires an error and null result")
         elif self.result is None or self.error is not None:

@@ -4,6 +4,25 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Finite committed-PCM encoding (#36)
+
+Added a portable one-frame-per-step encoder with fresh Codec 2 state, immutable
+source borrowing, separate hash-published output, partial counts/timing and bounded
+stop/lease/disconnect/deadline/acceptance-failure cleanup. The shared serial session
+negotiates the new compact codec profile and tracks its typed terminal result;
+GUI/CLI workflow controls and decoding remain separate issues. Full/partial
+reference clips match a separate public-library encoder; 24,000 samples produce
+150 frames/1200 bytes and repeated fresh-state clips match.
+
+Final `make check` passed 625 cases without skips plus lint/frontend/contracts/
+repository/dependency checks; the focused command passes 141. Selected V4.2/32 KiB
+IDF build: 0x6d870 bytes, 57% app free, +3840 bytes above corrected #29. Artifact
+manifest compatibility changes; codec uses its own exact supplement fingerprint.
+Existing control/diagnostic/audio/RF identities remain unchanged. See
+[encoding review and physical checks](codec_encoding.md). No flash or physical
+codec/voice qualification. B remains on the original audio image after the failed
+backup attempts; A and printed PCB revisions remain unobserved.
+
 ## November 23 — Pinned Codec 2 mode 3200 (#29)
 
 The main image now builds the pinned 1.2.0 codec/DSP subset and queries its actual

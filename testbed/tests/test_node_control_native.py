@@ -140,6 +140,7 @@ def native_library(tmp_path_factory):
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
             str(main / "audio/pcm_samples.c"),
+            str(main / "audio/codec_clip.c"),
             str(main / "radio/node_radio.c"),
             str(main / "radio/radio_config_json.c"),
             str(main / "radio/rf_frames.c"),

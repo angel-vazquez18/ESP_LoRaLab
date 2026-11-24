@@ -8,6 +8,7 @@ from pathlib import Path
 from lora_testbed import (
     artifact_contract_v2,
     audio_contract_v2,
+    codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
     rf_events_v2,
@@ -64,6 +65,14 @@ def outputs(root: Path) -> dict[Path, str]:
         )
     vector_header += "};\n"
     return {
+        root / "contracts/v2/codec_io.schema.json": document(
+            codec_contract_v2.schema()
+        ),
+        root / "firmware/lora_node/main/generated/codec_profile.h": (
+            "#pragma once\n"
+            f'#define CODEC_PROFILE "{codec_contract_v2.PROFILE}"\n'
+            f'#define CODEC_SCHEMA_SHA256 "{codec_contract_v2.schema_digest()}"\n'
+        ),
         root / "contracts/v2/crypto_benchmark.schema.json": document(
             crypto_benchmark_v2.schema()
         ),

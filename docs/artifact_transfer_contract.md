@@ -316,3 +316,14 @@ ignored local/m2-batch/artifact-hardware-report.json.
 The #26 host workflow also passed physical boundary round trips plus cancellation
 and recovery. See [host workflow checks](artifact_workflows.md). These observations
 do not establish physical audio or close the remaining M1 procedure matrices.
+
+## Encoded manifests (#36)
+
+The current manifest revision also represents node-produced `codec2_3200_v1`
+artifacts with original sample count, codec frames and source UUID. Final length
+is eight bytes per frame and publication requires its complete SHA-256. Host
+uploads retain the known-data/PCM subset. The manifest schema fingerprint changes
+from `be841147b98f69e54ac99b758dfde0ccc7e1977716017895c0aee0546e22ec6d`
+to `2f630eb2bc3f5501f2b989958fcd342ef6c0af7bdba3cf58c4dc7b61570a5d9d`;
+rebuild matching file consumers/producers without relabeling old evidence.
+[Finite encoding](codec_encoding.md) documents lifetime, command/result and checks.

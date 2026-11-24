@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "codec2_dependency.h"
+#include "audio/codec_clip.h"
+#include "generated/codec_profile.h"
 
 #include "node_control.h"
 #include "radio/radio_config_json.h"
@@ -39,7 +41,9 @@ typedef struct {
 } record_queue;
 
 typedef struct {
-    bool active, verifying, audio, capture, benchmark;
+    bool active, verifying, audio, capture, benchmark, encoding;
+    codec_clip *encoder;
+    codec_clip_status codec_status;
     crypto_benchmark *crypto;
     crypto_benchmark_status crypto_status;
     char artifact_id[37];
@@ -47,7 +51,7 @@ typedef struct {
     char id[37], run_id[37];
     uint8_t *buffer;
     uint32_t iterations, completed, bytes, offset;
-    int64_t started, deadline;
+    int64_t started, deadline, finished;
 } operation;
 
 struct node_control {
@@ -246,10 +250,10 @@ static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "codec2_3200",
         "echo",           "clock_sync",  "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
+    boolean(n, o, "codec2_3200", n->codec2_library_ready);
     boolean(n, o, "security_gcm", n->port.radio && n->port.radio->available);
     boolean(n, o, "radio", n->port.radio && n->port.radio->available);
     boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
@@ -299,7 +303,22 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         number(n, codec, "bytes_per_frame", n->codec2_format.bytes);
         number(n, codec, "sample_rate_hz", n->codec2_format.sample_rate_hz);
         string(n, codec, "build_options", "mode3200_only;kiss_fft;float;O2;no_fast_math");
-        add(n, limits, "codec2_library", codec);
+        if (n->codec2_library_ready) {
+            string(n, codec, "profile", CODEC_PROFILE);
+            string(n, codec, "schema_sha256", CODEC_SCHEMA_SHA256);
+            add(n, codec, "commands", cJSON_CreateStringArray((const char *[]){"audio.encode"}, 1));
+            string(n, codec, "codec", "codec2_3200_v1");
+            number(n, codec, "max_samples", 24000);
+            number(n, codec, "max_frames_per_step", 1);
+            number(n, codec, "operation_timeout_us", NODE_OPERATION_US);
+            add(n, limits, "codec_io", codec);
+        } else add(n, limits, "codec2_library", codec);
+    } else if (n->codec2_library_ready) {
+        cJSON *io = object(n);
+        string(n, io, "profile", CODEC_PROFILE);
+        string(n, io, "schema_sha256", CODEC_SCHEMA_SHA256);
+        add(n, io, "commands", cJSON_CreateStringArray((const char *[]){"audio.encode"}, 1));
+        add(n, limits, "codec_io", io);
     }
     cJSON *files = object(n);
     string(n, files, "profile", ARTIFACT_PROFILE);
@@ -406,7 +425,7 @@ static cJSON *health(node_control *n)
     number(n, traffic, "operation_iterations", n->op.active ? n->op.completed : 0);
     add(n, o, "traffic", traffic);
     boolean(n, o, "security_ready", rf_execution_security_ready(&n->rf));
-    string(n, o, "audio_state", n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
+    string(n, o, "audio_state", n->op.active && n->op.encoding ? "encoding" : n->op.active && n->op.audio ? (n->op.capture ? "capturing" : "playing") : (n->port.audio.playback || n->port.audio.capture) ? "idle" : "not_supported");
     number(n, o, "telemetry_drops", n->telemetry_drops);
     add(n, o, "last_error",
         error(n, n->error_code[0] ? n->error_code : NULL, n->error_message, NULL));
@@ -516,6 +535,29 @@ static void benchmark_result(node_control *n, cJSON *result)
     boolean(n, result, "public_vector_material_only", true);
 }
 static cJSON *manifest(node_control *n, const artifact_manifest *m);
+static void codec_result(node_control *n, cJSON *result)
+{
+    operation *op = &n->op;
+    codec_clip_status *state = &op->codec_status;
+    string(n, result, "kind", "audio_encode");
+    string(n, result, "codec", "codec2_3200_v1");
+    string(n, result, "source_artifact_id", state->source_id);
+    string(n, result, "source_sha256", state->source_sha256);
+    string(n, result, "artifact_id", state->output_id);
+    number(n, result, "input_samples", state->input_samples);
+    number(n, result, "frame_count", state->frame_count);
+    number(n, result, "frames_completed", state->frames_completed);
+    number(n, result, "encoded_bytes", state->encoded_bytes);
+    number(n, result, "padded_samples", state->padded_samples);
+    number(n, result, "setup_us", state->setup_us);
+    number(n, result, "conversion_us", state->conversion_us);
+    number(n, result, "codec_us", state->codec_us);
+    number(n, result, "finalize_us", state->finalize_us);
+    number(n, result, "started_us", op->started);
+    number(n, result, "finished_us", op->finished);
+    const artifact_manifest *m = state->complete ? artifact_store_find(n->artifacts, state->output_id) : NULL;
+    add(n, result, "artifact", m ? manifest(n, m) : cJSON_CreateNull());
+}
 static void finish_operation(node_control *n, const char *status, const char *code,
                              const char *message)
 {
@@ -523,7 +565,10 @@ static void finish_operation(node_control *n, const char *status, const char *co
         return;
     operation *op = &n->op;
     char audio_error[161];
-    if (op->benchmark) {
+    if (op->encoding) {
+        op->codec_status = codec_clip_progress(op->encoder);
+        codec_clip_destroy(&op->encoder);
+    } else if (op->benchmark) {
         unsigned lost = 0;
         const crypto_benchmark_page *page = crypto_benchmark_pending(op->crypto);
         if (page && !benchmark_page(n)) lost = page->count;
@@ -555,15 +600,17 @@ static void finish_operation(node_control *n, const char *status, const char *co
     } else if (op->buffer) n->port.deallocate(n->port.context, op->buffer);
     op->buffer = NULL;
     op->active = false;
+    op->finished = now(n);
     snprintf(n->last_operation, sizeof(n->last_operation), "%s", op->id);
     if (eq(status, "completed"))
         n->completed_operations++;
     if (code)
         remember_error(n, code, message);
     n->oom = false;
-    cJSON *data = object(n), *result = code && !op->benchmark ? cJSON_CreateNull() : object(n);
-    if (!code || op->benchmark) {
-        if (op->benchmark) benchmark_result(n, result);
+    cJSON *data = object(n), *result = code && !op->benchmark && !op->encoding ? cJSON_CreateNull() : object(n);
+    if (!code || op->benchmark || op->encoding) {
+        if (op->encoding) codec_result(n, result);
+        else if (op->benchmark) benchmark_result(n, result);
         else if (op->audio) {
             string(n, result, "kind", op->capture ? "audio.capture" : "audio.play");
             string(n, result, "artifact_id", op->artifact_id);
@@ -597,7 +644,7 @@ static void finish_operation(node_control *n, const char *status, const char *co
         number(n, result, "payload_bytes", op->bytes);
         number(n, result, "verified_bytes", (uint64_t)op->completed * op->bytes);
         }
-        number(n, result, "duration_us", now(n) - op->started);
+        number(n, result, "duration_us", (op->encoding ? op->finished : now(n)) - op->started);
         string(n, result, "stop_reason", message);
     }
     string(n, data, "operation_id", op->id);
@@ -670,12 +717,17 @@ static cJSON *manifest(node_control *n, const artifact_manifest *m)
     const char *const states[] = {"uploading", "failed", "committed"};
     string(n, o, "state", states[m->state]);
     boolean(n, o, "in_use", m->in_use);
-    string(n, o, "codec", NULL);
-    string(n, o, "frame_count", NULL);
-    string(n, o, "source_artifact_id", NULL);
+    bool encoded = eq(m->format, "codec2_3200_v1");
+    string(n, o, "codec", encoded ? "codec2_3200_v1" : NULL);
+    if (encoded) number(n, o, "frame_count", m->frame_count);
+    else string(n, o, "frame_count", NULL);
+    string(n, o, "source_artifact_id", m->source_artifact_id[0] ? m->source_artifact_id : NULL);
     if (eq(m->format, "pcm_s16le_8000_mono")) {
         number(n, o, "sample_rate_hz", 8000);
         number(n, o, "sample_count", m->length_bytes / 2);
+    } else if (encoded) {
+        number(n, o, "sample_rate_hz", 8000);
+        number(n, o, "sample_count", m->sample_count);
     } else {
         string(n, o, "sample_rate_hz", NULL);
         string(n, o, "sample_count", NULL);
@@ -701,7 +753,7 @@ static cJSON *artifact_list(node_control *n)
     return o;
 }
 
-enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, BENCHMARK, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
+enum action { RF_COMMAND, CONFIGURE, NONE, CLAIM, KEEPALIVE, RELEASE, PROBE, BENCHMARK, ENCODE, STOP, PLAY, CAPTURE, RESERVE_FILE, DELETE_FILE, PUT_FILE, COMMIT_FILE, GET_FILE };
 static void process(node_control *n, size_t length)
 {
     n->rx_records++;
@@ -788,6 +840,7 @@ static void process(node_control *n, size_t length)
     node_radio_settings radio_settings;
     node_link_settings link_settings;
     uint8_t *probe = NULL;
+    codec_clip *pending_encoder = NULL;
     const void *play_bytes = NULL;
     size_t play_length = 0;
     bool play_acquired = false, capture_reserved = false;
@@ -935,6 +988,22 @@ static void process(node_control *n, size_t length)
                         action = DELETE_FILE;
                 }
             }
+        } else if (eq(name, "audio.encode")) {
+            const char *const keys[] = {"artifact_id", "source_artifact_id"};
+            if (!n->codec2_library_ready) { code = "MISSING_CAPABILITY"; message = "Codec dependency is unavailable"; }
+            else if (!exact_keys(args, keys, 2) || !uuid(text(args, "artifact_id")) ||
+                !uuid(text(args, "source_artifact_id")) || eq(text(args, "artifact_id"), text(args, "source_artifact_id"))) {
+                code = "INVALID_ARGUMENT"; message = "Encoding requires separate source/output UUIDs";
+            } else if (n->op.active || rf_execution_busy(&n->rf)) { code = "BUSY"; message = "Another operation is active"; }
+            else {
+                artifact_status prepared = codec_clip_create(n->artifacts, client,
+                    text(args, "source_artifact_id"), text(args, "artifact_id"),
+                    (codec_clip_port){n->port.context, n->port.allocate, n->port.deallocate,
+                                      n->port.sha256, n->port.now_us}, &pending_encoder);
+                code = artifact_error(prepared);
+                if (code) message = "Encoding requires committed 8 kHz mono PCM and available resources";
+                else action = ENCODE;
+            }
         } else if (eq(name, "audio.capture")) {
             const char *const keys[] = {"artifact_id", "sample_count"};
             if (!n->port.audio.capture) { code = "MISSING_CAPABILITY"; message = "Capture is not configured for this board"; }
@@ -1027,7 +1096,7 @@ static void process(node_control *n, size_t length)
             message = "Command is unavailable in this firmware";
         }
     }
-    if (!code && (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE)) {
+    if (!code && (action == PROBE || action == BENCHMARK || action == ENCODE || action == PLAY || action == CAPTURE)) {
                     uint8_t id[16];
                     n->port.random_bytes(n->port.context, id, sizeof(id));
                     id[6] = (id[6] & 15) | 64;
@@ -1067,7 +1136,7 @@ static void process(node_control *n, size_t length)
             if (action == CLAIM) number(n,result,"config_revision",n->config_revision);
             if (action == CLAIM || action == RELEASE)
                 string(n, result, "state", n->op.active ? "running" : rf_execution_state(&n->rf));
-            if (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE) {
+            if (action == PROBE || action == BENCHMARK || action == ENCODE || action == PLAY || action == CAPTURE) {
                 string(n, result, "operation_id", operation_id);
                 string(n, result, "state", "accepted");
                 number(n, result, "deadline_us", operation_deadline);
@@ -1100,6 +1169,7 @@ static void process(node_control *n, size_t length)
     if (!encode(n, reply)) {
         if (action == RESERVE_FILE)
             artifact_store_delete(n->artifacts, file_spec.artifact_id);
+        if (pending_encoder) codec_clip_destroy(&pending_encoder);
         if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
         if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
         if (probe)
@@ -1116,8 +1186,9 @@ static void process(node_control *n, size_t length)
         if (strlen(n->encoded) >= sizeof(n->cache[0].reply)) {
             if (action == RESERVE_FILE)
                 artifact_store_delete(n->artifacts, file_spec.artifact_id);
+            if (pending_encoder) codec_clip_destroy(&pending_encoder);
             if (capture_reserved) artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-        if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
+            if (play_acquired) artifact_store_release(n->artifacts, text(args, "artifact_id"));
             if (probe)
                 n->port.deallocate(n->port.context, probe);
             n->reply_drops++;
@@ -1180,7 +1251,7 @@ static void process(node_control *n, size_t length)
                            chunk, chunk_length, chunk_crc);
     } else if (action == DELETE_FILE) {
         artifact_store_delete(n->artifacts, text(args, "artifact_id"));
-    } else if (action == PROBE || action == BENCHMARK || action == PLAY || action == CAPTURE) {
+    } else if (action == PROBE || action == BENCHMARK || action == ENCODE || action == PLAY || action == CAPTURE) {
         memset(&n->op, 0, sizeof(n->op));
         n->op.active = true;
         n->op.buffer = probe;
@@ -1192,6 +1263,13 @@ static void process(node_control *n, size_t length)
         const char *run_id = text(cmd, "run_id");
         if (run_id)
             snprintf(n->op.run_id, sizeof(n->op.run_id), "%s", run_id);
+        if (action == ENCODE) {
+            n->op.encoding = true;
+            n->op.encoder = pending_encoder;
+            pending_encoder = NULL;
+            n->op.codec_status = codec_clip_progress(n->op.encoder);
+            n->op.started = (int64_t)n->op.codec_status.started_us;
+        }
         if (action == BENCHMARK) {
             n->op.benchmark = true;
             n->op.crypto = crypto_benchmark_create(bytes, iterations, n->port.context, n->port.now_us);
@@ -1293,6 +1371,12 @@ void node_control_tick(node_control *n)
             if (progress.failed) finish_operation(n, "failed", "INTERNAL_ERROR", "Benchmark output or timer verification failed");
             else if (progress.finished) finish_operation(n, "completed", NULL, NULL);
         }
+    } else if (op->active && op->encoding) {
+        codec_clip_step(op->encoder);
+        op->codec_status = codec_clip_progress(op->encoder);
+        op->completed = op->codec_status.frames_completed;
+        if (op->codec_status.error) finish_operation(n, "failed", artifact_error(op->codec_status.error), "Encoding failed before publication");
+        else if (op->codec_status.complete) finish_operation(n, "completed", NULL, NULL);
     } else if (op->active && op->audio) {
         n->port.audio.poll(n->port.context, &op->audio_progress);
         if (op->audio_progress.failed)

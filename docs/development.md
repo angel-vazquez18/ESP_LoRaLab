@@ -182,3 +182,9 @@ Codec-enabled target builds require a 32 KiB main-task stack. Existing cached
 configurations fail clearly below that budget; update the active `SDKCONFIG` via
 `idf.py -C firmware/lora_node menuconfig`. See the measured
 [constructor stack requirement](codec2_dependency.md#required-task-stack).
+
+For #36, run the focused four-file command in [finite encoding](codec_encoding.md).
+It checks production C output against a separate public-library reference, exact
+frame/sample/hash relationships, interruption/allocation/publication cleanup and
+current host gates. Match both artifact and codec fingerprints after rebuilding;
+keep historical records unchanged. Encoding needs no microphone/speaker pins.

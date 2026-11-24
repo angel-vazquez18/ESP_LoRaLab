@@ -8,13 +8,16 @@ from test_node_control_native import NativeNode
 from test_node_control_native import native_library as native_library
 
 
-def test_node_reports_checked_codec_dependency_without_advertising_unimplemented_operations(
+def test_node_reports_checked_codec_dependency_and_only_implemented_operations(
     native_library,
 ):
     node = NativeNode(native_library)
     try:
         capabilities = node.request("hello")["result"]["capabilities"]
-        info = capabilities["resource_limits"]["codec2_library"]
+        info = (
+            capabilities["resource_limits"].get("codec_io")
+            or capabilities["resource_limits"]["codec2_library"]
+        )
         assert info["version"] == "1.2.0"
         assert info["source_commit"] == "06d4c11e699b0351765f10398abb4f663a984f36"
         assert info["library_ready"]
@@ -25,7 +28,8 @@ def test_node_reports_checked_codec_dependency_without_advertising_unimplemented
             8,
         )
         assert info["sample_rate_hz"] == 8000
-        assert not capabilities["codec2_3200"]
+        assert capabilities["codec2_3200"]
+        assert capabilities["resource_limits"]["codec_io"]["commands"] == ["audio.encode"]
     finally:
         node.close()
 
@@ -68,7 +72,7 @@ def test_configured_audio_radio_health_remains_bounded_after_an_error(native_lib
     node = NativeNode(native_library, audio=audio.port, radio=native_library.native_radio_create())
     try:
         hello = node.request("hello")["result"]
-        assert hello["capabilities"]["resource_limits"]["codec2_library"]["library_ready"]
+        assert hello["capabilities"]["resource_limits"]["codec_io"]["library_ready"]
         assert hello["capabilities"]["resource_limits"]["max_record_bytes"] == 4096
         node.claim()
         assert node.request("config.set", {"radio": {"spreading_factor": 12}, "link": {}})["ok"]
