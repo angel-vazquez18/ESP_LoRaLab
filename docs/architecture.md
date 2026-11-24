@@ -23,7 +23,7 @@ flowchart LR
 Dotted full-execution integration is planned. Diagnostic firmware cannot execute
 full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
 strict serial control, identity/health, ownership, duplicate protection and a finite
-memory operation, plus bounded RAM artifact reservations/list/delete. The new image
+memory operation, plus bounded RAM artifact reservations/list/delete and CRC-checked chunk uploads. The new image
 still needs physical acceptance. Its capability-based build order and completion
 gates are in [node development plan](node_development_plan.md);
 module implementations are not organized by experiment IDs.
@@ -71,7 +71,9 @@ main/
 │   └── artifact_store.h
 ├── protocol/
 │   ├── strict_json.c           Bounded UTF-8/JSON validation and integer-token checks
-│   └── strict_json.h
+│   ├── strict_json.h
+│   ├── chunk_bytes.c           Canonical Base64 and CRC-32 for bounded chunks
+│   └── chunk_bytes.h
 └── generated/
     ├── contract_schema.h       Main-control schema digest
     └── artifact_profile.h      Generated artifact digest and resource ceilings

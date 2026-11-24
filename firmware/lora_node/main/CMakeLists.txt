@@ -6,6 +6,7 @@ idf_component_register(
         "control/node_control.c"
         "artifacts/artifact_store.c"
         "protocol/strict_json.c"
+        "protocol/chunk_bytes.c"
     INCLUDE_DIRS "."
     REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support
              nvs_flash espressif__cjson mbedtls heap esp_app_format

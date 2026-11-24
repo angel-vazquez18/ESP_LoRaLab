@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "artifact_store.h"
+#include "protocol/chunk_bytes.h"
 
 typedef struct {
     artifact_manifest manifest;
@@ -167,4 +168,34 @@ void artifact_store_release(artifact_store *s, const char *id)
     artifact_slot *slot = find(s, id);
     if (slot)
         slot->manifest.in_use = false;
+}
+
+artifact_status artifact_store_check_put(artifact_store *s, const char *id, size_t offset,
+                                        const void *bytes, size_t length, uint32_t crc)
+{
+    if (!bytes || !length || length > ARTIFACT_CHUNK_BYTES)
+        return ARTIFACT_INVALID_ARGUMENT;
+    artifact_slot *slot = find(s, id);
+    if (!slot) return ARTIFACT_NOT_FOUND;
+    artifact_manifest *m = &slot->manifest;
+    if (m->state != ARTIFACT_UPLOADING) return ARTIFACT_INVALID_STATE;
+    if (chunk_crc32(bytes, length) != crc) return ARTIFACT_CHECKSUM_MISMATCH;
+    if (offset > m->next_offset || offset > m->length_bytes || length > m->length_bytes - offset)
+        return ARTIFACT_OFFSET_MISMATCH;
+    if (offset < m->next_offset &&
+        (length > m->next_offset - offset || memcmp((uint8_t *)slot->bytes + offset, bytes, length)))
+        return ARTIFACT_OFFSET_MISMATCH;
+    return ARTIFACT_OK;
+}
+artifact_status artifact_store_put(artifact_store *s, const char *id, size_t offset,
+                                  const void *bytes, size_t length, uint32_t crc)
+{
+    artifact_status result = artifact_store_check_put(s, id, offset, bytes, length, crc);
+    if (result != ARTIFACT_OK) return result;
+    artifact_slot *slot = find(s, id);
+    if (offset == slot->manifest.next_offset) {
+        memcpy((uint8_t *)slot->bytes + offset, bytes, length);
+        slot->manifest.next_offset += length;
+    }
+    return ARTIFACT_OK;
 }
