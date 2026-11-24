@@ -69,3 +69,66 @@ variant has the same layout. Physical checks still require identified compatible
 boards, matched antennas, verified RF control wiring and directional frame/hash,
 IRQ, timeout, stop, reconnect and applied-setting evidence. No ESP was connected
 for this change.
+
+## Implemented single-message subset (#25)
+
+The main image now implements the eight selected execution commands, using the
+real SX1262 driver. It still requires explicit board selection and successful
+initialization. `resource_limits.execution_limits` reports this initial bound:
+**one known-data message per session, one fragment, at most the configured
+fragment capacity (16–215 bytes; default 160), and 1–30 seconds maximum duration**.
+Larger/multiple/protected/encoded work rejects rather than being truncated or
+silently substituted. The shared contract's larger ceilings remain future limits;
+the host must respect this smaller node declaration. No full IF-02 qualification
+or operator simulation is introduced.
+
+`session.open` binds a host run UUID, a nonzero session ID, owner, A/B role and a
+distinct peer device/boot identity. Configure while idle, then prepare a typed
+one-message known-data spec/budget. Preparation generates the documented SHA-256
+block source and reserves a RAM artifact: committed source on TX, an expected-hash
+reservation on RX. The preparation result labels that artifact state explicitly.
+`run.prepared` and its correlated operation result precede arming/starting.
+Stale revisions reject. The receiver arms before the sender starts; only the
+sender starts an asynchronous TX operation. The node never invents peer readiness.
+
+The portable framing module encodes each field at explicit big-endian offsets;
+there are no packed-struct wire assumptions. Receive order is PHY CRC/header,
+bounded DATA framing, session/roles/message metadata, exact deterministic body,
+then delivery. The complete actual received bytes and their hash are committed
+as a recovered artifact. Duplicate/stale message tracking prevents second
+application delivery. Wrong/truncated/changed frames produce rejection evidence
+and rearm within the remaining finite window. There is no authentication claim
+for this unprotected bring-up mode.
+
+The execution module emits typed frame/message observations and summaries, holds
+radio terminal results until the telemetry queue has room, and releases incomplete
+reservations on stop, close, lease loss, disconnect or shutdown. Ownership loss
+invalidates the session; reconnect never resumes it. Committed artifacts remain
+until explicit deletion/reset, following the existing artifact contract. Requests
+that would steal resources while prepared/armed/running reject as busy. Both reply
+outcomes are reserved before mutating operations; cached retries apply once.
+
+`physical_wire_v2.py` decodes control plus RF events. NodeSession separately
+requires the exact advertised execution profile and a known run before accepting
+RF observations. A small closed-run history admits legitimate delayed events;
+foreign boots/runs still fail. Shutdown attempts finite stop/close before release.
+The original main-control/diagnostic schema digests remain unchanged.
+
+Read `radio/rf_frames.c` for exact bytes/source/delivery, `radio/rf_execution.c`
+for the bounded lifecycle and artifact/evidence rules, then the small routing in
+`control/node_control.c`. Run:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_rf_frames_native.py testbed/tests/test_rf_execution_native.py -q
+make check
+idf.py -C firmware/lora_node build
+```
+
+Expected: public header/source vectors match; 1/159/160-byte valid receives yield
+one committed, exact readback with the independent source hash; corrupt/session/
+length/CRC failures never publish a delivery and a following valid frame works;
+sender bytes/attempts, stale revisions, duplicate commands and stop/lease/disconnect
+cleanup remain attributable. Allocation-failure cases do not reserve hidden work.
+The serial/SPI peers in these checks exist only in tests. No ESP is connected;
+physical RF, board revision, antenna-power and precise IRQ timing validation stay
+pending. The receiver-first host workflow/dashboard follow in #27/#34.

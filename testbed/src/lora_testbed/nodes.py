@@ -9,7 +9,14 @@ from uuid import uuid4
 import serial
 from serial.tools.list_ports import comports
 
-from . import artifact_contract_v2, audio_contract_v2, control_v2, run_protocol_v2, v2
+from . import (
+    artifact_contract_v2,
+    audio_contract_v2,
+    control_v2,
+    physical_wire_v2,
+    run_protocol_v2,
+    v2,
+)
 from .adapters import (
     health_freshness,
     require_artifact_compatible,
@@ -65,6 +72,8 @@ class NodeSession:
         self.tasks = []
         self.pending = {}
         self.command_lock = asyncio.Lock()
+        self.rf_run_id = None
+        self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
         self.active_operation = None
         self.operation_results = deque(maxlen=16)
@@ -152,6 +161,8 @@ class NodeSession:
         self.last_health = None
         self.event_seq = self.event_gaps = self.framing_errors = 0
         self.startup_records = 0
+        self.rf_run_id = None
+        self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
         self.active_operation = None
         self.operation_results.clear()
@@ -284,6 +295,11 @@ class NodeSession:
                             return artifact_contract_v2.validate_result(
                                 name, command.args, reply.result, artifact_limits
                             ).model_dump()
+                        if name == "session.open":
+                            self.rf_run_id = run_id
+                            self.rf_runs.append(run_id)
+                        elif name == "session.close":
+                            self.rf_run_id = None
                         if execution_command:
                             return (
                                 run_protocol_v2.RESULTS[name]
@@ -311,7 +327,7 @@ class NodeSession:
                     future.cancel()
 
     async def read_loop(self):
-        decoder = v2.Decoder(adapter=control_v2.ADAPTER)
+        decoder = v2.Decoder(adapter=physical_wire_v2.ADAPTER)
         try:
             while self.connected:
                 data = await asyncio.to_thread(self.serial.read, 1024)
@@ -348,6 +364,16 @@ class NodeSession:
                         if entry and entry[0] == record.command_seq and not entry[1].done():
                             entry[1].set_result(record)
                     elif self.identity:
+                        if record.name not in ("health", "diagnostic", "operation.result"):
+                            require_execution_compatible(
+                                self.identity.model_dump(),
+                                "run.summary",
+                                self.health.capability_availability.model_dump()
+                                if self.health
+                                else None,
+                            )
+                            if record.run_id not in self.rf_runs:
+                                raise ValueError("RF event belongs to another run")
                         if (
                             record.name == "operation.result"
                             and self.wire_profile != "node_control"
@@ -367,7 +393,7 @@ class NodeSession:
                                 }
                             )
                         elif record.name == "operation.result":
-                            self.operation_results.append(record.data)
+                            self.operation_results.append(record.model_dump()["data"])
                             if (
                                 self.active_operation
                                 and self.active_operation["operation_id"]
@@ -406,6 +432,19 @@ class NodeSession:
 
     async def close(self, release=True):
         if release and self.connected and self.identity:
+            if self.rf_run_id:
+                with suppress(OSError, ValueError):
+                    await self.request(
+                        "run.stop",
+                        {"reason": "host_shutdown"},
+                        run_id=self.rf_run_id,
+                        timeout=0.5,
+                        retries=0,
+                    )
+                with suppress(OSError, ValueError):
+                    await self.request(
+                        "session.close", run_id=self.rf_run_id, timeout=0.5, retries=0
+                    )
             if self.active_operation:
                 with suppress(OSError, ValueError):
                     await self.request(

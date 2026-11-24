@@ -16,7 +16,7 @@ from uuid import uuid4
 import pytest
 from fastapi.testclient import TestClient
 
-from lora_testbed import control_v2
+from lora_testbed import control_v2, rf_events_v2
 from lora_testbed.app import create_app
 from lora_testbed.nodes import NodeSession
 from lora_testbed.paths import REPOSITORY_ROOT as REPO_ROOT
@@ -126,6 +126,8 @@ def native_library(tmp_path_factory):
             str(main / "audio/pcm_samples.c"),
             str(main / "radio/node_radio.c"),
             str(main / "radio/radio_config_json.c"),
+            str(main / "radio/rf_frames.c"),
+            str(main / "radio/rf_execution.c"),
             str(main / "radio/vendor/sx126x/sx126x.c"),
             str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),
             "-I",
@@ -149,6 +151,11 @@ def native_library(tmp_path_factory):
     lib.native_allocations_live.restype = C.c_long
     lib.native_radio_create.restype = C.c_void_p
     lib.native_radio_transfers.restype = C.c_uint
+    lib.native_radio_time.argtypes = [C.c_void_p, C.c_int64]
+    lib.native_radio_inject.argtypes = [C.c_void_p, C.c_void_p, C.c_uint, C.c_uint]
+    lib.native_radio_sent.argtypes = [C.c_void_p, C.c_void_p]
+    lib.native_radio_sent.restype = C.c_uint
+    lib.native_radio_tx_done.argtypes = [C.c_void_p]
     lib.node_control_create.argtypes = [C.POINTER(Platform)]
     lib.node_control_create.restype = C.c_void_p
     lib.node_control_destroy.argtypes = [C.c_void_p]
@@ -163,6 +170,7 @@ def native_library(tmp_path_factory):
 class NativeNode:
     def __init__(self, lib, realtime=False, boot=1, audio=None, radio=None):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
+        self.radio = radio
         self.origin = monotonic()
         self.boot_id = f"esp-001122334455:{boot}"
         self.client = str(uuid4())
@@ -240,6 +248,8 @@ class NativeNode:
         }
 
     def feed(self, data):
+        if self.radio:
+            self.lib.native_radio_time(self.radio, self.now())
         self.lib.node_control_feed(self.node, data, len(data))
 
     def drain(self):
@@ -249,7 +259,10 @@ class NativeNode:
             wire = output.raw[:length]
             assert wire.endswith(b"\n") and len(wire) <= 4096
             record = json.loads(wire)
-            control_v2.ADAPTER.validate_python(record)
+            if record.get("name") not in (None, "health", "diagnostic", "operation.result"):
+                rf_events_v2.ADAPTER.validate_python(record)
+            else:
+                control_v2.ADAPTER.validate_python(record)
             records.append(record)
         return records
 
@@ -266,6 +279,8 @@ class NativeNode:
 
     def tick(self, advance=0):
         self.time += advance
+        if self.radio:
+            self.lib.native_radio_time(self.radio, self.now())
         self.lib.node_control_tick(self.node)
 
     def close(self):
@@ -804,7 +819,7 @@ def test_host_radio_configuration_requires_current_support_and_validates_applied
                 "config.set", {"radio": {"spreading_factor": 12}, "link": {}}
             )
             assert result["radio"]["ldro_enabled"] and result["config_revision"] == 1
-            with pytest.raises(ValueError, match="MISSING_CAPABILITY"):
+            with pytest.raises(ValueError, match="INVALID_STATE"):
                 await session.request("run.start", {"config_revision": 1}, run_id=str(uuid4()))
             session.last_health -= 4
             with pytest.raises(ValueError, match="fresh health"):

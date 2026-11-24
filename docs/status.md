@@ -61,6 +61,20 @@ tests without skips, lint/frontend/contracts/repository checks. No board was
 connected. Operator RF run support is still unavailable pending frame/execution
 integration. See [finite reception](radio_driver.md#finite-reception-20).
 
+## November 21 — Single-fragment DATA and finite node lifecycle (#25)
+
+Added explicit-endian header/source-vector matching and exact once-only known-data
+validation, plus real session/prepare/arm/start/stop/summary routing. The initial
+node limit is one unprotected known-data message, one fragment (at most configured
+capacity, 215-byte ceiling), within 30 seconds. Source/recovered artifacts reuse
+verified RAM storage; bad frames cannot publish a delivery. Ownership loss clears
+incomplete work and sessions. The physical serial reader accepts only negotiated,
+known-run RF observations. [Current behavior and checks](radio_execution.md#implemented-single-message-subset-25)
+explain the limits; host workflow/dashboard and physical qualification are pending.
+Full `make check` passed 408 tests with no skips; ESP-IDF built successfully.
+The original checkout's 19 preserved files still match their saved SHA-256 values.
+No ESP was connected.
+
 ## Current source capabilities
 
 - November 8 GitHub planning setup: repository labels, eight capability milestones
