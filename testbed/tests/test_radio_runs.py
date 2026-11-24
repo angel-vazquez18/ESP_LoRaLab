@@ -70,6 +70,7 @@ def test_real_core_pair_runs_receiver_first_with_exact_readback(
             await task
             saved = host.radio.get(run["id"])
             assert saved["status"] == "completed", saved
+            assert set(saved["available_content"]) == {"source", "recovered", "wire"}
             assert saved["verification"]["bytes_equal"] and not saved["hardware_qualified"]
             assert len({identity["device_id"] for identity in saved["identities"].values()}) == 2
             assert saved["summaries"][saved["receiver"]]["delivered_messages"] == 1

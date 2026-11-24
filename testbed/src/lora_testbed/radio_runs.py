@@ -114,7 +114,15 @@ class RadioRuns:
         ).fetchone()
         if row is None:
             raise ValueError("Radio run not found")
-        return json.loads(row[0])
+        record = json.loads(row[0])
+        record["available_content"] = [
+            kind
+            for kind in ("source", "recovered", "wire")
+            if (
+                self.directory / f"{identifier}.{'ndjson' if kind == 'wire' else kind + '.bin'}"
+            ).is_file()
+        ]
+        return record
 
     @staticmethod
     def brief(record):

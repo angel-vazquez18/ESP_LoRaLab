@@ -71,6 +71,7 @@ export type HardwareNode = {
     capabilities: Capability;
   };
   health: null | {
+    capability_availability?: Capability;
     uptime_us: number;
     reset_cause: string;
     state: string;

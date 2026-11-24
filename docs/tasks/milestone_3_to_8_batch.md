@@ -68,3 +68,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   traces/hashed export and cancel/restart/disconnect recovery complete. 424 checks
   passed. A deterministic test fixed stop cancelling a worker already in cleanup;
   caller cancellation is shielded. Next #34 dashboard, then M4 #28/#35/#40/#43/#47.
+
+- #27: PR #168 (`feat/physical-radio-runs` → `feat/single-fragment-data`).
+- #34: shared radio dashboard, server readiness and actual evidence inspection;
+  browser verification covered both directions, incomplete telemetry with verified
+  bytes, stop, shared ownership, missing peer and light/mobile layout. No boards
+  were connected. Next #28 fragmentation; physical #39 stays pending.

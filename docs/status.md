@@ -1,6 +1,6 @@
 # Consolidated implementation status
 
-Updated November 15, 2026. The host is now physical-only by user decision, replacing
+Updated November 22, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
@@ -416,3 +416,18 @@ Screenshot: Codex visualization m2-file-inspector.png. Next is #23 playback.
 - November 16 #32: shared physical audio jobs now expose capture/play/retrieve/stop through API/CLI, reuse verified file downloads, wrap unchanged PCM as WAV, inspect count/hash/waveform/silence/clipping and retain separate operator listening notes. Cancellation, lost-result idle reconciliation, live capability loss and interrupted restart preserve errors/evidence. Full checks passed 360 tests, including 24 new host cases, no skips; lint/frontend/contracts/repository checks passed. Actual host 24000-sample WAV/hash, explicit all-zero warning, quiet playback driver completion, cancel and recovery passed. Microphone response remains unverified. See [host audio workflow](node_audio_workflows.md).
 
 - November 16 #38: node inspector now exposes shared local capture/play/stop, verified waveform/count/hash/silence/clipping findings, file playback/WAV inspection and separate listening notes/laptop preview. Busy/unsupported/previous-boot controls gate explicitly; reconnect starts with fresh health age. Full checks passed 361 tests (25 host audio), no skips, plus final frontend build/format. Real-board browser capture/play/cancel/error/recovery and actual disabled-firmware gates/history passed; audio image restored and port released. WAV endpoint bytes verified; in-app download location, light/mobile visual QA and acoustic/electrical qualification remain unconfirmed. See [UI check steps](local_audio_ui.md).
+
+## November 22 — Radio dashboard (#34)
+
+Experiments → IF-02 now exposes the shared one-message radio backend with live
+preflight, start/stop, direction/modem settings, exact byte/hash findings, actual
+receiver signal, retained history and evidence downloads. Missing peers, occupied
+bench and invalid settings disable start. Full IF-02 and hardware qualification
+remain pending. Browser checks used isolated real C cores with test-only serial/
+SPI boundaries; both directions, missing observation versus verified bytes,
+shared ownership, cancellation/idle cleanup, missing peer and light/dark/mobile
+layout passed. Corrected a narrow-screen experiment grid overflow. No physical
+port was opened.
+
+`make check` passed 424 tests without skips plus lint, production frontend build,
+generated contracts and repository checks; frontend format check passed.
