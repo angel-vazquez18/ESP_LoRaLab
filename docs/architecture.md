@@ -290,3 +290,9 @@ Optional PTT uses the portable allocation-free `input/ptt_gate` and a separate
 existing serial ownership, operation stop/deadline and audio readback/cleanup stay
 shared. The independent fingerprinted supplement gates API/CLI capture; input is
 configured only by explicit per-board Kconfig. No button RF lifecycle is added.
+
+Optional OLED observation uses `display/node_view` for a fixed nonsecret snapshot
+and text/bitmap, `display/oled_panel` for bounded protocol writes and
+`platform/esp32_display` for an isolated one-slot worker. The control loop never
+performs or waits for display I/O. Current exact-profile worker health stays
+separate from physical pixel qualification. Board-derived pins/power are opt-in.

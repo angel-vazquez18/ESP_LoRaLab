@@ -226,3 +226,11 @@ uv run --project testbed pytest testbed/tests/test_ptt_native.py testbed/tests/t
 ```
 
 Configuration/build and physical prerequisites are in `host_armed_ptt.md`.
+
+OLED state, framebuffer and bounded I2C checks:
+
+```sh
+uv run --project testbed pytest testbed/tests/test_oled_native.py testbed/tests/test_oled_panel.py testbed/tests/test_oled_host.py -q
+```
+
+See `oled_status.md` for configuration, primary references and physical checks.

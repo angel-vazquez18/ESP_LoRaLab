@@ -351,3 +351,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   PCB/GPIO47 physical prerequisite #1 remains open; PR does not auto-close it.
   Starting #37 on its own dependent branch for optional bounded OLED status
   derived from real state, with absence/failure isolated from serial control.
+
+- #37 implemented on #193: fixed nonsecret actual-state view, original bounded
+  text/bitmap, ten-write/5 ms panel transport and opt-in one-slot OLED worker.
+  Failure leaves USB/control running; passive exact-profile observations do not
+  claim observed pixels. Eighteen dedicated tests and the final 747-case full
+  release check pass with no skips, plus all shared checks and UI formatting.
+  Final IDF builds pass: disabled 0x6ed10/57%/73,841 static DIRAM; isolated full
+  audio/PTT/OLED enabled 0x73530/55%/75,661. Normal configuration remains off.
+  Board reference v3/1da5acc… adds GPIO36 LOW Vext control, matched table/Mermaid/
+  PNG; official V4.2/V4.3 pages and native bitmap visually inspected. Passive
+  OLED supplement e57d4c…; other wire hashes unchanged. No flash or PCB/screen
+  qualification. Preparing PR, then #69 resource/arm transitions before #73.

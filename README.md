@@ -103,3 +103,7 @@ commands, retained files and remaining physical acceptance.
 
 Optional [host-armed PTT capture](docs/host_armed_ptt.md) defaults off. Confirm the
 printed board revision and GPIO47-to-GND wiring before enabling a physical image.
+
+Optional [OLED status](docs/oled_status.md) shows real node phases through an
+isolated worker. It defaults off and requires a verified standard V4 R2
+OLED/power map; its USB observation does not qualify physical screen output.

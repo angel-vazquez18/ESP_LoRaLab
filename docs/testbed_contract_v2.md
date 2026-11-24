@@ -746,3 +746,12 @@ reconstruction apply. No encoded file becomes a consumer input until complete
 verified publication. The exact execution supplement changes; see
 [protected voice content](protected_voice_content.md) for schema migration,
 processing allowance, source/receiver ownership and acceptance instructions.
+
+## Optional OLED worker observation (`oled_status_v1`)
+
+Current `capability_availability.resource_limits.oled` is an optional passive
+observation with exact supplement fingerprint, starting/ready/failure state and
+`physical_qualified:false`. Ready means completed I2C frame acknowledgment, not
+verified pixels. No display mutation command is added. Missing, incompatible or
+stale observations do not become ready. Static enrollment and existing wire
+profiles remain unchanged. See `oled_status.md` and `contracts/v2/oled_status.schema.json`.

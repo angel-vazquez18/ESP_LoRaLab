@@ -4,6 +4,27 @@ Updated November 23, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 23 — Optional actual-state OLED (#37)
+
+A fixed nonsecret node view now follows ownership/USB, finite capture/codec/play/
+diagnostics and RF phases. An optional one-slot worker owns GPIO reset/Vext,
+original text/bitmap rendering and bounded I2C writes; core serial control never
+waits for display I/O. Failed writes stop without retry and report worker failure,
+while recorded error symbols remain distinct from current state. Passive exact-
+profile host observations reject incompatible/stale readiness; ready is an I2C
+completion fact, never physical pixel qualification.
+
+Eighteen dedicated C/serial/API cases and full `make check` pass: 747 total cases,
+no skips, plus lint/frontend/contracts/repository/vendor and frontend formatting. Both V4.2/32 KiB IDF builds pass: normal OLED disabled
+0x6ed10 (57% app free, 73,841 static DIRAM bytes), isolated audio/PTT/OLED enabled
+0x73530 (55%, 75,661 bytes). Declared worker stack/queue are additional runtime
+resources; physical high-water/serial/bus measurements remain open. Board profile
+v3 adds reference-only GPIO36/Vext and SSD1315 metadata; matching table/Mermaid/PNG
+and native bitmap were visually checked. Board SHA 1da5acc…; passive OLED SHA
+e57d4c…; existing wire identities unchanged. Normal controls stay off; no flash.
+See [OLED walkthrough and physical checks](oled_status.md). PCB prerequisite #1
+and physical screen qualification remain open.
+
 ## November 23 — Host-armed finite PTT capture (#30)
 
 Optional GPIO47 polling now starts only one explicitly host-armed fixed-length
