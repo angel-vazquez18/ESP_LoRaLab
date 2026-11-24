@@ -23,6 +23,8 @@ void rf_reassembly_destroy(rf_reassembly *);
 bool rf_reassembly_begin(rf_reassembly *, uint32_t message, uint8_t content, uint8_t flags,
                          uint32_t message_bytes, const uint8_t sha256[32], int64_t now_us,
                          int64_t deadline_us);
+/* Schedule the already reserved, empty message without allocating again. */
+bool rf_reassembly_arm(rf_reassembly *, int64_t now_us, int64_t deadline_us);
 /* Unprotected DATA entry; protected input uses the trusted authenticated entry below. */
 rf_reassembly_result rf_reassembly_accept(rf_reassembly *, const void *, size_t, int64_t now_us);
 rf_reassembly_result rf_reassembly_poll(rf_reassembly *, int64_t now_us);

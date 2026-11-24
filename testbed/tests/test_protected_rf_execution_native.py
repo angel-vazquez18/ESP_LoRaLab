@@ -199,6 +199,7 @@ def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequen
     node = NativeNode(native_library, radio=native_library.native_radio_create())
     try:
         run, revision = protected_setup(node, ack=True, sender=True)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         assert node.request("run.start", {"config_revision": revision}, run_id=run)["ok"]
         original = sent(node)
         assert len(original) == 72 and original[4] == 3
@@ -281,6 +282,7 @@ def test_two_c_nodes_recover_a_lost_protected_ack_without_duplicate_delivery(nat
         _, revision_a = protected_setup(nodes["A"], ack=True, sender=True, run=run)
         _, revision_b = protected_setup(nodes["B"], ack=True, role="B", run=run)
         assert nodes["B"].request("run.arm", {"config_revision": revision_b}, run_id=run)["ok"]
+        assert nodes["A"].request("run.arm", {"config_revision": revision_a}, run_id=run)["ok"]
         assert nodes["A"].request("run.start", {"config_revision": revision_a}, run_id=run)["ok"]
         for _ in range(400):
             for role, node in nodes.items():

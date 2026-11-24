@@ -1,4 +1,5 @@
 #include "radio/rf_execution.h"
+#include "generated/execution_profile.h"
 #include "protocol/chunk_bytes.h"
 #include "protocol/strict_json.h"
 #include <inttypes.h>
@@ -207,6 +208,17 @@ static cJSON *summary(rf_execution *r)
     else
         string(r, o, "last_rx_us", NULL);
     string(r, o, "stop_reason", r->stop_reason ? r->stop_reason : "operator");
+    cJSON *cleanup = cJSON_CreateArray();
+    const char *errors[] = {r->radio_cleanup_failed ? "RADIO_STOP_FAILED" : NULL,
+                            r->key_cleanup_failed ? "KEY_RETIRE_FAILED" : NULL};
+    for (unsigned i = 0; i < 2; i++) if (errors[i]) {
+        cJSON *error = cJSON_CreateString(errors[i]);
+        if (!error || !cleanup || !cJSON_AddItemToArray(cleanup, error)) {
+            cJSON_Delete(error);
+            r->oom = true;
+        }
+    }
+    add(r, o, "cleanup_errors", cleanup);
     number(r, o, "telemetry_drops", r->port.drops(r->port.context) - r->drops_start);
     cJSON *validity = cJSON_CreateArray();
     if (r->missing_evidence_incomplete && validity)
@@ -476,9 +488,12 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if (!allowed(args, keys, 1) || !cJSON_GetObjectItemCaseSensitive(args, "config_revision") ||
             !integer(args, "config_revision", 0, UINT32_MAX, 0, &requested))
             return "INVALID_ARGUMENT";
-        if (r->phase != RF_PREPARED || requested != revision || requested != r->plan.revision ||
-            (action == RF_ARM && r->sender) || (action == RF_START && !r->sender))
+        if (r->phase != (action == RF_ARM ? RF_PREPARED : RF_ARMED) ||
+            requested != revision || requested != r->plan.revision ||
+            (action == RF_START && !r->sender))
             return "INVALID_STATE";
+        if (action == RF_START && r->port.now_us(r->port.context) >= r->arm_deadline)
+            return "TIMEOUT";
         if (action == RF_START)
             snprintf(p->operation, 37, "%s", op);
     }
@@ -511,8 +526,11 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             number(r, *result, "deadline_us",
                    r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000);
         }
-        else if (action == RF_ARM)
-            add(r, *result, "receiver_ready", cJSON_CreateTrue());
+        else if (action == RF_ARM) {
+            string(r, *result, "role", r->sender ? "sender" : "receiver");
+            add(r, *result, "receiver_ready", cJSON_CreateBool(!r->sender));
+            number(r, *result, "arm_deadline_us", r->port.now_us(r->port.context) + RUN_ARM_WINDOW_US);
+        }
         else
         {
             string(r, *result, "state", "idle");
@@ -545,6 +563,15 @@ static void release_buffers(rf_execution *r)
     r->source_borrowed = false;
     r->generated = r->recovered_output = NULL;
     r->payload = NULL;
+}
+static bool prepare_failed(rf_execution *r)
+{
+    release_buffers(r);
+    if (r->artifact_id[0] && !(r->plan.encoded && r->sender))
+        artifact_store_delete(r->artifacts, r->artifact_id);
+    r->used = false;
+    r->phase = RF_IDLE;
+    return false;
 }
 static bool publish_bytes(rf_execution *r, const void *bytes)
 {
@@ -619,6 +646,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
     if (p->action == RF_OPEN)
     {
         r->plan = *p;
+        r->radio_cleanup_failed = r->key_cleanup_failed = false;
         r->plan.provision_keys = NULL;
         r->used = false;
         r->finished = false;
@@ -666,11 +694,11 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                 return false;
             r->source_borrowed = true;
             r->payload = source;
-            if (size != p->bytes) { release_buffers(r); return false; }
+            if (size != p->bytes) { return prepare_failed(r); }
         } else if (!p->encoded) {
             r->generated = r->port.allocate(r->port.context, p->bytes);
             r->payload = r->generated;
-            if (!r->payload) return false;
+            if (!r->payload) return prepare_failed(r);
         }
         r->first_tx = r->last_tx = r->first_rx = r->last_rx = -1;
         r->finished = r->failed = r->started = false;
@@ -684,13 +712,12 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             (!p->encoded && !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->generated, p->bytes)) ||
             ((!p->encoded || r->sender) && !r->port.hash(r->port.context, r->payload, p->bytes, digest)))
         {
-            release_buffers(r);
-            return false;
+            return prepare_failed(r);
         }
         if (p->encoded) {
             uint8_t expected[32];
             decode_hash(p->expected_sha256, expected);
-            if (r->sender && memcmp(digest, expected, 32)) { release_buffers(r); return false; }
+            if (r->sender && memcmp(digest, expected, 32)) { return prepare_failed(r); }
             memcpy(digest, expected, 32);
         }
         if (r->sender && p->protected_mode)
@@ -698,8 +725,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             uint32_t first = 0;
             if (rf_secure_reserve(r->security, r->fragments.fragment_count, &first) != RF_CRYPTO_OK)
             {
-                release_buffers(r);
-                return false;
+                return prepare_failed(r);
             }
             r->fragments.first_sequence = first;
         }
@@ -718,16 +744,8 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                 artifact_spec spec = {r->artifact_id, r->sender ? "source" : "recovered", r->sha_hex, "known_data", p->bytes};
                 status = artifact_store_begin(r->artifacts, p->owner, &spec);
             }
-            if (status != ARTIFACT_OK) { release_buffers(r); return false; }
+            if (status != ARTIFACT_OK) { return prepare_failed(r); }
         }
-        if (r->sender && !p->encoded && !publish_bytes(r, r->payload))
-        {
-            artifact_store_delete(r->artifacts, r->artifact_id);
-            release_buffers(r);
-            return false;
-        }
-        r->used = true;
-        r->phase = RF_PREPARING;
         rf_packet_port port = {r->port.context, r->port.allocate, r->port.release, r->port.hash};
         if (r->sender)
         {
@@ -735,25 +753,20 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             if (!r->transmitter ||
                 (p->protected_mode && !rf_sender_security(r->transmitter, r->security)))
             {
-                r->used = false;
-                r->phase = RF_IDLE;
-                release_buffers(r);
-                return false;
+                return prepare_failed(r);
             }
         }
         else
         {
-            rf_packet_port port = {r->port.context, r->port.allocate, r->port.release,
-                                   r->port.hash};
             r->receiver = rf_reassembly_create(port, p->session, p->source, p->role,
                                                p->link.fragment_payload_bytes);
-            if (!r->receiver)
+            int64_t prepared_at = r->port.now_us(r->port.context);
+            if (!r->receiver || !rf_reassembly_begin(r->receiver, 1, p->encoded ? 1 : 0,
+                (p->protected_mode ? 1 : 0) | (p->link.ack_requested ? 2 : 0),
+                p->bytes, r->expected_hash, prepared_at,
+                prepared_at + (int64_t)p->duration_ms * 1000))
             {
-                artifact_store_delete(r->artifacts, r->artifact_id);
-                r->used = false;
-                r->phase = RF_IDLE;
-                release_buffers(r);
-                return false;
+                return prepare_failed(r);
             }
             if (p->link.ack_requested && !p->protected_mode)
             {
@@ -762,34 +775,39 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                                   p->link.fragment_payload_bytes, 1, 20000, p->drain);
                 if (!r->acknowledgments)
                 {
-                    artifact_store_delete(r->artifacts, r->artifact_id);
-                    r->used = false;
-                    r->phase = RF_IDLE;
-                    release_buffers(r);
-                    return false;
+                    return prepare_failed(r);
                 }
             }
         }
+        if (r->sender && !p->encoded && !publish_bytes(r, r->payload))
+            return prepare_failed(r);
+        r->used = true;
+        r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
+        r->phase = RF_PREPARING;
         return true;
     }
     if (p->action == RF_ARM)
     {
         int64_t now = r->port.now_us(r->port.context);
+        r->arm_deadline = now + RUN_ARM_WINDOW_US;
+        if (r->sender) {
+            r->phase = RF_ARMED;
+            return true; // Arming reserves intent; no radio command or nonce use.
+        }
         int64_t lifetime = p->reassembly < (uint64_t)p->duration_ms * 1000
                                ? p->reassembly
                                : (int64_t)p->duration_ms * 1000;
-        if (!rf_reassembly_begin(r->receiver, 1, p->encoded ? 1 : 0,
-                                 (p->protected_mode ? 1 : 0) | (p->link.ack_requested ? 2 : 0),
-                                 p->bytes, r->expected_hash, now, now + lifetime))
+        lifetime += RUN_ARM_WINDOW_US; // Receiver cannot observe the peer's start acceptance.
+        if (!rf_reassembly_arm(r->receiver, now, now + lifetime))
             return false;
         r->receive_deadline = now + lifetime;
         uint32_t slice = lifetime > 30000000 ? 30000000 : lifetime;
         if (!node_radio_rx(r->radio, 255, slice) || r->radio->operation != 2)
         {
-            rf_reassembly_cancel(r->receiver);
+            rf_execution_abort(r, "error", true);
             return false;
         }
-        r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
+        r->deadline = r->arm_deadline + (int64_t)p->duration_ms * 1000;
         r->phase = RF_ARMED;
         r->started = true;
         return true;
@@ -798,8 +816,10 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
     {
         r->plan = *p;
         r->deadline = r->port.now_us(r->port.context) + (int64_t)p->duration_ms * 1000;
-        if (!transmit(r))
+        if (!transmit(r)) {
+            rf_execution_abort(r, "error", true);
             return false;
+        }
         r->started = true;
         r->phase = RF_RUNNING;
         return true;
@@ -815,7 +835,7 @@ static void finalize(rf_execution *r, const char *reason, bool failed)
     r->failed = failed;
     if (r->radio && (r->radio->operation || r->radio->event_pending))
     {
-        node_radio_stop(r->radio);
+        if (!node_radio_stop(r->radio)) r->radio_cleanup_failed = true;
         node_radio_event ignored;
         node_radio_poll(r->radio, &ignored);
     }
@@ -839,7 +859,7 @@ static void finish(rf_execution *r, const char *reason, bool failed)
     {
         if (r->radio->operation || r->radio->event_pending)
         {
-            node_radio_stop(r->radio);
+            if (!node_radio_stop(r->radio)) r->radio_cleanup_failed = true;
             node_radio_event ignored;
             node_radio_poll(r->radio, &ignored);
         }
@@ -922,6 +942,7 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
     if (r->radio && (r->radio->operation || r->radio->event_pending))
     {
         ok = node_radio_stop(r->radio);
+        if (!ok) r->radio_cleanup_failed = true;
         node_radio_event ignored;
         node_radio_poll(r->radio, &ignored);
     }
@@ -929,17 +950,19 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
     {
         r->missing_evidence_incomplete =
             r->missing_part < r->missing_parts || !r->failure_result_reported;
-        finalize(r, reason, true);
+        finalize(r, r->stop_reason ? r->stop_reason : reason, true);
     }
     else if (rf_execution_busy(r))
         finish(r, reason, true);
     if (r->phase == RF_REPORTING)
     {
         r->missing_evidence_incomplete = true;
-        finalize(r, reason, true);
+        finalize(r, r->stop_reason ? r->stop_reason : reason, true);
     }
-    if (rf_secure_close(&r->security) != RF_CRYPTO_OK)
+    if (rf_secure_close(&r->security) != RF_CRYPTO_OK) {
+        r->key_cleanup_failed = true;
         ok = false;
+    }
     if (close)
     {
         artifact_store_release_owner(r->artifacts, r->plan.owner);
@@ -1168,7 +1191,15 @@ void rf_execution_tick(rf_execution *r)
     r->oom = false;
     if (r->phase == RF_REPORTING)
     {
-        report_failure(r);
+        if (r->port.now_us(r->port.context) >= r->deadline)
+            rf_execution_abort(r, "timeout", false);
+        else
+            report_failure(r);
+        return;
+    }
+    if ((r->phase == RF_PREPARING || r->phase == RF_PREPARED) &&
+        r->port.now_us(r->port.context) >= r->deadline) {
+        rf_execution_abort(r, "timeout", false);
         return;
     }
     if (r->phase == RF_PREPARING)
@@ -1193,6 +1224,15 @@ void rf_execution_tick(rf_execution *r)
     }
     if (r->phase == RF_PREPARED)
         return;
+    if (r->phase == RF_ARMED && r->sender) {
+        if (r->port.now_us(r->port.context) >= r->arm_deadline)
+            rf_execution_abort(r, "timeout", false);
+        return;
+    }
+    if (r->port.now_us(r->port.context) >= r->deadline) {
+        rf_execution_abort(r, "timeout", false);
+        return; // Resource cleanup must not depend on telemetry space.
+    }
     node_radio_poll(r->radio, NULL);
     if (!r->port.room(r->port.context, 6))
         return;

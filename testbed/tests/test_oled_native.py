@@ -176,6 +176,8 @@ def test_oled_follows_actual_rf_direction_and_cancelled_session(native_library, 
     try:
         run, revision, _ = setup(node, sender=sender, length=321)
         assert states[-1] == "PREPARED"
+        if sender:
+            assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         action = "run.start" if sender else "run.arm"
         assert node.request(action, {"config_revision": revision}, run_id=run)["ok"]
         node.tick()

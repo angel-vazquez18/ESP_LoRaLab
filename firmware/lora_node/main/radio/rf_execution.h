@@ -63,6 +63,7 @@ typedef struct
     rf_plan plan;
     rf_phase phase;
     bool used, sender, oom, finished, failed, started;
+    bool radio_cleanup_failed, key_cleanup_failed;
     uint64_t drops_start;
     char artifact_id[37], sha_hex[65];
     const uint8_t *payload;
@@ -85,7 +86,7 @@ typedef struct
     bool failure_result_reported, missing_evidence_incomplete;
     int64_t next_tx, first_fragment;
     uint32_t observations, accepted, duplicates, attempts, delivered;
-    int64_t deadline, first_tx, last_tx, first_rx, last_rx;
+    int64_t arm_deadline, deadline, first_tx, last_tx, first_rx, last_rx;
     const char *stop_reason;
 } rf_execution;
 

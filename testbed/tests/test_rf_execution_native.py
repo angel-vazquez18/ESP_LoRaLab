@@ -98,6 +98,7 @@ def test_sender_retains_exact_source_and_attributed_completion(native_library):
     node = NativeNode(native_library, radio=radio)
     try:
         run, revision, _ = setup(node, sender=True)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         request = node.command("run.start", {"config_revision": revision}, run_id=run)
         accepted = node.send(request)[0]
         assert accepted["ok"]
@@ -254,6 +255,9 @@ def test_host_negotiates_and_collects_real_core_rf_events(native_library):
                 await asyncio.sleep(0.005)
             assert any(e["name"] == "run.prepared" for e in events)
             await node.request(
+                "run.arm", {"config_revision": config["config_revision"]}, run_id=run
+            )
+            await node.request(
                 "run.start", {"config_revision": config["config_revision"]}, run_id=run
             )
             native_library.native_radio_tx_done(radio)
@@ -304,6 +308,7 @@ def test_sender_emits_exact_original_fragments_with_guard_and_separate_counts(na
     node = NativeNode(native_library, radio=radio)
     try:
         run, revision, _ = setup(node, sender=True, length=321)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         assert node.request("run.start", {"config_revision": revision}, run_id=run)["ok"]
         source = known_data(743, 1, 321)
         attempts = []
@@ -381,6 +386,7 @@ def test_sender_waits_for_exact_ack_before_finishing_original(native_library):
     try:
         link = Link(ack_mode="stop_wait", max_retries=2, guard_us=0)
         run, revision, _ = setup(node, sender=True, length=64, link=link, duration=10000)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         assert node.request("run.start", {"config_revision": revision}, run_id=run)["ok"]
         frame = C.create_string_buffer(255)
         assert native_library.native_radio_sent(radio, frame) == 104
@@ -441,8 +447,11 @@ def test_incomplete_receiver_reports_exact_missing_indexes_without_partial_artif
             native_library.native_radio_inject(radio, wire, len(wire), 2)
             node.tick()
             node.drain()
-        node.tick(3100000)
-        events = node.drain()
+        events = []
+        for _ in range(8):
+            assert node.request("control.keepalive")["ok"]
+            node.tick(1_000_000)
+            events.extend(node.drain())
         for _ in range(5):
             node.tick()
             events.extend(node.drain())
@@ -489,7 +498,7 @@ def test_maximum_fragment_bitmap_emits_bounded_missing_range_pages(native_librar
             )
         )["timing"]["budget"]["reassembly_timeout_us"]
         events = []
-        remaining = lifetime + 1
+        remaining = lifetime + 5_000_001
         while remaining:
             assert node.request("control.keepalive")["ok"]
             step = min(remaining, 1000000)
@@ -525,6 +534,7 @@ def test_ack_wait_cleanup_reaches_real_sender_and_never_resumes_attempts(native_
     try:
         link = Link(ack_mode="stop_wait", max_retries=2, guard_us=0)
         run, revision, _ = setup(node, sender=True, length=321, link=link, duration=10000)
+        assert node.request("run.arm", {"config_revision": revision}, run_id=run)["ok"]
         assert node.request("run.start", {"config_revision": revision}, run_id=run)["ok"]
         native_library.native_radio_tx_done(radio)
         node.tick()
@@ -564,7 +574,7 @@ def test_stopping_blocked_range_report_releases_resources_with_explicit_incomple
                 spec=KnownDataSpec(message_count=1, message_bytes=8192, max_duration_ms=120000),
             )
         )["timing"]["budget"]["reassembly_timeout_us"]
-        remaining = lifetime + 1
+        remaining = lifetime + 5_000_001
         while remaining > 1000000:
             assert node.request("control.keepalive")["ok"]
             node.tick(1000000)
@@ -577,6 +587,7 @@ def test_stopping_blocked_range_report_releases_resources_with_explicit_incomple
         assert node.request("run.stop", {"reason": "operator"}, run_id=run)["ok"]
         summary = node.request("run.summary", run_id=run)["result"]
         assert "missing_range_evidence_incomplete" in summary["validity_reasons"]
+        assert summary["stop_reason"] == "timeout"
         assert node.request("status.get")["result"]["state"] == "idle"
         assert node.request("artifact.list")["result"]["artifacts"] == []
     finally:

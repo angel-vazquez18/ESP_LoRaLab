@@ -98,6 +98,14 @@ bool rf_reassembly_begin(rf_reassembly *r, uint32_t message, uint8_t content, ui
     memcpy(r->expected, digest, 32);
     return true;
 }
+bool rf_reassembly_arm(rf_reassembly *r, int64_t now, int64_t deadline)
+{
+    if (!r || !r->active || r->received || now < 0 || deadline <= now ||
+        deadline - now > INT64_C(3605000000))
+        return false;
+    r->deadline = deadline;
+    return true;
+}
 rf_reassembly_result rf_reassembly_poll(rf_reassembly *r, int64_t now)
 {
     if (!r || now < 0)
