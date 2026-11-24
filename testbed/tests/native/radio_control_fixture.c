@@ -24,3 +24,8 @@ unsigned native_radio_sent(void *radio, void *out) {
     fixture *f=boundary_for(radio); memcpy(out,f->tx_bytes,f->tx_length); return f->tx_length;
 }
 void native_radio_tx_done(void *radio) { boundary_for(radio)->irq=1; }
+
+bool native_radio_configure_default(void *radio) {
+    node_radio_settings settings={915000000,125000,7,5,2,8};
+    return node_radio_configure(radio,&settings);
+}

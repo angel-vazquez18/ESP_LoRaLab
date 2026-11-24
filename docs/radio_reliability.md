@@ -48,3 +48,46 @@ Physical acceptance later needs lost-DATA/lost-ACK cases, exact DATA retry byte
 hashes, one application delivery, observed ACK turnaround/deadlines, distinct
 DATA/ACK accounting and timeout/stop/lease-loss recovery on identified boards.
 No ESP was connected during implementation.
+
+## Bounded sender policy
+
+`radio/rf_sender` drives the real finite `node_radio` API with one retained DATA
+frame. Begin validates applied-modem airtime, retry/guard settings and remaining
+run budget, then copies the complete original before RF. Caller mutation cannot
+change retries. The context binds source/session/direction and a sequence high
+water; a completed or cancelled original cannot be restarted. A fresh higher
+sequence can use the same radio after a terminal result. New sessions need a
+new sender context. Encryption is not performed by this module.
+
+The selected explicit-header/CRC quarter-symbol airtime calculation includes
+LDRO at symbol durations >=16 ms. ACK timeout from observed DATA TX-done is
+turnaround + actual configured ACK airtime + margin. The absolute run deadline
+bounds every phase; per-attempt TX/RX remains within the driver's 30-second cap.
+A new attempt waits the configured guard. Zero/one/two retries permit exactly
+one/two/three total DATA attempts, while the original denominator remains one.
+ACK disabled permits no retries and completes after observed TX-done.
+
+Only a CRC-valid exact ACK reference finishes the outstanding original. Rejected
+ACKs do not extend its deadline. ACK loss can produce the identical DATA retry,
+a fresh receiver ACK and one application delivery. Exhaustion is explicit and
+leaves the radio reusable. Cancellation must be invoked on stop, ownership loss
+or shutdown by the execution owner; the host/node lifecycle wiring follows in
+multi-fragment integration. These modules are not yet an advertised ACK/retry
+operator workflow.
+
+Radio observations are retained through the public poll interface. A blocked
+consumer prevents further attempts, while finite driver/run deadlines still
+advance. Both an undrained TX observation and a later RX timeout remain readable
+after deadline cleanup. Destruction stops/drains owned work and releases the
+retained frame context; it is not a substitute for collecting evidence first.
+
+Run `uv run --project testbed pytest testbed/tests/test_rf_sender_native.py -q`.
+Expected: 19 cases pass without skips using the real portable radio and pinned
+vendor driver behind injected SPI/GPIO/time. They cover exact retries and attempt
+indexes, zero/one/two exhaustion and fresh-original recovery, wrong ACK without
+deadline extension, real caller-buffer mutation, ACK-loss once-only recovery,
+five literal airtime vectors, ACK-disabled operation, cancellation at ready/TX/
+ACK/guard, preflight before RF, old-sequence rejection and retained observations
+through the run deadline. Compile the main ESP-IDF image and run `make check`.
+Physical IRQ/ACK timing, actual loss recovery, lease-loss integration and full
+host runs remain later acceptance; no board was connected.

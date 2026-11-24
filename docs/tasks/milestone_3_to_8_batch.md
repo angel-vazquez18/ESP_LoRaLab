@@ -92,3 +92,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #40: exact referenced ACKs, bounded receiver turnaround/cache and explicit
   retry-versus-replay classification implemented. Combined reconstruction checks
   require fresh re-ACKs with one application delivery. #43 adds sender policy.
+
+- #40: PR #172 (`feat/referenced-radio-acks` →
+  `feat/bounded-message-reassembly`), 452 checks and selected-board build passed.
+- #43: real-radio-backed immutable frame sender, airtime-aware zero/one/two
+  retries, exact ACK completion, high-water/cancel/observation cleanup implemented;
+  19 focused cases pass. Next #47 integrates these packet modules into node
+  execution and host multi-fragment runs; physical #51 remains pending.

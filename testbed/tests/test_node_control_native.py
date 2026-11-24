@@ -130,6 +130,7 @@ def native_library(tmp_path_factory):
             str(main / "radio/rf_fragments.c"),
             str(main / "radio/rf_reassembly.c"),
             str(main / "radio/rf_ack.c"),
+            str(main / "radio/rf_sender.c"),
             str(main / "radio/rf_execution.c"),
             str(main / "radio/vendor/sx126x/sx126x.c"),
             str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),

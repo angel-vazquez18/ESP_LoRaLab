@@ -8,6 +8,7 @@ idf_component_register(
         "radio/rf_fragments.c"
         "radio/rf_reassembly.c"
         "radio/rf_ack.c"
+        "radio/rf_sender.c"
         "radio/rf_execution.c"
         "radio/vendor/sx126x/sx126x.c"
         "audio/esp32_audio.c"
