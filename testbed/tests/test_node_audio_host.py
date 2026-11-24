@@ -151,7 +151,13 @@ def test_corrupt_or_short_audio_completion_never_becomes_a_verified_wav_and_reco
             )
             with pytest.raises(ValueError):
                 host.audio.wav(record["id"])
-            assert not serial.core.allocations and not host.busy
+            assert not host.busy and record["cleanup_details"]["confirmed"]
+            retained = record["retained_capture"]
+            assert (
+                retained["artifact_id"] == record["artifact_id"]
+                and retained["state"] == "committed"
+            )
+            assert (await host.physical["A"].request("status.get"))["state"] == "idle"
             serial.corruption = None
             r = await host.audio_action("A", "capture", sample_count=129)
             assert (await finished(host.audio, r["id"]))["status"] == "completed"
@@ -186,7 +192,11 @@ def test_stop_priority_cleanup_and_following_capture(native_library, tmp_path, p
                 await host.audio_action("A", "play", artifact_id=r["artifact_id"])
             stopped = await host.audio.stop(r["id"])
             assert stopped["status"] == "cancelled" and not host.busy
-            assert not serial.core.allocations
+            files = (await host.physical["A"].request("artifact.list"))["artifacts"]
+            assert all(file["state"] == "committed" and not file["in_use"] for file in files)
+            assert (
+                not files or stopped["retained_capture"]["artifact_id"] == files[0]["artifact_id"]
+            )
             serial.audio.hold = False
             valid = await host.audio_action("A", "capture", sample_count=8)
             assert (await finished(host.audio, valid["id"]))["status"] == "completed"
@@ -331,7 +341,8 @@ def test_cancel_during_internal_retrieval_stops_transfer_and_releases_bench(
             await asyncio.wait_for(entered.wait(), 3)
             r = await host.audio.stop(r["id"])
             assert r["status"] == "cancelled" and not host.busy
-            assert not serial.core.allocations
+            assert r["retained_capture"]["state"] == "committed"
+            assert r["cleanup_details"]["confirmed"]
 
     asyncio.run(scenario())
 
