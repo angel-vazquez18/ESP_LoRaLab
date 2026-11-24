@@ -431,3 +431,18 @@ port was opened.
 
 `make check` passed 424 tests without skips plus lint, production frontend build,
 generated contracts and repository checks; frontend format check passed.
+
+## November 22 — Fragment planning (#28)
+
+Added bounded, allocation-free packet planning and exact 40-byte header/body
+encoding at 65,536 useful bytes/4,096 fragments, with sequence exhaustion checks
+and 199-byte protected capacity. Existing single-frame encoding uses this public
+module. Protected headers reserve a full tag; complete protected output remains
+unavailable until GCM exists. Boundary/max/rejection checks compare independent
+wire vectors and exact reconstructed bytes. Operator execution is still limited
+to one fragment pending reconstruction and scheduling. No board is connected.
+See [limits and checks](radio_fragments.md).
+
+`make check` passed 435 tests without skips, lint, frontend build, contracts and
+repository checks. The selected-board ESP-IDF build passed (0x51100-byte image,
+68% app partition free); no flash or physical serial access occurred.

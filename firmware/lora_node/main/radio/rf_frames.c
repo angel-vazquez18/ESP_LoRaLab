@@ -1,4 +1,5 @@
 #include "radio/rf_frames.h"
+#include "radio/rf_fragments.h"
 #include <string.h>
 
 static uint64_t read_be(const uint8_t *p, unsigned count)
@@ -24,25 +25,14 @@ static bool roles(uint8_t source, uint8_t destination)
 size_t rf_single_encode(uint64_t session, uint32_t sequence, uint32_t message, uint8_t source,
                         uint8_t destination, const void *body, size_t length, uint8_t out[255])
 {
-    if (!session || !sequence || !message || !roles(source, destination) || !body || !out ||
-        !length || length > RF_SINGLE_BYTES)
+    rf_message_plan plan;
+    if (length > RF_SINGLE_BYTES ||
+        !rf_message_plan_init(&plan, session, sequence, message, source, destination, 0, false,
+                              false, length, RF_SINGLE_BYTES))
         return 0;
-    memset(out, 0, RF_HEADER_BYTES);
-    out[0] = 'L';
-    out[1] = 'T';
-    out[2] = 2;
-    out[3] = 1;
-    out[5] = source;
-    out[6] = destination;
-    write_be(out + 8, session, 8);
-    write_be(out + 16, sequence, 4);
-    write_be(out + 20, message, 4);
-    write_be(out + 26, 1, 2);
-    write_be(out + 28, length, 4);
-    write_be(out + 32, length, 2);
-    memcpy(out + RF_HEADER_BYTES, body, length);
-    return RF_HEADER_BYTES + length;
+    return rf_message_fragment(&plan, 0, body, length, out);
 }
+
 bool rf_single_decode(const uint8_t *bytes, size_t length, uint32_t fragment, rf_single_header *out)
 {
     if (!bytes || !out || fragment < 16 || fragment > 215 || length <= 40 || length > 255 ||

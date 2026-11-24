@@ -74,3 +74,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   browser verification covered both directions, incomplete telemetry with verified
   bytes, stop, shared ownership, missing peer and light/mobile layout. No boards
   were connected. Next #28 fragmentation; physical #39 stays pending.
+
+- #34: PR #169 (`feat/radio-link-dashboard` → `feat/physical-radio-runs`),
+  424 checks and browser acceptance passed; original checkout untouched.
+- #28: allocation-free 65,536-byte/4,096-fragment planning and exact unprotected
+  encoding, sequence-range preflight and protected tag reservation implemented.
+  Execution remains single-fragment until receiver/scheduler integration.

@@ -177,3 +177,8 @@ relevant context without treating every historical plan as current behavior.
 Versioned interface changes require coordinated producers, consumers, generated
 outputs and conformance checks. A missing firmware feature remains capability-gated;
 a simulation result never establishes hardware support.
+
+`radio/rf_fragments` owns bounded message planning and canonical indexed DATA
+encoding; `rf_frames` retains source generation and the initial single-fragment
+acceptance adapter. Protected header generation reserves tag capacity without
+claiming encryption. See [fragment behavior](radio_fragments.md).
