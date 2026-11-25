@@ -319,12 +319,13 @@ static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "echo",           "clock_sync",  "fault_injection"};
+        "clock_sync", "fault_injection"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
     boolean(n, o, "codec2_3200", n->codec2_library_ready);
     boolean(n, o, "security_gcm", n->port.radio && n->port.radio->available);
     boolean(n, o, "radio", n->port.radio && n->port.radio->available);
+    boolean(n, o, "echo", n->port.radio && n->port.radio->available);
     boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
     boolean(n, o, "ack_retry", n->port.radio && n->port.radio->available);
     boolean(n, o, "audio_capture", n->port.audio.capture);

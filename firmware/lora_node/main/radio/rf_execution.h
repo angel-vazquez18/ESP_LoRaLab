@@ -4,6 +4,7 @@
 #include "radio/rf_ack.h"
 #include "radio/rf_fragments.h"
 #include "radio/rf_frames.h"
+#include "radio/rf_echo.h"
 #include "radio/rf_reassembly.h"
 #include "radio/rf_sender.h"
 #include "security/session_crypto.h"
@@ -52,7 +53,7 @@ typedef struct
     uint32_t revision, seed, bytes, duration_ms;
     uint32_t ack_timeout, reassembly, drain, processing;
     node_link_settings link;
-    bool protected_mode, encoded, fixed_source;
+    bool protected_mode, encoded, fixed_source, echo;
     char source_artifact_id[37], expected_sha256[65];
     uint32_t sample_count;
     const cJSON *provision_keys;
@@ -82,6 +83,8 @@ typedef struct
     rf_secure_session *security;
     rf_sender *transmitter;
     rf_ack_receiver *acknowledgments;
+    rf_echo *echo;
+    rf_echo_status echo_status;
     bool ack_pending, ack_transmitting;
     uint8_t protected_ack_header[40];
     int64_t protected_ack_due;

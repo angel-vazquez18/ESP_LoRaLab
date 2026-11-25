@@ -12,6 +12,7 @@ idf_component_register(
         "radio/rf_ack.c"
         "radio/rf_sender.c"
         "radio/rf_execution.c"
+        "radio/rf_echo.c"
         "security/frame_crypto.c"
         "security/session_crypto.c"
         "security/crypto_benchmark.c"
