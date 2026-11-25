@@ -563,3 +563,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   open. Live #46 explicitly requires both exact boards/schematics/instruments
   before pulses; leave pins unassigned/disabled. Next independent M8 slice #65
   verified-byte echoes and requester-local RTT, then dependent host/timing work.
+
+- #115: PR #206 (`feat/physical-campaign-dashboard` →
+  `feat/campaign-reruns-evidence`) is ready with scoped Conventional Commits,
+  walkthrough, expected software/browser/physical checks. Issue/card Testing;
+  no agent merge. Full 967 cases/all shared checks, final identical-asset UI
+  build/format and three dedicated cases pass. Original 19 files preserved.
+  Next #65 echo/RTT firmware on its own branch; #46/#49 pulse wiring/capture and
+  #132 physical acceptance remain gated by their actual hardware prerequisites.
