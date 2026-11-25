@@ -601,7 +601,10 @@ overhead separately when comparing command-to-done time with predicted airtime.
 The finite firmware echo capability and matching execution v4 result are described
 in [verified echo/RTT](verified_echo_rtt.md). One request is pending per run;
 missing replies have null latency, and late/duplicate/unrelated frames do not
-create additional successful samples. Host orchestration is a separate slice.
+create additional successful samples. The current coordinated v4 digest adds
+bounded actual `reply_hex` bytes and one shared captured acceptance instant in
+`echo.result` and `rx.accepted`. The [physical host path](physical_echo_timing.md)
+independently reconciles these records and keeps host transaction time separate.
 
 RTT is sender-local ECHO_REPLY acceptance minus request `tx_command_us`, including
 both airtimes and peer turnaround. Report success count, timeouts, median and

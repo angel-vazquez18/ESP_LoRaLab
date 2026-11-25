@@ -589,3 +589,20 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Testing; no merge. Original 19 files verified unchanged. Continue #83 on a
   separate branch for physical echo orchestration and independently reconciled
   requester-local distributions; preserve raw exclusions and host timing.
+
+
+- November 25: #83 adds shared physical echo runs, actual bounded returned bytes,
+  independent request/reply/content/local-time correlation and device/boot/
+  settings cohorts with n/median/nearest-rank p95. Host transaction timing stays
+  separate; timeout/invalid/partial evidence remains excluded with reasons.
+  An actual end-to-end case caught serialization-time drift in `rx.accepted`;
+  it now shares the captured acceptance instant with the echo result. Bounded
+  integrity-checked aggregation uses the shared tracked evidence worker, joined
+  before store close. A repeated-run check caught retained temporary artifacts;
+  verified fresh echo files now retire after readback, preserving pre-existing
+  files and failed readbacks. Six consecutive runs and explicit retirement
+  failure/session-close checks pass. Twenty-eight new cases, full 1,030 cases
+  without skips, final 75 recovery cases and all shared checks pass; IDF build/size passes (480,067-byte image), no physical access.
+  Original 19 files preserved. After review PR, continue #76/#77 lab fault hooks,
+  then #85 accounting/#89 views and all full procedure matrices. #84 one-way
+  calibration still depends on actual pulse setup/capture prerequisites.

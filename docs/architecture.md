@@ -121,7 +121,11 @@ receiver-first work and separates verified bytes from evidence completeness. Its
 compact live snapshots avoid repeatedly sending raw records; detailed evidence
 and linked readback traces remain accessible separately. `radio_accounting.py`
 reconciles originals, attempts, accepted fragments, deliveries and paged missing
-evidence independently of byte readback.
+evidence independently of byte readback. The same physical lifecycle now handles
+finite echoes; `echo_accounting.py` independently checks returned bytes and
+request/reply/local-time evidence, then groups distributions by both identities,
+boots and selected settings. `evidence_worker.py` joins saved-evidence work before
+store closure; campaign exports and echo aggregation reuse it.
 
 ## Important existing host modules
 

@@ -4,6 +4,41 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Shared physical echo runs and independent RTT reports (#83)
+
+The common physical radio lifecycle now runs finite echoes in either direction,
+with the existing bench owner, fresh bound sessions, receiver-first arm/start,
+source/request readback, stop/cleanup and durable raw evidence. The coordinated
+execution v4 revision returns bounded actual reply bytes. The host independently
+compares all three byte sources and matches request/reply identities, references,
+confirmed transmissions, receive observations and one captured acceptance instant.
+An end-to-end test exposed a second serialization-time timestamp; both published
+records now use the original acceptance instant.
+
+Timing reports retain valid n, median and nearest-rank p95, raw local intervals,
+reason-coded exclusions and separate overall host monotonic transaction time.
+Role, both devices/boots, settings and schema define separate cohorts. Missing
+replies retain completed finite timeout observations with null statistics;
+stopped/interrupted, inconsistent or incomplete evidence cannot create samples.
+Saved-file integrity is checked again before aggregation. Selection/count/byte
+and rejection projections are bounded; all original rejection rows remain in raw
+records. One tracked worker keeps hashing off control requests and joins through
+cancellation/shutdown. Campaign exports reuse that worker implementation.
+
+API/CLI share the existing owner; dedicated dashboard controls follow #89.
+Twenty-eight dedicated accounting/API/CLI/worker cases pass, including both actual
+C/PSA directions/profiles, corrupted evidence, dropped request/reply/result,
+cancel/disconnect, store-safe worker shutdown and six consecutive runs preserving
+pre-existing files. Verified fresh echo artifacts retire after readback; failed
+readback remains recoverable, and retirement failure still closes both sessions
+with an explicit unsuccessful finding. Full suite passes 1,030 cases without
+skips; final 75 echo/radio/campaign recovery cases and all lint/frontend/contracts/
+repository/vendor checks pass. The existing Starlette/httpx warning remains.
+ESP-IDF v6.0.2 build/size succeeds (480,067-byte
+image). No physical port, reset or flash; all 19 original files remain unchanged.
+See [commands, walkthrough and physical follow-up](physical_echo_timing.md).
+Full TIME-01, pulse review/capture and physical qualification remain open.
+
 ## November 25 — Verified echo firmware and requester-local timing (#65)
 
 The main node now supports one owned, single-fragment known-data echo request per

@@ -1,7 +1,8 @@
 # Verified echoes and requester-local RTT
 
-Issue #65 adds a finite firmware capability. Host RTT orchestration/accounting
-(#83), the full TIME-01 matrix (#102) and physical qualification remain separate.
+Issue #65 adds a finite firmware capability. The shared host workflow is now
+described in [physical echo timing](physical_echo_timing.md) (#83). The full
+TIME-01 matrix (#102) and physical qualification remain separate.
 The checks below use the actual portable C control/radio/security code with an
 isolated radio bus; they are not measured LoRa performance.
 
@@ -40,7 +41,9 @@ native conformance checks; normal sessions retain fresh RAM-only keys.
 The requester emits one `echo.result`, with a matching nested terminal
 `run.summary.echo`. A valid result contains session, request/reply sequences,
 expected payload length/hash, both local timestamps, their exact difference,
-`valid: true` and `reason: matched`. Typed host validation rejects inconsistent
+`valid: true` and `reason: matched`. The later #83 wire revision also retains
+actual accepted `reply_hex` bytes and shares one captured acceptance instant with
+`rx.accepted`; the exact generated execution digest gates that addition. Typed host validation rejects inconsistent
 intervals. Requester results identify source and boot through the event envelope.
 Responder summaries keep RTT unavailable; accepting a request is not measuring RTT.
 
@@ -81,9 +84,9 @@ Diagnostic, main-control, artifact, audio and memory profiles remain independent
 
 `EchoPlan`/`EchoSpec` build a one-request intent. The common preview calculates
 both airtimes, 30,000 us processing allowance, 20,000 us turnaround and bounded
-drain. These are declared budgets, not measured CPU/airtime evidence. The operator
-radio service still exposes its existing data/voice workloads until #83 adds the
-shared echo runner; advertising the firmware feature does not add a host stub.
+drain. These are declared budgets, not measured CPU/airtime evidence. The operator uses the shared physical echo runner described in
+[host timing](physical_echo_timing.md); readiness checks actual compatible nodes
+before starting work.
 
 ## Code walkthrough
 
