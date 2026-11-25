@@ -383,10 +383,10 @@ class Host:
                 raise ValueError(f"Operation cleanup unconfirmed: {cleanup['error']}")
             return {**result, "cleanup": cleanup}
 
-    async def start_procedure_matrix(self, request):
+    async def start_procedure_matrix(self, request, *, expected_plan_sha256=None):
         async with self.lock:
             self.require_available_bench()
-            return await self.procedures.start_matrix(request, self)
+            return await self.procedures.start_matrix(request, self, expected_plan_sha256)
 
     async def start_serial(self, request, *, _owner=None):
         async with self.lock:

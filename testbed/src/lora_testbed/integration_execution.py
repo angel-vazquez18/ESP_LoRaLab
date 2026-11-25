@@ -109,11 +109,13 @@ class IntegrationExecution:
             "hardware_validated": False,
         }
 
-    async def start(self, spec, host):
+    async def start(self, spec, host, expected_plan_sha256=None):
         radio, adapter = host.radio, host.adapter
         if self.ledger.busy:
             raise RuntimeError("Another procedure owns the bench")
         planned = self.preview(spec, radio)
+        if expected_plan_sha256 is not None and planned["sha256"] != expected_plan_sha256:
+            raise RuntimeError("The matrix plan changed. Preview the cases again.")
         if not planned["ready_case_count"]:
             raise ValueError("No selected matrix cases can run on this bench")
         required = (

@@ -12,6 +12,7 @@ from uuid import uuid4
 from . import control_v2, v2
 from .adapters import require_control_compatible
 from .integration_execution import IntegrationExecution
+from .integration_matrices import matrix_options
 from .paths import REPOSITORY_ROOT
 from .serial_validation import serial_plan
 from .storage import utc_now
@@ -108,6 +109,7 @@ class ProcedureService:
     def snapshot(self):
         return {
             "active_run": deepcopy(self.current) if self.busy else None,
+            "matrix_options": matrix_options(),
             "runs": [
                 {
                     k: r.get(k)
@@ -121,6 +123,7 @@ class ProcedureService:
                         "finished_at",
                         "scope",
                         "full_procedure_passed",
+                        "procedure_revision",
                     )
                 }
                 for r in self.runs()
@@ -193,8 +196,8 @@ class ProcedureService:
     def matrix_preview(self, spec, radio):
         return self.matrices.preview(spec, radio)
 
-    async def start_matrix(self, spec, host):
-        return await self.matrices.start(spec, host)
+    async def start_matrix(self, spec, host, expected_plan_sha256=None):
+        return await self.matrices.start(spec, host, expected_plan_sha256)
 
     async def execute(self, run, spec):
         try:
@@ -303,12 +306,14 @@ class ProcedureService:
             run.update(active_case=None, finished_at=utc_now(), full_procedure_passed=False)
             self.save(run)
 
-    async def stop(self, shutdown=False):
+    async def stop(self, shutdown=False, *, expected_run_id=None):
+        if expected_run_id is not None and (not self.busy or self.current["id"] != expected_run_id):
+            raise RuntimeError("This procedure is no longer active")
         if self.busy:
             self.current["reason"] = "Host shutdown" if shutdown else "Stopped by operator"
             self.task.cancel()
             await self.task
-        return deepcopy(self.current)
+        return self.get(expected_run_id) if expected_run_id else deepcopy(self.current)
 
     def csv(self, run):
         output = io.StringIO(newline="")

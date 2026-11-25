@@ -59,6 +59,18 @@ GROUPS = {
 }
 
 
+def matrix_options():
+    kinds = {"IF-01": "serial", "IF-03": "campaign", "SEC-04": "local"}
+    return {
+        identifier: {
+            "groups": list(groups),
+            "kind": kinds.get(identifier, "link"),
+            "choose_security": identifier in rf_sweeps.GROUPS or identifier == "PKT-01",
+        }
+        for identifier, groups in GROUPS.items()
+    }
+
+
 class MatrixRequest(ContractModel):
     catalog_id: Literal[
         "IF-01",

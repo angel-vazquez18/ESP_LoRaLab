@@ -600,8 +600,13 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         return host.procedures.matrix_preview(body, host.radio)
 
     @app.post("/api/procedures/matrix", status_code=202)
-    async def procedure_matrix_start(body: MatrixRequest):
-        return await app.state.host.start_procedure_matrix(body)
+    async def procedure_matrix_start(
+        body: MatrixRequest,
+        expected_plan_sha256: str | None = Query(None, pattern=r"^[a-f0-9]{64}$"),
+    ):
+        return await app.state.host.start_procedure_matrix(
+            body, expected_plan_sha256=expected_plan_sha256
+        )
 
     @app.post("/api/procedures/serial/preview")
     async def preview_serial(body: SerialValidationRequest):
@@ -612,9 +617,9 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         return await app.state.host.start_serial(body)
 
     @app.post("/api/procedures/stop")
-    async def stop_procedure():
+    async def stop_procedure(expected_run_id: control_v2.UUID | None = None):
         async with app.state.host.lock:
-            return await app.state.host.procedures.stop()
+            return await app.state.host.procedures.stop(expected_run_id=expected_run_id)
 
     @app.post("/api/experiments/{catalog_id}/preflight")
     async def experiment_preflight(catalog_id: str, body: PreflightRequest):
