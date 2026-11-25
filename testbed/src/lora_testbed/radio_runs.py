@@ -93,6 +93,20 @@ class PeerMismatchCheck(RadioRunRequest):
         return self
 
 
+class KeyMismatchRunRequest(RadioRunRequest):
+    security: Literal["aes128_gcm"] = "aes128_gcm"
+
+    @model_validator(mode="after")
+    def negative_single_frame(self):
+        if self.link.ack_mode != "none" or self.message_bytes > self.link.fragment_payload_bytes:
+            raise ValueError("Wrong-key controls require one unacknowledged fragment")
+        return self
+
+
+class PeerProfileMismatchCheck(RadioRunRequest):
+    peer_security: Literal["none", "aes128_gcm"]
+
+
 class LabRadioRunRequest(RadioRunRequest):
     injection: Injection
 
@@ -361,6 +375,11 @@ class RadioRuns:
 
     def preflight(self, request):
         blockers = []
+        if (
+            isinstance(request, PeerProfileMismatchCheck)
+            and request.security != request.peer_security
+        ):
+            blockers.append("Peer security profile mismatch")
         ids = set()
         for role, node in self.nodes.items():
             if not node.connected or node.identity is None:
@@ -389,13 +408,13 @@ class RadioRuns:
                 except ValueError as exc:
                     blockers.append(f"Node {role}: {exc}")
                     break
-            if isinstance(request, LabRadioRunRequest):
+            if isinstance(request, (LabRadioRunRequest, KeyMismatchRunRequest)):
                 if not (
                     node.identity.capabilities.fault_injection
                     and node.health.capability_availability.fault_injection
                 ):
                     blockers.append(f"Node {role} needs explicit lab firmware")
-                else:
+                elif isinstance(request, LabRadioRunRequest):
                     for name in run_protocol_v2.LAB_FAULT_COMMANDS:
                         try:
                             require_execution_compatible(
@@ -533,6 +552,8 @@ class RadioRuns:
                 for r, n in self.nodes.items()
             },
         }
+        if isinstance(request, KeyMismatchRunRequest):
+            record["security"]["controlled_receiver_key_mismatch"] = True
         if isinstance(request, TransmitterPowerRunRequest):
             record["receiver_power_dbm"] = request.receiver_power_dbm
         if isinstance(request, LabRadioRunRequest):
@@ -765,6 +786,7 @@ class RadioRuns:
             async with asyncio.timeout(request.timeout_ms / 1000 + 45):
                 plan = request.plan()
                 lab = r.get("lab")
+                key_mismatch = isinstance(request, KeyMismatchRunRequest)
                 budget = lab["budget"] if lab else preview(plan)["timing"]["budget"]
                 if plan.spec.source in ("known_data", "echo"):
                     r["initial_artifact_ids"] = {}
@@ -800,9 +822,13 @@ class RadioRuns:
                     raise ValueError("Peer settings mismatch before provisioning and arming")
                 r["stage"] = "provisioning"
                 key_set = EphemeralKeySet() if request.security == "aes128_gcm" else None
+                alternate = None
                 if key_set:
                     r["security"].update(key_set_id=key_set.key_set_id, keys_retired_on_host=False)
                 try:
+                    if key_mismatch:
+                        alternate = EphemeralKeySet()
+                        r["security"]["receiver_alternate_key_set_id"] = alternate.key_set_id
                     for role, peer in [("A", "B"), ("B", "A")]:
                         identity = r["identities"][peer]
                         args = (
@@ -820,6 +846,15 @@ class RadioRuns:
                             }
                         )
                         try:
+                            if alternate and role == r["receiver"]:
+                                replacement = alternate.arguments(
+                                    role,
+                                    r["session_id"],
+                                    identity["device_id"],
+                                    identity["boot_id"],
+                                )
+                                args["rx_key_hex"] = replacement["rx_key_hex"]
+                                replacement.clear()
                             await self.command(
                                 r,
                                 role,
@@ -841,6 +876,8 @@ class RadioRuns:
                             )
                         r["security"]["provisioned"][role] = True
                 finally:
+                    if alternate:
+                        alternate.close()
                     if key_set:
                         key_set.close()
                     r["security"]["keys_retired_on_host"] = True
@@ -925,7 +962,7 @@ class RadioRuns:
                         )
                     allowed_stops = (
                         ("completed", "timeout")
-                        if lab or isinstance(request, EchoRadioRunRequest)
+                        if lab or key_mismatch or isinstance(request, EchoRadioRunRequest)
                         else ("completed",)
                     )
                     if r["summaries"][role]["stop_reason"] not in allowed_stops:
@@ -938,7 +975,7 @@ class RadioRuns:
                         r, lab["role"], "fault.status", {"offset": 0, "limit": 4}
                     )
                 delivered = r["summaries"][r["receiver"]]["delivered_messages"]
-                if lab and not delivered:
+                if (lab or key_mismatch) and not delivered:
                     expected = known_data(request.source_seed, 1, request.message_bytes)
                     source = await self.retrieve(r, r["sender"], "source")
                     if source != expected:
@@ -977,9 +1014,9 @@ class RadioRuns:
                         if encoded
                         else "independent source recipe plus exact source/recovered readback",
                     }
-                if plan.spec.source == "known_data" and (not lab or delivered):
+                if plan.spec.source == "known_data" and (not (lab or key_mismatch) or delivered):
                     self.register_retirement(r, "AB")
-                if not lab or delivered:
+                if not (lab or key_mismatch) or delivered:
                     await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():
                     baseline = r["baseline"][role]

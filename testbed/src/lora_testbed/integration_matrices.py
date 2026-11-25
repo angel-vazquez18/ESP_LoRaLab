@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from . import rf_sweeps
+from . import content_series, rf_sweeps
 from .campaign_plans import CampaignSpec, RadioCase, Template
 from .experiments_v2 import ContractModel
 from .radio_runs import RadioRunRequest
@@ -54,11 +54,14 @@ GROUPS = {
     "IF-02": LINK_GROUPS,
     "IF-03": CAMPAIGN_GROUPS,
     **rf_sweeps.GROUPS,
+    **content_series.GROUPS,
 }
 
 
 class MatrixRequest(ContractModel):
-    catalog_id: Literal["IF-01", "IF-02", "IF-03", "RF-01", "RF-02", "RF-03", "RF-04"]
+    catalog_id: Literal[
+        "IF-01", "IF-02", "IF-03", "RF-01", "RF-02", "RF-03", "RF-04", "PKT-01", "SEC-01"
+    ]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
     roles: list[Literal["A", "B"]] = Field(
         default_factory=lambda: ["A", "B"], min_length=1, max_length=2
@@ -74,12 +77,24 @@ class MatrixRequest(ContractModel):
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
+    subset_sizes: list[int] | None = Field(default=None, min_length=1, max_length=11)
 
     @model_validator(mode="after")
     def selections(self):
-        for choices in (self.groups, self.roles, self.transports, self.directions):
+        for choices in (
+            self.groups,
+            self.roles,
+            self.transports,
+            self.directions,
+            self.subset_sizes,
+        ):
             if choices is not None and len(choices) != len(set(choices)):
                 raise ValueError("Choose each group, role, direction or transport once")
+        if self.subset_sizes is not None and (
+            self.catalog_id not in content_series.GROUPS
+            or any(size < 1 or size > 65537 for size in self.subset_sizes)
+        ):
+            raise ValueError("Size selection belongs to a valid packet or protection series")
         if self.groups is not None and not set(self.groups) <= set(GROUPS[self.catalog_id]):
             raise ValueError("Choose groups that belong to the selected procedure")
         if self.catalog_id != "IF-01" and set(self.roles) != {"A", "B"}:
@@ -148,20 +163,29 @@ def campaign_cases(request, groups):
                 )
 
 
-def compile_matrix(request):
+def compile_matrix(request, *, message_limit=65536):
     generated = {"IF-01": serial_cases, "IF-02": link_cases, "IF-03": campaign_cases}.get(
         request.catalog_id, rf_sweeps.cases
     )
     groups = request.groups or list(GROUPS[request.catalog_id])
+    candidates = (
+        content_series.cases(request, groups, message_limit)
+        if request.catalog_id in content_series.GROUPS
+        else generated(request, groups)
+    )
     cases = [
         {
             "id": f"{request.catalog_id}-{index + 1:03d}-{case['group']}-{case['variant']}",
             "index": index,
             **case,
         }
-        for index, case in enumerate(generated(request, groups))
+        for index, case in enumerate(candidates)
     ]
-    coverage = set(groups) == set(GROUPS[request.catalog_id]) and request.repetitions == 3
+    coverage = (
+        set(groups) == set(GROUPS[request.catalog_id])
+        and request.repetitions == 3
+        and request.subset_sizes is None
+    )
     if request.catalog_id == "IF-01":
         coverage = coverage and request.valid_cycles == 10 and set(request.roles) == {"A", "B"}
     else:
@@ -183,6 +207,8 @@ def compile_matrix(request):
 def link_request(matrix, case, ordinal):
     if case.get("driver") == "rf_sweep":
         return rf_sweeps.sweep_request(matrix, case, ordinal)
+    if case.get("driver") == "content_series":
+        return content_series.run_request(matrix, case, ordinal)
     # Match seeds across directions and sizes within the same repetition.
     seed = (matrix.seed + (case["repetition"] - 1) * 100 + ordinal) % 2**32
     return RadioRunRequest(

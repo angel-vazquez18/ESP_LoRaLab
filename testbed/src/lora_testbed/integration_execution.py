@@ -5,11 +5,16 @@ import hashlib
 from copy import deepcopy
 from uuid import uuid4
 
-from . import rf_sweeps
+from . import content_series, rf_sweeps
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
-from .radio_runs import PeerMismatchCheck, RadioRunRequest
+from .radio_runs import (
+    KeyMismatchRunRequest,
+    PeerMismatchCheck,
+    PeerProfileMismatchCheck,
+    RadioRunRequest,
+)
 from .storage import utc_now
 
 SERIAL_ERROR_CASES = {
@@ -23,12 +28,46 @@ class IntegrationExecution:
     def __init__(self, ledger):
         self.ledger = ledger
 
+    @staticmethod
+    def message_limit(radio):
+        values = []
+        for node in radio.nodes.values():
+            if not node.connected or node.health is None:
+                return None
+            limits = node.health.capability_availability.resource_limits.get("execution_limits", {})
+            maximum = limits.get("max_message_bytes")
+            if type(maximum) is not int or not 1 <= maximum <= 65536:
+                return None
+            values.append(maximum)
+        return min(values) if values else None
+
     def preview(self, spec, radio):
-        plan = compile_matrix(spec)
+        limit = self.message_limit(radio) if spec.catalog_id == "PKT-01" else None
+        plan = compile_matrix(spec, message_limit=limit or 65536)
         rows = []
         for case in plan["cases"]:
-            if case["driver"] in ("known_data_batch", "peer_mismatch", "rf_sweep"):
+            if case["driver"] in (
+                "known_data_batch",
+                "peer_mismatch",
+                "rf_sweep",
+                "content_series",
+            ):
                 blockers = radio.preflight(link_request(spec, case, 0))["blockers"]
+            elif case["driver"] == "content_negative":
+                if spec.catalog_id == "PKT-01" and limit is not None:
+                    blockers = radio.preflight(RadioRunRequest(direction=case["direction"]))[
+                        "blockers"
+                    ]
+                elif spec.catalog_id == "PKT-01":
+                    blockers = ["Connect both nodes to establish the negotiated message limit"]
+                else:
+                    control = content_series.run_request(spec, case, 0)
+                    request = (
+                        KeyMismatchRunRequest(**control.model_dump())
+                        if case["variant"] == "wrong_key"
+                        else control
+                    )
+                    blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "serial_matrix":
                 blockers = []
                 node = self.ledger.nodes[case["role"]]
@@ -94,6 +133,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/integration_matrices.py",
                     "testbed/src/lora_testbed/integration_execution.py",
                     "testbed/src/lora_testbed/rf_sweeps.py",
+                    "testbed/src/lora_testbed/content_series.py",
                     "testbed/src/lora_testbed/procedure_runs.py",
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
@@ -233,6 +273,93 @@ class IntegrationExecution:
                 {
                     "code": "matched_settings_recovered_delivery",
                     "outcome": "pass" if recovered else "inconclusive",
+                },
+            ],
+        )
+
+    async def matrix_oversize_case(self, run, case, spec, radio, adapter):
+        rejected = False
+        reason = None
+        try:
+            request = RadioRunRequest(
+                direction=case["direction"],
+                message_bytes=case["message_bytes"],
+                timeout_ms=300000,
+            )
+        except ValueError:
+            rejected = case["message_bytes"] > 65536
+            reason = "Request exceeds the testbed's model limit"
+        else:
+            preflight = radio.preflight(request)
+            rejected = any("max_message_bytes" in value for value in preflight["blockers"])
+            reason = "; ".join(preflight["blockers"])
+        self.ledger.append(
+            run["id"],
+            case["id"],
+            {
+                "source": "read-only host preflight",
+                "requested_message_bytes": case["message_bytes"],
+                "advertised_message_limit": self.message_limit(radio),
+                "rejection_observed": rejected,
+                "reason": reason,
+            },
+        )
+        control = RadioRunRequest(direction=case["direction"], security=case["security"])
+        recovered = await self.matrix_radio_child(
+            run, case, control, radio, adapter, "intact_after_oversize_preflight"
+        )
+        passed = rejected and self.verified_link_child(recovered)
+        case.update(
+            status="completed",
+            assessment="pass" if passed else "inconclusive",
+            cleanup_verified=True,
+            assertions=[
+                {
+                    "code": "host_oversize_rejection_and_recovery",
+                    "outcome": "pass" if passed else "inconclusive",
+                },
+            ],
+        )
+
+    async def matrix_security_case(self, run, case, spec, radio, adapter):
+        control = content_series.run_request(spec, case, 0)
+        before = await self.matrix_radio_child(run, case, control, radio, adapter, "intact_before")
+        baseline = self.verified_link_child(before)
+        observed = False
+        if baseline and case["variant"] == "wrong_key":
+            trial = await self.matrix_radio_child(
+                run,
+                case,
+                KeyMismatchRunRequest(**control.model_dump()),
+                radio,
+                adapter,
+                "controlled_wrong_receiver_key",
+            )
+            observed = content_series.matched_auth_rejection(trial)
+        elif baseline:
+            mismatched = PeerProfileMismatchCheck(**control.model_dump(), peer_security="none")
+            preflight = radio.preflight(mismatched)
+            observed = (
+                not preflight["ready"] and "Peer security profile mismatch" in preflight["blockers"]
+            )
+            self.ledger.append(run["id"], case["id"], {"security_profile_preflight": preflight})
+        after = await self.matrix_radio_child(run, case, control, radio, adapter, "intact_after")
+        controls = (
+            baseline
+            and self.verified_link_child(after)
+            and before["session_id"] != after["session_id"]
+            and before["verification"]["sha256"] == after["verification"]["sha256"]
+        )
+        passed = bool(observed and controls)
+        case.update(
+            status="completed",
+            assessment="pass" if passed else "inconclusive",
+            cleanup_verified=True,
+            assertions=[
+                {"code": case["variant"], "outcome": "pass" if observed else "inconclusive"},
+                {
+                    "code": "matched_intact_controls",
+                    "outcome": "pass" if controls else "inconclusive",
                 },
             ],
         )
@@ -474,6 +601,11 @@ class IntegrationExecution:
                     await self.matrix_campaign_case(run, case, spec, host)
                 elif case["driver"] == "peer_mismatch":
                     await self.matrix_mismatch_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "content_negative":
+                    if spec.catalog_id == "SEC-01":
+                        await self.matrix_security_case(run, case, spec, radio, adapter)
+                    else:
+                        await self.matrix_oversize_case(run, case, spec, radio, adapter)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
