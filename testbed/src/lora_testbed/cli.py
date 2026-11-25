@@ -653,6 +653,18 @@ def radio_start(
 
 
 @app.command()
+def integration_matrix(config: Path, preview: bool = False):
+    """Preview or start a selected physical integration matrix."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Matrix configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/procedures/matrix/preview" if preview else "/api/procedures/matrix", body)
+
+
+@app.command()
 def lab_start(config: Path, preview: bool = False):
     """Run one lab fault between verified intact controls."""
     try:

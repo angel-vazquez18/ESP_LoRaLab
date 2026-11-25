@@ -37,6 +37,7 @@ from .comparison import campaign_summary, compare
 from .experiments_v2 import KnownDataPlan
 from .experiments_v2 import preview as preview_known_data
 from .host import Host
+from .integration_matrices import MatrixRequest
 from .models import StrictModel
 from .nodes import discover_ports
 from .paths import TESTBED_ROOT
@@ -592,6 +593,15 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.get("/api/procedures")
     async def procedures():
         return app.state.host.procedures.snapshot()
+
+    @app.post("/api/procedures/matrix/preview")
+    async def procedure_matrix_preview(body: MatrixRequest):
+        host = app.state.host
+        return host.procedures.matrix_preview(body, host.radio)
+
+    @app.post("/api/procedures/matrix", status_code=202)
+    async def procedure_matrix_start(body: MatrixRequest):
+        return await app.state.host.start_procedure_matrix(body)
 
     @app.post("/api/procedures/serial/preview")
     async def preview_serial(body: SerialValidationRequest):

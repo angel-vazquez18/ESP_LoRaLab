@@ -53,8 +53,11 @@ class Host:
 
     @property
     def workload_busy(self) -> bool:
+        return self._workload_busy()
+
+    def _workload_busy(self, *, include_procedure=True) -> bool:
         return (
-            self.procedures.busy
+            (include_procedure and self.procedures.busy)
             or self.diagnostics.busy
             or self.voice.busy
             or self.radio.busy
@@ -257,8 +260,15 @@ class Host:
             return node.snapshot()
 
     def require_available_bench(self, owner=None):
+        current_campaign = self.physical_campaigns.current or {}
+        procedure = self.procedures.current or {}
+        nested_campaign = (
+            owner is self.physical_campaigns.owner
+            and self.procedures.busy
+            and current_campaign.get("enclosing_procedure_id") == procedure["id"]
+        )
         if (
-            self.workload_busy
+            self._workload_busy(include_procedure=not nested_campaign)
             or (self.physical_campaigns.busy and owner is not self.physical_campaigns.owner)
             or (self.lab_trials.busy and owner is not self.lab_trials.owner)
         ):
@@ -373,6 +383,11 @@ class Host:
                 raise ValueError(f"Operation cleanup unconfirmed: {cleanup['error']}")
             return {**result, "cleanup": cleanup}
 
+    async def start_procedure_matrix(self, request):
+        async with self.lock:
+            self.require_available_bench()
+            return await self.procedures.start_matrix(request, self)
+
     async def start_serial(self, request, *, _owner=None):
         async with self.lock:
             self.require_available_bench(_owner)
@@ -417,9 +432,16 @@ class Host:
     async def stop(self):
         if self.lab_trials.busy:
             return await self.lab_trials.stop()
+        if self.procedures.busy and (
+            not self.physical_campaigns.busy
+            or self.physical_campaigns.current.get("enclosing_procedure_id")
+        ):
+            return await self.procedures.stop()
         if self.physical_campaigns.busy:
             return await self.physical_campaigns.cancel(self.physical_campaigns.current["id"])
         async with self.lock:
+            if self.procedures.busy:
+                return await self.procedures.stop()
             if self.voice.busy:
                 return await self.voice.stop()
             if self.radio.busy:
@@ -443,14 +465,16 @@ class Host:
         self.campaign_exports.closing = True
         self.radio.evidence_worker.closing = True
         await self.lab_trials.close()
+        if (self.physical_campaigns.current or {}).get("enclosing_procedure_id"):
+            await self.procedures.stop(shutdown=True)
         await self.physical_campaigns.close()
         await self.observations.close()
         await self.diagnostics.close()
         await self.voice.close()
+        await self.procedures.stop(shutdown=True)
         await self.radio.close()
         await self.audio.close()
         await self.artifacts.close()
-        await self.procedures.stop(shutdown=True)
         for node in self.physical.values():
             await node.close()
         await self.campaign_exports.close()

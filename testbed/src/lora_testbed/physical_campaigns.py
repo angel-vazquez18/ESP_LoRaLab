@@ -141,7 +141,7 @@ class PhysicalCampaigns:
         ):
             raise ValueError("Saved campaign document hash differs")
 
-    async def rerun(self, identifier, case_ids):
+    async def rerun(self, identifier, case_ids, *, _procedure_id=None):
         parent = self.get(identifier)
         if parent["status"] not in TERMINAL:
             raise RuntimeError("Finish or interrupt the original campaign before rerunning cases")
@@ -149,7 +149,12 @@ class PhysicalCampaigns:
             raise ValueError("Select one or more distinct case IDs")
         if set(case_ids) - {case["case_id"] for case in parent["cases"]}:
             raise ValueError("A selected case does not belong to the original execution")
-        return await self.start(parent["plan_id"], _parent=parent, _case_ids=set(case_ids))
+        return await self.start(
+            parent["plan_id"],
+            _parent=parent,
+            _case_ids=set(case_ids),
+            _procedure_id=_procedure_id,
+        )
 
     def snapshot(self):
         rows = self.store.db.execute(
@@ -163,8 +168,28 @@ class PhysicalCampaigns:
             "executions": [dict(row) for row in rows],
         }
 
-    async def start(self, plan_id, *, _parent=None, _case_ids=None):
-        if self.host.busy:
+    async def start(
+        self,
+        plan_id,
+        *,
+        _parent=None,
+        _case_ids=None,
+        _procedure_id=None,
+        _reject_configuration=False,
+    ):
+        if _reject_configuration and _procedure_id is None:
+            raise ValueError("Configuration rejection is reserved for a procedure")
+        if _procedure_id:
+            if (
+                asyncio.current_task() is not self.host.procedures.task
+                or not self.host.procedures.current
+                or self.host.procedures.current["id"] != _procedure_id
+                or self.busy
+                or self.host.lab_trials.busy
+                or self.host._workload_busy(include_procedure=False)
+            ):
+                raise RuntimeError("The bound procedure cannot reserve the campaign")
+        elif self.host.busy:
             raise RuntimeError("Another run or campaign owns the bench")
         plan = self.host.campaign_plans.get(plan_id)
         selected_cases = [
@@ -185,6 +210,8 @@ class PhysicalCampaigns:
             "created_at": utc_now(),
             "finished_at": None,
             "plan_id": plan_id,
+            "enclosing_procedure_id": _procedure_id,
+            "configuration_probe": _reject_configuration,
             "name": plan["name"],
             "plan_sha256": plan["plan_sha256"],
             "parent_execution_id": _parent["id"] if _parent else None,
@@ -274,7 +301,7 @@ class PhysicalCampaigns:
             "voice": self.host.voice,
         }[name]
 
-    async def launch(self, spec, reserved):
+    async def launch(self, spec, reserved, *, reject_configuration=False):
         kind = spec["kind"]
         if kind in ("memory_probe", "crypto_benchmark"):
 
@@ -325,11 +352,12 @@ class PhysicalCampaigns:
                 lambda: self.host.audio.stop(result["id"]),
             )
         if kind == "known_data":
-            from .radio_runs import RadioRunRequest
+            from .radio_runs import PeerMismatchCheck, RadioRunRequest
 
-            result = await self.host.start_radio(
-                RadioRunRequest.model_validate(spec["request"]), _owner=self.owner
-            )
+            request = RadioRunRequest.model_validate(spec["request"])
+            if reject_configuration:
+                request = PeerMismatchCheck.from_control(request)
+            result = await self.host.start_radio(request, _owner=self.owner)
             return Child(
                 "radio",
                 result["id"],
@@ -460,7 +488,11 @@ class PhysicalCampaigns:
                     case["child"] = {"service": service, "id": identifier}
                     self.save(record, case)
 
-                child = await self.launch(spec, reserved)
+                child = await self.launch(
+                    spec,
+                    reserved,
+                    reject_configuration=(record["configuration_probe"] and case["index"] == 0),
+                )
                 reserved(child.service, child.identifier)
                 timed_out = await self.wait_child(record, child.task, child.stop, deadline)
                 result = self.record_child(record, runtime, case)

@@ -11,6 +11,7 @@ from uuid import uuid4
 
 from . import control_v2, v2
 from .adapters import require_control_compatible
+from .integration_execution import IntegrationExecution
 from .paths import REPOSITORY_ROOT
 from .serial_validation import serial_plan
 from .storage import utc_now
@@ -22,6 +23,7 @@ class ProcedureService:
     def __init__(self, store, nodes):
         self.store, self.db, self.nodes = store, store.db, nodes
         self.task, self.current = None, None
+        self.matrices = IntegrationExecution(self)
         sources = (
             "docs/test_procedures.md",
             "docs/testbed_contract_v2.md",
@@ -187,6 +189,12 @@ class ProcedureService:
         self.task = asyncio.create_task(self.execute(run, spec))
         await asyncio.sleep(0)  # Ensure immediate cancellation reaches the finalizer.
         return deepcopy(run)
+
+    def matrix_preview(self, spec, radio):
+        return self.matrices.preview(spec, radio)
+
+    async def start_matrix(self, spec, host):
+        return await self.matrices.start(spec, host)
 
     async def execute(self, run, spec):
         try:
