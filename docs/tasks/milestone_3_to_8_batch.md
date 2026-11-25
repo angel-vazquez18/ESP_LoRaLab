@@ -582,3 +582,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   skips. ESP-IDF v6.0.2 build/size succeeds (479,571-byte image); no physical port,
   reset or flash. Host collection/accounting #83 is next, then full procedures;
   #46/#49 pulse review/capture and actual hardware qualification remain gated.
+
+- #65: PR #208 (`feat/verified-echo-rtt` →
+  `feat/physical-campaign-dashboard`) is ready with five scoped Conventional
+  Commits, walkthrough, expected checks and physical follow-up. Issue/card
+  Testing; no merge. Original 19 files verified unchanged. Continue #83 on a
+  separate branch for physical echo orchestration and independently reconciled
+  requester-local distributions; preserve raw exclusions and host timing.
