@@ -730,3 +730,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   The isolated browser completed IF-01 C1, preserved the saved run after
   page navigation and disabled start for C3. All four member hashes in
   the archived evidence matched.
+
+- Dashboard PR #220 is open over #219. Full regression passed 1,126
+  tests, with the remaining build, lint and contract checks verified.
+- MEM-01 C1/C2 now run one-node idle and paired observed-data cases.
+  Verified matching stage/workload IDs, separate idle windows, observer
+  cancellation and retained hashes through the native fixtures. Full
+  make check passed 1,130 tests.

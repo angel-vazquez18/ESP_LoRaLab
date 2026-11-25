@@ -4,6 +4,16 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Stage memory matrix
+
+MEM-01 now runs per-node finite idle baselines and paired data observations
+with complete readback, matched radio run/observer identities and post-run
+idle measurements. Each observer saves raw events and observed allocation
+lifetimes. Cancelling an idle check stops its own observer. Full
+`make check` passed 1,130 tests and all repository checks. See
+[sampled memory procedures](memory_matrix.md) for supported cases and
+the remaining audio, allocation-rejection and deliberate recovery work.
+
 ## November 25 — Dashboard matrix controls
 
 The Experiments dashboard now previews and runs supported procedure
