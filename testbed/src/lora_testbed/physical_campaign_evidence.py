@@ -1,6 +1,5 @@
 """Bounded physical campaign bundles with verified saved files and explicit child links."""
 
-import asyncio
 import hashlib
 import io
 import json
@@ -13,6 +12,7 @@ from pydantic import TypeAdapter
 
 from .campaign_plans import digest
 from .control_v2 import UUID
+from .evidence_worker import SavedEvidenceWorker
 from .physical_campaigns import TERMINAL, PhysicalCampaigns
 from .session_keys import require_public_metadata
 
@@ -44,34 +44,13 @@ def json_bytes(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
 
 
-class CampaignExports:
+class CampaignExports(SavedEvidenceWorker):
     def __init__(self, host):
-        self.host, self.workers, self.closing = host, set(), False
-
-    def finished(self, worker):
-        self.workers.discard(worker)
-        if not worker.cancelled():
-            worker.exception()
+        super().__init__("Another campaign export is in progress")
+        self.host = host
 
     async def export(self, identifier):
-        if self.closing:
-            raise RuntimeError("Host is shutting down")
-        if self.workers:
-            raise RuntimeError("Another campaign export is in progress")
-        worker = asyncio.create_task(asyncio.to_thread(CampaignBundle(self.host).build, identifier))
-        self.workers.add(worker)
-        worker.add_done_callback(self.finished)
-        try:
-            return await asyncio.shield(worker)
-        except asyncio.CancelledError:
-            await asyncio.gather(asyncio.shield(worker), return_exceptions=True)
-            raise
-
-    async def close(self):
-        self.closing = True
-        await asyncio.gather(
-            *(asyncio.shield(task) for task in self.workers), return_exceptions=True
-        )
+        return await self.run(CampaignBundle(self.host).build, identifier)
 
 
 class CampaignBundle:
