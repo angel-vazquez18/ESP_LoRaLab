@@ -771,3 +771,49 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - Offline TIME-02 assessment checks retained pulse and frame identity,
   exact fit, per-phase intervals, expiration and uncertainty. All 37
   focused clock/echo checks pass. Live calibration remains open.
+
+- Offline clock PR #227 is open over #226.
+- VOICE-04 saved review checks encoded transport and both PCM artifacts
+  before presenting clips, and validates each score against its original
+  hash while preserving node-local phases and missing calibration.
+
+## Grouped review checkpoint
+
+| Procedure family | Software entry point | Coverage still open |
+| --- | --- | --- |
+| IF-01–03 | Experiments matrix and `integration-matrix` | Full framing, reply and ownership perturbations, UART, active/paused restart and campaign navigation cases |
+| RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, complete performance measurements and drift assessment |
+| SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
+| PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts, invalid ACK and all-attempt exhaustion |
+| TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
+| MEM-01 | Idle and paired known-data matrix | Instrumented audio stages, device-side limits and induced recovery-band checks |
+| VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
+| MODEL-01 | Independent vectors and observed frame/message matrices | Instrumented airtime/tolerance, residual plots and full bench study |
+| OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
+
+Keep fixture results and physical qualification records separate. Grouped
+support remains partial where a documented case is unavailable.
+
+The final dashboard fixture exercised one-node VOICE-01 C3 and paired
+VOICE-02 C1 through the saved reference controls. The paired result
+persisted across navigation. Every member of both archives matched its
+manifest. The voice review accepted two fixture ratings tied to their
+clip SHA-256 values and left one-way timing unavailable.
+
+The full OPS-01 fixture completed all 100 cases in four linked batches
+and verified 260 child and transfer records. A separate browser run
+showed the planned count, retained the active matrix across navigation,
+then verified targeted stop, skipped cases, confirmed cleanup and a
+hash-verified partial archive. The offline model run saved 90 passing
+reference cases and verified their archive with no device bindings.
+
+The dashboard and CLI share the matrix service for 20 of 23 catalog
+entries. TIME-02, VOICE-03 and VOICE-04 have separate evidence workflows.
+Both standard and lab ESP-IDF v6.0.2 images rebuilt successfully with
+distinct hashes and only the lab's generated configuration enabling
+the fault controls. Physical qualification remains deferred.
+
+The final full `make check` passed 1,155 tests with no skips. Ruff,
+the dashboard build, generated contracts, repository resources and the
+pinned Codec 2 files passed. Prettier passed for the changed UI. All
+19 originally changed workspace files still match their saved hashes.

@@ -4,6 +4,17 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Saved voice timing and listening review
+
+VOICE-04 now pairs verified source and decoded audio, preserves the
+original clock domain for each available stage, and exports seeded
+clip codes and five-point ratings. A rating must match the clip's
+PCM hash. The same review is available through the CLI and API.
+Full `make check` passed 1,155 tests with no skips, plus lint, build,
+contracts and repository checks. Both standard and lab ESP-IDF builds
+passed. See [saved voice review](voice_quality.md). Attended references,
+valid calibration and the complete physical study remain open.
+
 ## November 25 — Offline clock evidence
 
 TIME-02 now fits the saved paired pulses with exact rational arithmetic
