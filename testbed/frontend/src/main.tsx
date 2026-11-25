@@ -34,6 +34,8 @@ import VoiceRuns from "./VoiceRuns";
 import type { VoiceState } from "./VoiceRuns";
 import RunComparison from "./RunComparison";
 import WorkloadObservations from "./WorkloadObservations";
+import PhysicalCampaigns from "./PhysicalCampaigns";
+import type { CampaignState } from "./PhysicalCampaigns";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
 type Metrics = {
@@ -133,6 +135,7 @@ type State = {
   v2_execution: { runs: Historical[]; campaigns: Historical[] };
   runs: Run[];
   campaigns: Historical[];
+  physical_campaigns: CampaignState;
   references: Reference[];
 };
 const empty: State = {
@@ -149,6 +152,11 @@ const empty: State = {
   v2_execution: { runs: [], campaigns: [] },
   runs: [],
   campaigns: [],
+  physical_campaigns: {
+    execution_available: false,
+    active: null,
+    executions: [],
+  },
   references: [],
 };
 const navigation: { id: View; label: string; icon: LucideIcon }[] = [
@@ -541,16 +549,16 @@ function Campaigns({ host }: { host: Host }) {
       <Heading
         eyebrow="CAMPAIGNS"
         title="Physical campaigns"
-        description="Campaign execution requires a physical execution adapter and supporting firmware. Node requirements will follow the tests in each campaign."
+        description="Run saved node workloads, keep partial outcomes and inspect the shared campaign history."
       />
-      <section className="panel physical-check">
-        <h2>Execution unavailable</h2>
-        <p>
-          All 23 procedures remain in scope. Local tests can be qualified on
-          each device separately; RF cases require both devices. Saved campaigns
-          remain available below.
-        </p>
-      </section>
+      <PhysicalCampaigns
+        state={host.state.physical_campaigns}
+        nodes={host.state.hardware_nodes}
+        online={host.online}
+        benchBusy={host.state.bench_busy}
+        pending={host.pending}
+        request={host.request}
+      />
       {[
         { rows: host.state.campaigns, base: "/api/campaigns" },
         { rows: host.state.v2_execution.campaigns, base: "/api/v2/campaigns" },
@@ -770,6 +778,7 @@ function App() {
           {navigation.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
+              aria-label={label}
               className={view === id ? "nav-item active" : "nav-item"}
               onClick={() => navigate(id)}
             >
