@@ -581,6 +581,18 @@ def voice_start(
 
 
 @app.command()
+def voice_review(config: Path):
+    """Prepare clip order or assess saved ratings against inspected voice evidence."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Voice review configuration must be an object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/voice/review", body)
+
+
+@app.command()
 def voice_status(identifier: str):
     """Inspect voice stages, verified files, comparison bases and observations."""
     request(f"/api/voice/runs/{identifier}")

@@ -47,6 +47,8 @@ from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
 from .serial_validation import SerialValidationRequest, serial_plan
 from .session_keys import require_public_metadata
+from .voice_quality import Review as VoiceReview
+from .voice_quality import review as review_voice_evidence
 from .voice_runs import VoiceRunRequest
 from .workload_assessment import AssessmentRequest
 from .workload_plots import projection
@@ -199,6 +201,10 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/voice/runs", status_code=202)
     async def voice_start(body: VoiceRunRequest):
         return await app.state.host.start_voice(body)
+
+    @app.post("/api/voice/review")
+    async def voice_review(body: VoiceReview):
+        return review_voice_evidence(body, app.state.host.voice.inspect)
 
     @app.get("/api/voice/runs")
     async def voice_runs():
