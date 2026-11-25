@@ -1,0 +1,74 @@
+{
+  "revision": "C5-R7-Reinforced",
+  "date": "2026-11-25",
+  "scope": "Enclosure only. PCB, fabrication files, firmware and component mounting datums unchanged.",
+  "native_file": "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd",
+  "step_file": "cad/LoRa-Enclosure-C5-R7-Reinforced.step",
+  "master_mesh_file": "printing/C5-R7-all-parts-mm.3mf",
+  "units": "mm",
+  "installed_parts": 7,
+  "optional_parts": 1,
+  "parts": [
+    {
+      "optional": false,
+      "object": "EnclosureBase",
+      "name": "EnclosureBase",
+      "stem": "enclosure-base",
+      "candidate_brep": "audit/antenna/EnclosureBase.brep",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "EnclosureLid",
+      "name": "EnclosureLid",
+      "stem": "enclosure-lid",
+      "candidate_brep": "audit/antenna/EnclosureLid.brep",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "PTTPlunger",
+      "name": "PTTPlunger",
+      "stem": "ptt-plunger",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "PTTStopCup",
+      "name": "PTTStopCup",
+      "stem": "ptt-stop-cup",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "BatteryCover",
+      "name": "BatteryCover",
+      "stem": "battery-cover",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "SpeakerRetainer",
+      "name": "SpeakerRetainer",
+      "stem": "speaker-retainer",
+      "candidate_brep": "audit/lid/SpeakerRetainer.brep",
+      "quantity": 1
+    },
+    {
+      "optional": false,
+      "object": "SMAKey",
+      "name": "SMAKey",
+      "stem": "sma-key",
+      "candidate_brep": "audit/antenna/SMAKey.brep",
+      "quantity": 1
+    },
+    {
+      "optional": true,
+      "object": "R7FitCoupon",
+      "name": "R7FitCoupon",
+      "stem": "fit-coupon",
+      "candidate_brep": "audit/R7FitCoupon.brep",
+      "quantity": 1
+    }
+  ]
+}

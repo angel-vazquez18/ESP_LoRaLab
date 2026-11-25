@@ -1,0 +1,43 @@
+R7 ENGINEERING DOCUMENTATION INDEX
+2026-11-25 | Enclosure-only adoption; PCB fabrication baseline retained
+
+CURRENT GEOMETRY
+../cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd - approved parametric design.
+../cad/LoRa-Enclosure-C5-R7-Reinforced.step - approved eight-solid master,
+seven installed parts plus offset optional fit coupon. Exact hash manifests
+and validation reports bind every released drawing/mesh to these files.
+
+DRAWINGS AND DESIGN RECORD
+manufacturing/C5-R7-Manufacturing-Drawings.pdf - new R7 part orthographics,
+key nominal interfaces, assembly sections, load paths and manufacturing flow.
+LoRa-C5-R7-Enclosure-Improvements.pdf - dimensioned changed-feature details:
+SMA key, speaker bearing roof, microphone shroud, OLED reinforcement, coupon.
+R7-ASSEMBLY-AND-INSPECTION.txt - installation sequence and physical fit record.
+../REVISION-NOTES.txt - R7 decisions, preserved interfaces and limits.
+
+ASSEMBLY AND COMPONENT FIT
+../interactive/r7-enclosure-viewer.html - assembled, exploded and cutaway views
+with the assigned actual PCB/component geometry, nominal battery/speaker/SMA
+references and clickable inspection dimensions. Publication requires saved-
+native binding and browser validation. Reference hardware is not print geometry.
+Earlier R4/R5/R6 drawings remain history. They do not control changed R7 parts.
+
+MANUFACTURING AND HARDWARE
+bom/LoRa-C5-R7-Complete-BOM.xlsx and .csv - 37 assembly line items with one build
+quantity control. Seven installed print quantities; optional coupon defaults
+to zero. PCB-mounted component requirements are retained. Speaker and antenna
+rows describe the selected off-board hardware; original electronics BOM stays
+unchanged under ../pcb-fabrication/bom/.
+../craftcloud/ORDER-SPECIFICATION.txt and upload/ - printing preparation only.
+../craftcloud/optional-coupon/ - separate optional sample.
+../cnc-shop/CNC-SHOP-HANDOFF.txt - exact STEP-based shop DFM/CAM instructions,
+with no machine-specific G-code. The shop selects tooling, stock and setups.
+../pcb-fabrication/README.txt - unchanged Gerber/drill provenance and reuse.
+
+RELEASE CHECKS
+Read ../audit/saved-r7-validation.json, derived-print-validation.json,
+pcb-guard-verification.json, DOCUMENT-VALIDATION.json, manufacturing/
+MANUFACTURING-DRAWING-VALIDATION.json, bom/BOM-VALIDATION.json and ../cnc-shop/
+CNC-SHOP-GEOMETRY-MANIFEST.json. A missing, false or pending report is not a
+released artifact. Physical first-article acceptance remains separate from
+CAD/file verification. No order has been placed.

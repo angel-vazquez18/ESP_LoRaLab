@@ -1,0 +1,134 @@
+{
+  "ok": true,
+  "scope": "R4 CNC-shop CAD handoff and engineering drawings, not executable CNC code or physical qualification",
+  "source_native_sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+  "native_source_unchanged": true,
+  "single_solid_step_count": 5,
+  "step_native_symmetric_differences_mm3": {
+    "EnclosureBase": 0.0,
+    "BatteryCover": 0.0,
+    "EnclosureLid": 0.0,
+    "PTTPlunger": 0.0,
+    "PTTStopCup": 0.0
+  },
+  "dxf_readback_ok": true,
+  "dxf_max_bound_deviation_mm": 0.024154000000002895,
+  "pdf_pages": 6,
+  "pdf_text_checks": true,
+  "visual_review": "All six final A3 sheets visually inspected. No clipping, overlap or blank views; sheet2 title also inspected at enlarged pixel scale.",
+  "physical_fit_qualified": false,
+  "cnc_cam_qualified": false,
+  "machine_gcode_included": false,
+  "outputs": [
+    {
+      "path": "C5-R4-Manufacturing-Drawings.pdf",
+      "sha256": "184c9fe4cbd4ec228b9bbeba80f1e85dcb04a85ceb4122eb3d14681a8c01232e",
+      "bytes": 1030331
+    },
+    {
+      "path": "CNC-SHOP-HANDOFF.txt",
+      "sha256": "cfa12087ca695ef66e8018d9bb5c80fdd18b31935667dd017628214714f8a70b",
+      "bytes": 4751
+    },
+    {
+      "path": "manufacturing-geometry.json",
+      "sha256": "f04919cabcbcf40956230af62b725c20bf147893db77a42180e05bfbcbf8b450",
+      "bytes": 1903571
+    },
+    {
+      "path": "cnc-step/C5-R4-battery-cover.step",
+      "sha256": "9c0a2aa850acd9057782bf58206a28dfba4795103790099654e479d3b6bcd8a8",
+      "bytes": 149360
+    },
+    {
+      "path": "cnc-step/C5-R4-enclosure-base.step",
+      "sha256": "027aaf641d91e747788821067e2a7f2f93c9aab490e89b584115479b6a3b49cb",
+      "bytes": 131649
+    },
+    {
+      "path": "cnc-step/C5-R4-enclosure-lid.step",
+      "sha256": "5f257f69f67acc7119cca6129f5658f971e913c451e4e6e520884ac02a1dd74a",
+      "bytes": 122452
+    },
+    {
+      "path": "cnc-step/C5-R4-ptt-plunger.step",
+      "sha256": "fe036c7c8904e69f413b3289a0e6aecd107bffb32d2a80b57cc12debfd4c8ca8",
+      "bytes": 6770
+    },
+    {
+      "path": "cnc-step/C5-R4-ptt-stop-cup.step",
+      "sha256": "8a36843d41e6e391288a409d2a7bdba11c56b72abd166af22c73bfbb7b6299e8",
+      "bytes": 14572
+    },
+    {
+      "path": "cnc-reference/BatteryCover-top-reference.dxf",
+      "sha256": "6e80a478a5edfaeeafea475c47b9dd95dfd2e85d2e72e47ff4dbc89db6e6c5f9",
+      "bytes": 47130
+    },
+    {
+      "path": "cnc-reference/DXF-READBACK-VALIDATION.json",
+      "sha256": "ed9ae60f1f30157e0b3c7d7e3c462180fd597eedbb2524577a61fe017eab871f",
+      "bytes": 1503
+    },
+    {
+      "path": "cnc-reference/DXF-REFERENCE-MANIFEST.json",
+      "sha256": "2c33df6072382994f955b7ff36aa5b72cf268e7eacfcad0f89175bcd005a691d",
+      "bytes": 3034
+    },
+    {
+      "path": "cnc-reference/EnclosureBase-top-reference.dxf",
+      "sha256": "4933b9a551786ee0f58fd71aa8ef755434140584dbe93728dff02ab33f5dd5d0",
+      "bytes": 64050
+    },
+    {
+      "path": "cnc-reference/EnclosureLid-top-reference.dxf",
+      "sha256": "661cb62bfd69d1971e0a14065158efb010fad50a5685a8bec73f34429e036002",
+      "bytes": 58622
+    },
+    {
+      "path": "cnc-reference/PTTPlunger-top-reference.dxf",
+      "sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae",
+      "bytes": 6583
+    },
+    {
+      "path": "cnc-reference/PTTStopCup-top-reference.dxf",
+      "sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475",
+      "bytes": 12159
+    },
+    {
+      "path": "cnc-reference/READ-ME.txt",
+      "sha256": "c7ac91e6576108ba21894b7d14256d8d95b6bb30a5a5aec041706d03e9851893",
+      "bytes": 685
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-1.png",
+      "sha256": "b36728cf9f7c73f82538f0937b407a2361828110ffe26404e0a6bbb1c19c074f",
+      "bytes": 133857
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-2.png",
+      "sha256": "38966217fd2d90acdd9b6ce952cd9301b439c89fe6792bdd56f1c43d918b3864",
+      "bytes": 124734
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-3.png",
+      "sha256": "213423d40d23b35396ab2d1896f4bf81422ef58790f05dbe629d876727625e9d",
+      "bytes": 149054
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-4.png",
+      "sha256": "7ce51dbb0202f01ff7351c8608c40b5c1bedac2e073dcfc021b7fcc428252dc7",
+      "bytes": 130667
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-5.png",
+      "sha256": "7c02360f2e26f0553bcf208f6076288bfa6a99a8d397652dfd2b0e375d3defea",
+      "bytes": 315432
+    },
+    {
+      "path": "drawing-previews/C5-R4-Manufacturing-Sheet-6.png",
+      "sha256": "88c126f9b20e0f37706fd5c5917fb8fcfd8858e04d8899d9dcf04fc07ef475c3",
+      "bytes": 178894
+    }
+  ]
+}

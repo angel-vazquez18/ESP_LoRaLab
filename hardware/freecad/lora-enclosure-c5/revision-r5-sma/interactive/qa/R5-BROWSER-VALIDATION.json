@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "Fragment syntax, size and offline contract"
+    },
+    {
+      "name": "Packed geometry renders in WebGL 2",
+      "meshCount": "114",
+      "triangles": "395524"
+    },
+    {
+      "name": "Assembled, exploded and cutaway retain PCB, battery, SMA and coax",
+      "modePixels": {
+        "assembled": 3763909181,
+        "exploded": 23554179,
+        "cutaway": 3028331267
+      }
+    },
+    {
+      "name": "Runtime exploded draw offsets separate washer, nut, antenna and rigid base/coax",
+      "offsets": [
+        "[0,0,55]",
+        "[0,0,35]",
+        "[0,0,-90]",
+        "[0,0,-60]",
+        "[0,0,0]",
+        "[0,0,-30]",
+        "[0,0,80]",
+        "[0,8,-30]",
+        "[0,15,-30]",
+        "[0,28,-30]"
+      ]
+    },
+    {
+      "name": "Smooth sma_mount inspection and full overview restoration"
+    },
+    {
+      "name": "Smooth coax_route inspection and full overview restoration"
+    },
+    {
+      "name": "SMA/coax buttons are keyboard accessible"
+    },
+    {
+      "name": "Manual drag cancels sma_mount camera travel without snapping"
+    },
+    {
+      "name": "Manual drag cancels coax_route camera travel without snapping"
+    },
+    {
+      "name": "Wheel zoom remains interactive"
+    },
+    {
+      "name": "Two-finger pinch zooms without selecting a part"
+    },
+    {
+      "name": "All nine retained dimension labels open accurate capped close-ups"
+    },
+    {
+      "name": "Reduced motion applies inspection preset immediately"
+    },
+    {
+      "name": "Host state restores R5 inspection focus"
+    },
+    {
+      "name": "Battery, coax and antenna hardware visibility can be toggled without camera movement"
+    },
+    {
+      "name": "Shell transparency and hiding reveal actual internal geometry"
+    },
+    {
+      "name": "All overview and close-up layouts fit 736 light"
+    },
+    {
+      "name": "All overview and close-up layouts fit 736 dark"
+    },
+    {
+      "name": "All overview and close-up layouts fit 320 light"
+    },
+    {
+      "name": "All overview and close-up layouts fit 320 dark"
+    },
+    {
+      "name": "Light/dark themes redraw geometry colors"
+    },
+    {
+      "name": "No JavaScript or WebGL errors"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\assembled-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\exploded-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\cutaway-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\sma_mount-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\battery_top-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\pcb_main-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\oled_gap-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\sma_mount-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\sma_mount-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\assembled-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\exploded-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\cutaway-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\sma_mount-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\assembled-320-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\exploded-320-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\cutaway-320-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\sma_mount-320-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-320-dark.png"
+  ],
+  "fragmentSha256": "1c090adfca30f297958312ab47a7f1240d5a16694460a04ef8eb7b1ba5016d9f",
+  "fragmentBytes": 868352,
+  "scope": "Full functional QA against preview of original R5 build; subsequent change was the coax inspection caption only. See R5-FINAL-SMOKE-VALIDATION.json."
+}

@@ -1,0 +1,1225 @@
+{
+  "scope": "Saved R5 native/fit comparison plus STEP and five STL/3MF pairs",
+  "files": {
+    "native": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd",
+      "sha256": "b2c616f78a5f2515217f5c06ec199f38b0106067289fdab60a29e0879d1d9678",
+      "bytes": 17296203
+    },
+    "r4_native": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd",
+      "sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+      "bytes": 17226198
+    },
+    "actual_component_step": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step",
+      "sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+      "bytes": 76201161
+    },
+    "preflight_report": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\audit\\final-plan-validation.json",
+      "sha256": "8d2aac7cb8efc62ab1379254363499466bffb7a6d4029a021754ab21f359570c",
+      "bytes": 8053
+    },
+    "step": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.step",
+      "sha256": "4b1b03564223b8ee454f5ea371972d96fe84ee9e87e3432454177360d97a0cce",
+      "bytes": 528921
+    },
+    "EnclosureBase.stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-enclosure-base-mm.stl",
+      "sha256": "2b85dde7bfc3438adae8bfdbf9c212a104f5ad75e06990d01b1f14333d745600",
+      "bytes": 258684
+    },
+    "EnclosureBase.3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-enclosure-base-mm.3mf",
+      "sha256": "3ab65c89e45f594c7947c66f5e2b9a6d5019d34502cc3418f43c648797bfdf96",
+      "bytes": 48307
+    },
+    "EnclosureLid.stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-enclosure-lid-mm.stl",
+      "sha256": "dcf10115702431c8138c38810642ac3b0981e30046933dce3488271694d43121",
+      "bytes": 147484
+    },
+    "EnclosureLid.3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-enclosure-lid-mm.3mf",
+      "sha256": "b52b195e5882726355a5c47df35e94a19f20d4e39c78d4718c2d3f5f28bfafc4",
+      "bytes": 27329
+    },
+    "PTTPlunger.stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-ptt-plunger-mm.stl",
+      "sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41",
+      "bytes": 30284
+    },
+    "PTTPlunger.3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-ptt-plunger-mm.3mf",
+      "sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f",
+      "bytes": 7028
+    },
+    "PTTStopCup.stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-ptt-stop-cup-mm.stl",
+      "sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f",
+      "bytes": 56484
+    },
+    "PTTStopCup.3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-ptt-stop-cup-mm.3mf",
+      "sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0",
+      "bytes": 12126
+    },
+    "BatteryCover.stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-battery-cover-mm.stl",
+      "sha256": "28d39d0d965a64b5c19117da40807b9790cfc139ef8df78c88096868a57d8885",
+      "bytes": 112684
+    },
+    "BatteryCover.3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\printing\\C5-R5-battery-cover-mm.3mf",
+      "sha256": "8c96f9932ae488ed10c59520c80aca36ac681a30d5c8b7d0ac512a59c3ca6ad2",
+      "bytes": 21171
+    }
+  },
+  "failures": [],
+  "native_parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48905.01819719863,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ]
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 27234.371260957236,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000003
+      ]
+    },
+    "PTTPlunger": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 459.9291644855457,
+      "bounds_mm": [
+        45.0,
+        3.0,
+        16.2,
+        57.0,
+        15.0,
+        26.400000000000002
+      ]
+    },
+    "PTTStopCup": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 650.9008562343834,
+      "bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        17.15,
+        63.0,
+        17.3,
+        21.0
+      ]
+    },
+    "BatteryCover": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ]
+    }
+  },
+  "independent_plan_comparison": {
+    "EnclosureBase": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.00010214193753199652,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 3.552713678800501e-15,
+      "volume_difference_mm3": 3.637978807091713e-12,
+      "matches": true
+    }
+  },
+  "unchanged_parts": {
+    "PTTPlunger": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "BatteryCover": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "battery_reference_comparison": {
+    "symmetric_difference_mm3": 0.0,
+    "bounds_difference_mm": 0.0,
+    "volume_difference_mm3": 0.0,
+    "matches": true
+  },
+  "assembly_pairs": {
+    "EnclosureBase__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "EnclosureBase__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 5.0
+    },
+    "EnclosureBase__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.6999999999999993
+    },
+    "EnclosureBase__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.7763568394002505e-15
+    },
+    "EnclosureLid__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.1999999999999993
+    },
+    "EnclosureLid__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "EnclosureLid__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 20.41984329028996
+    },
+    "PTTPlunger__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.4499999999999993
+    },
+    "PTTPlunger__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 27.655740814521675
+    },
+    "PTTStopCup__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 28.15
+    }
+  },
+  "battery_fit": {
+    "base": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 3.0
+    },
+    "cover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.9999999999999929
+    },
+    "partition_difference_mm3": 0.0
+  },
+  "oled_fit": {
+    "lid_roi_comparison": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 7.503331289626658e-12,
+      "matches": true
+    },
+    "glass_top_z_mm": 19.9987192588,
+    "rim_underside_z_mm": 20.5,
+    "vertical_datum_gap_mm": 0.5012807412,
+    "meaning": "Vertical datum offset across open aperture; not minimum glass-to-solid distance."
+  },
+  "native_links": {
+    "BaseWithSupports": [
+      "BaseShell",
+      "PCBSupport1",
+      "PCBSupport2",
+      "PCBSupport3",
+      "PCBSupport4",
+      "SupportFoot1",
+      "SupportFoot2",
+      "SupportFoot3",
+      "SupportFoot4",
+      "BatteryBayTube",
+      "RearPost1",
+      "RearWeb1",
+      "RearPost2",
+      "RearWeb2",
+      "RearPost3",
+      "RearWeb3",
+      "RearPost4",
+      "RearWeb4",
+      "BatteryHarnessHood",
+      "SMABacking",
+      "SMACoaxAnchor"
+    ],
+    "BaseCutters": [
+      "InsertPocket1",
+      "InsertPocket2",
+      "InsertPocket3",
+      "InsertPocket4",
+      "ScrewTipRelief1",
+      "ScrewTipRelief2",
+      "ScrewTipRelief3",
+      "ScrewTipRelief4",
+      "USBAccess",
+      "SpeakerPassage",
+      "SpeakerTieSlot1",
+      "SpeakerTieSlot2",
+      "RearInsertBore1",
+      "RearInsertBore2",
+      "RearInsertBore3",
+      "RearInsertBore4",
+      "BatteryHarnessChase",
+      "SMABulkheadBore",
+      "SMARearRelief",
+      "SMACoaxTieSlot"
+    ],
+    "LidCutters": [
+      "LidScrew1",
+      "LidScrew2",
+      "LidScrew3",
+      "LidScrew4",
+      "OLEDWindow",
+      "MicrophonePort",
+      "PTTGuide",
+      "ResetAccess",
+      "ProgramAccess",
+      "SpeakerPassage",
+      "PTTStopScrew1",
+      "PTTStopScrew2",
+      "MicrophoneVent1",
+      "MicrophoneVent2",
+      "MicrophoneVent3",
+      "MicrophoneVent4",
+      "MicrophoneVent5",
+      "MicrophoneVent6",
+      "OLEDBezelRecess",
+      "OLEDHeadRelief1",
+      "OLEDHeadRelief2",
+      "OLEDHeadRelief3",
+      "OLEDHeadRelief4"
+    ]
+  },
+  "recompute": {
+    "EnclosureBase": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "BatteryCover": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "actual_electronics": {
+    "source_objects": 2949,
+    "new_base_material": {
+      "source_objects_scanned": 2949,
+      "aabb_disjoint_count": 2949,
+      "exact_boolean_count": 0,
+      "exact_boolean_checks": [],
+      "hits": [],
+      "ok": true,
+      "method": "Conservative bounding boxes reject disjoint shapes; all overlapping candidates use exact Boolean intersection."
+    },
+    "healed_lid_material": {
+      "source_objects_scanned": 2949,
+      "aabb_disjoint_count": 2949,
+      "exact_boolean_count": 0,
+      "exact_boolean_checks": [],
+      "hits": [],
+      "ok": true,
+      "method": "Conservative bounding boxes reject disjoint shapes; all overlapping candidates use exact Boolean intersection."
+    },
+    "new_base_material_clearance": {
+      "minimum_mm": 1.2349999999999994,
+      "component_index": 2947,
+      "aabb_lower_bounds_evaluated": 2949,
+      "exact_distance_checks": [
+        {
+          "index": 2947,
+          "aabb_lower_bound_mm": 1.2349995975558237,
+          "exact_distance_mm": 1.2349999999999994
+        }
+      ],
+      "method": "All conservative AABB distance lower bounds sorted; exact distance evaluated until remaining lower bounds exceed best distance."
+    },
+    "reference_connector_rear_clearance": {
+      "minimum_mm": 1.0350000000000001,
+      "component_index": 2947,
+      "aabb_lower_bounds_evaluated": 2949,
+      "exact_distance_checks": [
+        {
+          "index": 2947,
+          "aabb_lower_bound_mm": 1.0350000000000001,
+          "exact_distance_mm": 1.0350000000000001
+        }
+      ],
+      "method": "All conservative AABB distance lower bounds sorted; exact distance evaluated until remaining lower bounds exceed best distance."
+    },
+    "reference_rear_to_lid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.3999999999999986
+    }
+  },
+  "step_solid_count": 5,
+  "step_parts": {
+    "EnclosureBase": {
+      "index": 0,
+      "info": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 48905.01821069044,
+        "bounds_mm": [
+          -4.4,
+          -4.4,
+          -14.0,
+          74.4,
+          99.6,
+          21.0
+        ]
+      },
+      "comparison": {
+        "symmetric_difference_mm3": 0.0,
+        "bounds_difference_mm": 1.4210854715202004e-14,
+        "volume_difference_mm3": 1.3491808203980327e-05,
+        "matches": true
+      }
+    },
+    "EnclosureLid": {
+      "index": 1,
+      "info": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 27234.37126095722,
+        "bounds_mm": [
+          -4.400000100000001,
+          -4.400000100000001,
+          8.0,
+          74.4000001,
+          94.4000001,
+          24.600000100000006
+        ]
+      },
+      "comparison": {
+        "symmetric_difference_mm3": 0.0,
+        "bounds_difference_mm": 1.4210854715202004e-14,
+        "volume_difference_mm3": 1.4551915228366852e-11,
+        "matches": true
+      }
+    },
+    "PTTPlunger": {
+      "index": 2,
+      "info": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 459.9291644855456,
+        "bounds_mm": [
+          45.0,
+          3.0,
+          16.2,
+          57.0,
+          15.0,
+          26.4
+        ]
+      },
+      "comparison": {
+        "symmetric_difference_mm3": 0.0,
+        "bounds_difference_mm": 3.552713678800501e-15,
+        "volume_difference_mm3": 1.1368683772161603e-13,
+        "matches": true
+      }
+    },
+    "PTTStopCup": {
+      "index": 3,
+      "info": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 650.9008562344043,
+        "bounds_mm": [
+          39.0,
+          0.6999999999999993,
+          17.15,
+          63.0,
+          17.3,
+          21.0
+        ]
+      },
+      "comparison": {
+        "symmetric_difference_mm3": 0.0,
+        "bounds_difference_mm": 0.0,
+        "volume_difference_mm3": 2.091837814077735e-11,
+        "matches": true
+      }
+    },
+    "BatteryCover": {
+      "index": 4,
+      "info": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 18577.592701120506,
+        "bounds_mm": [
+          -4.4,
+          -4.4,
+          -16.4,
+          74.4,
+          99.6,
+          -11.0
+        ]
+      },
+      "comparison": {
+        "symmetric_difference_mm3": 0.0,
+        "bounds_difference_mm": 1.4210854715202004e-14,
+        "volume_difference_mm3": 2.546585164964199e-11,
+        "matches": true
+      }
+    }
+  },
+  "mesh_pairs": {
+    "EnclosureBase": {
+      "ok": true,
+      "translation_from_print_to_assembly_mm": [
+        0,
+        0,
+        0
+      ],
+      "stl": {
+        "topology": {
+          "file": "C5-R5-enclosure-base-mm.stl",
+          "ok": true,
+          "bytes": 258684,
+          "format": "binary",
+          "triangles": 5172,
+          "unique_vertices_after_rounding": 2578,
+          "bbox_mm": {
+            "min": [
+              -4.400000095367432,
+              -4.400000095367432,
+              -14.0
+            ],
+            "max": [
+              74.4000015258789,
+              99.5999984741211,
+              21.0
+            ],
+            "size": [
+              78.80000162124634,
+              103.99999856948853,
+              35.0
+            ]
+          },
+          "undirected_edges": 7758,
+          "edge_incidence_histogram": {
+            "2": 7758
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            5172
+          ],
+          "signed_volume_mm3": 48877.97059159283,
+          "absolute_volume_mm3": 48877.97059159283,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.5258789147765128e-06,
+          "relative_volume_error": 0.0005530640127101024,
+          "matches": true
+        }
+      },
+      "three_mf": {
+        "unit": "millimeter",
+        "model_resource": "3D/3dmodel.model",
+        "mesh_objects": 1,
+        "build_items": 1,
+        "applied_transforms": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "triangle_count": 5172,
+        "zip_integrity": "passed",
+        "topology": {
+          "file": "C5-R5-enclosure-base-mm.3mf",
+          "ok": true,
+          "bytes": 48307,
+          "format": "3mf_transform_resolved",
+          "triangles": 5172,
+          "unique_vertices_after_rounding": 2578,
+          "bbox_mm": {
+            "min": [
+              -4.4,
+              -4.4,
+              -14.0
+            ],
+            "max": [
+              74.4,
+              99.6,
+              21.0
+            ],
+            "size": [
+              78.80000000000001,
+              104.0,
+              35.0
+            ]
+          },
+          "undirected_edges": 7758,
+          "edge_incidence_histogram": {
+            "2": 7758
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            5172
+          ],
+          "signed_volume_mm3": 48877.97584310062,
+          "absolute_volume_mm3": 48877.97584310062,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.4210854715202004e-14,
+          "relative_volume_error": 0.0005529566309324242,
+          "matches": true
+        }
+      },
+      "stl_three_mf_comparison": {
+        "max_bounds_difference_mm": 1.5258789005656581e-06,
+        "absolute_volume_difference_mm3": 0.00525150779139949,
+        "relative_volume_difference": 1.0744119953913894e-07,
+        "corresponding_triangle_max_vertex_difference_mm": 4.99877929627246e-05,
+        "coordinate_round_trip_tolerance_mm": 0.0001,
+        "relative_volume_tolerance": 1e-06,
+        "precision_note": "STL float32 and FreeCAD 3MF XML serialization differ; ordered triangles compared with vertex permutation."
+      }
+    },
+    "EnclosureLid": {
+      "ok": true,
+      "translation_from_print_to_assembly_mm": [
+        0,
+        0,
+        0
+      ],
+      "stl": {
+        "topology": {
+          "file": "C5-R5-enclosure-lid-mm.stl",
+          "ok": true,
+          "bytes": 147484,
+          "format": "binary",
+          "triangles": 2948,
+          "unique_vertices_after_rounding": 1442,
+          "bbox_mm": {
+            "min": [
+              -4.400000095367432,
+              -4.400000095367432,
+              8.0
+            ],
+            "max": [
+              74.4000015258789,
+              94.4000015258789,
+              24.600000381469727
+            ],
+            "size": [
+              78.80000162124634,
+              98.80000162124634,
+              16.600000381469727
+            ]
+          },
+          "undirected_edges": 4422,
+          "edge_incidence_histogram": {
+            "2": 4422
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            2948
+          ],
+          "signed_volume_mm3": 27224.257986737295,
+          "absolute_volume_mm3": 27224.257986737295,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.4258789207133304e-06,
+          "relative_volume_error": 0.00037134230575900534,
+          "matches": true
+        }
+      },
+      "three_mf": {
+        "unit": "millimeter",
+        "model_resource": "3D/3dmodel.model",
+        "mesh_objects": 1,
+        "build_items": 1,
+        "applied_transforms": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "triangle_count": 2948,
+        "zip_integrity": "passed",
+        "topology": {
+          "file": "C5-R5-enclosure-lid-mm.3mf",
+          "ok": true,
+          "bytes": 27329,
+          "format": "3mf_transform_resolved",
+          "triangles": 2948,
+          "unique_vertices_after_rounding": 1442,
+          "bbox_mm": {
+            "min": [
+              -4.4,
+              -4.4,
+              8.0
+            ],
+            "max": [
+              74.4,
+              94.4,
+              24.6
+            ],
+            "size": [
+              78.80000000000001,
+              98.80000000000001,
+              16.6
+            ]
+          },
+          "undirected_edges": 4422,
+          "edge_incidence_histogram": {
+            "2": 4422
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            2948
+          ],
+          "signed_volume_mm3": 27224.26017082477,
+          "absolute_volume_mm3": 27224.26017082477,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.0000000116860974e-07,
+          "relative_volume_error": 0.0003712621097649387,
+          "matches": true
+        }
+      },
+      "stl_three_mf_comparison": {
+        "max_bounds_difference_mm": 1.5258789005656581e-06,
+        "absolute_volume_difference_mm3": 0.0021840874760528095,
+        "relative_volume_difference": 8.02257852947478e-08,
+        "corresponding_triangle_max_vertex_difference_mm": 4.9911499022670114e-05,
+        "coordinate_round_trip_tolerance_mm": 0.0001,
+        "relative_volume_tolerance": 1e-06,
+        "precision_note": "STL float32 and FreeCAD 3MF XML serialization differ; ordered triangles compared with vertex permutation."
+      }
+    },
+    "PTTPlunger": {
+      "ok": true,
+      "translation_from_print_to_assembly_mm": [
+        45.0074577331543,
+        3.0018649101257324,
+        16.200000762939453
+      ],
+      "stl": {
+        "topology": {
+          "file": "C5-R5-ptt-plunger-mm.stl",
+          "ok": true,
+          "bytes": 30284,
+          "format": "binary",
+          "triangles": 604,
+          "unique_vertices_after_rounding": 304,
+          "bbox_mm": {
+            "min": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max": [
+              11.992542266845703,
+              11.996271133422852,
+              10.19999885559082
+            ],
+            "size": [
+              11.992542266845703,
+              11.996271133422852,
+              10.19999885559082
+            ]
+          },
+          "undirected_edges": 906,
+          "edge_incidence_histogram": {
+            "2": 906
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            604
+          ],
+          "signed_volume_mm3": 458.8146958267419,
+          "absolute_volume_mm3": 458.8146958267419,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 0.007457733154296875,
+          "relative_volume_error": 0.0024231310924811155,
+          "matches": true
+        }
+      },
+      "three_mf": {
+        "unit": "millimeter",
+        "model_resource": "3D/3dmodel.model",
+        "mesh_objects": 1,
+        "build_items": 1,
+        "applied_transforms": [],
+        "triangle_count": 604,
+        "zip_integrity": "passed",
+        "topology": {
+          "file": "C5-R5-ptt-plunger-mm.3mf",
+          "ok": true,
+          "bytes": 7028,
+          "format": "3mf_transform_resolved",
+          "triangles": 604,
+          "unique_vertices_after_rounding": 304,
+          "bbox_mm": {
+            "min": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max": [
+              11.99254227,
+              11.99627066,
+              10.19999886
+            ],
+            "size": [
+              11.99254227,
+              11.99627066,
+              10.19999886
+            ]
+          },
+          "undirected_edges": 906,
+          "edge_incidence_histogram": {
+            "2": 906
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            604
+          ],
+          "signed_volume_mm3": 458.81469840463717,
+          "absolute_volume_mm3": 458.81469840463717,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 0.007457733154296875,
+          "relative_volume_error": 0.0024231254874978745,
+          "matches": true
+        }
+      },
+      "stl_three_mf_comparison": {
+        "max_bounds_difference_mm": 4.734228511438232e-07,
+        "absolute_volume_difference_mm3": 2.5778952590371773e-06,
+        "relative_volume_difference": 5.618597840228389e-09,
+        "corresponding_triangle_max_vertex_difference_mm": 4.808642586340284e-07,
+        "coordinate_round_trip_tolerance_mm": 0.0001,
+        "relative_volume_tolerance": 1e-06,
+        "precision_note": "STL float32 and FreeCAD 3MF XML serialization differ; ordered triangles compared with vertex permutation."
+      }
+    },
+    "PTTStopCup": {
+      "ok": true,
+      "translation_from_print_to_assembly_mm": [
+        39.0,
+        0.7074844837188721,
+        17.149999618530273
+      ],
+      "stl": {
+        "topology": {
+          "file": "C5-R5-ptt-stop-cup-mm.stl",
+          "ok": true,
+          "bytes": 56484,
+          "format": "binary",
+          "triangles": 1128,
+          "unique_vertices_after_rounding": 560,
+          "bbox_mm": {
+            "min": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max": [
+              24.0,
+              16.58502960205078,
+              3.8500003814697266
+            ],
+            "size": [
+              24.0,
+              16.58502960205078,
+              3.8500003814697266
+            ]
+          },
+          "undirected_edges": 1692,
+          "edge_incidence_histogram": {
+            "2": 1692
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            1128
+          ],
+          "signed_volume_mm3": 650.4762235515112,
+          "absolute_volume_mm3": 650.4762235515112,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 0.00748591423034739,
+          "relative_volume_error": 0.0006523769001146053,
+          "matches": true
+        }
+      },
+      "three_mf": {
+        "unit": "millimeter",
+        "model_resource": "3D/3dmodel.model",
+        "mesh_objects": 1,
+        "build_items": 1,
+        "applied_transforms": [],
+        "triangle_count": 1128,
+        "zip_integrity": "passed",
+        "topology": {
+          "file": "C5-R5-ptt-stop-cup-mm.3mf",
+          "ok": true,
+          "bytes": 12126,
+          "format": "3mf_transform_resolved",
+          "triangles": 1128,
+          "unique_vertices_after_rounding": 560,
+          "bbox_mm": {
+            "min": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max": [
+              24.0,
+              16.58503032,
+              3.850000381
+            ],
+            "size": [
+              24.0,
+              16.58503032,
+              3.850000381
+            ]
+          },
+          "undirected_edges": 1692,
+          "edge_incidence_histogram": {
+            "2": 1692
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            1128
+          ],
+          "signed_volume_mm3": 650.476234312237,
+          "absolute_volume_mm3": 650.476234312237,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 0.007485196281127315,
+          "relative_volume_error": 0.0006523603680641664,
+          "matches": true
+        }
+      },
+      "stl_three_mf_comparison": {
+        "max_bounds_difference_mm": 7.179492200748427e-07,
+        "absolute_volume_difference_mm3": 1.0760725785985414e-05,
+        "relative_volume_difference": 1.6542842607272136e-08,
+        "corresponding_triangle_max_vertex_difference_mm": 7.202392566796334e-07,
+        "coordinate_round_trip_tolerance_mm": 0.0001,
+        "relative_volume_tolerance": 1e-06,
+        "precision_note": "STL float32 and FreeCAD 3MF XML serialization differ; ordered triangles compared with vertex permutation."
+      }
+    },
+    "BatteryCover": {
+      "ok": true,
+      "translation_from_print_to_assembly_mm": [
+        0,
+        0,
+        0
+      ],
+      "stl": {
+        "topology": {
+          "file": "C5-R5-battery-cover-mm.stl",
+          "ok": true,
+          "bytes": 112684,
+          "format": "binary",
+          "triangles": 2252,
+          "unique_vertices_after_rounding": 1112,
+          "bbox_mm": {
+            "min": [
+              -4.400000095367432,
+              -4.400000095367432,
+              -16.399999618530273
+            ],
+            "max": [
+              74.4000015258789,
+              99.5999984741211,
+              -11.0
+            ],
+            "size": [
+              78.80000162124634,
+              103.99999856948853,
+              5.399999618530273
+            ]
+          },
+          "undirected_edges": 3378,
+          "edge_incidence_histogram": {
+            "2": 3378
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            2252
+          ],
+          "signed_volume_mm3": 18577.708585072025,
+          "absolute_volume_mm3": 18577.708585072025,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.5258789147765128e-06,
+          "relative_volume_error": 6.23783465156672e-06,
+          "matches": true
+        }
+      },
+      "three_mf": {
+        "unit": "millimeter",
+        "model_resource": "3D/3dmodel.model",
+        "mesh_objects": 1,
+        "build_items": 1,
+        "applied_transforms": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "triangle_count": 2252,
+        "zip_integrity": "passed",
+        "topology": {
+          "file": "C5-R5-battery-cover-mm.3mf",
+          "ok": true,
+          "bytes": 21171,
+          "format": "3mf_transform_resolved",
+          "triangles": 2252,
+          "unique_vertices_after_rounding": 1112,
+          "bbox_mm": {
+            "min": [
+              -4.4,
+              -4.4,
+              -16.4
+            ],
+            "max": [
+              74.4,
+              99.6,
+              -11.0
+            ],
+            "size": [
+              78.80000000000001,
+              104.0,
+              5.399999999999999
+            ]
+          },
+          "undirected_edges": 3378,
+          "edge_incidence_histogram": {
+            "2": 3378
+          },
+          "nonmanifold_edges": 0,
+          "boundary_edges": 0,
+          "inconsistent_winding_edges": 0,
+          "degenerate_triangles": 0,
+          "connected_components": 1,
+          "component_triangle_counts": [
+            2252
+          ],
+          "signed_volume_mm3": 18577.712039869322,
+          "absolute_volume_mm3": 18577.712039869322,
+          "failures": []
+        },
+        "native_comparison": {
+          "assembly_coordinate_bounds_difference_mm": 1.4210854715202004e-14,
+          "relative_volume_error": 6.423800473559379e-06,
+          "matches": true
+        }
+      },
+      "stl_three_mf_comparison": {
+        "max_bounds_difference_mm": 1.5258789005656581e-06,
+        "absolute_volume_difference_mm3": 0.003454797297308687,
+        "relative_volume_difference": 1.8596466197584577e-07,
+        "corresponding_triangle_max_vertex_difference_mm": 4.9084472657057177e-05,
+        "coordinate_round_trip_tolerance_mm": 0.0001,
+        "relative_volume_tolerance": 1e-06,
+        "precision_note": "STL float32 and FreeCAD 3MF XML serialization differ; ordered triangles compared with vertex permutation."
+      }
+    }
+  },
+  "reused_file_provenance": {
+    "PTTPlunger": {
+      "stl": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-ptt-plunger-mm.stl",
+        "same_hash": true
+      },
+      "3mf": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-ptt-plunger-mm.3mf",
+        "same_hash": true
+      }
+    },
+    "PTTStopCup": {
+      "stl": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-ptt-stop-cup-mm.stl",
+        "same_hash": true
+      },
+      "3mf": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-ptt-stop-cup-mm.3mf",
+        "same_hash": true
+      }
+    },
+    "BatteryCover": {
+      "stl": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-battery-cover-mm.stl",
+        "same_hash": true
+      },
+      "3mf": {
+        "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\printing\\C5-R4-battery-cover-mm.3mf",
+        "same_hash": true
+      }
+    }
+  },
+  "source_files_unchanged": {
+    "native": true,
+    "r4_native": true,
+    "actual_component_step": true,
+    "preflight_report": true,
+    "step": true,
+    "EnclosureBase.stl": true,
+    "EnclosureBase.3mf": true,
+    "EnclosureLid.stl": true,
+    "EnclosureLid.3mf": true,
+    "PTTPlunger.stl": true,
+    "PTTPlunger.3mf": true,
+    "PTTStopCup.stl": true,
+    "PTTStopCup.3mf": true,
+    "BatteryCover.stl": true,
+    "BatteryCover.3mf": true
+  },
+  "hardware_fit_qualified": false,
+  "ok": true,
+  "limitations": [
+    "Owned bulkhead mounting dimensions/panel nut torque remain unmeasured.",
+    "Connector rear volume is an explicit provisional \u00d810\u00d710mm envelope.",
+    "169mm coax routing and electrical/RF performance are not qualified.",
+    "Mesh topology/bounds/volume checks do not prove physical print strength or self-intersection absence."
+  ]
+}

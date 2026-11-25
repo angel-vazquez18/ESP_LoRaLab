@@ -1,0 +1,90 @@
+LORA C5 R7 - CNC SHOP QUOTATION AND CAM HANDOFF
+2026-11-25 | Millimetres | Enclosure fit prototype
+
+GEOMETRY AUTHORITY
+Use geometry/LoRa-Enclosure-C5-R7-Reinforced.step only after the adjacent
+CNC-SHOP-GEOMETRY-MANIFEST.json records ok=true and its hash matches the file.
+It is a byte-identical copy of the locally approved neutral CAD master.
+The original native source is ../cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd.
+../documentation/manufacturing/C5-R7-Manufacturing-Drawings.pdf gives current R7
+orthographic part views and nominal interfaces. The supplemental two-page
+LoRa-C5-R7-Enclosure-Improvements.pdf explains changed details and fit checks.
+
+The master STEP contains EIGHT separate solids: seven installed parts plus the
+optional R7FitCoupon offset to X100..150. Select individual solids in CAM.
+Do not machine the assembly as one fused item and do not include the coupon in
+the seven-part installed assembly. Match names, bounding boxes and quantities
+against CNC-SHOP-GEOMETRY-MANIFEST.json; STEP importers may rename bodies.
+
+Required installed parts, quantity one each:
+  EnclosureBase, EnclosureLid, BatteryCover, PTTPlunger, PTTStopCup,
+  SpeakerRetainer, SMAKey.
+Optional process sample: R7FitCoupon, quantity zero unless separately requested.
+No PCB, battery, speaker, screws, nuts, inserts, cable ties or reference models
+are to be machined from the enclosure STEP.
+
+Coordinates are assembly coordinates, in mm. XY origin is the carrier lower-
+left corner, USB faces +Y, and Z0 is the original floor exterior. The rear
+battery bay extends below Z0. Do not rescale, mirror or assume these coordinates
+are machine work offsets. The shop chooses setup datums and stock allowance.
+
+MATERIAL AND MANUFACTURING ROUTE
+Primary route is unfilled MJF PA12 printing with a standard cleaned finish.
+CNC is an alternative feasibility/quotation route. The shop must propose an
+insulating engineering-plastic stock and demonstrate that its behavior at the
+thin sections, inserts and sliding interfaces is suitable. A billet material
+is not automatically equivalent to printed PA12. Obtain agreement before any
+material substitution, geometry change or insert-method change.
+
+PROPOSED SETUP CONCEPTS - SHOP MUST DEVELOP CAM
+Base: support the retained 2.4-thick PCB/battery partition. Opposed PCB and
+battery cavities require re-registration; side holes, rear hood/chase, SMA
+carrier and enclosed tie slots need a specific tool-access review. Some of
+these additive features may be impractical to machine monolithically.
+Lid: machine outer recesses/holes and underside clamps/shroud/pockets/lip in
+separate supported setups. Preserve the OLED rim plane and speaker hard stops.
+The acoustic shroud, tie anchor, narrow lip relief and screw-roof returns need
+small-tool and workholding review; no silent removal is permitted.
+Battery cover: machine guide features, flip for strap channels, and preserve
+the 1.4 residual floor under the 1-deep channels. Keep strap edges smooth.
+PTT plunger: use a suitable lathe/mill or small-part fixture for shaft, flange
+and foot. Preserve both stop and actuator planes and diameter 8 sliding shaft.
+PTT stop cup: machine cavity, through bore, shelf, lugs and nut-bearing faces.
+Keep the 2-thick stop shelf and existing contact plane.
+Speaker retainer: machine the frame/window and 4.3 AF nut pockets, preserving
+the new 1.4 bearing roof and 3.2 overall thickness. Hex-pocket corner access
+requires a shop solution that does not change seating or component clearance.
+SMA key: support the 2-thick U profile and 1.1 top bridge. Trial-fit actual rear
+fixed hex before batch production; 8.4 nominal jaw gap is provisional.
+
+TOLERANCES AND DESIGN REVIEW BEFORE MACHINING
+All dimensions are nominal; no blanket tolerance or tightening torque is
+released. Agree supplier capability for insert pilots, locating lips, nut
+pockets, screw seats, the 0.50 OLED gap and PTT travel before a production run.
+Do not add fillets, dogbones, draft, extra screws or access holes without an
+enclosure design review. The PCB and its mounting datums are frozen.
+Finish battery-facing and cable-contact edges without removing fitted datums.
+Confirm cutter reach, tool diameter, collision clearance, thin-section support,
+stock clamping, release sequence and access to all internal pockets and holes.
+The existing 0.25 PTT switch depression is a reference assumption; qualify
+actual actuation and allowable overtravel before using a forceful stop test.
+
+REQUIRED SHOP DELIVERABLES BEFORE MACHINE OPERATION
+1. Chosen material/stock and any proposed manufacturability changes.
+2. Agreed drawing tolerances, tool-access review and setup/fixture sheets.
+3. Tool list, work offsets, cutting conditions and controller/postprocessor.
+4. CAM simulation, collision/stock-rest checks and machine-specific program.
+5. First-article inspection against R7-ASSEMBLY-AND-INSPECTION.txt.
+
+No machine-executable G-code, spindle commands, feeds, offsets or controller
+selection are supplied. The STEP is the machining geometry handoff. Gerber and
+Excellon files are separately preserved PCB-fabrication inputs and are not
+enclosure milling paths. No order or machining operation has been performed.
+
+ASSEMBLY ACCEPTANCE
+Check owned SMA rear body/thread engagement, actual cable/tie envelopes,
+speaker rigid frame and pads, OLED/header height, PTT switch, battery/USB plug
+coexistence and full service slack. The amplifier stays USB powered. Read the
+preserved battery electrical commissioning review before operation.
+Nominal solid-clearance checks do not establish physical load, impact, ingress,
+acoustic or thermal ratings. Qualify a first article before ordering a batch.

@@ -1,0 +1,714 @@
+{
+  "source_sha256": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+  "operations": [
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B11",
+        "value": 3.2
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBlank1",
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.2);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBore1",
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBlank2",
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.2);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBore2",
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7MicrophoneShroudBlank",
+        "properties": {
+          "Radius": 5.5,
+          "Height": 8.2,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7MicrophoneShroudBlank",
+        "expressions": {
+          "Placement": "placement(vector(54.5;30.5;13);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7MicrophoneShroudBlank",
+        "radius": 0.4,
+        "edges": [
+          "Edge1",
+          "Edge2",
+          "Edge3"
+        ],
+        "name": "R7MicrophoneShroudRounded"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7MicrophoneShroudBore",
+        "properties": {
+          "Radius": 4,
+          "Height": 8.5,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7MicrophoneShroudBore",
+        "expressions": {
+          "Placement": "placement(vector(54.5;30.5;12.9);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "R7MicrophoneShroudRounded",
+        "object2_name": "R7MicrophoneShroudBore",
+        "result_name": "R7MicrophoneShroud"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDStrengthBandBlank1",
+        "properties": {
+          "Length": 21.0,
+          "Width": 2.3500000000000014,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDStrengthBandBlank1",
+        "expressions": {
+          "Placement": "placement(vector(12.5;42.2;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDStrengthBandBlank1",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDStrengthBand1"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDStrengthBandBlank2",
+        "properties": {
+          "Length": 21.0,
+          "Width": 2.3499999999999943,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDStrengthBandBlank2",
+        "expressions": {
+          "Placement": "placement(vector(12.5;71.55;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDStrengthBandBlank2",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDStrengthBand2"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn1Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn1Blank",
+        "expressions": {
+          "Placement": "placement(vector(12.5;44.4;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn1Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn1"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn2Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn2Blank",
+        "expressions": {
+          "Placement": "placement(vector(12.5;70.5;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn2Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn2"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn3Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn3Blank",
+        "expressions": {
+          "Placement": "placement(vector(31.2;44.4;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn3Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn3"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn4Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn4Blank",
+        "expressions": {
+          "Placement": "placement(vector(31.2;70.5;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn4Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn4"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "R7OLEDStrengthMask",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDStrengthMask",
+        "values": {
+          "Shapes": [
+            "R7OLEDStrengthBand1",
+            "R7OLEDStrengthBand2",
+            "R7OLEDCornerReturn1",
+            "R7OLEDCornerReturn2",
+            "R7OLEDCornerReturn3",
+            "R7OLEDCornerReturn4"
+          ]
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "OLEDBezelRecess",
+        "object2_name": "R7OLEDStrengthMask",
+        "result_name": "R7OLEDRecessCutter"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieAnchorBlank",
+        "properties": {
+          "Length": 1.7000000000000028,
+          "Width": 5.399999999999999,
+          "Height": 4.399999999999999,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieAnchorBlank",
+        "expressions": {
+          "Placement": "placement(vector(68.3;53.6;16.8);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7SpeakerTieAnchorBlank",
+        "radius": 0.4,
+        "edges": [
+          "Edge1",
+          "Edge2",
+          "Edge3",
+          "Edge4",
+          "Edge5",
+          "Edge6",
+          "Edge7",
+          "Edge8",
+          "Edge9",
+          "Edge10",
+          "Edge11",
+          "Edge12"
+        ],
+        "name": "R7SpeakerTieAnchorRounded"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieSlot",
+        "properties": {
+          "Length": 1.8999999999999915,
+          "Width": 3.0,
+          "Height": 0.8000000000000007,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieSlot",
+        "expressions": {
+          "Placement": "placement(vector(68.2;54.8;18.7);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "R7SpeakerTieAnchorRounded",
+        "object2_name": "R7SpeakerTieSlot",
+        "result_name": "R7SpeakerTieAnchor"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieOuterBlank",
+        "properties": {
+          "Length": 6.099999999999994,
+          "Width": 2.5,
+          "Height": 3.3500000000000014,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieOuterBlank",
+        "expressions": {
+          "Placement": "placement(vector(65.2;55.05;16);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7SpeakerTieOuterBlank",
+        "radius": 0.8,
+        "edges": [
+          "Edge2",
+          "Edge4",
+          "Edge6",
+          "Edge8"
+        ],
+        "name": "R7SpeakerTieOuter"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieInnerBlank",
+        "properties": {
+          "Length": 5.199999999999989,
+          "Width": 2.6999999999999957,
+          "Height": 2.4499999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieInnerBlank",
+        "expressions": {
+          "Placement": "placement(vector(65.65;54.95;16.45);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7SpeakerTieInnerBlank",
+        "radius": 0.35,
+        "edges": [
+          "Edge2",
+          "Edge4",
+          "Edge6",
+          "Edge8"
+        ],
+        "name": "R7SpeakerTieInner"
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "R7SpeakerTieOuter",
+        "object2_name": "R7SpeakerTieInner",
+        "result_name": "R7SpeakerTieLoop"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieHeadBlank",
+        "properties": {
+          "Length": 4.5,
+          "Width": 4.5,
+          "Height": 2.700000000000001,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieHeadBlank",
+        "expressions": {
+          "Placement": "placement(vector(66.8;54.05;13.6);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7SpeakerTieHeadBlank",
+        "radius": 0.3,
+        "edges": [
+          "Edge1",
+          "Edge2",
+          "Edge3",
+          "Edge4",
+          "Edge5",
+          "Edge6",
+          "Edge7",
+          "Edge8",
+          "Edge9",
+          "Edge10",
+          "Edge11",
+          "Edge12"
+        ],
+        "name": "R7SpeakerTieHead"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "ReferenceSpeakerTie",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerTie",
+        "values": {
+          "Shapes": [
+            "R7SpeakerTieLoop",
+            "R7SpeakerTieHead"
+          ]
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieLipRelief",
+        "properties": {
+          "Length": 2.1000000000000085,
+          "Width": 3.5,
+          "Height": 0.5500000000000007,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieLipRelief",
+        "expressions": {
+          "Placement": "placement(vector(70.1;54.55;19.25);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    }
+  ],
+  "link_deltas_to_merge": {
+    "LidWithClamps": {
+      "append": [
+        "R7MicrophoneShroud",
+        "R7SpeakerTieAnchor"
+      ]
+    },
+    "LidCutters": {
+      "replace": {
+        "OLEDBezelRecess": "R7OLEDRecessCutter"
+      },
+      "append": [
+        "R7SpeakerTieLipRelief"
+      ]
+    }
+  },
+  "printable_final_names": [
+    "EnclosureLid",
+    "SpeakerRetainer"
+  ],
+  "reference_final_names": [
+    "ReferenceSpeakerTie",
+    "ReferenceSpeakerNut1",
+    "ReferenceSpeakerNut2"
+  ],
+  "hide": [
+    "R7MicrophoneShroudBlank",
+    "R7MicrophoneShroudRounded",
+    "R7MicrophoneShroudBore",
+    "R7OLEDStrengthBandBlank1",
+    "R7OLEDStrengthBand1",
+    "R7OLEDStrengthBandBlank2",
+    "R7OLEDStrengthBand2",
+    "R7OLEDCornerReturn1Blank",
+    "R7OLEDCornerReturn1",
+    "R7OLEDCornerReturn2Blank",
+    "R7OLEDCornerReturn2",
+    "R7OLEDCornerReturn3Blank",
+    "R7OLEDCornerReturn3",
+    "R7OLEDCornerReturn4Blank",
+    "R7OLEDCornerReturn4",
+    "R7OLEDStrengthMask",
+    "R7SpeakerTieAnchorBlank",
+    "R7SpeakerTieAnchorRounded",
+    "R7SpeakerTieSlot",
+    "R7SpeakerTieOuterBlank",
+    "R7SpeakerTieOuter",
+    "R7SpeakerTieInnerBlank",
+    "R7SpeakerTieInner",
+    "R7SpeakerTieHeadBlank",
+    "R7SpeakerTieHead",
+    "ReferenceSpeakerTie",
+    "R7SpeakerTieLipRelief",
+    "R7MicrophoneShroud",
+    "R7OLEDRecessCutter",
+    "R7SpeakerTieAnchor",
+    "R7SpeakerTieLoop"
+  ],
+  "equivalence_to_audited_candidate": {
+    "EnclosureLid": {
+      "symmetric_difference_mm3": 0.0,
+      "volume_difference_mm3": 0.0023608289011463057,
+      "valid": true,
+      "solids": 1
+    },
+    "SpeakerRetainer": {
+      "symmetric_difference_mm3": 0.0,
+      "volume_difference_mm3": 2.2737367544323206e-13,
+      "valid": true,
+      "solids": 1
+    },
+    "ReferenceSpeakerTie": {
+      "symmetric_difference_mm3": 0.0,
+      "volume_difference_mm3": 4.263256414560601e-14,
+      "valid": true,
+      "solids": 1
+    }
+  },
+  "source_unchanged": true,
+  "notes": [
+    "SpeakerParameters B11 drives blank, window, nut-pocket and screw-hole elevations. Existing M2x12 shafts remain fixed; new nuts13.4..15.0 leave0.5mmnominal exposedthread below.",
+    "The OLED strengthmask modifies only the recesscutter. Mainlocalface22.1 andunderside/window aperture unchanged; shortedgebands top22.7.",
+    "Microphone shroud has0.7mmminimum tohighest assignedcapsulefeatures; it does not clamp or sealunmeasuredhardware. Optionalsoftgasket requires actualfit.",
+    "Tie is a loose 2.5 mm wide, 0.45 mm thick reference with 4.5 x 4.5 x 2.7 mm head. Actual tie must fit this envelope; do not tighten onto insulation or claim strain qualification.",
+    "ReferenceSpeakerTie is nonprinted. NoPCB,componentplacement,firmwareorownedwirelengthchange."
+  ]
+}

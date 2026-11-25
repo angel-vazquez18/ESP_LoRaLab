@@ -1,0 +1,8 @@
+CNC SHOP REFERENCE PROJECTIONS
+
+Four top-view DXFs, millimetres, carrier datum XY. STEP solids control the complete 3D parts.
+Visible and hidden reference lines occupy separate layers. Hide TOP_HIDDEN_REFERENCE before using a visible profile.
+Curves are polylines at 0.025 mm maximum sampling deflection, not original analytical arcs.
+These files contain no toolpath, depth, work offset, compensation, feeds, speeds or machine-specific commands.
+The shop must review features, choose material and fixture/setup strategy, and generate/simulate CAM for its equipment.
+Use the engineering dossier and technical drawings to interpret the fits and physical acceptance requirements.

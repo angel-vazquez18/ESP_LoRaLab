@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "fragment": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\r6-enclosure-viewer.html",
+  "bytes": 919861,
+  "sha256": "4777ace0c3825d2a52a7f631e370ffabfc674f6554ef5285a725b4486a7d2efa",
+  "source_status": "saved R6 native printed geometry plus audited fit references",
+  "mesh_gzip_sha256": "0063ed8f4ce1d8415b3d248aa2131960cc9e42921221534194c05402d8bcc956",
+  "template_sha256": "43013796579490f2cf150c4908bc2e40a71560fe8c35cbc9f0270a246e17e2a3",
+  "mesh_count": 142,
+  "overview_mesh_count": 48,
+  "focus_mesh_count": 94,
+  "mesh_validation_sha256": "4f71438eeabd742cc44cc3f879a5e8bbff787caa87340b9759934389f9eba133",
+  "dimension_data_sha256": "2cd0598501ac27a4dae253a4d05e569009222a978f3eeac1c3f797ce80125868",
+  "focus_mesh_sha256": "8971e4ae6f072ebaa33195011e5f16058ad7454832a2475eb49f8c5acb8ce7de",
+  "focus_views_sha256": "7a11cef886c2d629a01402b76df830b05a41a8e1be4376411df050334ff78602",
+  "focus_validation_sha256": "82b53f5ce5e9254d86d4c09cbdcc8a580b3b926f449d5e59d8e037e7ccc9dd80",
+  "overview_triangles": 319388,
+  "focus_triangles": 85206,
+  "triangles": 404594,
+  "network_requests_required": false,
+  "cad_files_modified": false
+}

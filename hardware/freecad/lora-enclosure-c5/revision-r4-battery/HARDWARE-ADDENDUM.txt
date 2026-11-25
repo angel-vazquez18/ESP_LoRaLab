@@ -1,0 +1,32 @@
+R4 hardware and assembly addendum
+2026-11-24
+
+Added for battery compartment:
+1 Meshnology protected 3.7 V 3000 mAh 103665 LiPo, verified actual dimensions.
+4 M3x6 button-head screws for removable rear cover.
+4 RX-M3x5x4-compatible M3 inserts, OD5 x length4 mm.
+2 soft nonconductive retaining straps, nominal 10 mm wide; cut to fit with
+  secure overlap and no pouch compression (approximately 160 mm starting
+  length per strap, confirm actual path/thickness).
+1 smooth nonconductive support pad up to the allocated 1 mm thickness,
+  approximately 36 x 68 mm, compatible with the cell and printing material.
+Optional verified-polarity 1.25 mm two-pin service extension if the actual
+  included 66 mm lead cannot provide adequate assembly/service slack.
+
+Retained hardware:
+4 M3x22 top closure screws and 4 existing RX-M3x5x4 inserts.
+2 M2x10 PTT stop-cup screws and 2 M2 nuts.
+All existing electronics and external speaker/coax harness items.
+Total M3 inserts in a complete R4 assembly: 8 (four top, four rear).
+
+Suggested assembly order:
+1 Fit/check inserts before introducing the battery; remove all debris.
+2 Trial-fit the actual battery/USB mating plugs and route with power off.
+3 Place the insulating support, cell and soft straps on the rear cover.
+4 Route the lead through the rear channel and connect only after verifying
+  polarity, connector fit and the commissioning conditions in the review.
+5 Close with M3x6 rear screws, checking that no lead or pouch is trapped.
+6 Retain the existing PCB/top assembly procedure and verify OLED/PTT motion.
+
+The connector, firmware and charge-current conditions in the accompanying
+electrical review remain prerequisites to battery-powered commissioning.

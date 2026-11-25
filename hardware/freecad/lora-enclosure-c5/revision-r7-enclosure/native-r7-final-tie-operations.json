@@ -1,0 +1,240 @@
+[
+  {
+    "operation": {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7SpeakerTieLipRelief",
+        "properties": {
+          "Length": 2.1,
+          "Width": 3.5,
+          "Height": 0.55,
+          "Visibility": false
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"name\": \"R7SpeakerTieLipRelief\",\n  \"label\": \"R7SpeakerTieLipRelief\",\n  \"type_id\": \"Part::Box\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "name": "R7SpeakerTieLipRelief",
+        "label": "R7SpeakerTieLipRelief",
+        "type_id": "Part::Box"
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieLipRelief",
+        "expressions": {
+          "Placement": "placement(vector(70.1;54.55;19.25);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"name\": \"R7SpeakerTieLipRelief\",\n  \"label\": \"R7SpeakerTieLipRelief\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+        }
+      ],
+      "structuredContent": {
+        "name": "R7SpeakerTieLipRelief",
+        "label": "R7SpeakerTieLipRelief",
+        "set": {
+          "set": [],
+          "expressions_cleared": [],
+          "expressions_set": [
+            "Placement"
+          ]
+        }
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7SpeakerTieHeadBlank",
+        "values": {
+          "Length": 4.5,
+          "Width": 4.5,
+          "Height": 2.7
+        },
+        "expressions": {
+          "Placement": "placement(vector(66.8;54.05;13.6);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"name\": \"R7SpeakerTieHeadBlank\",\n  \"label\": \"R7SpeakerTieHeadBlank\",\n  \"set\": {\n    \"set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+        }
+      ],
+      "structuredContent": {
+        "name": "R7SpeakerTieHeadBlank",
+        "label": "R7SpeakerTieHeadBlank",
+        "set": {
+          "set": [
+            "Length",
+            "Width",
+            "Height"
+          ],
+          "expressions_cleared": [],
+          "expressions_set": [
+            "Placement"
+          ]
+        }
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "LidCutters",
+        "values": {
+          "Shapes": [
+            "LidScrew1",
+            "LidScrew2",
+            "LidScrew3",
+            "LidScrew4",
+            "OLEDWindow",
+            "MicrophonePort",
+            "PTTGuide",
+            "ResetAccess",
+            "ProgramAccess",
+            "PTTStopScrew1",
+            "PTTStopScrew2",
+            "MicrophoneVent1",
+            "MicrophoneVent2",
+            "MicrophoneVent3",
+            "MicrophoneVent4",
+            "MicrophoneVent5",
+            "MicrophoneVent6",
+            "R7OLEDRecessCutter",
+            "OLEDHeadRelief1",
+            "OLEDHeadRelief2",
+            "OLEDHeadRelief3",
+            "OLEDHeadRelief4",
+            "SpeakerScrewHole1",
+            "SpeakerScrewHole2",
+            "SpeakerGrille1",
+            "SpeakerGrille2",
+            "SpeakerGrille3",
+            "SpeakerGrille4",
+            "SpeakerGrille5",
+            "SpeakerGrille6",
+            "SpeakerGrille7",
+            "SpeakerGrille8",
+            "SpeakerGrille9",
+            "SpeakerLeadRelief",
+            "SMAKeyLipRelief",
+            "SMATieLipRelief",
+            "R7SpeakerTieLipRelief"
+          ]
+        },
+        "recompute": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"name\": \"LidCutters\",\n  \"label\": \"LidCutters\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+        }
+      ],
+      "structuredContent": {
+        "name": "LidCutters",
+        "label": "LidCutters",
+        "set": {
+          "set": [
+            "Shapes"
+          ],
+          "expressions_cleared": [],
+          "expressions_set": []
+        }
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "set_object_visibility",
+      "args": {
+        "object_name": "EnclosureBase",
+        "visible": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"success\": true,\n  \"visible\": true\n}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "visible": true
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "set_object_visibility",
+      "args": {
+        "object_name": "EnclosureLid",
+        "visible": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"success\": true,\n  \"visible\": true\n}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "visible": true
+      },
+      "isError": false
+    }
+  },
+  {
+    "operation": {
+      "tool": "set_object_visibility",
+      "args": {
+        "object_name": "SpeakerRetainer",
+        "visible": true
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"success\": true,\n  \"visible\": true\n}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "visible": true
+      },
+      "isError": false
+    }
+  }
+]

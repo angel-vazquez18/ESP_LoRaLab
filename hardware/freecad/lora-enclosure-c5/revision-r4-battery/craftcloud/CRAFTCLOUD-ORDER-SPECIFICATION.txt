@@ -1,0 +1,30 @@
+R4 battery-compartment prototype order
+
+Upload five files from upload/: either the five STL files OR the five 3MF
+files, not both sets. Units: mm. Scale: 100 percent. Quantity: one of each.
+
+1 enclosure base - R4 rear battery bay and cable channel
+1 enclosure lid - unchanged R3 OLED fit
+1 PTT plunger - unchanged
+1 PTT stop cup - unchanged
+1 battery cover - R4 removable rear cover and strap slots
+
+Requested process/material: MJF, unfilled PA12, standard depowdered finish.
+Avoid coating/buildup on insert pilots, locating lips, sliding PTT interfaces
+and narrow strap slots. Supplier chooses build orientation. Parts should be
+thoroughly depowdered; finish battery-facing surfaces free of sharp burrs.
+Quote and dimensional-capability acceptance are still supplier tasks.
+
+Critical nominal features: 4.4 mm rear insert pilots, 3.4 mm cover screw
+clearance holes, 2.4 x 12 mm strap slots, 0.4 mm registration clearance per
+side, and 1.4 mm cover floor remaining over strap channels. Existing R3 lid
+has a 1.6 mm normal bezel rim and local 1.1 mm screw-relief roofs.
+
+This is a PROTOTYPE order set. Actual battery maximum size, connector/USB
+simultaneous fit and tighter OLED clearance need a physical fit check.
+Mechanical CAD validity does not qualify charging, firmware or electronics.
+Read REVISION-NOTES.txt and research/BATTERY-CONNECTION-REVIEW.txt before use.
+
+Not supplied by the printing order: battery, PCB/modules, speaker, antenna,
+all screws/nuts/inserts, padding, straps or electrical harness. No purchase
+or upload was made by this preparation step.

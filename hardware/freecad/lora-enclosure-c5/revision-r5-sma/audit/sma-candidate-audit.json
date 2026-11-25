@@ -1,0 +1,1758 @@
+{
+  "sources": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19"
+  },
+  "parameters": [
+    [
+      1,
+      "PCBWidth",
+      70,
+      "C5 carrier outline verified"
+    ],
+    [
+      2,
+      "PCBLength",
+      90,
+      "C5 carrier outline verified"
+    ],
+    [
+      3,
+      "PCBThickness",
+      1.6,
+      "Project stackup"
+    ],
+    [
+      4,
+      "EdgeClearance",
+      2,
+      "Allowance per PCB edge"
+    ],
+    [
+      5,
+      "Wall",
+      2.4,
+      "Printed wall"
+    ],
+    [
+      6,
+      "Floor",
+      2.4,
+      "Printed bottom"
+    ],
+    [
+      7,
+      "Standoff",
+      4,
+      "Bottom solder clearance; reference tails 1.9"
+    ],
+    [
+      8,
+      "Headroom",
+      13,
+      "Reduced for nominal 1.0 mm glass clearance; verify owned assembly"
+    ],
+    [
+      9,
+      "LidThickness",
+      3.6,
+      "Printed top; cable roof and M3 screw allowance"
+    ],
+    [
+      10,
+      "MountInset",
+      4,
+      "Four M3 hole centres inset"
+    ],
+    [
+      11,
+      "BossOD",
+      7,
+      "Project hardware keepout"
+    ],
+    [
+      12,
+      "InsertBore",
+      4.4,
+      "ruthex RX-M3x5x4 installation pilot diameter"
+    ],
+    [
+      13,
+      "InsertPilotDepth",
+      5,
+      "4 mm insert plus manufacturer 1 mm depth allowance"
+    ],
+    [
+      14,
+      "ScrewClearance",
+      3.4,
+      "M3 through clearance"
+    ],
+    [
+      15,
+      "LipDepth",
+      1.6,
+      "Registration tongue; shortened to avoid coax-cut tangency"
+    ],
+    [
+      16,
+      "LipThickness",
+      1.2,
+      "Registration tongue wall"
+    ],
+    [
+      17,
+      "FitGap",
+      0.4,
+      "Lip clearance per side; prototype finish check"
+    ],
+    [
+      18,
+      "OLEDX",
+      23,
+      "U1 anchor X"
+    ],
+    [
+      19,
+      "OLEDY",
+      58.05,
+      "U1 Y64.41 minus bracket offset6.36"
+    ],
+    [
+      20,
+      "OLEDWidth",
+      16.4,
+      "Reference window11.4 +5 for viewing angle"
+    ],
+    [
+      21,
+      "OLEDLength",
+      27,
+      "Reference window22 +5 for viewing angle"
+    ],
+    [
+      22,
+      "MicX",
+      54.5,
+      "U2 centre"
+    ],
+    [
+      23,
+      "MicY",
+      30.5,
+      "U2 centre"
+    ],
+    [
+      24,
+      "MicPort",
+      1.6,
+      "Seven direct acoustic holes; 1.0 mm minimum web"
+    ],
+    [
+      25,
+      "PTTX",
+      51,
+      "SW1 centre"
+    ],
+    [
+      26,
+      "PTTY",
+      9,
+      "SW1 centre"
+    ],
+    [
+      27,
+      "PTTHeight",
+      8,
+      "Project tactile switch height"
+    ],
+    [
+      28,
+      "ButtonDiameter",
+      8,
+      "Plunger shaft diameter"
+    ],
+    [
+      29,
+      "ButtonGap",
+      0.4,
+      "Radial guide clearance; shaft8 / guide8.8"
+    ],
+    [
+      30,
+      "ButtonFlange",
+      12,
+      "Internal captured flange OD"
+    ],
+    [
+      31,
+      "ButtonFlangeThickness",
+      1.2,
+      "Captured flange thickness"
+    ],
+    [
+      32,
+      "ButtonProtrusion",
+      1.8,
+      "Above lid"
+    ],
+    [
+      33,
+      "SwitchReleaseGap",
+      0.2,
+      "Verify assembled tactile switch"
+    ],
+    [
+      34,
+      "USBX",
+      23,
+      "U1 centre"
+    ],
+    [
+      35,
+      "USBWidth",
+      16,
+      "Cable overmould allowance; measure cable"
+    ],
+    [
+      36,
+      "USBBottomAbovePCB",
+      3.5,
+      "Opening below connector reference"
+    ],
+    [
+      37,
+      "USBHeight",
+      9.5,
+      "USB notch ends at lid seam to eliminate bridge"
+    ],
+    [
+      38,
+      "SpeakerY",
+      66,
+      "Adjacent amplifier"
+    ],
+    [
+      39,
+      "SpeakerPassage",
+      5,
+      "Split cable exit at lid seam"
+    ],
+    [
+      40,
+      "AntennaX",
+      43,
+      "Adjustable coax route; no fixed RF connector"
+    ],
+    [
+      41,
+      "AntennaPassage",
+      4,
+      "Split coax exit at USB end"
+    ],
+    [
+      42,
+      "CornerRadius",
+      4.5,
+      "Vertical outside radius"
+    ],
+    [
+      43,
+      "PCBTop",
+      8,
+      "Derived"
+    ],
+    [
+      44,
+      "SeamHeight",
+      21,
+      "Derived"
+    ],
+    [
+      45,
+      "OuterWidth",
+      78.8,
+      "Derived"
+    ],
+    [
+      46,
+      "OuterLength",
+      98.8,
+      "Derived"
+    ],
+    [
+      47,
+      "TotalHeight",
+      24.6,
+      "Derived"
+    ],
+    [
+      48,
+      "USBBottom",
+      11.5,
+      "Derived"
+    ],
+    [
+      49,
+      "PTTContactZ",
+      16.2,
+      "Derived"
+    ],
+    [
+      50,
+      "TieSlotWidth",
+      3,
+      "Fits nominal2.5mm cable tie"
+    ],
+    [
+      51,
+      "TieSlotHeight",
+      1.2,
+      "Cable tie thickness allowance"
+    ],
+    [
+      52,
+      "ResetX",
+      15.09427,
+      "Reference STEP S1"
+    ],
+    [
+      53,
+      "ProgramX",
+      30.90578,
+      "Reference STEP S2"
+    ],
+    [
+      54,
+      "ServiceY",
+      85.99995,
+      "Reference STEP"
+    ],
+    [
+      55,
+      "ServicePort",
+      3.2,
+      "Recessed tool access"
+    ],
+    [
+      56,
+      "BlindFloor",
+      1.2,
+      "Floor beneath screw tip relief"
+    ],
+    [
+      57,
+      "BossFootOD",
+      9,
+      "Reinforcement below PCB"
+    ],
+    [
+      58,
+      "BossFootHeight",
+      1.5,
+      "Tapered support foot"
+    ],
+    [
+      59,
+      "PTTSwitchTravel",
+      0.25,
+      "Provisional comparable 6x6x8 switch travel; verify gently"
+    ],
+    [
+      60,
+      "PTTStopShelf",
+      2,
+      "Stop shelf thickness"
+    ],
+    [
+      61,
+      "PTTStopRadialGap",
+      0.6,
+      "Flange radial clearance; accommodates cup positioning"
+    ],
+    [
+      62,
+      "PTTStopOuter",
+      16.6,
+      "Cup outer diameter"
+    ],
+    [
+      63,
+      "PTTStopFootHole",
+      5.2,
+      "Foot passage diameter"
+    ],
+    [
+      64,
+      "PTTStopScrewSpan",
+      18,
+      "Two M2 screw axes, symmetric about PTT X"
+    ],
+    [
+      65,
+      "PTTStopScrewHole",
+      2.4,
+      "M2 screw clearance diameter"
+    ],
+    [
+      66,
+      "PTTStopLugDiameter",
+      6,
+      "Mounting lug outside diameter"
+    ],
+    [
+      67,
+      "PTTStopContactZ",
+      19.150000000000002,
+      "Shelf top; existing flange gap is 0.2 mm"
+    ],
+    [
+      68,
+      "PTTStopBottomZ",
+      17.150000000000002,
+      "Cup underside"
+    ],
+    [
+      69,
+      "PTTStopHeight",
+      3.849999999999998,
+      "Cup underside to lid underside"
+    ],
+    [
+      70,
+      "MicPatternRadius",
+      2.6,
+      "Six surrounding holes on pitch circle; seventh at center"
+    ],
+    [
+      71,
+      "InsertLength",
+      4,
+      "ruthex RX-M3x5x4 actual insert length"
+    ],
+    [
+      72,
+      "ClosureScrewLength",
+      22,
+      "M3x22 ISO4762 head seats at outer lid"
+    ],
+    [
+      73,
+      "OLEDBezelThickness",
+      1.6,
+      "Local material above underside; original lid is 3.6 mm"
+    ],
+    [
+      74,
+      "OLEDBezelLedge",
+      2,
+      "Horizontal ledge outside the existing aperture"
+    ],
+    [
+      75,
+      "OLEDBezelRecessDepth",
+      2.5,
+      "45 degree transition run equals recess depth"
+    ],
+    [
+      76,
+      "OLEDBezelFaceZ",
+      22.1,
+      "Local recessed exterior face datum"
+    ],
+    [
+      77,
+      "OLEDRecessToolOverrun",
+      0.1,
+      "Boolean cutter extension above main outer face"
+    ]
+  ],
+  "parts": {
+    "USBAccess": {
+      "label": "USBAccess",
+      "bounds": [
+        15.0,
+        89.0,
+        11.5,
+        31.0,
+        95.4,
+        21.0
+      ],
+      "expressions": {
+        "Height": "Parameters.B37",
+        "Length": "Parameters.B35",
+        "Placement": "placement(vector(Parameters.B34 - Parameters.B35 / 2; Parameters.B2 - 1; Parameters.B48); rotation(0; 0; 0))",
+        "Width": "Parameters.B4 + Parameters.B5 + 2"
+      }
+    },
+    "AntennaPassage": {
+      "label": "AntennaPassage",
+      "bounds": [
+        41.0,
+        89.0,
+        19.0,
+        45.0,
+        95.4,
+        23.0
+      ],
+      "expressions": {
+        "Height": "Parameters.B4 + Parameters.B5 + 2",
+        "Placement": "placement(vector(Parameters.B40; Parameters.B2 - 1; Parameters.B44); rotation(0; 0; -90))",
+        "Radius": "Parameters.B41 / 2"
+      }
+    },
+    "SpeakerTieSlot1": {
+      "label": "SpeakerTieSlot1",
+      "bounds": [
+        69.0,
+        59.0,
+        16.5,
+        75.4,
+        62.0,
+        17.7
+      ],
+      "expressions": {
+        "Height": "Parameters.B51",
+        "Length": "Parameters.B4 + Parameters.B5 + 2",
+        "Placement": "placement(vector(Parameters.B1 - 1; Parameters.B38 + -1 * 5.5 - Parameters.B50 / 2; Parameters.B44 - 4.5); rotation(0; 0; 0))",
+        "Width": "Parameters.B50"
+      }
+    },
+    "SpeakerTieSlot2": {
+      "label": "SpeakerTieSlot2",
+      "bounds": [
+        69.0,
+        70.0,
+        16.5,
+        75.4,
+        73.0,
+        17.7
+      ],
+      "expressions": {
+        "Height": "Parameters.B51",
+        "Length": "Parameters.B4 + Parameters.B5 + 2",
+        "Placement": "placement(vector(Parameters.B1 - 1; Parameters.B38 + 1 * 5.5 - Parameters.B50 / 2; Parameters.B44 - 4.5); rotation(0; 0; 0))",
+        "Width": "Parameters.B50"
+      }
+    },
+    "EnclosureBase": {
+      "label": "EnclosureBase",
+      "bounds": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ],
+      "expressions": {}
+    },
+    "EnclosureLid": {
+      "label": "EnclosureLid",
+      "bounds": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000003
+      ],
+      "expressions": {}
+    },
+    "ReferenceBatteryEnvelope": {
+      "label": "REFERENCE ONLY - LiPo 68 x 36 x 10 mm envelope",
+      "bounds": [
+        17.0,
+        11.0,
+        -13.0,
+        53.0,
+        79.0,
+        -3.0
+      ],
+      "expressions": {
+        "Height": "Parameters.B92",
+        "Length": "Parameters.B90",
+        "Placement": "placement(vector((Parameters.B1 - Parameters.B90) / 2; (Parameters.B2 - Parameters.B91) / 2; -Parameters.B83 + Parameters.B93); rotation(0; 0; 0))",
+        "Width": "Parameters.B91"
+      }
+    },
+    "ReferenceBatteryPlug": {
+      "label": "REFERENCE ONLY - unverified mating plug envelope",
+      "bounds": [
+        25.1,
+        88.42,
+        9.8,
+        30.1,
+        93.9,
+        12.8
+      ],
+      "expressions": {
+        "Placement": "placement(vector(25.1; 88.42; 9.8); rotation(0; 0; 0))"
+      }
+    },
+    "ReferenceBatteryLeadRoute": {
+      "label": "REFERENCE ONLY - provisional battery lead route",
+      "bounds": [
+        18.0,
+        79.0,
+        -8.0,
+        27.6,
+        95.9,
+        11.0
+      ],
+      "expressions": {}
+    }
+  },
+  "rear_components": [
+    {
+      "index": 1,
+      "label": "C5_detailed_assembly001",
+      "bounds": [
+        10.30000019074,
+        37.740001281738,
+        13.0,
+        35.69999980926546,
+        89.428999980927,
+        14.55871926
+      ]
+    },
+    {
+      "index": 892,
+      "label": "C5_detailed_assembly892",
+      "bounds": [
+        33.530001,
+        82.560001,
+        7.9068,
+        35.329999,
+        84.35999899999999,
+        7.955
+      ]
+    },
+    {
+      "index": 961,
+      "label": "C5_detailed_assembly961",
+      "bounds": [
+        33.53,
+        85.1,
+        7.9068,
+        35.33,
+        86.9,
+        7.955
+      ]
+    },
+    {
+      "index": 995,
+      "label": "C5_detailed_assembly995",
+      "bounds": [
+        33.530001,
+        80.02000100000001,
+        7.9068,
+        35.329999,
+        81.819999,
+        7.955
+      ]
+    },
+    {
+      "index": 1034,
+      "label": "C5_detailed_assembly1034",
+      "bounds": [
+        33.530001,
+        77.480001,
+        7.9068,
+        35.329999,
+        79.27999899999999,
+        7.955
+      ]
+    },
+    {
+      "index": 2922,
+      "label": "C5_detailed_assembly2922",
+      "bounds": [
+        65.163095,
+        80.97018086577036,
+        7.99,
+        65.884523,
+        82.12018113422964,
+        7.99
+      ]
+    },
+    {
+      "index": 2929,
+      "label": "C5_detailed_assembly2929",
+      "bounds": [
+        36.110713865770364,
+        87.970911,
+        7.99,
+        36.64166600000001,
+        89.12018093444505,
+        7.99
+      ]
+    },
+    {
+      "index": 2930,
+      "label": "C5_detailed_assembly2930",
+      "bounds": [
+        36.87261886577035,
+        87.97162199999946,
+        7.99,
+        37.64169884276024,
+        89.120181,
+        7.99
+      ]
+    },
+    {
+      "index": 2947,
+      "label": "C5_detailed_assembly2947",
+      "bounds": [
+        0.0,
+        0.0,
+        7.965,
+        70.0,
+        90.0,
+        7.965
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "x": 43,
+      "z": 9,
+      "rear_body_bounds": [
+        38.0,
+        82.0,
+        4.0,
+        48.0,
+        92.0,
+        14.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 105.85520479929792,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 105.85520479929792,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.0,
+          2948,
+          "C5_detailed_assembly2948"
+        ],
+        [
+          0.4526591028301903,
+          2930,
+          "C5_detailed_assembly2930"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        39.0,
+        98.4,
+        5.0,
+        47.0,
+        148.4,
+        13.0
+      ]
+    },
+    {
+      "x": 43,
+      "z": 12,
+      "rear_body_bounds": [
+        38.0,
+        82.0,
+        7.0,
+        48.0,
+        92.0,
+        17.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 28.321339018081158,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 28.321339018081158,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.5768000000000004,
+          2948,
+          "C5_detailed_assembly2948"
+        ],
+        [
+          1.6926445663636533,
+          2930,
+          "C5_detailed_assembly2930"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        39.0,
+        98.4,
+        8.0,
+        47.0,
+        148.4,
+        16.0
+      ]
+    },
+    {
+      "x": 43,
+      "z": 15,
+      "rear_body_bounds": [
+        38.0,
+        82.0,
+        10.0,
+        48.0,
+        92.0,
+        20.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          2.035,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          2.0932000000000004,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          2.3133256098867876,
+          1,
+          "C5_detailed_assembly001"
+        ],
+        [
+          2.576998032336084,
+          859,
+          "C5_detailed_assembly859"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.5085163763763241
+      },
+      "external_antenna_bounds": [
+        39.0,
+        98.4,
+        11.0,
+        47.0,
+        148.4,
+        19.0
+      ]
+    },
+    {
+      "x": 43,
+      "z": 18,
+      "rear_body_bounds": [
+        38.0,
+        82.0,
+        13.0,
+        48.0,
+        92.0,
+        23.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          3.070465656715599,
+          1,
+          "C5_detailed_assembly001"
+        ],
+        [
+          3.556657098902212,
+          859,
+          "C5_detailed_assembly859"
+        ],
+        [
+          3.556657098902212,
+          874,
+          "C5_detailed_assembly874"
+        ],
+        [
+          3.6372099022055777,
+          829,
+          "C5_detailed_assembly829"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 103.34644152000583
+      },
+      "external_antenna_bounds": [
+        39.0,
+        98.4,
+        14.0,
+        47.0,
+        148.4,
+        22.0
+      ]
+    },
+    {
+      "x": 47,
+      "z": 9,
+      "rear_body_bounds": [
+        42.0,
+        82.0,
+        3.999999999999999,
+        52.0,
+        92.0,
+        14.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 105.85520479929792,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 105.85520479929792,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.0,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        43.0,
+        98.4,
+        5.0,
+        51.0,
+        148.4,
+        13.0
+      ]
+    },
+    {
+      "x": 47,
+      "z": 12,
+      "rear_body_bounds": [
+        42.0,
+        82.0,
+        6.999999999999999,
+        52.0,
+        92.0,
+        17.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 28.321339018081158,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 28.321339018081158,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.5767999999999995,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        43.0,
+        98.4,
+        8.0,
+        51.0,
+        148.4,
+        16.0
+      ]
+    },
+    {
+      "x": 47,
+      "z": 15,
+      "rear_body_bounds": [
+        42.0,
+        82.0,
+        10.0,
+        52.0,
+        92.0,
+        20.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          2.035,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          2.0932000000000004,
+          1067,
+          "C5_detailed_assembly1067"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 2.3087185463148643
+      },
+      "external_antenna_bounds": [
+        43.0,
+        98.4,
+        11.0,
+        51.0,
+        148.4,
+        19.0
+      ]
+    },
+    {
+      "x": 47,
+      "z": 18,
+      "rear_body_bounds": [
+        42.0,
+        82.0,
+        13.0,
+        52.0,
+        92.0,
+        23.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 119.92937158513077
+      },
+      "external_antenna_bounds": [
+        43.0,
+        98.4,
+        14.0,
+        51.0,
+        148.4,
+        22.0
+      ]
+    },
+    {
+      "x": 51,
+      "z": 9,
+      "rear_body_bounds": [
+        46.0,
+        82.0,
+        4.0,
+        56.0,
+        92.0,
+        14.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 105.85520479929792,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 105.85520479929792,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.0,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        47.0,
+        98.4,
+        5.0,
+        55.0,
+        148.4,
+        13.0
+      ]
+    },
+    {
+      "x": 51,
+      "z": 12,
+      "rear_body_bounds": [
+        46.0,
+        82.0,
+        7.0,
+        56.0,
+        92.0,
+        17.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 28.321339018081158,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 28.321339018081158,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.5768000000000004,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        47.0,
+        98.4,
+        8.0,
+        55.0,
+        148.4,
+        16.0
+      ]
+    },
+    {
+      "x": 51,
+      "z": 15,
+      "rear_body_bounds": [
+        46.0,
+        82.0,
+        10.0,
+        56.0,
+        92.0,
+        20.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          2.035,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          2.0932000000000004,
+          1067,
+          "C5_detailed_assembly1067"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 2.3087185463148647
+      },
+      "external_antenna_bounds": [
+        47.0,
+        98.4,
+        11.0,
+        55.0,
+        148.4,
+        19.0
+      ]
+    },
+    {
+      "x": 51,
+      "z": 18,
+      "rear_body_bounds": [
+        46.0,
+        82.0,
+        13.0,
+        56.0,
+        92.0,
+        23.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 128.9510144879525
+      },
+      "external_antenna_bounds": [
+        47.0,
+        98.4,
+        14.0,
+        55.0,
+        148.4,
+        22.0
+      ]
+    },
+    {
+      "x": 55,
+      "z": 9,
+      "rear_body_bounds": [
+        50.0,
+        82.0,
+        4.0,
+        60.0,
+        92.0,
+        14.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 105.85520479929792,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 105.85520479929792,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.0,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        51.0,
+        98.4,
+        5.0,
+        59.0,
+        148.4,
+        13.0
+      ]
+    },
+    {
+      "x": 55,
+      "z": 12,
+      "rear_body_bounds": [
+        50.0,
+        82.0,
+        7.0,
+        60.0,
+        92.0,
+        17.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 28.321339018081158,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 28.321339018081158,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.5768000000000013,
+          2948,
+          "C5_detailed_assembly2948"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 0.0
+      },
+      "external_antenna_bounds": [
+        51.0,
+        98.4,
+        8.0,
+        59.0,
+        148.4,
+        16.0
+      ]
+    },
+    {
+      "x": 55,
+      "z": 15,
+      "rear_body_bounds": [
+        50.0,
+        82.0,
+        10.0,
+        60.0,
+        92.0,
+        20.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          2.035,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          2.0932000000000004,
+          1067,
+          "C5_detailed_assembly1067"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 2.308718546314865
+      },
+      "external_antenna_bounds": [
+        51.0,
+        98.4,
+        11.0,
+        59.0,
+        148.4,
+        19.0
+      ]
+    },
+    {
+      "x": 55,
+      "z": 18,
+      "rear_body_bounds": [
+        50.0,
+        82.0,
+        13.0,
+        60.0,
+        92.0,
+        23.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 128.9510144879525
+      },
+      "external_antenna_bounds": [
+        51.0,
+        98.4,
+        14.0,
+        59.0,
+        148.4,
+        22.0
+      ]
+    },
+    {
+      "x": 59,
+      "z": 9,
+      "rear_body_bounds": [
+        54.0,
+        82.0,
+        3.9999999999999996,
+        64.0,
+        92.0,
+        14.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 105.85520479929792,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 105.85520479929792,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.0,
+          2948,
+          "C5_detailed_assembly2948"
+        ],
+        [
+          1.246642416618206,
+          2922,
+          "C5_detailed_assembly2922"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 19.27483303487302
+      },
+      "external_antenna_bounds": [
+        55.0,
+        98.4,
+        5.0,
+        63.0,
+        148.4,
+        13.0
+      ]
+    },
+    {
+      "x": 59,
+      "z": 12,
+      "rear_body_bounds": [
+        54.0,
+        82.0,
+        7.0,
+        64.0,
+        92.0,
+        17.0
+      ],
+      "component_collision_count": 1,
+      "component_collision_volume": 28.321339018081158,
+      "collisions": [
+        {
+          "index": 1067,
+          "label": "C5_detailed_assembly1067",
+          "volume": 28.321339018081158,
+          "bounds": [
+            0.0,
+            0.0,
+            6.4814,
+            70.0,
+            90.0,
+            7.9068000000000005
+          ]
+        }
+      ],
+      "closest_components": [
+        [
+          0.0,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          0.0,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          0.5768000000000004,
+          2948,
+          "C5_detailed_assembly2948"
+        ],
+        [
+          2.353946712023585,
+          2922,
+          "C5_detailed_assembly2922"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 26.839024297348896
+      },
+      "external_antenna_bounds": [
+        55.0,
+        98.4,
+        8.0,
+        63.0,
+        148.4,
+        16.0
+      ]
+    },
+    {
+      "x": 59,
+      "z": 15,
+      "rear_body_bounds": [
+        54.0,
+        82.0,
+        10.0,
+        64.0,
+        92.0,
+        20.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [
+        [
+          2.035,
+          2947,
+          "C5_detailed_assembly2947"
+        ],
+        [
+          2.0932000000000004,
+          1067,
+          "C5_detailed_assembly1067"
+        ],
+        [
+          4.334908740009902,
+          2922,
+          "C5_detailed_assembly2922"
+        ],
+        [
+          5.06000629713013,
+          2923,
+          "C5_detailed_assembly2923"
+        ]
+      ],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 29.147938385832383
+      },
+      "external_antenna_bounds": [
+        55.0,
+        98.4,
+        11.0,
+        63.0,
+        148.4,
+        19.0
+      ]
+    },
+    {
+      "x": 59,
+      "z": 18,
+      "rear_body_bounds": [
+        54.0,
+        82.0,
+        13.0,
+        64.0,
+        92.0,
+        23.0
+      ],
+      "component_collision_count": 0,
+      "component_collision_volume": 0,
+      "collisions": [],
+      "closest_components": [],
+      "retained_part_collisions": {
+        "PTTPlunger": 0.0,
+        "PTTStopCup": 0.0,
+        "BatteryCover": 0.0,
+        "ReferenceBatteryEnvelope": 0.0,
+        "EnclosureLid": 155.49141836739946
+      },
+      "external_antenna_bounds": [
+        55.0,
+        98.4,
+        14.0,
+        63.0,
+        148.4,
+        22.0
+      ]
+    }
+  ],
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true
+  }
+}

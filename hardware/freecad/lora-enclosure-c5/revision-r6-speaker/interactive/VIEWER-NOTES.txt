@@ -1,0 +1,29 @@
+R6 interactive enclosure inspection
+
+The viewer retains the project-assigned PCB/component geometry and displays
+the new enclosure-mounted speaker, back retainer, acoustic grille and direct
+lead route to the MAX98357A speaker output. The speaker does not mount to
+the PCB. Speaker hardware and leads are reference envelopes, not an exact
+manufacturer-supplied 3D model. Do not infer wire polarity from the viewing
+angle: connect the speaker only across SPK+ and SPK-, never SPK- to GND.
+
+Assembled uses the complete shapes. Cutaway makes capped Boolean cuts of
+the housing for inspection only. Speaker mount inspection uses complete
+transparent housing so the cradle and grille can be seen from either side.
+These viewing cuts are not holes in the manufacturing files.
+
+Exploded offsets are presentation separations, not dimensions. The speaker,
+gasket, back retainer and reference hardware separate from the lid. Leads
+translate rigidly with the speaker and are disconnected from the amplifier;
+they are not stretched to bridge the presentation gap. The coax similarly
+translates with the base and is disconnected from the PCB.
+
+The nine retained clearance views are regenerated from the R6 source shapes
+and actual component assembly; source hashes and endpoint witness checks
+are in focus/FOCUS-MESH-VALIDATION.json and dimensions/DIMENSION-VALIDATION.json.
+The OLED 0.50 mm dimension is an inner-rim height datum offset, not the minimum
+solid-edge distance. Battery lower space is a padding allowance.
+
+The R5 viewer and all source manufacturing files remain unchanged by this
+derived presentation. The current geometry source status and source hashes
+are recorded in SOURCE-INPUTS.json and the validation reports.

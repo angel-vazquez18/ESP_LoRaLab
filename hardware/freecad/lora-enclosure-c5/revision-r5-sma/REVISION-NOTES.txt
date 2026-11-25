@@ -1,0 +1,44 @@
+R5 SMA antenna bulkhead mount - 2026-11-24
+Parametric fit prototype; millimetres.
+
+The latest user reference specifies an SMA female bulkhead, an SMA male
+915 MHz antenna and an IPEX/U.FL pigtail. The temporary direct-spring-antenna
+concept is not adopted. The earlier user image supplies 50 x 8 mm antenna
+and 169 mm pigtail envelopes; connector mounting dimensions remain unmeasured.
+
+The SMA axis is X47, Z14, pointing +Y through the USB end wall. A nominal
+6.6 mm round bore and 2.4 mm seating wall support the connector's shoulder,
+washer arrangement and nut. An integral rounded backing reinforces the
+wall while an 11.2 mm rear relief leaves access to the fixed connector body.
+This is a round-bore, nut-and-washer clamped mount, not a keyed hex capture.
+Counter-hold the fixed body while tightening the mounting nut or antenna.
+
+A separate rounded anchor accommodates a loose nominal 2.5 mm cable tie.
+Keep the tie head beside the cable and preserve service slack; do not clamp
+the fine coax hard or transfer antenna rotation to the board's U.FL socket.
+The pigtail route, bend limit, nut torque and antenna thread engagement need
+checking with the owned hardware. No strength, drop, sealing or RF qualification
+is implied by nominal CAD clearance checks.
+
+The old split coax exit is closed in both base and lid. Use the R5 base and
+lid together. The R4 battery cover, PTT plunger and stop cup are retained with
+identical geometry. The battery compartment and 0.50 mm OLED datum offset
+are retained. PCB files and electrical design are not changed by this revision.
+
+Key editable cells in the native Parameters table:
+B40 SMA centre X; B41 bore diameter; B96 centre Z; B97 rear relief diameter;
+B98 seating thickness; B99 backing depth; B100 backing width.
+Native primitive dimensions and fillet radii also remain editable.
+Reference antenna/connector objects are illustrative and excluded from all
+print and STEP exports. The native document retains the development history.
+
+Printing package: five parts, quantity one each, unfilled MJF PA12 as in R4.
+Use ONE format per part (STL or 3MF), millimetres, scale 100 percent.
+Craftcloud upload files are neutral models, not sliced printer G-code.
+Verify the owned bulkhead fits the 6.6 mm hole, rear relief and 2.4 mm seat
+before placing a manufacturing order. No order is placed by this task.
+
+See documentation/LoRa-C5-R5-SMA-Mount-Drawing.pdf and
+documentation/SMA-MOUNT-INSTALLATION.txt for dimensions and assembly.
+See research/SMA-MOUNT-SOURCES.txt for manufacturer analogue evidence and
+audit/ for the independent nominal-geometry checks and source hashes.

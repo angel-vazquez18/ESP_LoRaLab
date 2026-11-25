@@ -1,0 +1,1213 @@
+{
+  "scope": "R6 parametric speaker enclosure mount",
+  "date": "2026-11-25",
+  "source": "LoRa-Enclosure-C5-R5-SMA.FCStd",
+  "parameter_rows": [
+    [
+      "Speaker body length (mm)",
+      15
+    ],
+    [
+      "Speaker body width (mm)",
+      10
+    ],
+    [
+      "Speaker body thickness (mm)",
+      3.5
+    ],
+    [
+      "Speaker centre X (mm)",
+      54.5
+    ],
+    [
+      "Speaker centre Y (mm)",
+      47
+    ],
+    [
+      "Lid underside Z (mm)",
+      21
+    ],
+    [
+      "Front frame allowance (mm)",
+      0.6
+    ],
+    [
+      "Rear pad allowance (mm)",
+      0.5
+    ],
+    [
+      "Pocket side clearance (mm)",
+      0.3
+    ],
+    [
+      "Cradle wall (mm)",
+      1.2
+    ],
+    [
+      "Retainer thickness (mm)",
+      2.6
+    ],
+    [
+      "Grille bore diameter (mm)",
+      1.8
+    ]
+  ],
+  "operations": [
+    {
+      "tool": "spreadsheet_create",
+      "args": {
+        "name": "SpeakerParameters",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A1",
+        "value": "Speaker body length (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B1",
+        "value": 15,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A2",
+        "value": "Speaker body width (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B2",
+        "value": 10,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A3",
+        "value": "Speaker body thickness (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B3",
+        "value": 3.5,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A4",
+        "value": "Speaker centre X (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B4",
+        "value": 54.5,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A5",
+        "value": "Speaker centre Y (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B5",
+        "value": 47,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A6",
+        "value": "Lid underside Z (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B6",
+        "value": 21,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A7",
+        "value": "Front frame allowance (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B7",
+        "value": 0.6,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A8",
+        "value": "Rear pad allowance (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B8",
+        "value": 0.5,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A9",
+        "value": "Pocket side clearance (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B9",
+        "value": 0.3,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A10",
+        "value": "Cradle wall (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B10",
+        "value": 1.2,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A11",
+        "value": "Retainer thickness (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B11",
+        "value": 2.6,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "A12",
+        "value": "Grille bore diameter (mm)",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "spreadsheet_set_cell",
+      "args": {
+        "spreadsheet_name": "SpeakerParameters",
+        "cell": "B12",
+        "value": 1.8,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "SpeakerCradleBlank",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerCradleBlank",
+        "expressions": {
+          "Length": "SpeakerParameters.B1+2*(SpeakerParameters.B9+SpeakerParameters.B10)",
+          "Width": "SpeakerParameters.B2+2*(SpeakerParameters.B9+SpeakerParameters.B10)",
+          "Height": "21.2-(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-SpeakerParameters.B9-SpeakerParameters.B10;SpeakerParameters.B5-SpeakerParameters.B2/2-SpeakerParameters.B9-SpeakerParameters.B10;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "SpeakerCradleBlank",
+        "radius": 0.4,
+        "name": "SpeakerCradleRounded",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "SpeakerCradleCavity",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerCradleCavity",
+        "expressions": {
+          "Length": "SpeakerParameters.B1+2*SpeakerParameters.B9",
+          "Width": "SpeakerParameters.B2+2*SpeakerParameters.B9",
+          "Height": "21.1-(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)+0.1",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-SpeakerParameters.B9;SpeakerParameters.B5-SpeakerParameters.B2/2-SpeakerParameters.B9;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-0.1);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "SpeakerCradleRounded",
+        "object2_name": "SpeakerCradleCavity",
+        "result_name": "SpeakerCradleRing",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerBoss1",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerBoss1",
+        "expressions": {
+          "Radius": "3.2",
+          "Height": "21.2-(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-3.5;SpeakerParameters.B5;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerBoss2",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerBoss2",
+        "expressions": {
+          "Radius": "3.2",
+          "Height": "21.2-(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)",
+          "Placement": "placement(vector(SpeakerParameters.B4+SpeakerParameters.B1/2+3.5;SpeakerParameters.B5-5;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerScrewHole1",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerScrewHole1",
+        "expressions": {
+          "Radius": "1.2",
+          "Height": "12",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-3.5;SpeakerParameters.B5;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerScrewHole2",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerScrewHole2",
+        "expressions": {
+          "Radius": "1.2",
+          "Height": "12",
+          "Placement": "placement(vector(SpeakerParameters.B4+SpeakerParameters.B1/2+3.5;SpeakerParameters.B5-5;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille1",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille1",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(-3);SpeakerParameters.B5+(-2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille2",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille2",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(-3);SpeakerParameters.B5+(0);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille3",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille3",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(-3);SpeakerParameters.B5+(2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille4",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille4",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(0);SpeakerParameters.B5+(-2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille5",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille5",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(0);SpeakerParameters.B5+(0);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille6",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille6",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(0);SpeakerParameters.B5+(2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille7",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille7",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(3);SpeakerParameters.B5+(-2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille8",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille8",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(3);SpeakerParameters.B5+(0);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "SpeakerGrille9",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille9",
+        "expressions": {
+          "Radius": "SpeakerParameters.B12/2",
+          "Height": "5",
+          "Placement": "placement(vector(SpeakerParameters.B4+(3);SpeakerParameters.B5+(2.4);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "SpeakerLeadRelief",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerLeadRelief",
+        "expressions": {
+          "Length": "1.8",
+          "Width": "3",
+          "Height": "SpeakerParameters.B3-0.3",
+          "Placement": "placement(vector(SpeakerParameters.B4+SpeakerParameters.B1/2-0.2;SpeakerParameters.B5-1.5;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3+0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "SpeakerRetainerBlank",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainerBlank",
+        "expressions": {
+          "Length": "SpeakerParameters.B1+13.4",
+          "Width": "SpeakerParameters.B2+4.7",
+          "Height": "SpeakerParameters.B11",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-6.7;SpeakerParameters.B5-SpeakerParameters.B2/2-3.2;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "SpeakerRetainerBlank",
+        "radius": 0.4,
+        "name": "SpeakerRetainerRounded",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "SpeakerRetainerWindow",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainerWindow",
+        "expressions": {
+          "Length": "SpeakerParameters.B1-2",
+          "Width": "SpeakerParameters.B2-2",
+          "Height": "SpeakerParameters.B11+0.2",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2+1;SpeakerParameters.B5-SpeakerParameters.B2/2+1;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11-0.1);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "SpeakerNutPocket1",
+        "properties": {
+          "Visibility": false,
+          "Polygon": 6
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerNutPocket1",
+        "expressions": {
+          "Circumradius": "3.8/sqrt(3)",
+          "Height": "1.9",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-3.5;SpeakerParameters.B5;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11-0.1);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "SpeakerNutPocket2",
+        "properties": {
+          "Visibility": false,
+          "Polygon": 6
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerNutPocket2",
+        "expressions": {
+          "Circumradius": "3.8/sqrt(3)",
+          "Height": "1.9",
+          "Placement": "placement(vector(SpeakerParameters.B4+SpeakerParameters.B1/2+3.5;SpeakerParameters.B5-5;(SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8)-SpeakerParameters.B11-0.1);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "fuse_all",
+      "args": {
+        "object_names": [
+          "SpeakerRetainerWindow",
+          "SpeakerScrewHole1",
+          "SpeakerScrewHole2",
+          "SpeakerNutPocket1",
+          "SpeakerNutPocket2"
+        ],
+        "result_name": "SpeakerRetainerCutters",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "SpeakerRetainerRounded",
+        "object2_name": "SpeakerRetainerCutters",
+        "result_name": "SpeakerRetainer",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainer",
+        "values": {
+          "Refine": true,
+          "Visibility": true
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "BaseCutters",
+        "values": {
+          "Shapes": [
+            "InsertPocket1",
+            "InsertPocket2",
+            "InsertPocket3",
+            "InsertPocket4",
+            "ScrewTipRelief1",
+            "ScrewTipRelief2",
+            "ScrewTipRelief3",
+            "ScrewTipRelief4",
+            "USBAccess",
+            "RearInsertBore1",
+            "RearInsertBore2",
+            "RearInsertBore3",
+            "RearInsertBore4",
+            "BatteryHarnessChase",
+            "SMABulkheadBore",
+            "SMARearRelief",
+            "SMACoaxTieSlot"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "LidCutters",
+        "values": {
+          "Shapes": [
+            "LidScrew1",
+            "LidScrew2",
+            "LidScrew3",
+            "LidScrew4",
+            "OLEDWindow",
+            "MicrophonePort",
+            "PTTGuide",
+            "ResetAccess",
+            "ProgramAccess",
+            "PTTStopScrew1",
+            "PTTStopScrew2",
+            "MicrophoneVent1",
+            "MicrophoneVent2",
+            "MicrophoneVent3",
+            "MicrophoneVent4",
+            "MicrophoneVent5",
+            "MicrophoneVent6",
+            "OLEDBezelRecess",
+            "OLEDHeadRelief1",
+            "OLEDHeadRelief2",
+            "OLEDHeadRelief3",
+            "OLEDHeadRelief4",
+            "SpeakerScrewHole1",
+            "SpeakerScrewHole2",
+            "SpeakerGrille1",
+            "SpeakerGrille2",
+            "SpeakerGrille3",
+            "SpeakerGrille4",
+            "SpeakerGrille5",
+            "SpeakerGrille6",
+            "SpeakerGrille7",
+            "SpeakerGrille8",
+            "SpeakerGrille9",
+            "SpeakerLeadRelief"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "LidWithClamps",
+        "values": {
+          "Shapes": [
+            "LidPlate",
+            "LocatingLip",
+            "LidClamp1",
+            "LidClamp2",
+            "LidClamp3",
+            "LidClamp4",
+            "OLEDLowerRim",
+            "SpeakerCradleRing",
+            "SpeakerBoss1",
+            "SpeakerBoss2"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "ReferenceSpeakerEnvelope",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerEnvelope",
+        "expressions": {
+          "Length": "SpeakerParameters.B1",
+          "Width": "SpeakerParameters.B2",
+          "Height": "SpeakerParameters.B3",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2;SpeakerParameters.B5-SpeakerParameters.B2/2;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerEnvelope",
+        "values": {
+          "Label": "REFERENCE ONLY - 15 x 10 x 3.5 mm speaker envelope",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerBoss1",
+        "expressions": {
+          "Radius": "4"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerBoss2",
+        "expressions": {
+          "Radius": "4"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainerBlank",
+        "expressions": {
+          "Length": "SpeakerParameters.B1+15",
+          "Width": "SpeakerParameters.B2+5.5",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2-7.5;SpeakerParameters.B5-SpeakerParameters.B2/2-4;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerNutPocket1",
+        "expressions": {
+          "Circumradius": "4.3/sqrt(3)"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerNutPocket2",
+        "expressions": {
+          "Circumradius": "4.3/sqrt(3)"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fuse_all",
+      "args": {
+        "object_names": [
+          "SpeakerCradleRing",
+          "SpeakerBoss1",
+          "SpeakerBoss2"
+        ],
+        "result_name": "SpeakerMountUntrimmed",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "SpeakerMountUntrimmed",
+        "object2_name": "SpeakerCradleCavity",
+        "result_name": "SpeakerMountFrame",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "LidWithClamps",
+        "values": {
+          "Shapes": [
+            "LidPlate",
+            "LocatingLip",
+            "LidClamp1",
+            "LidClamp2",
+            "LidClamp3",
+            "LidClamp4",
+            "OLEDLowerRim",
+            "SpeakerMountFrame"
+          ]
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "SpeakerRetainerParametricCutters",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainerParametricCutters",
+        "values": {
+          "Shapes": [
+            "SpeakerRetainerWindow",
+            "SpeakerScrewHole1",
+            "SpeakerScrewHole2",
+            "SpeakerNutPocket1",
+            "SpeakerNutPocket2"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "SpeakerMountParametricUnion",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerMountParametricUnion",
+        "values": {
+          "Shapes": [
+            "SpeakerCradleRing",
+            "SpeakerBoss1",
+            "SpeakerBoss2"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerRetainer",
+        "values": {
+          "Tool": "SpeakerRetainerParametricCutters",
+          "Refine": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerMountFrame",
+        "values": {
+          "Base": "SpeakerMountParametricUnion",
+          "Refine": true,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille1",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(-3);SpeakerParameters.B5+(-3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille3",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(-3);SpeakerParameters.B5+(3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille4",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(0);SpeakerParameters.B5+(-3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille6",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(0);SpeakerParameters.B5+(3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille7",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(3);SpeakerParameters.B5+(-3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "SpeakerGrille9",
+        "expressions": {
+          "Placement": "placement(vector(SpeakerParameters.B4+(3);SpeakerParameters.B5+(3);SpeakerParameters.B6-0.2);rotation(0;0;0))"
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    }
+  ],
+  "note": "Final corrections included: standard M2 4.3 mm AF pockets, R4 bosses, 30 x 15.5 retainer, 3 mm grille pitch and live parametric MultiFuse feature links. Superseded static Boolean helper results are hidden and unlinked."
+}

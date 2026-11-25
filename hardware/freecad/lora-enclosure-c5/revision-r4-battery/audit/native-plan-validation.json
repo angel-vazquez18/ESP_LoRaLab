@@ -1,0 +1,38 @@
+{
+  "scope": "In-memory native feature operation-plan check. No CAD file saved/exported.",
+  "parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48563.4551320795,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ],
+      "symmetric_difference_mm3": 0.0
+    },
+    "BatteryCover": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ],
+      "symmetric_difference_mm3": 0.0
+    }
+  },
+  "failures": [],
+  "source_unchanged": true,
+  "ok": true
+}

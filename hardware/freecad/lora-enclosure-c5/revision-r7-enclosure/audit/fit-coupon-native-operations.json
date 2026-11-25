@@ -1,0 +1,385 @@
+{
+  "scope": "Optional R7 fit coupon; add doc_name to every call; only root executes approved bridge operations.",
+  "operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7CouponPlate",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponPlate",
+        "expressions": {
+          "Length": "50",
+          "Width": "32",
+          "Height": "3.2",
+          "Placement": "placement(vector(0;0;0);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7CouponPlate",
+        "radius": 0.5,
+        "name": "R7CouponPlateRounded"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponInsertBossNominal",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponInsertBossNominal",
+        "expressions": {
+          "Radius": "3.5",
+          "Height": "6",
+          "Placement": "placement(vector(8;8;0);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponInsertBossTrial",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponInsertBossTrial",
+        "expressions": {
+          "Radius": "3.5",
+          "Height": "6",
+          "Placement": "placement(vector(19;8;0);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponGuideBoss",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponGuideBoss",
+        "expressions": {
+          "Radius": "6",
+          "Height": "3.6",
+          "Placement": "placement(vector(39;9;0);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponInsertPilotNominal",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponInsertPilotNominal",
+        "expressions": {
+          "Radius": "2.2",
+          "Height": "5.1",
+          "Placement": "placement(vector(8;8;1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponInsertPilotTrial",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponInsertPilotTrial",
+        "expressions": {
+          "Radius": "2.25",
+          "Height": "5.1",
+          "Placement": "placement(vector(19;8;1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponGuideBore",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponGuideBore",
+        "expressions": {
+          "Radius": "4.4",
+          "Height": "3.8",
+          "Placement": "placement(vector(39;9;-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "R7CouponNut42",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNut42",
+        "expressions": {
+          "Polygon": "6",
+          "Circumradius": "2.4248711305964283",
+          "Height": "1.9",
+          "Placement": "placement(vector(8;23;1.4);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "R7CouponNut43",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNut43",
+        "expressions": {
+          "Polygon": "6",
+          "Circumradius": "2.482606157515391",
+          "Height": "1.9",
+          "Placement": "placement(vector(21;23;1.4);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "R7CouponNut44",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNut44",
+        "expressions": {
+          "Polygon": "6",
+          "Circumradius": "2.5403411844343537",
+          "Height": "1.9",
+          "Placement": "placement(vector(34;23;1.4);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponNutHole42",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNutHole42",
+        "expressions": {
+          "Radius": "1.2",
+          "Height": "3.4",
+          "Placement": "placement(vector(8;23;-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponNutHole43",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNutHole43",
+        "expressions": {
+          "Radius": "1.2",
+          "Height": "3.4",
+          "Placement": "placement(vector(21;23;-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "R7CouponNutHole44",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponNutHole44",
+        "expressions": {
+          "Radius": "1.2",
+          "Height": "3.4",
+          "Placement": "placement(vector(34;23;-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "R7CouponMaterial",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponMaterial",
+        "values": {
+          "Shapes": [
+            "R7CouponPlateRounded",
+            "R7CouponInsertBossNominal",
+            "R7CouponInsertBossTrial",
+            "R7CouponGuideBoss"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::MultiFuse",
+        "name": "R7CouponCutters",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7CouponCutters",
+        "values": {
+          "Shapes": [
+            "R7CouponInsertPilotNominal",
+            "R7CouponInsertPilotTrial",
+            "R7CouponGuideBore",
+            "R7CouponNut42",
+            "R7CouponNut43",
+            "R7CouponNut44",
+            "R7CouponNutHole42",
+            "R7CouponNutHole43",
+            "R7CouponNutHole44"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "R7CouponMaterial",
+        "object2_name": "R7CouponCutters",
+        "result_name": "R7FitCoupon"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7FitCoupon",
+        "values": {
+          "Refine": true,
+          "Label": "OPTIONAL - fit coupon (not installed)"
+        },
+        "expressions": {
+          "Placement": "placement(vector(100;0;0);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    }
+  ]
+}

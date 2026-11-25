@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "pages": 1,
+  "pdf_sha256": "c5722b6f44158e5fc9a9211c4bac5402b9f95663aa0c458a363ed117812c1ab5",
+  "plan_sha256": "26177bf6efe03c86ae188a2a4959ecef2fb780d3b774ffa418611b8e4f796089",
+  "audit_sha256": "ae0da26890340b4b385be4bdb00fbdaec5e8f29b12d41c50d5b2c5e7f1210b65",
+  "drawing_kind": "Dimensioned schematic integration detail; native CAD governs complete contours.",
+  "hardware_fit_qualified": false,
+  "visual_review_pending": false,
+  "visual_review": "Latest rendered A3 sheet inspected: no clipping, overlap or missing glyphs. Nine DIA1.8 grille holes now use 3mm pitch on both axes, with 1.2mm nominal webs."
+}

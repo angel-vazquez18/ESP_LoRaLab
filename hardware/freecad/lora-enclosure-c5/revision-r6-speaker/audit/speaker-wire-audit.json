@@ -1,0 +1,159 @@
+{
+  "provisional": true,
+  "assumed_wire_od_mm": 0.8,
+  "assumed_centerline_bend_mm": 1.8,
+  "paths": {
+    "ReferenceSpeakerLeadA": [
+      [
+        62,
+        46.8,
+        18.5
+      ],
+      [
+        67.4,
+        46.8,
+        18.5
+      ],
+      [
+        67.4,
+        79,
+        16.4
+      ],
+      [
+        52.75,
+        79,
+        14.3
+      ],
+      [
+        52.75,
+        75.7,
+        14.3
+      ]
+    ],
+    "ReferenceSpeakerLeadB": [
+      [
+        62,
+        47.7,
+        18.5
+      ],
+      [
+        66.3,
+        47.7,
+        18.5
+      ],
+      [
+        66.3,
+        77.8,
+        16.4
+      ],
+      [
+        56.25,
+        77.8,
+        14.3
+      ],
+      [
+        56.25,
+        75.7,
+        14.3
+      ]
+    ]
+  },
+  "lengths_mm": {
+    "ReferenceSpeakerLeadA": 53.46692191200201,
+    "ReferenceSpeakerLeadB": 44.547789368109825
+  },
+  "actual_electronics": {
+    "ReferenceSpeakerLeadA": {
+      "objects_scanned": 2949,
+      "exact_booleans": 15,
+      "hits": [],
+      "minimum_mm": 0.3499999039999864,
+      "nearest_source_index": 2136,
+      "exact_distances": 30
+    },
+    "ReferenceSpeakerLeadB": {
+      "objects_scanned": 2949,
+      "exact_booleans": 9,
+      "hits": [],
+      "minimum_mm": 0.3499999040000006,
+      "nearest_source_index": 2137,
+      "exact_distances": 21
+    }
+  },
+  "native_pairs": {
+    "ReferenceSpeakerLeadA": {
+      "EnclosureBase": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 4.199999999999989
+      },
+      "EnclosureLid": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 0.3999999999999986
+      },
+      "SpeakerRetainer": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 1.2847016996447131
+      },
+      "ReferenceSpeakerEnvelope": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 0.0
+      },
+      "ReferenceSpeakerScrewShafts": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 3.3999999999999986
+      },
+      "Coax": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 0.7969533817705158
+      }
+    },
+    "ReferenceSpeakerLeadB": {
+      "EnclosureBase": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 5.299999999999997
+      },
+      "EnclosureLid": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 0.3999999999999986
+      },
+      "SpeakerRetainer": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 1.3181071327057448
+      },
+      "ReferenceSpeakerEnvelope": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 0.0
+      },
+      "ReferenceSpeakerScrewShafts": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 4.366334952734823
+      },
+      "Coax": {
+        "intersection_mm3": 0.0,
+        "distance_mm": 2.1001579719833208
+      }
+    }
+  },
+  "lead_to_lead": {
+    "intersection_mm3": 0.0,
+    "distance_mm": 0.10000000000000853
+  },
+  "ok": true,
+  "terminal_note": "Assigned terminal block has no modeled wire cavities. Reference endpoints stop just outside +Y face Y75.3; terminal holes/polarity and exact entry height are not qualified. Read SPK+ and SPK- markings on actual module.",
+  "slack_note": "Listing gives approximately80mm leads before connector removal. Only proposed routed sections are drawn; surplus/service slack and opening movement not modeled. Disconnect speaker wires before separating lid fully.",
+  "source_hash_verification": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadA.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadB.brep": true
+  },
+  "candidate_lid_sha256": "e80b82bc8adb4bc1ef271640e7bcd4afc368a153dc50d22ae7453e644d184836",
+  "candidate_native_brep_hashes": {
+    "EnclosureBase": "414b01b3bea554e9ec4848f16f1f8d5f800fcee64b354d26b2a68549efffd690",
+    "EnclosureLid": "e80b82bc8adb4bc1ef271640e7bcd4afc368a153dc50d22ae7453e644d184836",
+    "SpeakerRetainer": "0979770765e3bc921c6f24976fd1a1ce8f7b035004ee105e26214eaeaeef47e8",
+    "ReferenceSpeakerEnvelope": "66686bb1c51f95e809955b37259eb767f6a775faf4f2e1dd397805bde6028da9",
+    "ReferenceSpeakerScrewShafts": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16"
+  },
+  "recheck": "Updated3mm-pitch grille. Exact wireBREP and originalSTEP hashes unchanged; existing2949source electronics audit reused; all nativeBRep distance/intersection pairs re-evaluated."
+}

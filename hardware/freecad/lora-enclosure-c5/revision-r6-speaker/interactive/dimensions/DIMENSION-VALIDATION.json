@@ -1,0 +1,257 @@
+{
+  "ok": true,
+  "source_revision": "R6",
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": "b2c616f78a5f2515217f5c06ec199f38b0106067289fdab60a29e0879d1d9678",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\dimensions\\dimensions.json": "2cd0598501ac27a4dae253a4d05e569009222a978f3eeac1c3f797ce80125868",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\prepare_inputs.py": "16c422f5ce96854464481a936cee650684b28041abfeb6dfc2c42cd1541157a6",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-geometry-plan.json": "26177bf6efe03c86ae188a2a4959ecef2fb780d3b774ffa418611b8e4f796089",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-candidate-audit.json": "e29042147d7fc4b8e40bd25cf0283555b9bfa0b5eb61c6762cf39ae64e87f744",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerFrontGasket.brep": "e097d580852758565675aca6ce2991e5bd536d26092aefe48ee353f5f0e92a4c",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerBackPad.brep": "17950ccd8eddd8e93abf4c3ba5ee498611af9911ffe8b004faa6517e56d113a7",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerScrewShafts.brep": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerNuts.brep": "af57ad8573f119288a14e0d029a9af4315e71e5451220bdd2ae519f1a0e0c45d",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_body.brep": "abb08a73f4ef503c803e3e97894854609f689c3d31ec3bfd475b45e1067dbe1f",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_rim.brep": "5deeeb81055acf02fa6f519a8470c754db3e3962d363390062cd224133f5329f",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_diaphragm.brep": "9f7f8c39e5b33384bcf0a85dba4078a8855530aa95c7c6928a4276f8c72c33ce",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_heads.brep": "c7f4a31637e79e41620aeaad092199710f4784f70359521d1b6221587e56a182",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_washers.brep": "2641a1273cd3a66c73cd1a6247ca13eb0fb003c64827b06fcc7ea6ec38b4e067",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadA.brep": "e1edccd95898f7bfec8a159ec34b6cabee04a9b944ed776644098343b85f5c45",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadB.brep": "58d09fb74dea493bc6823a96141ab1cdfee219bdfeb7ff01e9e70466080b1c7c",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\NATIVE-INPUT-VALIDATION.json": "110ef8120652ea73d7aceea75d9265b6cd6fb5ec6d77e375f12faba0426d3527",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\SOURCE-INPUTS.json": "8f04aa2529e62cadcc5641d1c2cb972cbb358bf2e3c7a065de8704fba7e9bef2"
+  },
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\dimensions\\dimensions.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\prepare_inputs.py": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-geometry-plan.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-candidate-audit.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerFrontGasket.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerBackPad.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerScrewShafts.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerNuts.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_body.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_rim.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_diaphragm.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_heads.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_washers.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadA.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadB.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\NATIVE-INPUT-VALIDATION.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\SOURCE-INPUTS.json": true
+  },
+  "dimensions_sha256": "2cd0598501ac27a4dae253a4d05e569009222a978f3eeac1c3f797ce80125868",
+  "witness_checks": [
+    {
+      "dimension": "battery_top",
+      "part": "battery",
+      "point_mm": [
+        53,
+        30,
+        -3
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_top",
+      "part": "base",
+      "point_mm": [
+        53,
+        30,
+        0
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_pad",
+      "part": "cover",
+      "point_mm": [
+        53,
+        35,
+        -14
+      ],
+      "distance_to_retained_surface_mm": 7.105427357601002e-15,
+      "ok": true
+    },
+    {
+      "dimension": "battery_pad",
+      "part": "battery",
+      "point_mm": [
+        53,
+        35,
+        -13
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_left",
+      "part": "cover",
+      "point_mm": [
+        16,
+        30,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_left",
+      "part": "battery",
+      "point_mm": [
+        17,
+        30,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_right",
+      "part": "battery",
+      "point_mm": [
+        53,
+        60,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_right",
+      "part": "cover",
+      "point_mm": [
+        54,
+        60,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_front",
+      "part": "cover",
+      "point_mm": [
+        35,
+        10,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_front",
+      "part": "battery",
+      "point_mm": [
+        35,
+        11,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_rear",
+      "part": "battery",
+      "point_mm": [
+        35,
+        79,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_rear",
+      "part": "cover",
+      "point_mm": [
+        35,
+        80,
+        -12
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_main",
+      "part": "pcb",
+      "point_mm": [
+        60,
+        50,
+        7.965
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_main",
+      "part": "lid",
+      "point_mm": [
+        60,
+        50,
+        21
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_local",
+      "part": "pcb",
+      "point_mm": [
+        32.2,
+        58.05,
+        7.965
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_local",
+      "part": "lid",
+      "point_mm": [
+        32.2,
+        58.05,
+        20.5
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "oled_gap",
+      "part": "oled",
+      "point_mm": [
+        28.7,
+        58.05,
+        19.9987192588
+      ],
+      "distance_to_retained_surface_mm": 4.800000397153781e-10,
+      "ok": true
+    },
+    {
+      "dimension": "oled_gap",
+      "part": "lid",
+      "point_mm": [
+        32.2,
+        58.05,
+        20.5
+      ],
+      "distance_to_retained_surface_mm": 0.0,
+      "ok": true
+    }
+  ],
+  "source_component_object_count": 2949,
+  "component_translation_mm": [
+    0,
+    0,
+    6.4814
+  ],
+  "evidence": "All nine local sections regenerated from current R6 input shapes and actual component geometry; both endpoints of each dimension remain on retained surfaces.",
+  "native_cad_modified": false
+}

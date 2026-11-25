@@ -1,0 +1,60 @@
+SMA mount research - 2026-11-24
+
+OWNED HARDWARE
+The user's photographs show a normal SMA female bulkhead (socket center) and
+normal SMA male antenna (pin center), not RP-SMA. The annotated antenna is
+50 mm long x 8 mm diameter and the pigtail assembly is 169 mm long. Mounting
+thread length, shoulder/hex dimensions and cable diameter are not specified.
+Do not identify the pictured generic kit as any of the analogues below.
+
+PRIMARY ANALOGUE: TE / LINX CSH-SGFB-ccc-UFFR
+Product: https://www.te.com/en/product-CSH-SGFB-200-UFFR.html
+Drawing: https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=C-CSH-SGFB-ccc-UFFR&DocType=Customer+Drawing&PartCntxt=CSH-SGFB-200-UFFR
+Datasheet: https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=css-sgaf-050-sttn-ds&DocType=Data+Sheet&PartCntxt=CSH-SGFB-200-UFFR
+Verified on the manufacturer drawing: 1/4-36 UNS-2A external thread
+(6.35 mm nominal diameter; pitch calculated as 25.4/36 = 0.70556 mm).
+Recommended D-hole is diameter 6.50 mm, width from opposite circle tangent
+to flat 6.0 mm (flat lies 2.75 mm from center). Threaded projecting portion
+11.4 mm; rear shoulder axial thickness 2.6 mm. Nut is 8.00 mm across flats
+and 1.7 mm thick. Washer is 10.2 mm outside diameter x 0.50 mm thick.
+Maximum panel thickness is 3.175 mm. Rear fixed-body hex across-flats is
+not dimensioned; the nut's 8 mm dimension must not be substituted silently.
+The datasheet specifies 4.0 mm minimum inside bend radius for its 1.32 mm
+coax. Drawing note 13 conflicts in units and labels a maximum bend radius;
+do not use that inconsistent note as a cable routing requirement.
+Both nut torque figures are product-specific and are not validated for
+the user's unknown connector or a printed polymer wall.
+
+ADDITIONAL PRIMARY COMPARISON: MOLEX 732306130
+https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/732/73230/732306130_sd.pdf
+This different SMA bulkhead / MHF1 assembly uses a 6.35 mm minimum D-hole
+with a 2.79 mm minimum center-to-flat dimension. This confirms mounting
+cutout dimensions vary between bulkhead models; the SMA interface alone
+does not define the exact mounting body.
+
+PRIMARY U.FL HANDLING SOURCE: HIROSE U.FL SERIES CATALOG
+https://www.hirose.com/en/product/document?clcode=&documentid=ed_U.FL_CAT&documenttype=Catalog&lang=en&productname=&series=U.FL
+The catalog requires axial connector removal and limits cable pull loads
+by direction and connector variant. It warns against forcefully twisting
+or deforming the wire. Use the enclosure-mounted SMA bulkhead to carry
+antenna loads and provide a separate gentle cable restraint/service loop;
+do not rely on the PCB U.FL snap connector as a structural mount.
+
+PROVISIONAL DESIGN JUDGMENT, NOT MANUFACTURER REQUIREMENTS
+A 2.4 mm local panel seat inside a larger ribbed boss leaves useful thread
+for nut/washer/antenna on the TE analogue. Reserve at least 11 mm clear
+washer seating diameter and wrench access. Keep mounting nut and antenna
+coupling nut separately accessible; counter-hold the connector while
+installing the antenna so its coax cannot twist.
+For the unknown kit, use a parametric nominal 6.6 mm through-hole and a
+provisional 10 mm cable centerline bend radius. These are initial CAD
+allowances, not validated dimensions. Make any rear hex capture replaceable
+or parameter-driven after measurement, rather than claiming a verified fit.
+Rib thickness, fillets, polymer torque, creep, impact/drop strength, cable
+diameter/bend limits and radio performance still require physical checks.
+
+LOCAL RESEARCH COPIES
+The manufacturer's public drawing was inspected visually via its distributor
+mirror https://docs.rs-online.com/3709/A700000010108438.pdf after direct TE
+download returned HTTP access denied. The local PDF/PNG are research evidence,
+not original project deliverables; cite manufacturer URLs in released files.

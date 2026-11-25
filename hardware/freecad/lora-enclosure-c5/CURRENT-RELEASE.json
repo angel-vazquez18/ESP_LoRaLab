@@ -1,0 +1,25 @@
+{
+  "revision": "R7",
+  "title": "C5 enclosure with battery housing, SMA antenna retention and reinforced internal mounts",
+  "adopted_date": "2026-11-25",
+  "release_directory": "revision-r7-enclosure",
+  "native_cad": "revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd",
+  "assembly_step": "revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.step",
+  "print_part_count": 7,
+  "optional_fit_coupon_count": 1,
+  "step_solid_count": 8,
+  "craftcloud_upload_directory": "revision-r7-enclosure/craftcloud/upload",
+  "preferred_prototype_process": "MJF, unfilled PA12",
+  "status": "Digital fit prototype verified; owned-hardware fit and physical qualification pending",
+  "electronics_scope": "Existing C5 PCB and firmware unchanged; Heltec BAT only, amplifier USB powered",
+  "nominal_oled_gap_mm": 0.5,
+  "supersedes": [
+    "final-design (R1)",
+    "revision-r2-oled",
+    "revision-r3-oled-gap",
+    "revision-r4-battery",
+    "revision-r5-sma",
+    "revision-r6-speaker"
+  ],
+  "ordering_authorized": false
+}

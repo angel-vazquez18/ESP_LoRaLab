@@ -1,0 +1,95 @@
+{
+  "source_status": "saved R6 native printed geometry plus audited fit references",
+  "shapes": {
+    "base": {
+      "native": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd",
+      "object": "EnclosureBase",
+      "kind": "printed-cad"
+    },
+    "lid": {
+      "native": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd",
+      "object": "EnclosureLid",
+      "kind": "printed-cad"
+    },
+    "speaker_retainer": {
+      "native": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd",
+      "object": "SpeakerRetainer",
+      "kind": "printed-cad"
+    },
+    "speaker_gasket": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerFrontGasket.brep",
+      "kind": "reference"
+    },
+    "speaker_pad": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerBackPad.brep",
+      "kind": "reference"
+    },
+    "speaker_screw_shafts": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerScrewShafts.brep",
+      "kind": "reference",
+      "part": "speaker_screws"
+    },
+    "speaker_nuts": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerNuts.brep",
+      "kind": "reference"
+    },
+    "speaker_body": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_body.brep",
+      "part": "speaker",
+      "kind": "reference"
+    },
+    "speaker_rim": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_rim.brep",
+      "part": "speaker",
+      "kind": "reference"
+    },
+    "speaker_diaphragm": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_diaphragm.brep",
+      "part": "speaker",
+      "kind": "reference"
+    },
+    "speaker_screw_heads": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_heads.brep",
+      "part": "speaker_screws",
+      "kind": "reference"
+    },
+    "speaker_screw_washers": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_washers.brep",
+      "part": "speaker_screws",
+      "kind": "reference"
+    },
+    "speaker_lead_a": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadA.brep",
+      "kind": "reference"
+    },
+    "speaker_lead_b": {
+      "brep": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadB.brep",
+      "kind": "reference"
+    }
+  },
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\prepare_inputs.py": "16c422f5ce96854464481a936cee650684b28041abfeb6dfc2c42cd1541157a6",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-geometry-plan.json": "26177bf6efe03c86ae188a2a4959ecef2fb780d3b774ffa418611b8e4f796089",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\speaker-candidate-audit.json": "e29042147d7fc4b8e40bd25cf0283555b9bfa0b5eb61c6762cf39ae64e87f744",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerFrontGasket.brep": "e097d580852758565675aca6ce2991e5bd536d26092aefe48ee353f5f0e92a4c",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerBackPad.brep": "17950ccd8eddd8e93abf4c3ba5ee498611af9911ffe8b004faa6517e56d113a7",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerScrewShafts.brep": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerNuts.brep": "af57ad8573f119288a14e0d029a9af4315e71e5451220bdd2ae519f1a0e0c45d",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_body.brep": "abb08a73f4ef503c803e3e97894854609f689c3d31ec3bfd475b45e1067dbe1f",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_rim.brep": "5deeeb81055acf02fa6f519a8470c754db3e3962d363390062cd224133f5329f",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_diaphragm.brep": "9f7f8c39e5b33384bcf0a85dba4078a8855530aa95c7c6928a4276f8c72c33ce",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_heads.brep": "c7f4a31637e79e41620aeaad092199710f4784f70359521d1b6221587e56a182",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\reference\\speaker_screw_washers.brep": "2641a1273cd3a66c73cd1a6247ca13eb0fb003c64827b06fcc7ea6ec38b4e067",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadA.brep": "e1edccd95898f7bfec8a159ec34b6cabee04a9b944ed776644098343b85f5c45",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\audit\\ReferenceSpeakerLeadB.brep": "58d09fb74dea493bc6823a96141ab1cdfee219bdfeb7ff01e9e70466080b1c7c",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": "b2c616f78a5f2515217f5c06ec199f38b0106067289fdab60a29e0879d1d9678",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\interactive\\NATIVE-INPUT-VALIDATION.json": "110ef8120652ea73d7aceea75d9265b6cd6fb5ec6d77e375f12faba0426d3527"
+  },
+  "limitations": [
+    "Illustrative oval speaker from the photo within the conservative 15 x 10 x 3.5 mm rectangular fit envelope. All engineering collision checks use the full box, not this visual approximation.",
+    "Gasket and rear pad rectangles indicate allowance only; trim support to the actual speaker frame and keep the diaphragm clear.",
+    "Screw/washer/nut and wire envelopes are references. Actual terminal left/right polarity and wire entry shape require checking on hardware."
+  ]
+}

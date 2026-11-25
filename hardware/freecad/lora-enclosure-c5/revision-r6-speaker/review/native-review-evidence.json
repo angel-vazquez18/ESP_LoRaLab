@@ -1,0 +1,856 @@
+{
+  "date": "2026-11-25",
+  "scope": "Read-only geometry/parameter inventory; existing detailed fit audits reviewed separately; no load simulation or physical testing.",
+  "native_sha256": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+  "matches_existing_export_audit": true,
+  "document_label": "LoRa-Enclosure-C5-R6-Speaker",
+  "object_count": 3473,
+  "object_types": {
+    "Spreadsheet::Sheet": 2,
+    "Part::Box": 55,
+    "Part::Fillet": 21,
+    "Part::Cut": 17,
+    "Part::Cylinder": 96,
+    "Part::Cone": 4,
+    "Part::MultiFuse": 18,
+    "Part::Feature": 2954,
+    "App::Part": 33,
+    "App::Origin": 33,
+    "App::Line": 99,
+    "App::Plane": 99,
+    "App::Point": 33,
+    "Part::Plane": 2,
+    "Part::Loft": 1,
+    "Part::Prism": 6
+  },
+  "parts": {
+    "EnclosureBase": {
+      "type": "Part::Cut",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48945.86014801146,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ],
+      "size_mm": [
+        78.8,
+        104.0,
+        35.0
+      ]
+    },
+    "EnclosureLid": {
+      "type": "Part::Cut",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 27823.089277191848,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000006
+      ],
+      "size_mm": [
+        78.80000019999999,
+        98.80000019999999,
+        16.600000100000006
+      ]
+    },
+    "PTTPlunger": {
+      "type": "Part::MultiFuse",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 459.9291644855457,
+      "bounds_mm": [
+        45.0,
+        3.0,
+        16.2,
+        57.0,
+        15.0,
+        26.400000000000002
+      ],
+      "size_mm": [
+        12.0,
+        12.0,
+        10.200000000000003
+      ]
+    },
+    "PTTStopCup": {
+      "type": "Part::Cut",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 650.9008562343834,
+      "bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        17.15,
+        63.0,
+        17.3,
+        21.0
+      ],
+      "size_mm": [
+        24.0,
+        16.6,
+        3.8500000000000014
+      ]
+    },
+    "BatteryCover": {
+      "type": "Part::Cut",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ],
+      "size_mm": [
+        78.8,
+        104.0,
+        5.399999999999999
+      ]
+    },
+    "SpeakerRetainer": {
+      "type": "Part::Cut",
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 867.1950636047765,
+      "bounds_mm": [
+        39.5,
+        38.0,
+        13.799999999999999,
+        69.5,
+        53.5,
+        16.4
+      ],
+      "size_mm": [
+        30.0,
+        15.5,
+        2.5999999999999996
+      ]
+    }
+  },
+  "parameters": {
+    "Parameters": [
+      {
+        "row": 1,
+        "label": "'PCBWidth",
+        "value": "70",
+        "expression": "70"
+      },
+      {
+        "row": 2,
+        "label": "'PCBLength",
+        "value": "90",
+        "expression": "90"
+      },
+      {
+        "row": 3,
+        "label": "'PCBThickness",
+        "value": "1.6",
+        "expression": "1.6"
+      },
+      {
+        "row": 4,
+        "label": "'EdgeClearance",
+        "value": "2",
+        "expression": "2"
+      },
+      {
+        "row": 5,
+        "label": "'Wall",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 6,
+        "label": "'Floor",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 7,
+        "label": "'Standoff",
+        "value": "4",
+        "expression": "4"
+      },
+      {
+        "row": 8,
+        "label": "'Headroom",
+        "value": "13",
+        "expression": "13"
+      },
+      {
+        "row": 9,
+        "label": "'LidThickness",
+        "value": "3.6",
+        "expression": "3.6"
+      },
+      {
+        "row": 10,
+        "label": "'MountInset",
+        "value": "4",
+        "expression": "4"
+      },
+      {
+        "row": 11,
+        "label": "'BossOD",
+        "value": "7",
+        "expression": "7"
+      },
+      {
+        "row": 12,
+        "label": "'InsertBore",
+        "value": "4.4",
+        "expression": "4.4"
+      },
+      {
+        "row": 13,
+        "label": "'InsertPilotDepth",
+        "value": "5",
+        "expression": "5"
+      },
+      {
+        "row": 14,
+        "label": "'ScrewClearance",
+        "value": "3.4",
+        "expression": "3.4"
+      },
+      {
+        "row": 15,
+        "label": "'LipDepth",
+        "value": "1.6",
+        "expression": "1.6"
+      },
+      {
+        "row": 16,
+        "label": "'LipThickness",
+        "value": "1.2",
+        "expression": "1.2"
+      },
+      {
+        "row": 17,
+        "label": "'FitGap",
+        "value": "0.4",
+        "expression": "0.4"
+      },
+      {
+        "row": 18,
+        "label": "'OLEDX",
+        "value": "23",
+        "expression": "23"
+      },
+      {
+        "row": 19,
+        "label": "'OLEDY",
+        "value": "58.05",
+        "expression": "58.05"
+      },
+      {
+        "row": 20,
+        "label": "'OLEDWidth",
+        "value": "16.4",
+        "expression": "16.4"
+      },
+      {
+        "row": 21,
+        "label": "'OLEDLength",
+        "value": "27",
+        "expression": "27"
+      },
+      {
+        "row": 22,
+        "label": "'MicX",
+        "value": "54.5",
+        "expression": "54.5"
+      },
+      {
+        "row": 23,
+        "label": "'MicY",
+        "value": "30.5",
+        "expression": "30.5"
+      },
+      {
+        "row": 24,
+        "label": "'MicPort",
+        "value": "1.6",
+        "expression": "1.6"
+      },
+      {
+        "row": 25,
+        "label": "'PTTX",
+        "value": "51",
+        "expression": "51"
+      },
+      {
+        "row": 26,
+        "label": "'PTTY",
+        "value": "9",
+        "expression": "9"
+      },
+      {
+        "row": 27,
+        "label": "'PTTHeight",
+        "value": "8",
+        "expression": "8"
+      },
+      {
+        "row": 28,
+        "label": "'ButtonDiameter",
+        "value": "8",
+        "expression": "8"
+      },
+      {
+        "row": 29,
+        "label": "'ButtonGap",
+        "value": "0.4",
+        "expression": "0.4"
+      },
+      {
+        "row": 30,
+        "label": "'ButtonFlange",
+        "value": "12",
+        "expression": "12"
+      },
+      {
+        "row": 31,
+        "label": "'ButtonFlangeThickness",
+        "value": "1.2",
+        "expression": "1.2"
+      },
+      {
+        "row": 32,
+        "label": "'ButtonProtrusion",
+        "value": "1.8",
+        "expression": "1.8"
+      },
+      {
+        "row": 33,
+        "label": "'SwitchReleaseGap",
+        "value": "0.2",
+        "expression": "0.2"
+      },
+      {
+        "row": 34,
+        "label": "'USBX",
+        "value": "23",
+        "expression": "23"
+      },
+      {
+        "row": 35,
+        "label": "'USBWidth",
+        "value": "16",
+        "expression": "16"
+      },
+      {
+        "row": 36,
+        "label": "'USBBottomAbovePCB",
+        "value": "3.5",
+        "expression": "3.5"
+      },
+      {
+        "row": 37,
+        "label": "'USBHeight",
+        "value": "9.5",
+        "expression": "=B8 - B36"
+      },
+      {
+        "row": 38,
+        "label": "'SpeakerY",
+        "value": "66",
+        "expression": "66"
+      },
+      {
+        "row": 39,
+        "label": "'SpeakerPassage",
+        "value": "5",
+        "expression": "5"
+      },
+      {
+        "row": 40,
+        "label": "'AntennaX",
+        "value": "47",
+        "expression": "47"
+      },
+      {
+        "row": 41,
+        "label": "'AntennaPassage",
+        "value": "6.6",
+        "expression": "6.6"
+      },
+      {
+        "row": 42,
+        "label": "'CornerRadius",
+        "value": "4.5",
+        "expression": "4.5"
+      },
+      {
+        "row": 43,
+        "label": "'PCBTop",
+        "value": "8",
+        "expression": "=B6 + B7 + B3"
+      },
+      {
+        "row": 44,
+        "label": "'SeamHeight",
+        "value": "21",
+        "expression": "=B43 + B8"
+      },
+      {
+        "row": 45,
+        "label": "'OuterWidth",
+        "value": "78.8",
+        "expression": "=B1 + 2 * (B4 + B5)"
+      },
+      {
+        "row": 46,
+        "label": "'OuterLength",
+        "value": "98.8",
+        "expression": "=B2 + 2 * (B4 + B5)"
+      },
+      {
+        "row": 47,
+        "label": "'TotalHeight",
+        "value": "24.6",
+        "expression": "=B44 + B9"
+      },
+      {
+        "row": 48,
+        "label": "'USBBottom",
+        "value": "11.5",
+        "expression": "=B43 + B36"
+      },
+      {
+        "row": 49,
+        "label": "'PTTContactZ",
+        "value": "16.2",
+        "expression": "=B43 + B27 + B33"
+      },
+      {
+        "row": 50,
+        "label": "'TieSlotWidth",
+        "value": "3",
+        "expression": "3"
+      },
+      {
+        "row": 51,
+        "label": "'TieSlotHeight",
+        "value": "1.2",
+        "expression": "1.2"
+      },
+      {
+        "row": 52,
+        "label": "'ResetX",
+        "value": "15.09427",
+        "expression": "15.09427"
+      },
+      {
+        "row": 53,
+        "label": "'ProgramX",
+        "value": "30.90578",
+        "expression": "30.90578"
+      },
+      {
+        "row": 54,
+        "label": "'ServiceY",
+        "value": "85.99995",
+        "expression": "85.99995"
+      },
+      {
+        "row": 55,
+        "label": "'ServicePort",
+        "value": "3.2",
+        "expression": "3.2"
+      },
+      {
+        "row": 56,
+        "label": "'BlindFloor",
+        "value": "1.2",
+        "expression": "1.2"
+      },
+      {
+        "row": 57,
+        "label": "'BossFootOD",
+        "value": "9",
+        "expression": "9"
+      },
+      {
+        "row": 58,
+        "label": "'BossFootHeight",
+        "value": "1.5",
+        "expression": "1.5"
+      },
+      {
+        "row": 59,
+        "label": "'PTTSwitchTravel",
+        "value": "0.25",
+        "expression": "0.25"
+      },
+      {
+        "row": 60,
+        "label": "'PTTStopShelf",
+        "value": "2",
+        "expression": "2"
+      },
+      {
+        "row": 61,
+        "label": "'PTTStopRadialGap",
+        "value": "0.6",
+        "expression": "0.6"
+      },
+      {
+        "row": 62,
+        "label": "'PTTStopOuter",
+        "value": "16.6",
+        "expression": "16.6"
+      },
+      {
+        "row": 63,
+        "label": "'PTTStopFootHole",
+        "value": "5.2",
+        "expression": "5.2"
+      },
+      {
+        "row": 64,
+        "label": "'PTTStopScrewSpan",
+        "value": "18",
+        "expression": "18"
+      },
+      {
+        "row": 65,
+        "label": "'PTTStopScrewHole",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 66,
+        "label": "'PTTStopLugDiameter",
+        "value": "6",
+        "expression": "6"
+      },
+      {
+        "row": 67,
+        "label": "'PTTStopContactZ",
+        "value": "19.150000000000002",
+        "expression": "=B44 - 0.2 - B31 - B33 - B59"
+      },
+      {
+        "row": 68,
+        "label": "'PTTStopBottomZ",
+        "value": "17.150000000000002",
+        "expression": "=B67 - B60"
+      },
+      {
+        "row": 69,
+        "label": "'PTTStopHeight",
+        "value": "3.849999999999998",
+        "expression": "=B44 - B68"
+      },
+      {
+        "row": 70,
+        "label": "'MicPatternRadius",
+        "value": "2.6",
+        "expression": "2.6"
+      },
+      {
+        "row": 71,
+        "label": "'InsertLength",
+        "value": "4",
+        "expression": "4"
+      },
+      {
+        "row": 72,
+        "label": "'ClosureScrewLength",
+        "value": "22",
+        "expression": "22"
+      },
+      {
+        "row": 73,
+        "label": "'OLEDBezelThickness",
+        "value": "1.6",
+        "expression": "1.6"
+      },
+      {
+        "row": 74,
+        "label": "'OLEDBezelLedge",
+        "value": "2",
+        "expression": "2"
+      },
+      {
+        "row": 75,
+        "label": "'OLEDBezelRecessDepth",
+        "value": "2.5",
+        "expression": "=B9 - B73 + B78"
+      },
+      {
+        "row": 76,
+        "label": "'OLEDBezelFaceZ",
+        "value": "22.1",
+        "expression": "=B79 + B73"
+      },
+      {
+        "row": 77,
+        "label": "'OLEDRecessToolOverrun",
+        "value": "0.1",
+        "expression": "0.1"
+      },
+      {
+        "row": 78,
+        "label": "'OLEDBezelDrop",
+        "value": "0.5",
+        "expression": "0.5"
+      },
+      {
+        "row": 79,
+        "label": "'OLEDLocalUndersideZ",
+        "value": "20.5",
+        "expression": "=B44 - B78"
+      },
+      {
+        "row": 80,
+        "label": "'OLEDHeadReliefRadius",
+        "value": "2.2",
+        "expression": "2.2"
+      },
+      {
+        "row": 81,
+        "label": "'OLEDHeadSpanX",
+        "value": "14",
+        "expression": "14"
+      },
+      {
+        "row": 82,
+        "label": "'OLEDHeadSpanY",
+        "value": "29",
+        "expression": "29"
+      },
+      {
+        "row": 83,
+        "label": "'BatteryBayDepth",
+        "value": "14",
+        "expression": "14"
+      },
+      {
+        "row": 84,
+        "label": "'BatteryCoverThickness",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 85,
+        "label": "'BatteryPostDiameter",
+        "value": "8",
+        "expression": "8"
+      },
+      {
+        "row": 86,
+        "label": "'BatteryInsertDepth",
+        "value": "4.5",
+        "expression": "4.5"
+      },
+      {
+        "row": 87,
+        "label": "'BatteryHoodTop",
+        "value": "11.1",
+        "expression": "11.1"
+      },
+      {
+        "row": 88,
+        "label": "'BatteryHoodBack",
+        "value": "99.6",
+        "expression": "99.6"
+      },
+      {
+        "row": 89,
+        "label": "'BatteryHoodChaseBack",
+        "value": "97.2",
+        "expression": "97.2"
+      },
+      {
+        "row": 90,
+        "label": "'BatteryEnvelopeWidth",
+        "value": "36",
+        "expression": "36"
+      },
+      {
+        "row": 91,
+        "label": "'BatteryEnvelopeLength",
+        "value": "68",
+        "expression": "68"
+      },
+      {
+        "row": 92,
+        "label": "'BatteryEnvelopeThickness",
+        "value": "10",
+        "expression": "10"
+      },
+      {
+        "row": 93,
+        "label": "'BatteryFloorAllowance",
+        "value": "1",
+        "expression": "1"
+      },
+      {
+        "row": 94,
+        "label": "'BatteryStrapWidth",
+        "value": "10",
+        "expression": "10"
+      },
+      {
+        "row": 95,
+        "label": "'BatteryStrapSlotWidth",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 96,
+        "label": "'SMAMountZ",
+        "value": "14",
+        "expression": "14"
+      },
+      {
+        "row": 97,
+        "label": "'SMARearReliefDiameter",
+        "value": "11.2",
+        "expression": "11.2"
+      },
+      {
+        "row": 98,
+        "label": "'SMASeatThickness",
+        "value": "2.4",
+        "expression": "2.4"
+      },
+      {
+        "row": 99,
+        "label": "'SMABackingDepth",
+        "value": "3",
+        "expression": "3"
+      },
+      {
+        "row": 100,
+        "label": "'SMABackingWidth",
+        "value": "18",
+        "expression": "18"
+      }
+    ],
+    "SpeakerParameters": [
+      {
+        "row": 1,
+        "label": "'Speaker body length (mm)",
+        "value": "15",
+        "expression": "15"
+      },
+      {
+        "row": 2,
+        "label": "'Speaker body width (mm)",
+        "value": "10",
+        "expression": "10"
+      },
+      {
+        "row": 3,
+        "label": "'Speaker body thickness (mm)",
+        "value": "3.5",
+        "expression": "3.5"
+      },
+      {
+        "row": 4,
+        "label": "'Speaker centre X (mm)",
+        "value": "54.5",
+        "expression": "54.5"
+      },
+      {
+        "row": 5,
+        "label": "'Speaker centre Y (mm)",
+        "value": "47",
+        "expression": "47"
+      },
+      {
+        "row": 6,
+        "label": "'Lid underside Z (mm)",
+        "value": "21",
+        "expression": "21"
+      },
+      {
+        "row": 7,
+        "label": "'Front frame allowance (mm)",
+        "value": "0.6",
+        "expression": "0.6"
+      },
+      {
+        "row": 8,
+        "label": "'Rear pad allowance (mm)",
+        "value": "0.5",
+        "expression": "0.5"
+      },
+      {
+        "row": 9,
+        "label": "'Pocket side clearance (mm)",
+        "value": "0.3",
+        "expression": "0.3"
+      },
+      {
+        "row": 10,
+        "label": "'Cradle wall (mm)",
+        "value": "1.2",
+        "expression": "1.2"
+      },
+      {
+        "row": 11,
+        "label": "'Retainer thickness (mm)",
+        "value": "2.6",
+        "expression": "2.6"
+      },
+      {
+        "row": 12,
+        "label": "'Grille bore diameter (mm)",
+        "value": "1.8",
+        "expression": "1.8"
+      }
+    ]
+  },
+  "retained_construction_history": {
+    "SpeakerMountUntrimmed": {
+      "type": "Part::Feature",
+      "used_by": []
+    },
+    "SpeakerRetainerCutters": {
+      "type": "Part::Feature",
+      "used_by": []
+    },
+    "SpeakerPassage": {
+      "type": "Part::Cylinder",
+      "used_by": []
+    },
+    "SpeakerTieSlot1": {
+      "type": "Part::Box",
+      "used_by": []
+    },
+    "SpeakerTieSlot2": {
+      "type": "Part::Box",
+      "used_by": []
+    },
+    "AntennaPassage": {
+      "type": "Part::Cylinder",
+      "used_by": []
+    }
+  },
+  "speaker_grille_open_area_mm2": 22.902210444669592,
+  "speaker_grille_open_fraction_of_13_by_8_window": 0.22021356196797684,
+  "all_printed_parts_valid_closed_single_solids": true,
+  "native_file_unchanged": true
+}

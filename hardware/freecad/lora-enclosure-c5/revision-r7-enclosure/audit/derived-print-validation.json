@@ -1,0 +1,2328 @@
+{
+  "ok": true,
+  "scope": "Approved3MF master decomposition; exact3MF and checkedfloat32 STL; translation-only ordering files",
+  "failures": [],
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\printing\\C5-R7-all-parts-mm.3mf": "eb52f53a0c4d385cc17d057ee5f2cbfdfefebfef4e57e40096103f43e1f944b8",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\cad\\LoRa-Enclosure-C5-R7-Reinforced.FCStd": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\release-plan.json": "62d50a644513fc23d9b6ef4da7e9046f3153db554e5c7cbc88802082d1516b01",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\saved-r7-validation.json": "99879309d1fc0f0172fb379ecd82d0db54e59f7039311cc11f6feffebf280f5b"
+  },
+  "source_leaf_count": 1,
+  "connected_part_count": 8,
+  "parts": {
+    "EnclosureBase": {
+      "name": "EnclosureBase",
+      "stem": "enclosure-base",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 0,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "relative_volume_error": 0.00020495765028628358,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 7594,
+        "unique_vertices_after_rounding": 3789,
+        "bbox_mm": {
+          "min": [
+            -4.4,
+            -4.4,
+            -14.0
+          ],
+          "max": [
+            74.4,
+            99.6,
+            21.0
+          ],
+          "size": [
+            78.80000000000001,
+            104.0,
+            35.0
+          ]
+        },
+        "undirected_edges": 11391,
+        "edge_incidence_histogram": {
+          "2": 11391
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          7594
+        ],
+        "signed_volume_mm3": 48943.9377699694,
+        "absolute_volume_mm3": 48943.9377699694,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        4.4,
+        4.4,
+        14.0
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-enclosure-base-mm.3mf",
+          "sha256": "aea2a21cd69eff3dea371a8a83dbbd97bb5b9dc37369406b920322be6b789408",
+          "bytes": 70608,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-base-mm.3mf",
+              "ok": true,
+              "bytes": 70608,
+              "format": "3mf_resolved",
+              "triangles": 7594,
+              "unique_vertices_after_rounding": 3789,
+              "bbox_mm": {
+                "min": [
+                  -4.4,
+                  -4.4,
+                  -14.0
+                ],
+                "max": [
+                  74.4,
+                  99.6,
+                  21.0
+                ],
+                "size": [
+                  78.80000000000001,
+                  104.0,
+                  35.0
+                ]
+              },
+              "undirected_edges": 11391,
+              "edge_incidence_histogram": {
+                "2": 11391
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                7594
+              ],
+              "signed_volume_mm3": 48943.9377699694,
+              "absolute_volume_mm3": 48943.9377699694,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.4210854715202004e-14,
+            "native_relative_volume_error": 0.00020495765028628358
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-enclosure-base-mm.stl",
+          "sha256": "b3f6da72cf6f1fe328092a7a82c1ca780f0f35f485f33f1e3d29af1ffc7ddb20",
+          "bytes": 379784,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.80859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-base-mm.stl",
+              "ok": true,
+              "bytes": 379784,
+              "format": "binary",
+              "triangles": 7594,
+              "unique_vertices_after_rounding": 3789,
+              "bbox_mm": {
+                "min": [
+                  -4.400000095367432,
+                  -4.400000095367432,
+                  -14.0
+                ],
+                "max": [
+                  74.4000015258789,
+                  99.5999984741211,
+                  21.0
+                ],
+                "size": [
+                  78.80000162124634,
+                  103.99999856948853,
+                  35.0
+                ]
+              },
+              "undirected_edges": 11391,
+              "edge_incidence_histogram": {
+                "2": 11391
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                7594
+              ],
+              "signed_volume_mm3": 48943.94706953068,
+              "absolute_volume_mm3": 48943.94706953068,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.5258789147765128e-06,
+            "native_relative_volume_error": 0.00020476768487510342
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-enclosure-base-mm.3mf",
+          "sha256": "b27abb09960abfc3cf399b407db11c7648fc6c68251e264dabdc7b829cd5a864",
+          "bytes": 70917,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-base-mm.3mf",
+              "ok": true,
+              "bytes": 70917,
+              "format": "3mf_resolved",
+              "triangles": 7594,
+              "unique_vertices_after_rounding": 3789,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.8,
+                  104.0,
+                  35.0
+                ],
+                "size": [
+                  78.8,
+                  104.0,
+                  35.0
+                ]
+              },
+              "undirected_edges": 11391,
+              "edge_incidence_histogram": {
+                "2": 11391
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                7594
+              ],
+              "signed_volume_mm3": 48943.937769969336,
+              "absolute_volume_mm3": 48943.937769969336,
+              "failures": []
+            },
+            "native_bounds_error_mm": 8.881784197001252e-16,
+            "native_relative_volume_error": 0.00020495765028762125
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-enclosure-base-mm.stl",
+          "sha256": "c0d0f231ac0f40f4e94d82c814875dcc8bdda8195bae2ee592b51d34230a311c",
+          "bytes": 379784,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.80859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-base-mm.stl",
+              "ok": true,
+              "bytes": 379784,
+              "format": "binary",
+              "triangles": 7594,
+              "unique_vertices_after_rounding": 3789,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.80000305175781,
+                  104.0,
+                  35.0
+                ],
+                "size": [
+                  78.80000305175781,
+                  104.0,
+                  35.0
+                ]
+              },
+              "undirected_edges": 11391,
+              "edge_incidence_histogram": {
+                "2": 11391
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                7594
+              ],
+              "signed_volume_mm3": 48943.943821602385,
+              "absolute_volume_mm3": 48943.943821602385,
+              "failures": []
+            },
+            "native_bounds_error_mm": 3.051757815342171e-06,
+            "native_relative_volume_error": 0.0002048340314495013
+          }
+        }
+      }
+    },
+    "EnclosureLid": {
+      "name": "EnclosureLid",
+      "stem": "enclosure-lid",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 1,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 1.0000000472132342e-07,
+        "relative_volume_error": 5.6185038518631744e-05,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 8240,
+        "unique_vertices_after_rounding": 4062,
+        "bbox_mm": {
+          "min": [
+            -4.4,
+            -4.4,
+            8.0
+          ],
+          "max": [
+            74.4,
+            94.4,
+            24.6
+          ],
+          "size": [
+            78.80000000000001,
+            98.80000000000001,
+            16.6
+          ]
+        },
+        "undirected_edges": 12360,
+        "edge_incidence_histogram": {
+          "2": 12360
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          8240
+        ],
+        "signed_volume_mm3": 28231.572434960402,
+        "absolute_volume_mm3": 28231.572434960402,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        4.4,
+        4.4,
+        -8.0
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-enclosure-lid-mm.3mf",
+          "sha256": "da3bf25bdbe0b061e9b32425b8deda18213e25f364c43237308435cd08ee2153",
+          "bytes": 76657,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-lid-mm.3mf",
+              "ok": true,
+              "bytes": 76657,
+              "format": "3mf_resolved",
+              "triangles": 8240,
+              "unique_vertices_after_rounding": 4062,
+              "bbox_mm": {
+                "min": [
+                  -4.4,
+                  -4.4,
+                  8.0
+                ],
+                "max": [
+                  74.4,
+                  94.4,
+                  24.6
+                ],
+                "size": [
+                  78.80000000000001,
+                  98.80000000000001,
+                  16.6
+                ]
+              },
+              "undirected_edges": 12360,
+              "edge_incidence_histogram": {
+                "2": 12360
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                8240
+              ],
+              "signed_volume_mm3": 28231.572434960402,
+              "absolute_volume_mm3": 28231.572434960402,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.0000000472132342e-07,
+            "native_relative_volume_error": 5.6185038518631744e-05
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-enclosure-lid-mm.stl",
+          "sha256": "82bb2061789984c6f186cab1a3de622f67dd45dc9482b7532c08fb01d24997c9",
+          "bytes": 412084,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.80859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-lid-mm.stl",
+              "ok": true,
+              "bytes": 412084,
+              "format": "binary",
+              "triangles": 8240,
+              "unique_vertices_after_rounding": 4062,
+              "bbox_mm": {
+                "min": [
+                  -4.400000095367432,
+                  -4.400000095367432,
+                  8.0
+                ],
+                "max": [
+                  74.4000015258789,
+                  94.4000015258789,
+                  24.600000381469727
+                ],
+                "size": [
+                  78.80000162124634,
+                  98.80000162124634,
+                  16.600000381469727
+                ]
+              },
+              "undirected_edges": 12360,
+              "edge_incidence_histogram": {
+                "2": 12360
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                8240
+              ],
+              "signed_volume_mm3": 28231.574917584636,
+              "absolute_volume_mm3": 28231.574917584636,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.4258789207133304e-06,
+            "native_relative_volume_error": 5.6097105593437404e-05
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-enclosure-lid-mm.3mf",
+          "sha256": "ac5943b4f4da063ff0cb0964e1557e4e5c7ab08090e4594bcd9ad18295474b99",
+          "bytes": 76805,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-lid-mm.3mf",
+              "ok": true,
+              "bytes": 76805,
+              "format": "3mf_resolved",
+              "triangles": 8240,
+              "unique_vertices_after_rounding": 4062,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.8,
+                  98.8,
+                  16.6
+                ],
+                "size": [
+                  78.8,
+                  98.8,
+                  16.6
+                ]
+              },
+              "undirected_edges": 12360,
+              "edge_incidence_histogram": {
+                "2": 12360
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                8240
+              ],
+              "signed_volume_mm3": 28231.5724349604,
+              "absolute_volume_mm3": 28231.5724349604,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.0000000472132342e-07,
+            "native_relative_volume_error": 5.6185038518760594e-05
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-enclosure-lid-mm.stl",
+          "sha256": "53c3b04024f91faa0305e5c48873228604fd1cd10461894aa620f08cab5d129d",
+          "bytes": 412084,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.80859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-enclosure-lid-mm.stl",
+              "ok": true,
+              "bytes": 412084,
+              "format": "binary",
+              "triangles": 8240,
+              "unique_vertices_after_rounding": 4062,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.80000305175781,
+                  98.80000305175781,
+                  16.600000381469727
+                ],
+                "size": [
+                  78.80000305175781,
+                  98.80000305175781,
+                  16.600000381469727
+                ]
+              },
+              "undirected_edges": 12360,
+              "edge_incidence_histogram": {
+                "2": 12360
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                8240
+              ],
+              "signed_volume_mm3": 28231.576383895503,
+              "absolute_volume_mm3": 28231.576383895503,
+              "failures": []
+            },
+            "native_bounds_error_mm": 2.9517578212789886e-06,
+            "native_relative_volume_error": 5.604516982239728e-05
+          }
+        }
+      }
+    },
+    "PTTPlunger": {
+      "name": "PTTPlunger",
+      "stem": "ptt-plunger",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 2,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 0.009799999999998477,
+        "relative_volume_error": 0.003221711605532308,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 524,
+        "unique_vertices_after_rounding": 264,
+        "bbox_mm": {
+          "min": [
+            45.0098,
+            3.00245,
+            16.2
+          ],
+          "max": [
+            57.0,
+            14.9976,
+            26.4
+          ],
+          "size": [
+            11.990200000000002,
+            11.99515,
+            10.2
+          ]
+        },
+        "undirected_edges": 786,
+        "edge_incidence_histogram": {
+          "2": 786
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          524
+        ],
+        "signed_volume_mm3": 458.44740535859984,
+        "absolute_volume_mm3": 458.44740535859984,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        -45.0098,
+        -3.00245,
+        -16.2
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-ptt-plunger-mm.3mf",
+          "sha256": "036fadaed51caf66afdb9b10d38adf1c93cfdcb68849daa5a2a059b6b0d38d4b",
+          "bytes": 5540,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-plunger-mm.3mf",
+              "ok": true,
+              "bytes": 5540,
+              "format": "3mf_resolved",
+              "triangles": 524,
+              "unique_vertices_after_rounding": 264,
+              "bbox_mm": {
+                "min": [
+                  45.0098,
+                  3.00245,
+                  16.2
+                ],
+                "max": [
+                  57.0,
+                  14.9976,
+                  26.4
+                ],
+                "size": [
+                  11.990200000000002,
+                  11.99515,
+                  10.2
+                ]
+              },
+              "undirected_edges": 786,
+              "edge_incidence_histogram": {
+                "2": 786
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                524
+              ],
+              "signed_volume_mm3": 458.44740535859984,
+              "absolute_volume_mm3": 458.44740535859984,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009799999999998477,
+            "native_relative_volume_error": 0.003221711605532308
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-ptt-plunger-mm.stl",
+          "sha256": "16c74e8267720443a1e9c0f054365c23f9539cd66216ac50c5771fc2373e7b77",
+          "bytes": 26284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 1.89208984375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-plunger-mm.stl",
+              "ok": true,
+              "bytes": 26284,
+              "format": "binary",
+              "triangles": 524,
+              "unique_vertices_after_rounding": 264,
+              "bbox_mm": {
+                "min": [
+                  45.00979995727539,
+                  3.0024499893188477,
+                  16.200000762939453
+                ],
+                "max": [
+                  57.0,
+                  14.997599601745605,
+                  26.399999618530273
+                ],
+                "size": [
+                  11.99020004272461,
+                  11.995149612426758,
+                  10.19999885559082
+                ]
+              },
+              "undirected_edges": 786,
+              "edge_incidence_histogram": {
+                "2": 786
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                524
+              ],
+              "signed_volume_mm3": 458.4473276244704,
+              "absolute_volume_mm3": 458.4473276244704,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009799957275390625,
+            "native_relative_volume_error": 0.003221880618796602
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-ptt-plunger-mm.3mf",
+          "sha256": "9d654e00ad3d0c11d7726c39ee36bba1c6fc50f4154f60394b063e8892959659",
+          "bytes": 5528,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-plunger-mm.3mf",
+              "ok": true,
+              "bytes": 5528,
+              "format": "3mf_resolved",
+              "triangles": 524,
+              "unique_vertices_after_rounding": 264,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  11.9902,
+                  11.99515,
+                  10.2
+                ],
+                "size": [
+                  11.9902,
+                  11.99515,
+                  10.2
+                ]
+              },
+              "undirected_edges": 786,
+              "edge_incidence_histogram": {
+                "2": 786
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                524
+              ],
+              "signed_volume_mm3": 458.44740535859995,
+              "absolute_volume_mm3": 458.44740535859995,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009799999999998477,
+            "native_relative_volume_error": 0.0032217116055320606
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-ptt-plunger-mm.stl",
+          "sha256": "73c5b2353243d139a4bb8e179f404436cf587dc7284739c1f8e53d0ee52921a4",
+          "bytes": 26284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 4.7149658203125e-07,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-plunger-mm.stl",
+              "ok": true,
+              "bytes": 26284,
+              "format": "binary",
+              "triangles": 524,
+              "unique_vertices_after_rounding": 264,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  11.99020004272461,
+                  11.995149612426758,
+                  10.199999809265137
+                ],
+                "size": [
+                  11.99020004272461,
+                  11.995149612426758,
+                  10.199999809265137
+                ]
+              },
+              "undirected_edges": 786,
+              "edge_incidence_histogram": {
+                "2": 786
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                524
+              ],
+              "signed_volume_mm3": 458.44737892214334,
+              "absolute_volume_mm3": 458.44737892214334,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009799999999998477,
+            "native_relative_volume_error": 0.0032217690849411723
+          }
+        }
+      }
+    },
+    "PTTStopCup": {
+      "name": "PTTStopCup",
+      "stem": "ptt-stop-cup",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 3,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 0.009300000000003195,
+        "relative_volume_error": 0.0007283358103120003,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 1004,
+        "unique_vertices_after_rounding": 498,
+        "bbox_mm": {
+          "min": [
+            39.0093,
+            0.7,
+            17.15
+          ],
+          "max": [
+            63.0,
+            17.3,
+            21.0
+          ],
+          "size": [
+            23.990699999999997,
+            16.6,
+            3.8500000000000014
+          ]
+        },
+        "undirected_edges": 1506,
+        "edge_incidence_histogram": {
+          "2": 1506
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          1004
+        ],
+        "signed_volume_mm3": 650.4267818318251,
+        "absolute_volume_mm3": 650.4267818318251,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        -39.0093,
+        -0.7,
+        -17.15
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-ptt-stop-cup-mm.3mf",
+          "sha256": "aa612f969d487a1ad25f122f27238b01603257dfac5262791b52fd3f9901fa45",
+          "bytes": 9944,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-stop-cup-mm.3mf",
+              "ok": true,
+              "bytes": 9944,
+              "format": "3mf_resolved",
+              "triangles": 1004,
+              "unique_vertices_after_rounding": 498,
+              "bbox_mm": {
+                "min": [
+                  39.0093,
+                  0.7,
+                  17.15
+                ],
+                "max": [
+                  63.0,
+                  17.3,
+                  21.0
+                ],
+                "size": [
+                  23.990699999999997,
+                  16.6,
+                  3.8500000000000014
+                ]
+              },
+              "undirected_edges": 1506,
+              "edge_incidence_histogram": {
+                "2": 1506
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                1004
+              ],
+              "signed_volume_mm3": 650.4267818318251,
+              "absolute_volume_mm3": 650.4267818318251,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009300000000003195,
+            "native_relative_volume_error": 0.0007283358103120003
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-ptt-stop-cup-mm.stl",
+          "sha256": "9af5c19ab37fa7c36ffccf5c8e110de7a06312cbea5dc46a4836069daff97e28",
+          "bytes": 50284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 1.885986328125e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-stop-cup-mm.stl",
+              "ok": true,
+              "bytes": 50284,
+              "format": "binary",
+              "triangles": 1004,
+              "unique_vertices_after_rounding": 498,
+              "bbox_mm": {
+                "min": [
+                  39.009300231933594,
+                  0.699999988079071,
+                  17.149999618530273
+                ],
+                "max": [
+                  63.0,
+                  17.299999237060547,
+                  21.0
+                ],
+                "size": [
+                  23.990699768066406,
+                  16.599999248981476,
+                  3.8500003814697266
+                ]
+              },
+              "undirected_edges": 1506,
+              "edge_incidence_histogram": {
+                "2": 1506
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                1004
+              ],
+              "signed_volume_mm3": 650.4267905301498,
+              "absolute_volume_mm3": 650.4267905301498,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.00930023193359375,
+            "native_relative_volume_error": 0.0007283224467949698
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-ptt-stop-cup-mm.3mf",
+          "sha256": "f26a24128481825a428eae967748eda5606d56ecae57947df4ac4338b0162091",
+          "bytes": 9894,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-stop-cup-mm.3mf",
+              "ok": true,
+              "bytes": 9894,
+              "format": "3mf_resolved",
+              "triangles": 1004,
+              "unique_vertices_after_rounding": 498,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  23.9907,
+                  16.6,
+                  3.85
+                ],
+                "size": [
+                  23.9907,
+                  16.6,
+                  3.85
+                ]
+              },
+              "undirected_edges": 1506,
+              "edge_incidence_histogram": {
+                "2": 1506
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                1004
+              ],
+              "signed_volume_mm3": 650.426781831825,
+              "absolute_volume_mm3": 650.426781831825,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009300000000003195,
+            "native_relative_volume_error": 0.000728335810312175
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-ptt-stop-cup-mm.stl",
+          "sha256": "cea6bcf02ade4060d64ca34adbb24499dc1275469d6d2fe10ae4ef817bb7205d",
+          "bytes": 50284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 9.490966796875e-07,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-ptt-stop-cup-mm.stl",
+              "ok": true,
+              "bytes": 50284,
+              "format": "binary",
+              "triangles": 1004,
+              "unique_vertices_after_rounding": 498,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  23.990699768066406,
+                  16.600000381469727,
+                  3.8499999046325684
+                ],
+                "size": [
+                  23.990699768066406,
+                  16.600000381469727,
+                  3.8499999046325684
+                ]
+              },
+              "undirected_edges": 1506,
+              "edge_incidence_histogram": {
+                "2": 1506
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                1004
+              ],
+              "signed_volume_mm3": 650.4267886091787,
+              "absolute_volume_mm3": 650.4267886091787,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.009300000000003195,
+            "native_relative_volume_error": 0.0007283253980448046
+          }
+        }
+      }
+    },
+    "BatteryCover": {
+      "name": "BatteryCover",
+      "stem": "battery-cover",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 4,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "relative_volume_error": 6.423800473559379e-06,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 2252,
+        "unique_vertices_after_rounding": 1112,
+        "bbox_mm": {
+          "min": [
+            -4.4,
+            -4.4,
+            -16.4
+          ],
+          "max": [
+            74.4,
+            99.6,
+            -11.0
+          ],
+          "size": [
+            78.80000000000001,
+            104.0,
+            5.399999999999999
+          ]
+        },
+        "undirected_edges": 3378,
+        "edge_incidence_histogram": {
+          "2": 3378
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          2252
+        ],
+        "signed_volume_mm3": 18577.712039869322,
+        "absolute_volume_mm3": 18577.712039869322,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        4.4,
+        4.4,
+        16.4
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-battery-cover-mm.3mf",
+          "sha256": "351cd2503e262d95b3edcda8ca6b7cec9819a256adba6e58d323cf8ffd9bb334",
+          "bytes": 20630,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-battery-cover-mm.3mf",
+              "ok": true,
+              "bytes": 20630,
+              "format": "3mf_resolved",
+              "triangles": 2252,
+              "unique_vertices_after_rounding": 1112,
+              "bbox_mm": {
+                "min": [
+                  -4.4,
+                  -4.4,
+                  -16.4
+                ],
+                "max": [
+                  74.4,
+                  99.6,
+                  -11.0
+                ],
+                "size": [
+                  78.80000000000001,
+                  104.0,
+                  5.399999999999999
+                ]
+              },
+              "undirected_edges": 3378,
+              "edge_incidence_histogram": {
+                "2": 3378
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2252
+              ],
+              "signed_volume_mm3": 18577.712039869322,
+              "absolute_volume_mm3": 18577.712039869322,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.4210854715202004e-14,
+            "native_relative_volume_error": 6.423800473559379e-06
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-battery-cover-mm.stl",
+          "sha256": "809e5fe939840fb410945d5f84d3c95a01f9f05c112a9f9a8624feed4ca48421",
+          "bytes": 112684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.80859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-battery-cover-mm.stl",
+              "ok": true,
+              "bytes": 112684,
+              "format": "binary",
+              "triangles": 2252,
+              "unique_vertices_after_rounding": 1112,
+              "bbox_mm": {
+                "min": [
+                  -4.400000095367432,
+                  -4.400000095367432,
+                  -16.399999618530273
+                ],
+                "max": [
+                  74.4000015258789,
+                  99.5999984741211,
+                  -11.0
+                ],
+                "size": [
+                  78.80000162124634,
+                  103.99999856948853,
+                  5.399999618530273
+                ]
+              },
+              "undirected_edges": 3378,
+              "edge_incidence_histogram": {
+                "2": 3378
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2252
+              ],
+              "signed_volume_mm3": 18577.708910019377,
+              "absolute_volume_mm3": 18577.708910019377,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.5258789147765128e-06,
+            "native_relative_volume_error": 6.255326011038492e-06
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-battery-cover-mm.3mf",
+          "sha256": "9547dd504fc31c44fd4f8511f452e8b323296604ed8a0297d9e215e4564bda42",
+          "bytes": 20622,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-battery-cover-mm.3mf",
+              "ok": true,
+              "bytes": 20622,
+              "format": "3mf_resolved",
+              "triangles": 2252,
+              "unique_vertices_after_rounding": 1112,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.8,
+                  104.0,
+                  5.4
+                ],
+                "size": [
+                  78.8,
+                  104.0,
+                  5.4
+                ]
+              },
+              "undirected_edges": 3378,
+              "edge_incidence_histogram": {
+                "2": 3378
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2252
+              ],
+              "signed_volume_mm3": 18577.712039869333,
+              "absolute_volume_mm3": 18577.712039869333,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.7763568394002505e-15,
+            "native_relative_volume_error": 6.423800474146858e-06
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-battery-cover-mm.stl",
+          "sha256": "1f340db18b4c9d62788bb696fe52f0151776bf05e55d5345b1e1b7b3426e9fef",
+          "bytes": 112684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.74755859375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-battery-cover-mm.stl",
+              "ok": true,
+              "bytes": 112684,
+              "format": "binary",
+              "triangles": 2252,
+              "unique_vertices_after_rounding": 1112,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  78.80000305175781,
+                  104.0,
+                  5.400000095367432
+                ],
+                "size": [
+                  78.80000305175781,
+                  104.0,
+                  5.400000095367432
+                ]
+              },
+              "undirected_edges": 3378,
+              "edge_incidence_histogram": {
+                "2": 3378
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2252
+              ],
+              "signed_volume_mm3": 18577.712931353515,
+              "absolute_volume_mm3": 18577.712931353515,
+              "failures": []
+            },
+            "native_bounds_error_mm": 3.051757815342171e-06,
+            "native_relative_volume_error": 6.471787540946247e-06
+          }
+        }
+      }
+    },
+    "SpeakerRetainer": {
+      "name": "SpeakerRetainer",
+      "stem": "speaker-retainer",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 5,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 0.0,
+        "relative_volume_error": 7.320592234714034e-05,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 904,
+        "unique_vertices_after_rounding": 448,
+        "bbox_mm": {
+          "min": [
+            39.5,
+            38.0,
+            13.2
+          ],
+          "max": [
+            69.5,
+            53.5,
+            16.4
+          ],
+          "size": [
+            30.0,
+            15.5,
+            3.1999999999999993
+          ]
+        },
+        "undirected_edges": 1356,
+        "edge_incidence_histogram": {
+          "2": 1356
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          904
+        ],
+        "signed_volume_mm3": 1078.2050476204877,
+        "absolute_volume_mm3": 1078.2050476204877,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        -39.5,
+        -38.0,
+        -13.2
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-speaker-retainer-mm.3mf",
+          "sha256": "33852e0fc983855e2ca7274d0ef76b265898fa4baf1128f96fd061b73eb5ca11",
+          "bytes": 8810,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-speaker-retainer-mm.3mf",
+              "ok": true,
+              "bytes": 8810,
+              "format": "3mf_resolved",
+              "triangles": 904,
+              "unique_vertices_after_rounding": 448,
+              "bbox_mm": {
+                "min": [
+                  39.5,
+                  38.0,
+                  13.2
+                ],
+                "max": [
+                  69.5,
+                  53.5,
+                  16.4
+                ],
+                "size": [
+                  30.0,
+                  15.5,
+                  3.1999999999999993
+                ]
+              },
+              "undirected_edges": 1356,
+              "edge_incidence_histogram": {
+                "2": 1356
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                904
+              ],
+              "signed_volume_mm3": 1078.2050476204877,
+              "absolute_volume_mm3": 1078.2050476204877,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.0,
+            "native_relative_volume_error": 7.320592234714034e-05
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-speaker-retainer-mm.stl",
+          "sha256": "cbb4f71c517c2c300687cd08222fc038f336bcdf33258b62c7892ef36115e8ee",
+          "bytes": 45284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.61328125e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-speaker-retainer-mm.stl",
+              "ok": true,
+              "bytes": 45284,
+              "format": "binary",
+              "triangles": 904,
+              "unique_vertices_after_rounding": 448,
+              "bbox_mm": {
+                "min": [
+                  39.5,
+                  38.0,
+                  13.199999809265137
+                ],
+                "max": [
+                  69.5,
+                  53.5,
+                  16.399999618530273
+                ],
+                "size": [
+                  30.0,
+                  15.5,
+                  3.1999998092651367
+                ]
+              },
+              "undirected_edges": 1356,
+              "edge_incidence_histogram": {
+                "2": 1356
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                904
+              ],
+              "signed_volume_mm3": 1078.2049332308347,
+              "absolute_volume_mm3": 1078.2049332308347,
+              "failures": []
+            },
+            "native_bounds_error_mm": 3.8146972514141453e-07,
+            "native_relative_volume_error": 7.331200725110924e-05
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-speaker-retainer-mm.3mf",
+          "sha256": "e1c78e9d09765c82dfdc8480cca984b25763cb31bb2e90faa8d49b139624c812",
+          "bytes": 8758,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-speaker-retainer-mm.3mf",
+              "ok": true,
+              "bytes": 8758,
+              "format": "3mf_resolved",
+              "triangles": 904,
+              "unique_vertices_after_rounding": 448,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  30.0,
+                  15.5,
+                  3.2
+                ],
+                "size": [
+                  30.0,
+                  15.5,
+                  3.2
+                ]
+              },
+              "undirected_edges": 1356,
+              "edge_incidence_histogram": {
+                "2": 1356
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                904
+              ],
+              "signed_volume_mm3": 1078.2050476204877,
+              "absolute_volume_mm3": 1078.2050476204877,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.0,
+            "native_relative_volume_error": 7.320592234714034e-05
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-speaker-retainer-mm.stl",
+          "sha256": "5b895cb95348da565683f76e4f7236424f220cda7ca4726bdb68439393682ee7",
+          "bytes": 45284,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 9.185791015625e-07,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-speaker-retainer-mm.stl",
+              "ok": true,
+              "bytes": 45284,
+              "format": "binary",
+              "triangles": 904,
+              "unique_vertices_after_rounding": 448,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  30.0,
+                  15.5,
+                  3.200000047683716
+                ],
+                "size": [
+                  30.0,
+                  15.5,
+                  3.200000047683716
+                ]
+              },
+              "undirected_edges": 1356,
+              "edge_incidence_histogram": {
+                "2": 1356
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                904
+              ],
+              "signed_volume_mm3": 1078.2050555157086,
+              "absolute_volume_mm3": 1078.2050555157086,
+              "failures": []
+            },
+            "native_bounds_error_mm": 4.7683716530855236e-08,
+            "native_relative_volume_error": 7.319860032337403e-05
+          }
+        }
+      }
+    },
+    "SMAKey": {
+      "name": "SMAKey",
+      "stem": "sma-key",
+      "optional": false,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 6,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 0.0,
+        "relative_volume_error": 0.0003971980864762268,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 692,
+        "unique_vertices_after_rounding": 348,
+        "bbox_mm": {
+          "min": [
+            40.0,
+            89.6,
+            10.4
+          ],
+          "max": [
+            54.0,
+            91.6,
+            20.3
+          ],
+          "size": [
+            14.0,
+            2.0,
+            9.9
+          ]
+        },
+        "undirected_edges": 1038,
+        "edge_incidence_histogram": {
+          "2": 1038
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          692
+        ],
+        "signed_volume_mm3": 127.66895976172391,
+        "absolute_volume_mm3": 127.66895976172391,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        -40.0,
+        -89.6,
+        -10.4
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-sma-key-mm.3mf",
+          "sha256": "235e1bdc43a683216077132ed390c2d826fcecbd4c2ed6f43732703950cc7b4c",
+          "bytes": 6916,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-sma-key-mm.3mf",
+              "ok": true,
+              "bytes": 6916,
+              "format": "3mf_resolved",
+              "triangles": 692,
+              "unique_vertices_after_rounding": 348,
+              "bbox_mm": {
+                "min": [
+                  40.0,
+                  89.6,
+                  10.4
+                ],
+                "max": [
+                  54.0,
+                  91.6,
+                  20.3
+                ],
+                "size": [
+                  14.0,
+                  2.0,
+                  9.9
+                ]
+              },
+              "undirected_edges": 1038,
+              "edge_incidence_histogram": {
+                "2": 1038
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                692
+              ],
+              "signed_volume_mm3": 127.66895976172391,
+              "absolute_volume_mm3": 127.66895976172391,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.0,
+            "native_relative_volume_error": 0.0003971980864762268
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-sma-key-mm.stl",
+          "sha256": "ed5dc6d16cd7577c73fb5aa6dd9d1cf3e1769fd0ccffd0b2f59d7bc6aced5f62",
+          "bytes": 34684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 3.6376953125e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-sma-key-mm.stl",
+              "ok": true,
+              "bytes": 34684,
+              "format": "binary",
+              "triangles": 692,
+              "unique_vertices_after_rounding": 348,
+              "bbox_mm": {
+                "min": [
+                  40.0,
+                  89.5999984741211,
+                  10.399999618530273
+                ],
+                "max": [
+                  54.0,
+                  91.5999984741211,
+                  20.299999237060547
+                ],
+                "size": [
+                  14.0,
+                  2.0,
+                  9.899999618530273
+                ]
+              },
+              "undirected_edges": 1038,
+              "edge_incidence_histogram": {
+                "2": 1038
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                692
+              ],
+              "signed_volume_mm3": 127.6689161042752,
+              "absolute_volume_mm3": 127.6689161042752,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.5258789005656581e-06,
+            "native_relative_volume_error": 0.00039753990885921085
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/upload/C5-R7-sma-key-mm.3mf",
+          "sha256": "e260913349fefea202a5a02f30b41c6845c3f04069b26d36be6a402ad223c624",
+          "bytes": 6871,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-sma-key-mm.3mf",
+              "ok": true,
+              "bytes": 6871,
+              "format": "3mf_resolved",
+              "triangles": 692,
+              "unique_vertices_after_rounding": 348,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  14.0,
+                  2.0,
+                  9.9
+                ],
+                "size": [
+                  14.0,
+                  2.0,
+                  9.9
+                ]
+              },
+              "undirected_edges": 1038,
+              "edge_incidence_histogram": {
+                "2": 1038
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                692
+              ],
+              "signed_volume_mm3": 127.66895976172403,
+              "absolute_volume_mm3": 127.66895976172403,
+              "failures": []
+            },
+            "native_bounds_error_mm": 0.0,
+            "native_relative_volume_error": 0.0003971980864753367
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/upload/C5-R7-sma-key-mm.stl",
+          "sha256": "e8d2ae4d9abb6c237339219e267d224f90f7b662cf032d0ab8ec27b99f86e73d",
+          "bytes": 34684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 4.6539306640625e-07,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-sma-key-mm.stl",
+              "ok": true,
+              "bytes": 34684,
+              "format": "binary",
+              "triangles": 692,
+              "unique_vertices_after_rounding": 348,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  14.0,
+                  2.0,
+                  9.899999618530273
+                ],
+                "size": [
+                  14.0,
+                  2.0,
+                  9.899999618530273
+                ]
+              },
+              "undirected_edges": 1038,
+              "edge_incidence_histogram": {
+                "2": 1038
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                692
+              ],
+              "signed_volume_mm3": 127.66895151588768,
+              "absolute_volume_mm3": 127.66895151588768,
+              "failures": []
+            },
+            "native_bounds_error_mm": 3.814697286941282e-07,
+            "native_relative_volume_error": 0.00039726264845755865
+          }
+        }
+      }
+    },
+    "R7FitCoupon": {
+      "name": "R7FitCoupon",
+      "stem": "fit-coupon",
+      "optional": true,
+      "source_labels": [],
+      "source_mesh": {
+        "model_resource": "3D/3dmodel.model",
+        "object_id": "1",
+        "component_path": [
+          0
+        ],
+        "transforms": [
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "reflection_winding_reversed": false,
+        "split_component": 7,
+        "components_in_leaf": 8
+      },
+      "native_comparison": {
+        "max_bounds_difference_mm": 1.1e-16,
+        "relative_volume_error": 5.676781717600067e-05,
+        "matches": true
+      },
+      "source_topology": {
+        "file": "C5-R7-all-parts-mm.3mf",
+        "ok": true,
+        "bytes": 215156,
+        "format": "3mf_resolved",
+        "triangles": 2032,
+        "unique_vertices_after_rounding": 1010,
+        "bbox_mm": {
+          "min": [
+            100.0,
+            -1.11022e-16,
+            0.0
+          ],
+          "max": [
+            150.0,
+            32.0,
+            6.0
+          ],
+          "size": [
+            50.0,
+            32.0,
+            6.0
+          ]
+        },
+        "undirected_edges": 3048,
+        "edge_incidence_histogram": {
+          "2": 3048
+        },
+        "nonmanifold_edges": 0,
+        "boundary_edges": 0,
+        "inconsistent_winding_edges": 0,
+        "degenerate_triangles": 0,
+        "connected_components": 1,
+        "component_triangle_counts": [
+          2032
+        ],
+        "signed_volume_mm3": 4882.90744472207,
+        "absolute_volume_mm3": 4882.90744472207,
+        "failures": []
+      },
+      "translation_from_assembly_mm": [
+        -100.0,
+        1.11022e-16,
+        0.0
+      ],
+      "files": {
+        "assembly.3mf": {
+          "path": "printing/C5-R7-fit-coupon-mm.3mf",
+          "sha256": "0bf1dbf614cd337d51a695c308d5fa2a64fac7b509049525071269f498769a01",
+          "bytes": 19067,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-fit-coupon-mm.3mf",
+              "ok": true,
+              "bytes": 19067,
+              "format": "3mf_resolved",
+              "triangles": 2032,
+              "unique_vertices_after_rounding": 1010,
+              "bbox_mm": {
+                "min": [
+                  100.0,
+                  -1.11022e-16,
+                  0.0
+                ],
+                "max": [
+                  150.0,
+                  32.0,
+                  6.0
+                ],
+                "size": [
+                  50.0,
+                  32.0,
+                  6.0
+                ]
+              },
+              "undirected_edges": 3048,
+              "edge_incidence_histogram": {
+                "2": 3048
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2032
+              ],
+              "signed_volume_mm3": 4882.90744472207,
+              "absolute_volume_mm3": 4882.90744472207,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.1e-16,
+            "native_relative_volume_error": 5.676781717600067e-05
+          }
+        },
+        "assembly.stl": {
+          "path": "printing/C5-R7-fit-coupon-mm.stl",
+          "sha256": "897690ac140f61924865ae476fc443260d91467e3b04edcba2ab5c61257b623f",
+          "bytes": 101684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 7.568359375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-fit-coupon-mm.stl",
+              "ok": true,
+              "bytes": 101684,
+              "format": "binary",
+              "triangles": 2032,
+              "unique_vertices_after_rounding": 1010,
+              "bbox_mm": {
+                "min": [
+                  100.0,
+                  -1.1102199806005023e-16,
+                  0.0
+                ],
+                "max": [
+                  150.0,
+                  32.0,
+                  6.0
+                ],
+                "size": [
+                  50.0,
+                  32.0,
+                  6.0
+                ]
+              },
+              "undirected_edges": 3048,
+              "edge_incidence_histogram": {
+                "2": 3048
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2032
+              ],
+              "signed_volume_mm3": 4882.907410080053,
+              "absolute_volume_mm3": 4882.907410080053,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.1e-16,
+            "native_relative_volume_error": 5.676072222603538e-05
+          }
+        },
+        "order.3mf": {
+          "path": "craftcloud/optional-coupon/C5-R7-fit-coupon-mm.3mf",
+          "sha256": "2aee587b620159741734ae456de1d22468802eb5249f4aafbb0e52f34f2c17a6",
+          "bytes": 19583,
+          "validation": {
+            "exact_fraction_coordinate_round_trip": true,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-fit-coupon-mm.3mf",
+              "ok": true,
+              "bytes": 19583,
+              "format": "3mf_resolved",
+              "triangles": 2032,
+              "unique_vertices_after_rounding": 1010,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  50.0,
+                  32.0,
+                  6.0
+                ],
+                "size": [
+                  50.0,
+                  32.0,
+                  6.0
+                ]
+              },
+              "undirected_edges": 3048,
+              "edge_incidence_histogram": {
+                "2": 3048
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2032
+              ],
+              "signed_volume_mm3": 4882.90744472207,
+              "absolute_volume_mm3": 4882.90744472207,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.1e-16,
+            "native_relative_volume_error": 5.676781717600067e-05
+          }
+        },
+        "order.stl": {
+          "path": "craftcloud/optional-coupon/C5-R7-fit-coupon-mm.stl",
+          "sha256": "e30355d8009032b4bbb5095dc7dfaee648b7a2e9041d6d364301483ec68afc61",
+          "bytes": 101684,
+          "validation": {
+            "max_coordinate_round_trip_error_mm": 1.89208984375e-06,
+            "oriented_connectivity_preserved": true,
+            "topology": {
+              "file": "C5-R7-fit-coupon-mm.stl",
+              "ok": true,
+              "bytes": 101684,
+              "format": "binary",
+              "triangles": 2032,
+              "unique_vertices_after_rounding": 1010,
+              "bbox_mm": {
+                "min": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "max": [
+                  50.0,
+                  32.0,
+                  6.0
+                ],
+                "size": [
+                  50.0,
+                  32.0,
+                  6.0
+                ]
+              },
+              "undirected_edges": 3048,
+              "edge_incidence_histogram": {
+                "2": 3048
+              },
+              "nonmanifold_edges": 0,
+              "boundary_edges": 0,
+              "inconsistent_winding_edges": 0,
+              "degenerate_triangles": 0,
+              "connected_components": 1,
+              "component_triangle_counts": [
+                2032
+              ],
+              "signed_volume_mm3": 4882.907480194606,
+              "absolute_volume_mm3": 4882.907480194606,
+              "failures": []
+            },
+            "native_bounds_error_mm": 1.1e-16,
+            "native_relative_volume_error": 5.6775082222549906e-05
+          }
+        }
+      }
+    }
+  },
+  "installed_part_count": 7,
+  "optional_coupon_count": 1,
+  "order_placed": false,
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\printing\\C5-R7-all-parts-mm.3mf": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\cad\\LoRa-Enclosure-C5-R7-Reinforced.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\release-plan.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\saved-r7-validation.json": true
+  }
+}

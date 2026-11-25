@@ -1,0 +1,372 @@
+{
+  "scope": "Saved R5 native/fit comparison only",
+  "files": {
+    "native": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd",
+      "sha256": "b2c616f78a5f2515217f5c06ec199f38b0106067289fdab60a29e0879d1d9678",
+      "bytes": 17296203
+    },
+    "r4_native": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd",
+      "sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+      "bytes": 17226198
+    },
+    "actual_component_step": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step",
+      "sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+      "bytes": 76201161
+    },
+    "preflight_report": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\audit\\final-plan-validation.json",
+      "sha256": "8d2aac7cb8efc62ab1379254363499466bffb7a6d4029a021754ab21f359570c",
+      "bytes": 8053
+    }
+  },
+  "failures": [],
+  "native_parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48905.01819719863,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ]
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 27234.371260957236,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000003
+      ]
+    },
+    "PTTPlunger": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 459.9291644855457,
+      "bounds_mm": [
+        45.0,
+        3.0,
+        16.2,
+        57.0,
+        15.0,
+        26.400000000000002
+      ]
+    },
+    "PTTStopCup": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 650.9008562343834,
+      "bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        17.15,
+        63.0,
+        17.3,
+        21.0
+      ]
+    },
+    "BatteryCover": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ]
+    }
+  },
+  "independent_plan_comparison": {
+    "EnclosureBase": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.00010214193753199652,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 3.552713678800501e-15,
+      "volume_difference_mm3": 3.637978807091713e-12,
+      "matches": true
+    }
+  },
+  "unchanged_parts": {
+    "PTTPlunger": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "BatteryCover": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "battery_reference_comparison": {
+    "symmetric_difference_mm3": 0.0,
+    "bounds_difference_mm": 0.0,
+    "volume_difference_mm3": 0.0,
+    "matches": true
+  },
+  "assembly_pairs": {
+    "EnclosureBase__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "EnclosureBase__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 5.0
+    },
+    "EnclosureBase__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.6999999999999993
+    },
+    "EnclosureBase__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.7763568394002505e-15
+    },
+    "EnclosureLid__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.1999999999999993
+    },
+    "EnclosureLid__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "EnclosureLid__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 20.41984329028996
+    },
+    "PTTPlunger__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.4499999999999993
+    },
+    "PTTPlunger__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 27.655740814521675
+    },
+    "PTTStopCup__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 28.15
+    }
+  },
+  "battery_fit": {
+    "base": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 3.0
+    },
+    "cover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.9999999999999929
+    },
+    "partition_difference_mm3": 0.0
+  },
+  "oled_fit": {
+    "lid_roi_comparison": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 7.503331289626658e-12,
+      "matches": true
+    },
+    "glass_top_z_mm": 19.9987192588,
+    "rim_underside_z_mm": 20.5,
+    "vertical_datum_gap_mm": 0.5012807412,
+    "meaning": "Vertical datum offset across open aperture; not minimum glass-to-solid distance."
+  },
+  "native_links": {
+    "BaseWithSupports": [
+      "BaseShell",
+      "PCBSupport1",
+      "PCBSupport2",
+      "PCBSupport3",
+      "PCBSupport4",
+      "SupportFoot1",
+      "SupportFoot2",
+      "SupportFoot3",
+      "SupportFoot4",
+      "BatteryBayTube",
+      "RearPost1",
+      "RearWeb1",
+      "RearPost2",
+      "RearWeb2",
+      "RearPost3",
+      "RearWeb3",
+      "RearPost4",
+      "RearWeb4",
+      "BatteryHarnessHood",
+      "SMABacking",
+      "SMACoaxAnchor"
+    ],
+    "BaseCutters": [
+      "InsertPocket1",
+      "InsertPocket2",
+      "InsertPocket3",
+      "InsertPocket4",
+      "ScrewTipRelief1",
+      "ScrewTipRelief2",
+      "ScrewTipRelief3",
+      "ScrewTipRelief4",
+      "USBAccess",
+      "SpeakerPassage",
+      "SpeakerTieSlot1",
+      "SpeakerTieSlot2",
+      "RearInsertBore1",
+      "RearInsertBore2",
+      "RearInsertBore3",
+      "RearInsertBore4",
+      "BatteryHarnessChase",
+      "SMABulkheadBore",
+      "SMARearRelief",
+      "SMACoaxTieSlot"
+    ],
+    "LidCutters": [
+      "LidScrew1",
+      "LidScrew2",
+      "LidScrew3",
+      "LidScrew4",
+      "OLEDWindow",
+      "MicrophonePort",
+      "PTTGuide",
+      "ResetAccess",
+      "ProgramAccess",
+      "SpeakerPassage",
+      "PTTStopScrew1",
+      "PTTStopScrew2",
+      "MicrophoneVent1",
+      "MicrophoneVent2",
+      "MicrophoneVent3",
+      "MicrophoneVent4",
+      "MicrophoneVent5",
+      "MicrophoneVent6",
+      "OLEDBezelRecess",
+      "OLEDHeadRelief1",
+      "OLEDHeadRelief2",
+      "OLEDHeadRelief3",
+      "OLEDHeadRelief4"
+    ]
+  },
+  "recompute": {
+    "EnclosureBase": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    },
+    "BatteryCover": {
+      "symmetric_difference_mm3": 0.0,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "actual_electronics": {
+    "source_objects": 2949,
+    "new_base_material": {
+      "source_objects_scanned": 2949,
+      "aabb_disjoint_count": 2949,
+      "exact_boolean_count": 0,
+      "exact_boolean_checks": [],
+      "hits": [],
+      "ok": true,
+      "method": "Conservative bounding boxes reject disjoint shapes; all overlapping candidates use exact Boolean intersection."
+    },
+    "healed_lid_material": {
+      "source_objects_scanned": 2949,
+      "aabb_disjoint_count": 2949,
+      "exact_boolean_count": 0,
+      "exact_boolean_checks": [],
+      "hits": [],
+      "ok": true,
+      "method": "Conservative bounding boxes reject disjoint shapes; all overlapping candidates use exact Boolean intersection."
+    },
+    "new_base_material_clearance": {
+      "minimum_mm": 1.2349999999999994,
+      "component_index": 2947,
+      "aabb_lower_bounds_evaluated": 2949,
+      "exact_distance_checks": [
+        {
+          "index": 2947,
+          "aabb_lower_bound_mm": 1.2349995975558237,
+          "exact_distance_mm": 1.2349999999999994
+        }
+      ],
+      "method": "All conservative AABB distance lower bounds sorted; exact distance evaluated until remaining lower bounds exceed best distance."
+    },
+    "reference_connector_rear_clearance": {
+      "minimum_mm": 1.0350000000000001,
+      "component_index": 2947,
+      "aabb_lower_bounds_evaluated": 2949,
+      "exact_distance_checks": [
+        {
+          "index": 2947,
+          "aabb_lower_bound_mm": 1.0350000000000001,
+          "exact_distance_mm": 1.0350000000000001
+        }
+      ],
+      "method": "All conservative AABB distance lower bounds sorted; exact distance evaluated until remaining lower bounds exceed best distance."
+    },
+    "reference_rear_to_lid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.3999999999999986
+    }
+  },
+  "source_files_unchanged": {
+    "native": true,
+    "r4_native": true,
+    "actual_component_step": true,
+    "preflight_report": true
+  },
+  "hardware_fit_qualified": false,
+  "ok": true,
+  "limitations": [
+    "Owned bulkhead mounting dimensions/panel nut torque remain unmeasured.",
+    "Connector rear volume is an explicit provisional \u00d810\u00d710mm envelope.",
+    "169mm coax routing and electrical/RF performance are not qualified.",
+    "Mesh topology/bounds/volume checks do not prove physical print strength or self-intersection absence."
+  ]
+}

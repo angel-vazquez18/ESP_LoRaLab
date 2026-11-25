@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "fragmentSha256": "c7815e141cbaf486d60b534eab92e4d48de47cfe91d3156ed72310e17d2debd0",
+  "fragmentBytes": 868364,
+  "fullFunctionalQaSha256": "1c090adfca30f297958312ab47a7f1240d5a16694460a04ef8eb7b1ba5016d9f",
+  "onlyChangeSinceFullQa": "Coax inspection caption clarifies unqualified tie placement and remaining cable slack.",
+  "checks": [
+    {
+      "width": 736,
+      "colorScheme": "light",
+      "captionVerified": true,
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "width": 736,
+      "colorScheme": "dark",
+      "captionVerified": true,
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "captionVerified": true,
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "captionVerified": true,
+      "overflow": false,
+      "webglError": 0
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-736-dark.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-320-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\qa\\coax_route-320-dark.png"
+  ]
+}

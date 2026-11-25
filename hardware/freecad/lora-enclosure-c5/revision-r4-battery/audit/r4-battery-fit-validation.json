@@ -1,0 +1,415 @@
+{
+  "scope": "Saved native mechanical verification, not physical battery/connector/USB fit qualification.",
+  "sources": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\cad\\LoRa-Enclosure-C5-R3-OLED.FCStd": "57f535488ac286e72e6a9f33ff3ffc29532e826844323bb8ec2bd9fdbbfd4480",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19"
+  },
+  "failures": [],
+  "parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48563.4551320795,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ]
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 27193.687043252077,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000003
+      ]
+    },
+    "PTTPlunger": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 459.9291644855457,
+      "bounds_mm": [
+        45.0,
+        3.0,
+        16.2,
+        57.0,
+        15.0,
+        26.400000000000002
+      ]
+    },
+    "PTTStopCup": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 650.9008562343834,
+      "bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        17.15,
+        63.0,
+        17.3,
+        21.0
+      ]
+    },
+    "BatteryCover": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ]
+    }
+  },
+  "unchanged_r3_parts": {
+    "EnclosureLid": 0.0,
+    "PTTPlunger": 0.0,
+    "PTTStopCup": 0.0
+  },
+  "independent_rebuild": {
+    "EnclosureBase": 0.0,
+    "BatteryCover": 0.0
+  },
+  "original_base_change": {
+    "removed_volume_mm3": 262.65599999999915,
+    "removed_bounds_mm": [
+      23.4,
+      91.9,
+      0.0,
+      32.599999999999994,
+      94.4,
+      13.200000000000003
+    ],
+    "removed_outside_intended_harness_chase_mm3": 0.0
+  },
+  "recompute": {
+    "EnclosureBase": 0.0,
+    "EnclosureLid": 0.0,
+    "PTTPlunger": 0.0,
+    "PTTStopCup": 0.0,
+    "BatteryCover": 0.0
+  },
+  "parameters": {
+    "B83": {
+      "value": 14.0,
+      "expected": 14
+    },
+    "B84": {
+      "value": 2.4,
+      "expected": 2.4
+    },
+    "B85": {
+      "value": 8.0,
+      "expected": 8
+    },
+    "B86": {
+      "value": 4.5,
+      "expected": 4.5
+    },
+    "B87": {
+      "value": 11.1,
+      "expected": 11.1
+    },
+    "B88": {
+      "value": 99.6,
+      "expected": 99.6
+    },
+    "B89": {
+      "value": 97.2,
+      "expected": 97.2
+    },
+    "B90": {
+      "value": 36.0,
+      "expected": 36
+    },
+    "B91": {
+      "value": 68.0,
+      "expected": 68
+    },
+    "B92": {
+      "value": 10.0,
+      "expected": 10
+    },
+    "B93": {
+      "value": 1.0,
+      "expected": 1
+    },
+    "B94": {
+      "value": 10.0,
+      "expected": 10
+    },
+    "B95": {
+      "value": 2.4,
+      "expected": 2.4
+    }
+  },
+  "parameter_sensitivity": {
+    "temporary_depth_mm": 15,
+    "temporary_body_bounds_mm": [
+      -4.400000000000001,
+      -4.400000000000001,
+      -15.000000000000004,
+      74.39999999999999,
+      99.6,
+      21.0
+    ],
+    "temporary_cover_bounds_mm": [
+      -4.400000000000001,
+      -4.400000000000001,
+      -17.4,
+      74.39999999999999,
+      99.6,
+      -12.0
+    ],
+    "temporary_cell_bounds_mm": [
+      17.0,
+      11.0,
+      -14.0,
+      53.0,
+      79.0,
+      -4.0
+    ],
+    "restored_differences_mm3": {
+      "EnclosureBase": 0.0,
+      "EnclosureLid": 0.0,
+      "PTTPlunger": 0.0,
+      "PTTStopCup": 0.0,
+      "BatteryCover": 0.0
+    }
+  },
+  "battery_fit": {
+    "envelope": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 24480.0,
+      "bounds_mm": [
+        17.0,
+        11.0,
+        -13.0,
+        53.0,
+        79.0,
+        -3.0
+      ]
+    },
+    "body_distance_mm": 3.0,
+    "cover_distance_mm": 0.9999999999999929,
+    "body_intersection_mm3": 0.0,
+    "cover_intersection_mm3": 0.0,
+    "body_cover_intersection_mm3": 0.0,
+    "partition_volume_mm3": 5875.200000000001,
+    "expected_partition_volume_mm3": 5875.200000000001,
+    "partition_thickness_mm": 2.4
+  },
+  "rear_fasteners": {
+    "centers_xy_mm": [
+      [
+        4,
+        4
+      ],
+      [
+        66,
+        4
+      ],
+      [
+        4,
+        86
+      ],
+      [
+        66,
+        86
+      ]
+    ],
+    "screw": "M3x6 buttonhead",
+    "nominal_engagement_mm": 3.6,
+    "blind_pilot_depth_mm": 4.5,
+    "screw_tip_z_mm": -10.4,
+    "pilot_top_z_mm": -9.5,
+    "tip_clearance_mm": 0.9,
+    "insert": "M3 OD5 x length4",
+    "insert_unused_engagement_mm": 0.4,
+    "shaft_battery_intersection_mm3": 0.0
+  },
+  "provisional_harness": {
+    "plug_assumed_bounds_mm": [
+      25.1,
+      88.42,
+      9.8,
+      30.1,
+      93.9,
+      12.8
+    ],
+    "lead_centerline_mm": [
+      [
+        18,
+        79,
+        -8
+      ],
+      [
+        18,
+        83,
+        -8
+      ],
+      [
+        27.6,
+        88,
+        -8
+      ],
+      [
+        27.6,
+        95.9,
+        -8
+      ],
+      [
+        27.6,
+        95.9,
+        9
+      ],
+      [
+        27.6,
+        95.88288972274762,
+        9.261052384440102
+      ],
+      [
+        27.6,
+        95.83185165257814,
+        9.517638090205041
+      ],
+      [
+        27.6,
+        95.74775906502258,
+        9.76536686473018
+      ],
+      [
+        27.6,
+        95.63205080756889,
+        10.0
+      ],
+      [
+        27.6,
+        95.48670668058247,
+        10.21752285801744
+      ],
+      [
+        27.6,
+        95.3142135623731,
+        10.414213562373096
+      ],
+      [
+        27.6,
+        95.11752285801745,
+        10.58670668058247
+      ],
+      [
+        27.6,
+        94.9,
+        10.732050807568877
+      ],
+      [
+        27.6,
+        94.66536686473019,
+        10.847759065022574
+      ],
+      [
+        27.6,
+        94.41763809020505,
+        10.931851652578137
+      ],
+      [
+        27.6,
+        94.16105238444011,
+        10.98288972274762
+      ],
+      [
+        27.6,
+        93.9,
+        11.0
+      ],
+      [
+        27.6,
+        93.7,
+        11
+      ]
+    ],
+    "lead_radius_mm": 0.8,
+    "lead_nominal_polyline_length_mm": 43.063397505234725,
+    "lead_assumptions": "Lead exit at pack upper end X18/Y79;66mm photo length includes unknown termination details. Does not prove exact connector compatibility, bend-radius rating, or service slack.",
+    "usb_limitation": "No new printed material enters the original USB opening sweep. Assumed battery plug/lead overlaps the provisional USB cable-overmould reservation; actual simultaneous plug/USB cable fit is not qualified.",
+    "plug_usb_access_envelope_overlap_mm3": 12.350000000000042,
+    "wire_usb_access_envelope_overlap_mm3": 0.0,
+    "plug_body_intersection_mm3": 0.0,
+    "wire_body_intersection_mm3": 0.0,
+    "plug_cover_intersection_mm3": 0.0,
+    "wire_cover_intersection_mm3": 0.0
+  },
+  "actual_electronics": {
+    "nearby_checks": [
+      {
+        "index": 170,
+        "added_material_intersection_mm3": 0.0,
+        "plug_intersection_mm3": 0.0,
+        "wire_intersection_mm3": 0.0,
+        "added_minimum_distance_mm": 5.304127994121274
+      },
+      {
+        "index": 1067,
+        "added_material_intersection_mm3": 0.0,
+        "plug_intersection_mm3": 0.0,
+        "wire_intersection_mm3": 0.0,
+        "added_minimum_distance_mm": 4.3999999999999915
+      },
+      {
+        "index": 2947,
+        "added_material_intersection_mm3": 0.0,
+        "plug_intersection_mm3": 0.0,
+        "wire_intersection_mm3": 0.0,
+        "added_minimum_distance_mm": 4.3999999999999915
+      },
+      {
+        "index": 2948,
+        "added_material_intersection_mm3": 0.0,
+        "plug_intersection_mm3": 0.0,
+        "wire_intersection_mm3": 0.0,
+        "added_minimum_distance_mm": 4.3999999999999915
+      }
+    ],
+    "lowest_component_z_mm": 4.5,
+    "pouch_top_to_lowest_component_mm": 7.5,
+    "new_material_basis": "All new material aboveZ0.2 is confined to local rear chimney; all other addition below unchanged original floor. Bounding candidates checked exactly.",
+    "new_interference_mm3": 0.0,
+    "plug_interference_mm3": 0.0,
+    "wire_interference_mm3": 0.0
+  },
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\cad\\LoRa-Enclosure-C5-R3-OLED.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true
+  },
+  "limitations": [
+    "Pouch dimensions from user photo with conservative36mm width; actual maximum packaging thickness and seal/cable details unmeasured.",
+    "Provisional plug/harness geometry is not vendor mating CAD. Connector polarity, family, cablebend and USB-overmould simultaneous fit remain unqualified.",
+    "Battery storage and Heltec connection only; no claim that carrier5V amplifier rail works frombattery.",
+    "No thermal, abuse, impact or physical qualification is established by CAD checks."
+  ],
+  "ok": true,
+  "native_geometry_ok": true,
+  "hardware_fit_qualified": false,
+  "release_fit_qualified": false
+}

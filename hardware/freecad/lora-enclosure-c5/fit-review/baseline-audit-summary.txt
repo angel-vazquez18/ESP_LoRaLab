@@ -1,0 +1,54 @@
+Original assembled enclosure vs corrected detailed KiCad assembly: quantitative audit
+Source case SHA256: 9344d19bd6fe47d3db466b61135b3f5d41527295afbba18a09447b51aa3e410e
+Actual STEP SHA256: 65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19
+Actual KiCad parts translated +6.4814 mm in Z, component datum at nominal PCB top Z8.
+No actual component-to-case intersections or unintended sub-0.5 mm clearances.
+All minimum values below are millimetres; carrier contacts and PTT release gap are intentional.
+
+EnclosureBase: exact evaluations 286, zero distance count 0, penetrations 0
+Carrier substrate: 0.081400 mm; source index 1067
+Carrier top soldermask: 1.565000 mm; source index 2947
+Carrier bottom soldermask: 0.023200 mm; source index 2948
+Carrier top silkscreen: 1.590000 mm; source index 2924
+U1 Heltec manufacturer model: 2.100001 mm; source index 559
+SW1 PTT switch: 2.100000 mm; source index 0
+JAMP1 MAX98357A: 2.600000 mm; source index 1764
+U2 INMP441: 2.600000 mm; source index 1105
+R8 resistor: 2.800001 mm; source index 2143
+Carrier pads and plating: 3.170174 mm; source index 959
+U1 OLED supplement: 12.158719 mm; source index 2814
+Carrier bottom silkscreen: 3.998200 mm; source index 2931
+
+EnclosureLid: exact evaluations 772, zero distance count 0, penetrations 0
+Carrier top silkscreen: 0.010000 mm; source index 2924
+Carrier top soldermask: 0.035000 mm; source index 2947
+Carrier substrate: 0.093200 mm; source index 1067
+Carrier bottom soldermask: 1.576800 mm; source index 2948
+U1 OLED supplement: 3.698781 mm; source index 2823
+U1 Heltec manufacturer model: 2.799999 mm; source index 589
+Carrier pads and plating: 3.170319 mm; source index 958
+JAMP1 MAX98357A: 4.800000 mm; source index 2121
+SW1 PTT switch: 8.390751 mm; source index 0
+U2 INMP441: 11.700000 mm; source index 1104
+R8 resistor: 12.050000 mm; source index 2138
+Carrier bottom silkscreen: 14.551185 mm; source index 2938
+
+PTTPlunger: exact evaluations 30, zero distance count 0, penetrations 0
+SW1 PTT switch: 0.200000 mm; source index 0
+Carrier top soldermask: 8.235000 mm; source index 2947
+Carrier pads and plating: 8.264950 mm; source index 985
+Carrier substrate: 8.293200 mm; source index 1067
+Carrier top silkscreen: 8.325209 mm; source index 2832
+Carrier bottom soldermask: 9.776800 mm; source index 2948
+U2 INMP441: 13.456168 mm; source index 1070
+Carrier bottom silkscreen: 26.344540 mm; source index 2943
+U1 Heltec manufacturer model: 31.026699 mm; source index 1
+U1 OLED supplement: 32.266311 mm; source index 2811
+R8 resistor: 30.681340 mm; source index 2138
+JAMP1 MAX98357A: 42.687820 mm; source index 1715
+
+Housing: all three pairwise common volumes are zero. Base/lid intentionally meet at Z24.
+Locating lip per-side clearance 0.300 mm; plunger guide radial clearance 0.300 mm.
+PTT release gap 0.200 mm. Moving down 0.200 mm reaches first switch contact; moving down 0.400 mm overlaps the static switch actuator by 1.90093 mm3, representing 0.200 mm depression. No housing collision at these samples. Physical switch stroke is not verified.
+Existing STL meshes are closed solids. Base/lid bound deviations <0.000002 mm; volume deviations -0.0403% and -0.0541%. Coarse plunger tessellation has maximum bound deviation 0.02415 mm and volume deviation -0.7448%.
+Limits: analysis covers assigned CAD geometry, including open VRML-derived surfaces. Cable boots, wiring routing, purchased inserts, and measured physical components remain outside this CAD model. Bounds/volume STL comparison is not a complete surface equivalence proof.

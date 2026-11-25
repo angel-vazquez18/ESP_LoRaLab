@@ -1,0 +1,28 @@
+C5 R7 - CRAFTCLOUD FILE PREPARATION ONLY
+
+Request unfilled MJF PA12 with standard cleaned/depowdered finish. Use mm and
+100% scale, quantity 1 of each of the seven installed parts. Supplier build
+orientation and achievable tolerances must be reviewed against the drawing.
+Avoid polishing or coatings on fitted surfaces without dimensional review.
+
+Upload EITHER the seven STL files OR the seven 3MF files from upload/:
+  enclosure-base, enclosure-lid, battery-cover, ptt-plunger, ptt-stop-cup,
+  speaker-retainer, sma-key.
+
+Optional first-article coupon: upload one file from optional-coupon/ separately.
+It checks fit using actual purchased inserts, nuts and the plunger. It is not
+part of the installed assembly. Do not upload both formats for the same part.
+
+The upload files differ from assembly coordinates by translation only; units,
+shape and scale are unchanged. The master multipart file is for traceability,
+not a single-piece order. Do not print the reference PCB, electronics, battery,
+antenna, wires, screws, nuts, ties or pads shown in the CAD/viewer.
+
+Provide documentation/LoRa-C5-R7-Enclosure-Improvements.pdf with a quote request.
+Inspect the first article before ordering a batch. The nominal SMA rear-body
+reference is unmeasured, so check the owned connector and key fit first. Review
+the drawing's small roofs, key features and nominal gaps with the supplier.
+
+No order has been placed. No machine-specific slicing or machining G-code is
+included. The exact STEP geometry is available for shop feasibility review;
+internal features in this revision are designed primarily for additive making.

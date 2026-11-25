@@ -1,0 +1,421 @@
+<div id="r5-enclosure-viewer">
+  <div class="viz-controls" role="group" aria-label="Enclosure view">
+    <button class="btn" type="button" data-mode="assembled" aria-pressed="true">Assembled</button>
+    <button class="btn" type="button" data-mode="exploded" aria-pressed="false">Exploded</button>
+    <button class="btn" type="button" data-mode="cutaway" aria-pressed="false">Cutaway</button>
+  </div>
+  <div class="r5-stage">
+    <canvas role="img" aria-label="Interactive R5 SMA enclosure with project PCB, components, battery envelope and provisional coax route" aria-describedby="r5-gestures">R5 SMA mount, populated carrier, coax route and separate rear battery compartment.</canvas>
+    <svg id="r5-dimension-overlay" class="r5-dimensions text-small" role="img" aria-label="Nominal assembled fit dimensions in millimetres"><g id="r5-dimension-lines"></g></svg>
+    <div id="r5-dimension-labels" aria-label="Clearance close-ups"></div>
+    <div class="r5-loading text-small" role="status">Loading R5 geometry…</div>
+  </div>
+  <div class="text-small" id="r5-gestures">Drag to rotate · Scroll or pinch to zoom · Click a dimension for a close-up</div>
+  <div class="viz-controls">
+    <button class="btn" type="button" data-inspection="sma_mount">SMA mount</button>
+    <button class="btn" type="button" data-inspection="coax_route">Coax route</button>
+  </div>
+  <div class="viz-controls">
+    <label class="form-label">Inspect
+      <select class="form-select" id="r5-part"><option value="all">Complete assembly</option></select>
+    </label>
+    <label class="form-label">Shell
+      <select class="form-select" id="r5-shell"><option value="solid">Solid</option><option value="transparent">Transparent</option><option value="hidden">Hidden</option></select>
+    </label>
+    <label class="form-check"><input class="form-check-input" id="r5-part-visible" type="checkbox" checked disabled><span class="form-check-label">Selected part visible</span></label>
+  </div>
+  <div class="text-small r5-detail" id="r5-detail" aria-live="polite"></div>
+  <div class="viz-controls">
+    <label class="form-label">Fit dimensions
+      <select class="form-select" id="r5-dimensions"><option value="all">Key clearances</option><option value="battery">Battery clearances</option><option value="pcb">PCB to lid</option><option value="oled">OLED gap</option><option value="off">Off</option></select>
+    </label>
+    <span id="r5-overview-wrap" hidden><button class="btn" id="r5-overview" type="button">Back to overview</button></span>
+  </div>
+  <div class="text-small" id="r5-dimension-note" aria-live="polite"></div>
+  <details>
+    <summary>Camera controls</summary>
+    <div class="r5-camera">
+      <label class="form-label">Rotation <output class="tabular-nums" id="r5-yaw-value">40°</output><input class="form-range" id="r5-yaw" type="range" min="-180" max="180" value="40" step="1"></label>
+      <label class="form-label">Tilt <output class="tabular-nums" id="r5-pitch-value">35°</output><input class="form-range" id="r5-pitch" type="range" min="-85" max="85" value="35" step="1"></label>
+      <label class="form-label">Zoom <output class="tabular-nums" id="r5-zoom-value">1.0×</output><input class="form-range" id="r5-zoom" type="range" min="0.5" max="5" value="1" step="0.05"></label>
+    </div>
+  </details>
+  <div class="text-small">R5 CAD + project component models · Battery, SMA hardware and cables are fit references</div>
+  <div class="text-destructive" id="r5-error" role="alert" hidden></div>
+</div>
+<style>
+  #r5-enclosure-viewer{display:flex;flex-direction:column;gap:calc(var(--font-size-base)*.75);color:var(--foreground)}
+  #r5-enclosure-viewer .r5-stage{position:relative}
+  #r5-enclosure-viewer canvas{display:block;width:100%;height:clamp(360px,67vw,500px);touch-action:none;cursor:grab}
+  #r5-enclosure-viewer canvas[data-dragging="true"]{cursor:grabbing}
+  #r5-enclosure-viewer .r5-loading{position:absolute;inset:45% 0 auto;text-align:center;pointer-events:none}
+  #r5-enclosure-viewer .r5-camera{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--font-size-base)*1);padding-top:calc(var(--font-size-base)*.5)}
+  #r5-enclosure-viewer .r5-detail{min-height:calc(var(--font-size-base)*2.5)}
+  #r5-enclosure-viewer .r5-dimensions{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
+  #r5-enclosure-viewer .r5-dim-line{fill:none;stroke:var(--viz-series-1);stroke-width:1.25;vector-effect:non-scaling-stroke}
+  #r5-enclosure-viewer .r5-dim-witness{fill:none;stroke:var(--foreground);stroke-width:1;stroke-dasharray:3 3;opacity:.65;vector-effect:non-scaling-stroke}
+  #r5-enclosure-viewer .r5-dim-head{fill:var(--viz-series-1);stroke:none}
+  #r5-enclosure-viewer .r5-dim-dot{fill:var(--viz-series-1);stroke:var(--background);stroke-width:1}
+  #r5-enclosure-viewer .r5-dim-text{fill:var(--foreground);stroke:var(--background);stroke-width:4;paint-order:stroke;stroke-linejoin:round;font-weight:500}
+  #r5-enclosure-viewer #r5-dimension-labels{position:absolute;inset:0;pointer-events:none}
+  #r5-enclosure-viewer .r5-label-position{position:absolute;pointer-events:auto}
+  @media(max-width:450px){#r5-enclosure-viewer .r5-camera{grid-template-columns:1fr}}
+</style>
+<script type="application/octet-stream" id="r5-mesh-data">__R5_MESH_BASE64__</script>
+<script type="application/json" id="r5-dimension-data">__R5_DIMENSIONS_JSON__</script>
+<script type="application/octet-stream" id="r5-focus-mesh-data">__R5_FOCUS_MESH_BASE64__</script>
+<script type="application/json" id="r5-focus-data">__R5_FOCUS_JSON__</script>
+<script>
+(async()=>{
+  const root=document.getElementById('r5-enclosure-viewer');
+  const canvas=root.querySelector('canvas'),error=root.querySelector('#r5-error');
+  const dimensionSelect=root.querySelector('#r5-dimensions'),dimensionOverlay=root.querySelector('#r5-dimension-overlay');
+  const dimensionData=JSON.parse(document.getElementById('r5-dimension-data').textContent);
+  const focusData=JSON.parse(document.getElementById('r5-focus-data').textContent);
+  const focusViews=new Map(focusData.views.map(v=>[v.id,v]));
+  focusViews.set('sma_mount',{id:'sma_mount',overviewGeometry:true,target_mm:[47,93,14],frame_mm:[31,78,4,65,113,27],yaw:145,pitch:40,selected:'sma_body',shell:'solid'});
+  focusViews.set('coax_route',{id:'coax_route',overviewGeometry:true,target_mm:[40,64,15],frame_mm:[14,31,9,67,95,25],yaw:150,pitch:65,selected:'coax',shell:'transparent'});
+  const dimensionLabels=root.querySelector('#r5-dimension-labels'),overviewButton=root.querySelector('#r5-overview');
+  const dimensionButtons=new Map(),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  const controls={part:root.querySelector('#r5-part'),shell:root.querySelector('#r5-shell'),visible:root.querySelector('#r5-part-visible'),yaw:root.querySelector('#r5-yaw'),pitch:root.querySelector('#r5-pitch'),zoom:root.querySelector('#r5-zoom')};
+  const labels={all:'Complete assembly',base:'Enclosure base',lid:'OLED / microphone lid',plunger:'PTT plunger',cup:'PTT stop cup',cover:'Battery cover',pcb:'C5 carrier PCB',heltec:'Heltec ESP32 V4',oled:'OLED / bracket',microphone:'Microphone',amplifier:'Speaker amplifier',switch:'PTT switch',resistor:'Pulldown resistor',battery:'LiPo battery envelope',pad:'Insulating pad allowance',plug:'Battery plug reference',lead_positive:'Battery lead (+ reference)',lead_negative:'Battery lead (− reference)'};
+  const details={all:'78.8 × 104 × 41 mm shell · PCB and PTT positions retained',base:'14 mm rear battery bay · 2.4 mm separator below the PCB',lid:'0.50 mm nominal OLED inner-rim clearance · Seven microphone openings',plunger:'PTT actuator and flange · Switch travel remains a reference assumption',cup:'Flange stop transfers load through two M2 screw/nut locations into the lid',cover:'Removable rear cover · Four M3 × 6 screws · Two soft-strap paths',pcb:'Actual C5 carrier geometry · 70 × 90 mm · Component locations retained',heltec:'Assigned Heltec V4 geometry · Battery connects to the board BAT input',oled:'Assigned display/bracket model · 0.50 mm nominal glass-to-inner-rim gap',microphone:'Assigned 14 mm round microphone model · Acoustic holes in the lid',amplifier:'Assigned amplifier model · The C5 amplifier remains USB-powered',switch:'Assigned representative PTT switch · Owned-switch travel needs verification',resistor:'Assigned carrier pulldown resistor geometry',battery:'68 × 36 × 10 mm fit envelope · 3 mm above · 1 mm padding allowance below',pad:'About 1 mm soft, nonconductive padding allowance · Avoid pouch compression',plug:'Assumed mating envelope · Actual keying, polarity and USB cable fit unqualified',lead_positive:'Provisional battery lead route · Presentation color does not establish pin orientation',lead_negative:'Provisional battery lead route · Actual bend radius and service slack to verify'};
+  const housing=new Set(['base','lid','cover']);
+  Object.assign(labels,{sma_body:'SMA bulkhead reference',sma_washer:'SMA washer reference',sma_nut:'SMA mounting nut reference',antenna:'915 MHz antenna reference',coax:'LoRa coax route reference',coax_plug:'LoRa IPEX plug reference',coax_tie:'Loose coax tie reference'});
+  Object.assign(details,{all:'R5 reinforced SMA mount · Separate rear battery bay · 0.50 mm OLED datum gap',base:'Ø6.6 mm SMA bore · 2.4 mm seating wall · Rounded backing and separate coax tie anchor',sma_body:'Reference bulkhead in the R5 bore · Rear shoulder and outer nut clamp the seating wall',sma_washer:'Reference Ø10.2 mm washer · Distributes clamp load into the outer wall',sma_nut:'Reference 8 mm AF nut · Counter-hold the fixed rear body while tightening',antenna:'50 × Ø8 mm reference antenna · Screws onto the external SMA connector',coax:'Provisional route to the top LoRa IPEX port · Cable size, bends and service slack need hardware verification',coax_plug:'Reference plug at the top LoRa IPEX socket · Not the underside 2.4 GHz port',coax_tie:'Loose tie reference · Strain relief at the anchor; avoid crushing the fine coax'});
+  const rad=Math.PI/180,clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const wrap=n=>((n+180)%360+360)%360-180;
+  const norm=v=>{const d=Math.hypot(...v)||1;return v.map(x=>x/d);},sub=(a,b)=>a.map((x,i)=>x-b[i]);
+  const dot=(a,b)=>a.reduce((sum,x,i)=>sum+x*b[i],0),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const mix=(a,b,t)=>a.map((x,i)=>x*(1-t)+b[i]*t);
+  const multiply=(a,b)=>{const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)for(let k=0;k<4;k++)r[c*4+row]+=a[k*4+row]*b[c*4+k];return r;};
+  const lookAt=(eye,target)=>{const z=norm(sub(eye,target)),x=norm(cross([0,0,1],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);};
+  const ortho=(l,r,b,t,n,f)=>new Float32Array([2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1]);
+  let state={mode:'assembled',shell:'solid',selected:'all',hidden:[],yaw:40,pitch:35,zoom:1,dimensions:'all',focus:null,focusTarget:null,focusScale:1,overview:null};
+  let meshes=[],palette={},width=1,height=1,ready=false,raf=0,saveTimer=0;
+  let motion=null;
+  let focusClearance=()=>{};
+  const origin='r5-'+Math.random().toString(36).slice(2);
+  function readState(snapshot){
+    const s=snapshot?.privateContent?.r5||snapshot?.modelContent?.r5||snapshot?.r5;
+    if(!s||s.schema!==1)return;
+    if(['assembled','exploded','cutaway'].includes(s.mode))state.mode=s.mode;
+    if(['solid','transparent','hidden'].includes(s.shell))state.shell=s.shell;
+    if(['all','battery','pcb','oled','off'].includes(s.dimensions))state.dimensions=s.dimensions;
+    if(labels[s.selected])state.selected=s.selected;
+    if(Array.isArray(s.hidden))state.hidden=s.hidden.filter(x=>labels[x]&&x!=='all');
+    for(const k of ['yaw','pitch','zoom'])if(Number.isFinite(s[k]))state[k]=k==='yaw'?wrap(s[k]):clamp(s[k],k==='zoom'?.5:-85,k==='zoom'?5:85);
+    state.focus=state.mode==='cutaway'&&focusViews.has(s.focus)?s.focus:null;
+    state.focusTarget=state.focus&&Array.isArray(s.focusTarget)&&s.focusTarget.length===3&&s.focusTarget.every(n=>Number.isFinite(n)&&Math.abs(n)<500)?[...s.focusTarget]:null;
+    state.focusScale=state.focus&&Number.isFinite(s.focusScale)?clamp(s.focusScale,.01,100):1;
+    state.overview=state.focus&&s.overview&&typeof s.overview==='object'?s.overview:null;
+  }
+  readState(window.openai?.widgetState);
+  function save(){
+    const snapshot={schema:1,...state,origin};
+    window.openai?.setWidgetState?.({modelContent:{r5:{...snapshot,hidden:[...state.hidden]},units:'mm',battery_model:'68 × 36 × 10 mm fit envelope'},privateContent:{r5:snapshot}})?.catch(()=>{});
+  }
+  window.addEventListener('openai:set_globals',event=>{
+    const snapshot=event.detail?.globals?.widgetState;
+    if(!snapshot||snapshot.privateContent?.r5?.origin===origin)return;
+    motion=null;readState(snapshot);sync();requestDraw();
+  });
+  const offsets={base:[0,0,-30],cover:[0,0,-90],battery:[0,0,-60],pad:[0,0,-60],lid:[0,0,80],plunger:[0,0,55],cup:[0,0,35],sma_body:[0,0,-30],sma_washer:[0,8,-30],sma_nut:[0,15,-30],antenna:[0,28,-30],coax:[0,0,-30],coax_plug:[0,0,-30],coax_tie:[0,0,-30]};
+  const offset=m=>state.mode==='exploded'?(m.explodeOffset??offsets[m.part]??[0,0,m.explodeZ??0]):[0,0,0];
+  function shown(m){
+    if(state.focus&&!focusViews.get(state.focus)?.overviewGeometry)return m.variant==='focus'&&m.focusId===state.focus&&!state.hidden.includes(m.part)&&!(state.shell==='hidden'&&housing.has(m.part));
+    if(m.variant==='focus')return false;
+    if(state.hidden.includes(m.part)||(state.shell==='hidden'&&housing.has(m.part)))return false;
+    if(state.mode==='exploded'&&['plug','lead_positive','lead_negative'].includes(m.part))return false;
+    const cut=state.mode==='cutaway'&&housing.has(m.part);
+    return cut?m.variant==='cut':m.variant!=='cut';
+  }
+  function sync(){
+    controls.part.value=state.selected;controls.shell.value=state.shell;
+    dimensionSelect.value=state.dimensions;dimensionSelect.disabled=state.mode==='exploded';
+    root.dataset.dimensions=state.dimensions;
+    root.querySelector('#r5-overview-wrap').hidden=!state.focus;root.dataset.focus=state.focus||'';root.dataset.animating=String(!!motion);
+    root.querySelector('#r5-dimension-note').textContent=state.mode==='exploded'?'Fit dimensions are hidden in exploded view; presentation offsets are not clearances.':state.dimensions==='off'?'':state.dimensions==='oled'?'OLED value is glass-top to inner-rim datum height, not the nearest solid-edge distance.':state.dimensions==='battery'?'Nominal battery envelope to separator, cover and guide faces; lower space is padding allowance.':state.dimensions==='pcb'?'Carrier top surface to lid underside planes; component heights are not included.':'Nominal assembled dimensions, visible through the shell. OLED uses the inner-rim datum; battery lower space is padding allowance.';
+    if(state.focus){const d=dimensionData.dimensions.find(d=>d.id===state.focus);root.querySelector('#r5-dimension-note').textContent=d?`${d.label} · ${d.display_value} · Local section. `+(d.category==='oled'?'Vertical datum offset; the window is open above the glass.':d.id==='battery_pad'?'Reserved for soft padding, not extra air.':d.category==='pcb'?'Carrier surface spacing; component heights are excluded.':'Nominal battery envelope; physical fit remains to be checked.'):state.focus==='sma_mount'?'R5 backing, round bore and tie anchor · Hardware sizes remain provisional.':'Provisional coax to the LoRa socket · Loose tie placement and remaining cable slack to verify.';}
+    if(state.mode==='exploded')root.querySelector('#r5-dimension-note').textContent='Presentation offsets only · Coax moves with the base and is disconnected from the PCB; it is not stretched.';
+    root.querySelectorAll('[data-inspection]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inspection===state.focus)));
+    controls.visible.disabled=state.selected==='all';controls.visible.checked=!state.hidden.includes(state.selected);
+    controls.yaw.value=state.yaw;controls.pitch.value=state.pitch;controls.zoom.value=state.zoom;
+    for(const key of ['yaw','pitch'])root.querySelector('#r5-'+key+'-value').value=Math.round(state[key])+'°';
+    root.querySelector('#r5-zoom-value').value=state.zoom.toFixed(2)+'×';
+    root.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));
+    root.querySelector('#r5-detail').textContent=details[state.selected]||labels[state.selected];
+    root.dataset.mode=state.mode;root.dataset.yaw=state.yaw;root.dataset.pitch=state.pitch;root.dataset.zoom=state.zoom;root.dataset.selectedPart=state.selected;
+    root.dataset.shell=state.shell;root.dataset.visibleParts=[...new Set(meshes.filter(shown).map(m=>m.part))].join(',');
+    canvas.setAttribute('aria-label',`R5 ${state.mode} view. ${labels[state.selected]} selected. Shell ${state.shell}. Rotate by dragging; zoom by scrolling or camera controls.`);
+  }
+  const svgNS='http://www.w3.org/2000/svg';
+  function svgNode(tag,attrs,parent){const e=document.createElementNS(svgNS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));parent.append(e);return e;}
+  function projectDimension(point,matrix){const[x,y,z]=point;return[(1+matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12])*width/2,(1-matrix[1]*x-matrix[5]*y-matrix[9]*z-matrix[13])*height/2];}
+  function drawDimensions(cam){
+    const lines=root.querySelector('#r5-dimension-lines');lines.replaceChildren();
+    dimensionOverlay.setAttribute('viewBox',`0 0 ${width} ${height}`);
+    const enabled=state.dimensions!=='off'&&state.mode!=='exploded';
+    dimensionOverlay.style.display=enabled?'block':'none';root.dataset.dimensionCount='0';if(!enabled){dimensionButtons.forEach(({position})=>position.hidden=true);return;}
+    const selected=dimensionData.dimensions.filter(d=>state.focus?d.id===state.focus:state.dimensions==='all'?d.show_in_all:d.category===state.dimensions);
+    const selectedIds=new Set(selected.map(d=>d.id));dimensionButtons.forEach(({position},id)=>position.hidden=!selectedIds.has(id));
+    const items=[];
+    function line(a,b,klass,parent=lines){return svgNode('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:klass},parent);}
+    function arrow(tip,back,parent){const side=[-back[1],back[0]],length=6,half=2.5;svgNode('path',{class:'r5-dim-head',d:`M${tip[0]},${tip[1]} L${tip[0]+back[0]*length+side[0]*half},${tip[1]+back[1]*length+side[1]*half} L${tip[0]+back[0]*length-side[0]*half},${tip[1]+back[1]*length-side[1]*half} Z`},parent);}
+    for(const d of selected){
+      const a=projectDimension(d.start_mm,cam.matrix),b=projectDimension(d.end_mm,cam.matrix),mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+      if(![...a,...b].every(Number.isFinite))continue;
+      const group=svgNode('g',{'data-dimension':d.id,'data-value-mm':d.value_mm,'data-start-world':JSON.stringify(d.start_mm),'data-end-world':JSON.stringify(d.end_mm),'data-start-screen':JSON.stringify(a),'data-end-screen':JSON.stringify(b)},lines);
+      const w0=projectDimension(d.witness_start_mm||d.start_mm,cam.matrix),w1=projectDimension(d.witness_end_mm||d.end_mm,cam.matrix);
+      if(Math.hypot(w0[0]-a[0],w0[1]-a[1])>.1)line(w0,a,'r5-dim-witness',group);
+      if(Math.hypot(w1[0]-b[0],w1[1]-b[1])>.1)line(w1,b,'r5-dim-witness',group);
+      const delta=[b[0]-a[0],b[1]-a[1]],length=Math.hypot(...delta),u=length>.01?delta.map(n=>n/length):[0,-1];
+      const axisVector=norm(sub(d.end_mm,d.start_mm));
+      const pUnit=projectDimension(d.start_mm.map((v,i)=>v+axisVector[i]),cam.matrix);
+      const scale=Math.max(...[[1,0,0],[0,1,0],[0,0,1]].map(v=>{const p=projectDimension(d.start_mm.map((n,i)=>n+v[i]),cam.matrix);return Math.hypot(p[0]-a[0],p[1]-a[1]);}));
+      const edgeOn=Math.hypot(pUnit[0]-a[0],pUnit[1]-a[1])/scale<.10;
+      if(edgeOn){line([mid[0]-3,mid[1]-3],[mid[0]+3,mid[1]+3],'r5-dim-line',group);line([mid[0]-3,mid[1]+3],[mid[0]+3,mid[1]-3],'r5-dim-line',group);}
+      else if(length<22){const outA=[a[0]-u[0]*14,a[1]-u[1]*14],outB=[b[0]+u[0]*14,b[1]+u[1]*14];line(outA,a,'r5-dim-line',group);line(b,outB,'r5-dim-line',group);line(a,b,'r5-dim-line',group);arrow(a,u.map(n=>-n),group);arrow(b,u,group);}
+      else{line(a,b,'r5-dim-line',group);arrow(a,u,group);arrow(b,u.map(n=>-n),group);}
+      for(const p of[w0,w1])svgNode('circle',{cx:p[0],cy:p[1],r:1.8,class:'r5-dim-dot'},group);
+      group.dataset.edgeOn=String(edgeOn);
+      let entry=dimensionButtons.get(d.id);
+      if(!entry){
+        const position=document.createElement('div');position.className='r5-label-position';
+        const button=document.createElement('button');button.type='button';button.className='btn';button.dataset.dimensionLabel=d.id;
+        button.addEventListener('click',()=>focusClearance(d.id));
+        button.setAttribute('aria-label',`${d.label}, ${d.display_value}. Open close-up cutaway.`);
+        position.append(button);dimensionLabels.append(position);entry={position,button};dimensionButtons.set(d.id,entry);
+      }
+      entry.position.hidden=false;entry.button.setAttribute('aria-pressed',String(state.focus===d.id));
+      const measure=document.createElement('canvas').getContext('2d');measure.font=getComputedStyle(entry.button).font;
+      const maxLabelWidth=Math.max(64,(width-36)/2-32),words=d.label.split(' '),wrapped=[];let segment='';
+      for(const word of words){const next=segment?segment+' '+word:word;if(segment&&measure.measureText(next).width>maxLabelWidth){wrapped.push(segment);segment=word;}else segment=next;}
+      if(segment)wrapped.push(segment);
+      const content=[...wrapped,d.display_value,...(edgeOn?['edge-on']:[])],key=content.join('|');
+      if(entry.key!==key){entry.button.replaceChildren();content.forEach((s,i)=>{if(i)entry.button.append(document.createElement('br'));entry.button.append(document.createTextNode(s));});entry.key=key;}
+      const bounds=entry.button.getBoundingClientRect();
+      items.push({d,mid,a,b,group,...entry,boxWidth:bounds.width,boxHeight:bounds.height,side:d.side==='right'?'right':'left'});
+    }
+    const pad=8,gap=8;
+    for(const side of['left','right']){
+      const sideItems=items.filter(i=>i.side===side).sort((a,b)=>a.mid[1]-b.mid[1]);
+      let bottom=pad-gap;
+      for(const item of sideItems){item.y=Math.max(pad,Math.min(height-pad-item.boxHeight,item.mid[1]-item.boxHeight/2),bottom+gap);bottom=item.y+item.boxHeight;}
+      if(sideItems.length&&bottom>height-pad){const shift=bottom-(height-pad);sideItems.forEach(i=>i.y-=shift);}
+      for(const item of sideItems){
+        if(state.focus)item.y=pad;
+        const x=side==='left'?pad:width-pad-item.boxWidth;
+        item.position.style.left=x+'px';item.position.style.top=item.y+'px';
+        const connect=[side==='left'?x+item.boxWidth+5:x-5,item.y+item.boxHeight/2];
+        const elbow=[side==='left'?connect[0]+8:connect[0]-8,connect[1]];
+        svgNode('polyline',{class:'r5-dim-witness',points:`${item.mid.join(',')} ${elbow.join(',')} ${connect.join(',')}`},item.group);
+        item.button.dataset.labelBox=JSON.stringify([x,item.y,item.boxWidth,item.boxHeight]);
+      }
+    }
+    root.dataset.dimensionCount=String(items.length);
+    dimensionOverlay.setAttribute('aria-label',selected.map(d=>`${d.label}: ${d.display_value}`).join('; ')+'. Nominal assembled dimensions.');
+  }
+  try{
+    async function unpack(elementId){
+    const encoded=document.getElementById(elementId).textContent.trim();
+    const bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const packed=new Uint8Array(await new Response(stream).arrayBuffer());
+    const headerLength=new DataView(packed.buffer).getUint32(0,true),payloadStart=4+headerLength;
+    const data=JSON.parse(new TextDecoder().decode(packed.subarray(4,payloadStart)));
+    for(const part of data.parts){
+      let cursor=payloadStart+part.byteOffset;
+      const integer=()=>{let value=0,multiplier=1,byte;do{byte=packed[cursor++];value+=(byte&127)*multiplier;multiplier*=128;}while(byte&128);return value%2?-(value+1)/2:value/2;};
+      part.positions=new Float32Array(part.vertices*3);const previous=[0,0,0];
+      for(let i=0;i<part.positions.length;i++){const axis=i%3;previous[axis]+=integer();part.positions[i]=previous[axis]/1000;}
+      part.indices=new Uint32Array(part.indexCount);let previousIndex=0;
+      for(let i=0;i<part.indices.length;i++){previousIndex+=integer();part.indices[i]=previousIndex;}
+      if(cursor!==payloadStart+part.byteOffset+part.byteLength)throw Error('Geometry data length mismatch.');
+    }
+    return data;
+    }
+    const [data,focusMeshes]=await Promise.all([unpack('r5-mesh-data'),unpack('r5-focus-mesh-data')]);
+    data.parts.push(...focusMeshes.parts);
+    const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,preserveDrawingBuffer:true});
+    if(!gl)throw Error('This view needs WebGL 2. Open it in a browser with hardware acceleration enabled.');
+    const shader=(type,source)=>{const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;};
+    const program=gl.createProgram();
+    gl.attachShader(program,shader(gl.VERTEX_SHADER,`#version 300 es
+      precision highp float;in vec3 aPosition;in vec3 aNormal;in vec3 aColor;uniform mat4 uVP;uniform vec3 uOffset;out vec3 vNormal;out vec3 vWorld;out vec3 vColor;
+      void main(){vNormal=aNormal;vWorld=aPosition+uOffset;vColor=aColor;gl_Position=uVP*vec4(vWorld,1.);}`));
+    gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`#version 300 es
+      precision highp float;in vec3 vNormal;in vec3 vWorld;in vec3 vColor;uniform vec3 uColor;uniform vec3 uEye;uniform vec3 uLight;uniform float uAlpha;uniform bool uVertexColor;out vec4 outColor;
+      void main(){vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;vec3 L=normalize(vec3(-.35,-.85,1.2));vec3 V=normalize(uEye-vWorld);float diffuse=max(dot(N,L),0.);float lighting=.56+.34*diffuse+.10*(.5+.5*N.z);float shine=pow(max(dot(N,normalize(L+V)),0.),28.)*.13;vec3 base=uVertexColor?vColor:uColor;outColor=vec4(mix(base*lighting,uLight,shine),uAlpha);}`));
+    gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+    const U={};for(const name of ['uVP','uOffset','uColor','uEye','uLight','uAlpha','uVertexColor'])U[name]=gl.getUniformLocation(program,name);
+    const P=gl.getAttribLocation(program,'aPosition'),N=gl.getAttribLocation(program,'aNormal'),C=gl.getAttribLocation(program,'aColor');
+    function attr(location,values,usage=gl.STATIC_DRAW){const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,values,usage);gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,3,gl.FLOAT,false,0,0);return buffer;}
+    meshes=data.parts.map(m=>{
+      const semantic=m.part||m.id.replace(/_cut$/,'');
+      const positions=new Float32Array(m.indices.length*3),normals=new Float32Array(positions.length);
+      for(let i=0;i<m.indices.length;i+=3){
+        const pts=[0,1,2].map(k=>m.positions.slice(m.indices[i+k]*3,m.indices[i+k]*3+3));
+        const normal=norm(cross(sub(pts[1],pts[0]),sub(pts[2],pts[0])));
+        for(let j=0;j<3;j++){positions.set(pts[j],(i+j)*3);normals.set(normal,(i+j)*3);}
+      }
+      const vao=gl.createVertexArray();gl.bindVertexArray(vao);attr(P,positions);attr(N,normals);gl.disableVertexAttribArray(C);gl.vertexAttrib3f(C,0,0,0);
+      return {...m,part:semantic,positions,normalValues:normals,vao,count:positions.length/3};
+    });
+    const ids=new Set(meshes.map(m=>m.part));
+    for(const [id,label]of Object.entries(labels))if(id!=='all'&&ids.has(id)){const option=document.createElement('option');option.value=id;option.textContent=label;controls.part.append(option);}
+    if(state.selected!=='all'&&!ids.has(state.selected))state.selected='all';
+    const probe=document.createElement('span');probe.hidden=true;root.append(probe);
+    const swatch=document.createElement('canvas');swatch.width=swatch.height=1;const ctx=swatch.getContext('2d',{willReadFrequently:true});
+    function color(expression){probe.style.color=expression;ctx.clearRect(0,0,1,1);ctx.fillStyle=getComputedStyle(probe).color;ctx.fillRect(0,0,1,1);return [...ctx.getImageData(0,0,1,1).data].slice(0,3).map(x=>x/255);}
+    function theme(){
+      const bg=color('var(--background)'),fg=color('var(--foreground)');
+      palette={bg,fg,series:[1,2,3,4,5,6].map(n=>color('var(--viz-series-'+n+')'))};
+      palette.dark=dot(bg,[.2126,.7152,.0722])<dot(fg,[.2126,.7152,.0722]);palette.light=palette.dark?fg:bg;
+      transparentKey='';requestDraw();
+    }
+    function meshColor(m){
+      const id=m.part,dark=palette.dark,bg=palette.bg,fg=palette.fg;
+      let c;
+      if(id==='base')c=mix(bg,fg,dark?.40:.58);
+      else if(id==='lid')c=mix(bg,fg,dark?.65:.16);
+      else if(id==='cover')c=mix(palette.series[0],bg,.38);
+      else if(id==='battery')c=mix(palette.series[2],bg,.22);
+      else if(id==='plunger')c=palette.series[1];
+      else if(id==='cup')c=mix(palette.series[2],bg,.10);
+      else if(id==='pcb'||id==='microphone'||id==='amplifier')c=mix(palette.series[4],bg,dark?.18:.08);
+      else if(id==='oled'||id==='switch')c=mix(bg,fg,dark?.18:.85);
+      else if(id==='heltec')c=mix(bg,fg,dark?.36:.72);
+      else if(id==='lead_positive')c=palette.series[3];
+      else if(id==='coax')c=palette.series[1];
+      else if(id==='coax_tie')c=mix(bg,fg,dark?.75:.75);
+      else if(id==='sma_body'||id==='sma_washer'||id==='sma_nut'||id==='coax_plug'||m.id==='antenna_coupler')c=mix(palette.series[5],fg,.20);
+      else if(id==='antenna')c=mix(bg,fg,dark?.25:.85);
+      else c=mix(bg,fg,dark?.55:.40);
+      if(/pads|pins|metal|detail/.test(m.id))c=mix(palette.series[5],fg,.20);
+      if(/marking/.test(m.id))c=mix(bg,fg,dark?.85:.18);
+      if(m.id.includes('_section'))c=mix(c,palette.series[1],.50);
+      return state.selected===id?mix(c,palette.series[0],.60):c;
+    }
+    let transparentKey='',transparentVAO=gl.createVertexArray(),transparentBuffers=[],transparentCount=0;
+    function transparency(active,cam){
+      const key=active.map(m=>m.id+':'+offset(m).join(',')).join('|')+':'+state.selected+':'+state.yaw+':'+state.pitch;
+      if(key===transparentKey)return;
+      transparentKey=key;
+      const triangles=[];
+      for(const m of active){const shift=offset(m),col=meshColor(m);for(let i=0;i<m.count;i+=3){
+        const center=[0,0,0];for(let j=0;j<3;j++)for(let a=0;a<3;a++)center[a]+=m.positions[(i+j)*3+a]/3;
+        for(let a=0;a<3;a++)center[a]+=shift[a];triangles.push({m,i,shift,col,depth:dot(center,cam.direction)});
+      }}
+      triangles.sort((a,b)=>a.depth-b.depth);
+      const pos=new Float32Array(triangles.length*9),normal=new Float32Array(pos.length),colors=new Float32Array(pos.length);
+      triangles.forEach((t,k)=>{for(let j=0;j<3;j++){const src=(t.i+j)*3,dst=k*9+j*3;pos.set(t.m.positions.subarray(src,src+3),dst);for(let a=0;a<3;a++)pos[dst+a]+=t.shift[a];normal.set(t.m.normalValues.subarray(src,src+3),dst);colors.set(t.col,dst);}});
+      gl.bindVertexArray(transparentVAO);transparentBuffers.forEach(b=>gl.deleteBuffer(b));transparentBuffers=[attr(P,pos,gl.DYNAMIC_DRAW),attr(N,normal,gl.DYNAMIC_DRAW),attr(C,colors,gl.DYNAMIC_DRAW)];transparentCount=pos.length/3;
+    }
+    function fittedCamera(){
+      const focused=focusViews.get(state.focus);
+      const target=focused?(state.focusTarget||focused.target_mm):state.mode==='exploded'?[35,77,-2]:[35,72,4];
+      const direction=[Math.sin(state.yaw*rad)*Math.cos(state.pitch*rad),-Math.cos(state.yaw*rad)*Math.cos(state.pitch*rad),Math.sin(state.pitch*rad)];
+      const eye=target.map((n,i)=>n+direction[i]*400),view=lookAt(eye,target),aspect=width/height;
+      const candidates=focused?[{bounds:focused.frame_mm,part:'frame'}]:meshes.filter(m=>m.variant==='full'&&!['plug','lead_positive','lead_negative'].includes(m.part));
+      let horizontal=0,vertical=0;
+      for(const m of candidates){const b=m.bounds||[0,0,0,70,90,20],shift=offset(m);for(const x of [b[0]+shift[0],b[3]+shift[0]])for(const y of [b[1]+shift[1],b[4]+shift[1]])for(const z of [b[2]+shift[2],b[5]+shift[2]]){
+        horizontal=Math.max(horizontal,Math.abs(view[0]*x+view[4]*y+view[8]*z+view[12]));
+        vertical=Math.max(vertical,Math.abs(view[1]*x+view[5]*y+view[9]*z+view[13]));
+      }}
+      const halfHeight=Math.max(1,vertical,horizontal/aspect)*1.10*(focused?state.focusScale:1)/state.zoom;
+      return {target:[...target],halfHeight,yaw:state.yaw,pitch:state.pitch};
+    }
+    function camera(){
+      const pose=motion?.current||fittedCamera(),{target,halfHeight,yaw,pitch}=pose;
+      const direction=[Math.sin(yaw*rad)*Math.cos(pitch*rad),-Math.cos(yaw*rad)*Math.cos(pitch*rad),Math.sin(pitch*rad)];
+      const eye=target.map((n,i)=>n+direction[i]*400),aspect=width/height;
+      return {...pose,direction,eye,matrix:multiply(ortho(-halfHeight*aspect,halfHeight*aspect,-halfHeight,halfHeight,1,900),lookAt(eye,target))};
+    }
+    function cancelMotion(){
+      if(!motion)return;
+      const pose=motion.current;motion=null;
+      state.yaw=wrap(pose.yaw);state.pitch=pose.pitch;
+      if(state.focus){state.focusTarget=[...pose.target];state.focusScale=1;state.focusScale=pose.halfHeight/fittedCamera().halfHeight;}
+      sync();requestDraw();
+    }
+    function advanceMotion(now){
+      if(!motion)return;
+      const t=clamp((now-motion.started)/900,0,1),ease=t*t*(3-2*t),{from,to}=motion;
+      motion.current={target:mix(from.target,to.target,ease),halfHeight:from.halfHeight*(1-ease)+to.halfHeight*ease,yaw:from.yaw+wrap(to.yaw-from.yaw)*ease,pitch:from.pitch*(1-ease)+to.pitch*ease};
+      state.yaw=wrap(motion.current.yaw);state.pitch=motion.current.pitch;
+      if(t===1){motion=null;save();}else requestDraw();
+    }
+    focusClearance=id=>{
+      const focus=focusViews.get(id);if(!focus)return;
+      const from=camera();
+      if(!state.focus)state.overview={schema:1,mode:state.mode,shell:state.shell,selected:state.selected,hidden:[...state.hidden],yaw:state.yaw,pitch:state.pitch,zoom:state.zoom,dimensions:state.dimensions};
+      motion=null;state.focus=id;state.focusTarget=[...focus.target_mm];state.focusScale=1;
+      state.mode='cutaway';state.shell=focus.shell||'solid';state.hidden=[];state.selected=focus.selected||'all';state.yaw=focus.yaw;state.pitch=focus.pitch;state.zoom=1;
+      if(state.dimensions==='off'&&!focus.overviewGeometry)state.dimensions=dimensionData.dimensions.find(d=>d.id===id).category;
+      const to=fittedCamera();
+      if(!reducedMotion.matches)motion={from,to,current:from,started:performance.now()};
+      sync();requestDraw();if(!motion)save();
+    };
+    function leaveFocus(){
+      if(!state.focus)return;
+      const old=state.overview;motion=null;state.focus=null;state.focusTarget=null;state.focusScale=1;state.overview=null;
+      if(old)readState({r5:old});else{state.yaw=40;state.pitch=35;state.zoom=1;}
+      sync();requestDraw();
+    }
+    overviewButton.addEventListener('click',()=>{leaveFocus();save();});
+    root.querySelectorAll('[data-inspection]').forEach(b=>b.addEventListener('click',()=>focusClearance(b.dataset.inspection)));
+    reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches&&motion){state.yaw=motion.to.yaw;state.pitch=motion.to.pitch;motion=null;sync();requestDraw();save();}});
+    function draw(now=performance.now()){
+      if(!ready)return;
+      advanceMotion(now);
+      const rect=canvas.getBoundingClientRect();width=Math.max(1,rect.width);height=Math.max(1,rect.height);const dpr=Math.min(devicePixelRatio||1,2);
+      const w=Math.round(width*dpr),h=Math.round(height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+      const cam=camera();root.dataset.cameraTarget=JSON.stringify(cam.target);root.dataset.cameraHalfHeight=String(cam.halfHeight);
+      gl.viewport(0,0,w,h);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.depthMask(true);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
+      gl.uniformMatrix4fv(U.uVP,false,cam.matrix);gl.uniform3fv(U.uEye,cam.eye);gl.uniform3fv(U.uLight,palette.light);gl.uniform1f(U.uAlpha,1);gl.uniform1i(U.uVertexColor,0);
+      const visible=meshes.filter(shown),trans=visible.filter(m=>state.shell==='transparent'&&housing.has(m.part));
+      for(const m of visible){if(trans.includes(m))continue;gl.bindVertexArray(m.vao);gl.uniform3fv(U.uOffset,offset(m));gl.uniform3fv(U.uColor,meshColor(m));gl.drawArrays(gl.TRIANGLES,0,m.count);}
+      if(trans.length){transparency(trans,cam);gl.bindVertexArray(transparentVAO);gl.uniform3fv(U.uOffset,[0,0,0]);gl.uniform1f(U.uAlpha,.16);gl.uniform1i(U.uVertexColor,1);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.drawArrays(gl.TRIANGLES,0,transparentCount);gl.depthMask(true);gl.disable(gl.BLEND);}
+      root.dataset.drawCount=String(Number(root.dataset.drawCount||0)+1);sync();drawDimensions(cam);
+    }
+    requestDraw=()=>{if(!raf)raf=requestAnimationFrame(now=>{raf=0;draw(now);});};
+    function pick(clientX,clientY){
+      const rect=canvas.getBoundingClientRect(),px=(clientX-rect.left)/rect.width*2-1,py=1-(clientY-rect.top)/rect.height*2,M=camera().matrix;
+      let selected=null,depth=Infinity;
+      for(const m of meshes.filter(shown)){
+        if(state.shell==='transparent'&&housing.has(m.part))continue;
+        const shift=offset(m),p=m.positions;
+        for(let i=0;i<p.length;i+=9){const v=[];for(let j=0;j<3;j++){const x=p[i+j*3]+shift[0],y=p[i+j*3+1]+shift[1],z=p[i+j*3+2]+shift[2];v.push([M[0]*x+M[4]*y+M[8]*z+M[12],M[1]*x+M[5]*y+M[9]*z+M[13],M[2]*x+M[6]*y+M[10]*z+M[14]]);}
+          const [a,b,c]=v,den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);if(Math.abs(den)<1e-12)continue;
+          const u=((b[1]-c[1])*(px-c[0])+(c[0]-b[0])*(py-c[1]))/den,vv=((c[1]-a[1])*(px-c[0])+(a[0]-c[0])*(py-c[1]))/den;
+          if(u>=0&&vv>=0&&u+vv<=1){const z=u*a[2]+vv*b[2]+(1-u-vv)*c[2];if(z<depth&&z>=-1&&z<=1){depth=z;selected=m.part;}}
+        }
+      }
+      if(selected){state.selected=selected;sync();requestDraw();save();}
+    }
+    const pointers=new Map();let down=null;
+    const pair=()=>{const p=[...pointers.values()];return p.length<2?null:{x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2,d:Math.hypot(p[1].x-p[0].x,p[1].y-p[0].y)};};
+    canvas.addEventListener('pointerdown',e=>{if(e.button!==0&&e.pointerType!=='touch')return;e.preventDefault();cancelMotion();pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);canvas.dataset.dragging='true';down={x:e.clientX,y:e.clientY,moved:false,multi:pointers.size>1};});
+    canvas.addEventListener('pointermove',e=>{const old=pointers.get(e.pointerId);if(!old)return;e.preventDefault();const before=pair();pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>4)down.moved=true;
+      if(before){const after=pair();if(before.d>1&&after.d>1)state.zoom=clamp(state.zoom*after.d/before.d,.5,5);state.yaw=wrap(state.yaw-(after.x-before.x)*.35);state.pitch=clamp(state.pitch+(after.y-before.y)*.35,-85,85);if(down)down.multi=true;}
+      else{state.yaw=wrap(state.yaw-(e.clientX-old.x)*.35);state.pitch=clamp(state.pitch+(e.clientY-old.y)*.35,-85,85);}requestDraw();
+    });
+    function end(e){if(!pointers.has(e.pointerId))return;const click=e.type==='pointerup'&&down&&!down.moved&&!down.multi;pointers.delete(e.pointerId);if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);canvas.dataset.dragging=String(pointers.size>0);if(click)pick(e.clientX,e.clientY);if(!pointers.size){down=null;save();}}
+    ['pointerup','pointercancel','lostpointercapture'].forEach(name=>canvas.addEventListener(name,end));
+    canvas.addEventListener('wheel',e=>{e.preventDefault();cancelMotion();state.zoom=clamp(state.zoom*Math.exp(-clamp(e.deltaY,-500,500)*.0015),.5,5);requestDraw();clearTimeout(saveTimer);saveTimer=setTimeout(save,180);},{passive:false});
+    root.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{leaveFocus();state.mode=b.dataset.mode;sync();requestDraw();save();}));
+    controls.part.addEventListener('change',()=>{state.selected=controls.part.value;sync();requestDraw();save();});
+    controls.shell.addEventListener('change',()=>{state.shell=controls.shell.value;sync();requestDraw();save();});
+    dimensionSelect.addEventListener('change',()=>{const value=dimensionSelect.value;leaveFocus();state.dimensions=value;sync();requestDraw();save();});
+    controls.visible.addEventListener('change',()=>{state.hidden=state.hidden.filter(x=>x!==state.selected);if(!controls.visible.checked&&state.selected!=='all')state.hidden.push(state.selected);sync();requestDraw();save();});
+    for(const key of ['yaw','pitch','zoom']){controls[key].addEventListener('input',()=>{const value=Number(controls[key].value);cancelMotion();state[key]=value;sync();requestDraw();});controls[key].addEventListener('change',save);}
+    canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();ready=false;error.hidden=false;error.textContent='The 3D graphics context was interrupted. Reopen the view to restore it.';});
+    new ResizeObserver(requestDraw).observe(canvas);
+    new MutationObserver(theme).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+    ready=true;theme();sync();draw();root.querySelector('.r5-loading').hidden=true;root.dataset.ready='true';root.dataset.meshCount=meshes.length;root.dataset.triangleCount=meshes.reduce((n,m)=>n+m.count/3,0);
+  }catch(e){error.hidden=false;error.textContent='Unable to display the model: '+e.message;root.querySelector('.r5-loading').hidden=true;root.dataset.ready='error';console.error(e);}
+  function requestDraw(){}
+})();
+</script>

@@ -1,0 +1,184 @@
+R7 ENCLOSURE - ASSEMBLY, HARDWARE AND FIRST-ARTICLE INSPECTION
+2026-11-25 | Nominal dimensions in millimetres | Fit prototype
+
+SCOPE AND CONFIGURATION
+R7 changes the enclosure only. The PCB is already in fabrication. PCB design,
+Gerbers, drills, current firmware and component mounting locations remain the
+fabrication baseline. The integrity guard records 367 protected files and
+checks SHA256 hashes and file membership. Do not submit this enclosure revision
+as a replacement PCB release. CAD calculations do not qualify physical hardware.
+
+Seven installed printed parts, one of each:
+  EnclosureBase, EnclosureLid, BatteryCover, PTTPlunger, PTTStopCup,
+  SpeakerRetainer, SMAKey.
+R7FitCoupon is an optional eighth printed part, supplied separately. It is never
+installed. The actual PCB/component assembly and nominal battery, SMA, cable,
+speaker, nuts, screws, pads and ties shown in the CAD are reference hardware.
+
+R7 ENCLOSURE CHANGES
+1. SMA retention: a replaceable U-shaped key captures the fixed rear hex body.
+   Key 14 wide x 2 axial x 9.9 high; jaw gap 8.4; top bridge 1.1; guide allowance
+   0.3 per side and axially; key top Z20.3 has 0.7 to the closed lid at Z21.
+   The reference rear hex is 8 AF and is unmeasured. Measure the OWNED fixed rear
+   body, not the mounting nut, and adjust the parametric key gap if necessary.
+   The nominal reference contacts the key at +/-8 degrees including guide play.
+   This is geometric anti-rotation evidence, not a torque or antenna load rating.
+2. Coax support: integrated anchor accepts a loose nominal 2.5-wide tie. The
+   reference route is 132.165 long, 1.32 diameter and uses R10 bends. These are
+   routing assumptions, not the owned cable specification. Reference minimum
+   distances: base 0.640, lid 0.485, assigned components 0.321 near the U.FL end.
+   Verify actual lead length, bend limit and full surplus slack. The tie must
+   retain position without crushing the coax or pulling on the U.FL socket.
+3. Speaker retainer: 3.2 thick, underside Z13.2 and original hard-stop plane
+   Z16.4. The 4.3 AF nut pockets remain 1.8 deep and now leave a 1.4 bearing roof
+   (was 0.8). Nuts occupy Z13.4-15.0. Existing M2x12 screws have nominal tips at
+   Z12.9, projecting 0.5 beyond the nut. Speaker, pads and stop plane stay fixed.
+   A separate lid anchor carries a second loose tie for the speaker lead pair.
+   Both ties now use the same conservative 4.5 x 4.5 x 2.7 head envelope. The
+   speaker head occupies X66.8-71.3, Y54.05-58.55, Z13.6-16.3. A local lip relief
+   at X70.1-72.2, Y54.55-58.05, Z19.25-19.8 provides 0.45 loop-to-lip clearance
+   and retains 1.2 lip thickness. Reference minimum clearances are 0.15 at the
+   anchor slot, 0.25 to the speaker lead, 0.70 to base and 3.669 to electronics.
+4. Microphone path: integrated noncontact shroud OD11, ID8, bottom Z13 and lid
+   underside Z21, giving 8 protrusion and 1.5 nominal wall. Minimum assigned-
+   component clearance is 0.70. No acoustic seal or performance rating is implied.
+   Any optional soft gasket must fit the real stationary port/frame without
+   loading the microphone or obscuring an acoustic opening.
+5. OLED support: two external short-edge bands and four corner returns increase
+   sampled screw-relief roof thickness from 1.1 to 1.5-1.7. Exact vertical probes
+   checked 252 locations, including 196 former 1.1-thick positions; this is not
+   a global minimum-wall solution. Added features stay outside the aperture.
+   Main long-edge outer face Z22.1, lower rim Z20.5, OLED location and the nominal
+   0.50 glass-to-rim gap are retained. Top-edge fillets R0.2 reduce sharp edges.
+
+CONSOLIDATED PURCHASED HARDWARE
+Qty  Item                          Installation / fit basis
+4    M3x22 main closure screws     Existing main closure, ISO4762/DIN912 basis
+4    M3x6 rear-cover screws        Blind holes; do not substitute longer screws
+8    M3 heat-set inserts           RX-M3x5x4-compatible; OD 5, length 4
+2    M2x10 PTT cup screws          Pan head reference, nominal head diameter 4
+2    M2 full nuts for PTT          4.0 across flats, 1.6 height
+2    M2x12 speaker screws          Actual head envelope must fit the reference
+2    M2 full nuts for speaker      4.0 across flats, 1.6 height
+2    M2 speaker flat washers       Reference OD 5.0, ID 2.2, thickness 0.3
+2    Battery retaining straps      Soft nonconductive, nominal 10 width, cut to fit
+1    Battery support pad           Smooth insulating; 1 mm installed allowance
+1    Speaker front-frame gasket    Fit actual stationary rim; no diaphragm load
+1    Speaker back-frame pad        Fit stationary body; keep vents clear
+1    SMA kit mounting hardware     Supplied nut/washer arrangement; measure kit
+2    Small cable ties              Nominal 2.5 wide; one coax, one speaker pair
+                                   Both reference heads 4.5 x 4.5 x 2.7
+
+Cable ties are purchased hardware, not printed parts. Both head references use
+the same 4.5 x 4.5 x 2.7 envelope; coax strap thickness is 0.50 and speaker strap
+0.45 in the references. Verify the purchased head, strap thickness and locking-
+tail access before assembly. A 2.5-wide tie does not identify a vendor part.
+Counter-hold the SMA fixed body while fitting the nut/antenna; the printed key
+assists location and should not carry uncontrolled installation torque.
+
+RETAINED CRITICAL INTERFACES
+- PCB nominal 70 x 90 x 1.6; original board datums, mounting holes and parts retained.
+- Main floor/PCB-battery partition 2.4; keep continuous under the battery.
+- Battery reference 68 x 36 x 10, locating space 70 x 38, pad allowance 1 below
+  and 3 above.
+  These are packaging allowances, not a cell-maker expansion rating. Retain the
+  soft pouch without compression, sharp contacts, screw tips or pinched leads.
+- OLED CAD datum gap 0.501281 (0.50 nominal); no display-glass compression. Measure
+  the owned display/header stack and closed-case clearance. The window remains
+  an open aperture, with no separate lens added in this revision.
+- PTT nominal 0.25 switch depression after 0.20 released gap. The actual switch's
+  operating travel and safe overtravel remain unverified. Confirm continuity-on
+  and reliable release gently before load/cycle tests. Comparator dimensions do
+  not establish the specification of the actual switch.
+- Main insert pilots diameter 4.4 x 5 in diameter 7 bosses; rear pilots 4.4 x 4.5.
+- Rear M3x6 nominal blind-end clearance 0.9; main M3x22 tip clearance 1.4.
+- Locating lip allowance 0.4 per side; plunger diameter 8 in guide diameter 8.8.
+
+ASSEMBLY SEQUENCE
+1. Clean and inspect printed parts. Remove loose powder, support remnants and
+   sharp burrs without changing fitted datums. Confirm all holes are clear.
+2. Test insert/nut/guide fits on the optional coupon with the purchased hardware.
+   Install inserts using the supplier's process; support the boss and prevent
+   distortion. A good coupon is useful process evidence, not proof every boss
+   is acceptable. Inspect the enclosure's actual bosses after installation.
+3. Fit the SMA bulkhead with its supplied mounting hardware. Trial-fit the key
+   around the fixed rear hex and into its carrier. Counter-hold and tighten only
+   enough to seat hardware securely; check antenna mating and wrench access.
+4. Install the unchanged PCB on its original supports. Connect the correct LoRa
+   U.FL socket and route coax through the loose tie. Fit all lead slack, keep
+   strain off the connector and confirm the actual cable's minimum bend radius.
+5. Fit the PTT assembly with its existing cup, two M2x10 screws and nuts. Verify
+   free sliding and actual switch actuation/release before applying hard load.
+6. Fit the speaker on the stationary-frame pads. Seat the reinforced retainer
+   fully on both hard stops using its two M2x12 screws, washers and captive nuts.
+   Do not trap its diaphragm, vents or wires. Remove the speaker connector as
+   previously specified and clamp the leads in marked SPK+ and SPK- terminals.
+   Neither speaker conductor connects to system ground. Leave service slack and
+   retain the pair with the lid tie without crushing insulation.
+7. Fit the padded battery and soft straps in the separate compartment. Connect
+   only to the existing Heltec battery input using the preserved connection and
+   polarity checks. This revision does not provide battery power to the amplifier.
+8. Lower the lid slowly while watching both lead routes and microphone shroud.
+   Confirm no pinch, plug interference or preload on glass/switch/PCB. Fit the
+   main screws and rear cover. Recheck movement and clearances after closure.
+
+FIRST-ARTICLE INSPECTION RECORD
+Record measured values, date and inspector. A blank item is not accepted.
+1. Shop/process/material/finish: __________________________________________
+2. Critical print dimensions and lid flatness: ____________________________
+3. Purchased inserts/nuts/screws and pilot results: ________________________
+4. Insert installation/no cracks/pull-out criterion: _______________________
+5. PCB seats without bending and unchanged hole alignment: ________________
+6. OLED rim clearance, screw clearance, no glass contact: _________________
+7. PTT switch identification, travel, actuation/release/free slide: _________
+8. SMA fixed-body/key/thread/seat fit and counter-hold access: _____________
+9. Coax actual diameter/bend limit/length/tie head/slack: __________________
+10. Speaker frame/pad fit/retainer hard-stop seating: ______________________
+11. Speaker tie head/terminal access/lid-opening service slack: ____________
+12. Battery wrapped dimensions/pad/straps/no compression: _________________
+13. Battery plug and USB plug together at full insertion: _________________
+14. Harness sweep during slow close/open, no pinch: _______________________
+15. Closure screw engagement, no bottoming: _______________________________
+16. Closed-case audio, PTT cycles and intended duty temperature: __________
+
+PRINT PROCESS AND OPTIONAL COUPON
+Unfilled MJF PA12, standard cleaned/depowdered finish; 100% scale in mm. Submit
+one mesh format per part and distinguish the optional coupon from installed
+parts. The shop chooses build orientation. Do not polish or coat critical fits
+without reviewing material removal/deposition and the small bearing features.
+Provider-specific tolerances govern; CAD nominal gaps are not print tolerances.
+
+The 50 x 32 coupon has a 3.2-thick plate, two diameter 7 insert bosses with
+diameter 4.4 and 4.5 pilots (5 deep, 1 floor), diameter 8.8 plunger guide (3.6
+local thickness), and M2 nut pockets 4.2/4.3/4.4 AF (1.8 depth, 1.4 roof,
+diameter 2.4 through). External plate edges R0.5. Pilot 4.4 is the current
+basis; 4.5 is an optional comparison,
+not an automatically accepted replacement. Test actual nuts and plunger. Do
+not print 0.25-thick shims and assume they qualify the PTT operating travel.
+
+FUNCTIONAL QUALIFICATION AFTER FIT
+Record repeated PTT and closure cycles, antenna fitting/removal, rear-cover
+servicing, closed-case speaker/microphone performance and temperatures at the
+intended duty. Initial handling/drop development uses inert battery mass.
+Define acceptance loads and environments before claiming strength. No weather,
+IP, impact, acoustic or thermal rating is established by the model or drawings.
+
+UNCHANGED ELECTRICAL COMMISSIONING LIMIT
+The amplifier remains USB powered. The earlier battery-only enable/firmware
+issue remains outside this enclosure revision. Keep the existing BATTERY-
+CONNECTION-REVIEW prerequisites with the project; electrical/firmware changes
+require a separate task. PCB and firmware are not modified here.
+
+EVIDENCE AND PRIMARY PROCESS GUIDANCE
+- LoRa-C5-R7-Enclosure-Improvements.pdf: changed-feature dimensions and checks.
+- ../audit/pcb-guard-baseline.json and pcb-guard-verification.json: protected files.
+- ../audit/lid/lid-candidate-audit.json and oled-roof-witnesses.json.
+- ../audit/lid/larger-speaker-tie-audit.json: conservative head and lip relief.
+- ../audit/antenna/antenna-final-audit.json and route-r10-audit.json.
+- ../audit/fit-coupon-audit.json and fit-coupon-plan.json.
+Materialise PA12 MJF: published accuracy +/-0.3%, with +/-0.3 mm lower limit,
+minimum wall 1 mm; actual shop rules can differ. Polishing can alter small fits.
+https://www.materialise.com/en/industrial/3d-printing-materials/pa12-mjf
+HP recommends considering reinforcement for long/thin features.
+https://www.hp.com/us-en/printers/3d-printers/learning-center/how-to-design-3d-print-model.html
+Sources checked 2026-11-25; they provide process context, not a supplier quote.

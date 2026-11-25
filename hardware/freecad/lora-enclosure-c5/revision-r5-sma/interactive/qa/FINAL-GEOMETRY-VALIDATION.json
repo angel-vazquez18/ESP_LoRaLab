@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "report": "mesh/MESH-VALIDATION.json",
+      "sha256": "f63ed95461b05e1c8f3aa2e05f56301fe56693502fad961ea40d4f1004d70717",
+      "ok": true
+    },
+    {
+      "report": "focus/FOCUS-MESH-VALIDATION.json",
+      "sha256": "dce2a818e39a8b906c4f96ede9b9d17d8572707cd5e854cd0e9e3a3b4e38e376",
+      "ok": true
+    },
+    {
+      "report": "dimensions/DIMENSION-VALIDATION.json",
+      "sha256": "1fd08316b72936c664ff0593e1a7ddbf1de4f0f9bd64ffe6faa385bc6b86fb5d",
+      "ok": true
+    },
+    {
+      "report": "routing/ROUTE-VALIDATION.json",
+      "sha256": "e44655399aaf40a181d56b06e01635cc6eeecf49c6d9ad4f45fb66169a781876",
+      "ok": true
+    },
+    {
+      "report": "BUILD-VALIDATION.json",
+      "sha256": "1306428920ef53c1df92a89c0bc77342420138744dd74b681c0ccd420c2a8b89",
+      "ok": true
+    }
+  ],
+  "fragment_sha256": "c7815e141cbaf486d60b534eab92e4d48de47cfe91d3156ed72310e17d2debd0",
+  "native_cad_modified": false,
+  "references": "SMA, antenna, battery and cables are fit references; physical cable slack and tie placement unverified"
+}

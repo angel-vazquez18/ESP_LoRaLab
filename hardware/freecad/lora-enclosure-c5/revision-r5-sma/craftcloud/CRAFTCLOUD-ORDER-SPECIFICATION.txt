@@ -1,0 +1,31 @@
+R5 SMA bulkhead enclosure - file preparation only
+2026-11-24 | Fit prototype | No order submitted
+
+Process/material: unfilled MJF PA12, as selected for the R4 enclosure.
+Units: millimetres. Scale: 100 percent. Quantity: one of each of five parts.
+Supplier selects orientation and process settings. No printer-specific G-code.
+
+Upload either the five STL files OR the five 3MF files from upload/.
+Do not upload both formats for the same part and do not upload the whole
+assembly STEP as one printable object. The models contain no hardware.
+
+1. C5-R5-enclosure-base-mm: revised SMA bore/backing and coax restraint.
+2. C5-R5-enclosure-lid-mm: closes the former seam coax exit.
+3. C5-R5-ptt-plunger-mm: same geometry as R4.
+4. C5-R5-ptt-stop-cup-mm: same geometry as R4.
+5. C5-R5-battery-cover-mm: same geometry as R4.
+
+Order the R5 base and lid as a matched pair. Inspect/finish the 6.6 mm bore,
+2.4 mm SMA seating wall and 3.0 x 1.5 mm cable-tie slot after manufacture.
+Keep dimensional features free of coatings that consume fitting clearance.
+The user's actual SMA mounting body, threaded length and washer stack are
+unmeasured. Confirm their fit and clamp engagement before a production order.
+Do not substitute a keyed or threaded printed hole for the round bulkhead bore.
+
+Assembly hardware is purchased separately: the referenced SMA antenna/pigtail
+with its supplied mounting nut/washer arrangement, one gentle nominal 2.5 mm
+coax-restraint tie, plus the retained R4 screws, nuts, inserts and battery straps.
+Counter-hold the fixed SMA body when attaching the antenna. The U.FL connector
+must not carry antenna mounting or twisting loads.
+
+See the included drawing, installation notes and validation reports.

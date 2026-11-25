@@ -1,0 +1,33 @@
+R7 enclosure inspection viewer
+
+The viewer is a derived inspection aid. Printing and machining use the released
+R7 CAD and manufacturing files, not its capped display cuts or exploded offsets.
+
+The populated C5 PCB and all 2,949 assigned source objects retain their existing
+placements and overview mesh coordinates. The battery, speaker shape, fasteners,
+SMA hardware, wires and ties remain fit references, with measured-hardware checks
+listed in the R7 assembly/inspection instructions.
+
+R7 view changes: reinforced lid relief edges, noncontact microphone shroud,
+thicker speaker-retainer nut roofs, speaker lead retention, removable SMA key,
+and a 10 mm nominal bend-radius coax route. The 0.50 mm OLED datum gap, PCB
+positions, battery bay and speaker electrical connection are retained.
+
+Controls include assembled/exploded/cutaway modes, rotate/zoom, shell transparency,
+individual part selection/visibility, nine clickable fit dimensions, and focused
+speaker/SMA/coax/microphone inspections. Exploded cable positions are illustrative
+disconnections; they do not imply that the installed cables stretch.
+
+Source preparation checks saved native solids against audited candidates and
+hashes every input. Mesh verification decodes the packed data and compares all
+coordinates and triangle indices. No geometric simplification is applied. The
+display meshes use 0.001 mm coordinate quantization. Local clearance views use
+exact Boolean sections with 18 endpoint-to-surface witnesses.
+
+Rebuild using the installed FreeCAD Python on prepare_inputs.py, then the two
+mesh exporters, build_viewer.py and browser QA; rebuild_viewer.py orchestrates
+the sequence. --preflight uses candidate geometry and visibly marks a draft.
+Final SOURCE-INPUTS.json and BUILD-VALIDATION.json must state saved R7 native
+geometry, and qa/R7-BROWSER-VALIDATION.json must match the fragment SHA-256.
+The browser report also records the tested standalone preview SHA-256 and
+verifies its decoded embedded content contains the exact current fragment.

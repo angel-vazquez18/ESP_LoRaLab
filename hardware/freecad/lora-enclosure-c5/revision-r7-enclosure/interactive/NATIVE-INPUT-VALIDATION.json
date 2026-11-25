@@ -1,0 +1,80 @@
+{
+  "ok": true,
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "candidate_comparisons": [
+    {
+      "object": "EnclosureBase",
+      "candidate_symmetric_difference_mm3": 0.0,
+      "volume_integration_difference_mm3": 3.962923074141145e-07
+    },
+    {
+      "object": "EnclosureLid",
+      "candidate_symmetric_difference_mm3": 0.0,
+      "volume_integration_difference_mm3": 0.002359138641622849
+    },
+    {
+      "object": "SMAKey",
+      "candidate_symmetric_difference_mm3": 0.0,
+      "volume_integration_difference_mm3": 1.2789769243681803e-13
+    },
+    {
+      "object": "SpeakerRetainer",
+      "candidate_symmetric_difference_mm3": 0.0,
+      "volume_integration_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceSpeakerTie",
+      "candidate_symmetric_difference_mm3": 0.0,
+      "volume_integration_difference_mm3": 4.263256414560601e-14
+    }
+  ],
+  "retained_native_parts": [
+    {
+      "object": "PTTPlunger",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "PTTStopCup",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "BatteryCover",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceBatteryEnvelope",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceSMAStud",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceSMAWasher",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceSMANut",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceAntennaCoupler",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceAntenna50mm",
+      "R6_symmetric_difference_mm3": 0.0
+    },
+    {
+      "object": "ReferenceSpeakerEnvelope",
+      "R6_symmetric_difference_mm3": 0.0
+    }
+  ],
+  "native_cad_modified": false,
+  "SMA_rear_body_symmetric_difference_mm3": 0.0,
+  "speaker_nuts_symmetric_difference_mm3": 0.0,
+  "derived_references_not_native": [
+    "R10 coax route",
+    "coax tie installation envelope"
+  ]
+}

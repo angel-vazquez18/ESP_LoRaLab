@@ -1,0 +1,838 @@
+{
+  "checks": [
+    {
+      "name": "default paused slow motion",
+      "data": {
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "0.000000",
+        "phase": "press"
+      },
+      "saved": null,
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "continuous loop observation",
+      "transitions": [
+        {
+          "phase": "pressed",
+          "time": 1300
+        },
+        {
+          "phase": "released",
+          "time": 3400
+        },
+        {
+          "phase": "pressed",
+          "time": 5200
+        },
+        {
+          "phase": "released",
+          "time": 7300
+        },
+        {
+          "phase": "pressed",
+          "time": 9100
+        }
+      ],
+      "state": {
+        "data": {
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "1371.600000",
+          "phase": "contact"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 0,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 2
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "continuous contact release next press",
+      "transitions": [
+        {
+          "phase": "pressed",
+          "time": 1300
+        },
+        {
+          "phase": "released",
+          "time": 3400
+        },
+        {
+          "phase": "pressed",
+          "time": 5200
+        },
+        {
+          "phase": "released",
+          "time": 7300
+        },
+        {
+          "phase": "pressed",
+          "time": 9100
+        }
+      ],
+      "state": {
+        "data": {
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "1371.600000",
+          "phase": "contact"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 0,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 2
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "quarter speed timing",
+      "timings": [
+        {
+          "speed": 1,
+          "contactTimeMs": 1368
+        },
+        {
+          "speed": 0.25,
+          "contactTimeMs": 5434
+        }
+      ],
+      "ratio": 3.9722222222222223
+    },
+    {
+      "name": "mid-motion speed change continuity",
+      "before": {
+        "data": {
+          "strokeMm": "0.107055",
+          "gapMm": "0.142945",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "610.200000",
+          "phase": "press"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 0,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 10
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      },
+      "after": {
+        "data": {
+          "strokeMm": "0.109066",
+          "gapMm": "0.140934",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "617.500000",
+          "phase": "press"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.109,
+            "flange_gap_mm": 0.141,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.25,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.436265648021135,
+            "closeup": false,
+            "speed": 0.25,
+            "cycleTime": 617.5,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 11
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      },
+      "progressed": {
+        "data": {
+          "strokeMm": "0.130179",
+          "gapMm": "0.119821",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "693.650000",
+          "phase": "press"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.109,
+            "flange_gap_mm": 0.141,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.25,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.436265648021135,
+            "closeup": false,
+            "speed": 0.25,
+            "cycleTime": 617.5,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 11
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "pause freezes and resume keeps release phase",
+      "paused": {
+        "data": {
+          "strokeMm": "0.225149",
+          "gapMm": "0.024851",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "2563.475000",
+          "phase": "release"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.225,
+            "flange_gap_mm": 0.025,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.9005977242008926,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 2563.474999964237,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 13
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      },
+      "frozen": {
+        "data": {
+          "strokeMm": "0.225149",
+          "gapMm": "0.024851",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "2563.475000",
+          "phase": "release"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.225,
+            "flange_gap_mm": 0.025,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.9005977242008926,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 2563.474999964237,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 13
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      },
+      "resumedData": {
+        "strokeMm": "0.225149",
+        "gapMm": "0.024851",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "2563.475000",
+        "phase": "release"
+      },
+      "resumedLater": {
+        "data": {
+          "strokeMm": "0.202603",
+          "gapMm": "0.047397",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "1",
+          "cycleTime": "2676.093000",
+          "phase": "release"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.225,
+            "flange_gap_mm": 0.025,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 1,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.9005977242008926,
+            "closeup": false,
+            "speed": 1,
+            "cycleTime": 2563.474999964237,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 13
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "camera gestures and self echo during loop",
+      "before": {
+        "data": {
+          "strokeMm": "0.003668",
+          "gapMm": "0.246332",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "96.750000",
+          "phase": "press"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.25,
+            "looping": true,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0,
+            "closeup": false,
+            "speed": 0.25,
+            "cycleTime": 0,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 15
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      },
+      "after": {
+        "data": {
+          "strokeMm": "0.015719",
+          "gapMm": "0.234281",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.159103",
+          "pitch": "0.332425",
+          "zoom": "1.094174",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "206.225000",
+          "phase": "press"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.013,
+            "flange_gap_mm": 0.237,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 0.25,
+            "looping": true,
+            "camera": {
+              "rotation_deg": -9.12,
+              "tilt_deg": 19.05,
+              "zoom": 1.094
+            }
+          },
+          "privateContent": {
+            "version": 3,
+            "t": 0.050001046059082926,
+            "closeup": false,
+            "speed": 0.25,
+            "cycleTime": 182.72500004768335,
+            "camera": {
+              "yaw": -0.15910326411588294,
+              "pitch": 0.332425343819969,
+              "zoom": 1.0941742837052104
+            },
+            "origin": "ptt-up6se8ue0uc",
+            "revision": 17
+          }
+        },
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "keyboard speed select while looping",
+      "data": {
+        "strokeMm": "0.022202",
+        "gapMm": "0.227798",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.159103",
+        "pitch": "0.332425",
+        "zoom": "1.094174",
+        "activePointers": "0",
+        "speed": "0.5",
+        "cycleTime": "247.950000",
+        "phase": "press"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.022,
+          "flange_gap_mm": 0.228,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.5,
+          "looping": true,
+          "camera": {
+            "rotation_deg": -9.12,
+            "tilt_deg": 19.05,
+            "zoom": 1.094
+          }
+        },
+        "privateContent": {
+          "version": 3,
+          "t": 0.08880891477251573,
+          "closeup": false,
+          "speed": 0.5,
+          "cycleTime": 247.95000004768372,
+          "camera": {
+            "yaw": -0.15910326411588294,
+            "pitch": 0.332425343819969,
+            "zoom": 1.0941742837052104
+          },
+          "origin": "loop-speed-restore",
+          "revision": 18
+        }
+      },
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "persisted speed restoration",
+      "data": {
+        "strokeMm": "0.022202",
+        "gapMm": "0.227798",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.159103",
+        "pitch": "0.332425",
+        "zoom": "1.094174",
+        "activePointers": "0",
+        "speed": "0.5",
+        "cycleTime": "247.950000",
+        "phase": "press"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.024,
+          "flange_gap_mm": 0.226,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "camera": {
+            "rotation_deg": -9.12,
+            "tilt_deg": 19.05,
+            "zoom": 1.094
+          }
+        },
+        "privateContent": {
+          "version": 3,
+          "t": 0.09502703095383788,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 257.14999997615814,
+          "camera": {
+            "yaw": -0.15910326411588294,
+            "pitch": 0.332425343819969,
+            "zoom": 1.0941742837052104
+          },
+          "origin": "ptt-up6se8ue0uc",
+          "revision": 19
+        }
+      },
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "backward-compatible state version 1",
+      "data": {
+        "strokeMm": "0.100000",
+        "gapMm": "0.150000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.200000",
+        "pitch": "0.100000",
+        "zoom": "1.100000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "584.456954",
+        "phase": "press"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.024,
+          "flange_gap_mm": 0.226,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "camera": {
+            "rotation_deg": -9.12,
+            "tilt_deg": 19.05,
+            "zoom": 1.094
+          }
+        },
+        "privateContent": {
+          "version": 3,
+          "t": 0.09502703095383788,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 257.14999997615814,
+          "camera": {
+            "yaw": -0.15910326411588294,
+            "pitch": 0.332425343819969,
+            "zoom": 1.0941742837052104
+          },
+          "origin": "ptt-up6se8ue0uc",
+          "revision": 19
+        }
+      },
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "backward-compatible state version 2",
+      "data": {
+        "strokeMm": "0.100000",
+        "gapMm": "0.150000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.200000",
+        "pitch": "0.100000",
+        "zoom": "1.100000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "584.456954",
+        "phase": "press"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.024,
+          "flange_gap_mm": 0.226,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "camera": {
+            "rotation_deg": -9.12,
+            "tilt_deg": 19.05,
+            "zoom": 1.094
+          }
+        },
+        "privateContent": {
+          "version": 3,
+          "t": 0.09502703095383788,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 257.14999997615814,
+          "camera": {
+            "yaw": -0.15910326411588294,
+            "pitch": 0.332425343819969,
+            "zoom": 1.0941742837052104
+          },
+          "origin": "ptt-up6se8ue0uc",
+          "revision": 19
+        }
+      },
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "narrow dark looping layout",
+      "data": {
+        "strokeMm": "0.011295",
+        "gapMm": "0.238705",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.200000",
+        "pitch": "0.100000",
+        "zoom": "1.100000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "173.250000",
+        "phase": "press"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0,
+          "flange_gap_mm": 0.25,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 0.25,
+          "looping": true,
+          "camera": {
+            "rotation_deg": 11.46,
+            "tilt_deg": 5.73,
+            "zoom": 1.1
+          }
+        },
+        "privateContent": {
+          "version": 3,
+          "t": 0,
+          "closeup": false,
+          "speed": 0.25,
+          "cycleTime": 0,
+          "camera": {
+            "yaw": 0.1999999999999993,
+            "pitch": 0.1,
+            "zoom": 1.1
+          },
+          "origin": "ptt-up6se8ue0uc",
+          "revision": 21
+        }
+      },
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "reduced-motion looping endpoint dwells",
+      "transitions": [
+        {
+          "time": 100,
+          "stroke": 0
+        },
+        {
+          "time": 700,
+          "stroke": 0.25
+        },
+        {
+          "time": 1700,
+          "stroke": 0
+        },
+        {
+          "time": 2600,
+          "stroke": 0.25
+        },
+        {
+          "time": 3700,
+          "stroke": 0
+        },
+        {
+          "time": 4600,
+          "stroke": 0.25
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\loop-preview\\looping-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\loop-preview\\looping-320-dark.png"
+  ]
+}

@@ -1,0 +1,623 @@
+{
+  "scope": "R6 native speaker pad and M2 hardware reference additions only; no save/export",
+  "units": "mm",
+  "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+  "operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "ReferenceSpeakerFrontGasketBlank",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerFrontGasketBlank",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Length": "SpeakerParameters.B1",
+          "Width": "SpeakerParameters.B2",
+          "Height": "SpeakerParameters.B7",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2;SpeakerParameters.B5-SpeakerParameters.B2/2;SpeakerParameters.B6-SpeakerParameters.B7);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "ReferenceSpeakerFrontGasketWindow",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerFrontGasketWindow",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Length": "SpeakerParameters.B1-2",
+          "Width": "SpeakerParameters.B2-2",
+          "Height": "SpeakerParameters.B7+0.2",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2+1;SpeakerParameters.B5-SpeakerParameters.B2/2+1;SpeakerParameters.B6-SpeakerParameters.B7-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "ReferenceSpeakerBackPadBlank",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerBackPadBlank",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Length": "SpeakerParameters.B1",
+          "Width": "SpeakerParameters.B2",
+          "Height": "SpeakerParameters.B8",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2;SpeakerParameters.B5-SpeakerParameters.B2/2;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "ReferenceSpeakerBackPadWindow",
+        "properties": {
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerBackPadWindow",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Length": "SpeakerParameters.B1-2",
+          "Width": "SpeakerParameters.B2-2",
+          "Height": "SpeakerParameters.B8+0.2",
+          "Placement": "placement(vector(SpeakerParameters.B4-SpeakerParameters.B1/2+1;SpeakerParameters.B5-SpeakerParameters.B2/2+1;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-0.1);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerFrontGasketBlank",
+        "object2_name": "ReferenceSpeakerFrontGasketWindow",
+        "result_name": "ReferenceSpeakerFrontGasket",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerFrontGasket",
+        "values": {
+          "Label": "REFERENCE ONLY — speaker frame gasket allowance",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerBackPadBlank",
+        "object2_name": "ReferenceSpeakerBackPadWindow",
+        "result_name": "ReferenceSpeakerBackPad",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerBackPad",
+        "values": {
+          "Label": "REFERENCE ONLY — speaker back pad allowance",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerScrewShaft1",
+        "properties": {
+          "Radius": 1,
+          "Height": 12,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrewShaft1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;12.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerScrewHead1",
+        "properties": {
+          "Radius": 2,
+          "Height": 1.72,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrewHead1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;24.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "fuse",
+        "object1_name": "ReferenceSpeakerScrewShaft1",
+        "object2_name": "ReferenceSpeakerScrewHead1",
+        "result_name": "ReferenceSpeakerScrew1",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrew1",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 x 12 screw 1 (threads omitted)",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerWasherBlank1",
+        "properties": {
+          "Radius": 2.5,
+          "Height": 0.3,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasherBlank1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;24.6);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerWasherBore1",
+        "properties": {
+          "Radius": 1.1,
+          "Height": 0.5,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasherBore1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;24.5);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerWasherBlank1",
+        "object2_name": "ReferenceSpeakerWasherBore1",
+        "result_name": "ReferenceSpeakerWasher1",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasher1",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 flat washer 1",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "ReferenceSpeakerNutBlank1",
+        "properties": {
+          "Polygon": 6,
+          "Circumradius": 2.3094010767585034,
+          "Height": 1.6,
+          "FirstAngle": 0,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBlank1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;14);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerNutBore1",
+        "properties": {
+          "Radius": 0.8,
+          "Height": 1.8,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBore1",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(43.5;47;13.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerNutBlank1",
+        "object2_name": "ReferenceSpeakerNutBore1",
+        "result_name": "ReferenceSpeakerNut1",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNut1",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 hex nut 1 (4 mm AF)",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerScrewShaft2",
+        "properties": {
+          "Radius": 1,
+          "Height": 12,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrewShaft2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;12.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerScrewHead2",
+        "properties": {
+          "Radius": 2,
+          "Height": 1.72,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrewHead2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;24.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "fuse",
+        "object1_name": "ReferenceSpeakerScrewShaft2",
+        "object2_name": "ReferenceSpeakerScrewHead2",
+        "result_name": "ReferenceSpeakerScrew2",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerScrew2",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 x 12 screw 2 (threads omitted)",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerWasherBlank2",
+        "properties": {
+          "Radius": 2.5,
+          "Height": 0.3,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasherBlank2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;24.6);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerWasherBore2",
+        "properties": {
+          "Radius": 1.1,
+          "Height": 0.5,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasherBore2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;24.5);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerWasherBlank2",
+        "object2_name": "ReferenceSpeakerWasherBore2",
+        "result_name": "ReferenceSpeakerWasher2",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerWasher2",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 flat washer 2",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Prism",
+        "name": "ReferenceSpeakerNutBlank2",
+        "properties": {
+          "Polygon": 6,
+          "Circumradius": 2.3094010767585034,
+          "Height": 1.6,
+          "FirstAngle": 0,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBlank2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;14);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Cylinder",
+        "name": "ReferenceSpeakerNutBore2",
+        "properties": {
+          "Radius": 0.8,
+          "Height": 1.8,
+          "Visibility": false
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNutBore2",
+        "values": {
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(65.5;42;13.9);rotation(0;0;0))"
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    },
+    {
+      "tool": "boolean_operation",
+      "args": {
+        "operation": "cut",
+        "object1_name": "ReferenceSpeakerNutBlank2",
+        "object2_name": "ReferenceSpeakerNutBore2",
+        "result_name": "ReferenceSpeakerNut2",
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "ReferenceSpeakerNut2",
+        "values": {
+          "Label": "REFERENCE ONLY — M2 hex nut 2 (4 mm AF)",
+          "Visibility": true
+        },
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "recompute": true
+      }
+    }
+  ]
+}

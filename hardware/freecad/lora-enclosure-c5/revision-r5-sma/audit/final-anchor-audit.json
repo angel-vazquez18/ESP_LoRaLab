@@ -1,0 +1,52 @@
+{
+  "dimensions": {
+    "blank": [
+      55,
+      84,
+      14,
+      61.5,
+      92.2,
+      18
+    ],
+    "slot": [
+      54.9,
+      85.8,
+      15.2,
+      61.6,
+      88.8,
+      16.7
+    ]
+  },
+  "outer_fillet_mm": 0.6,
+  "slot_fillet_mm": 0.4,
+  "valid": true,
+  "solids": 1,
+  "pairs": {
+    "EnclosureBase": {
+      "anchor_intersection_mm3": 4.038604839486261,
+      "anchor_distance_mm": 0.0,
+      "slot_intersection_mm3": 0.0
+    },
+    "EnclosureLid": {
+      "anchor_intersection_mm3": 0.0,
+      "anchor_distance_mm": 1.0,
+      "slot_intersection_mm3": 0.0
+    },
+    "ReferenceBatteryEnvelope": {
+      "anchor_intersection_mm3": 0.0,
+      "anchor_distance_mm": 18.051541491254817,
+      "slot_intersection_mm3": 0.0
+    },
+    "BatteryCover": {
+      "anchor_intersection_mm3": 0.0,
+      "anchor_distance_mm": 26.4,
+      "slot_intersection_mm3": 0.0
+    },
+    "PTTStopCup": {
+      "anchor_intersection_mm3": 0.0,
+      "anchor_distance_mm": 66.83981779750991,
+      "slot_intersection_mm3": 0.0
+    }
+  },
+  "source_unchanged": true
+}

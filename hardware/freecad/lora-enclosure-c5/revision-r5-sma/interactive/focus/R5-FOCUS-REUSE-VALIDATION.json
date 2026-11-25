@@ -1,0 +1,632 @@
+{
+  "ok": true,
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": "b2c616f78a5f2515217f5c06ec199f38b0106067289fdab60a29e0879d1d9678",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\focus\\focus-mesh-data.b64": "7175c7d04be33f643cfd06633f8978275cc1d93a101b37796fd781d3fb4e4c68",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\focus\\focus-views.json": "7a11cef886c2d629a01402b76df830b05a41a8e1be4376411df050334ff78602",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\dimensions\\dimensions.json": "3e59ee5a571dac970e64e5a01176197af225308215b9f84333e5d875f35b7f00"
+  },
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\cad\\LoRa-Enclosure-C5-R5-SMA.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\focus\\focus-mesh-data.b64": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\focus\\focus-views.json": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\interactive\\dimensions\\dimensions.json": true
+  },
+  "roi_comparisons": [
+    {
+      "id": "battery_top",
+      "roi_mm": [
+        43,
+        30,
+        -17,
+        65,
+        42,
+        7
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 633.5999999999997,
+          "after_volume_mm3": 633.5999999999997,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 559.7902301973363,
+          "after_volume_mm3": 559.7902301973363,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 1199.9999999999998,
+          "after_volume_mm3": 1199.9999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "battery_pad",
+      "roi_mm": [
+        43,
+        35,
+        -17,
+        65,
+        47,
+        1
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 264.0,
+          "after_volume_mm3": 264.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 626.5859902055967,
+          "after_volume_mm3": 626.5859902055967,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 1199.9999999999998,
+          "after_volume_mm3": 1199.9999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "battery_left",
+      "roi_mm": [
+        9.5,
+        30,
+        -17,
+        23.5,
+        42,
+        -4
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 350.390230197336,
+          "after_volume_mm3": 350.390230197336,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 702.0,
+          "after_volume_mm3": 702.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "battery_right",
+      "roi_mm": [
+        46.5,
+        60,
+        -17,
+        60.5,
+        72,
+        -4
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 350.39023019733617,
+          "after_volume_mm3": 350.39023019733617,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 702.0,
+          "after_volume_mm3": 702.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "battery_front",
+      "roi_mm": [
+        35,
+        3.5,
+        -17,
+        47,
+        17.5,
+        -4
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 456.3759289474465,
+          "after_volume_mm3": 456.3759289474465,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 702.0,
+          "after_volume_mm3": 702.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "battery_rear",
+      "roi_mm": [
+        35,
+        72.5,
+        -17,
+        47,
+        86.5,
+        -4
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 456.3759289474466,
+          "after_volume_mm3": 456.3759289474466,
+          "ok": true
+        },
+        "battery": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 702.0,
+          "after_volume_mm3": 702.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pcb_main",
+      "roi_mm": [
+        47,
+        50,
+        4,
+        76,
+        63,
+        26
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 521.759999999995,
+          "after_volume_mm3": 521.759999999995,
+          "ok": true
+        },
+        "lid": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 1307.280000000003,
+          "after_volume_mm3": 1307.2800000000009,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "battery": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pcb_local",
+      "roi_mm": [
+        23,
+        58.05,
+        4,
+        42,
+        68,
+        26
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 315.9622818818914,
+          "after_volume_mm3": 315.9622818818908,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "battery": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "oled_gap",
+      "roi_mm": [
+        22,
+        58.05,
+        14,
+        39,
+        68,
+        26
+      ],
+      "shape_checks": {
+        "base": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "lid": {
+          "empty": false,
+          "symmetric_difference_mm3": 0.0,
+          "before_volume_mm3": 208.50227800197925,
+          "after_volume_mm3": 208.50227800197885,
+          "ok": true
+        },
+        "plunger": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cup": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "cover": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        },
+        "battery": {
+          "empty": true,
+          "symmetric_difference_mm3": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "native_witness_checks": [
+    {
+      "dimension": "battery_top",
+      "part": "battery",
+      "point_mm": [
+        53,
+        30,
+        -3
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_top",
+      "part": "base",
+      "point_mm": [
+        53,
+        30,
+        0
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_pad",
+      "part": "cover",
+      "point_mm": [
+        53,
+        35,
+        -14
+      ],
+      "surface_distance_mm": 7.105427357601002e-15,
+      "ok": true
+    },
+    {
+      "dimension": "battery_pad",
+      "part": "battery",
+      "point_mm": [
+        53,
+        35,
+        -13
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_left",
+      "part": "cover",
+      "point_mm": [
+        16,
+        30,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_left",
+      "part": "battery",
+      "point_mm": [
+        17,
+        30,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_right",
+      "part": "battery",
+      "point_mm": [
+        53,
+        60,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_right",
+      "part": "cover",
+      "point_mm": [
+        54,
+        60,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_front",
+      "part": "cover",
+      "point_mm": [
+        35,
+        10,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_front",
+      "part": "battery",
+      "point_mm": [
+        35,
+        11,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_rear",
+      "part": "battery",
+      "point_mm": [
+        35,
+        79,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "battery_rear",
+      "part": "cover",
+      "point_mm": [
+        35,
+        80,
+        -12
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_main",
+      "part": "lid",
+      "point_mm": [
+        60,
+        50,
+        21
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "pcb_local",
+      "part": "lid",
+      "point_mm": [
+        32.2,
+        58.05,
+        20.5
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    },
+    {
+      "dimension": "oled_gap",
+      "part": "lid",
+      "point_mm": [
+        32.2,
+        58.05,
+        20.5
+      ],
+      "surface_distance_mm": 0.0,
+      "ok": true
+    }
+  ],
+  "unchanged_component_source_count": 2949,
+  "component_translation_mm": [
+    0,
+    0,
+    6.4814
+  ],
+  "component_source_sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+  "source_geometry_payload_sha256": "3d28b22693227b8670e3c563a748d7abca2b86b74a932329a852e33931acfda6",
+  "geometry_payload_byte_identical": true,
+  "native_cad_modified": false,
+  "note": "Battery/pad remain fit references. OLED is a vertical glass-top to inner-rim datum offset, not minimum solid distance.",
+  "elapsed_seconds": 17.44085121154785
+}

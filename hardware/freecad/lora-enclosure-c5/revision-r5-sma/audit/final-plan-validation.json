@@ -1,0 +1,309 @@
+{
+  "sources": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19"
+  },
+  "source_modified_in_memory_only": true,
+  "cutter_changes": [
+    {
+      "name": "BaseCutters",
+      "before": [
+        "InsertPocket1",
+        "InsertPocket2",
+        "InsertPocket3",
+        "InsertPocket4",
+        "ScrewTipRelief1",
+        "ScrewTipRelief2",
+        "ScrewTipRelief3",
+        "ScrewTipRelief4",
+        "USBAccess",
+        "SpeakerPassage",
+        "AntennaPassage",
+        "SpeakerTieSlot1",
+        "SpeakerTieSlot2",
+        "RearInsertBore1",
+        "RearInsertBore2",
+        "RearInsertBore3",
+        "RearInsertBore4",
+        "BatteryHarnessChase"
+      ],
+      "after": [
+        "InsertPocket1",
+        "InsertPocket2",
+        "InsertPocket3",
+        "InsertPocket4",
+        "ScrewTipRelief1",
+        "ScrewTipRelief2",
+        "ScrewTipRelief3",
+        "ScrewTipRelief4",
+        "USBAccess",
+        "SpeakerPassage",
+        "SpeakerTieSlot1",
+        "SpeakerTieSlot2",
+        "RearInsertBore1",
+        "RearInsertBore2",
+        "RearInsertBore3",
+        "RearInsertBore4",
+        "BatteryHarnessChase"
+      ]
+    },
+    {
+      "name": "LidCutters",
+      "before": [
+        "LidScrew1",
+        "LidScrew2",
+        "LidScrew3",
+        "LidScrew4",
+        "OLEDWindow",
+        "MicrophonePort",
+        "PTTGuide",
+        "ResetAccess",
+        "ProgramAccess",
+        "SpeakerPassage",
+        "AntennaPassage",
+        "PTTStopScrew1",
+        "PTTStopScrew2",
+        "MicrophoneVent1",
+        "MicrophoneVent2",
+        "MicrophoneVent3",
+        "MicrophoneVent4",
+        "MicrophoneVent5",
+        "MicrophoneVent6",
+        "OLEDBezelRecess",
+        "OLEDHeadRelief1",
+        "OLEDHeadRelief2",
+        "OLEDHeadRelief3",
+        "OLEDHeadRelief4"
+      ],
+      "after": [
+        "LidScrew1",
+        "LidScrew2",
+        "LidScrew3",
+        "LidScrew4",
+        "OLEDWindow",
+        "MicrophonePort",
+        "PTTGuide",
+        "ResetAccess",
+        "ProgramAccess",
+        "SpeakerPassage",
+        "PTTStopScrew1",
+        "PTTStopScrew2",
+        "MicrophoneVent1",
+        "MicrophoneVent2",
+        "MicrophoneVent3",
+        "MicrophoneVent4",
+        "MicrophoneVent5",
+        "MicrophoneVent6",
+        "OLEDBezelRecess",
+        "OLEDHeadRelief1",
+        "OLEDHeadRelief2",
+        "OLEDHeadRelief3",
+        "OLEDHeadRelief4"
+      ]
+    }
+  ],
+  "parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48905.01829934057,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ]
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 27234.371260957232,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000006
+      ]
+    }
+  },
+  "failures": [],
+  "local_features": {
+    "backing": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 555.1894486192455,
+      "bounds_mm": [
+        38.0,
+        89.0,
+        9.2,
+        56.0,
+        92.2,
+        19.0
+      ]
+    },
+    "anchor": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 207.71047634914817,
+      "bounds_mm": [
+        55.0,
+        84.0,
+        14.0,
+        61.5,
+        92.2,
+        18.0
+      ]
+    },
+    "slot": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 28.697445029360704,
+      "bounds_mm": [
+        54.9,
+        85.8,
+        15.2,
+        61.6,
+        88.8,
+        16.7
+      ]
+    },
+    "relief": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 315.2651059730429,
+      "bounds_mm": [
+        41.4,
+        88.8,
+        8.4,
+        52.6,
+        92.0,
+        19.6
+      ]
+    },
+    "bore": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 239.48360798314994,
+      "bounds_mm": [
+        43.7,
+        88.5,
+        10.7,
+        50.3,
+        95.5,
+        17.3
+      ]
+    }
+  },
+  "pairs": {
+    "base_lid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "base_cover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.7763568394002505e-15
+    },
+    "base_battery": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 3.0
+    },
+    "lid_battery": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 15.744720974928905
+    },
+    "base_ptt_cup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.6999999999999993
+    },
+    "base_plunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 5.0
+    }
+  },
+  "original_pairs": {
+    "base_battery": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 3.0
+    },
+    "cover_battery": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.9999999999999929
+    }
+  },
+  "unchanged_region": {
+    "oled_lid_roi_difference_mm3": 0.0
+  },
+  "material_changes": {
+    "base_added_volume_mm3": 423.671716260334,
+    "base_removed_volume_mm3": 82.10866559422253,
+    "lid_added_volume_mm3": 40.68421770517751,
+    "lid_removed_volume_mm3": 0.0
+  },
+  "battery_dimensions_mm": {
+    "envelope": [
+      68,
+      36,
+      10
+    ],
+    "above": 3.0,
+    "pad_allowance": 1.0
+  },
+  "oled_vertical_datum_gap_mm": 0.5012807412,
+  "reference_connector": {
+    "rear_bounds_mm": [
+      42.0,
+      82.0,
+      9.0,
+      52.0,
+      92.0,
+      19.0
+    ],
+    "rear_to_lid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.3999999999999986
+    },
+    "rear_to_base": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "stud_to_base": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.12499999999999509
+    },
+    "radial_bore_clearance_mm": 0.125
+  },
+  "electronics_rear_region": {
+    "assigned_source_objects": 2949,
+    "checked_candidates": 0,
+    "hits": [],
+    "nearest_new_material": [],
+    "nearest_rear_envelope": [],
+    "source_objects_scanned": 2949,
+    "conservative_region_aabb_rejections": 2949,
+    "exact_boolean_count": 0,
+    "method": "All 2949 component bounding boxes were scanned against a conservative region containing every added feature. Disjoint boxes ruled out intersections; exact Booleans apply only to overlapping candidates. Empty nearest lists do not establish clearance.",
+    "clearance_evidence": "Use sma-block-fit-audit.json for provisional envelope clearances; verify_saved_r5.py will measure global saved-material clearance with AABB lower bounds and exact distances."
+  },
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true
+  },
+  "ok": true,
+  "hardware_fit_qualified": false,
+  "limitations": [
+    "Connector dimensions are provisional; kit mounting geometry is unmeasured.",
+    "Rear-region exact checks cover all newly added material; untouched original regions inherit R4 validation.",
+    "The 169mm cable route and bending/slack are not physically validated."
+  ]
+}

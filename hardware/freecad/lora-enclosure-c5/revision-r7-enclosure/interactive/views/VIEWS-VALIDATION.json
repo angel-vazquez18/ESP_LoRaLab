@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "fragment_sha256": "f18d7d5754b6f5e1e8f7aa43e7c128639d35b0a2b46ef785c0a830af0bb6c620",
+  "preview_sha256": "abd264e629183f1381d92b5010b20e6d0258888bc85e424492094d9199c43c3d",
+  "source_status": "saved R7 native printed geometry plus audited fit references",
+  "images": [
+    {
+      "mode": "assembled",
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\interactive\\views\\R7-assembled.png",
+      "sha256": "e9675a37ab3de8af6a9687e81423854c8503770879706c242dd7760ad180c08e",
+      "width_px": 1984,
+      "height_px": 1000,
+      "state": {
+        "schema": 1,
+        "mode": "assembled",
+        "shell": "solid",
+        "selected": "all",
+        "hidden": [],
+        "yaw": 40,
+        "pitch": 35,
+        "zoom": 1,
+        "dimensions": "off",
+        "focus": null,
+        "focusTarget": null,
+        "focusScale": 1,
+        "overview": null
+      },
+      "canvas_width_px": 992,
+      "canvas_height_px": 500
+    },
+    {
+      "mode": "exploded",
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\interactive\\views\\R7-exploded.png",
+      "sha256": "04a018bda3fad32aa468b71d1b74287db15f238936d03ee14db34c80421c8bd7",
+      "width_px": 1984,
+      "height_px": 1000,
+      "state": {
+        "schema": 1,
+        "mode": "exploded",
+        "shell": "solid",
+        "selected": "all",
+        "hidden": [],
+        "yaw": 40,
+        "pitch": 35,
+        "zoom": 1,
+        "dimensions": "off",
+        "focus": null,
+        "focusTarget": null,
+        "focusScale": 1,
+        "overview": null
+      },
+      "canvas_width_px": 992,
+      "canvas_height_px": 500
+    },
+    {
+      "mode": "cutaway",
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\interactive\\views\\R7-cutaway.png",
+      "sha256": "ad5ac6b9c3eac23c6d1e37bcce580ef1594bd8b5a04eb4ef7d63aa02257c92c9",
+      "width_px": 1984,
+      "height_px": 1000,
+      "state": {
+        "schema": 1,
+        "mode": "cutaway",
+        "shell": "solid",
+        "selected": "all",
+        "hidden": [],
+        "yaw": 40,
+        "pitch": 35,
+        "zoom": 1,
+        "dimensions": "all",
+        "focus": null,
+        "focusTarget": null,
+        "focusScale": 1,
+        "overview": null
+      },
+      "canvas_width_px": 992,
+      "canvas_height_px": 500
+    }
+  ],
+  "errors": [],
+  "visual_review_pending": false,
+  "visually_reviewed_modes": [
+    "assembled",
+    "exploded",
+    "cutaway"
+  ]
+}
