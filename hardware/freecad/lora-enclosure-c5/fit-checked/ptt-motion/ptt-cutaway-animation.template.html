@@ -1,0 +1,648 @@
+<div id="ptt-cutaway-3d">
+  <div class="ptt-legend text-small" aria-label="Part colors">
+    <span><i class="ptt-selected-key" aria-hidden="true"></i>Selected part &amp; related forces</span>
+    <span><i class="ptt-plunger-key" aria-hidden="true"></i>Moving plunger</span>
+    <span><i class="ptt-cup-key" aria-hidden="true"></i>Fixed stop cup</span>
+    <span><i class="ptt-fixed-key" aria-hidden="true"></i>Enclosure, hardware, switch &amp; PCB</span>
+    <span><i class="ptt-contact-key" aria-hidden="true"></i>Contact patch (through parts)</span>
+  </div>
+  <div class="ptt-stage">
+    <div class="ptt-model-view">
+    <canvas aria-label="Actual three-dimensional CAD cutaway of the PTT mechanism. The moving plunger depresses the switch by up to 0.25 millimetres until its flange meets the fixed stop shelf." aria-describedby="ptt-camera-access ptt-keyboard-hint" role="img">Three-dimensional cutaway of the PTT plunger, stop cup, lid, screws, nuts, switch and PCB.</canvas>
+    <svg class="ptt-annotations" role="img" aria-label="Live flange-to-shelf clearance">
+      <path class="ptt-contact-patch" data-contact-patch visibility="hidden"></path>
+      <g data-force-overlay visibility="hidden">
+        <g data-force-routes></g>
+        <g data-force-arrows></g>
+      </g>
+      <g data-part-markers aria-hidden="true"></g>
+      <g data-dimension-geometry>
+        <path class="ptt-dimension-extensions" data-dimension-extensions fill="none"></path>
+        <path class="ptt-dimension-arrows" data-dimension-arrows fill="none"></path>
+        <circle class="ptt-dimension-anchor" data-lower-anchor r="2"></circle>
+        <circle class="ptt-dimension-anchor" data-upper-anchor r="2"></circle>
+      </g>
+      <text class="ptt-dimension-label tabular-nums" data-dimension-label></text>
+    </svg>
+    <div class="ptt-render-error text-destructive" role="alert" hidden>3D rendering is unavailable in this viewer.</div>
+    </div>
+    <div class="ptt-part-labels" role="group" aria-label="Parts in the stop load path">
+      <button type="button" class="btn" data-part="lid" aria-pressed="false" aria-controls="ptt-part-detail">Lid</button>
+      <button type="button" class="btn" data-part="screws" aria-pressed="false" aria-controls="ptt-part-detail">Screws</button>
+      <button type="button" class="btn" data-part="flange" aria-pressed="true" aria-controls="ptt-part-detail">Flange</button>
+      <button type="button" class="btn" data-part="stop_cup" aria-pressed="false" aria-controls="ptt-part-detail">Stop cup</button>
+      <button type="button" class="btn" data-part="nuts" aria-pressed="false" aria-controls="ptt-part-detail">Nuts</button>
+    </div>
+  </div>
+  <div class="text-small text-muted" id="ptt-keyboard-hint">Model shortcuts: ← / → steps · Space play/pause · L camera lock · T transparency</div>
+  <div class="viz-row">
+    <button type="button" class="btn" data-action="previous" aria-controls="ptt-part-detail" aria-keyshortcuts="ArrowLeft">Previous</button>
+    <button type="button" class="btn" data-action="next" aria-controls="ptt-part-detail" aria-keyshortcuts="ArrowRight">Next</button>
+    <label class="form-check form-switch" data-tooltip="Automatically advance through the load path while the animation plays.">
+      <input class="form-check-input" id="ptt-guided-mode" type="checkbox" aria-describedby="ptt-guide-status">
+      <span class="form-check-label">Auto advance</span>
+    </label>
+    <label class="form-check form-switch" data-tooltip="Keep this framing across guided steps. Manual rotation and zoom still work.">
+      <input class="form-check-input" id="ptt-camera-lock" type="checkbox" aria-describedby="ptt-camera-lock-help" aria-keyshortcuts="L">
+      <span class="form-check-label">Lock camera</span>
+    </label>
+    <span class="sr-only" id="ptt-camera-lock-help">Stops automatic camera moves while guided highlighting continues. You can still rotate and zoom manually.</span>
+    <span class="text-small" id="ptt-guide-status" data-guide-status hidden></span>
+  </div>
+  <div id="ptt-part-detail" aria-live="polite" aria-atomic="true"></div>
+  <div class="ptt-force-caption">
+    <span data-force-status>Stop load path · not engaged</span>
+    <span class="text-small">Flange → cup → nuts → screws → lid</span>
+    <span class="text-small text-muted">Bold arrows: interactions with selected part · dashed lines: load path · part markers show through parts</span>
+    <span class="text-small text-muted">Stop load path only · force directions, not magnitudes · switch load share unknown</span>
+  </div>
+  <div class="viz-controls" aria-label="PTT motion controls">
+    <button type="button" class="btn btn-primary" data-action="play" aria-pressed="false" aria-keyshortcuts="Space" aria-describedby="ptt-keyboard-hint">Play loop</button>
+    <button type="button" class="btn" data-action="released" aria-pressed="true">Released</button>
+    <button type="button" class="btn" data-action="pressed" aria-pressed="false">Fully pressed</button>
+    <button type="button" class="btn" data-action="closeup" aria-pressed="false">Contact close-up</button>
+    <label class="form-label" for="ptt-playback-speed">Speed
+      <select class="form-select" id="ptt-playback-speed">
+        <option value="0.1">0.1×</option>
+        <option value="0.25" selected>0.25×</option>
+        <option value="0.5">0.5×</option>
+        <option value="1">1×</option>
+        <option value="2">2×</option>
+      </select>
+    </label>
+  </div>
+  <label class="form-check form-switch">
+    <input class="form-check-input" id="ptt-transparent-shell" type="checkbox" aria-keyshortcuts="T">
+    <span class="form-check-label">Transparent lid &amp; stop cup</span>
+  </label>
+  <details class="ptt-camera-access" id="ptt-camera-access">
+    <summary>Camera angle and zoom</summary>
+    <div class="ptt-camera-fields">
+    <div class="viz-controls">
+      <label class="form-label" for="ptt-camera-yaw">Rotation <output class="tabular-nums" data-camera-yaw-value>17°</output>
+        <input class="form-range" id="ptt-camera-yaw" type="range" min="-180" max="180" step="1" value="17">
+      </label>
+      <label class="form-label" for="ptt-camera-pitch">Tilt <output class="tabular-nums" data-camera-pitch-value>15°</output>
+        <input class="form-range" id="ptt-camera-pitch" type="range" min="-85" max="85" step="1" value="15">
+      </label>
+      <label class="form-label" for="ptt-camera-zoom">Zoom <output class="tabular-nums" data-camera-zoom-value>1.00×</output>
+        <input class="form-range" id="ptt-camera-zoom" type="range" min="0.25" max="8" step="0.01" value="1">
+      </label>
+    </div>
+    </div>
+  </details>
+  <div class="ptt-slider">
+    <div class="ptt-values">
+      <label class="form-label" for="ptt-3d-stroke">Depression <output class="tabular-nums" id="ptt-3d-stroke-value">0.000 mm</output></label>
+      <span class="tabular-nums" data-gap>Gap 0.250 mm</span>
+    </div>
+    <input class="form-range" id="ptt-3d-stroke" type="range" min="0" max="0.25" step="0.001" value="0" aria-valuetext="0.000 millimetres depression">
+  </div>
+  <div class="text-small text-muted">Actual CAD meshes · Unexaggerated travel · Simulated switch motion · Provisional 0.25 mm stop</div>
+  <div class="sr-only" aria-live="polite" data-announcement>Released. The flange is 0.25 millimetres above the stop shelf.</div>
+</div>
+<style>
+  #ptt-cutaway-3d { display:grid; gap:calc(var(--font-size-base) * .8); }
+  #ptt-cutaway-3d .ptt-legend { display:flex; flex-wrap:wrap; gap:calc(var(--font-size-base) * .5) calc(var(--font-size-base) * 1.1); padding-inline-end:90px; }
+  #ptt-cutaway-3d .ptt-legend span { display:inline-flex; align-items:center; gap:calc(var(--font-size-base) * .4); }
+  #ptt-cutaway-3d .ptt-legend i { width:calc(var(--font-size-base) * .7); height:calc(var(--font-size-base) * .7); display:inline-block; flex-shrink:0; }
+  #ptt-cutaway-3d .ptt-selected-key { background:var(--viz-series-1); }
+  #ptt-cutaway-3d .ptt-plunger-key { background:color-mix(in srgb,var(--viz-series-1) 32%,var(--background)); }
+  #ptt-cutaway-3d .ptt-cup-key { background:var(--viz-series-2); }
+  #ptt-cutaway-3d .ptt-fixed-key { background:color-mix(in srgb,var(--foreground) 30%,var(--background)); }
+  #ptt-cutaway-3d .ptt-contact-key { background:var(--viz-series-3); }
+  #ptt-cutaway-3d .ptt-stage { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:calc(var(--font-size-base) * .5); min-width:0; }
+  #ptt-cutaway-3d .ptt-model-view { position:relative; min-width:0; }
+  #ptt-cutaway-3d .ptt-part-labels { display:flex; flex-direction:column; justify-content:center; gap:calc(var(--font-size-base) * .5); }
+  #ptt-cutaway-3d .ptt-part-leader { fill:none; stroke:color-mix(in srgb,var(--foreground) 45%,var(--background)); stroke-width:.8; }
+  #ptt-cutaway-3d .ptt-part-dot { fill:var(--background); stroke:var(--foreground); stroke-width:1; }
+  #ptt-cutaway-3d [data-part-marker][data-selected="true"] .ptt-part-leader { stroke:var(--viz-series-1); stroke-width:1.5; }
+  #ptt-cutaway-3d [data-part-marker][data-selected="true"] .ptt-part-dot { fill:var(--viz-series-1); stroke:var(--background); stroke-width:1.5; }
+  #ptt-cutaway-3d .ptt-annotations { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:hidden; }
+  #ptt-cutaway-3d .ptt-contact-patch { fill:var(--viz-series-3); fill-opacity:.35; fill-rule:evenodd; stroke:var(--viz-series-3); stroke-width:1.5; stroke-linejoin:round; }
+  #ptt-cutaway-3d .ptt-dimension-extensions { stroke:color-mix(in srgb,var(--foreground) 65%,var(--background)); stroke-width:1; }
+  #ptt-cutaway-3d .ptt-dimension-arrows { stroke:var(--foreground); stroke-width:1.25; stroke-linecap:round; stroke-linejoin:round; }
+  #ptt-cutaway-3d .ptt-dimension-anchor { fill:var(--foreground); }
+  #ptt-cutaway-3d .ptt-dimension-label { fill:var(--foreground); stroke:var(--background); stroke-width:4; stroke-linejoin:round; paint-order:stroke; font:inherit; }
+  #ptt-cutaway-3d .ptt-force-caption { display:grid; gap:calc(var(--font-size-base) * .2); }
+  #ptt-cutaway-3d .ptt-force-route { fill:none; stroke:color-mix(in srgb,var(--viz-series-4) 65%,var(--foreground)); stroke-width:1.2; stroke-dasharray:4 3; }
+  #ptt-cutaway-3d .ptt-force-arrow { fill:none; stroke:var(--viz-series-4); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  #ptt-cutaway-3d .ptt-force-halo { fill:none; stroke:var(--background); stroke-width:3.8; stroke-linecap:round; stroke-linejoin:round; }
+  #ptt-cutaway-3d [data-related="false"] { opacity:.3; }
+  #ptt-cutaway-3d [data-related="false"] .ptt-force-arrow { stroke-width:1.2; }
+  #ptt-cutaway-3d [data-related="true"] .ptt-force-arrow { stroke:var(--viz-series-1); stroke-width:2.8; }
+  #ptt-cutaway-3d [data-related="true"] .ptt-force-halo { stroke-width:4.8; }
+  #ptt-cutaway-3d canvas { display:block; width:100%; height:400px; touch-action:none; cursor:grab; }
+  #ptt-cutaway-3d canvas[data-dragging="true"] { cursor:grabbing; }
+  #ptt-cutaway-3d .ptt-camera-fields { margin-top:calc(var(--font-size-base) * .5); }
+  #ptt-cutaway-3d .ptt-render-error { padding-block:calc(var(--font-size-base) * 2); }
+  #ptt-cutaway-3d .ptt-slider { display:grid; gap:calc(var(--font-size-base) * .3); }
+  #ptt-cutaway-3d .ptt-values { display:flex; flex-wrap:wrap; justify-content:space-between; gap:calc(var(--font-size-base) * .4); align-items:center; }
+  @media (max-width:580px) {
+    #ptt-cutaway-3d .ptt-legend { padding-inline-end:0; }
+    #ptt-cutaway-3d .ptt-stage { grid-template-columns:minmax(0,1fr); }
+    #ptt-cutaway-3d .ptt-part-labels { flex-direction:row; flex-wrap:wrap; justify-content:flex-start; }
+  }
+</style>
+<script type="application/json" id="ptt-cutaway-mesh-data">__PTT_CUTAWAY_MESH_JSON__</script>
+<script type="application/json" id="ptt-contact-patch-data">__PTT_CONTACT_PATCH_JSON__</script>
+<script type="application/json" id="ptt-load-path-data">__PTT_LOAD_PATH_JSON__</script>
+<script>
+(() => {
+  const root=document.getElementById('ptt-cutaway-3d');
+  const data=JSON.parse(document.getElementById('ptt-cutaway-mesh-data').textContent);
+  const contactData=JSON.parse(document.getElementById('ptt-contact-patch-data').textContent);
+  const forceData=JSON.parse(document.getElementById('ptt-load-path-data').textContent);
+  const canvas=root.querySelector('canvas');
+  const annotation=root.querySelector('.ptt-annotations');
+  const contactPath=root.querySelector('[data-contact-patch]');
+  const dimensionGeometry=root.querySelector('[data-dimension-geometry]');
+  const dimensionExtensions=root.querySelector('[data-dimension-extensions]');
+  const dimensionArrows=root.querySelector('[data-dimension-arrows]');
+  const dimensionLabel=root.querySelector('[data-dimension-label]');
+  const lowerAnchor=root.querySelector('[data-lower-anchor]'),upperAnchor=root.querySelector('[data-upper-anchor]');
+  const forceOverlay=root.querySelector('[data-force-overlay]'),forceStatus=root.querySelector('[data-force-status]');
+  const forceRouteGroup=root.querySelector('[data-force-routes]'),forceArrowGroup=root.querySelector('[data-force-arrows]');
+  const svgElement=(name,attributes,parent)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [key,value] of Object.entries(attributes))el.setAttribute(key,value);parent.appendChild(el);return el;};
+  const forceRoutes=forceData.load_path_routes.map(route=>({route,node:svgElement('path',{class:'ptt-force-route','data-force-route':route.side},forceRouteGroup)}));
+  const forceArrows=forceData.arrows.map(arrow=>{
+    const group=svgElement('g',{'aria-label':arrow.label+', '+(arrow.unit_direction_world[2]>0?'upward reaction':'downward force')},forceArrowGroup);
+    return {arrow,group,halo:svgElement('path',{class:'ptt-force-halo'},group),node:svgElement('path',{class:'ptt-force-arrow','data-force-id':arrow.id},group)};
+  });
+  const partDetails={
+    flange:{name:'Flange',anchor:[55.5,9,22.9],moving:true,text:'At the stop, the flange pushes down on the shelf. The cup pushes back up, limiting further plunger travel.'},
+    stop_cup:{name:'Stop cup',anchor:[55.5,9,21.15],text:'At the stop, the shelf carries the flange’s downward load to the mounting ears, which bear down on the nuts.'},
+    nuts:{name:'Nuts',anchor:[61.6,9,19.35],text:'At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.'},
+    screws:{name:'Screws',anchor:[60,9,24.3],text:'At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.'},
+    lid:{name:'Lid',anchor:[63,9,25.8],text:'At the stop, the screw heads bear downward on the lid. The lid provides an upward reaction and carries the load toward its enclosure attachments.'}
+  };
+  const selectedMeshes={flange:['plunger'],stop_cup:['stop_cup'],nuts:['left_nut','right_nut'],screws:['left_screw','right_screw'],lid:['lid']};
+  const relatedForceKinds={flange:['flange_on_cup'],stop_cup:['flange_on_cup','cup_on_nut'],nuts:['cup_on_nut','nut_on_screw'],screws:['nut_on_screw','head_on_lid','lid_on_screw'],lid:['head_on_lid','lid_on_screw']};
+  const selectionMode=part=>selectedMeshes[selectedPart].includes(part.id)?(selectedPart==='flange'?2:1):0;
+  const isRelatedForce=arrow=>relatedForceKinds[selectedPart].includes(arrow.id.replace(/^(left|right)_/,''));
+  const partDetail=root.querySelector('#ptt-part-detail'),partMarkerGroup=root.querySelector('[data-part-markers]');
+  const partLabels=[...root.querySelectorAll('[data-part]')].map(button=>{
+    const id=button.dataset.part,group=svgElement('g',{'data-part-marker':id},partMarkerGroup);
+    return {id,button,...partDetails[id],group,leader:svgElement('path',{class:'ptt-part-leader'},group),dot:svgElement('circle',{class:'ptt-part-dot',r:2},group)};
+  });
+  const buttons=Object.fromEntries([...root.querySelectorAll('[data-action]')].map(el=>[el.dataset.action,el]));
+  const slider=root.querySelector('#ptt-3d-stroke');
+  const value=root.querySelector('#ptt-3d-stroke-value');
+  const gap=root.querySelector('[data-gap]');
+  const speedSelect=root.querySelector('#ptt-playback-speed');
+  const transparencyToggle=root.querySelector('#ptt-transparent-shell');
+  const guideToggle=root.querySelector('#ptt-guided-mode'),guideStatus=root.querySelector('[data-guide-status]');
+  const cameraLockToggle=root.querySelector('#ptt-camera-lock');
+  const announcement=root.querySelector('[data-announcement]');
+  const cameraInputs={yaw:root.querySelector('#ptt-camera-yaw'),pitch:root.querySelector('#ptt-camera-pitch'),zoom:root.querySelector('#ptt-camera-zoom')};
+  const cameraValues={yaw:root.querySelector('[data-camera-yaw-value]'),pitch:root.querySelector('[data-camera-pitch-value]'),zoom:root.querySelector('[data-camera-zoom-value]')};
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,preserveDrawingBuffer:true});
+  if(!gl){canvas.hidden=true;annotation.style.display='none';root.querySelector('.ptt-render-error').hidden=false;return;}
+  const travel=.25;
+  let t=0,closeup=false,playing=false,raf=0,transparentShell=false,selectedPart='flange';
+  const guideOrder=['flange','stop_cup','nuts','screws','lid'],guideMinimumReadMs=6000;
+  let guided=false,guideAutoAdvance=true,guideElapsed=0,guideSawContact=false;
+  const pressDuration=1350,contactDuration=950,releaseDuration=1350,releasedDuration=650;
+  const releaseStart=pressDuration+contactDuration,releasedStart=releaseStart+releaseDuration,cycleDuration=releasedStart+releasedDuration;
+  const allowedSpeeds=[.1,.25,.5,1,2];
+  let speed=.25,cycleTime=0,lastTick=null;
+  let width=0,height=0,colors=null;
+  const defaultYaw=Math.atan2(.30,1),defaultPitch=Math.atan2(.28,Math.hypot(.30,1)),maxPitch=85*Math.PI/180;
+  let yaw=defaultYaw,pitch=defaultPitch,zoom=1,wheelSaveTimer=0;
+  const pointers=new Map();
+  const cameraControlPointers=new Set(),focusDuration=900;
+  let focusFrame=null,focusTween=null,focusPart=null,manualCamera=false,cameraLocked=false,lastCameraInput=-Infinity;
+  const stateOrigin='ptt-'+Math.random().toString(36).slice(2);
+  let stateRevision=0;
+  const clamp=n=>Math.max(0,Math.min(1,Number.isFinite(n)?n:0));
+  const wrapYaw=n=>((n+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
+  const limitPitch=n=>Math.max(-maxPitch,Math.min(maxPitch,n));
+  const limitZoom=n=>Math.max(.25,Math.min(8,n));
+  const mix=(a,b,k)=>a.map((x,i)=>x*(1-k)+b[i]*k);
+  const norm=v=>{const m=Math.hypot(...v)||1;return v.map(x=>x/m);};
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+  const sub=(a,b)=>a.map((x,i)=>x-b[i]);
+  const multiply=(a,b)=>{const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)for(let k=0;k<4;k++)r[c*4+row]+=a[k*4+row]*b[c*4+k];return r;};
+  const lookAt=(eye,target)=>{const z=norm(sub(eye,target)),x=norm(cross([0,0,1],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);};
+  const ortho=(l,r,b,top,n,f)=>new Float32Array([2/(r-l),0,0,0,0,2/(top-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(top+b)/(top-b),-(f+n)/(f-n),1]);
+  function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
+  const program=gl.createProgram();
+  gl.attachShader(program,shader(gl.VERTEX_SHADER,`#version 300 es
+    precision highp float;
+    in vec3 aPosition;in vec3 aNormal;in vec4 aTint;
+    uniform mat4 uViewProjection;uniform float uDz;
+    out vec3 vWorld;out vec3 vNormal;out vec4 vTint;out float vLocalZ;
+    void main(){vWorld=aPosition+vec3(0.,0.,uDz);vNormal=aNormal;vTint=aTint;vLocalZ=aPosition.z;gl_Position=uViewProjection*vec4(vWorld,1.);}`));
+  gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`#version 300 es
+    precision highp float;
+    in vec3 vWorld;in vec3 vNormal;in vec4 vTint;in float vLocalZ;
+    uniform vec3 uColor;uniform vec3 uLightColor;uniform vec3 uEye;uniform float uClipMinZ;uniform bool uUseTint;
+    uniform int uSelectionMode;uniform vec3 uSelectionColor;uniform bool uEdgePass;
+    out vec4 outColor;
+    void main(){
+      if(vWorld.z<uClipMinZ-0.00001)discard;
+      bool selected=uSelectionMode==1||(uSelectionMode==2&&vLocalZ>=22.39999&&vLocalZ<=23.60001);
+      if(uEdgePass){if(!selected)discard;outColor=vec4(uSelectionColor,1.);return;}
+      vec4 base=uUseTint?vTint:vec4(uColor,1.);if(selected)base.rgb=uSelectionColor;
+      vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;vec3 L=normalize(vec3(-.35,-.85,1.2));float diff=max(dot(N,L),0.);float hemi=.5+.5*N.z;float lit=.60+.28*diff+.12*hemi;vec3 V=normalize(uEye-vWorld);vec3 H=normalize(L+V);float shine=pow(max(dot(N,H),0.),35.)*.12;outColor=vec4(mix(base.rgb*lit,uLightColor,shine),base.a);
+    }`));
+  gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+  gl.useProgram(program);
+  const locations={};for(const name of ['uViewProjection','uDz','uColor','uLightColor','uEye','uClipMinZ','uUseTint','uSelectionMode','uSelectionColor','uEdgePass'])locations[name]=gl.getUniformLocation(program,name);
+  const positionLocation=gl.getAttribLocation(program,'aPosition'),normalLocation=gl.getAttribLocation(program,'aNormal'),tintLocation=gl.getAttribLocation(program,'aTint');
+  const meshes=data.parts.map(part=>{
+    const vao=gl.createVertexArray();gl.bindVertexArray(vao);
+    for(const [location,values] of [[positionLocation,part.positions],[normalLocation,part.normals]]){
+      const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(values),gl.STATIC_DRAW);gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,3,gl.FLOAT,false,0,0);
+    }
+    const index=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(part.indices),gl.STATIC_DRAW);
+    return {part,vao};
+  });
+  // Highlight true boundaries and sharp CAD edges; omit coplanar tessellation diagonals.
+  for(const mesh of meshes){
+    if(!Object.values(selectedMeshes).flat().includes(mesh.part.id))continue;
+    const {positions,indices}=mesh.part,edges=new Map();
+    const point=i=>positions.slice(i*3,i*3+3),key=p=>p.map(n=>Math.round(n*10000)).join(',');
+    for(let i=0;i<indices.length;i+=3){
+      const points=[point(indices[i]),point(indices[i+1]),point(indices[i+2])],normal=norm(cross(sub(points[1],points[0]),sub(points[2],points[0])));
+      for(let j=0;j<3;j++){const a=points[j],b=points[(j+1)%3],ka=key(a),kb=key(b);if(ka===kb)continue;const id=ka<kb?ka+'|'+kb:kb+'|'+ka;
+        if(edges.has(id))edges.get(id).normals.push(normal);else edges.set(id,{a,b,normals:[normal]});}
+    }
+    const vertices=[];
+    for(const edge of edges.values())if(edge.normals.length===1||edge.normals.some(n=>dot(n,edge.normals[0])<Math.cos(Math.PI/6)))vertices.push(...edge.a,...edge.b);
+    mesh.edgeVao=gl.createVertexArray();gl.bindVertexArray(mesh.edgeVao);
+    const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(positionLocation);gl.vertexAttribPointer(positionLocation,3,gl.FLOAT,false,0,0);mesh.edgeCount=vertices.length/3;
+  }
+  // The two fixed transparent parts share one batch, sorted back to front at
+  // triangle level whenever the camera rotates. All other parts stay opaque.
+  const transparentParts=new Set(['lid','stop_cup']);
+  const transparentPositions=[],transparentNormals=[],transparentTriangles=[];
+  for(const {part} of meshes){
+    if(!transparentParts.has(part.id))continue;
+    for(const group of part.groups){
+      for(let i=group.start;i<group.start+group.count;i+=3){
+        const start=transparentPositions.length/3,center=[0,0,0];
+        for(let j=0;j<3;j++){
+          const index=part.indices[i+j]*3;
+          for(let axis=0;axis<3;axis++){const p=part.positions[index+axis];transparentPositions.push(p);transparentNormals.push(part.normals[index+axis]);center[axis]+=p/3;}
+        }
+        transparentTriangles.push({start,center,part,section:group.material===1||group.material==='cut'});
+      }
+    }
+  }
+  const transparentVao=gl.createVertexArray();gl.bindVertexArray(transparentVao);
+  for(const [location,values] of [[positionLocation,transparentPositions],[normalLocation,transparentNormals]]){
+    const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(values),gl.STATIC_DRAW);gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,3,gl.FLOAT,false,0,0);
+  }
+  const transparentTintBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,transparentTintBuffer);gl.enableVertexAttribArray(tintLocation);gl.vertexAttribPointer(tintLocation,4,gl.FLOAT,false,0,0);
+  const transparentIndexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,transparentIndexBuffer);
+  let transparentPalette=null,transparentSelection='',transparentSortKey='';
+  function prepareTransparency(direction){
+    gl.bindVertexArray(transparentVao);
+    if(transparentPalette!==colors||transparentSelection!==selectedPart){
+      const tint=new Float32Array(transparentPositions.length/3*4);
+      for(const triangle of transparentTriangles){const rgb=selectionMode(triangle.part)===1?colors.selected:partColor(triangle.part,triangle.section),alpha=triangle.part.id==='lid'?.14:.24;for(let j=0;j<3;j++)tint.set([...rgb,alpha],(triangle.start+j)*4);}
+      gl.bindBuffer(gl.ARRAY_BUFFER,transparentTintBuffer);gl.bufferData(gl.ARRAY_BUFFER,tint,gl.DYNAMIC_DRAW);transparentPalette=colors;transparentSelection=selectedPart;
+    }
+    const key=yaw+':'+pitch;
+    if(key!==transparentSortKey){
+      const ordered=transparentTriangles.map(triangle=>({triangle,depth:dot(triangle.center,direction)})).sort((a,b)=>a.depth-b.depth);
+      const indices=new Uint32Array(ordered.length*3);ordered.forEach(({triangle},i)=>indices.set([triangle.start,triangle.start+1,triangle.start+2],i*3));
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,transparentIndexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.DYNAMIC_DRAW);transparentSortKey=key;
+    }
+  }
+  gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);
+  const colorProbe=document.createElement('span');colorProbe.hidden=true;root.append(colorProbe);
+  const swatch=document.createElement('canvas');swatch.width=swatch.height=1;const colorContext=swatch.getContext('2d',{willReadFrequently:true});
+  function cssColor(expression){colorProbe.style.color=expression;colorContext.clearRect(0,0,1,1);colorContext.fillStyle=getComputedStyle(colorProbe).color;colorContext.fillRect(0,0,1,1);return [...colorContext.getImageData(0,0,1,1).data].slice(0,3).map(v=>v/255);}
+  function theme(){const bg=cssColor('var(--background)'),fg=cssColor('var(--foreground)');colors={bg,fg,selected:cssColor('var(--viz-series-1)'),plunger:cssColor('color-mix(in srgb,var(--viz-series-1) 32%,var(--background))'),cup:cssColor('color-mix(in srgb,var(--viz-series-2) 56%,var(--background))')};colors.dark=dot(bg,[.2126,.7152,.0722])<dot(fg,[.2126,.7152,.0722]);colors.light=colors.dark?fg:bg;draw();}
+  function partColor(part,section){let c;if(part.id==='plunger')c=colors.plunger;else if(part.id==='stop_cup')c=colors.cup;else{const amount=part.id.includes('screw')||part.id.includes('nut')?.32:part.id.startsWith('switch')?.28:part.id==='pcb_copper'?.28:part.id==='floor'?(colors.dark?.22:.11):(colors.dark?.28:.17);c=mix(colors.bg,colors.fg,amount);}return section?mix(c,colors.fg,.08):c;}
+  function baseCameraFrame(){
+    if(closeup)return {target:[46.5,9,22.3],radius:2.8};
+    const target=[51,14,15.1];
+      let radius=0;
+      for(const mesh of meshes){const b=mesh.part.bounds;if(!b)continue;for(const x of [b[0],b[3]])for(const y of [b[1],b[4]])for(const z of [b[2]-.25,b[5]])radius=Math.max(radius,Math.hypot(x-target[0],y-target[1],z-target[2]));}
+    return {target,radius:radius*1.04};
+  }
+  function frameForPart(id){
+    const boxes=id==='flange'?[[45,9,22.15,57,15,23.6]]:meshes.filter(m=>selectedMeshes[id].includes(m.part.id)).map(m=>m.part.bounds);
+    const low=[0,1,2].map(axis=>Math.min(...boxes.map(b=>b[axis]))),high=[0,1,2].map(axis=>Math.max(...boxes.map(b=>b[axis+3])));
+    const target=low.map((value,axis)=>(value+high[axis])/2),points=[];
+    for(const b of boxes)for(const x of [b[0],b[3]])for(const y of [b[1],b[4]])for(const z of [b[2],b[5]])points.push([x,y,z]);
+    for(const arrow of forceData.arrows)if(relatedForceKinds[id].includes(arrow.id.replace(/^(left|right)_/,''))){points.push(arrow.anchor_xyz_mm,arrow.anchor_xyz_mm.map((v,i)=>v+arrow.unit_direction_world[i]*2.1));}
+    return {target,radius:Math.max(...points.map(point=>Math.hypot(...sub(point,target))))*1.15};
+  }
+  function camera(){
+    const frame=focusFrame||baseCameraFrame(),target=frame.target,aspect=width/height;
+    const direction=[Math.sin(yaw)*Math.cos(pitch),-Math.cos(yaw)*Math.cos(pitch),Math.sin(pitch)];
+    const eye=target.map((x,i)=>x+direction[i]*120),view=lookAt(eye,target),halfHeight=frame.radius/Math.min(1,aspect)/zoom;
+    return {eye,direction,target,radius:frame.radius,halfHeight,matrix:multiply(ortho(-halfHeight*aspect,halfHeight*aspect,-halfHeight,halfHeight,1,300),view)};
+  }
+  function beginGuidedFocus(explicit=false){
+    if(!guided||cameraLocked)return;
+    if(pointers.size||cameraControlPointers.size||(!explicit&&performance.now()-lastCameraInput<1500)){focusTween=null;manualCamera=true;return;}
+    const current=focusFrame||baseCameraFrame(),from={target:[...current.target],radius:current.radius/zoom},to=frameForPart(selectedPart);
+    focusFrame=from;focusPart=selectedPart;zoom=1;closeup=false;manualCamera=false;
+    if(reduced.matches){focusFrame=to;focusTween=null;}else focusTween={from,to,elapsed:0,part:selectedPart};
+    updateCamera(false);
+  }
+  function advanceCamera(elapsed){
+    if(cameraLocked){focusTween=null;return;}
+    if(!focusTween)return;
+    focusTween.elapsed=reduced.matches?focusDuration:Math.min(focusDuration,focusTween.elapsed+elapsed);
+    const k=ease(focusTween.elapsed/focusDuration),{from,to}=focusTween;
+    focusFrame={target:from.target.map((v,i)=>v+(to.target[i]-v)*k),radius:Math.exp(Math.log(from.radius)*(1-k)+Math.log(to.radius)*k)};
+    if(focusTween.elapsed>=focusDuration){focusFrame=to;focusTween=null;save();}
+  }
+  function takeManualCamera(){
+    // Keep the displayed interpolated frame; pointer input owns this guide step.
+    focusTween=null;lastCameraInput=performance.now();manualCamera=guided;
+  }
+  function cameraViewLabel(){return focusFrame?'part inspection':closeup?'contact close-up':'complete mechanism';}
+  function readCameraFrame(value){
+    return value&&Array.isArray(value.target)&&value.target.length===3&&value.target.every(n=>Number.isFinite(n)&&Math.abs(n)<1000)&&Number.isFinite(value.radius)&&value.radius>=.05&&value.radius<=1000?{target:[...value.target],radius:value.radius}:null;
+  }
+  function project(point,matrix){
+    const [x,y,z]=point,w=matrix[3]*x+matrix[7]*y+matrix[11]*z+matrix[15];
+    return [(1+(matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12])/w)*width/2,(1-(matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13])/w)*height/2];
+  }
+  function updateForces(matrix,engaged){
+    forceOverlay.setAttribute('visibility',engaged?'visible':'hidden');
+    forceOverlay.style.display=engaged?'':'none';
+    forceStatus.textContent=engaged?'Stop engaged · screws in tension':'Stop load path · not engaged';
+    root.dataset.forceVisible=String(engaged);root.dataset.forceCount=String(engaged?forceArrows.length:0);
+    for(const {arrow,group,node} of forceArrows){const related=isRelatedForce(arrow);group.dataset.related=String(related);node.dataset.highlighted=String(engaged&&related);}
+    root.dataset.highlightedForceIds=JSON.stringify(engaged?forceData.arrows.filter(isRelatedForce).map(arrow=>arrow.id):[]);
+    if(!engaged){root.dataset.forceVisibleCount='0';return;}
+    const xy=p=>p.map(n=>n.toFixed(3)).join(',');
+    for(const {route,node} of forceRoutes)node.setAttribute('d',route.polyline_xyz_mm.map((p,i)=>(i?'L':'M')+xy(project(p,matrix))).join(' '));
+    let visibleCount=0;
+    for(const {arrow,group,halo,node} of forceArrows){
+      const start=arrow.anchor_xyz_mm,end=start.map((v,i)=>v+arrow.unit_direction_world[i]*2.1);
+      const a=project(start,matrix),b=project(end,matrix),delta=[b[0]-a[0],b[1]-a[1]],length=Math.hypot(...delta),unit=norm(delta),normal=[-unit[1],unit[0]];
+      const head=Math.min(6,length*.42),half=Math.min(3,head*.5),neck=[b[0]-unit[0]*head,b[1]-unit[1]*head];
+      const d=`M${xy(a)} L${xy(b)} M${xy([neck[0]+normal[0]*half,neck[1]+normal[1]*half])} L${xy(b)} L${xy([neck[0]-normal[0]*half,neck[1]-normal[1]*half])}`;
+      halo.setAttribute('d',d);node.setAttribute('d',d);
+      const visible=length>.25&&Math.max(a[0],b[0])>=0&&Math.min(a[0],b[0])<=width&&Math.max(a[1],b[1])>=0&&Math.min(a[1],b[1])<=height;
+      group.setAttribute('visibility',visible?'visible':'hidden');if(visible)visibleCount++;
+      node.dataset.worldStart=JSON.stringify(start);node.dataset.worldEnd=JSON.stringify(end);node.dataset.screenStart=JSON.stringify(a);node.dataset.screenEnd=JSON.stringify(b);node.dataset.inView=String(visible);
+    }
+    root.dataset.forceVisibleCount=String(visibleCount);
+  }
+  function updatePartLabels(matrix){
+    const rect=canvas.getBoundingClientRect(),rail=root.querySelector('.ptt-part-labels').getBoundingClientRect();
+    const beside=rail.left>=rect.right;
+    for(const label of partLabels){
+      const anchor=[...label.anchor];if(label.moving)anchor[2]-=travel*t;
+      const point=project(anchor,matrix),selected=label.id===selectedPart;
+      const inView=point[0]>=5&&point[0]<=width-5&&point[1]>=5&&point[1]<=height-5;
+      label.group.dataset.worldAnchor=JSON.stringify(anchor);label.group.dataset.screenAnchor=JSON.stringify(point);
+      label.group.dataset.inView=String(inView);label.group.dataset.selected=String(selected);
+      label.group.setAttribute('visibility',inView&&(beside||selected)?'visible':'hidden');
+      label.dot.setAttribute('cx',point[0]);label.dot.setAttribute('cy',point[1]);label.dot.setAttribute('r',selected?4:2);
+      label.leader.style.display=beside?'':'none';
+      if(beside){const box=label.button.getBoundingClientRect(),endY=box.top+box.height/2-rect.top;label.leader.setAttribute('d',`M${point[0]},${point[1]} L${width-3},${endY}`);}
+    }
+    root.dataset.selectedPart=selectedPart;
+  }
+  function selectPart(id,persist=false){
+    selectedPart=Object.hasOwn(partDetails,id)?id:'flange';
+    for(const label of partLabels)label.button.setAttribute('aria-pressed',String(label.id===selectedPart));
+    const part=partDetails[selectedPart],text=(guided?'Step '+(guideOrder.indexOf(selectedPart)+1)+' of 5 · ':'')+part.name+' — '+part.text;
+    if(partDetail.textContent!==text)partDetail.textContent=text;
+    draw();if(persist)save();
+  }
+  function updateGuideUI(){
+    guideToggle.checked=guided&&guideAutoAdvance;cameraLockToggle.checked=cameraLocked;guideStatus.hidden=!guided;
+    const text=!guideAutoAdvance?'Manual steps'+(cameraLocked?' · camera locked':'')+(playing?'':' · motion paused'):cameraLocked?(playing?'Repeating · camera locked':'Paused · camera locked'):!playing?'Paused with animation':manualCamera?'Manual view · refocus next step':focusTween?'Centering on '+partDetails[selectedPart].name.toLowerCase():'Repeating · automatic camera focus';
+    if(guideStatus.textContent!==text)guideStatus.textContent=text;
+    root.dataset.guidedMode=String(guided);root.dataset.guideStep=String(guided?guideOrder.indexOf(selectedPart)+1:0);root.dataset.guideElapsedMs=guideElapsed.toFixed(3);
+    root.dataset.guideAutoAdvance=String(guided&&guideAutoAdvance);
+    root.dataset.cameraLocked=String(cameraLocked);
+  }
+  function updateAnnotations(matrix){
+    annotation.setAttribute('viewBox',`0 0 ${width} ${height}`);
+    const clearance=travel*(1-t),atContact=t>=1;
+    updateForces(matrix,atContact);
+    updatePartLabels(matrix);
+    const [x,y]=contactData.arrow.anchor_xy_mm;
+    const lowerWorld=[x,y,contactData.arrow.lower_z_mm],upperWorld=[x,y,contactData.arrow.released_upper_z_mm-travel*t];
+    const lower=project(lowerWorld,matrix),upper=project(upperWorld,matrix),above=project([x,y,lowerWorld[2]+1],matrix);
+    const inside=p=>p[0]>=8&&p[0]<=width-8&&p[1]>=22&&p[1]<=height-22;
+    const visible=inside(lower)&&inside(upper),mid=[(lower[0]+upper[0])/2,(lower[1]+upper[1])/2];
+    const unit=norm([above[0]-lower[0],above[1]-lower[1]]);
+    let normal=[unit[1],-unit[0]];
+    if((mid[0]<width/2&&normal[0]>0)||(mid[0]>=width/2&&normal[0]<0))normal=normal.map(v=>-v);
+    let offset=42;
+    while(offset>0&&!inside([mid[0]+normal[0]*offset,mid[1]+normal[1]*offset]))offset-=2;
+    const a=[lower[0]+normal[0]*offset,lower[1]+normal[1]*offset],b=[upper[0]+normal[0]*offset,upper[1]+normal[1]*offset];
+    const xy=p=>p.map(n=>n.toFixed(3)).join(',');
+    const segment=(p,q)=>`M${xy(p)} L${xy(q)} `;
+    dimensionExtensions.setAttribute('d',segment(lower,a)+segment(upper,b));
+    let arrows=segment(a,b);
+    for(const [tip,sign] of [[a,-1],[b,1]]){
+      const tail=[tip[0]+unit[0]*sign*15,tip[1]+unit[1]*sign*15];
+      const shoulder=[tip[0]+unit[0]*sign*5,tip[1]+unit[1]*sign*5];
+      arrows+=segment(tail,tip)+segment([shoulder[0]+normal[0]*3,shoulder[1]+normal[1]*3],tip)+segment(tip,[shoulder[0]-normal[0]*3,shoulder[1]-normal[1]*3]);
+    }
+    dimensionArrows.setAttribute('d',arrows);dimensionGeometry.setAttribute('visibility',visible?'visible':'hidden');
+    for(const [node,point] of [[lowerAnchor,lower],[upperAnchor,upper]]){node.setAttribute('cx',point[0]);node.setAttribute('cy',point[1]);}
+    const text=atContact?'0.000 mm · contact':(clearance<.0005?'<0.001':clearance.toFixed(3))+' mm gap';
+    dimensionLabel.textContent=text+(visible?'':' · off-screen');
+    const textWidth=dimensionLabel.getComputedTextLength();
+    const suggestedX=visible?(normal[0]<0?Math.min(a[0],b[0])-10-textWidth:Math.max(a[0],b[0])+10):10;
+    const labelX=Math.max(10,Math.min(width-textWidth-10,suggestedX));
+    const labelY=visible?Math.max(22,Math.min(height-10,(a[1]+b[1])/2-21)):22;
+    dimensionLabel.setAttribute('x',labelX);dimensionLabel.setAttribute('y',labelY);
+    contactPath.setAttribute('visibility',atContact?'visible':'hidden');
+    if(atContact)contactPath.setAttribute('d',contactData.boundary_polylines.map(loop=>loop.map((p,i)=>(i?'L':'M')+xy(project(p,matrix))).join(' ')+' Z').join(' '));
+    annotation.setAttribute('aria-label',`${text}. ${atContact?'The exact contact patch is highlighted. Force arrows show the qualitative stop load through the cup and nuts into screws in tension and the lid. Upward arrows at the heads are lid reactions; downward arrows act on the named parts.':'No contact patch or stop-load arrows are shown.'}`);
+    root.dataset.contactHighlighted=String(atContact);root.dataset.dimensionVisible=String(visible);root.dataset.dimensionLowerWorld=JSON.stringify(lowerWorld);root.dataset.dimensionUpperWorld=JSON.stringify(upperWorld);root.dataset.dimensionLowerScreen=JSON.stringify(lower);root.dataset.dimensionUpperScreen=JSON.stringify(upper);
+  }
+  function draw(){
+    if(!colors||!width||!height)return;
+    updateGuideUI();
+    const {eye,direction,matrix,target,radius,halfHeight}=camera();gl.viewport(0,0,canvas.width,canvas.height);gl.depthMask(true);gl.disable(gl.BLEND);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.uniform1i(locations.uUseTint,0);gl.uniform1i(locations.uEdgePass,0);
+    gl.uniformMatrix4fv(locations.uViewProjection,false,matrix);gl.uniform3fv(locations.uEye,eye);gl.uniform3fv(locations.uLightColor,colors.light);gl.uniform3fv(locations.uSelectionColor,colors.selected);
+    gl.polygonOffset(1,1);
+    for(const {part,vao} of meshes){
+      if(transparentShell&&transparentParts.has(part.id))continue;
+      const mode=selectionMode(part);gl.uniform1i(locations.uSelectionMode,mode);if(mode)gl.enable(gl.POLYGON_OFFSET_FILL);else gl.disable(gl.POLYGON_OFFSET_FILL);
+      gl.bindVertexArray(vao);gl.uniform1f(locations.uDz,part.motion==='plunger'||part.motion==='switch_stem'?-travel*t:0);gl.uniform1f(locations.uClipMinZ,Number.isFinite(part.clipMinZ)?part.clipMinZ:-10000);
+      for(const group of part.groups||[{start:0,count:part.indices.length,material:0}]){gl.uniform3fv(locations.uColor,partColor(part,group.material===1||group.material==='cut'));gl.drawElements(gl.TRIANGLES,group.count,gl.UNSIGNED_INT,group.start*4);}
+    }
+    gl.disable(gl.POLYGON_OFFSET_FILL);
+    if(transparentShell){
+      prepareTransparency(direction);gl.uniform1i(locations.uUseTint,1);gl.uniform1i(locations.uSelectionMode,0);gl.uniform1f(locations.uDz,0);gl.uniform1f(locations.uClipMinZ,-10000);
+      gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
+      gl.drawElements(gl.TRIANGLES,transparentTriangles.length*3,gl.UNSIGNED_INT,0);
+      gl.depthMask(true);gl.disable(gl.BLEND);gl.uniform1i(locations.uUseTint,0);
+    }
+    // Depth-tested feature edges keep selected transparent parts recognizable.
+    gl.uniform1i(locations.uEdgePass,1);gl.depthMask(false);
+    for(const {part,edgeVao,edgeCount} of meshes){const mode=selectionMode(part);if(!mode||!edgeCount)continue;
+      gl.uniform1i(locations.uSelectionMode,mode);gl.uniform1f(locations.uDz,part.motion==='plunger'?-travel*t:0);gl.uniform1f(locations.uClipMinZ,-10000);
+      gl.bindVertexArray(edgeVao);gl.drawArrays(gl.LINES,0,edgeCount);
+    }
+    gl.depthMask(true);gl.uniform1i(locations.uEdgePass,0);gl.uniform1i(locations.uSelectionMode,0);
+    updateAnnotations(matrix);
+    root.dataset.highlightedMeshes=JSON.stringify(selectedMeshes[selectedPart]);root.dataset.highlightedFlangeLocalBounds=JSON.stringify(selectedPart==='flange'?[22.4,23.6]:null);
+    canvas.setAttribute('aria-label',`${focusFrame?'Part inspection':closeup?'Contact close-up':'Actual three-dimensional CAD cutaway'}${transparentShell?', translucent lid and stop cup':''}: ${(travel*t).toFixed(3)} millimetres depression, ${t>=1?'flange touching the fixed stop shelf':(travel*(1-t)).toFixed(3)+' millimetres flange clearance'}. ${partDetails[selectedPart].name} highlighted; related force arrows emphasized when the stop engages.`);
+    root.dataset.strokeMm=(travel*t).toFixed(6);root.dataset.gapMm=(travel*(1-t)).toFixed(6);root.dataset.view=focusFrame?'part':closeup?'contact':'mechanism';root.dataset.playing=String(playing);
+    root.dataset.cameraTarget=JSON.stringify(target);root.dataset.cameraFitRadius=String(radius);root.dataset.cameraHalfHeight=String(halfHeight);root.dataset.cameraTransition=String(Boolean(focusTween));root.dataset.manualCamera=String(manualCamera);root.dataset.cameraFocusPart=focusPart||'';
+    root.dataset.yaw=yaw.toFixed(6);root.dataset.pitch=pitch.toFixed(6);root.dataset.zoom=zoom.toFixed(6);root.dataset.activePointers=String(pointers.size);
+    root.dataset.speed=String(speed);root.dataset.cycleTime=cycleTime.toFixed(6);root.dataset.phase=cycleTime<pressDuration?'press':cycleTime<releaseStart?'contact':cycleTime<releasedStart?'release':'released';
+    root.dataset.transparentShell=String(transparentShell);
+  }
+  function updateCamera(drawScene=true){
+    cameraInputs.yaw.value=(yaw*180/Math.PI).toFixed(0);cameraInputs.pitch.value=(pitch*180/Math.PI).toFixed(0);cameraInputs.zoom.value=zoom.toFixed(2);
+    cameraValues.yaw.textContent=(yaw*180/Math.PI).toFixed(0)+'°';cameraValues.pitch.textContent=(pitch*180/Math.PI).toFixed(0)+'°';cameraValues.zoom.textContent=zoom.toFixed(2)+'×';
+    cameraInputs.yaw.setAttribute('aria-valuetext',cameraValues.yaw.textContent+' rotation');cameraInputs.pitch.setAttribute('aria-valuetext',cameraValues.pitch.textContent+' tilt');cameraInputs.zoom.setAttribute('aria-valuetext',zoom.toFixed(2)+' times zoom');
+    if(drawScene)draw();
+  }
+  function update(){
+    slider.value=(travel*t).toFixed(3);value.textContent=(travel*t).toFixed(3)+' mm';slider.setAttribute('aria-valuetext',(travel*t).toFixed(3)+' millimetres depression');
+    gap.textContent=t>=1?'Flange contact':'Gap '+(travel*(1-t)).toFixed(3)+' mm';
+    buttons.play.textContent=playing?'Pause':'Play loop';buttons.play.setAttribute('aria-pressed',String(playing));speedSelect.value=String(speed);
+    transparencyToggle.checked=transparentShell;
+    buttons.released.setAttribute('aria-pressed',String(t<.00001));buttons.pressed.setAttribute('aria-pressed',String(t>=1));buttons.closeup.setAttribute('aria-pressed',String(!focusFrame&&closeup));
+    draw();
+  }
+  function announce(){announcement.textContent=t>=1?'Fully pressed. The plunger flange contacts the fixed stop shelf.':t<.00001?'Released. The flange is 0.25 millimetres above the stop shelf.':`${(travel*t).toFixed(3)} millimetres depression. ${(travel*(1-t)).toFixed(3)} millimetres remain to the stop.`;}
+  function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({
+    modelContent:{depression_mm:Number((travel*t).toFixed(3)),flange_gap_mm:Number((travel*(1-t)).toFixed(3)),view:cameraViewLabel(),reference_travel_mm:travel,playback_speed:speed,looping:true,transparent_lid_and_stop_cup:transparentShell,selected_load_part:selectedPart,guided_load_path:guided,guide_auto_advance:guided&&guideAutoAdvance,guide_step:guided?guideOrder.indexOf(selectedPart)+1:null,camera:{rotation_deg:Number((yaw*180/Math.PI).toFixed(2)),tilt_deg:Number((pitch*180/Math.PI).toFixed(2)),zoom:Number(zoom.toFixed(3)),focus_frame:focusFrame,focus_part:focusPart,manual_for_step:manualCamera,locked:cameraLocked}},
+    privateContent:{version:9,t,closeup,speed,cycleTime,transparentShell,selectedPart,guided,guideAutoAdvance,guideElapsed,guideSawContact,focusFrame,focusTween:focusTween?{...focusTween}:null,focusPart,manualCamera,cameraLocked,camera:{yaw,pitch,zoom},origin:stateOrigin,revision:++stateRevision}
+  }).catch(()=>{});}
+  function pause(){if(playing)advance(performance.now());playing=false;lastTick=null;if(raf)cancelAnimationFrame(raf);raf=0;}
+  function restore(saved){
+    const state=saved?.privateContent||saved;
+    yaw=defaultYaw;pitch=defaultPitch;zoom=1;speed=.25;transparentShell=false;selectedPart='flange';guided=false;guideAutoAdvance=true;guideElapsed=0;guideSawContact=false;focusFrame=null;focusTween=null;focusPart=null;manualCamera=false;cameraLocked=false;lastCameraInput=-Infinity;
+    if([1,2,3,4,5,6,7,8,9].includes(state?.version)){t=clamp(Number(state.t));closeup=Boolean(state.closeup);transparentShell=state.transparentShell===true;if(Object.hasOwn(partDetails,state.selectedPart))selectedPart=state.selectedPart;if(allowedSpeeds.includes(state.speed))speed=state.speed;const c=state.camera;if(c){yaw=Number.isFinite(c.yaw)?wrapYaw(c.yaw):defaultYaw;pitch=Number.isFinite(c.pitch)?limitPitch(c.pitch):defaultPitch;zoom=Number.isFinite(c.zoom)?limitZoom(c.zoom):1;}
+      if(state.version>=6){guided=state.guided===true;guideElapsed=Number.isFinite(state.guideElapsed)?Math.max(0,Math.min(300000,state.guideElapsed)):0;guideSawContact=state.guideSawContact===true;}
+      if(state.version===9)guideAutoAdvance=state.guideAutoAdvance!==false;
+      if(state.version>=8)cameraLocked=state.cameraLocked===true;
+      if(state.version>=7){
+        focusFrame=readCameraFrame(state.focusFrame);focusPart=focusFrame&&Object.hasOwn(partDetails,state.focusPart)?state.focusPart:null;manualCamera=guided&&state.manualCamera===true;
+        const flight=state.focusTween,from=readCameraFrame(flight?.from),to=readCameraFrame(flight?.to);
+        if(focusFrame&&guided&&!cameraLocked&&!manualCamera&&from&&to&&flight?.part===selectedPart&&Number.isFinite(flight.elapsed)&&flight.elapsed>=0&&flight.elapsed<focusDuration)focusTween={from,to,elapsed:flight.elapsed,part:selectedPart};
+      }
+    }
+    else if(saved?.modelContent){const m=saved.modelContent;t=clamp(Number(m.depression_mm)/travel);closeup=m.view==='contact close-up';transparentShell=m.transparent_lid_and_stop_cup===true;if(Object.hasOwn(partDetails,m.selected_load_part))selectedPart=m.selected_load_part;guided=m.guided_load_path===true;guideAutoAdvance=m.guide_auto_advance!==false;guideSawContact=t>=1;if(allowedSpeeds.includes(m.playback_speed))speed=m.playback_speed;const c=m.camera;if(c){yaw=Number.isFinite(c.rotation_deg)?wrapYaw(c.rotation_deg*Math.PI/180):defaultYaw;pitch=Number.isFinite(c.tilt_deg)?limitPitch(c.tilt_deg*Math.PI/180):defaultPitch;zoom=Number.isFinite(c.zoom)?limitZoom(c.zoom):1;focusFrame=readCameraFrame(c.focus_frame);focusPart=focusFrame&&Object.hasOwn(partDetails,c.focus_part)?c.focus_part:null;manualCamera=guided&&c.manual_for_step===true;cameraLocked=c.locked===true;}}
+    cycleTime=[3,4,5,6,7,8,9].includes(state?.version)&&Number.isFinite(state.cycleTime)?((state.cycleTime%cycleDuration)+cycleDuration)%cycleDuration:timeForPose(t);
+    lastTick=null;
+    selectPart(selectedPart);
+  }
+  function resetGuideReading(){guideElapsed=0;guideSawContact=t>=1;}
+  function setEndpoint(next){pause();t=next;cycleTime=timeForPose(t);resetGuideReading();update();announce();save();}
+  const ease=u=>u*u*(3-2*u);
+  function timeForPose(pose){let low=0,high=1;for(let i=0;i<30;i++){const mid=(low+high)/2;if(ease(mid)<pose)low=mid;else high=mid;}return pose<=0?0:pose>=1?pressDuration:(low+high)/2*pressDuration;}
+  function samplePose(){
+    if(cycleTime<pressDuration)t=reduced.matches?0:ease(cycleTime/pressDuration);
+    else if(cycleTime<releaseStart)t=1;
+    else if(cycleTime<releasedStart)t=reduced.matches?1:1-ease((cycleTime-releaseStart)/releaseDuration);
+    else t=0;
+  }
+  function advance(now){
+    const elapsed=lastTick===null?0:Math.max(0,now-lastTick),unwrapped=cycleTime+elapsed*speed,wrapped=unwrapped>=cycleDuration;
+    advanceCamera(elapsed);
+    cycleTime=unwrapped%cycleDuration;
+    lastTick=now;samplePose();
+    if(guided&&guideAutoAdvance){
+      guideElapsed+=elapsed;guideSawContact=guideSawContact||t>=1;
+      // Change at a release boundary, after reading time and a visible contact dwell.
+      if(wrapped&&guideElapsed>=guideMinimumReadMs&&guideSawContact){
+        resetGuideReading();selectPart(guideOrder[(guideOrder.indexOf(selectedPart)+1)%guideOrder.length]);beginGuidedFocus();save();
+      }
+    }
+  }
+  function tick(now){
+    if(!playing)return;
+    advance(now);
+    update();raf=requestAnimationFrame(tick);
+  }
+  function startPlayback(){if(playing)return;if(guided&&guideAutoAdvance&&!focusFrame&&!manualCamera)beginGuidedFocus(true);playing=true;lastTick=performance.now();update();raf=requestAnimationFrame(tick);}
+  function togglePlayback(){if(playing){pause();update();announce();save();return;}startPlayback();announcement.textContent=guided&&guideAutoAdvance?'Automatic load-path tour resumed.':'Looping press and release at '+speed+' times speed.';save();}
+  buttons.play.addEventListener('click',togglePlayback);
+  function stepGuide(direction){
+    // Disable automatic stepping before catching up motion at a possible loop boundary.
+    guideAutoAdvance=false;guided=true;focusTween=null;manualCamera=true;
+    if(playing)advance(performance.now());
+    resetGuideReading();selectPart(guideOrder[(guideOrder.indexOf(selectedPart)+direction+guideOrder.length)%guideOrder.length]);update();save();
+  }
+  buttons.previous.addEventListener('click',()=>stepGuide(-1));buttons.next.addEventListener('click',()=>stepGuide(1));
+  document.addEventListener('keydown',event=>{
+    if(event.defaultPrevented||event.isComposing||event.altKey||event.ctrlKey||event.metaKey)return;
+    const letter=(event.key||'').toLowerCase(),lock=letter==='l',transparent=letter==='t';
+    const left=event.key==='ArrowLeft',right=event.key==='ArrowRight',space=event.key===' '||event.key==='Spacebar';
+    if((event.shiftKey&&!lock&&!transparent)||(!left&&!right&&!space&&!lock&&!transparent))return;
+    const target=event.target instanceof Element?event.target:document.activeElement;
+    if(!target||(!root.contains(target)&&target!==document.body&&target!==document.documentElement))return;
+    // Sliders, fields, toggles and other native controls keep their own keyboard actions.
+    if(target.isContentEditable||target.closest('input,select,textarea,summary,a[href],[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="slider"],[role="combobox"],[role="listbox"],[role="spinbutton"],[role="menu"],[role="tablist"]'))return;
+    if(space&&target.closest('button,[role="button"],[role="checkbox"],[role="switch"],[role="radio"]'))return;
+    event.preventDefault();if(event.repeat)return;
+    if(left||right)stepGuide(left?-1:1);else if(lock)setCameraLock(!cameraLocked);else if(transparent)setTransparency(!transparentShell);else togglePlayback();
+  });
+  function setCameraLock(next){
+    cameraLocked=Boolean(next);focusTween=null;
+    if(!cameraLocked&&guided)beginGuidedFocus(true);
+    update();announcement.textContent=cameraLocked?'Camera locked across guided steps. Manual rotation and zoom remain available.':guided?'Camera unlocked. Guided focusing resumes.':'Camera unlocked.';save();
+  }
+  cameraLockToggle.addEventListener('change',()=>setCameraLock(cameraLockToggle.checked));
+  guideToggle.addEventListener('change',()=>{
+    const nextAuto=guideToggle.checked;guideAutoAdvance=false;if(!nextAuto){focusTween=null;manualCamera=true;}if(playing)advance(performance.now());guided=true;guideAutoAdvance=nextAuto;resetGuideReading();selectPart(selectedPart);
+    if(nextAuto){beginGuidedFocus(true);startPlayback();announcement.textContent='Automatic load-path tour resumed from '+partDetails[selectedPart].name.toLowerCase()+'.';}
+    else announcement.textContent='Automatic steps paused. Use Previous and Next; the animation keeps its current playback state.';
+    update();save();
+  });
+  speedSelect.addEventListener('change',()=>{if(playing)advance(performance.now());const next=Number(speedSelect.value);if(allowedSpeeds.includes(next))speed=next;update();announcement.textContent='Playback speed '+speed+' times.';save();});
+  function setTransparency(next){transparentShell=Boolean(next);update();announcement.textContent=transparentShell?'Lid and stop cup are translucent.':'Lid and stop cup are opaque.';save();}
+  transparencyToggle.addEventListener('change',()=>setTransparency(transparencyToggle.checked));
+  for(const label of partLabels)label.button.addEventListener('click',()=>{guided=false;focusTween=null;manualCamera=false;if(playing)advance(performance.now());resetGuideReading();selectPart(label.id,true);});
+  buttons.released.addEventListener('click',()=>setEndpoint(0));buttons.pressed.addEventListener('click',()=>setEndpoint(1));
+  buttons.closeup.addEventListener('click',()=>{const next=focusFrame?true:!closeup;takeManualCamera();focusFrame=null;focusPart=null;closeup=next;yaw=defaultYaw;pitch=defaultPitch;zoom=1;updateCamera();update();save();});
+  slider.addEventListener('input',()=>{pause();t=clamp(Number(slider.value)/travel);cycleTime=timeForPose(t);resetGuideReading();update();});slider.addEventListener('change',()=>{announce();save();});
+  function pointerPoint(event){return {x:event.clientX,y:event.clientY};}
+  function pointerPair(){const points=[...pointers.values()].slice(0,2);return {distance:Math.hypot(points[1].x-points[0].x,points[1].y-points[0].y),x:(points[0].x+points[1].x)/2,y:(points[0].y+points[1].y)/2};}
+  function rotate(dx,dy){yaw=wrapYaw(yaw-dx*.008);pitch=limitPitch(pitch+dy*.008);}
+  canvas.addEventListener('pointerdown',event=>{
+    if(event.pointerType==='mouse'&&event.button!==0)return;
+    event.preventDefault();buttons.play.focus({preventScroll:true});takeManualCamera();pointers.set(event.pointerId,pointerPoint(event));canvas.setPointerCapture(event.pointerId);canvas.dataset.dragging='true';draw();
+  });
+  canvas.addEventListener('pointermove',event=>{
+    if(!pointers.has(event.pointerId))return;
+    event.preventDefault();takeManualCamera();const old=pointers.get(event.pointerId),before=pointers.size>=2?pointerPair():null;
+    pointers.set(event.pointerId,pointerPoint(event));
+    if(before){const after=pointerPair();if(before.distance>1&&after.distance>1)zoom=limitZoom(zoom*after.distance/before.distance);rotate(after.x-before.x,after.y-before.y);}
+    else rotate(event.clientX-old.x,event.clientY-old.y);
+    updateCamera();
+  });
+  function endPointer(event){
+    if(!pointers.delete(event.pointerId))return;
+    if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);
+    lastCameraInput=performance.now();canvas.dataset.dragging=String(pointers.size>0);draw();if(!pointers.size)save();
+  }
+  canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);canvas.addEventListener('lostpointercapture',endPointer);
+  canvas.addEventListener('wheel',event=>{
+    event.preventDefault();takeManualCamera();const pixels=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?height:1);
+    zoom=limitZoom(zoom*Math.exp(-Math.max(-600,Math.min(600,pixels))*.0015));updateCamera();clearTimeout(wheelSaveTimer);wheelSaveTimer=setTimeout(save,150);
+  },{passive:false});
+  for(const [key,input] of Object.entries(cameraInputs)){
+    input.addEventListener('pointerdown',event=>{cameraControlPointers.add(event.pointerId);takeManualCamera();draw();});
+    input.addEventListener('input',()=>{takeManualCamera();const n=Number(input.value);if(key==='yaw')yaw=wrapYaw(n*Math.PI/180);else if(key==='pitch')pitch=limitPitch(n*Math.PI/180);else zoom=limitZoom(n);updateCamera();});
+    input.addEventListener('change',save);
+  }
+  for(const type of ['pointerup','pointercancel'])window.addEventListener(type,event=>{if(cameraControlPointers.delete(event.pointerId)){lastCameraInput=performance.now();save();}});
+  window.addEventListener('blur',()=>cameraControlPointers.clear());
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals&&Object.hasOwn(event.detail.globals,'widgetState')){const incoming=event.detail.globals.widgetState;if((incoming?.privateContent||incoming)?.origin===stateOrigin)return;pause();restore(incoming);updateCamera();update();}});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){pause();update();}});
+  const resize=()=>{width=root.querySelector('.ptt-model-view').getBoundingClientRect().width;height=Math.round(Math.max(300,Math.min(440,width*.68)));canvas.style.height=height+'px';const dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);draw();};
+  new ResizeObserver(resize).observe(root.querySelector('.ptt-model-view'));
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+  new MutationObserver(theme).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});
+  restore(window.openai?.widgetState);resize();theme();updateCamera();update();
+})();
+</script>

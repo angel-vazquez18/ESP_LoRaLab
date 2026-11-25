@@ -1,0 +1,72 @@
+{
+  "native_file": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.FCStd",
+  "printed_objects": ["EnclosureBase", "EnclosureLid", "PTTPlunger", "PTTStopCup", "BatteryCover"],
+  "reference_objects": ["ReferenceBatteryEnvelope"],
+  "battery_object": "ReferenceBatteryEnvelope",
+  "battery_bounds_mm": [17, 11, -13, 53, 79, -3],
+  "padding_bounds_mm": [17, 11, -14, 53, 79, -13],
+  "battery_description": "Conservative 68 x 36 x 10 mm packaging envelope; supplied photo identifies 68 x 35 x 10 mm wrapped pack and 66 mm lead. The 36 mm width is a design allowance, not a measured battery dimension.",
+  "harness_reference": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r4-battery/audit/rear-harness-predictive-report.json",
+  "hardware_and_routing": "Battery and wire/plug geometry are illustrative packaging envelopes, not manufacturer mating-plug CAD. Pair colors do not establish real connector pin orientation. Simultaneous USB-overmould/battery-plug fit remains unqualified.",
+  "section_x_mm": 27.2,
+  "colors": {
+    "EnclosureBase": [0.12, 0.20, 0.27],
+    "EnclosureLid": [0.72, 0.79, 0.82],
+    "PTTPlunger": [0.98, 0.26, 0.035],
+    "PTTStopCup": [0.16, 0.65, 0.4],
+    "BatteryCover": [0.30, 0.48, 0.62],
+    "ReferenceBatteryEnvelope": [0.13, 0.63, 0.39]
+  },
+  "views": {
+    "battery-assembled": {
+      "hide": [],
+      "render": {"width": 2000, "height": 1600, "rotate": "-50,0,-45", "zoom": 0.75}
+    },
+    "battery-cutaway": {
+      "hide": ["EnclosureLid", "PTTPlunger", "PTTStopCup"],
+      "cuts": [
+        {"objects": ["EnclosureBase"], "bounds_mm": [-20, -20, -18, 85, 30, 30], "planes": [["Y", 30]]},
+        {"objects": ["EnclosureBase"], "bounds_mm": [70, -20, -18, 85, 84, 30], "planes": [["X", 70], ["Y", 84]]}
+      ],
+      "render": {"width": 2000, "height": 1600, "rotate": "-65,0,-45", "zoom": 0.75}
+    },
+    "battery-exploded": {
+      "hide": ["ReferenceBatteryPlug", "ReferenceLeadPositive", "ReferenceLeadNegative"],
+      "z_offsets": {"EnclosureBase": -30, "BatteryCover": -90, "ReferenceBatteryEnvelope": -60, "ReferenceSoftPad": -60, "EnclosureLid": 80, "PTTPlunger": 55, "PTTStopCup": 35},
+      "render": {"width": 1800, "height": 2400, "rotate": "-54.7356,0,-45", "zoom": 0.32}
+    }
+  },
+  "dimensions": {
+    "overall_height_mm": 41,
+    "bay_depth_mm": 14,
+    "barrier_thickness_mm": 2.4,
+    "cover_thickness_mm": 2.4,
+    "main_outer_z": 24.6,
+    "cover_outer_z": -16.4,
+    "cover_inner_z": -14,
+    "bay_ceiling_z": 0,
+    "case_ymax": 99.6,
+    "battery_bounds_mm": [17, 11, -13, 53, 79, -3],
+    "upper_cell_clearance_mm": 3,
+    "lower_cell_clearance_mm": 1
+  },
+  "section_objects": ["EnclosureBase", "EnclosureLid", "BatteryCover", "ReferenceSoftPad", "ReferenceBatteryEnvelope", "carrier", "heltec", "oled", "ReferenceBatteryPlug", "ReferenceLeadPositive", "ReferenceLeadNegative"],
+  "overview_notes": [
+    ["PCB BARRIER RETAINED", "The original 2.4 mm floor separates the pouch from PCB solder joints and header pins. OLED and PTT geometry retain R3 positions."],
+    ["REMOVABLE BACK", "Four M3 x 6 screws and four M3 inserts sit outside the pouch footprint. Use about 1 mm nonconductive padding and two soft 10 mm straps without rigid pouch compression."],
+    ["REAR CABLE CHASE", "A local rear hood accommodates the provisional harness route. A matched extension may be needed for service access."],
+    ["POWER SCOPE", "Battery connects to Heltec BAT only. The carrier amplifier still requires USB. Battery-only operation needs verified speaker-disabled firmware."],
+    ["FIT QUALIFICATION", "Pack tolerance, plug keying/polarity, charging limits and simultaneous USB-cable fit require hardware checks. No complete battery operating qualification is claimed."]
+  ],
+  "dimension_rows": [
+    ["Conservative battery envelope", "68 x 36 x 10 mm"],
+    ["Bay depth / PCB barrier", "14.0 / 2.4 mm"],
+    ["Upper headspace / lower pad allowance", "3.0 / about 1.0 mm"],
+    ["Rear cover thickness", "2.4 mm"],
+    ["Printed shell incl. rear hood", "78.8 x 104.0 x 41.0 mm"],
+    ["Rear fasteners", "4 x M3 x 6; 3.6 mm engagement"],
+    ["OLED gap retained", "0.50 mm nominal (R3)"]
+  ],
+  "connection_note": "Verify actual keyed plug fit and end-to-end polarity before connection. Existing firmware drives AMP_SD HIGH at startup; battery-only use requires a verified mode holding it LOW while the USB-powered amplifier is unpowered. Confirm the pack permits Heltec's approximately 500 mA charging. The assumed battery plug overlaps the generic USB-overmould reservation; actual simultaneous connector fit remains unqualified.",
+  "source_note": "Sources: Meshnology battery product page; Heltec V4.3.1 datasheet pp12-14 and V4.3 schematic JP2; Analog Devices MAX98357A datasheet p4. Full URLs and reviewed constraints are in research/BATTERY-CONNECTION-REVIEW.txt. Battery body and lead dimensions come from the supplied photo."
+}

@@ -1,0 +1,109 @@
+{
+  "document": "LoRaEnclosure",
+  "recomputed_without_errors": true,
+  "travel_rebuild_test": {
+    "changed_B59_to": 0.35,
+    "cup_volume_mm3": 661.8016260247701,
+    "valid": true,
+    "restored_to": 0.25
+  },
+  "parts": [
+    {
+      "name": "EnclosureBase",
+      "result": {
+        "name": "EnclosureBase",
+        "label": "EnclosureBase",
+        "type_id": "Part::Cut",
+        "children": [
+          "BaseWithSupports",
+          "BaseCutters"
+        ],
+        "parents": [],
+        "visibility": true,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 36204.14510584077,
+          "area": 31449.178983772323,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 94,
+          "edge_count": 142,
+          "face_count": 62
+        }
+      }
+    },
+    {
+      "name": "EnclosureLid",
+      "result": {
+        "name": "EnclosureLid",
+        "label": "EnclosureLid",
+        "type_id": "Part::Cut",
+        "children": [
+          "LidWithClamps",
+          "LidCutters"
+        ],
+        "parents": [],
+        "visibility": false,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 28321.828434130617,
+          "area": 19522.557409041823,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 108,
+          "edge_count": 162,
+          "face_count": 60
+        }
+      }
+    },
+    {
+      "name": "PTTPlunger",
+      "result": {
+        "name": "PTTPlunger",
+        "label": "PTTPlunger",
+        "type_id": "Part::MultiFuse",
+        "children": [
+          "PlungerFlange",
+          "PlungerShaft",
+          "PlungerFoot"
+        ],
+        "parents": [],
+        "visibility": true,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 497.6282763286232,
+          "area": 492.6017280828797,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 6,
+          "edge_count": 9,
+          "face_count": 7
+        }
+      }
+    },
+    {
+      "name": "PTTStopCup",
+      "result": {
+        "name": "PTTStopCup",
+        "label": "PTT stop cup — 0.25 mm reference travel",
+        "type_id": "Part::Cut",
+        "children": [
+          "PTTStopBlank",
+          "PTTStopCutters"
+        ],
+        "parents": [],
+        "visibility": true,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 650.9008562343832,
+          "area": 865.2393701501218,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 18,
+          "edge_count": 26,
+          "face_count": 11
+        }
+      }
+    }
+  ]
+}

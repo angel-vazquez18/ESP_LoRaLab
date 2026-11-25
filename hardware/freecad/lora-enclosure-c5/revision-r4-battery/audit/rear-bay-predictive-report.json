@@ -1,0 +1,111 @@
+{
+  "scope": "Predictive enclosure-only bay; does not claim verified connector or cable route.",
+  "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\cad\\LoRa-Enclosure-C5-R3-OLED.FCStd",
+  "source_sha256": "57f535488ac286e72e6a9f33ff3ffc29532e826844323bb8ec2bd9fdbbfd4480",
+  "new_base": {
+    "valid": true,
+    "closed": true,
+    "solids": 1,
+    "volume_mm3": 47954.52713207957,
+    "bounds_mm": [
+      -4.400000000000001,
+      -4.400000000000001,
+      -14.0,
+      74.4,
+      94.4,
+      21.0
+    ]
+  },
+  "rear_cover": {
+    "valid": true,
+    "closed": true,
+    "solids": 1,
+    "volume_mm3": 18420.53670112048,
+    "bounds_mm": [
+      -4.400000000000001,
+      -4.400000000000001,
+      -16.4,
+      74.4,
+      94.4,
+      -11.0
+    ]
+  },
+  "battery_envelope": {
+    "valid": true,
+    "closed": true,
+    "solids": 1,
+    "volume_mm3": 24480.0,
+    "bounds_mm": [
+      17.0,
+      11.0,
+      -13.0,
+      53.0,
+      79.0,
+      -3.0
+    ]
+  },
+  "body_to_battery_mm": 3.0,
+  "cover_to_battery_mm": 1.0,
+  "body_battery_intersection_mm3": 0.0,
+  "cover_battery_intersection_mm3": 0.0,
+  "body_cover_intersection_mm3": 0.0,
+  "existing_base_lost_mm3": 0.0,
+  "original_electronics_partition_mm": 2.4,
+  "bay_ceiling_z": 0,
+  "cover_inner_face_z": -14,
+  "pouch_nominal_lower_air_mm": 1,
+  "pouch_nominal_upper_air_mm": 3,
+  "case_outer_height_mm": 41,
+  "rear_fastener_centers_mm": [
+    [
+      4,
+      4
+    ],
+    [
+      66,
+      4
+    ],
+    [
+      4,
+      86
+    ],
+    [
+      66,
+      86
+    ]
+  ],
+  "rear_insert_pilot": {
+    "diameter_mm": 4.4,
+    "depth_mm": 4.5,
+    "blind_top_z": -9.5,
+    "nominal_insert": "M3 OD5 x length4, same RX-M3x5x4 family as original"
+  },
+  "rear_screw": "Four M3x6 buttonhead;3.6mm nominal engagement after2.4mm cover; tipZ-10.4 stays0.9mm below blind-pilot topZ-9.5, outside pouch footprint.",
+  "strap_slot_centers_mm": [
+    [
+      12.2,
+      30
+    ],
+    [
+      12.2,
+      60
+    ],
+    [
+      57.8,
+      30
+    ],
+    [
+      57.8,
+      60
+    ]
+  ],
+  "strap_slot_size_mm": [
+    2.4,
+    12
+  ],
+  "strap_channels_depth_mm": 1,
+  "cover_min_channel_floor_mm": 1.4,
+  "retention": "Two soft nonconductive nominal10mm straps around pouch, through rear-cover slots; not supplied/manufactured with print. Round guide corners, no clamp preload.",
+  "source_unchanged": true,
+  "ok": true
+}

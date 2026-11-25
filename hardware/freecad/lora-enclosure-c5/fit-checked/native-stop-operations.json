@@ -1,0 +1,339 @@
+{
+  "parameter_start_row": 59,
+  "parameter_rows": [
+    [
+      "PTTSwitchTravel",
+      0.25,
+      "Provisional comparable 6x6x8 switch travel; verify gently"
+    ],
+    [
+      "PTTStopShelf",
+      2,
+      "Stop shelf thickness"
+    ],
+    [
+      "PTTStopRadialGap",
+      0.6,
+      "Flange radial clearance; accommodates cup positioning"
+    ],
+    [
+      "PTTStopOuter",
+      16.6,
+      "Cup outer diameter"
+    ],
+    [
+      "PTTStopFootHole",
+      5.2,
+      "Foot passage diameter"
+    ],
+    [
+      "PTTStopScrewSpan",
+      18,
+      "Two M2 screw axes, symmetric about PTT X"
+    ],
+    [
+      "PTTStopScrewHole",
+      2.4,
+      "M2 screw clearance diameter"
+    ],
+    [
+      "PTTStopLugDiameter",
+      6,
+      "Mounting lug outside diameter"
+    ],
+    [
+      "PTTStopContactZ",
+      "=B44-0.2-B31-B33-B59",
+      "Shelf top; existing flange gap is 0.2 mm"
+    ],
+    [
+      "PTTStopBottomZ",
+      "=B67-B60",
+      "Cup underside"
+    ],
+    [
+      "PTTStopHeight",
+      "=B44-B68",
+      "Cup underside to lid underside"
+    ]
+  ],
+  "operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopOuter",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopOuter",
+        "expressions": {
+          "Radius": "Parameters.B62/2",
+          "Height": "Parameters.B69",
+          "Placement": "placement(vector(Parameters.B25;Parameters.B26;Parameters.B68);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopLug1",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopLug1",
+        "expressions": {
+          "Radius": "Parameters.B66/2",
+          "Height": "Parameters.B69",
+          "Placement": "placement(vector(Parameters.B25-Parameters.B64/2;Parameters.B26;Parameters.B68);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopLug2",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopLug2",
+        "expressions": {
+          "Radius": "Parameters.B66/2",
+          "Height": "Parameters.B69",
+          "Placement": "placement(vector(Parameters.B25+Parameters.B64/2;Parameters.B26;Parameters.B68);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopFlangeCavity",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopFlangeCavity",
+        "expressions": {
+          "Radius": "Parameters.B30/2+Parameters.B61",
+          "Height": "Parameters.B44-Parameters.B67+0.1",
+          "Placement": "placement(vector(Parameters.B25;Parameters.B26;Parameters.B67);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopFootPassage",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopFootPassage",
+        "expressions": {
+          "Radius": "Parameters.B63/2",
+          "Height": "Parameters.B69+0.2",
+          "Placement": "placement(vector(Parameters.B25;Parameters.B26;Parameters.B68-0.1);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopScrew1",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopScrew1",
+        "expressions": {
+          "Radius": "Parameters.B65/2",
+          "Height": "Parameters.B47-Parameters.B68+0.2",
+          "Placement": "placement(vector(Parameters.B25-Parameters.B64/2;Parameters.B26;Parameters.B68-0.1);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cylinder",
+        "name": "PTTStopScrew2",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopScrew2",
+        "expressions": {
+          "Radius": "Parameters.B65/2",
+          "Height": "Parameters.B47-Parameters.B68+0.2",
+          "Placement": "placement(vector(Parameters.B25+Parameters.B64/2;Parameters.B26;Parameters.B68-0.1);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::MultiFuse",
+        "name": "PTTStopBlank",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopBlank",
+        "values": {
+          "Shapes": [
+            "PTTStopOuter",
+            "PTTStopLug1",
+            "PTTStopLug2"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::MultiFuse",
+        "name": "PTTStopCutters",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopCutters",
+        "values": {
+          "Shapes": [
+            "PTTStopFlangeCavity",
+            "PTTStopFootPassage",
+            "PTTStopScrew1",
+            "PTTStopScrew2"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "PTTStopCup",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTStopCup",
+        "values": {
+          "Base": "PTTStopBlank",
+          "Tool": "PTTStopCutters",
+          "Refine": true,
+          "Visibility": true,
+          "Label": "PTT stop cup — 0.25 mm reference travel"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "LidCutters",
+        "values": {
+          "Shapes": [
+            "LidScrew1",
+            "LidScrew2",
+            "LidScrew3",
+            "LidScrew4",
+            "OLEDWindow",
+            "MicrophonePort",
+            "PTTGuide",
+            "ResetAccess",
+            "ProgramAccess",
+            "SpeakerPassage",
+            "AntennaPassage",
+            "PTTStopScrew1",
+            "PTTStopScrew2"
+          ]
+        },
+        "recompute": true
+      }
+    }
+  ],
+  "notes": "Applied through native FreeCAD MCP tools to the detailed assembly, with electronics mounted at +6.4814 mm, lid/plunger placements reset to zero. Existing base/plunger geometry retained."
+}

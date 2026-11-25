@@ -1,0 +1,47 @@
+R4 battery-compartment documentation
+
+The rendered views use the saved R4 native printed geometry and the six
+actual model attachments in the existing C5 KiCad carrier project. The PCB
+and electronics retain their original mounted coordinates. The microphone
+uses its corrected original assignment, not hidden oversized import history.
+
+The green battery is a conservative 68 x 36 x 10 mm packaging envelope.
+The supplied photo gives 68 x 35 x 10 mm; the extra width is an allowance.
+It is not a manufacturer battery CAD model. The gray soft-pad block is an
+approximately 1 mm nonconductive padding allowance. Plug and red/black wire
+shapes illustrate the provisional route checked in the engineering review.
+Wire colors in a presentation do not establish actual pin orientation.
+
+The cutaway removes selected housing material and omits the lid/plunger/stop
+cup so the battery compartment and actual electronics can be seen. Removed
+material is an illustration, not the shape to print. The exploded view uses
+presentation offsets recorded in view-config.json/view-manifest.json; these
+are not assembly clearances. Printed part colors distinguish geometry and
+are not a finish order specification. Hardware, straps and thread detail may
+be omitted for visibility; see HARDWARE-ADDENDUM.txt for required items.
+
+The dimensioned section uses actual saved B-rep slices at X27.2, with actual
+component slices from the corrected assembly. The view generator verifies
+the native battery bounds and housing height against the reported envelope.
+The separate native and export audits establish geometry integrity; drawings
+and rendering do not qualify actual battery, connector or electrical operation.
+
+The original C5 amplifier remains USB powered. Existing normal-audio firmware
+drives AMP_SD high at startup and is not qualified for battery-only use.
+A verified mode must hold AMP_SD low while amplifier VDD is absent. Actual
+plug polarity/keying, pack charging-current limits, and simultaneous USB/
+battery connector fit remain hardware verification items. See the research
+report for primary source URLs and the exact scope of these findings.
+
+Reproduction
+Run cache_electronics_sections.py and build_battery_views.py with the FreeCAD
+bundled Python. Run render_battery_views.py with ordinary Python and KiCad 10.
+Run build_battery_document.py with the bundled PDF runtime, render with Poppler,
+then visually review both final pages before setting DOCUMENT-VALIDATION.json
+to ok:true. The recipes require the existing full project source paths;
+those external KiCad/model dependencies are not duplicated into this focused
+revision. All source and render hashes are recorded in view-manifest.json.
+
+The boards under presentation/ contain illustration-only footprints and must
+never be fabricated. Use the existing PCB fabrication project for the carrier.
+This enclosure revision changes no PCB copper, schematic, Gerber or firmware.

@@ -1,0 +1,7 @@
+# Local reconstruction/cache files only.
+/detailed-import/C5-detailed-assembly.step
+__pycache__/
+*.pyc
+*.FCBak
+*.FCStd1
+*.log

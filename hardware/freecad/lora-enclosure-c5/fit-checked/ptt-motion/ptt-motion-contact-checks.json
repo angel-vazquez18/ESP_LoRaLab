@@ -1,0 +1,263 @@
+{
+  "nominal_free_gap_is_not_released_pose": {
+    "nominal_plunger_offset_z_mm": 0,
+    "nominal_foot_to_switch_gap_mm": 0.1999999999999993
+  },
+  "released": {
+    "plunger_offset_z_mm": -0.2,
+    "switch_actuator_offset_z_mm": 0,
+    "foot_switch": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            52.55,
+            9.0,
+            16.0
+          ],
+          [
+            52.55,
+            9.0,
+            16.0
+          ]
+        ]
+      ],
+      "contact_area_mm2": 8.552985999398208
+    },
+    "plunger_cup": {
+      "distance_mm": 0.25,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            57.0,
+            8.999999999999998,
+            22.400000000000002
+          ],
+          [
+            57.0,
+            8.999999999999998,
+            22.150000000000002
+          ]
+        ],
+        [
+          [
+            53.6,
+            9.0,
+            22.400000000000002
+          ],
+          [
+            53.6,
+            9.0,
+            22.150000000000002
+          ]
+        ]
+      ]
+    },
+    "plunger_lid": {
+      "distance_mm": 0.29999999999999716,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            55.0,
+            8.999999999999998,
+            27.599999999999994
+          ],
+          [
+            55.3,
+            8.999999999999998,
+            27.599999999999994
+          ]
+        ],
+        [
+          [
+            55.0,
+            8.999999999999998,
+            24.0
+          ],
+          [
+            55.3,
+            8.999999999999998,
+            24.0
+          ]
+        ]
+      ]
+    }
+  },
+  "fully_pressed": {
+    "plunger_offset_z_mm": -0.45,
+    "switch_actuator_offset_z_mm": -0.25,
+    "foot_switch": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            52.55,
+            9.0,
+            15.75
+          ],
+          [
+            52.55,
+            9.0,
+            15.75
+          ]
+        ]
+      ],
+      "contact_area_mm2": 8.552985999398208
+    },
+    "plunger_cup": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            57.0,
+            8.999999999999998,
+            22.150000000000002
+          ],
+          [
+            57.0,
+            8.999999999999998,
+            22.150000000000002
+          ]
+        ],
+        [
+          [
+            53.6,
+            9.0,
+            22.150000000000002
+          ],
+          [
+            53.6,
+            9.0,
+            22.150000000000002
+          ]
+        ]
+      ],
+      "contact_area_mm2": 91.86016919096558
+    },
+    "plunger_lid": {
+      "distance_mm": 0.2999999999999933,
+      "common_volume_mm3": 0.0,
+      "nearest_points": [
+        [
+          [
+            55.0,
+            8.999999999999998,
+            27.599999999999994
+          ],
+          [
+            55.3,
+            8.999999999999998,
+            27.599999999999994
+          ]
+        ],
+        [
+          [
+            55.0,
+            8.999999999999998,
+            24.0
+          ],
+          [
+            55.3,
+            8.999999999999998,
+            24.0
+          ]
+        ]
+      ]
+    }
+  },
+  "extra_0_01mm_blocked": {
+    "plunger_offset_z_mm": -0.46,
+    "plunger_cup": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.9186016919098056,
+      "nearest_points": [
+        [
+          [
+            57.0,
+            8.999999999999998,
+            22.150000000000002
+          ],
+          [
+            57.0,
+            8.999999999999998,
+            22.150000000000002
+          ]
+        ],
+        [
+          [
+            53.6,
+            9.0,
+            22.14
+          ],
+          [
+            53.6,
+            9.0,
+            22.14
+          ]
+        ]
+      ]
+    }
+  },
+  "switch_model": {
+    "original_valid": true,
+    "upper_valid": true,
+    "upper_solids": 1,
+    "upper_bbox_mm": [
+      49.00581364948831,
+      7.105813649488311,
+      12.5,
+      52.79418635051169,
+      10.894186350511688,
+      16.0
+    ],
+    "pressed_valid": true,
+    "pressed_solids": 1,
+    "fixed_lower_unchanged": true,
+    "stem_axis_x_mm": 50.9,
+    "stem_axis_y_mm": 9,
+    "stem_radius_mm": 1.75,
+    "top_flat_radius_mm": 1.65,
+    "split_z_mm": 12.5,
+    "crossing_profile_edges": [
+      {
+        "curve_type": "<class 'Part.Line'>",
+        "bbox_mm": [
+          52.65,
+          9.0,
+          11.6,
+          52.65,
+          9.0,
+          15.9
+        ],
+        "constant_x": true,
+        "constant_y": true
+      },
+      {
+        "curve_type": "<class 'Part.Line'>",
+        "bbox_mm": [
+          49.15,
+          9.0,
+          11.6,
+          49.15,
+          9.0,
+          15.9
+        ],
+        "constant_x": true,
+        "constant_y": true
+      }
+    ],
+    "exact_vertex_warp_vs_split_union_symmetric_section_area_mm2": 0.0,
+    "upper_profile_translation_is_faithful": true
+  },
+  "source_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\cutaway-view\\LoRa-Enclosure-C5-Assembled-Cutaway.FCStd",
+  "source_sha256": "a242a1c629cfd86b54b88113d231ee400dff4b3beaf2d126d107bf21aff12cdd",
+  "source_file_unchanged": true,
+  "section_y_mm": 9.0,
+  "elapsed_seconds": 4.8171067237854,
+  "ok": true
+}

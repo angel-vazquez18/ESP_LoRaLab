@@ -1,0 +1,107 @@
+{
+  "revision": "C5-R1",
+  "files": [
+    {
+      "part": "enclosure-base",
+      "quantity": 1,
+      "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\enclosure-base.stl",
+      "source_sha256": "80ec68aba7c5a5e3b39387c33558248b92e63bd03a1ae0aa5eb8e1818c21cfd9",
+      "stl": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-base-mm.stl",
+      "stl_sha256": "f1968e216942993e6f97ff66b21d2d97cbeb8eb6f935162cd1cacd944d130635",
+      "3mf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-base-mm.3mf",
+      "3mf_sha256": "1dfa4bc02b912351f5352d2f42bb346180ece971ca181302fd8f4f85ad4bb3c2",
+      "units": "mm",
+      "scale": 1,
+      "triangles": 3640,
+      "dimensions_mm": [
+        78.80000162124634,
+        98.80000162124634,
+        21.0
+      ],
+      "translation_from_assembly_mm": [
+        4.400000095367432,
+        4.400000095367432,
+        -0.0
+      ],
+      "geometry_change": "translation only",
+      "3mf_round_trip_verified": true
+    },
+    {
+      "part": "enclosure-lid",
+      "quantity": 1,
+      "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\enclosure-lid.stl",
+      "source_sha256": "6e971c1f09717404f0c1c594ed57dde162fd08f1e33802f9eb5f11298dce241c",
+      "stl": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-lid-mm.stl",
+      "stl_sha256": "9f127c82d33d244d278dad135412b3b1dec5a66c91461c409c0d7e5837282466",
+      "3mf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-enclosure-lid-mm.3mf",
+      "3mf_sha256": "593a865b21f21b27a8c40d1baea97b0f2a6e39da81ed2c2d57294cbd955f80de",
+      "units": "mm",
+      "scale": 1,
+      "triangles": 3632,
+      "dimensions_mm": [
+        78.80000162124634,
+        98.80000162124634,
+        16.600000381469727
+      ],
+      "translation_from_assembly_mm": [
+        4.400000095367432,
+        4.400000095367432,
+        -8.0
+      ],
+      "geometry_change": "translation only",
+      "3mf_round_trip_verified": true
+    },
+    {
+      "part": "ptt-plunger",
+      "quantity": 1,
+      "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\ptt-plunger.stl",
+      "source_sha256": "7ec78932fe45c13f351e8086e0d637c3c218f46431078ca2384442b95609fa86",
+      "stl": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-plunger-mm.stl",
+      "stl_sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41",
+      "3mf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-plunger-mm.3mf",
+      "3mf_sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f",
+      "units": "mm",
+      "scale": 1,
+      "triangles": 604,
+      "dimensions_mm": [
+        11.992542266845703,
+        11.996270656585693,
+        10.19999885559082
+      ],
+      "translation_from_assembly_mm": [
+        -45.0074577331543,
+        -3.0018649101257324,
+        -16.200000762939453
+      ],
+      "geometry_change": "translation only",
+      "3mf_round_trip_verified": true
+    },
+    {
+      "part": "ptt-stop-cup",
+      "quantity": 1,
+      "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\printing\\ptt-stop-cup.stl",
+      "source_sha256": "7ca20c816ad1d272a70bdb7187ec16fd80c83f2caa69822bc22bcd1b557e8117",
+      "stl": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-stop-cup-mm.stl",
+      "stl_sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f",
+      "3mf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\craftcloud\\upload\\C5-R1-ptt-stop-cup-mm.3mf",
+      "3mf_sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0",
+      "units": "mm",
+      "scale": 1,
+      "triangles": 1128,
+      "dimensions_mm": [
+        24.0,
+        16.58503031730652,
+        3.8500003814697266
+      ],
+      "translation_from_assembly_mm": [
+        -39.0,
+        -0.7074844837188721,
+        -17.149999618530273
+      ],
+      "geometry_change": "translation only",
+      "3mf_round_trip_verified": true
+    }
+  ],
+  "upload_instruction": "Upload ONE format per part (four STL files OR four 3MF files), never both. Quantity 1 for each. Units millimetres; scale 100%. No hardware or PCB is included in these meshes.",
+  "configuration": "Neutral models; supplier selects manufacturing orientation and process settings."
+}

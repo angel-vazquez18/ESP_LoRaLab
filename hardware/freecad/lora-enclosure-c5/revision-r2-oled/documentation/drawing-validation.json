@@ -1,0 +1,27 @@
+{
+  "pdf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r2-oled\\documentation\\C5-R2-OLED-Dimensioned-Section.pdf",
+  "pages": 1,
+  "page_size_points": [
+    0,
+    0,
+    1190.551,
+    841.8898
+  ],
+  "source_geometry": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r2-oled\\documentation\\oled-section-geometry.json",
+  "source_sha256": "b53789775fe27678d245a19d0fc9189acb54b3ac9ac652110a743f678c6e1102",
+  "pdf_sha256": "ad964c32729019c91d1626f55b0fed4f8a026de617a44556bf701c11b92f29fc",
+  "values_mm": {
+    "glass_to_local_face": 2.6012807412,
+    "glass_to_inner_reference": 1.0012807411999987,
+    "glass_to_main_outer": 4.6012807412
+  },
+  "section_geometry": "Actual B-rep slice wires supplied by CAD audit; no synthesized model outlines.",
+  "render_review": "Passed visual inspection of final 150 dpi Poppler render after trimmed-bounds audit refresh: clear dimensions, no overlapping labels or clipping.",
+  "png": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r2-oled\\documentation\\C5-R2-OLED-Dimensioned-Section.png",
+  "png_sha256": "4ae8aa67f3a1428fe8f8a18bac9ab05c6c1b872a4574ce076882b38127937ac9",
+  "png_pixels": [
+    2481,
+    1754
+  ],
+  "ok": true
+}
