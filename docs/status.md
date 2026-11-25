@@ -4,6 +4,16 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Airtime and delivery model matrix
+
+MODEL-01 now checks the pinned reference and worksheet numerically, then
+links exact frame evidence and sender-local duration to calculated runs.
+The delivery cases retain no-ACK, ACK and observed one-retry costs
+separately. Full `make check` passed 1,134 tests, including all 90 numerical
+vectors and native RF/ACK evidence. The TX interval is a software
+measurement. Instrumented airtime tolerance and physical qualification are
+still open. See [airtime model procedures](model_series.md).
+
 ## November 25 — Stage memory matrix
 
 MEM-01 now runs per-node finite idle baselines and paired data observations

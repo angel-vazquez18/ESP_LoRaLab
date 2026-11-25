@@ -737,3 +737,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Verified matching stage/workload IDs, separate idle windows, observer
   cancellation and retained hashes through the native fixtures. Full
   make check passed 1,130 tests.
+
+- Memory PR #221 is open over #220. Issue #90 links to the partial runner.
+- MODEL-01 groups the 90 independent reference vectors, isolated TX
+  observations and no-ACK, ACK and confirmed one-retry message cases.
+  Full make check passed 1,134 tests. Instrumented physical tolerance
+  is still separate from node-local TX timing.
