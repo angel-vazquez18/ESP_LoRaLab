@@ -261,7 +261,9 @@ def preview(plan: KnownDataPlan) -> dict:
         else ("encoded_message_calculated_preview" if encoded else "known_data_calculated_preview"),
         "execution_available": False,
         "hardware_validated": False,
-        "execution_blocker": "The v2 run adapter and RF firmware are not implemented",
+        "execution_blocker": "Preview only; use the shared echo preflight and run service"
+        if echo
+        else "The v2 run adapter and RF firmware are not implemented",
         "plan": plan.model_dump(),
         "plan_sha256": hashlib.sha256(canonical).hexdigest(),
         "required_capabilities": required,

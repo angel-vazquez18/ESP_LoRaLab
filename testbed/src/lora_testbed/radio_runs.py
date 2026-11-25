@@ -13,9 +13,10 @@ from uuid import uuid4
 
 from pydantic import Field, model_validator
 
-from . import __version__, run_protocol_v2
+from . import __version__, echo_accounting, run_protocol_v2
 from .adapters import require_execution_compatible
 from .artifact_contract_v2 import SHA256, ArtifactID
+from .evidence_worker import SavedEvidenceWorker
 from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
 from .models import StrictModel
 from .physical_adapter import PhysicalAdapter
@@ -62,6 +63,23 @@ class RadioRunRequest(StrictModel):
         return self
 
 
+class EchoRadioRunRequest(RadioRunRequest):
+    message_bytes: int = Field(default=64, ge=1, le=215)
+
+    def plan(self):
+        return run_protocol_v2.EchoPlan(
+            radio=self.radio,
+            link=self.link,
+            spec=run_protocol_v2.EchoSpec(
+                direction=self.direction,
+                security=self.security,
+                message_bytes=self.message_bytes,
+                source_seed=self.source_seed,
+                max_duration_ms=self.timeout_ms,
+            ),
+        )
+
+
 class EncodedMessagePlan(KnownDataPlan):
     spec: run_protocol_v2.EncodedSourceSpec
 
@@ -105,6 +123,7 @@ class RadioRuns:
         self.started = self.stop_requested = self.cleaning_up = False
         self.stop_lock = asyncio.Lock()
         self.shutting_down = False
+        self.evidence_worker = SavedEvidenceWorker("Another echo distribution is in progress")
         self.directory = store.root / "radio_runs"
         self.directory.mkdir(exist_ok=True)
         store.db.execute(
@@ -173,6 +192,8 @@ class RadioRuns:
             "security",
             "verification",
             "accounting",
+            "timing",
+            "host_transaction",
             "missing_evidence",
             "error",
             "cleanup",
@@ -322,7 +343,9 @@ class RadioRuns:
             "ready": not blockers,
             "blockers": list(dict.fromkeys(blockers)),
             "required_nodes": 2,
-            "scope": "one protected encoded message; physical qualification separate"
+            "scope": "one verified echo; requester-local RTT; physical qualification separate"
+            if isinstance(request, EchoRadioRunRequest)
+            else "one protected encoded message; physical qualification separate"
             if isinstance(request, EncodedRadioRunRequest)
             else "one known-data message with selected security; physical bring-up only",
             "hardware_qualified": False,
@@ -367,6 +390,8 @@ class RadioRuns:
                 for name in (
                     "radio_runs.py",
                     "radio_accounting.py",
+                    "echo_accounting.py",
+                    "evidence_worker.py",
                     "radio_security.py",
                     "session_keys.py",
                     "rf_events_v2.py",
@@ -405,6 +430,14 @@ class RadioRuns:
                 for r, n in self.nodes.items()
             },
         }
+        if isinstance(request, EchoRadioRunRequest):
+            record["host_transaction"] = {
+                "start_ns": monotonic_ns(),
+                "end_ns": None,
+                "elapsed_ns": None,
+                "scope": "host_configuration_through_readback_and_cleanup",
+            }
+            record["timing"] = None
         self.current = record
         self.started = self.stop_requested = self.cleaning_up = False
         self.save(record)
@@ -533,6 +566,15 @@ class RadioRuns:
         return data
 
     async def cleanup(self, r):
+        retired = {}
+        for role, identifier in r.get("retire_echo_artifacts", {}).items():
+            try:
+                await self.command(
+                    r, role, "artifact.delete", {"artifact_id": identifier}, cleanup=True
+                )
+                retired[role] = {"artifact_id": identifier, "confirmed": True}
+            except (TimeoutError, ValueError, OSError) as exc:
+                retired[role] = {"artifact_id": identifier, "confirmed": False, "error": str(exc)}
         details = {}
         for role in self.nodes:
             details[role] = await self.adapter.cleanup(
@@ -541,7 +583,9 @@ class RadioRuns:
                 on_record=lambda value, selected=role: self.trace_command(r, selected, value, True),
             )
         return {
-            "confirmed": all(detail["confirmed"] for detail in details.values()),
+            "confirmed": all(detail["confirmed"] for detail in details.values())
+            and all(item["confirmed"] for item in retired.values()),
+            **({"retired_echo_artifacts": retired} if retired else {}),
             "nodes": {
                 role: "; ".join(detail["steps"])
                 if detail["confirmed"]
@@ -559,6 +603,13 @@ class RadioRuns:
             async with asyncio.timeout(request.timeout_ms / 1000 + 45):
                 plan = request.plan()
                 budget = preview(plan)["timing"]["budget"]
+                if isinstance(request, EchoRadioRunRequest):
+                    r["initial_artifact_ids"] = {}
+                    for role in "AB":
+                        listing = await self.command(r, role, "artifact.list")
+                        r["initial_artifact_ids"][role] = [
+                            item["artifact_id"] for item in listing["artifacts"]
+                        ]
                 for role in "AB":
                     r["applied_settings"][role] = await self.command(
                         r,
@@ -687,37 +738,49 @@ class RadioRuns:
                         raise ValueError(
                             f"Node {role} summary belongs to another session/settings/role"
                         )
-                    if r["summaries"][role]["stop_reason"] != "completed":
+                    allowed_stops = (
+                        ("completed", "timeout")
+                        if isinstance(request, EchoRadioRunRequest)
+                        else ("completed",)
+                    )
+                    if r["summaries"][role]["stop_reason"] not in allowed_stops:
                         raise ValueError(
                             f"Node {role} stopped with {r['summaries'][role]['stop_reason']}"
                         )
                     await self.command(r, role, "status.get")
-                source = await self.retrieve(r, r["sender"], "source")
-                recovered = await self.retrieve(r, r["receiver"], "recovered")
-                encoded = isinstance(request, EncodedRadioRunRequest)
-                expected = (
-                    source if encoded else known_data(request.source_seed, 1, request.message_bytes)
-                )
-                if encoded and (
-                    len(source) != request.message_bytes
-                    or hashlib.sha256(source).hexdigest() != request.expected_sha256
-                ):
-                    raise ValueError(
-                        "Encoded source readback differs from the declared committed clip"
+                if isinstance(request, EchoRadioRunRequest):
+                    expected = await self.verify_echo(r, request)
+                else:
+                    source = await self.retrieve(r, r["sender"], "source")
+                    recovered = await self.retrieve(r, r["receiver"], "recovered")
+                    encoded = isinstance(request, EncodedRadioRunRequest)
+                    expected = (
+                        source
+                        if encoded
+                        else known_data(request.source_seed, 1, request.message_bytes)
                     )
-                if source != expected or recovered != source:
-                    raise ValueError(
-                        "Actual source/recovered bytes differ from the independent source recipe"
-                    )
-                r["verification"] = {
-                    "bytes_equal": True,
-                    "length_bytes": len(recovered),
-                    "sha256": hashlib.sha256(recovered).hexdigest(),
-                    "sample_hex": recovered[:32].hex(),
-                    "method": "declared committed source hash plus exact source/recovered readback"
-                    if encoded
-                    else "independent source recipe plus exact source/recovered readback",
-                }
+                    if encoded and (
+                        len(source) != request.message_bytes
+                        or hashlib.sha256(source).hexdigest() != request.expected_sha256
+                    ):
+                        raise ValueError(
+                            "Encoded source readback differs from the declared committed clip"
+                        )
+                    if source != expected or recovered != source:
+                        raise ValueError(
+                            "Actual source/recovered bytes differ from the "
+                            "independent source recipe"
+                        )
+                    r["verification"] = {
+                        "bytes_equal": True,
+                        "length_bytes": len(recovered),
+                        "sha256": hashlib.sha256(recovered).hexdigest(),
+                        "sample_hex": recovered[:32].hex(),
+                        "method": "declared committed source hash plus exact "
+                        "source/recovered readback"
+                        if encoded
+                        else "independent source recipe plus exact source/recovered readback",
+                    }
                 await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():
                     baseline = r["baseline"][role]
@@ -762,7 +825,14 @@ class RadioRuns:
                     r["error"] = "Cleanup evidence incomplete; verified artifacts retained"
                 if not r["cleanup"]["confirmed"] and r["status"] == "completed":
                     r["status"] = "failed"
-                    r["error"] = "Radio cleanup did not confirm both nodes idle"
+                    r["error"] = (
+                        "Echo cleanup could not retire every verified run artifact"
+                        if any(
+                            not item["confirmed"]
+                            for item in r["cleanup"].get("retired_echo_artifacts", {}).values()
+                        )
+                        else "Radio cleanup did not confirm both nodes idle"
+                    )
                 if r["status"] == "completed" and any(
                     n.event_gaps != r["baseline"][role]["event_gaps"]
                     or n.framing_errors != r["baseline"][role]["framing_errors"]
@@ -774,7 +844,8 @@ class RadioRuns:
                     r["error"] = (
                         "Telemetry became incomplete during cleanup; verified bytes are retained"
                     )
-                r["security"]["assessment"] = assess_security(r)
+                if not isinstance(request, EchoRadioRunRequest):
+                    r["security"]["assessment"] = assess_security(r)
                 r["missing_evidence"] = failed_ranges(r)
                 r["finished_at"] = utc_now()
                 r["stage"] = "finished"
@@ -801,11 +872,119 @@ class RadioRuns:
                         if r["status"] == "completed":
                             r["status"] = "failed"
                 r["wire_sha256"] = r["saved_files"].get("wire", {}).get("sha256")
+                if isinstance(request, EchoRadioRunRequest):
+                    transaction = r["host_transaction"]
+                    transaction["end_ns"] = monotonic_ns()
+                    transaction["elapsed_ns"] = transaction["end_ns"] - transaction["start_ns"]
+                    r["timing"] = echo_accounting.assess(r)
+                    if (
+                        r["status"] == "completed"
+                        and not r["timing"]["n"]
+                        and not all(
+                            exclusion["reason"] == "timeout"
+                            for exclusion in r["timing"]["exclusions"]
+                        )
+                    ):
+                        r["status"] = "failed"
+                        r["error"] = (
+                            "Echo correlation excluded the measurement: "
+                            + r["timing"]["exclusions"][0]["reason"]
+                        )
+                    r["accounting"] = {
+                        "evidence_complete": bool(r["timing"]["n"]),
+                        "scope": "echo",
+                        "reasons": r["timing"]["exclusions"],
+                    }
+                    r["security"]["assessment"] = {
+                        "profile": request.security,
+                        "classification": "verified_echo"
+                        if r["timing"]["n"]
+                        else "no_successful_echo",
+                        "scope": "echo bytes and node-reported protection; "
+                        "full security qualification separate",
+                    }
                 self.save(r)
             finally:
                 self.current = None
 
+    async def collect_echo_distribution(self, identifiers):
+        return await self.evidence_worker.run(self.echo_distribution, identifiers)
+
+    def echo_distribution(self, identifiers):
+        if not 1 <= len(identifiers) <= 1000 or len(identifiers) != len(set(identifiers)):
+            raise ValueError("Select 1–1000 distinct echo run IDs")
+
+        def records():
+            verified_bytes = 0
+            for identifier in identifiers:
+                record = self.get(identifier)
+                if record["plan"]["spec"]["source"] != "echo":
+                    raise ValueError("Selected record is not an echo run")
+                if record["status"] == "completed":
+                    kinds = ["source", "wire"] + (
+                        ["recovered"]
+                        if (record.get("verification") or {}).get("bytes_equal")
+                        else []
+                    )
+                    try:
+                        for kind in kinds:
+                            if not record.get("saved_files", {}).get(kind):
+                                raise ValueError("Finalized echo file fingerprint is unavailable")
+                            verified_bytes += record["saved_files"][kind]["length_bytes"]
+                            if verified_bytes > 64 * 1024 * 1024:
+                                raise ValueError(
+                                    "Selected echo evidence exceeds 64 MiB; choose fewer runs"
+                                )
+                            self.content(identifier, kind)
+                    except (ValueError, OSError) as exc:
+                        if verified_bytes > 64 * 1024 * 1024:
+                            raise
+                        record["saved_integrity_error"] = str(exc)
+                yield record
+
+        return echo_accounting.distributions(records())
+
+    async def verify_echo(self, r, request):
+        expected = known_data(request.source_seed, 1, request.message_bytes)
+        source = await self.retrieve(r, r["sender"], "source")
+        result = r["summaries"][r["sender"]].get("echo")
+        if source != expected or result is None:
+            raise ValueError("Echo source bytes or requester result are unavailable")
+        r["verification"] = {
+            "bytes_equal": None,
+            "length_bytes": len(source),
+            "sha256": hashlib.sha256(source).hexdigest(),
+            "method": "independent source recipe and actual returned echo bytes",
+        }
+        recovered = None
+        if r["summaries"][r["receiver"]]["delivered_messages"]:
+            recovered = await self.retrieve(r, r["receiver"], "recovered")
+            if recovered != expected:
+                raise ValueError(
+                    "Echo recovered request differs from the independent source recipe"
+                )
+        if result["valid"]:
+            if recovered != expected or bytes.fromhex(result.get("reply_hex") or "") != expected:
+                raise ValueError("Echo returned bytes differ from the independent source recipe")
+            r["verification"]["bytes_equal"] = True
+        verified = [r["sender"]] + ([r["receiver"]] if recovered is not None else [])
+        retirement = {}
+        for role in verified:
+            identifier = r["prepared"][role]["artifact_id"]
+            if identifier in r["initial_artifact_ids"][role]:
+                raise ValueError("Echo prepared an existing artifact ID; preserving it")
+            retirement[role] = identifier
+        r["retire_echo_artifacts"] = retirement
+        return expected
+
     async def required_evidence(self, r, expected):
+        if r["plan"]["spec"]["source"] == "echo":
+            # Final correlation follows cleanup; here preserve a required result event.
+            if not any(
+                e["role"] == r["sender"] and e["name"] == "echo.result" for e in r["events"]
+            ):
+                raise ValueError("Requester echo result event is unavailable")
+            return
         # Byte verification remains visible even when a required observation is absent.
         async with asyncio.timeout(1.5):
             while True:
@@ -858,8 +1037,10 @@ class RadioRuns:
 
     async def close(self):
         self.shutting_down = True
+        self.evidence_worker.closing = True
         if self.busy:
             await self.stop()
+        await self.evidence_worker.close()
 
     def export(self, identifier):
         record = self.get(identifier)

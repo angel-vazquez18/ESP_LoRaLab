@@ -430,6 +430,7 @@ class Host:
 
     async def close(self):
         self.campaign_exports.closing = True
+        self.radio.evidence_worker.closing = True
         await self.physical_campaigns.close()
         await self.observations.close()
         await self.diagnostics.close()
