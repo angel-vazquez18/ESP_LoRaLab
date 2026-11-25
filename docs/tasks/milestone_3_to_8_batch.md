@@ -671,3 +671,17 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   applied target, matching TX/RX wire digests or exact RX arrival, the observed
   receiver stage and fresh before/after controls. Bind the evidence to both
   device boots and preserve negative results independently of execution status.
+
+- #77 branch `feat/lab-fragment-controls` is pushed over #213, with 77 focused,
+  1,095 full checks, and standard/lab builds. GitHub PR creation returned
+  server errors. Check for an existing review before trying to create one.
+- #85 uses three bound radio child runs, independent target/digest/stage
+  correlation, and a shared dashboard/API/CLI entry. Lab controls are
+  available on PKT-02/03 and SEC-02/03. The native browser fixture retained
+  a passing retry result with the same evidence links after reload.
+
+- #85 host checks: full 1,105 tests, 10 focused trial cases, lint, frontend
+  build/format and generated contract/repository/vendor checks passed.
+  The isolated browser checked a passing three-child trial, refresh and
+  an eight-member evidence hash manifest. No bench hardware was exercised.
+  Continue with the shared IF-01/02/03 procedure matrix and evidence runner.

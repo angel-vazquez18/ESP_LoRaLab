@@ -55,8 +55,9 @@ The firmware scheduler composes the control in
 [`rf_faults.c`](../firmware/lora_node/main/radio/rf_faults.c) owns selectors,
 scratch/retained storage and cleanup. Host types and pagination checks live in
 [`fault_protocol_v2.py`](../testbed/src/lora_testbed/fault_protocol_v2.py).
-The hooks are low-level controls. Procedure orchestration, evidence correlation
-and operator screens follow separately.
+The hooks are low-level controls. Use the [controlled lab trial](lab_trials.md)
+to exercise one selected fault between verified controls and inspect the retained
+sender, receiver and application evidence.
 
 ## Software review
 

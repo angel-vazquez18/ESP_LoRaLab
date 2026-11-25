@@ -4,6 +4,22 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Matched lab trials and evidence (#85)
+
+The testbed runs one selected fault between matched intact controls under one
+bench owner and the same bound node connections. The fault child preserves
+planned/applied targets, confirmed TX, CRC-valid RX digests, exact rejection
+or insertion evidence, node-local times and independent file verification.
+The assessment distinguishes a proven negative result from partial evidence.
+The dashboard and CLI share readiness, execution, stop and saved evidence.
+
+Ten focused tests cover live native-pair host orchestration, CRC/gap exclusions,
+firmware gating, stop and API preflight. Full `make check` passed 1,105 tests
+without skips and all shared checks. The isolated browser fixture completes
+a drop/retry trial, retains its child evidence after reload and exports eight
+hash-verified members. See [controlled lab trials](lab_trials.md). Timing views
+and complete experiment matrices remain separate work.
+
 ## November 25 — Laboratory fragment and ACK controls (#77)
 
 Execution v6 adds receiver drop before insertion, ACK suppression after
