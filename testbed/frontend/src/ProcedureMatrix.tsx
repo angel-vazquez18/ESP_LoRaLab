@@ -30,6 +30,10 @@ type MatrixCase = {
   repetition: number;
   role: string;
   message_bytes?: number;
+  message_count?: number;
+  cycles?: number;
+  iterations?: number;
+  planned_campaign_cases?: number;
   ready: boolean;
   blockers: string[];
   status?: string;
@@ -84,6 +88,14 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                   ? "Ready"
                   : "Blocked"}
               {row.message_bytes ? ` · ${row.message_bytes} bytes` : ""}
+              {row.message_count && row.message_count > 1
+                ? ` · ${row.message_count} messages`
+                : ""}
+              {row.cycles && row.cycles > 1 ? ` · ${row.cycles} cycles` : ""}
+              {row.iterations ? ` · ${row.iterations} iterations` : ""}
+              {row.planned_campaign_cases
+                ? ` · ${row.planned_campaign_cases} campaign cases`
+                : ""}
             </span>
             {(row.reason || row.blockers.length > 0) && (
               <span>{row.reason || row.blockers.join(" · ")}</span>

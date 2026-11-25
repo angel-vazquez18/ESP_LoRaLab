@@ -453,7 +453,7 @@ function Experiments({ host }: { host: Host }) {
               <p>
                 <strong>{entry.node_requirement}</strong>
               </p>
-              <p>{entry.scope}</p>
+              {!matrix && <p>{entry.scope}</p>}
               {!matrix && entry.preflight.blockers.length > 0 && (
                 <ul>
                   {entry.preflight.blockers.map((b) => (
