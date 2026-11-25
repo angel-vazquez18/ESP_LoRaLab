@@ -2,7 +2,14 @@ import { useState } from "react";
 
 export type MatrixOption = {
   groups: string[];
-  kind: "serial" | "local" | "link" | "campaign" | "memory" | "voice";
+  kind:
+    | "serial"
+    | "local"
+    | "link"
+    | "campaign"
+    | "memory"
+    | "voice"
+    | "voice_local";
   choose_security: boolean;
 };
 
@@ -143,8 +150,11 @@ export default function ProcedureMatrix({
   const local =
     option.kind === "serial" ||
     option.kind === "local" ||
+    option.kind === "voice_local" ||
     (memory && group === "C1");
-  const voice = option.kind === "voice" && group !== "C2";
+  const voice =
+    (option.kind === "voice" && group !== "C2") ||
+    (option.kind === "voice_local" && (!group || group === "C3"));
   const selectDirection =
     option.kind === "link" || option.kind === "voice" || (memory && !local);
   const recent = saved.filter(

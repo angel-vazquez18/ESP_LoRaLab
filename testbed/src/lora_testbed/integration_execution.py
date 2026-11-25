@@ -9,6 +9,7 @@ from . import (
     content_series,
     crypto_benchmark_v2,
     fault_matrices,
+    local_voice,
     memory_matrix,
     model_series,
     ops_matrix,
@@ -83,6 +84,8 @@ class IntegrationExecution:
                 blockers = ops_matrix.ready_blockers(spec, case, campaigns)
             elif case["driver"] == "ops_unavailable":
                 blockers = [ops_matrix.BLOCKERS[case["group"]]]
+            elif case["driver"] in ("local_voice_reference", "local_voice_operator"):
+                blockers = local_voice.blockers(voice, case)
             elif case["driver"] in ("voice_reference", "voice_operator"):
                 blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "fault_window_unavailable":
@@ -166,7 +169,13 @@ class IntegrationExecution:
         if not planned["ready_case_count"]:
             raise ValueError("No selected matrix cases can run on this bench")
         ready_cases = [case for case in planned["cases"] if case["ready"]]
-        local_drivers = {"serial_matrix", "local_crypto", "memory_idle", "model_reference"}
+        local_drivers = {
+            "serial_matrix",
+            "local_crypto",
+            "memory_idle",
+            "model_reference",
+            "local_voice_reference",
+        }
         local_only = all(case["driver"] in local_drivers for case in ready_cases)
         numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
         required = (
@@ -205,6 +214,8 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/fault_accounting.py",
                     "testbed/src/lora_testbed/lab_trials.py",
                     "testbed/src/lora_testbed/voice_matrix.py",
+                    "testbed/src/lora_testbed/local_voice.py",
+                    "testbed/src/lora_testbed/node_audio.py",
                     "testbed/src/lora_testbed/voice_runs.py",
                     "testbed/src/lora_testbed/ops_matrix.py",
                     "testbed/src/lora_testbed/experiments_v2.py",
@@ -640,6 +651,27 @@ class IntegrationExecution:
                     "code": "bounded_linkage_and_complete_archive",
                     "outcome": "pass" if passed else "inconclusive",
                 }
+            ],
+        )
+
+    async def matrix_local_voice_case(self, run, case, host):
+        def emit(document):
+            if jobs := document.get("local_audio_jobs"):
+                case["audio_jobs"] = jobs
+                self.ledger.save(run)
+            if "local_audio_cleanup_confirmed" in document:
+                case["cleanup_verified"] = document["local_audio_cleanup_confirmed"]
+            self.ledger.append(run["id"], case["id"], document)
+
+        report = await local_voice.execute(host, case, run["physical_bindings"][case["role"]], emit)
+        self.ledger.append(run["id"], case["id"], {"local_reference_report": report})
+        case.update(
+            status="completed",
+            assessment="pass",
+            cleanup_verified=True,
+            measurements=report,
+            assertions=[
+                {"code": "verified_reference_codec_and_playback_command", "outcome": "pass"}
             ],
         )
 
@@ -1133,6 +1165,8 @@ class IntegrationExecution:
                     await self.matrix_fault_case(run, case, spec, host)
                 elif case["driver"] == "voice_reference":
                     await self.matrix_voice_case(run, case, host)
+                elif case["driver"] == "local_voice_reference":
+                    await self.matrix_local_voice_case(run, case, host)
                 elif case["driver"] == "ops_campaign":
                     await self.matrix_ops_case(run, case, spec, host)
                 else:

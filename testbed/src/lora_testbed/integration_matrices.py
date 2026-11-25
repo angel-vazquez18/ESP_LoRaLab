@@ -9,6 +9,7 @@ from pydantic import Field, model_validator
 from . import (
     content_series,
     fault_matrices,
+    local_voice,
     memory_matrix,
     model_series,
     ops_matrix,
@@ -71,6 +72,7 @@ GROUPS = {
     **fault_matrices.GROUPS,
     **voice_matrix.GROUPS,
     **ops_matrix.GROUPS,
+    **local_voice.GROUPS,
 }
 
 
@@ -81,6 +83,7 @@ def matrix_options():
         "SEC-04": "local",
         "MEM-01": "memory",
         "VOICE-02": "voice",
+        "VOICE-01": "voice_local",
         "OPS-01": "campaign",
     }
     return {
@@ -113,6 +116,7 @@ class MatrixRequest(ContractModel):
         "MEM-01",
         "MODEL-01",
         "VOICE-02",
+        "VOICE-01",
         "OPS-01",
     ]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
@@ -156,11 +160,11 @@ class MatrixRequest(ContractModel):
             raise ValueError("Choose groups that belong to the selected procedure")
         if self.catalog_id != "SEC-04" and self.diagnostic_iterations != 1000:
             raise ValueError("Diagnostic iterations belong to the local crypto procedure")
-        if self.voice_reference_ids is not None and self.catalog_id != "VOICE-02":
+        if self.voice_reference_ids is not None and self.catalog_id not in ("VOICE-01", "VOICE-02"):
             raise ValueError("Voice references belong to the voice transfer procedure")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
-        local = self.catalog_id in ("IF-01", "SEC-04") or (
+        local = self.catalog_id in ("IF-01", "SEC-04", "VOICE-01") or (
             self.catalog_id == "MEM-01" and set(self.groups or ()) == {"C1"}
         )
         if not local and set(self.roles) != {"A", "B"}:
@@ -238,6 +242,7 @@ def compile_matrix(request, *, message_limit=65536):
         **{catalog: fault_matrices.cases for catalog in fault_matrices.GROUPS},
         "TIME-01": timed_series.cases,
         "VOICE-02": voice_matrix.cases,
+        "VOICE-01": local_voice.cases,
         "OPS-01": ops_matrix.cases,
         "SEC-04": timed_series.cases,
     }.get(request.catalog_id, rf_sweeps.cases)
@@ -267,6 +272,10 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.diagnostic_iterations == 1000 and len(request.roles) == 2
     elif request.catalog_id == "MEM-01":
         coverage = coverage and request.memory_window_ms == 30000 and len(request.directions) == 2
+    elif request.catalog_id == "VOICE-01":
+        coverage = (
+            coverage and len(request.voice_reference_ids or ()) == 3 and len(request.roles) == 2
+        )
     elif request.catalog_id == "VOICE-02":
         coverage = (
             coverage
