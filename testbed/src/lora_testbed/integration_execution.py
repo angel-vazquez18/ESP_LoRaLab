@@ -11,6 +11,7 @@ from . import (
     fault_matrices,
     memory_matrix,
     model_series,
+    ops_matrix,
     rf_sweeps,
     timed_series,
     voice_matrix,
@@ -51,7 +52,7 @@ class IntegrationExecution:
             values.append(maximum)
         return min(values) if values else None
 
-    def preview(self, spec, radio, voice=None):
+    def preview(self, spec, radio, voice=None, campaigns=None):
         limit = self.message_limit(radio) if spec.catalog_id in ("PKT-01", "MEM-01") else None
         plan = compile_matrix(spec, message_limit=limit or 65536)
         rows = []
@@ -78,6 +79,10 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "ops_campaign":
+                blockers = ops_matrix.ready_blockers(spec, case, campaigns)
+            elif case["driver"] == "ops_unavailable":
+                blockers = [ops_matrix.BLOCKERS[case["group"]]]
             elif case["driver"] in ("voice_reference", "voice_operator"):
                 blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "fault_window_unavailable":
@@ -155,7 +160,7 @@ class IntegrationExecution:
         radio, adapter = host.radio, host.adapter
         if self.ledger.busy:
             raise RuntimeError("Another procedure owns the bench")
-        planned = self.preview(spec, radio, host.voice)
+        planned = self.preview(spec, radio, host.voice, host.campaign_plans)
         if expected_plan_sha256 is not None and planned["sha256"] != expected_plan_sha256:
             raise RuntimeError("The matrix plan changed. Preview the cases again.")
         if not planned["ready_case_count"]:
@@ -201,6 +206,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/lab_trials.py",
                     "testbed/src/lora_testbed/voice_matrix.py",
                     "testbed/src/lora_testbed/voice_runs.py",
+                    "testbed/src/lora_testbed/ops_matrix.py",
                     "testbed/src/lora_testbed/experiments_v2.py",
                     "testbed/src/lora_testbed/workload_observations.py",
                     "testbed/src/lora_testbed/workload_assessment.py",
@@ -565,6 +571,74 @@ class IntegrationExecution:
                 {
                     "code": "complete_public_vector_timing_samples",
                     "outcome": "pass" if complete else "inconclusive",
+                }
+            ],
+        )
+
+    async def matrix_ops_case(self, run, case, spec, host):
+        for binding in run["physical_bindings"].values():
+            host.adapter.current(binding)
+        service = host.physical_campaigns
+        plan = host.campaign_plans.create(ops_matrix.campaign_request(spec, case))
+        expected = case["planned_campaign_cases"]
+        if not ops_matrix.verified_batches(plan, expected):
+            raise ValueError("Campaign batch linkage or case count differs from the OPS plan")
+        self.ledger.append(
+            run["id"],
+            case["id"],
+            {"plan_id": plan["id"], "plan_sha256": plan["plan_sha256"], "batches": plan["batches"]},
+        )
+        launched = await service.start(plan["id"], _procedure_id=run["id"])
+        identifier, task = launched["id"], service.task
+        try:
+            case["campaign_ids"] = [identifier]
+            self.ledger.save(run)
+            await asyncio.shield(task)
+        finally:
+            if not task.done():
+                await service.cancel(identifier, "Recovery matrix stopped")
+            result = service.get(identifier)
+            self.ledger.append(
+                run["id"],
+                case["id"],
+                {
+                    "campaign_id": identifier,
+                    "status": result["status"],
+                    "case_counts": result["case_counts"],
+                    "cleanup": result["cleanup"],
+                    "export": f"/api/physical-campaigns/executions/{identifier}/export",
+                },
+            )
+        clean = bool(result["cleanup"]["confirmed"])
+        if not clean:
+            raise ValueError("OPS campaign cleanup is unconfirmed")
+        archive = await host.campaign_exports.export(identifier)
+        checked = await asyncio.to_thread(verify_campaign_bundle, archive)
+        planned_order = [entry["id"] for entry in plan["cases"]]
+        actual_order = [entry["case_id"] for entry in result["cases"]]
+        expected_children = expected + 2 * (expected - expected // 5)
+        passed = (
+            result["status"] == "completed"
+            and result["case_counts"].get("completed") == expected
+            and actual_order == planned_order
+            and checked["case_count"] == expected
+            and checked["child_count"] == expected_children
+        )
+        self.ledger.append(run["id"], case["id"], {"checked_export": checked})
+        case.update(
+            status="completed",
+            assessment="pass" if passed else "inconclusive",
+            cleanup_verified=True,
+            measurements={
+                "planned_cases": expected,
+                "completed_cases": result["case_counts"].get("completed", 0),
+                "batches": plan["batch_count"],
+                "verified_export": checked,
+            },
+            assertions=[
+                {
+                    "code": "bounded_linkage_and_complete_archive",
+                    "outcome": "pass" if passed else "inconclusive",
                 }
             ],
         )
@@ -1059,6 +1133,8 @@ class IntegrationExecution:
                     await self.matrix_fault_case(run, case, spec, host)
                 elif case["driver"] == "voice_reference":
                     await self.matrix_voice_case(run, case, host)
+                elif case["driver"] == "ops_campaign":
+                    await self.matrix_ops_case(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)

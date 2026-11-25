@@ -11,6 +11,7 @@ from . import (
     fault_matrices,
     memory_matrix,
     model_series,
+    ops_matrix,
     rf_sweeps,
     timed_series,
     voice_matrix,
@@ -69,6 +70,7 @@ GROUPS = {
     **model_series.GROUPS,
     **fault_matrices.GROUPS,
     **voice_matrix.GROUPS,
+    **ops_matrix.GROUPS,
 }
 
 
@@ -79,6 +81,7 @@ def matrix_options():
         "SEC-04": "local",
         "MEM-01": "memory",
         "VOICE-02": "voice",
+        "OPS-01": "campaign",
     }
     return {
         identifier: {
@@ -110,6 +113,7 @@ class MatrixRequest(ContractModel):
         "MEM-01",
         "MODEL-01",
         "VOICE-02",
+        "OPS-01",
     ]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
     roles: list[Literal["A", "B"]] = Field(
@@ -161,7 +165,7 @@ class MatrixRequest(ContractModel):
         )
         if not local and set(self.roles) != {"A", "B"}:
             raise ValueError("The link and campaign procedures require both hardware roles")
-        if self.catalog_id == "IF-03" and set(self.directions) != {"A_TO_B", "B_TO_A"}:
+        if self.catalog_id in ("IF-03", "OPS-01") and set(self.directions) != {"A_TO_B", "B_TO_A"}:
             raise ValueError("Campaign procedures require both directions")
         return self
 
@@ -234,6 +238,7 @@ def compile_matrix(request, *, message_limit=65536):
         **{catalog: fault_matrices.cases for catalog in fault_matrices.GROUPS},
         "TIME-01": timed_series.cases,
         "VOICE-02": voice_matrix.cases,
+        "OPS-01": ops_matrix.cases,
         "SEC-04": timed_series.cases,
     }.get(request.catalog_id, rf_sweeps.cases)
     groups = request.groups or list(GROUPS[request.catalog_id])
@@ -274,7 +279,7 @@ def compile_matrix(request, *, message_limit=65536):
             and len(request.directions) == 2
             and (request.catalog_id.startswith("SEC") or request.messages_per_case >= 10)
         )
-    elif request.catalog_id == "MODEL-01":
+    elif request.catalog_id in ("MODEL-01", "OPS-01"):
         coverage = coverage and request.messages_per_case >= 10 and len(request.directions) == 2
     else:
         coverage = coverage and request.messages_per_case == 100 and len(request.directions) == 2
