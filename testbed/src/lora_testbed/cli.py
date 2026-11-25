@@ -653,6 +653,40 @@ def radio_start(
 
 
 @app.command()
+def echo_start(
+    direction: str = "A_TO_B",
+    security: str = "none",
+    message_bytes: Annotated[int, typer.Option(min=1, max=215)] = 64,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 10000,
+    config: Path | None = None,
+    preview: bool = False,
+):
+    """Run one verified physical echo using the shared radio owner."""
+    try:
+        body = (
+            json.loads(config.read_text())
+            if config
+            else {
+                "direction": direction.upper(),
+                "security": security,
+                "message_bytes": message_bytes,
+                "timeout_ms": timeout_ms,
+            }
+        )
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/echo/preflight" if preview else "/api/echo/runs", body)
+
+
+@app.command()
+def echo_distribution(identifiers: list[str]):
+    """Reconcile selected saved echoes in separate device/boot/settings cohorts."""
+    request("/api/echo/distribution", identifiers)
+
+
+@app.command()
 def radio_status(identifier: str | None = None):
     """Show active/saved physical bring-up and its byte/evidence findings."""
     request("/api/radio/runs" + (f"/{identifier}" if identifier else ""))

@@ -40,7 +40,7 @@ from .host import Host
 from .models import StrictModel
 from .nodes import discover_ports
 from .paths import TESTBED_ROOT
-from .radio_runs import RadioRunRequest
+from .radio_runs import EchoRadioRunRequest, RadioRunRequest
 from .reports import campaign_csv, evidence_bundle
 from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
@@ -233,6 +233,18 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/voice/runs/{identifier}/listening")
     async def voice_listening(identifier: str, body: ListeningRequest):
         return app.state.host.voice.listening(identifier, body.heard, body.notes)
+
+    @app.post("/api/echo/preflight")
+    async def echo_preflight(body: EchoRadioRunRequest):
+        return app.state.host.radio_preflight(body)
+
+    @app.post("/api/echo/runs", status_code=202)
+    async def echo_start(body: EchoRadioRunRequest):
+        return await app.state.host.start_radio(body)
+
+    @app.post("/api/echo/distribution")
+    async def echo_distribution(body: list[control_v2.UUID]):
+        return await app.state.host.radio.collect_echo_distribution(body)
 
     @app.post("/api/radio/preflight")
     async def radio_preflight(body: RadioRunRequest):
