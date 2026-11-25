@@ -766,3 +766,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   stages, playback command and owned cleanup. The native fixture
   retained an unrelated preexisting artifact. All 41 focused checks
   passed. Physical listening remains separate.
+
+- Local audio PR #226 is open over #225.
+- Offline TIME-02 assessment checks retained pulse and frame identity,
+  exact fit, per-phase intervals, expiration and uncertainty. All 37
+  focused clock/echo checks pass. Live calibration remains open.
