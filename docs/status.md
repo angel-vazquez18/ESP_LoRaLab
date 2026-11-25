@@ -4,6 +4,23 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Packet boundaries and paired protection
+
+PKT-01 and SEC-01 now share the matrix executor. Packet cases retain exact
+fragment sizes, negotiated limits and host max-plus-one rejection with a
+subsequent valid control. Protection cases compare matched unprotected and
+AES-GCM content and actual frame lengths. Separate negative cases verify
+a matching CRC-valid wrong-key arrival rejected at authentication, and
+a peer profile mismatch rejected during preflight. Both keep intact controls
+and secret-free evidence.
+
+The 17 focused content, sweep and integration checks passed on isolated
+native firmware. Full `make check` passed 1,122 tests, lint, dashboard build,
+and contract, repository and vendored-resource verification. The above-limit
+gate is a host result. Board-side limits,
+physical performance and hardware qualification remain open. See
+[packet and protection procedure notes](content_series.md).
+
 ## November 25 — Grouped RF sweep execution
 
 RF-01 to RF-04 now use seeded factor order, matched direction/repetition source

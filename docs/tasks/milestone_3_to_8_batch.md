@@ -706,3 +706,13 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   RF-04 case generation and execution through the shared ledger, with separate
   applied settings, modeled airtime and sender/receiver observations. All 13
   focused checks passed, including actual native readback at each setting.
+
+- RF sweep PR #217 is open over #214. Full `make check` passed 1,118 tests.
+  Issues #55/#56/#57/#58 link to the execution PR. Full comparison plots and
+  assessment remain open.
+- On `feat/packet-and-protection-series`, PKT-01 and SEC-01 reuse the shared
+  executor. The native checks pass bounds, complete readback, per-fragment
+  GCM tag length, independent wrong-key and peer-profile assertions and
+  intact follow-up with no keys in evidence. Full `make check` passed 1,122 tests.
+  Next grouped software slice can reuse verified echo and local crypto
+  benchmarks for TIME-01 and SEC-04.
