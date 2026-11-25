@@ -781,7 +781,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 
 | Procedure family | Software entry point | Coverage still open |
 | --- | --- | --- |
-| IF-01–03 | Experiments matrix and `integration-matrix` | Full framing, reply and ownership perturbations, UART, active/paused restart and campaign navigation cases |
+| IF-01–03 | Experiments matrix and `integration-matrix` | Settings integrity, compatibility, reply and ownership perturbations, UART, active/paused restart and campaign navigation cases |
 | RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, complete performance measurements and drift assessment |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts, invalid ACK and all-attempt exhaustion |
@@ -817,3 +817,8 @@ The final full `make check` passed 1,155 tests with no skips. Ruff,
 the dashboard build, generated contracts, repository resources and the
 pinned Codec 2 files passed. Prettier passed for the changed UI. All
 19 originally changed workspace files still match their saved hashes.
+
+IF-01 C3 runs all 27 default USB cases per selected role and compares
+device framing counters with the expected rejections. The isolated native
+fixture covers the full one-role schedule and interrupted multi-write cleanup.
+The separate UART and physical qualification remain open.

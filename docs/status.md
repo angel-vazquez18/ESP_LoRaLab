@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Serial framing recovery
+
+IF-01 C3 now runs nine framing variants with three default repetitions
+per selected USB role. It records exact write lengths and hashes,
+correlated status replies, rejection counter deltas and the host
+decoder's every-byte split result. The native C fixture verified all 27
+cases and cancellation during a partial write. Physical USB and UART
+qualification remain open. See [integration procedures](integration_matrices.md).
+
 ## November 25 — Saved voice timing and listening review
 
 VOICE-04 now pairs verified source and decoded audio, preserves the

@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim, plus actual invalid argument, unknown command and unavailable command replies. One connected role is enough. | Framing boundaries, settings integrity, version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim, plus actual invalid argument, unknown command and unavailable command replies. C3 framing and parser recovery. One connected role is enough. | Settings integrity, version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and process restart in active and paused states. |
 
@@ -53,6 +53,17 @@ child retains its reference and cleanup record. Unavailable cases remain visible
 as blocked. The shared stop command waits for the active case or campaign to
 finish cleanup before returning.
 
+IF-01 C3 runs nine variants, each repeated three times by default per
+selected role. It checks representative board splits, concatenation, CRLF,
+the inclusive 4,096-byte line limit, discard and recovery at 4,097 bytes,
+duplicate keys, invalid UTF-8, malformed JSON and every split of a valid
+host-decoder fixture. The decoder fixture re-encodes an observed status
+reply. Each board variant correlates fresh status replies and saves exact
+write sizes and SHA-256 hashes, expected and observed firmware counter
+deltas, and idle recovery. Missing rejection counters are inconclusive.
+The case stops if device ownership or connection changes. USB hardware
+qualification and the UART path remain separate.
+
 A peer mismatch control verifies applied settings on both roles and stops at
 configuration before session setup or radio arming. Its follow-up restores
 matching settings and verifies bytes. Campaign exports verify the complete
@@ -68,7 +79,7 @@ existing serial, radio, campaign and evidence services.
 ## Software checks
 
 ```sh
-uv run --project testbed pytest testbed/tests/test_integration_matrices.py testbed/tests/test_physical_campaign_execution.py testbed/tests/test_campaign_reruns_evidence.py -q
+uv run --project testbed pytest testbed/tests/test_serial_framing_matrix.py testbed/tests/test_integration_matrices.py testbed/tests/test_physical_campaign_execution.py testbed/tests/test_campaign_reruns_evidence.py -q
 make check
 ```
 
