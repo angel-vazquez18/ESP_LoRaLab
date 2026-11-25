@@ -77,7 +77,7 @@ class Pair:
                         or self.lib.native_radio_generation(radio) != generation
                     ):
                         continue
-                    kind = "data" if wire[3] == 1 else "ack"
+                    kind = {1: "data", 2: "ack", 3: "echo_request", 4: "echo_reply"}[wire[3]]
                     lost = not self.dropped and self.drop == kind
                     if lost:
                         self.dropped = True
