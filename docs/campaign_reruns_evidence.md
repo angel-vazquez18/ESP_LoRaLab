@@ -3,8 +3,8 @@
 Selected-case reruns create a **new execution** from the original immutable plan.
 They preserve the original campaign, case outcomes, child links and evidence.
 They are explicit operator work, never automatic restart recovery. Campaign
-controls in the dashboard follow #115; these API/CLI paths share the existing
-physical controller.
+[dashboard controls](campaign_dashboard.md) added in #115 use these same API/CLI
+paths and the existing physical controller.
 
 ## Rerun selected cases
 

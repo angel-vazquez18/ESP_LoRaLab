@@ -4,6 +4,30 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Shared physical campaign dashboard (#115)
+
+Campaigns now exposes saved settings/imports, current requirements, bounded case
+pages and the existing shared owner. Explicit start/pause/resume/stop, linked
+selected-case reruns, child/identity/cleanup inspection and verified ZIP downloads
+use the same services as the CLI. Selected plan/execution IDs survive refresh and
+navigation; browser reads never start work. Backend disconnect disables controls,
+and interrupted restart history stays interrupted with unconfirmed prior cleanup.
+Legacy histories remain readable. All 23 full procedure references remain in scope.
+
+Three dedicated public/native view cases and the full 967-case check pass without
+skips, plus all lint/frontend/contracts/repository/vendor checks. Final frontend
+build/format pass; a nullable-type-only adjustment leaves identical JS assets.
+Interactive browser fixtures verify pause/refresh/navigation without duplicate
+children, resumed saved order, stop/partial/skipped cases, parent-linked rerun,
+settings import, verified download, cold restart and mobile/light/dark layouts.
+The actual downloaded ZIP independently retained one case, one child, two files
+and seven hash-matching members. Six total unique fixture diagnostic starts stayed
+six after restart/reload. Final captured console is clear and 390-pixel layout has
+no page overflow. Original 19 files are unchanged. No physical port, reset, flash,
+firmware change or target build. Physical #132 and pulse-pin review #46 remain
+hardware-dependent; continue independently with verified echo/RTT firmware #65.
+See [workflow, observed evidence and physical instructions](campaign_dashboard.md).
+
 ## November 24 — Linked campaign reruns and verified bundles (#107)
 
 Terminal campaigns can now create explicit selected-case executions without

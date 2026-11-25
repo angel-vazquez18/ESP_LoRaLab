@@ -29,8 +29,8 @@ service, not historical readiness flags, checks each case before doing work.
 The shared HTTP interface is POST `/api/physical-campaigns/executions` with
 `plan_id`, GET `/api/physical-campaigns/executions` or `/{execution_id}`, and POST
 `/{execution_id}/pause`, `/resume` or `/cancel`. Cancel accepts a bounded `reason`.
-The normal global stop also cancels an active campaign. Dashboard controls follow
-#115; the backend and CLI use this same service.
+The normal global stop also cancels an active campaign. The [dashboard controls](campaign_dashboard.md)
+added in #115 use this same service as the CLI.
 
 ## Ownership and order
 

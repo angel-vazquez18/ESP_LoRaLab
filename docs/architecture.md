@@ -133,6 +133,8 @@ evidence independently of byte readback.
   fresh checks. It reuses existing domain runners and never resumes hardware.
 - `physical_campaign_evidence.py`: bounded terminal child/file graph exports and
   offline member/count/hash verification, without device access.
+- `campaign_views.py` / `frontend/src/PhysicalCampaigns.tsx`: bounded read-only
+  plan/ledger views and explicit shared lifecycle actions; no browser run owner.
 
 - `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
   stage-memory reconciliation, immutable evidence and bound readback; imported

@@ -544,3 +544,22 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   and CLI help. The export worker red test reproduced control-loop blocking;
   the joined bounded worker fixes it. Original 19 files preserved. Starting #115
   saved-plan/ledger controls, refresh attachment, selected reruns and exports.
+
+
+- #115 implemented on #205: bounded read-only case views/current page readiness,
+  compact live headers and a shared-owner dashboard for plan imports, explicit
+  start/pause/resume/stop, partial/blocked history, linked selected reruns and
+  verified downloads. Session preferences contain IDs only; no browser read or
+  reconnect starts work. Three dedicated cases and full 967 cases pass without
+  skips/all shared checks; final UI build/format pass with identical JS after a
+  type-only correction. Isolated browser checks cover pause/navigation/reload,
+  three saved children, cancel+skip, one-case rerun and unchanged original,
+  nine-case import with no start, exact downloaded 1-case/1-child/2-file/7-member
+  hash verification, cold active restart and still-six unique diagnostic starts,
+  unconfirmed cleanup, light/dark and 390-pixel no-overflow layout. Console clear.
+  Test-only fixture port 8874 stopped; original 8000 untouched. Download/chooser
+  tools were unexpectedly slow, not product timing evidence. Original 19 files
+  preserved; no firmware/wire/build/flash/physical access. Physical #132 remains
+  open. Live #46 explicitly requires both exact boards/schematics/instruments
+  before pulses; leave pins unassigned/disabled. Next independent M8 slice #65
+  verified-byte echoes and requester-local RTT, then dependent host/timing work.
