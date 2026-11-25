@@ -4,6 +4,36 @@ Updated November 24, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 24 — Linked campaign reruns and verified bundles (#107)
+
+Terminal campaigns can now create explicit selected-case executions without
+changing originals. Selection keeps original plan order/settings/seeds/batch
+links, uses fresh bindings/readiness and records parent/snapshot links. New
+header/case hashes guard the saved ledger. Active or paused cold restart retains
+interrupted history without reopening ports or resuming RF; rerun is a new owner.
+
+Bounded ZIP exports retain the complete selected execution, original plan and
+reachable diagnostic/procedure/audio/radio/voice/transfer records, traces and
+saved files. Independent saved length/hash/manifest checks reject corruption;
+offline verification checks member/count/order/link integrity without extraction.
+Older/interrupted files lacking finalized hashes retain explicit export-time-only
+scope. Radio finalization now fingerprints saved files, and fingerprint failure
+preserves cleanup and terminal error instead of leaving the record running.
+Shared API/CLI include rerun, verified exclusive export and offline verification.
+One tracked export worker keeps file work off the control loop, rejects concurrent
+exports and joins through cancellation/shutdown before storage closes.
+
+Twenty-seven dedicated cases pass, including real native DATA/voice traversal,
+actual active/paused process exits, original preservation, partial serial records,
+corrupt files/archives/ledgers, ownership and CLI/archive limits. The campaign/radio
+regression also covers unreadable trace finalization and preserved cleanup.
+Full check passes 964 cases without skips and all shared checks; formatting and
+CLI help pass. Existing Starlette/httpx deprecation remains. Host-only: no
+wire/firmware/IDF build or physical port/reset/flash. All 19 original files remain
+unchanged. Physical acceptance is open. See [policy, walkthrough and expected
+checks](campaign_reruns_evidence.md). Next #115 exposes these shared controls in
+the dashboard; physical #132 still needs applicable boards and peripherals.
+
 ## November 24 — Memory and source history views (#88)
 
 Results now plots immutable memory/stage/buffer and source/backlog observations

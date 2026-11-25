@@ -520,3 +520,19 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   cases and all shared checks pass; nine dedicated cases/UI formatting pass.
   Next #107 on a separate branch: linked subset reruns and verified campaign
   bundles; never restore or automatically resume an interrupted RF execution.
+
+
+- #107 implemented on #203: linked selected-case reruns preserve original history,
+  exact saved settings/order/seeds/batches and fresh bound preflight/ownership.
+  Header/case hashes and bounded complete child/file graph exports, persisted
+  radio file fingerprints and offline ZIP/count/link verification reject corrupt
+  evidence. One tracked worker keeps export I/O off the control loop and joins
+  through cancellation/shutdown before DB close. Legacy/interrupted files retain missing prior-hash scope. A wider
+  regression reproduced an unreadable-fingerprint finalizer leaving radio running;
+  it now preserves terminal failure and cleanup. Twenty-seven dedicated cases and
+  full 964 cases pass without skips, all shared checks/format/CLI help. Combined
+  55 lifecycle/radio cases pass; final dedicated run adds serial/limit cases.
+  Actual native two-node DATA/voice graph and cold active/paused process exits are
+  software fixtures, not physical qualification. Original 19 files unchanged;
+  no firmware/wire/build/flash/physical access. Next #115 campaign controls/UI,
+  physical #132 remains blocked on real setup and predecessor acceptance.

@@ -92,7 +92,8 @@ the serial sessions/database. Cold restart marks unfinished campaigns interrupte
 active cases interrupted and unstarted cases skipped with `host_restart`.
 Previous cleanup stays unconfirmed; no port is opened and no RF/audio operation
 is automatically resumed. To run again, explicitly create a new execution from
-the saved plan. Selected-case reruns/comparison follow #107.
+the saved plan. Linked selected-case reruns and verified exports are implemented in #107; see
+[rerun, recovery and evidence policy](campaign_reruns_evidence.md).
 
 ## Records and scope
 

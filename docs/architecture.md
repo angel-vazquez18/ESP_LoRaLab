@@ -129,7 +129,10 @@ evidence independently of byte readback.
   bounded linked batches and cached capability readiness. It starts no work.
 - `physical_campaigns.py`: exclusive physical execution of that saved order,
   durable child/case links, pause/cancel, bounded child cleanup and interruption
-  on restart. It reuses the existing domain runners and never resumes hardware.
+  on restart. Linked selected-case reruns preserve original history and repeat
+  fresh checks. It reuses existing domain runners and never resumes hardware.
+- `physical_campaign_evidence.py`: bounded terminal child/file graph exports and
+  offline member/count/hash verification, without device access.
 
 - `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
   stage-memory reconciliation, immutable evidence and bound readback; imported
