@@ -233,6 +233,11 @@ stop-and-wait states, bounded attempts and retained radio observations. It drive
 the existing real radio API; execution owns stop/lease/shutdown integration and
 message-level aggregation. ACK observations never inflate original DATA counts.
 
+`radio/rf_faults` owns laboratory selectors, frame digests and bounded
+scratch/retained storage. Execution controls admission, deadlines and cleanup.
+The sender keeps its original retry bytes and borrows transformed bytes only
+for the selected submission. See [laboratory checks](lab_frame_faults.md).
+
 The session-security contract maps key-bearing fields and provisioning
 persistence boundaries in [security_sessions.md](security_sessions.md). Firmware
 composes owned private setup, protected RF and replay checks. Shared-host setup

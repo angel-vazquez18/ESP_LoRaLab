@@ -2,9 +2,10 @@
 
 ## User direction
 
-Continue software development through the remaining milestones without waiting
-for individual PR merges. One issue/branch/PR per scope, small descriptive
-Conventional Commits, no merges. The user will review and test later. Software work does not use physical ports.
+Continue software development through the remaining milestones. Group work by
+reviewable outcome, with small descriptive Conventional Commits and linked issues
+for coverage. Stack dependent PRs and continue without waiting for individual
+reviews. The user will review and merge. Hardware qualification is deferred.
 A separately connected audio node was exercised at the user’s request using its
 existing image; its RF profile is still unconfirmed and it was not flashed. Preserve the original checkout's
 19 existing changes and their ignored snapshot under `local/milestone-batch`.
@@ -18,7 +19,27 @@ software prerequisite and record the base explicitly. Do not close hardware
 qualification issues from software fixtures. The current board revision is
 unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 
-## Work order
+## Remaining software batches
+
+1. **Lab controls and evidence.** Finish #76, then group fragment/ACK fault cases
+   with host reconciliation and operator views. Make missing observations
+   explicit and require an intact control for recovery assertions.
+2. **Shared procedure runner.** Use the existing physical services and campaign
+   ownership for typed case plans, capability preflight, child links, assertions,
+   cancellation/restart, immutable evidence and exports. Prove the shared path
+   with IF-01, IF-02 and IF-03. Gate operations by the actual device capabilities.
+3. **Experiment suites.** Add RF sweeps, packet/security, timing, memory/voice,
+   model and recovery matrices by family. Reuse cases and analysis where the
+   procedures call for the same run. Keep all 23 procedure IDs accounted for.
+   One-way time processing uses saved pulse evidence and remains unavailable
+   without valid calibration; board pin selection and loaded timing stay deferred.
+4. **Release verification.** Build the standard and lab images, verify the full
+   host suite, exercise the dashboard and CLI against isolated fixtures, check
+   all 23 coverage/evidence paths and document repeatable setup and review.
+   Software completion advances those issue cards to Testing; hardware signoff
+   remains in the separate validation ledger.
+
+## Prior capability sequence
 
 - M3: #3 contract, #12 driver initialization, #15 modem settings, #19 finite TX,
   #20 finite RX, #25 frame acceptance, #27 host runs, #34 dashboard, #39 physical
@@ -637,3 +658,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   formatting pass. Original 19 files unchanged. No firmware/physical access.
   Continue #76 on its own branch: explicit default-off laboratory post-protect
   mutation/retained replay, then #77 fragment/ACK faults. No pulse pins guessed.
+
+- #76 software verification: 59 focused and 1,077 full cases pass without
+  skips. Standard and isolated lab ESP-IDF builds pass, and execution v5
+  metadata matches. See [laboratory checks](../lab_frame_faults.md).

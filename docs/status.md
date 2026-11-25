@@ -4,6 +4,20 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Laboratory protected-frame checks (#76)
+
+An explicit build option adds bounded session-scoped post-protection checks and
+one-shot retained-frame controls for generated known-data. The controls default
+off. They preserve the original retry bytes, report nonsecret frame digests and
+clear retained data on cancellation, ownership loss and close. Execution v5
+coordinates the new commands, events and bounded health records.
+
+Full `make check` passes 1,077 cases without skips and all shared checks. The
+59 focused cases pass. ESP-IDF v6.0.2 builds succeed with the standard
+(488,395 bytes) and isolated lab (488,399 bytes) configurations. CRC and radio
+observations in the native fixtures still require on-air qualification.
+See [laboratory checks](lab_frame_faults.md).
+
 ## November 25 — Repeated DATA run artifact retirement (#210)
 
 A native six-message probe reproduced the fifth ordinary DATA run failing with

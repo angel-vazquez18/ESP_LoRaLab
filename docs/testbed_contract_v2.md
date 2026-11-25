@@ -182,6 +182,7 @@ are errors. Read commands are marked R; all others are mutating commands.
 | `operation.stop` | `operation_id` | Idempotent cancel for artifact/audio/diagnostic operations |
 | `diag.run` | `kind,iterations,payload_bytes` | `serial_echo`, `crypto_benchmark`, or `memory_probe`; iterations 1–10000, bytes within negotiated limits |
 | `fault.set` | `injections,replace` | Up to eight entries per command and 32 per session; replace=true clears previous entries, false appends; idle/prepared only |
+| `fault.status` R | `offset,limit` | Lab-only run evidence, up to four entries per page, with session identity and fire-window status |
 | `fault.fire` | `injection_id` | Execute an armed retained-frame replay after the host observes legitimate RX; active run only, within the prepared fault/drain budget |
 | `clock.arm` | `calibration_id,count,interval_us` | Arm sync capture; count 32 for a burst or 0 for continuous, interval 100000 |
 | `clock.emit` | `calibration_id,count,interval_us` | Node A's wired pulse source; both capture inputs must be armed |
@@ -480,6 +481,11 @@ is started. Record original failure and cleanup failure separately.
 
 ## 9. Controlled faults and CDR assertions
 
+Execution v5 implements the first two actions below for protected generated
+known-data on the default-off laboratory build. The fragment, ACK and scheduling
+actions describe the next planned extension. See [laboratory checks](lab_frame_faults.md)
+for bounds, evidence and cleanup.
+
 Each `fault.set` entry has `injection_id` (UUID), `stage`, `action`, `message_id`,
 `fragment_index`, `attempt_index` (1-based), `byte_offset`, `xor_mask` and
 `block_size`; unused selectors are null. Match exact selectors once and report
@@ -550,9 +556,9 @@ post-startup interval after three seconds, plus all startup/drain durations.
 This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
-The finite source was introduced in `finite_message_execution_v3`. The selected
-execution profile is now `finite_message_execution_v4`, adding finite verified
-echoes while retaining the source contract; use its exact generated schema.
+The finite source was introduced in `finite_message_execution_v3`, followed by
+verified echoes in v4. The selected `finite_message_execution_v5` retains both
+and adds optional laboratory fault controls. Use its exact generated schema.
 The source retains bounded `run.source` readback. It starts at nominal elapsed zero,
 retains actual wake times, uses a 0–30 second declared source drain, and keeps
 sender transmission distinct from receiver delivery. See
