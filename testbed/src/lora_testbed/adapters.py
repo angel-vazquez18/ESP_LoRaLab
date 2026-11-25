@@ -90,6 +90,12 @@ def require_execution_compatible(identity, command, capability_availability):
             raise NodeFailure("UNSUPPORTED_VERSION", "Execution schema mismatch")
         if command not in limits.commands:
             raise NodeFailure("MISSING_CAPABILITY", "Execution command is not implemented")
+        if (
+            command in run_protocol_v2.LAB_FAULT_COMMANDS
+            and command != "fault.status"
+            and not capabilities.get("fault_injection")
+        ):
+            raise NodeFailure("MISSING_CAPABILITY", "Laboratory fault build is required")
         if command not in run_protocol_v2.CLEANUP_COMMANDS and not capabilities.get("radio"):
             raise NodeFailure("MISSING_CAPABILITY", "Radio is unavailable")
     return limits

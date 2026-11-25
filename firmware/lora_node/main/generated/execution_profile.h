@@ -1,4 +1,4 @@
 #pragma once
-#define EXECUTION_PROFILE "finite_message_execution_v4"
-#define EXECUTION_SCHEMA_SHA256 "2e3a712347e458ecb5e4d9f7f1e3902ed95849ad2bbbd390409d052704ec447c"
+#define EXECUTION_PROFILE "finite_message_execution_v5"
+#define EXECUTION_SCHEMA_SHA256 "b8d198c4d373c10f11c73c54fb7c0608b173b69d5202f4c41d70235ed425d833"
 #define RUN_ARM_WINDOW_US 5000000LL

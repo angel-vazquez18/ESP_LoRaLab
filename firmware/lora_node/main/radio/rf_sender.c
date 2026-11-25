@@ -8,6 +8,7 @@ struct rf_sender
     rf_packet_port port;
     node_radio *radio;
     rf_secure_session *security;
+    rf_faults *faults;
     rf_sender_status status;
     rf_data_view header;
     uint8_t frame[255], maximum_retries;
@@ -153,6 +154,12 @@ bool rf_sender_security(rf_sender *s, rf_secure_session *owner)
     s->security = owner;
     return true;
 }
+bool rf_sender_faults(rf_sender *s, rf_faults *owner)
+{
+    if (!s || s->used || !owner) return false;
+    s->faults = owner;
+    return true;
+}
 static bool accept_ack(void *context, const uint8_t header[40], const uint8_t *body, size_t bytes)
 {
     (void)body;
@@ -194,7 +201,10 @@ static void advance(rf_sender *s)
             finish(s, RF_SENDER_FAILED, "run_deadline");
             return;
         }
-        if (!node_radio_tx(s->radio, s->frame, s->length, &ref, timeout))
+        const uint8_t *wire = s->faults ? rf_faults_transform(s->faults, s->frame,
+            s->length, s->status.attempts + 1, now) : s->frame;
+        if (!wire) finish(s, RF_SENDER_FAILED, "fault_transform_failed");
+        else if (!node_radio_tx(s->radio, wire, s->length, &ref, timeout))
             finish(s, RF_SENDER_FAILED, "radio_tx_failed");
         else
         {

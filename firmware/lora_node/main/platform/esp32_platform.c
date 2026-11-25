@@ -124,6 +124,9 @@ void esp32_platform_init(node_platform *platform)
         .audio = esp32_audio_port(),
         .radio = esp32_radio_init(),
         .cpu_frequency_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
+#ifdef CONFIG_LORALAB_LAB_FAULTS
+        .lab_faults = true,
+#endif
 #ifdef CONFIG_LORALAB_CODEC2
         .codec2_mode = 3200,
 #endif

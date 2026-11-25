@@ -6,6 +6,7 @@ from typing import Annotated, Literal
 
 from pydantic import AfterValidator, Field, TypeAdapter, model_validator
 
+from . import fault_protocol_v2 as fault
 from .experiments_v2 import SHA256, Budget
 from .experiments_v2 import ContractModel as StrictModel
 from .v2 import CONTRACT_VERSION, Counter, Identifier, NodeError
@@ -321,6 +322,16 @@ class AckResult(Envelope):
     data: AckData
 
 
+class FaultApplied(Envelope):
+    name: Literal["fault.applied"]
+    data: fault.Applied
+
+
+class FaultTransmission(Envelope):
+    name: Literal["fault.tx"]
+    data: fault.Transmission
+
+
 RFEvent = Annotated[
     RunState
     | RunPrepared
@@ -329,6 +340,8 @@ RFEvent = Annotated[
     | Accepted
     | AckResult
     | EchoResult
+    | FaultApplied
+    | FaultTransmission
     | Rejected
     | Missing
     | MessageResult

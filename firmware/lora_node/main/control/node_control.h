@@ -35,6 +35,7 @@ typedef struct {
     node_display_port display;
     node_memory_region (*memory_region)(void *, const void *);
     encoded_worker_port source_worker;
+    bool lab_faults; // Explicit laboratory image; default off.
 } node_platform;
 
 typedef struct node_control node_control;

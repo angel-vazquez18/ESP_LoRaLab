@@ -296,7 +296,7 @@ class RadioRuns:
             if node.identity.device_id in ids:
                 blockers.append("Connect two distinct physical device identities")
             ids.add(node.identity.device_id)
-            for name in run_protocol_v2.EXECUTION_COMMANDS:
+            for name in run_protocol_v2.BASE_EXECUTION_COMMANDS:
                 try:
                     require_execution_compatible(
                         node.identity.model_dump(),
@@ -395,6 +395,7 @@ class RadioRuns:
                     "radio_security.py",
                     "session_keys.py",
                     "rf_events_v2.py",
+                    "fault_protocol_v2.py",
                     "control_v2.py",
                     "v2.py",
                     "nodes.py",

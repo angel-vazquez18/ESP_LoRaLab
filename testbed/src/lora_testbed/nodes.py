@@ -377,7 +377,7 @@ class NodeSession:
                             raise ValueError()
                     except (ValueError, TypeError, AttributeError):
                         raise ValueError("Invalid key set identity") from None
-                if name.startswith(("run.", "session.")) and run_id is None:
+                if name.startswith(("run.", "session.", "fault.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
             if name in memory_observation_v2.ARGUMENTS:
                 available = self.memory_availability()
@@ -548,6 +548,7 @@ class NodeSession:
                             "status.get",
                             "run.summary",
                             "run.source",
+                            "fault.status",
                             "artifact.list",
                             "artifact.get",
                         ):
@@ -619,7 +620,9 @@ class NodeSession:
                         elif record.name not in ("health", "diagnostic", "operation.result"):
                             require_execution_compatible(
                                 self.identity.model_dump(),
-                                "run.summary",
+                                "fault.status"
+                                if record.name.startswith("fault.")
+                                else "run.summary",
                                 self.health.capability_availability.model_dump()
                                 if self.health
                                 else None,

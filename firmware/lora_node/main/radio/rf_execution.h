@@ -5,6 +5,7 @@
 #include "radio/rf_fragments.h"
 #include "radio/rf_frames.h"
 #include "radio/rf_echo.h"
+#include "radio/rf_fault_json.h"
 #include "radio/rf_reassembly.h"
 #include "radio/rf_sender.h"
 #include "security/session_crypto.h"
@@ -23,6 +24,7 @@ typedef struct
     void (*release)(void *, void *);
     void (*before_release)(void *);
     encoded_worker_port source_worker;
+    bool lab_faults;
 } rf_execution_port;
 typedef enum
 {
@@ -43,7 +45,7 @@ typedef enum
     RF_START,
     RF_STOP,
     RF_SUMMARY,
-    RF_SOURCE
+    RF_SOURCE, RF_FAULT_SET, RF_FAULT_FIRE, RF_FAULT_STATUS
 } rf_action;
 typedef struct
 {
@@ -51,12 +53,12 @@ typedef struct
     char run[37], owner[37], operation[37], peer_device[17], peer_boot[32], session_text[17];
     uint64_t session;
     uint32_t revision, seed, bytes, duration_ms;
-    uint32_t ack_timeout, reassembly, drain, processing;
+    uint32_t ack_timeout, reassembly, drain, processing, fault_us;
     node_link_settings link;
     bool protected_mode, encoded, fixed_source, echo;
     char source_artifact_id[37], expected_sha256[65];
     uint32_t sample_count;
-    const cJSON *provision_keys;
+    const cJSON *provision_keys, *fault_arguments;
     uint8_t role, source;
     const char *reason;
 } rf_plan;
@@ -83,6 +85,10 @@ typedef struct
     rf_secure_session *security;
     rf_sender *transmitter;
     rf_ack_receiver *acknowledgments;
+    rf_faults *faults;
+    rf_fault_view fault_pending, replay_view;
+    bool fault_pending_valid, injected_tx;
+    char replay_id[37];
     rf_echo *echo;
     rf_echo_status echo_status;
     char echo_reply_hex[431];

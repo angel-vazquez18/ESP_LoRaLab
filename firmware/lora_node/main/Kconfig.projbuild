@@ -54,3 +54,12 @@ config LORALAB_OLED
         GPIO36 low to enable Vext. Verify the actual standard PCB first;
         V4-R8 is unsupported. Updates use an isolated bounded I2C worker.
 endmenu
+
+menu "LoRaLab laboratory fault hooks"
+config LORALAB_LAB_FAULTS
+    bool "Enable controlled laboratory protected-frame faults"
+    default n
+    help
+        Allow explicit run-owned post-protection mutation and retained replay.
+        Normal images leave these hooks unavailable. No hook activates by default.
+endmenu

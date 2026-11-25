@@ -2,6 +2,7 @@
 #include "memory/buffers.h"
 #include "radio/node_radio.h"
 #include "radio/rf_frames.h"
+#include "radio/rf_faults.h"
 #include "security/session_crypto.h"
 
 typedef struct rf_sender rf_sender;
@@ -37,5 +38,6 @@ void rf_sender_cancel(rf_sender *);
 
 // Borrow a session owner before beginning work; retained retries never invoke seal.
 bool rf_sender_security(rf_sender *, rf_secure_session *);
+bool rf_sender_faults(rf_sender *, rf_faults *);
 
 void rf_sender_memory(const rf_sender *s, node_memory_inventory *out);

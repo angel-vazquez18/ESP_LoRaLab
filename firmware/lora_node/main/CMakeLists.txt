@@ -13,6 +13,8 @@ idf_component_register(
         "radio/rf_sender.c"
         "radio/rf_execution.c"
         "radio/rf_echo.c"
+        "radio/rf_faults.c"
+        "radio/rf_fault_json.c"
         "security/frame_crypto.c"
         "security/session_crypto.c"
         "security/crypto_benchmark.c"

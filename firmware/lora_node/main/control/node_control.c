@@ -319,13 +319,14 @@ static cJSON *capabilities(node_control *n, bool enrollment)
 {
     cJSON *o = object(n), *limits = object(n);
     static const char *const disabled[] = {
-        "clock_sync", "fault_injection"};
+        "clock_sync"};
     for (size_t i = 0; i < sizeof(disabled) / sizeof(disabled[0]); i++)
         boolean(n, o, disabled[i], false);
     boolean(n, o, "codec2_3200", n->codec2_library_ready);
     boolean(n, o, "security_gcm", n->port.radio && n->port.radio->available);
     boolean(n, o, "radio", n->port.radio && n->port.radio->available);
     boolean(n, o, "echo", n->port.radio && n->port.radio->available);
+    boolean(n, o, "fault_injection", n->port.lab_faults && n->port.radio && n->port.radio->available);
     boolean(n, o, "fragmentation", n->port.radio && n->port.radio->available);
     boolean(n, o, "ack_retry", n->port.radio && n->port.radio->available);
     boolean(n, o, "audio_capture", n->port.audio.capture);
@@ -419,7 +420,9 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         cJSON *execution = object(n);
         string(n, execution, "profile", EXECUTION_PROFILE);
         string(n, execution, "schema_sha256", EXECUTION_SCHEMA_SHA256);
-        add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary","run.source"},9));
+        if (enrollment || !n->port.lab_faults)
+            add(n, execution, "commands", cJSON_CreateStringArray((const char *[]){"config.set","session.open","session.close","run.prepare","run.arm","run.start","run.stop","run.summary","run.source","fault.set","fault.fire","fault.status"},n->port.lab_faults ? 12 : 9));
+        else string(n, execution, "commands", "lab"); // Exact v5 set; keep active health bounded.
         add(n, limits, "execution", execution);
         cJSON *execution_limits=object(n);
         if (!enrollment) {
@@ -915,7 +918,7 @@ static void process(node_control *n, size_t length)
     const char *name = text(cmd, "name"), *client = text(cmd, "client_id");
     uint32_t sequence = (uint32_t)item(cmd, "command_seq")->valuedouble;
     const cJSON *args = item(cmd, "args");
-    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary") || eq(name,"run.source") || eq(name, "memory.status");
+    bool read = eq(name, "hello") || eq(name, "status.get") || eq(name, "artifact.list") || eq(name, "artifact.get") || eq(name,"run.summary") || eq(name,"run.source") || eq(name,"fault.status") || eq(name, "memory.status");
     bool owned = !field && eq(client, n->owner);
     uint8_t fingerprint[32] = {0};
     client_watermark *mark = !field ? watermark(n, client, false) : NULL;
@@ -1520,7 +1523,7 @@ node_control *node_control_create(const node_platform *platform)
         free(n);
         return NULL;
     }
-    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release,observation_leave,n->port.source_worker});
+    rf_execution_init(&n->rf,n->port.radio,n->artifacts,(rf_execution_port){n,radio_now,radio_hash,radio_random,radio_emit,radio_room,radio_drops,radio_allocate,radio_release,observation_leave,n->port.source_worker,n->port.lab_faults});
     memory_observer_init(&n->memory_watch, (memory_observer_port){n, radio_now, observation_memory, observation_emit, observation_buffers});
     n->linked = true;
     n->replies.capacity = NODE_REPLY_SLOTS;

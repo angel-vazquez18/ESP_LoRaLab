@@ -8,7 +8,8 @@
 #include <string.h>
 
 static const char *names[] = {"session.open", "session.close", "run.prepare", "run.arm",
-                              "run.start",    "run.stop",      "run.summary", "run.source"};
+                              "run.start",    "run.stop",      "run.summary", "run.source",
+                              "fault.set", "fault.fire", "fault.status"};
 static const char *text(const cJSON *o, const char *k)
 {
     return cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(o, k));
@@ -363,6 +364,81 @@ static void operation(rf_execution *r, bool ok, cJSON *result)
     add(r, o, "error", error ? error : cJSON_CreateNull());
     send(r, "operation.result", o);
 }
+static bool fire_window(const rf_execution *r)
+{
+    return r->port.lab_faults && r->sender && r->phase == RF_DRAINING && r->plan.fault_us &&
+        !r->injected_tx && r->port.now_us(r->port.context) < r->drain_deadline;
+}
+static const char *fault_command(rf_execution *r, const cJSON *args, rf_plan *p, cJSON **result)
+{
+    if (!r->port.lab_faults || !r->faults) return "MISSING_CAPABILITY";
+    if (p->action == RF_FAULT_SET) {
+        rf_fault_spec specs[RF_FAULT_BATCH]; size_t count; bool replace;
+        if (!rf_fault_json_parse(args, specs, &count, &replace)) return "INVALID_ARGUMENT";
+        if ((r->phase != RF_IDLE && r->phase != RF_PREPARED) || (r->used && r->phase == RF_IDLE && count))
+            return "INVALID_STATE";
+        unsigned total = (replace ? 0 : rf_faults_count(r->faults)) + count;
+        if (total > RF_FAULT_ENTRIES) return "RESOURCE_LIMIT";
+        if (count && (!r->plan.protected_mode ||
+            (r->phase == RF_PREPARED && (!r->sender || r->plan.encoded || r->plan.echo))))
+            return "INVALID_ARGUMENT";
+        if (!rf_faults_can_configure(r->faults, specs, count, replace)) return "INVALID_ARGUMENT";
+        if (r->phase == RF_PREPARED) {
+            uint64_t required = 0;
+            unsigned prior = replace ? 0 : rf_faults_count(r->faults);
+            for (size_t i = 0; i < prior + count; i++) {
+                rf_fault_view view;
+                if (i < prior) rf_faults_view(r->faults, i, &view);
+                const rf_fault_spec *spec = i < prior ? &view.spec : &specs[i - prior];
+                if (spec->action != RF_FAULT_REPLAY) continue;
+                unsigned body = spec->fragment + 1 < r->fragments.fragment_count ?
+                    r->fragments.fragment_bytes : r->plan.bytes - spec->fragment * r->fragments.fragment_bytes;
+                required += rf_radio_airtime_us(&r->radio->applied, 56 + body) + 80000;
+            }
+            if (required && r->plan.fault_us < required + 1000000) return "INVALID_ARGUMENT";
+        }
+        p->fault_arguments = args;
+        *result = object(r); number(r, *result, "count", total);
+    } else if (p->action == RF_FAULT_STATUS) {
+        const char *const keys[] = {"offset", "limit"};
+        uint32_t offset, limit;
+        if (!allowed(args, keys, 2) || !integer(args, "offset", 0, 32, 0, &offset) ||
+            !integer(args, "limit", 4, 4, 4, &limit)) return "INVALID_ARGUMENT";
+        unsigned count = rf_faults_count(r->faults), end = offset;
+        cJSON *rows = cJSON_CreateArray();
+        for (; end < count && end < offset + limit; end++) {
+            rf_fault_view view; rf_faults_view(r->faults, end, &view);
+            cJSON *row = rf_fault_json_entry(&view);
+            if (!rows || !row || !cJSON_AddItemToArray(rows, row)) { cJSON_Delete(row); r->oom = true; break; }
+        }
+        *result = object(r);
+        string(r, *result, "session_id", r->plan.session_text);
+        number(r, *result, "count", count); number(r, *result, "offset", offset);
+        number(r, *result, "next_offset", end);
+        add(r, *result, "eof", cJSON_CreateBool(end >= count));
+        add(r, *result, "fire_window_open", cJSON_CreateBool(fire_window(r)));
+        add(r, *result, "entries", rows);
+    } else {
+        const char *const keys[] = {"injection_id"};
+        const char *id = text(args, "injection_id"); size_t bytes;
+        if (!allowed(args, keys, 1) || cJSON_GetArraySize(args) != 1 || !id || strlen(id) != 36)
+            return "INVALID_ARGUMENT";
+        const uint8_t *wire = rf_faults_replay(r->faults, id, &bytes);
+        if (!fire_window(r) || !wire || !rf_secure_ready(r->security)) return "INVALID_STATE";
+        uint32_t timeout = rf_radio_airtime_us(&r->radio->applied, bytes) + 80000;
+        if (r->drain_deadline - r->port.now_us(r->port.context) < timeout) return "TIMEOUT";
+        uint8_t digest[32]; char sha[65];
+        if (!r->port.hash(r->port.context, wire, bytes, digest)) return "INTERNAL_ERROR";
+        hex(digest, sha);
+        p->fault_arguments = args;
+        *result = object(r); string(r, *result, "injection_id", id);
+        number(r, *result, "frame_seq", (uint32_t)wire[16] << 24 | (uint32_t)wire[17] << 16 | (uint32_t)wire[18] << 8 | wire[19]);
+        number(r, *result, "frame_bytes", bytes); string(r, *result, "sha256", sha);
+        string(r, *result, "status", "submitted");
+    }
+    if (r->oom) { cJSON_Delete(*result); *result = NULL; }
+    return NULL;
+}
 void rf_execution_init(rf_execution *r, node_radio *radio, artifact_store *artifacts,
                        rf_execution_port port)
 {
@@ -376,7 +452,7 @@ void rf_execution_init(rf_execution *r, node_radio *radio, artifact_store *artif
 }
 bool rf_execution_command(const char *name)
 {
-    for (unsigned i = 0; i < 8; i++)
+    for (unsigned i = 0; i < sizeof(names) / sizeof(names[0]); i++)
         if (eq(name, names[i]))
             return true;
     return false;
@@ -398,18 +474,19 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
     *result = NULL;
     *p = r->plan;
     unsigned action = 0;
-    while (action < 8 && !eq(name, names[action]))
+    while (action < sizeof(names) / sizeof(names[0]) && !eq(name, names[action]))
         action++;
-    if (action == 8)
+    if (action == sizeof(names) / sizeof(names[0]))
         return "UNSUPPORTED_COMMAND";
     p->action = (rf_action)action;
     if (!run)
         return "INVALID_ARGUMENT";
     if (action != RF_OPEN && (!r->plan.session || !eq(run, r->plan.run)))
         return "INVALID_STATE";
-    if (action != RF_CLOSE && action != RF_STOP && action != RF_SUMMARY && action != RF_SOURCE &&
+    if (action != RF_CLOSE && action != RF_STOP && action != RF_SUMMARY && action != RF_SOURCE && action != RF_FAULT_STATUS &&
         (!r->radio || !r->radio->available))
         return "MISSING_CAPABILITY";
+    if (action >= RF_FAULT_SET) return fault_command(r, args, p, result);
     if (action == RF_OPEN)
     {
         const char *const keys[] = {"session_id", "peer_device_id", "peer_boot_id",
@@ -550,7 +627,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             !integer(b, "processing_budget_us", 0, 3600000000U, 0, &p->processing) ||
             !integer(b, "capture_budget_us", 0, 0, 0, &unused) ||
             !integer(b, "playback_budget_us", 0, 0, 0, &unused) ||
-            !integer(b, "fault_budget_us", 0, 0, 0, &unused) ||
+            !integer(b, "fault_budget_us", 0, r->port.lab_faults ? 3600000000U : 0, 0, &p->fault_us) ||
             !literal(b, "model_version", "sx126x_lora_v1"))
             return "INVALID_ARGUMENT";
         uint32_t fragments =
@@ -576,9 +653,26 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
                             2000000;
         if (p->ack_timeout != ack || p->drain < minimum_drain || p->processing < processing ||
             (p->fixed_source ? p->reassembly != (uint64_t)p->duration_ms * 1000 :
-                p->reassembly < lifetime || p->reassembly > (uint64_t)p->duration_ms * 1000) ||
+                p->reassembly < lifetime + p->fault_us || p->reassembly > (uint64_t)p->duration_ms * 1000) ||
             p->drain > (uint64_t)p->duration_ms * 1000)
             return "INVALID_ARGUMENT";
+        unsigned faults = rf_faults_count(r->faults);
+        if ((faults || p->fault_us) && (!p->protected_mode || p->encoded || p->echo)) return "INVALID_ARGUMENT";
+        if (r->faults && !p->encoded && !p->echo) {
+            rf_message_plan packet;
+            if (!rf_message_plan_init(&packet, p->session, 1, 1, p->source, p->source == 1 ? 2 : 1,
+                0, p->protected_mode, link->ack_requested, p->bytes, link->fragment_payload_bytes) ||
+                !rf_faults_validate(r->faults, &packet, attempts)) return "INVALID_ARGUMENT";
+            uint64_t minimum_fault = 0;
+            for (unsigned i = 0; i < faults; i++) {
+                rf_fault_view view; rf_faults_view(r->faults, i, &view);
+                if (view.spec.action == RF_FAULT_REPLAY) {
+                    unsigned body = view.spec.fragment + 1 < fragments ? link->fragment_payload_bytes : last;
+                    minimum_fault += rf_radio_airtime_us(&r->radio->applied, 56 + body) + 80000;
+                }
+            }
+            if (minimum_fault && p->fault_us < minimum_fault + 1000000) return "INVALID_ARGUMENT";
+        }
         unsigned free_slots = 0;
         for (unsigned i = 0; i < ARTIFACT_SLOTS; i++)
             if (!artifact_store_at(r->artifacts, i))
@@ -700,6 +794,7 @@ static bool release_buffers(rf_execution *r)
 }
 static bool prepare_failed(rf_execution *r)
 {
+    rf_faults_unprepare(r->faults);
     if (!release_buffers(r)) { r->used = true; return false; }
     encoded_queue_destroy(r->queue); r->queue = NULL;
     if (r->artifact_reserved)
@@ -786,6 +881,11 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->plan.provision_keys = NULL;
         r->used = false;
         r->finished = false;
+        r->fault_pending_valid = r->injected_tx = false;
+        if (r->port.lab_faults) {
+            r->faults = rf_faults_create((rf_packet_port){r->port.context, r->port.allocate, r->port.release, r->port.hash}, p->session, p->role);
+            if (!r->faults) return false;
+        }
         if (p->protected_mode)
         {
             const char *tx = text(p->provision_keys, "tx_key_hex"),
@@ -802,9 +902,34 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
                 ((volatile uint8_t *)tx_key)[i] = 0;
                 ((volatile uint8_t *)rx_key)[i] = 0;
             }
+            if (status != RF_CRYPTO_OK) { rf_faults_destroy(r->faults); r->faults = NULL; }
             return status == RF_CRYPTO_OK;
         }
         return true;
+    }
+    if (p->action == RF_FAULT_STATUS) return true;
+    if (p->action == RF_FAULT_SET) {
+        rf_fault_spec specs[RF_FAULT_BATCH]; size_t count; bool replace;
+        return rf_fault_json_parse(p->fault_arguments, specs, &count, &replace) &&
+            rf_faults_configure(r->faults, specs, count, replace);
+    }
+    if (p->action == RF_FAULT_FIRE) {
+        const char *id = text(p->fault_arguments, "injection_id"); size_t bytes;
+        const uint8_t *wire = rf_faults_replay(r->faults, id, &bytes);
+        if (!wire || !fire_window(r)) return false;
+        for (unsigned i = 0; i < rf_faults_count(r->faults); i++) {
+            rf_fault_view view; rf_faults_view(r->faults, i, &view);
+            if (eq(view.spec.id, id)) r->replay_view = view;
+        }
+        node_radio_reference ref = {p->session, r->replay_view.sequence, r->replay_view.spec.message,
+            r->replay_view.spec.fragment, r->replay_view.spec.attempt};
+        uint32_t timeout = rf_radio_airtime_us(&r->radio->applied, bytes) + 80000;
+        if (r->radio->operation || r->radio->event_pending ||
+            r->drain_deadline - r->port.now_us(r->port.context) < timeout ||
+            !node_radio_tx(r->radio, wire, bytes, &ref, timeout)) return false;
+        r->injected_tx = true;
+        snprintf(r->replay_id, sizeof(r->replay_id), "%s", id);
+        return rf_faults_fired(r->faults, id, r->port.now_us(r->port.context));
     }
     if (p->action == RF_STOP)
         return rf_execution_abort(r, p->reason, false);
@@ -893,6 +1018,8 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             r->artifact_reserved = true;
         }
         rf_packet_port port = {r->port.context, r->port.allocate, r->port.release, r->port.hash};
+        if (r->faults && !p->encoded && !p->echo &&
+            !rf_faults_prepare(r->faults, &r->fragments, 1 + p->link.max_retries)) return prepare_failed(r);
         if (p->echo)
         {
             r->echo = rf_echo_create((rf_echo_port){port, r->port.now_us, r->radio, r->security},
@@ -939,6 +1066,8 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             r->source_worker = r->port.source_worker.reserve(r->port.source_worker.context, r->queue);
             if (!r->source_worker) return prepare_failed(r);
         }
+        if (r->sender && r->faults && !p->encoded && !p->echo &&
+            !rf_sender_faults(r->transmitter, r->faults)) return prepare_failed(r);
         if (r->sender && !p->encoded && !publish_bytes(r, r->payload))
             return prepare_failed(r);
         r->used = true;
@@ -995,6 +1124,8 @@ static void finalize(rf_execution *r, const char *reason, bool failed)
     r->stop_reason = reason;
     r->finished = true;
     r->failed = failed;
+    rf_faults_finish(r->faults);
+    r->injected_tx = false;
     if (r->radio && (r->radio->operation || r->radio->event_pending))
     {
         if (!node_radio_stop(r->radio)) r->radio_cleanup_failed = true;
@@ -1106,6 +1237,8 @@ static void report_failure(rf_execution *r)
 }
 bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
 {
+    rf_faults_disable(r->faults);
+    r->injected_tx = false;
     bool ok = true;
     if (r->radio && (r->radio->operation || r->radio->event_pending))
     {
@@ -1135,6 +1268,8 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
     {
         if (!release_buffers(r)) return false;
         encoded_queue_destroy(r->queue); r->queue = NULL;
+        rf_faults_destroy(r->faults); r->faults = NULL;
+        r->fault_pending_valid = false;
         artifact_store_release_owner(r->artifacts, r->plan.owner);
         if (!r->security)
         {
@@ -1468,8 +1603,36 @@ static void echo_work(rf_execution *r)
                         ? RF_DRAINING : status->request_seen ? RF_RUNNING : r->phase;
     if (phase != r->phase) { r->phase = phase; state(r); }
 }
+static void fault_observation(rf_execution *r)
+{
+    if (!r->faults || !r->port.room(r->port.context, 1)) return;
+    if (!r->fault_pending_valid) r->fault_pending_valid = rf_faults_pop(r->faults, &r->fault_pending);
+    if (!r->fault_pending_valid) return;
+    cJSON *o = rf_fault_json_entry(&r->fault_pending);
+    if (o) string(r, o, "session_id", r->plan.session_text);
+    if (o && send(r, "fault.applied", o)) r->fault_pending_valid = false;
+}
+static void fault_drain(rf_execution *r)
+{
+    if (r->injected_tx) {
+        node_radio_event event;
+        if (!node_radio_poll(r->radio, &event)) return;
+        cJSON *o = object(r);
+        string(r, o, "injection_id", r->replay_id); string(r, o, "session_id", r->plan.session_text);
+        number(r, o, "frame_seq", event.reference.frame_seq); number(r, o, "message_id", event.reference.message_id);
+        number(r, o, "fragment_index", event.reference.fragment_index); number(r, o, "frame_bytes", event.frame_bytes);
+        if (event.command_us >= 0) number(r, o, "tx_command_us", event.command_us); else string(r, o, "tx_command_us", NULL);
+        if (event.done_us >= 0) number(r, o, "tx_done_us", event.done_us); else string(r, o, "tx_done_us", NULL);
+        string(r, o, "status", event.status == RADIO_DONE ? "completed" : "failed");
+        send(r, "fault.tx", o); r->injected_tx = false;
+        if (event.status != RADIO_DONE) { finish(r, "error", true); return; }
+    }
+    if (r->port.now_us(r->port.context) >= r->drain_deadline) finish(r, "completed", false);
+}
 void rf_execution_tick(rf_execution *r)
 {
+    r->oom = false;
+    fault_observation(r);
     if (r->phase == RF_IDLE)
         return;
     r->oom = false;
@@ -1536,6 +1699,7 @@ void rf_execution_tick(rf_execution *r)
     node_radio_poll(r->radio, NULL);
     if (!r->port.room(r->port.context, 6))
         return;
+    if (r->sender && r->phase == RF_DRAINING && r->plan.fault_us) { fault_drain(r); return; }
     if (!r->sender && receiver_ack_work(r))
         return;
     node_radio_event event;
@@ -1636,6 +1800,12 @@ void rf_execution_tick(rf_execution *r)
                 encoded_queue_complete(r->queue, r->active_message, SOURCE_SENT);
                 r->active_message = 0;
                 r->source_finished_messages++;
+            } else if (r->plan.fault_us) {
+                r->phase = RF_DRAINING;
+                int64_t now = r->port.now_us(r->port.context);
+                r->drain_deadline = now + r->plan.fault_us + r->plan.drain;
+                if (r->drain_deadline > r->deadline) r->drain_deadline = r->deadline;
+                state(r);
             } else finish(r, "completed", false);
         }
         else if ((status.state == RF_SENDER_FAILED || status.state == RF_SENDER_CANCELLED) &&
@@ -1788,14 +1958,15 @@ void rf_execution_tick(rf_execution *r)
         number(r, o, "first_fragment_us", r->first_fragment);
         number(r, o, "complete_us", r->port.now_us(r->port.context));
         send(r, "message.result", o);
-        if (!r->plan.fixed_source && !r->plan.link.ack_requested)
+        if (!r->plan.fixed_source && !r->plan.link.ack_requested && !r->plan.fault_us)
         {
             finish(r, "completed", false);
             return;
         }
         if (!r->plan.fixed_source) r->phase = RF_DRAINING;
         int64_t now = r->port.now_us(r->port.context);
-        r->drain_deadline = r->deadline - now < r->plan.drain ? r->deadline : now + r->plan.drain;
+        r->drain_deadline = r->deadline - now < r->plan.drain ? r->deadline : now + r->plan.drain + r->plan.fault_us;
+        if (r->drain_deadline > r->deadline) r->drain_deadline = r->deadline;
     }
     if (r->plan.link.ack_requested &&
         (insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE ||
@@ -1826,7 +1997,7 @@ void rf_execution_tick(rf_execution *r)
                                                       : "phy_crc_or_header");
     int64_t until = !r->plan.fixed_source && r->delivered ? r->drain_deadline : r->receive_deadline;
     int64_t remaining = until - r->port.now_us(r->port.context);
-    if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || (!r->plan.fixed_source && insertion == RF_REASSEMBLY_COMPLETE) ||
+    if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || (!r->plan.fixed_source && !r->plan.fault_us && insertion == RF_REASSEMBLY_COMPLETE) ||
         !node_radio_rx(r->radio, 255, remaining > 30000000 ? 30000000 : remaining))
         finish(r, "error", true);
 }
@@ -1836,6 +2007,7 @@ void rf_execution_memory(const rf_execution *r, node_memory_inventory *out)
     node_memory_add(out, "rf_generated", r->generated, r->plan.bytes);
     encoded_queue_memory(r->queue, out);
     rf_echo_memory(r->echo, out);
+    rf_faults_memory(r->faults, out);
     rf_sender_memory(r->transmitter, out);
     rf_reassembly_memory(r->receiver, out);
     rf_ack_memory(r->acknowledgments, out);

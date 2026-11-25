@@ -141,6 +141,7 @@ class Platform(C.Structure):
             ("display", DisplayPort),
             ("memory_region", REGION),
             ("source_worker", SourceWorkerPort),
+            ("lab_faults", C.c_bool),
         ]
     )
 
@@ -196,6 +197,8 @@ def native_library(tmp_path_factory):
             str(main / "radio/rf_sender.c"),
             str(main / "radio/rf_execution.c"),
             str(main / "radio/rf_echo.c"),
+            str(main / "radio/rf_faults.c"),
+            str(main / "radio/rf_fault_json.c"),
             str(main / "radio/vendor/sx126x/sx126x.c"),
             str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),
             "-I",
@@ -255,6 +258,7 @@ class NativeNode:
         display=None,
         display_status=None,
         source_worker=None,
+        lab_faults=False,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -295,6 +299,7 @@ class NativeNode:
         self.region_callback = REGION(lambda _, pointer: 1 if pointer in self.allocations else 0)
         self.platform.memory_region = self.region_callback
         self.platform.source_worker = source_worker or SourceWorkerPort()
+        self.platform.lab_faults = lab_faults
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -633,6 +638,7 @@ class NativeSerial:
         display=None,
         display_status=None,
         source_worker=None,
+        lab_faults=False,
     ):
         self.core = NativeNode(
             lib,
@@ -645,6 +651,7 @@ class NativeSerial:
             ptt=ptt,
             display=display,
             display_status=display_status,
+            lab_faults=lab_faults,
         )
         self.lock = threading.RLock()
         self.queue = queue.Queue()

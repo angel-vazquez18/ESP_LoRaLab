@@ -259,6 +259,176 @@
       "title": "AckResult",
       "type": "object"
     },
+    "Applied": {
+      "additionalProperties": false,
+      "properties": {
+        "injection_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Injection Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "tx_after_protect",
+            "tx_retained"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "xor_byte",
+            "replay"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "attempt_index": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Attempt Index",
+          "type": "integer"
+        },
+        "byte_offset": {
+          "anyOf": [
+            {
+              "maximum": 254,
+              "minimum": 40,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Byte Offset"
+        },
+        "xor_mask": {
+          "anyOf": [
+            {
+              "maximum": 255,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Xor Mask"
+        },
+        "block_size": {
+          "title": "Block Size",
+          "type": "null"
+        },
+        "state": {
+          "enum": [
+            "applied",
+            "fired"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "target_frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Frame Seq"
+        },
+        "frame_bytes": {
+          "anyOf": [
+            {
+              "maximum": 255,
+              "minimum": 57,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Bytes"
+        },
+        "before_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Before Sha256"
+        },
+        "after_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "After Sha256"
+        },
+        "applied_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Applied Us"
+        },
+        "session_id": {
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "injection_id",
+        "stage",
+        "action",
+        "message_id",
+        "fragment_index",
+        "attempt_index",
+        "byte_offset",
+        "xor_mask",
+        "block_size",
+        "state",
+        "target_frame_seq",
+        "frame_bytes",
+        "before_sha256",
+        "after_sha256",
+        "applied_us",
+        "session_id"
+      ],
+      "title": "Applied",
+      "type": "object"
+    },
     "Attempt": {
       "additionalProperties": false,
       "properties": {
@@ -689,6 +859,154 @@
         "data"
       ],
       "title": "EchoResult",
+      "type": "object"
+    },
+    "FaultApplied": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "fault.applied",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/Applied"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "FaultApplied",
+      "type": "object"
+    },
+    "FaultTransmission": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "fault.tx",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/Transmission"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "FaultTransmission",
       "type": "object"
     },
     "MessageData": {
@@ -2068,12 +2386,100 @@
       ],
       "title": "SummaryData",
       "type": "object"
+    },
+    "Transmission": {
+      "additionalProperties": false,
+      "properties": {
+        "injection_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Injection Id",
+          "type": "string"
+        },
+        "session_id": {
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "frame_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Frame Seq",
+          "type": "integer"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "frame_bytes": {
+          "maximum": 255,
+          "minimum": 57,
+          "title": "Frame Bytes",
+          "type": "integer"
+        },
+        "tx_command_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Command Us"
+        },
+        "tx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Done Us"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "injection_id",
+        "session_id",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "frame_bytes",
+        "tx_command_us",
+        "tx_done_us",
+        "status"
+      ],
+      "title": "Transmission",
+      "type": "object"
     }
   },
   "discriminator": {
     "mapping": {
       "ack.result": "#/$defs/AckResult",
       "echo.result": "#/$defs/EchoResult",
+      "fault.applied": "#/$defs/FaultApplied",
+      "fault.tx": "#/$defs/FaultTransmission",
       "message.missing": "#/$defs/Missing",
       "message.result": "#/$defs/MessageResult",
       "operation.result": "#/$defs/OperationResult",
@@ -2108,6 +2514,12 @@
     },
     {
       "$ref": "#/$defs/EchoResult"
+    },
+    {
+      "$ref": "#/$defs/FaultApplied"
+    },
+    {
+      "$ref": "#/$defs/FaultTransmission"
     },
     {
       "$ref": "#/$defs/Rejected"

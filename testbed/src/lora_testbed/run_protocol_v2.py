@@ -7,12 +7,13 @@ from typing import Annotated, Literal
 
 from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 
+from . import fault_protocol_v2 as fault
 from . import rf_events_v2 as rf
 from . import source_protocol_v2 as source_protocol
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataPlan, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "finite_message_execution_v4"
+EXECUTION_PROFILE = "finite_message_execution_v5"
 ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
@@ -24,8 +25,11 @@ ExecutionName = Literal[
     "run.stop",
     "run.summary",
     "run.source",
+    "fault.set",
+    "fault.fire",
+    "fault.status",
 ]
-EXECUTION_COMMANDS = (
+BASE_EXECUTION_COMMANDS = (
     "session.open",
     "session.close",
     "config.set",
@@ -36,16 +40,22 @@ EXECUTION_COMMANDS = (
     "run.summary",
     "run.source",
 )
-CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source")
+LAB_FAULT_COMMANDS = ("fault.set", "fault.fire", "fault.status")
+EXECUTION_COMMANDS = BASE_EXECUTION_COMMANDS + LAB_FAULT_COMMANDS
+CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source", "fault.status")
 
 
 class Capabilities(ContractModel):
-    profile: Literal["finite_message_execution_v4"]
+    profile: Literal["finite_message_execution_v5"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    commands: list[ExecutionName] = Field(min_length=1, max_length=9)
+    commands: list[ExecutionName] | Literal["base", "lab"] = Field(min_length=1, max_length=12)
 
     @model_validator(mode="after")
     def unique_commands(self):
+        if isinstance(self.commands, str):
+            self.commands = list(
+                BASE_EXECUTION_COMMANDS if self.commands == "base" else EXECUTION_COMMANDS
+            )
         if len(self.commands) != len(set(self.commands)):
             raise ValueError("Duplicate execution command")
         return self
@@ -172,6 +182,9 @@ ARGUMENTS = {
     "run.stop": Stop,
     "run.summary": Empty,
     "run.source": source_protocol.Query,
+    "fault.set": fault.Set,
+    "fault.fire": fault.Fire,
+    "fault.status": fault.Query,
     "artifact.list": Empty,
     "artifact.get": ArtifactGet,
 }
@@ -258,6 +271,9 @@ RESULTS = {
     "run.stop": Idle,
     "run.summary": rf.SummaryData,
     "run.source": source_protocol.Report,
+    "fault.set": fault.Configured,
+    "fault.fire": fault.Fired,
+    "fault.status": fault.Report,
     "artifact.list": ArtifactList,
     "artifact.get": ArtifactChunk,
 }
@@ -275,7 +291,7 @@ class Command(v2.Command, ContractModel):
         if model is None:
             raise ValueError("Unknown run-protocol command")
         self.args = model.model_validate(self.args).model_dump()
-        if self.name.startswith(("session.", "run.")) and self.run_id is None:
+        if self.name.startswith(("session.", "run.", "fault.")) and self.run_id is None:
             raise ValueError("Session and run commands require run_id")
         if self.name != "hello" and self.target_boot_id is None:
             raise ValueError("Command requires target_boot_id")
@@ -298,8 +314,17 @@ def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
         "scope": "finite_message_execution",
+        "command_sets": {"base": list(BASE_EXECUTION_COMMANDS), "lab": list(EXECUTION_COMMANDS)},
         "fixed_source_policy": source_protocol.POLICY,
         "lifecycle": {"arm_window_us": ARM_WINDOW_US, "sender_arm_required": True},
+        "laboratory_faults": {
+            "default_enabled": False,
+            "command_entries": 8,
+            "session_entries": 32,
+            "retained_frames": 16,
+            "status_page": 4,
+            "scope": "protected_generated_data",
+        },
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},
