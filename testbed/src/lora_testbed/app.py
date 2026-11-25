@@ -342,9 +342,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
 
     @app.get("/api/physical-campaigns/executions/{identifier}/export")
     async def physical_campaign_export(identifier: control_v2.UUID):
-        from .physical_campaign_evidence import CampaignBundle
-
-        content = CampaignBundle(app.state.host).build(identifier)
+        content = await app.state.host.campaign_exports.export(identifier)
         return Response(
             content,
             media_type="application/zip",

@@ -11,6 +11,7 @@ from .diagnostic_jobs import DiagnosticJobs
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .physical_adapter import PhysicalAdapter
+from .physical_campaign_evidence import CampaignExports
 from .physical_campaigns import PhysicalCampaigns
 from .procedure_runs import ProcedureService
 from .radio_runs import RadioRuns
@@ -37,6 +38,7 @@ class Host:
         self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
         self.observations = WorkloadObservations(self.store, self.adapter)
         self.physical_campaigns = PhysicalCampaigns(self)
+        self.campaign_exports = CampaignExports(self)
 
     def node_event(self, role, event):
         self.store.append_node_event(role, event)
@@ -427,6 +429,7 @@ class Host:
             return await self.audio.start(role, action, **kwargs)
 
     async def close(self):
+        self.campaign_exports.closing = True
         await self.physical_campaigns.close()
         await self.observations.close()
         await self.diagnostics.close()
@@ -437,4 +440,5 @@ class Host:
         await self.procedures.stop(shutdown=True)
         for node in self.physical.values():
             await node.close()
+        await self.campaign_exports.close()
         self.store.close()
