@@ -629,3 +629,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Full 1,038 cases and all shared checks pass without skips; formatting passes.
   Original 19 files unchanged. Host-only, no wire/firmware/build/physical access.
   Finish checks and this bug PR before #76/#77; all full procedures remain open.
+
+- #210: PR #211 (`fix/repeated-data-artifacts` → `feat/physical-echo-rtt`)
+  is ready in three scoped commits with retention walkthrough and expected
+  checks. Issue/card Testing, P1/default host owner Angel; depends on #83.
+  Full 1,038 cases/all shared checks, six dedicated/20 combined cases and
+  formatting pass. Original 19 files unchanged. No firmware/physical access.
+  Continue #76 on its own branch: explicit default-off laboratory post-protect
+  mutation/retained replay, then #77 fragment/ACK faults. No pulse pins guessed.
