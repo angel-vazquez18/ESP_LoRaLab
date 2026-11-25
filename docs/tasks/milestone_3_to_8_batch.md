@@ -723,3 +723,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   and SEC-04 known-answer batches, with per-run raw evidence and no
   fabricated timing for an unavailable case. The suite passed 1,125
   tests. The shared dashboard matrix controls are the next review slice.
+
+- Timing PR #219 is open over #218. Issues #62 and #102 link to it.
+- The matrix dashboard adds reviewed-plan start, run-specific stop,
+  per-case readiness and archive inspection across supported suites.
+  The isolated browser completed IF-01 C1, preserved the saved run after
+  page navigation and disabled start for C3. All four member hashes in
+  the archived evidence matched.

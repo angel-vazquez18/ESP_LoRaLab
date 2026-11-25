@@ -18,7 +18,16 @@ measurements with a continuous-message workload.
 
 ## Preview, run and review
 
-Save a JSON request with the desired procedure and scope. For example, a short
+In **Experiments**, select a procedure that offers a matrix. Choose one case
+group or all groups, pick a quick check or the procedure defaults, and
+preview the cases. The panel lists readiness and blockers before enabling
+**Run ready cases**. The start request binds that preview's plan hash.
+A changed plan requires a fresh preview. **Stop matrix** targets its active
+run and waits for cleanup. Use **Inspect cases** to reopen the saved ledger
+with case evidence and an evidence ZIP. This view uses the same procedure
+store as the CLI. Neither path awards physical qualification.
+
+From the CLI, save a JSON request with the desired scope. For example, a short
 IF-02 subset is:
 
 ```json

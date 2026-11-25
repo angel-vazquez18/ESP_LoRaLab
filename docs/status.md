@@ -4,6 +4,16 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Dashboard matrix controls
+
+The Experiments dashboard now previews and runs supported procedure
+matrices using the same service and records as the CLI. It retains
+case blockers, active progress, run-specific stop and saved case
+evidence. A changed plan hash requires previewing again. The software
+fixture browser run verified completed IF-01 evidence, navigation and
+a fully blocked group. All four exported file hashes matched. The regression suite passed 1,126 tests. Lint, build, contract and repository checks also passed.
+See [shared procedure controls](integration_matrices.md).
+
 ## November 25 — Round-trip and local crypto matrices
 
 TIME-01 now runs matched exact-byte echo cohorts under both protection
