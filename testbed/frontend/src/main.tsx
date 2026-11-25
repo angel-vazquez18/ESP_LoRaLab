@@ -28,6 +28,7 @@ import type { HardwareNode } from "./HardwareBench";
 import type { AudioState } from "./NodeAudio";
 import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
+import LabTrials, { type LabState } from "./LabTrials";
 import RadioLink from "./RadioLink";
 import type { RadioState } from "./RadioLink";
 import VoiceRuns from "./VoiceRuns";
@@ -124,6 +125,7 @@ type State = {
   artifact_transfers: ArtifactState;
   audio_operations: AudioState;
   radio_runs: RadioState;
+  lab_trials?: LabState;
   voice_runs: VoiceState;
   bench_busy: boolean;
   catalog: Entry[];
@@ -424,6 +426,15 @@ function Experiments({ host }: { host: Host }) {
               nodes={host.state.hardware_nodes}
               benchBusy={host.state.bench_busy === true}
               online={host.online}
+              request={host.request}
+              pending={host.pending}
+            />
+          )}
+          {["PKT-02", "PKT-03", "SEC-02", "SEC-03"].includes(selected) && (
+            <LabTrials
+              state={host.state.lab_trials}
+              online={host.online}
+              benchBusy={host.state.bench_busy === true}
               request={host.request}
               pending={host.pending}
             />
