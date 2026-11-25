@@ -5,7 +5,7 @@ import hashlib
 from copy import deepcopy
 from uuid import uuid4
 
-from . import content_series, rf_sweeps
+from . import content_series, crypto_benchmark_v2, rf_sweeps, timed_series
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
@@ -68,6 +68,12 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "echo_batch":
+                blockers = radio.preflight(timed_series.echo_request(spec, case))["blockers"]
+            elif case["driver"] == "echo_timeout_fixture":
+                blockers = ["A controlled missing-reply fixture is required"]
+            elif case["driver"] == "local_crypto":
+                blockers = timed_series.crypto_blockers(self.ledger.nodes[case["role"]])
             elif case["driver"] == "serial_matrix":
                 blockers = []
                 node = self.ledger.nodes[case["role"]]
@@ -112,7 +118,7 @@ class IntegrationExecution:
             raise ValueError("No selected matrix cases can run on this bench")
         required = (
             {case["role"] for case in planned["cases"] if case["ready"]}
-            if spec.catalog_id == "IF-01"
+            if spec.catalog_id in ("IF-01", "SEC-04")
             else set(spec.roles)
         )
         run = {
@@ -134,6 +140,9 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/integration_execution.py",
                     "testbed/src/lora_testbed/rf_sweeps.py",
                     "testbed/src/lora_testbed/content_series.py",
+                    "testbed/src/lora_testbed/timed_series.py",
+                    "testbed/src/lora_testbed/echo_accounting.py",
+                    "testbed/src/lora_testbed/crypto_benchmark_v2.py",
                     "testbed/src/lora_testbed/procedure_runs.py",
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
@@ -142,7 +151,7 @@ class IntegrationExecution:
                 )
             },
             "transport": "physical USB"
-            if spec.catalog_id == "IF-01"
+            if spec.catalog_id in ("IF-01", "SEC-04")
             else "physical USB and owned radio runs",
             "timing_basis": "per-child node-local and host-monotonic observations",
             "physical_bindings": {role: adapter.bind(role) for role in sorted(required)},
@@ -403,6 +412,100 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_echo_case(self, run, case, spec, radio, adapter):
+        request = timed_series.echo_request(spec, case)
+        for _ in range(case["message_count"]):
+            await self.matrix_radio_child(run, case, request, radio, adapter, "matched_echo")
+        distribution = await radio.collect_echo_distribution(case["run_ids"])
+        groups = distribution["groups"]
+        complete = len(groups) == 1 and groups[0]["n"] == case["message_count"]
+        self.ledger.append(run["id"], case["id"], {"round_trip_distribution": distribution})
+        case.update(
+            status="completed",
+            assessment="pass" if complete else "inconclusive",
+            measurements={
+                "requested_echoes": case["message_count"],
+                "verified_echoes": sum(group["n"] for group in groups),
+                "distribution_count": len(groups),
+            },
+            cleanup_verified=True,
+            assertions=[
+                {
+                    "code": "requester_local_exact_echo_distribution",
+                    "outcome": "pass" if complete else "inconclusive",
+                }
+            ],
+        )
+
+    async def matrix_crypto_case(self, run, case, host):
+        binding = run["physical_bindings"][case["role"]]
+        node = host.adapter.current(binding)
+        before = await host.adapter.request(binding, "status.get")
+        if blockers := timed_series.crypto_blockers(node):
+            raise ValueError(blockers[0])
+        args = crypto_benchmark_v2.Arguments(
+            iterations=case["iterations"], payload_bytes=case["message_bytes"]
+        )
+        service = host.diagnostics
+        task = None
+
+        def on_created(identifier):
+            case["diagnostic_run_id"] = identifier
+            self.ledger.save(run)
+
+        try:
+            await service.start(case["role"], binding, args.model_dump(), on_created=on_created)
+            task = service.task
+            await asyncio.shield(task)
+        finally:
+            if task is not None and not task.done():
+                await service.stop()
+            if identifier := case.get("diagnostic_run_id"):
+                evidence = service.evidence(identifier, include_records=True)
+                job = evidence["job"]
+                clean = bool((job.get("cleanup") or {}).get("confirmed"))
+                self.ledger.append(
+                    run["id"],
+                    case["id"],
+                    {
+                        "diagnostic_run_id": identifier,
+                        "identity": job["identity"],
+                        "status": job["status"],
+                        "cleanup_confirmed": clean,
+                        "wire_sha256": job.get("wire_sha256"),
+                        "error": job.get("error"),
+                        "evidence": (
+                            f"/api/diagnostic-runs/{identifier}/evidence?include_records=true"
+                        ),
+                    },
+                )
+        if not clean:
+            raise ValueError("Local benchmark cleanup is unconfirmed")
+        after = await host.adapter.request(binding, "status.get")
+        report = timed_series.crypto_report(evidence["operation_events"] or [])
+        complete = (
+            job["status"] == "completed"
+            and report["complete"]
+            and report["identification"]["payload_bytes"] == case["message_bytes"]
+            and all(path["n"] == case["iterations"] for path in report["distributions"].values())
+            and before["telemetry_drops"] == after["telemetry_drops"]
+        )
+        self.ledger.append(
+            run["id"], case["id"], {"crypto_timing": report, "before": before, "after": after}
+        )
+        case.update(
+            status="completed",
+            assessment="pass" if complete else "inconclusive",
+            measurements=report,
+            cleanup_verified=True,
+            assertions=[
+                {
+                    "code": "complete_public_vector_timing_samples",
+                    "outcome": "pass" if complete else "inconclusive",
+                }
+            ],
+        )
+
     async def matrix_campaign_case(self, run, case, spec, host):
         service = host.physical_campaigns
         for binding in run["physical_bindings"].values():
@@ -606,6 +709,10 @@ class IntegrationExecution:
                         await self.matrix_security_case(run, case, spec, radio, adapter)
                     else:
                         await self.matrix_oversize_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "echo_batch":
+                    await self.matrix_echo_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "local_crypto":
+                    await self.matrix_crypto_case(run, case, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
