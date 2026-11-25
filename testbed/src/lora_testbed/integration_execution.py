@@ -5,6 +5,7 @@ import hashlib
 from copy import deepcopy
 from uuid import uuid4
 
+from . import rf_sweeps
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
@@ -26,7 +27,7 @@ class IntegrationExecution:
         plan = compile_matrix(spec)
         rows = []
         for case in plan["cases"]:
-            if case["driver"] in ("known_data_batch", "peer_mismatch"):
+            if case["driver"] in ("known_data_batch", "peer_mismatch", "rf_sweep"):
                 blockers = radio.preflight(link_request(spec, case, 0))["blockers"]
             elif case["driver"] == "serial_matrix":
                 blockers = []
@@ -92,6 +93,7 @@ class IntegrationExecution:
                     "docs/test_procedures.md",
                     "testbed/src/lora_testbed/integration_matrices.py",
                     "testbed/src/lora_testbed/integration_execution.py",
+                    "testbed/src/lora_testbed/rf_sweeps.py",
                     "testbed/src/lora_testbed/procedure_runs.py",
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
@@ -237,18 +239,33 @@ class IntegrationExecution:
 
     async def matrix_link_case(self, run, case, spec, radio, adapter):
         verified = 0
+        sweep = case["driver"] == "rf_sweep"
+        observations = []
         for ordinal in range(case["message_count"]):
             result = await self.matrix_radio_child(
                 run, case, link_request(spec, case, ordinal), radio, adapter, "known_data"
             )
             verified += int(bool(self.verified_link_child(result)))
+            if sweep and (sample := rf_sweeps.observation(result)) is not None:
+                observations.append(sample)
+                self.ledger.append(
+                    run["id"],
+                    case["id"],
+                    {
+                        "radio_run_id": result["id"],
+                        "observation": sample,
+                    },
+                )
         complete = verified == case["message_count"]
+        if sweep:
+            complete = complete and len(observations) == case["message_count"]
         case.update(
             status="completed",
             assessment="pass" if complete else "inconclusive",
             measurements={
                 "verified_messages": verified,
                 "requested_messages": case["message_count"],
+                **(rf_sweeps.report(observations, case["message_count"]) if sweep else {}),
             },
             cleanup_verified=True,
             assertions=[

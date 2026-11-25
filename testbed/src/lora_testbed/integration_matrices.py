@@ -6,6 +6,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
+from . import rf_sweeps
 from .campaign_plans import CampaignSpec, RadioCase, Template
 from .experiments_v2 import ContractModel
 from .radio_runs import RadioRunRequest
@@ -48,11 +49,16 @@ CAMPAIGN_GROUPS = {
     "C7": ("selected_rerun",),
     "C8": ("hashes_and_concurrent_start",),
 }
-GROUPS = {"IF-01": SERIAL_GROUPS, "IF-02": LINK_GROUPS, "IF-03": CAMPAIGN_GROUPS}
+GROUPS = {
+    "IF-01": SERIAL_GROUPS,
+    "IF-02": LINK_GROUPS,
+    "IF-03": CAMPAIGN_GROUPS,
+    **rf_sweeps.GROUPS,
+}
 
 
 class MatrixRequest(ContractModel):
-    catalog_id: Literal["IF-01", "IF-02", "IF-03"]
+    catalog_id: Literal["IF-01", "IF-02", "IF-03", "RF-01", "RF-02", "RF-03", "RF-04"]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
     roles: list[Literal["A", "B"]] = Field(
         default_factory=lambda: ["A", "B"], min_length=1, max_length=2
@@ -67,6 +73,7 @@ class MatrixRequest(ContractModel):
     valid_cycles: int = Field(default=10, ge=1, le=10)
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
+    rf_security: Literal["none", "aes128_gcm"] = "none"
 
     @model_validator(mode="after")
     def selections(self):
@@ -142,9 +149,9 @@ def campaign_cases(request, groups):
 
 
 def compile_matrix(request):
-    generated = {"IF-01": serial_cases, "IF-02": link_cases, "IF-03": campaign_cases}[
-        request.catalog_id
-    ]
+    generated = {"IF-01": serial_cases, "IF-02": link_cases, "IF-03": campaign_cases}.get(
+        request.catalog_id, rf_sweeps.cases
+    )
     groups = request.groups or list(GROUPS[request.catalog_id])
     cases = [
         {
@@ -174,6 +181,8 @@ def compile_matrix(request):
 
 
 def link_request(matrix, case, ordinal):
+    if case.get("driver") == "rf_sweep":
+        return rf_sweeps.sweep_request(matrix, case, ordinal)
     # Match seeds across directions and sizes within the same repetition.
     seed = (matrix.seed + (case["repetition"] - 1) * 100 + ordinal) % 2**32
     return RadioRunRequest(

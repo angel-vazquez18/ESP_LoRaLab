@@ -73,6 +73,10 @@ class RadioRunRequest(StrictModel):
         return self
 
 
+class TransmitterPowerRunRequest(RadioRunRequest):
+    receiver_power_dbm: int = Field(ge=2, le=20)
+
+
 class PeerMismatchCheck(RadioRunRequest):
     # Internal negative control, available through the procedure runner.
     peer_radio: Radio
@@ -529,6 +533,8 @@ class RadioRuns:
                 for r, n in self.nodes.items()
             },
         }
+        if isinstance(request, TransmitterPowerRunRequest):
+            record["receiver_power_dbm"] = request.receiver_power_dbm
         if isinstance(request, LabRadioRunRequest):
             injection = request.injection.model_dump()
             record["lab"] = {
@@ -768,11 +774,14 @@ class RadioRuns:
                             item["artifact_id"] for item in listing["artifacts"]
                         ]
                 for role in "AB":
-                    selected = (
-                        request.peer_radio
-                        if isinstance(request, PeerMismatchCheck) and role == r["receiver"]
-                        else plan.radio
-                    )
+                    selected = plan.radio
+                    if role == r["receiver"]:
+                        if isinstance(request, PeerMismatchCheck):
+                            selected = request.peer_radio
+                        elif isinstance(request, TransmitterPowerRunRequest):
+                            selected = plan.radio.model_copy(
+                                update={"tx_power_dbm": request.receiver_power_dbm}
+                            )
                     r["applied_settings"][role] = await self.command(
                         r,
                         role,
