@@ -1,0 +1,66 @@
+{
+  "ok": true,
+  "original_files_unchanged": 23,
+  "portable_reference_inputs": 13,
+  "reconstruction": {
+    "ok": true,
+    "overview": {
+      "parts": 50,
+      "triangles": 326330,
+      "sha256": "26e61947021f6c42db91c50ec9c16487e3750d768d826afe9024c0dea9257680"
+    },
+    "focus": {
+      "parts": 101,
+      "triangles": 89170,
+      "sha256": "b23758a7b2f09590877a8818e8a3bec36db65bb17aba77ec0c33e789692565c0"
+    },
+    "dimensions": 9,
+    "fragment_sha256": "f18d7d5754b6f5e1e8f7aa43e7c128639d35b0a2b46ef785c0a830af0bb6c620",
+    "preview_sha256": "abd264e629183f1381d92b5010b20e6d0258888bc85e424492094d9199c43c3d",
+    "preview_fragment_matches": true,
+    "exact_text_reconstruction": true,
+    "exact_byte_reconstruction": true,
+    "writes": false
+  },
+  "fresh_CAD_mesh_generation": false,
+  "native_inspection": {
+    "ok": true,
+    "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+    "actual_component_count": 2949,
+    "global_placement_applied": true,
+    "first_component_bounds_mm": [
+      47.312768888758,
+      6.0,
+      4.5,
+      54.487231111242,
+      12.0,
+      16.0
+    ],
+    "all_components_bounds_mm": [
+      0.0,
+      0.0,
+      0.3799999999999497,
+      72.28000000000004,
+      90.40034241696304,
+      20.30121926086
+    ],
+    "source_hashes": {
+      "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+      "interactive/reference/sma_body.brep": "66676cb8a555774f1fad03460f0e228e76c6345f486aed17bc6f032065bf71ec",
+      "interactive/reference/ReferenceSpeakerFrontGasket.brep": "e097d580852758565675aca6ce2991e5bd536d26092aefe48ee353f5f0e92a4c",
+      "interactive/reference/ReferenceSpeakerBackPad.brep": "17950ccd8eddd8e93abf4c3ba5ee498611af9911ffe8b004faa6517e56d113a7",
+      "interactive/reference/ReferenceSpeakerScrewShafts.brep": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16",
+      "interactive/reference/speaker_body.brep": "abb08a73f4ef503c803e3e97894854609f689c3d31ec3bfd475b45e1067dbe1f",
+      "interactive/reference/speaker_rim.brep": "5deeeb81055acf02fa6f519a8470c754db3e3962d363390062cd224133f5329f",
+      "interactive/reference/speaker_diaphragm.brep": "9f7f8c39e5b33384bcf0a85dba4078a8855530aa95c7c6928a4276f8c72c33ce",
+      "interactive/reference/speaker_screw_heads.brep": "c7f4a31637e79e41620aeaad092199710f4784f70359521d1b6221587e56a182",
+      "interactive/reference/speaker_screw_washers.brep": "2641a1273cd3a66c73cd1a6247ca13eb0fb003c64827b06fcc7ea6ec38b4e067",
+      "interactive/reference/ReferenceSpeakerLeadA.brep": "e1edccd95898f7bfec8a159ec34b6cabee04a9b944ed776644098343b85f5c45",
+      "interactive/reference/ReferenceSpeakerLeadB.brep": "58d09fb74dea493bc6823a96141ab1cdfee219bdfeb7ff01e9e70466080b1c7c",
+      "interactive/reference/coax_plug.brep": "227d3587230507ff8ccbcf8db4c6a68d6afec2f3432a227d8b8f10c5dfa58ad8",
+      "interactive/reference/battery-harness.json": "2bbc7ded4940801213b55b38830982b9306203f293e1a250a3035404c86df22a",
+      "audit/antenna/CoaxR10Final.brep": "622f7725aa133e211a24a92af1577417e8526a42b9ae560de8d1a600462bec3a",
+      "audit/antenna/ReferenceCoaxTie.brep": "838801d0508f7e79479566c6da454432f5087783c5a665484284f49273fc2bdd"
+    }
+  }
+}

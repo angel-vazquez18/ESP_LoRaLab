@@ -1,0 +1,249 @@
+{
+  "ok": true,
+  "kind": "current-R7-native-STEP-global-placement",
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "step_sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a",
+  "parts": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48953.971260891216,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -14.0,
+        74.39999999999999,
+        99.6,
+        21.0
+      ]
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 28233.158716070368,
+      "bounds_mm": [
+        -4.4000001000000015,
+        -4.4000001000000015,
+        8.0,
+        74.40000009999999,
+        94.40000009999999,
+        24.600000100000006
+      ]
+    },
+    "PTTPlunger": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 459.9291644855457,
+      "bounds_mm": [
+        45.0,
+        3.0,
+        16.2,
+        57.0,
+        15.0,
+        26.400000000000002
+      ]
+    },
+    "PTTStopCup": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 650.9008562343834,
+      "bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        17.15,
+        63.0,
+        17.3,
+        21.0
+      ]
+    },
+    "BatteryCover": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 18577.59270112053,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        -16.4,
+        74.39999999999999,
+        99.6,
+        -11.0
+      ]
+    },
+    "SpeakerRetainer": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 1078.2839843941174,
+      "bounds_mm": [
+        39.5,
+        38.0,
+        13.2,
+        69.5,
+        53.5,
+        16.4
+      ]
+    },
+    "SMAKey": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 127.71968977810911,
+      "bounds_mm": [
+        40.0,
+        89.6,
+        10.4,
+        54.0,
+        91.6,
+        20.3
+      ]
+    },
+    "R7FitCoupon": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 4882.630268459652,
+      "bounds_mm": [
+        100.0,
+        -1.1102230246251565e-16,
+        -1.1e-16,
+        150.0,
+        32.0,
+        6.0
+      ]
+    }
+  },
+  "step": {
+    "EnclosureBase": {
+      "matches": true,
+      "bounds_difference_mm": 1.4210854715202004e-14,
+      "volume_difference_mm3": 9.83171776169911e-06,
+      "symmetric_difference_mm3": 0.0
+    },
+    "EnclosureLid": {
+      "matches": true,
+      "bounds_difference_mm": 1.4210854715202004e-14,
+      "volume_difference_mm3": 0.002388615976087749,
+      "symmetric_difference_mm3": 0.0
+    },
+    "PTTPlunger": {
+      "matches": true,
+      "bounds_difference_mm": 3.552713678800501e-15,
+      "volume_difference_mm3": 1.1368683772161603e-13,
+      "symmetric_difference_mm3": 0.0
+    },
+    "PTTStopCup": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 2.091837814077735e-11,
+      "symmetric_difference_mm3": 0.0
+    },
+    "BatteryCover": {
+      "matches": true,
+      "bounds_difference_mm": 1.4210854715202004e-14,
+      "volume_difference_mm3": 2.546585164964199e-11,
+      "symmetric_difference_mm3": 0.0
+    },
+    "SpeakerRetainer": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 6.366462912410498e-12,
+      "symmetric_difference_mm3": 0.0
+    },
+    "SMAKey": {
+      "matches": true,
+      "bounds_difference_mm": 1.7763568394002505e-15,
+      "volume_difference_mm3": 1.2789769243681803e-12,
+      "symmetric_difference_mm3": 0.0
+    },
+    "R7FitCoupon": {
+      "matches": true,
+      "bounds_difference_mm": 1.0223024625e-18,
+      "volume_difference_mm3": 4.3655745685100555e-11,
+      "symmetric_difference_mm3": 0.0
+    }
+  },
+  "source_hashes": {
+    "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+    "cad/LoRa-Enclosure-C5-R7-Reinforced.step": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a"
+  },
+  "failures": [],
+  "historical_R6_comparison_rerun": false,
+  "native_saved": false,
+  "global_placement_correction": {
+    "ok": true,
+    "component_count": 2949,
+    "parent_z_offsets_mm": [
+      6.4814
+    ],
+    "parent_translation_mm": [
+      0.0,
+      0.0,
+      6.4814
+    ],
+    "world_bounds_mm": [
+      0.0,
+      0.0,
+      0.3799999999999497,
+      72.28000000000004,
+      90.40034241696301,
+      20.30121926086
+    ],
+    "placement_records_sha256": "924ce6b77d032e2a622296424f036bee27040d29bf7c06872b31a1470b035077",
+    "method": "parent = getGlobalPlacement() * object.Placement.inverse(); parent applied once to Shape.Placement"
+  },
+  "recompute": {
+    "EnclosureBase": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "EnclosureLid": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "PTTPlunger": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "PTTStopCup": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "BatteryCover": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "SpeakerRetainer": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "SMAKey": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    },
+    "R7FitCoupon": {
+      "matches": true,
+      "bounds_difference_mm": 0.0,
+      "volume_difference_mm3": 0.0,
+      "symmetric_difference_mm3": 0.0
+    }
+  }
+}

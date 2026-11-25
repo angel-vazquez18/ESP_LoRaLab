@@ -1,0 +1,27 @@
+{
+  "purpose": "Remove superseded enclosure iterations and ordinary publication duplicates after preservation verification",
+  "targets": [
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5",
+      "files": 1701,
+      "bytes": 745208726.0
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\freecad-publish\\payload",
+      "files": 227,
+      "bytes": 118653292.0
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\freecad-publish\\r4-preparation\\payload",
+      "files": 363,
+      "bytes": 183351371.0
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\freecad-publish\\r7-preparation\\payload",
+      "files": 734,
+      "bytes": 273384000.0
+    }
+  ],
+  "git_worktrees_untouched": true,
+  "removed": true
+}

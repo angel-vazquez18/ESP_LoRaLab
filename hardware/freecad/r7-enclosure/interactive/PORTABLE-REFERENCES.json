@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "references": {
+    "sma_body": {
+      "path": "reference/sma_body.brep",
+      "sha256": "66676cb8a555774f1fad03460f0e228e76c6345f486aed17bc6f032065bf71ec",
+      "part": "sma_body"
+    },
+    "speaker_gasket": {
+      "path": "reference/ReferenceSpeakerFrontGasket.brep",
+      "sha256": "e097d580852758565675aca6ce2991e5bd536d26092aefe48ee353f5f0e92a4c",
+      "part": "speaker_gasket"
+    },
+    "speaker_pad": {
+      "path": "reference/ReferenceSpeakerBackPad.brep",
+      "sha256": "17950ccd8eddd8e93abf4c3ba5ee498611af9911ffe8b004faa6517e56d113a7",
+      "part": "speaker_pad"
+    },
+    "speaker_screw_shafts": {
+      "path": "reference/ReferenceSpeakerScrewShafts.brep",
+      "sha256": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16",
+      "part": "speaker_screws"
+    },
+    "speaker_body": {
+      "path": "reference/speaker_body.brep",
+      "sha256": "abb08a73f4ef503c803e3e97894854609f689c3d31ec3bfd475b45e1067dbe1f",
+      "part": "speaker"
+    },
+    "speaker_rim": {
+      "path": "reference/speaker_rim.brep",
+      "sha256": "5deeeb81055acf02fa6f519a8470c754db3e3962d363390062cd224133f5329f",
+      "part": "speaker"
+    },
+    "speaker_diaphragm": {
+      "path": "reference/speaker_diaphragm.brep",
+      "sha256": "9f7f8c39e5b33384bcf0a85dba4078a8855530aa95c7c6928a4276f8c72c33ce",
+      "part": "speaker"
+    },
+    "speaker_screw_heads": {
+      "path": "reference/speaker_screw_heads.brep",
+      "sha256": "c7f4a31637e79e41620aeaad092199710f4784f70359521d1b6221587e56a182",
+      "part": "speaker_screws"
+    },
+    "speaker_screw_washers": {
+      "path": "reference/speaker_screw_washers.brep",
+      "sha256": "2641a1273cd3a66c73cd1a6247ca13eb0fb003c64827b06fcc7ea6ec38b4e067",
+      "part": "speaker_screws"
+    },
+    "speaker_lead_a": {
+      "path": "reference/ReferenceSpeakerLeadA.brep",
+      "sha256": "e1edccd95898f7bfec8a159ec34b6cabee04a9b944ed776644098343b85f5c45",
+      "part": "speaker_lead_a"
+    },
+    "speaker_lead_b": {
+      "path": "reference/ReferenceSpeakerLeadB.brep",
+      "sha256": "58d09fb74dea493bc6823a96141ab1cdfee219bdfeb7ff01e9e70466080b1c7c",
+      "part": "speaker_lead_b"
+    },
+    "coax_plug": {
+      "path": "reference/coax_plug.brep",
+      "sha256": "227d3587230507ff8ccbcf8db4c6a68d6afec2f3432a227d8b8f10c5dfa58ad8",
+      "part": "coax_plug"
+    },
+    "battery_harness": {
+      "path": "reference/battery-harness.json",
+      "sha256": "2bbc7ded4940801213b55b38830982b9306203f293e1a250a3035404c86df22a"
+    }
+  },
+  "note": "Current fit inputs only; original SOURCE-INPUTS.json remains unchanged historical evidence."
+}

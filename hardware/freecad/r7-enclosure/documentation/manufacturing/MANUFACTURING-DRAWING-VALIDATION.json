@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "release_ready": true,
+  "pages": 9,
+  "pdf": "C5-R7-Manufacturing-Drawings.pdf",
+  "pdf_sha256": "b1791a69c52b6cd26930e4c4c438494793cc92d92934e14ca09e2aaf22eda9e2",
+  "geometry_sha256": "bd90f738521a0804dd57c341688676f9a27cd454e37647341d9219a3f06894ae",
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "step_sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a",
+  "text_checks": true,
+  "visual_review_pending": false,
+  "source_hashes": {
+    "documentation/manufacturing/manufacturing-geometry.json": "bd90f738521a0804dd57c341688676f9a27cd454e37647341d9219a3f06894ae",
+    "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+    "cad/LoRa-Enclosure-C5-R7-Reinforced.step": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a"
+  },
+  "read_only_extraction": true,
+  "machine_code_generated": false,
+  "global_placement_correction": {
+    "ok": true,
+    "component_count": 2949,
+    "parent_z_offsets_mm": [
+      6.4814
+    ],
+    "method": "Copy Shape and replace Placement with object.getGlobalPlacement(); no extra transform or CAD mutation.",
+    "first_object": "C5_detailed_assembly",
+    "first_local_bounds_mm": [
+      47.312768888758,
+      6.0,
+      -1.9814,
+      54.487231111242,
+      12.0,
+      9.5186
+    ],
+    "first_global_bounds_mm": [
+      47.312768888758,
+      6.0,
+      4.5,
+      54.487231111242,
+      12.0,
+      16.0
+    ]
+  },
+  "supersedes_provenance_report_sha256": "ff16f7b08451a8f342b102beaebffe8e82a73722369e53ef048ef76a8177753d",
+  "reviewed_pdf_sha256": "b1791a69c52b6cd26930e4c4c438494793cc92d92934e14ca09e2aaf22eda9e2",
+  "visual_review": "All nine pages rendered with Poppler at 100 dpi. Seven pages have byte-identical PNGs to their previously reviewed versions (1,2,4,5,6,7,9). Changed pages3 and8 visually inspected: clear dimensions/tables and corrected globally placed actual component sections, no overlap or clipped labels. All8 part projection records are unchanged; native CAD/STEP bytes unchanged.",
+  "render_comparison": {
+    "identical_previously_reviewed_pages": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      9
+    ],
+    "changed_pages_visually_reviewed": [
+      3,
+      8
+    ]
+  },
+  "printed_part_projections_unchanged": true
+}
