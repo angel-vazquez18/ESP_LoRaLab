@@ -24,6 +24,7 @@ class Spec(C.Structure):
         ("attempt", C.c_uint8),
         ("action", C.c_uint8),
         ("mask", C.c_uint8),
+        ("block_size", C.c_uint8),
     ]
 
 
@@ -36,6 +37,7 @@ class View(C.Structure):
         ("before", C.c_uint8 * 32),
         ("after", C.c_uint8 * 32),
         ("applied_us", C.c_int64),
+        ("arrived_us", C.c_int64),
     ]
 
 
@@ -177,7 +179,7 @@ def test_retained_replay_is_exact_once_and_cleared_on_disable(fault_library):
         owner.close()
 
 
-@pytest.mark.parametrize("change", [{"offset": 39}, {"mask": 0}, {"attempt": 0}, {"action": 3}])
+@pytest.mark.parametrize("change", [{"offset": 39}, {"mask": 0}, {"attempt": 0}, {"action": 255}])
 def test_invalid_configuration_is_atomic_and_keeps_previous_target(fault_library, change):
     owner = Faults(fault_library)
     try:

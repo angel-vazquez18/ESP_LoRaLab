@@ -19,7 +19,14 @@ def injection(action="xor_byte", **changes):
     return Injection.model_validate(
         dict(
             injection_id=str(uuid4()),
-            stage="tx_after_protect" if action == "xor_byte" else "tx_retained",
+            stage={
+                "xor_byte": "tx_after_protect",
+                "replay": "tx_retained",
+                "drop": "rx_before_reassembly",
+                "drop_ack": "tx_before_radio",
+                "duplicate": "tx_schedule",
+                "reverse_block": "tx_schedule",
+            }[action],
             action=action,
             message_id=1,
             fragment_index=0,
@@ -36,20 +43,20 @@ class LabPair(EchoPair):
     def __init__(self, lib):
         super().__init__(lib, True, node_options={"lab_faults": True})
 
-    def prepare(self, entry, *, start=True, direction="A_TO_B"):
+    def prepare(self, entry, *, start=True, direction="A_TO_B", link=None, byte_count=32):
         self.source, self.target = ("A", "B") if direction == "A_TO_B" else ("B", "A")
         self.plan = KnownDataPlan(
-            link=Link(fragment_payload_bytes=64),
+            link=link or Link(fragment_payload_bytes=64),
             spec=KnownDataSpec(
                 message_count=1,
-                message_bytes=32,
-                security="aes128_gcm",
+                message_bytes=byte_count,
+                security="aes128_gcm" if self.protected else "none",
                 max_duration_ms=10000,
                 direction=direction,
             ),
         )
         budget = preview(self.plan)["timing"]["budget"]
-        if entry["action"] == "replay":
+        if entry["action"] in ("replay", "duplicate"):
             budget["fault_budget_us"] = 2000000
             budget["reassembly_timeout_us"] += 2000000
         for role, node, peer in (
@@ -64,9 +71,9 @@ class LabPair(EchoPair):
                     session_id=self.session,
                     peer_device_id=peer,
                     peer_boot_id=peer + ":1",
-                    security="aes128_gcm",
-                    tx_key_hex=(KEY_A if role == "A" else KEY_B).hex(),
-                    rx_key_hex=(KEY_B if role == "A" else KEY_A).hex(),
+                    security=self.plan.spec.security,
+                    tx_key_hex=(KEY_A if role == "A" else KEY_B).hex() if self.protected else None,
+                    rx_key_hex=(KEY_B if role == "A" else KEY_A).hex() if self.protected else None,
                 ),
                 run_id=self.run,
             )["ok"]
@@ -75,7 +82,8 @@ class LabPair(EchoPair):
             )
             assert configured["ok"]
             self.revisions[role] = configured["result"]["config_revision"]
-        configured = self.node(self.source).request(
+        role = self.target if entry["action"] in ("drop", "drop_ack") else self.source
+        configured = self.node(role).request(
             "fault.set", dict(injections=[entry], replace=True), run_id=self.run
         )
         assert configured["ok"], configured
