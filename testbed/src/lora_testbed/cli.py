@@ -665,6 +665,26 @@ def integration_matrix(config: Path, preview: bool = False):
 
 
 @app.command()
+def clock_evaluate(evidence: Path):
+    """Assess saved TIME-02 pulse and frame evidence offline."""
+    import hashlib
+
+    from .clock_analysis import ClockEvidence, assess
+
+    try:
+        with evidence.open("rb") as source:
+            raw = source.read(1_048_577)
+        if len(raw) > 1_048_576:
+            raise ValueError("Clock evidence exceeds 1 MiB")
+        document = ClockEvidence.model_validate_json(raw)
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    report = assess(document)
+    report["input_sha256"] = hashlib.sha256(raw).hexdigest()
+    typer.echo(json.dumps(report, indent=2))
+
+
+@app.command()
 def lab_start(config: Path, preview: bool = False):
     """Run one lab fault between verified intact controls."""
     try:
