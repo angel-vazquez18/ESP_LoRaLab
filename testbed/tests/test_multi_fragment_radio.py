@@ -17,10 +17,11 @@ from lora_testbed.radio_runs import RadioRunRequest
 
 
 class Pair:
-    def __init__(self, host, lib, drop=None, event_loss=None):
+    def __init__(self, host, lib, drop=None, event_loss=None, lab=False):
         self.host, self.lib, self.drop = host, lib, drop
         self.event_loss = event_loss
         self.serials = {}
+        self.lab = lab
         self.frames = []
         self.dropped = False
         lib.native_radio_generation.argtypes = [C.c_void_p]
@@ -32,7 +33,11 @@ class Pair:
 
     async def connect(self):
         for role, device in [("A", "esp-001122334455"), ("B", "esp-66778899aabb")]:
-            options = {"radio": self.lib.native_radio_create(), "device": device}
+            options = {
+                "radio": self.lib.native_radio_create(),
+                "device": device,
+                "lab_faults": self.lab,
+            }
             peer = (
                 FaultSerial(self.lib, drop_event=self.event_loss[1], **options)
                 if self.event_loss and self.event_loss[0] == role
