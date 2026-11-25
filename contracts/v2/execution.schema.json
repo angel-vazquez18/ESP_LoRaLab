@@ -640,6 +640,19 @@
             "title": "Payload Sha256",
             "type": "string"
           },
+          "reply_hex": {
+            "anyOf": [
+              {
+                "pattern": "^(?:[0-9a-f]{2}){1,215}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reply Hex"
+          },
           "tx_command_us": {
             "anyOf": [
               {
@@ -4311,6 +4324,19 @@
               "pattern": "^[0-9a-f]{64}$",
               "title": "Payload Sha256",
               "type": "string"
+            },
+            "reply_hex": {
+              "anyOf": [
+                {
+                  "pattern": "^(?:[0-9a-f]{2}){1,215}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Reply Hex"
             },
             "tx_command_us": {
               "anyOf": [

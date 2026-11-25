@@ -211,6 +211,7 @@ class EchoData(StrictModel):
     reply_frame_seq: Sequence | None
     payload_bytes: int = Field(ge=1, le=215)
     payload_sha256: SHA256
+    reply_hex: str | None = Field(default=None, pattern=r"^(?:[0-9a-f]{2}){1,215}$")
     tx_command_us: Counter | None
     reply_accepted_us: Counter | None
     rtt_us: Counter | None
@@ -232,7 +233,11 @@ class EchoData(StrictModel):
                 raise ValueError(
                     "Valid RTT requires a matched request/reply and one ordered local interval"
                 )
-        elif self.rtt_us is not None or self.reply_accepted_us is not None:
+        elif (
+            self.rtt_us is not None
+            or self.reply_accepted_us is not None
+            or self.reply_hex is not None
+        ):
             raise ValueError("Unavailable RTT remains null with a reason")
         return self
 
