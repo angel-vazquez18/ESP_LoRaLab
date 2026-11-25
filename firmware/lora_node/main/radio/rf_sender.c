@@ -11,7 +11,8 @@ struct rf_sender
     rf_faults *faults;
     rf_sender_status status;
     rf_data_view header;
-    uint8_t frame[255], maximum_retries;
+    uint8_t frame[255], maximum_retries, wire_sha[32];
+    bool wire_sha_valid;
     size_t length;
     uint16_t fragment;
     uint32_t guard, ack_timeout, tx_timeout, highest_sequence;
@@ -90,6 +91,7 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
                      int64_t deadline)
 {
     rf_data_view header;
+    bool ordered = s && rf_faults_owns_ordered_wire(s->faults, frame);
     if (!s || active(s) || s->pending || !s->radio->available || !s->radio->configured ||
         s->radio->operation || s->radio->event_pending || retries > 2 || guard > 1000000U ||
         turnaround > 1000000U || margin > 1000000U ||
@@ -98,7 +100,7 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
         (s->security && !rf_secure_ready(s->security)) || (!(header.flags & 2) && retries) ||
         (s->session &&
          (header.session != s->session || header.source != s->source ||
-          header.destination != s->destination || header.frame_sequence <= s->highest_sequence)))
+          header.destination != s->destination || (header.frame_sequence <= s->highest_sequence && !ordered))))
         return false;
     int64_t now = s->radio->bus.now_us(s->radio->bus.context);
     if (now < 0 || deadline <= now || deadline - now > INT64_C(3600000000))
@@ -115,7 +117,9 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
     s->session = header.session;
     s->source = header.source;
     s->destination = header.destination;
-    s->highest_sequence = header.frame_sequence;
+    if (header.frame_sequence > s->highest_sequence)
+        s->highest_sequence = header.frame_sequence;
+    if (ordered) rf_faults_consume_ordered_wire(s->faults);
     memcpy(s->frame, frame, length);
     s->length = length;
     s->header = header;
@@ -128,6 +132,7 @@ bool rf_sender_begin(rf_sender *s, const void *frame, size_t length, uint16_t fr
     s->deadline = deadline;
     s->ack_requested = header.flags & 2;
     s->used = true;
+    s->wire_sha_valid = false;
     s->status =
         (rf_sender_status){.state = RF_SENDER_READY, .last_ack_acceptance = RF_SECURE_REJECTED};
     return true;
@@ -203,7 +208,10 @@ static void advance(rf_sender *s)
         }
         const uint8_t *wire = s->faults ? rf_faults_transform(s->faults, s->frame,
             s->length, s->status.attempts + 1, now) : s->frame;
-        if (!wire) finish(s, RF_SENDER_FAILED, "fault_transform_failed");
+        s->wire_sha_valid = wire && s->faults &&
+            s->port.hash(s->port.context, wire, s->length, s->wire_sha);
+        if (!wire || (s->faults && !s->wire_sha_valid))
+            finish(s, RF_SENDER_FAILED, "fault_transform_failed");
         else if (!node_radio_tx(s->radio, wire, s->length, &ref, timeout))
             finish(s, RF_SENDER_FAILED, "radio_tx_failed");
         else
@@ -284,6 +292,11 @@ void rf_sender_snapshot(const rf_sender *s, rf_sender_status *out)
 {
     if (s && out)
         *out = s->status;
+}
+
+const uint8_t *rf_sender_wire_digest(const rf_sender *s)
+{
+    return s && s->wire_sha_valid ? s->wire_sha : NULL;
 }
 
 void rf_sender_memory(const rf_sender *s, node_memory_inventory *out)

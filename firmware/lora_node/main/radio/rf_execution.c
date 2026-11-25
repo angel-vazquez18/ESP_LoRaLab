@@ -170,7 +170,7 @@ static cJSON *budget(rf_execution *r, const rf_plan *p)
     number(r, o, "processing_budget_us", p->processing);
     number(r, o, "capture_budget_us", 0);
     number(r, o, "playback_budget_us", 0);
-    number(r, o, "fault_budget_us", 0);
+    number(r, o, "fault_budget_us", p->fault_us);
     string(r, o, "model_version", "sx126x_lora_v1");
     return o;
 }
@@ -364,6 +364,25 @@ static void operation(rf_execution *r, bool ok, cJSON *result)
     add(r, o, "error", error ? error : cJSON_CreateNull());
     send(r, "operation.result", o);
 }
+static uint32_t duplicate_guard(const node_link_settings *link)
+{
+    return link->guard_us > RF_FAULT_DUPLICATE_GUARD_US ?
+        link->guard_us : RF_FAULT_DUPLICATE_GUARD_US;
+}
+
+static void retained_budget(const rf_execution *r, const rf_message_plan *packet,
+                            const node_link_settings *link, const rf_fault_spec *spec,
+                            uint64_t *total, bool *needs_barrier)
+{
+    if (spec->action != RF_FAULT_REPLAY && spec->action != RF_FAULT_DUPLICATE) return;
+    unsigned body = spec->fragment + 1 < packet->fragment_count ? packet->fragment_bytes :
+        packet->message_bytes - spec->fragment * packet->fragment_bytes;
+    unsigned wire = RF_HEADER_BYTES + body + ((packet->flags & 1) ? RF_TAG_BYTES : 0);
+    *total += rf_radio_airtime_us(&r->radio->applied, wire) + 80000;
+    if (spec->action == RF_FAULT_REPLAY) *needs_barrier = true;
+    else *total += duplicate_guard(link);
+}
+
 static bool fire_window(const rf_execution *r)
 {
     return r->port.lab_faults && r->sender && r->phase == RF_DRAINING && r->plan.fault_us &&
@@ -379,23 +398,25 @@ static const char *fault_command(rf_execution *r, const cJSON *args, rf_plan *p,
             return "INVALID_STATE";
         unsigned total = (replace ? 0 : rf_faults_count(r->faults)) + count;
         if (total > RF_FAULT_ENTRIES) return "RESOURCE_LIMIT";
-        if (count && (!r->plan.protected_mode ||
-            (r->phase == RF_PREPARED && (!r->sender || r->plan.encoded || r->plan.echo))))
-            return "INVALID_ARGUMENT";
+        if (count && r->phase == RF_PREPARED &&
+            (r->plan.encoded || r->plan.echo || r->plan.fixed_source)) return "INVALID_ARGUMENT";
+        if (!r->plan.protected_mode)
+            for (size_t i = 0; i < count; i++)
+                if (specs[i].action == RF_FAULT_XOR || specs[i].action == RF_FAULT_REPLAY)
+                    return "INVALID_ARGUMENT";
         if (!rf_faults_can_configure(r->faults, specs, count, replace)) return "INVALID_ARGUMENT";
         if (r->phase == RF_PREPARED) {
             uint64_t required = 0;
+            bool barrier = false;
             unsigned prior = replace ? 0 : rf_faults_count(r->faults);
             for (size_t i = 0; i < prior + count; i++) {
                 rf_fault_view view;
                 if (i < prior) rf_faults_view(r->faults, i, &view);
                 const rf_fault_spec *spec = i < prior ? &view.spec : &specs[i - prior];
-                if (spec->action != RF_FAULT_REPLAY) continue;
-                unsigned body = spec->fragment + 1 < r->fragments.fragment_count ?
-                    r->fragments.fragment_bytes : r->plan.bytes - spec->fragment * r->fragments.fragment_bytes;
-                required += rf_radio_airtime_us(&r->radio->applied, 56 + body) + 80000;
+                retained_budget(r, &r->fragments, &r->plan.link, spec, &required, &barrier);
             }
-            if (required && r->plan.fault_us < required + 1000000) return "INVALID_ARGUMENT";
+            if (r->plan.fault_us < required + (barrier ? 1000000 : 0))
+                return "INVALID_ARGUMENT";
         }
         p->fault_arguments = args;
         *result = object(r); number(r, *result, "count", total);
@@ -657,21 +678,20 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             p->drain > (uint64_t)p->duration_ms * 1000)
             return "INVALID_ARGUMENT";
         unsigned faults = rf_faults_count(r->faults);
-        if ((faults || p->fault_us) && (!p->protected_mode || p->encoded || p->echo)) return "INVALID_ARGUMENT";
+        if ((faults || p->fault_us) && (p->encoded || p->echo || p->fixed_source)) return "INVALID_ARGUMENT";
         if (r->faults && !p->encoded && !p->echo) {
             rf_message_plan packet;
             if (!rf_message_plan_init(&packet, p->session, 1, 1, p->source, p->source == 1 ? 2 : 1,
                 0, p->protected_mode, link->ack_requested, p->bytes, link->fragment_payload_bytes) ||
                 !rf_faults_validate(r->faults, &packet, attempts)) return "INVALID_ARGUMENT";
             uint64_t minimum_fault = 0;
+            bool barrier = false;
             for (unsigned i = 0; i < faults; i++) {
                 rf_fault_view view; rf_faults_view(r->faults, i, &view);
-                if (view.spec.action == RF_FAULT_REPLAY) {
-                    unsigned body = view.spec.fragment + 1 < fragments ? link->fragment_payload_bytes : last;
-                    minimum_fault += rf_radio_airtime_us(&r->radio->applied, 56 + body) + 80000;
-                }
+                retained_budget(r, &packet, link, &view.spec, &minimum_fault, &barrier);
             }
-            if (minimum_fault && p->fault_us < minimum_fault + 1000000) return "INVALID_ARGUMENT";
+            if (p->fault_us < minimum_fault + (barrier ? 1000000 : 0))
+                return "INVALID_ARGUMENT";
         }
         unsigned free_slots = 0;
         for (unsigned i = 0; i < ARTIFACT_SLOTS; i++)
@@ -840,25 +860,39 @@ static void sender_counts(rf_execution *r, const rf_sender_status *s)
     r->attempts += s->attempts - r->frame_attempts;
     r->frame_attempts = s->attempts;
 }
-static bool transmit(rf_execution *r)
+static size_t encode_data(void *context, uint16_t fragment, uint8_t frame[255])
 {
-    uint8_t frame[255];
+    rf_execution *r = context;
     size_t length = 0;
     if (r->plan.protected_mode)
     {
         uint8_t header[40];
-        if (!rf_message_header(&r->fragments, r->tx_fragment, header))
-            return false;
+        if (!rf_message_header(&r->fragments, fragment, header))
+            return 0;
         size_t body_bytes = ((unsigned)header[32] << 8) | header[33];
         if (rf_secure_seal(r->security, header,
-                           r->payload + (uint32_t)r->tx_fragment * r->fragments.fragment_bytes,
-                           body_bytes, frame, sizeof(frame), &length) != RF_CRYPTO_OK)
-            return false;
+                           r->payload + (uint32_t)fragment * r->fragments.fragment_bytes,
+                           body_bytes, frame, 255, &length) != RF_CRYPTO_OK)
+            return 0;
     }
     else
         length =
-            rf_message_fragment(&r->fragments, r->tx_fragment, r->payload, r->plan.bytes, frame);
-    if (!length || !rf_sender_begin(r->transmitter, frame, length,
+            rf_message_fragment(&r->fragments, fragment, r->payload, r->plan.bytes, frame);
+    return length;
+}
+
+static bool transmit(rf_execution *r)
+{
+    uint8_t frame[255];
+    const uint8_t *wire = frame;
+    size_t length = 0;
+    r->wire_fragment = r->tx_fragment;
+    rf_fault_match schedule = rf_faults_order(r->faults, r->tx_fragment, encode_data, r,
+        r->port.now_us(r->port.context), &wire, &length, &r->wire_fragment);
+    if (schedule == RF_FAULT_OBSERVATION_FAILED) return false;
+    if (schedule == RF_FAULT_NO_MATCH)
+        length = encode_data(r, r->wire_fragment, frame);
+    if (!length || !rf_sender_begin(r->transmitter, wire, length,
                                     r->plan.link.fragment_payload_bytes, r->plan.link.max_retries,
                                     r->plan.link.guard_us, 20000, 80000, r->deadline))
         return false;
@@ -945,7 +979,8 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->observations = r->accepted = r->duplicates = r->attempts = r->delivered = 0;
         r->originals = r->active_message = r->received_message = r->delivered_bitmap = r->source_finished_messages = r->received_messages = 0;
         r->archive_sha[0] = 0;
-        r->tx_fragment = 0;
+        r->tx_fragment = r->wire_fragment = 0;
+        r->duplicate_due = -1;
         r->next_tx = r->first_fragment = -1;
         r->missing_count = r->missing_parts = r->missing_part = 0;
         r->missing_cursor = 0;
@@ -1281,14 +1316,26 @@ bool rf_execution_abort(rf_execution *r, const char *reason, bool close)
     }
     return ok;
 }
-static void rejected(rf_execution *r, const char *reason)
+static void rejected_at(rf_execution *r, const char *reason, const rf_data_view *header,
+                        int64_t rx_done)
 {
     cJSON *o = object(r);
-    string(r, o, "session_id", NULL);
-    string(r, o, "source_role", NULL);
-    string(r, o, "frame_seq", NULL);
-    string(r, o, "message_id", NULL);
-    string(r, o, "fragment_index", NULL);
+    if (header && r->port.lab_faults) {
+        char session[17];
+        snprintf(session, sizeof(session), "%016" PRIx64, header->session);
+        string(r, o, "session_id", session);
+        string(r, o, "source_role", header->source == 1 ? "A" : "B");
+        number(r, o, "frame_seq", header->frame_sequence);
+        number(r, o, "message_id", header->message_id);
+        number(r, o, "fragment_index", header->fragment_index);
+        number(r, o, "rx_done_us", rx_done);
+    } else {
+        string(r, o, "session_id", NULL);
+        string(r, o, "source_role", NULL);
+        string(r, o, "frame_seq", NULL);
+        string(r, o, "message_id", NULL);
+        string(r, o, "fragment_index", NULL);
+    }
     string(r, o, "stage",
            eq(reason, "wrong_session") || eq(reason, "wrong_source") ? "session"
            : eq(reason, "content_mismatch") || eq(reason, "wrong_reference") || eq(reason, "wrong_message") ? "reassembly"
@@ -1300,6 +1347,17 @@ static void rejected(rf_execution *r, const char *reason)
     string(r, o, "reason", reason);
     string(r, o, "related_injection_id", NULL);
     send(r, "rx.rejected", o);
+}
+static void rejected(rf_execution *r, const char *reason)
+{
+    rejected_at(r, reason, NULL, -1);
+}
+static void wire_digest(rf_execution *r, cJSON *o, const uint8_t *digest)
+{
+    if (!digest) return;
+    char digest_hex[65];
+    hex(digest, digest_hex);
+    string(r, o, "wire_sha256", digest_hex);
 }
 static uint32_t word(const uint8_t *p)
 {
@@ -1324,6 +1382,7 @@ static void tx_observation(rf_execution *r, const node_radio_event *event, const
     else
         string(r, o, "tx_done_us", NULL);
     string(r, o, "status", event->status == RADIO_DONE ? "completed" : "failed");
+    if (eq(kind, "data")) wire_digest(r, o, rf_sender_wire_digest(r->transmitter));
     send(r, "tx.attempt", o);
 }
 static bool resume_receive(rf_execution *r)
@@ -1419,7 +1478,7 @@ static void received_ack(rf_execution *r, const node_radio_event *event)
         return;
     uint8_t data[40];
     bool decoded = event->crc_ok && event->frame_bytes == (r->plan.protected_mode ? 56 : 40) &&
-                   rf_message_header(&r->fragments, r->tx_fragment, data) &&
+                   rf_message_header(&r->fragments, r->wire_fragment, data) &&
                    rf_ack_header_matches(event->bytes, data);
     r->observations++;
     if (r->first_rx < 0)
@@ -1432,7 +1491,7 @@ static void received_ack(rf_execution *r, const node_radio_event *event)
     {
         number(r, o, "frame_seq", word(event->bytes + 16));
         number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
-        number(r, o, "fragment_index", r->tx_fragment);
+        number(r, o, "fragment_index", r->wire_fragment);
     }
     else
     {
@@ -1452,10 +1511,19 @@ typedef struct
 {
     rf_execution *execution;
     rf_data_view *header;
-    int64_t received;
+    const node_radio_event *event;
     rf_reassembly_result insertion;
     rf_acceptance accepted;
+    rf_fault_match fault;
 } protected_insertion;
+
+static rf_fault_match receiver_fault(rf_execution *r, rf_fault_action action, const rf_data_view *h,
+                                     const node_radio_event *event)
+{
+    if (!r->faults) return RF_FAULT_NO_MATCH;
+    return rf_faults_receive(r->faults, action, h, event->bytes, event->frame_bytes,
+                             event->done_us, r->port.now_us(r->port.context));
+}
 static bool insert_protected(void *context, const uint8_t header[40], const uint8_t *body,
                              size_t bytes)
 {
@@ -1476,17 +1544,20 @@ static bool insert_protected(void *context, const uint8_t header[40], const uint
         call->accepted = RF_CONTENT_MISMATCH;
     else
     {
+        call->fault = receiver_fault(r, RF_FAULT_DROP, h, call->event);
+        if (call->fault != RF_FAULT_NO_MATCH) return false;
+        int64_t received = call->event->done_us;
         if (r->plan.fixed_source && h->message_id > r->received_message) {
             if (r->received_message && !rf_reassembly_next(r->receiver, h->message_id,
-                call->received, r->receive_deadline)) { call->accepted = RF_INTERNAL_ERROR; return false; }
+                received, r->receive_deadline)) { call->accepted = RF_INTERNAL_ERROR; return false; }
             if (!r->received_message && h->message_id != 1 && !rf_reassembly_next(r->receiver, h->message_id,
-                call->received, r->receive_deadline)) { call->accepted = RF_INTERNAL_ERROR; return false; }
+                received, r->receive_deadline)) { call->accepted = RF_INTERNAL_ERROR; return false; }
             r->received_message = h->message_id;
             r->received_messages++;
             r->first_fragment = -1;
         }
         call->insertion =
-            rf_reassembly_accept_authenticated(r->receiver, header, body, bytes, call->received);
+            rf_reassembly_accept_authenticated(r->receiver, header, body, bytes, received);
         if (call->insertion == RF_REASSEMBLY_ACCEPTED || call->insertion == RF_REASSEMBLY_COMPLETE)
         {
             call->accepted = RF_DELIVERED;
@@ -1612,22 +1683,76 @@ static void fault_observation(rf_execution *r)
     if (o) string(r, o, "session_id", r->plan.session_text);
     if (o && send(r, "fault.applied", o)) r->fault_pending_valid = false;
 }
+static bool poll_extra_transmission(rf_execution *r)
+{
+    node_radio_event event;
+    if (!node_radio_poll(r->radio, &event)) return false;
+    cJSON *o = object(r);
+    string(r, o, "injection_id", r->replay_id); string(r, o, "session_id", r->plan.session_text);
+    number(r, o, "frame_seq", event.reference.frame_seq); number(r, o, "message_id", event.reference.message_id);
+    number(r, o, "fragment_index", event.reference.fragment_index); number(r, o, "frame_bytes", event.frame_bytes);
+    if (event.command_us >= 0) number(r, o, "tx_command_us", event.command_us); else string(r, o, "tx_command_us", NULL);
+    if (event.done_us >= 0) number(r, o, "tx_done_us", event.done_us); else string(r, o, "tx_done_us", NULL);
+    string(r, o, "status", event.status == RADIO_DONE ? "completed" : "failed");
+    wire_digest(r, o, r->replay_view.after);
+    send(r, "fault.tx", o); r->injected_tx = false;
+    if (event.status != RADIO_DONE) { finish(r, "error", true); return false; }
+    return true;
+}
+
 static void fault_drain(rf_execution *r)
 {
-    if (r->injected_tx) {
-        node_radio_event event;
-        if (!node_radio_poll(r->radio, &event)) return;
-        cJSON *o = object(r);
-        string(r, o, "injection_id", r->replay_id); string(r, o, "session_id", r->plan.session_text);
-        number(r, o, "frame_seq", event.reference.frame_seq); number(r, o, "message_id", event.reference.message_id);
-        number(r, o, "fragment_index", event.reference.fragment_index); number(r, o, "frame_bytes", event.frame_bytes);
-        if (event.command_us >= 0) number(r, o, "tx_command_us", event.command_us); else string(r, o, "tx_command_us", NULL);
-        if (event.done_us >= 0) number(r, o, "tx_done_us", event.done_us); else string(r, o, "tx_done_us", NULL);
-        string(r, o, "status", event.status == RADIO_DONE ? "completed" : "failed");
-        send(r, "fault.tx", o); r->injected_tx = false;
-        if (event.status != RADIO_DONE) { finish(r, "error", true); return; }
-    }
+    if (r->injected_tx && !poll_extra_transmission(r)) return;
     if (r->port.now_us(r->port.context) >= r->drain_deadline) finish(r, "completed", false);
+}
+
+static void next_fragment(rf_execution *r)
+{
+    r->tx_fragment++;
+    int64_t now = r->port.now_us(r->port.context);
+    if (r->tx_fragment < r->fragments.fragment_count)
+        r->next_tx = now + r->plan.link.guard_us;
+    else if (r->plan.fixed_source) {
+        encoded_queue_complete(r->queue, r->active_message, SOURCE_SENT);
+        r->active_message = 0;
+        r->source_finished_messages++;
+    } else if (r->plan.fault_us) {
+        r->phase = RF_DRAINING;
+        r->drain_deadline = now + r->plan.fault_us + r->plan.drain;
+        if (r->drain_deadline > r->deadline) r->drain_deadline = r->deadline;
+        state(r);
+    } else finish(r, "completed", false);
+}
+
+static void duplicate_work(rf_execution *r)
+{
+    if (r->injected_tx) {
+        if (poll_extra_transmission(r)) {
+            r->duplicate_due = -1;
+            next_fragment(r);
+        }
+        return;
+    }
+    int64_t now = r->port.now_us(r->port.context);
+    if (now < r->duplicate_due) return;
+    rf_fault_view view;
+    const uint8_t *wire = rf_faults_duplicate(r->faults, r->wire_fragment, &view);
+    if (!wire) { finish(r, "error", true); return; }
+    node_radio_reference ref = {r->plan.session, view.sequence, view.spec.message,
+        view.spec.fragment, view.spec.attempt};
+    uint32_t timeout = rf_radio_airtime_us(&r->radio->applied, view.frame_bytes) + 80000;
+    if (r->deadline - now < timeout) {
+        finish(r, "timeout", true);
+        return;
+    }
+    if (!node_radio_tx(r->radio, wire, view.frame_bytes, &ref, timeout) ||
+        !rf_faults_duplicated(r->faults, view.spec.id, now)) {
+        finish(r, "error", true);
+        return;
+    }
+    r->injected_tx = true;
+    r->replay_view = view;
+    memcpy(r->replay_id, view.spec.id, sizeof(r->replay_id));
 }
 void rf_execution_tick(rf_execution *r)
 {
@@ -1700,6 +1825,7 @@ void rf_execution_tick(rf_execution *r)
     if (!r->port.room(r->port.context, 6))
         return;
     if (r->sender && r->phase == RF_DRAINING && r->plan.fault_us) { fault_drain(r); return; }
+    if (r->sender && r->duplicate_due >= 0) { duplicate_work(r); return; }
     if (!r->sender && receiver_ack_work(r))
         return;
     node_radio_event event;
@@ -1787,26 +1913,16 @@ void rf_execution_tick(rf_execution *r)
             if (event.kind == RADIO_EVENT_RX && status.acks)
             {
                 cJSON *ack = object(r);
-                number(r, ack, "acked_frame_seq", r->fragments.first_sequence + r->tx_fragment);
+                number(r, ack, "acked_frame_seq", r->fragments.first_sequence + r->wire_fragment);
                 number(r, ack, "ack_frame_seq", word(event.bytes + 16));
                 number(r, ack, "attempt_index", status.attempts);
                 string(r, ack, "status", "received");
                 send(r, "ack.result", ack);
             }
-            r->tx_fragment++;
-            if (r->tx_fragment < r->fragments.fragment_count)
-                r->next_tx = r->port.now_us(r->port.context) + r->plan.link.guard_us;
-            else if (r->plan.fixed_source) {
-                encoded_queue_complete(r->queue, r->active_message, SOURCE_SENT);
-                r->active_message = 0;
-                r->source_finished_messages++;
-            } else if (r->plan.fault_us) {
-                r->phase = RF_DRAINING;
-                int64_t now = r->port.now_us(r->port.context);
-                r->drain_deadline = now + r->plan.fault_us + r->plan.drain;
-                if (r->drain_deadline > r->deadline) r->drain_deadline = r->deadline;
-                state(r);
-            } else finish(r, "completed", false);
+            rf_fault_view duplicate;
+            if (rf_faults_duplicate(r->faults, r->wire_fragment, &duplicate))
+                r->duplicate_due = r->port.now_us(r->port.context) + duplicate_guard(&r->plan.link);
+            else next_fragment(r);
         }
         else if ((status.state == RF_SENDER_FAILED || status.state == RF_SENDER_CANCELLED) &&
             !continue_source_after_failure(r, &status))
@@ -1847,6 +1963,11 @@ void rf_execution_tick(rf_execution *r)
         add(r, o, "rssi_dbm", cJSON_CreateNumber(event.rssi_dbm));
         add(r, o, "snr_db", cJSON_CreateNumber(event.snr_db));
         add(r, o, "crc_ok", cJSON_CreateBool(event.crc_ok));
+        if (decoded && r->faults && event.crc_ok) {
+            uint8_t digest[32];
+            if (r->port.hash(r->port.context, event.bytes, event.frame_bytes, digest))
+                wire_digest(r, o, digest);
+        }
         send(r, "rx.frame", o);
     }
     if (event.status == RADIO_TIMEOUT && resume_receive(r))
@@ -1861,6 +1982,7 @@ void rf_execution_tick(rf_execution *r)
     rf_acceptance accepted = RF_INVALID_FRAME;
     rf_reassembly_result insertion = RF_REASSEMBLY_REJECTED;
     const char *security_rejection = NULL;
+    rf_fault_match dropped = RF_FAULT_NO_MATCH;
     if (decoded && event.crc_ok && h.session != r->plan.session)
         accepted = RF_WRONG_SESSION;
     else if (decoded && event.crc_ok &&
@@ -1870,12 +1992,14 @@ void rf_execution_tick(rf_execution *r)
         security_rejection = "protection_mismatch";
     else if (decoded && event.crc_ok && r->plan.protected_mode)
     {
-        protected_insertion call = {r, &h, event.done_us, RF_REASSEMBLY_REJECTED, RF_INVALID_FRAME};
+        protected_insertion call = {.execution = r, .header = &h, .event = &event,
+            .insertion = RF_REASSEMBLY_REJECTED, .accepted = RF_INVALID_FRAME};
         rf_secure_acceptance decision =
             rf_secure_receive(r->security, event.bytes, event.frame_bytes, event.done_us,
                               r->plan.link.ack_requested, r->plan.drain, insert_protected, &call);
         insertion = call.insertion;
         accepted = call.accepted;
+        dropped = call.fault;
         if (insertion == RF_REASSEMBLY_HASH_FAILED)
             security_rejection = "content_mismatch";
         if (decision == RF_SECURE_RETRY_DUPLICATE)
@@ -1902,7 +2026,8 @@ void rf_execution_tick(rf_execution *r)
         else if (h.source != r->plan.source || h.destination != r->plan.role)
             accepted = RF_WRONG_ROLE;
         else if (h.message_id != 1 || h.message_bytes != r->plan.bytes ||
-                 h.fragment_count != r->fragments.fragment_count)
+                 h.fragment_count != r->fragments.fragment_count || h.content ||
+                 h.flags != (r->plan.link.ack_requested ? 2 : 0))
             accepted = RF_WRONG_MESSAGE;
         else if (memcmp(h.body,
                         r->payload + (uint32_t)h.fragment_index * r->fragments.fragment_bytes,
@@ -1910,13 +2035,21 @@ void rf_execution_tick(rf_execution *r)
             accepted = RF_CONTENT_MISMATCH;
         else
         {
-            insertion =
-                rf_reassembly_accept(r->receiver, event.bytes, event.frame_bytes, event.done_us);
+            dropped = receiver_fault(r, RF_FAULT_DROP, &h, &event);
+            if (dropped == RF_FAULT_NO_MATCH) {
+                insertion =
+                    rf_reassembly_accept(r->receiver, event.bytes, event.frame_bytes, event.done_us);
+            }
             accepted = insertion == RF_REASSEMBLY_DUPLICATE ? RF_DUPLICATE
                        : insertion == RF_REASSEMBLY_ACCEPTED || insertion == RF_REASSEMBLY_COMPLETE
                            ? RF_DELIVERED
                            : RF_INTERNAL_ERROR;
         }
+    }
+    if (dropped != RF_FAULT_NO_MATCH) {
+        if (dropped == RF_FAULT_OBSERVATION_FAILED || !resume_receive(r))
+            finish(r, "error", true);
+        return;
     }
     if (accepted == RF_DELIVERED)
     {
@@ -1985,16 +2118,25 @@ void rf_execution_tick(rf_execution *r)
             finish(r, "error", true);
             return;
         }
+        rf_fault_match suppressed = receiver_fault(r, RF_FAULT_DROP_ACK, &h, &event);
+        if (suppressed != RF_FAULT_NO_MATCH) {
+            rf_ack_suppress(r->acknowledgments); // Preserve accepted-frame retry eligibility.
+            if (suppressed == RF_FAULT_OBSERVATION_FAILED || !resume_receive(r))
+                finish(r, "error", true);
+            return;
+        }
         r->ack_pending = true;
         return;
     }
     if (accepted != RF_DELIVERED)
-        rejected(r, security_rejection                ? security_rejection
+        rejected_at(r, security_rejection             ? security_rejection
                     : accepted == RF_CONTENT_MISMATCH ? "content_mismatch"
                     : accepted == RF_WRONG_SESSION    ? "wrong_session"
                     : accepted == RF_WRONG_ROLE       ? "wrong_source"
+                    : accepted == RF_DUPLICATE        ? "duplicate"
                     : event.crc_ok                    ? "invalid_frame"
-                                                      : "phy_crc_or_header");
+                                                      : "phy_crc_or_header",
+                    decoded && event.crc_ok ? &h : NULL, event.done_us);
     int64_t until = !r->plan.fixed_source && r->delivered ? r->drain_deadline : r->receive_deadline;
     int64_t remaining = until - r->port.now_us(r->port.context);
     if (remaining <= 0 || accepted == RF_INTERNAL_ERROR || (!r->plan.fixed_source && !r->plan.fault_us && insertion == RF_REASSEMBLY_COMPLETE) ||

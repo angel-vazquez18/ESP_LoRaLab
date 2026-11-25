@@ -127,6 +127,10 @@ size_t rf_ack_take(rf_ack_receiver *r, int64_t now, uint8_t out[56])
         r->sequence++;
     return 40;
 }
+void rf_ack_suppress(rf_ack_receiver *r)
+{
+    if (r) r->queued = false;
+}
 void rf_ack_cancel(rf_ack_receiver *r)
 {
     if (!r)

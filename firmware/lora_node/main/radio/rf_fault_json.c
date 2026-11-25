@@ -41,8 +41,8 @@ bool rf_fault_json_parse(const cJSON *args, rf_fault_spec out[RF_FAULT_BATCH], s
         const cJSON *entry = cJSON_GetArrayItem(entries, i);
         const char *id = text(entry, "injection_id"), *stage = text(entry, "stage"),
                    *action = text(entry, "action");
-        uint32_t message, fragment, attempt, offset = 0, mask = 0;
-        if (!exact_keys(entry, keys, 9) || !id || strlen(id) != 36 || !null(entry, "block_size") ||
+        uint32_t message, fragment, attempt, offset = 0, mask = 0, block = 0;
+        if (!exact_keys(entry, keys, 9) || !id || strlen(id) != 36 ||
             !integer(entry, "message_id", 1, UINT32_MAX, &message) ||
             !integer(entry, "fragment_index", 0, RF_MESSAGE_FRAGMENTS - 1, &fragment) ||
             !integer(entry, "attempt_index", 1, 3, &attempt)) return false;
@@ -51,11 +51,20 @@ bool rf_fault_json_parse(const cJSON *args, rf_fault_spec out[RF_FAULT_BATCH], s
             kind = RF_FAULT_XOR;
             if (!integer(entry, "byte_offset", 40, 254, &offset) ||
                 !integer(entry, "xor_mask", 1, 255, &mask)) return false;
-        } else if (equal(stage, "tx_retained") && equal(action, "replay") &&
-                   null(entry, "byte_offset") && null(entry, "xor_mask")) kind = RF_FAULT_REPLAY;
-        else return false;
+        } else {
+            if (!null(entry, "byte_offset") || !null(entry, "xor_mask")) return false;
+            if (equal(stage, "tx_retained") && equal(action, "replay")) kind = RF_FAULT_REPLAY;
+            else if (equal(stage, "rx_before_reassembly") && equal(action, "drop")) kind = RF_FAULT_DROP;
+            else if (equal(stage, "tx_before_radio") && equal(action, "drop_ack")) kind = RF_FAULT_DROP_ACK;
+            else if (equal(stage, "tx_schedule") && equal(action, "duplicate")) kind = RF_FAULT_DUPLICATE;
+            else if (equal(stage, "tx_schedule") && equal(action, "reverse_block")) kind = RF_FAULT_REVERSE;
+            else return false;
+        }
+        if (kind == RF_FAULT_REVERSE) {
+            if (!integer(entry, "block_size", 2, RF_FAULT_ORDER_FRAMES, &block)) return false;
+        } else if (!null(entry, "block_size")) return false;
         out[i] = (rf_fault_spec){.message = message, .fragment = fragment, .attempt = attempt,
-            .offset = offset, .mask = mask, .action = kind};
+            .offset = offset, .mask = mask, .action = kind, .block_size = block};
         memcpy(out[i].id, id, 37);
     }
     return true;
@@ -78,18 +87,23 @@ cJSON *rf_fault_json_entry(const rf_fault_view *v)
 {
     if (!v || v->state > RF_FAULT_MISSED) return NULL;
     const rf_fault_spec *s = &v->spec;
+    const char *stages[] = {NULL, "tx_after_protect", "tx_retained", "rx_before_reassembly", "tx_before_radio",
+        "tx_schedule", "tx_schedule"};
+    const char *actions[] = {NULL, "xor_byte", "replay", "drop", "drop_ack", "duplicate", "reverse_block"};
+    if (s->action < RF_FAULT_XOR || s->action > RF_FAULT_REVERSE) return NULL;
     bool mutation = s->action == RF_FAULT_XOR, observed = v->sequence != 0;
     cJSON *o = cJSON_CreateObject();
     if (!o || !cJSON_AddStringToObject(o, "injection_id", s->id) ||
-        !cJSON_AddStringToObject(o, "stage", mutation ? "tx_after_protect" : "tx_retained") ||
-        !cJSON_AddStringToObject(o, "action", mutation ? "xor_byte" : "replay") ||
+        !cJSON_AddStringToObject(o, "stage", stages[s->action]) ||
+        !cJSON_AddStringToObject(o, "action", actions[s->action]) ||
         !number(o, "message_id", s->message, true) || !number(o, "fragment_index", s->fragment, true) ||
         !number(o, "attempt_index", s->attempt, true) || !number(o, "byte_offset", s->offset, mutation) ||
-        !number(o, "xor_mask", s->mask, mutation) || !cJSON_AddNullToObject(o, "block_size") ||
+        !number(o, "xor_mask", s->mask, mutation) || !number(o, "block_size", s->block_size, s->block_size != 0) ||
         !cJSON_AddStringToObject(o, "state", (const char *[]){"planned", "retained", "applied", "fired", "disabled", "missed"}[v->state]) ||
         !number(o, "target_frame_seq", v->sequence, observed) || !number(o, "frame_bytes", v->frame_bytes, observed) ||
         !digest(o, "before_sha256", v->before, observed) || !digest(o, "after_sha256", v->after, observed) ||
-        !number(o, "applied_us", v->applied_us, v->applied_us >= 0)) {
+        !number(o, "applied_us", v->applied_us, v->applied_us >= 0) ||
+        !number(o, "target_arrived_us", v->arrived_us, v->arrived_us >= 0)) {
         cJSON_Delete(o);
         return NULL;
     }

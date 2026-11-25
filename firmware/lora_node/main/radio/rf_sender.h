@@ -40,4 +40,5 @@ void rf_sender_cancel(rf_sender *);
 bool rf_sender_security(rf_sender *, rf_secure_session *);
 bool rf_sender_faults(rf_sender *, rf_faults *);
 
+const uint8_t *rf_sender_wire_digest(const rf_sender *);
 void rf_sender_memory(const rf_sender *s, node_memory_inventory *out);

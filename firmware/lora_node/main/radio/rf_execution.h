@@ -98,7 +98,8 @@ typedef struct
     int64_t receive_deadline, drain_deadline;
     uint32_t frame_attempts, frame_originals;
     rf_message_plan fragments;
-    uint16_t tx_fragment;
+    uint16_t tx_fragment, wire_fragment;
+    int64_t duplicate_due;
     uint32_t originals;
     uint32_t missing_count, missing_parts, missing_part;
     uint16_t missing_cursor;

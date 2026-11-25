@@ -127,7 +127,7 @@ class Budget(ContractModel):
     capture_budget_us: Literal[0] = 0
     processing_budget_us: int = Field(ge=0)
     playback_budget_us: Literal[0] = 0
-    fault_budget_us: Literal[0] = 0
+    fault_budget_us: int = Field(default=0, ge=0, le=3_600_000_000)
     model_version: Literal["sx126x_lora_v1"] = MODEL_VERSION
 
 

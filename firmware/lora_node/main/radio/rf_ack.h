@@ -20,6 +20,7 @@ bool rf_ack_offer(rf_ack_receiver *, const void *data, size_t frame_bytes, rf_ac
                   int64_t now_us);
 /* Emits one due ACK, consuming a fresh local sequence. No DATA counters change. */
 size_t rf_ack_take(rf_ack_receiver *, int64_t now_us, uint8_t out[56]);
+void rf_ack_suppress(rf_ack_receiver *);
 void rf_ack_cancel(rf_ack_receiver *);
 bool rf_ack_matches(const void *ack, size_t ack_bytes, const void *outstanding_data,
                     size_t data_bytes, uint16_t fragment_bytes);

@@ -13,7 +13,7 @@ from . import source_protocol_v2 as source_protocol
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataPlan, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "finite_message_execution_v5"
+EXECUTION_PROFILE = "finite_message_execution_v6"
 ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
@@ -46,7 +46,7 @@ CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source", "f
 
 
 class Capabilities(ContractModel):
-    profile: Literal["finite_message_execution_v5"]
+    profile: Literal["finite_message_execution_v6"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     commands: list[ExecutionName] | Literal["base", "lab"] = Field(min_length=1, max_length=12)
 
@@ -322,8 +322,10 @@ def schema():
             "command_entries": 8,
             "session_entries": 32,
             "retained_frames": 16,
+            "order_frames": 32,
             "status_page": 4,
-            "scope": "protected_generated_data",
+            "scope": "finite_generated_data",
+            "receiver_attempt_index": "eligible_arrival_ordinal",
         },
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),

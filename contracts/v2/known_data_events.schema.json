@@ -270,7 +270,10 @@
         "stage": {
           "enum": [
             "tx_after_protect",
-            "tx_retained"
+            "tx_retained",
+            "rx_before_reassembly",
+            "tx_before_radio",
+            "tx_schedule"
           ],
           "title": "Stage",
           "type": "string"
@@ -278,7 +281,11 @@
         "action": {
           "enum": [
             "xor_byte",
-            "replay"
+            "replay",
+            "drop",
+            "drop_ack",
+            "duplicate",
+            "reverse_block"
           ],
           "title": "Action",
           "type": "string"
@@ -328,8 +335,17 @@
           "title": "Xor Mask"
         },
         "block_size": {
-          "title": "Block Size",
-          "type": "null"
+          "anyOf": [
+            {
+              "maximum": 32,
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Block Size"
         },
         "state": {
           "enum": [
@@ -356,7 +372,7 @@
           "anyOf": [
             {
               "maximum": 255,
-              "minimum": 57,
+              "minimum": 41,
               "type": "integer"
             },
             {
@@ -402,6 +418,19 @@
           ],
           "title": "Applied Us"
         },
+        "target_arrived_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Arrived Us"
+        },
         "session_id": {
           "pattern": "^[0-9a-f]{16}$",
           "title": "Session Id",
@@ -424,6 +453,7 @@
         "before_sha256",
         "after_sha256",
         "applied_us",
+        "target_arrived_us",
         "session_id"
       ],
       "title": "Applied",
@@ -587,6 +617,19 @@
           ],
           "title": "Status",
           "type": "string"
+        },
+        "wire_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wire Sha256"
         }
       },
       "required": [
@@ -640,8 +683,9 @@
           "type": "integer"
         },
         "fault_budget_us": {
-          "const": 0,
           "default": 0,
+          "maximum": 3600000000,
+          "minimum": 0,
           "title": "Fault Budget Us",
           "type": "integer"
         },
@@ -1688,6 +1732,19 @@
         "crc_ok": {
           "title": "Crc Ok",
           "type": "boolean"
+        },
+        "wire_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wire Sha256"
         }
       },
       "required": [
@@ -1880,6 +1937,20 @@
             }
           ],
           "title": "Related Injection Id"
+        },
+        "rx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rx Done Us"
         }
       },
       "required": [
@@ -2420,7 +2491,7 @@
         },
         "frame_bytes": {
           "maximum": 255,
-          "minimum": 57,
+          "minimum": 41,
           "title": "Frame Bytes",
           "type": "integer"
         },
@@ -2457,6 +2528,11 @@
           ],
           "title": "Status",
           "type": "string"
+        },
+        "wire_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Wire Sha256",
+          "type": "string"
         }
       },
       "required": [
@@ -2468,7 +2544,8 @@
         "frame_bytes",
         "tx_command_us",
         "tx_done_us",
-        "status"
+        "status",
+        "wire_sha256"
       ],
       "title": "Transmission",
       "type": "object"

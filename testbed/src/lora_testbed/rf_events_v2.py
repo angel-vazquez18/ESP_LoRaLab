@@ -60,6 +60,7 @@ class AttemptData(FrameIdentity):
     tx_command_us: Counter | None
     tx_done_us: Counter | None
     status: Literal["completed", "failed"]
+    wire_sha256: SHA256 | None = None
 
     @model_validator(mode="after")
     def timestamps(self):
@@ -86,6 +87,7 @@ class ReceivedData(StrictModel):
     rssi_dbm: Annotated[float, Field(allow_inf_nan=False)]
     snr_db: Annotated[float, Field(allow_inf_nan=False)]
     crc_ok: bool
+    wire_sha256: SHA256 | None = None
 
 
 class AcceptedData(FrameIdentity):
@@ -176,6 +178,7 @@ class RejectedData(StrictModel):
     stage: Literal["framing", "session", "authentication", "replay", "reassembly"]
     reason: Identifier
     related_injection_id: RunID | None
+    rx_done_us: Counter | None = None
 
 
 class Rejected(Envelope):

@@ -10,14 +10,16 @@ from .experiments_v2 import ContractModel
 
 class Injection(ContractModel):
     injection_id: UUID
-    stage: Literal["tx_after_protect", "tx_retained"]
-    action: Literal["xor_byte", "replay"]
+    stage: Literal[
+        "tx_after_protect", "tx_retained", "rx_before_reassembly", "tx_before_radio", "tx_schedule"
+    ]
+    action: Literal["xor_byte", "replay", "drop", "drop_ack", "duplicate", "reverse_block"]
     message_id: int = Field(ge=1, le=2**32 - 1)
     fragment_index: int = Field(ge=0, le=4095)
     attempt_index: int = Field(ge=1, le=3)
     byte_offset: int | None = Field(ge=40, le=254)
     xor_mask: int | None = Field(ge=1, le=255)
-    block_size: None
+    block_size: int | None = Field(ge=2, le=32)
 
     @model_validator(mode="after")
     def exact_stage(self):
@@ -30,10 +32,20 @@ class Injection(ContractModel):
                 raise ValueError(
                     "Mutation requires the post-protection stage and an explicit byte/mask"
                 )
-        elif (
-            self.stage != "tx_retained" or self.byte_offset is not None or self.xor_mask is not None
-        ):
-            raise ValueError("Replay requires retained bytes and null mutation selectors")
+        else:
+            stage = {
+                "replay": "tx_retained",
+                "drop": "rx_before_reassembly",
+                "drop_ack": "tx_before_radio",
+                "duplicate": "tx_schedule",
+                "reverse_block": "tx_schedule",
+            }[self.action]
+            if self.stage != stage or self.byte_offset is not None or self.xor_mask is not None:
+                raise ValueError("Action requires its declared stage and null mutation selectors")
+        if (self.block_size is not None) != (self.action == "reverse_block"):
+            raise ValueError("Only a reverse block requires a block size")
+        if self.stage == "tx_schedule" and self.attempt_index != 1:
+            raise ValueError("A scheduling fault targets the original send")
         return self
 
 
@@ -65,10 +77,11 @@ class Configured(ContractModel):
 class Entry(Injection):
     state: Literal["planned", "retained", "applied", "fired", "disabled", "missed"]
     target_frame_seq: int | None = Field(ge=1, le=2**32 - 1)
-    frame_bytes: int | None = Field(ge=57, le=255)
+    frame_bytes: int | None = Field(ge=41, le=255)
     before_sha256: str | None = Field(pattern=r"^[0-9a-f]{64}$")
     after_sha256: str | None = Field(pattern=r"^[0-9a-f]{64}$")
     applied_us: int | None = Field(ge=0, le=2**53 - 1)
+    target_arrived_us: int | None = Field(ge=0, le=2**53 - 1)
 
     @model_validator(mode="after")
     def actual_observation(self):
@@ -84,6 +97,14 @@ class Entry(Injection):
             raise ValueError("Observed fault state requires exact target and wire digests")
         if self.state in ("applied", "fired") and self.applied_us is None:
             raise ValueError("Applied fault requires a node-local application instant")
+        if (
+            self.state == "applied"
+            and self.action in ("drop", "drop_ack")
+            and (self.target_arrived_us is None or self.target_arrived_us > self.applied_us)
+        ):
+            raise ValueError("Receiver fault requires its observed arrival before application")
+        if self.action not in ("drop", "drop_ack") and self.target_arrived_us is not None:
+            raise ValueError("Transmitter fault cannot carry a receiver arrival")
         return self
 
 
@@ -121,10 +142,11 @@ class Transmission(Fire):
     frame_seq: int = Field(ge=1, le=2**32 - 1)
     message_id: int = Field(ge=1, le=2**32 - 1)
     fragment_index: int = Field(ge=0, le=4095)
-    frame_bytes: int = Field(ge=57, le=255)
+    frame_bytes: int = Field(ge=41, le=255)
     tx_command_us: int | None = Field(ge=0, le=2**53 - 1)
     tx_done_us: int | None = Field(ge=0, le=2**53 - 1)
     status: Literal["completed", "failed"]
+    wire_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def confirmed_times(self):
