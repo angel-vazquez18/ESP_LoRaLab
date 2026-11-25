@@ -31,6 +31,7 @@ from . import (
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
 from .campaign_plans import CampaignSpec
+from .campaign_views import execution_view, plan_view
 from .catalog import catalog
 from .comparison import campaign_summary, compare
 from .experiments_v2 import KnownDataPlan
@@ -356,6 +357,12 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     async def physical_campaign_rerun(identifier: control_v2.UUID, body: CampaignRerunRequest):
         return await app.state.host.rerun_campaign(identifier, body.case_ids)
 
+    @app.get("/api/physical-campaigns/executions/{identifier}/view")
+    async def physical_campaign_execution_view(
+        identifier: control_v2.UUID, offset: int = Query(0, ge=0, le=4096)
+    ):
+        return execution_view(app.state.host, identifier, offset)
+
     @app.get("/api/physical-campaigns/executions/{identifier}")
     async def physical_campaign_execution(identifier: control_v2.UUID):
         return app.state.host.physical_campaigns.get(identifier)
@@ -383,6 +390,12 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.get("/api/physical-campaigns/plans")
     async def physical_campaign_plans(limit: int = Query(20, ge=1, le=100)):
         return app.state.host.campaign_plans.list(limit)
+
+    @app.get("/api/physical-campaigns/plans/{plan_id}/view")
+    async def physical_campaign_plan_view(
+        plan_id: control_v2.UUID, offset: int = Query(0, ge=0, le=4096)
+    ):
+        return plan_view(app.state.host, plan_id, offset)
 
     @app.get("/api/physical-campaigns/plans/{plan_id}")
     async def physical_campaign_plan(plan_id: control_v2.UUID):

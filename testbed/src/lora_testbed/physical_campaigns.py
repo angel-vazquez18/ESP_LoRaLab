@@ -12,6 +12,7 @@ from time import monotonic
 from uuid import uuid4
 
 from .campaign_plans import digest
+from .campaign_views import execution_header
 from .session_keys import require_public_metadata
 from .storage import utc_now
 
@@ -158,7 +159,7 @@ class PhysicalCampaigns:
         )
         return {
             "execution_available": True,
-            "active": deepcopy(self.current),
+            "active": deepcopy(execution_header(self.current)),
             "executions": [dict(row) for row in rows],
         }
 
