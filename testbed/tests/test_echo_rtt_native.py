@@ -20,10 +20,12 @@ SESSION = "0102030405060708"
 
 
 class EchoPair:
-    def __init__(self, lib, protected=False):
+    def __init__(self, lib, protected=False, *, node_options=None):
         self.lib, self.protected = lib, protected
-        self.a = NativeNode(lib, radio=lib.native_radio_create())
-        self.b = NativeNode(lib, radio=lib.native_radio_create(), device="esp-66778899aabb")
+        self.a = NativeNode(lib, radio=lib.native_radio_create(), **(node_options or {}))
+        self.b = NativeNode(
+            lib, radio=lib.native_radio_create(), device="esp-66778899aabb", **(node_options or {})
+        )
         self.b.time = 101_000_000  # Peer clock must never enter requester RTT arithmetic.
         self.run = str(uuid4())
         self.session = SESSION

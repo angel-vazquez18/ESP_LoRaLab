@@ -1,5 +1,6 @@
 """Finite memory observations use real control and an explicit injected clock."""
 
+import pytest
 from test_node_control_native import NativeNode
 from test_node_control_native import native_library as native_library
 
@@ -381,7 +382,10 @@ def test_duplicate_memory_commands_do_not_restart_or_repeat_stop(native_library)
         node.close()
 
 
-def test_all_capabilities_active_run_and_prior_error_keep_health_bounded(native_library):
+@pytest.mark.parametrize("lab_faults", [False, True])
+def test_all_capabilities_active_run_and_prior_error_keep_health_bounded(
+    native_library, lab_faults
+):
     import json
 
     from test_node_audio_native import AudioFixture
@@ -396,6 +400,7 @@ def test_all_capabilities_active_run_and_prior_error_keep_health_bounded(native_
         display=lambda *_: True,
         display_status=lambda _: 1,
         boot=4294967295,
+        lab_faults=lab_faults,
     )
     try:
         node.time = 123456789000000

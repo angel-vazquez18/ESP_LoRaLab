@@ -81,7 +81,7 @@ def test_shared_lifecycle_examples_validate_without_accepting_unsupported_settin
         (Path(__file__).resolve().parents[2] / "contracts/v2/radio_examples.json").read_text()
     )
     assert {entry["command"]["name"] for entry in examples["records"]} == set(
-        run_protocol_v2.EXECUTION_COMMANDS
+        run_protocol_v2.BASE_EXECUTION_COMMANDS
     )
     for entry in examples["records"]:
         command = run_protocol_v2.Command.model_validate(entry["command"])
@@ -92,3 +92,21 @@ def test_shared_lifecycle_examples_validate_without_accepting_unsupported_settin
     for radio in examples["rejected_configurations"]:
         with pytest.raises(ValidationError):
             Radio.model_validate(radio)
+
+
+def test_exact_compact_command_sets_expand_without_enabling_normal_lab_commands():
+    node = advertised()
+    capabilities = node["capabilities"]
+    declaration = capabilities["resource_limits"]["execution"]
+    declaration["commands"] = "base"
+    assert "run.start" in require_execution_compatible(node, "run.start", capabilities).commands
+    with pytest.raises(NodeFailure, match="MISSING_CAPABILITY"):
+        require_execution_compatible(node, "fault.set", capabilities)
+    declaration["commands"] = "lab"
+    with pytest.raises(NodeFailure, match="MISSING_CAPABILITY"):
+        require_execution_compatible(node, "fault.set", capabilities)
+    capabilities["fault_injection"] = True
+    assert "fault.set" in require_execution_compatible(node, "fault.set", capabilities).commands
+    declaration["commands"] = "unknown"
+    with pytest.raises(NodeFailure, match="UNSUPPORTED_VERSION"):
+        require_execution_compatible(node, "run.start", capabilities)
