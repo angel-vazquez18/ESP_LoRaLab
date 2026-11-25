@@ -653,6 +653,30 @@ def radio_start(
 
 
 @app.command()
+def lab_start(config: Path, preview: bool = False):
+    """Run one lab fault between verified intact controls."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/lab/preflight" if preview else "/api/lab/trials", body)
+
+
+@app.command()
+def lab_status(identifier: str | None = None):
+    """Inspect saved trial assertions and their linked radio records."""
+    request("/api/lab/trials" + (f"/{identifier}" if identifier else ""))
+
+
+@app.command()
+def lab_stop(identifier: str):
+    """Stop the active trial and clean up its current run."""
+    request(f"/api/lab/trials/{identifier}/stop", {})
+
+
+@app.command()
 def echo_start(
     direction: str = "A_TO_B",
     security: str = "none",

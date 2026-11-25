@@ -40,7 +40,7 @@ from .host import Host
 from .models import StrictModel
 from .nodes import discover_ports
 from .paths import TESTBED_ROOT
-from .radio_runs import EchoRadioRunRequest, RadioRunRequest
+from .radio_runs import EchoRadioRunRequest, LabRadioRunRequest, RadioRunRequest
 from .reports import campaign_csv, evidence_bundle
 from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
@@ -245,6 +245,26 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/echo/distribution")
     async def echo_distribution(body: list[control_v2.UUID]):
         return await app.state.host.radio.collect_echo_distribution(body)
+
+    @app.post("/api/lab/preflight")
+    async def lab_preflight(body: LabRadioRunRequest):
+        return app.state.host.radio_preflight(body)
+
+    @app.post("/api/lab/trials", status_code=202)
+    async def lab_start(body: LabRadioRunRequest):
+        return await app.state.host.start_lab_trial(body)
+
+    @app.get("/api/lab/trials")
+    async def lab_trials():
+        return app.state.host.lab_trials.snapshot()
+
+    @app.get("/api/lab/trials/{identifier}")
+    async def lab_trial(identifier: control_v2.UUID):
+        return app.state.host.lab_trials.get(identifier)
+
+    @app.post("/api/lab/trials/{identifier}/stop")
+    async def lab_stop(identifier: control_v2.UUID):
+        return await app.state.host.lab_trials.stop(identifier)
 
     @app.post("/api/radio/preflight")
     async def radio_preflight(body: RadioRunRequest):

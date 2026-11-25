@@ -8,6 +8,7 @@ from .artifact_transfers import ArtifactTransfers
 from .campaign_plans import CampaignPlans
 from .catalog import catalog, required_nodes
 from .diagnostic_jobs import DiagnosticJobs
+from .lab_trials import LabTrials
 from .node_audio import NodeAudio
 from .nodes import NodeSession, discover_ports
 from .physical_adapter import PhysicalAdapter
@@ -38,6 +39,7 @@ class Host:
         self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
         self.observations = WorkloadObservations(self.store, self.adapter)
         self.physical_campaigns = PhysicalCampaigns(self)
+        self.lab_trials = LabTrials(self)
         self.campaign_exports = CampaignExports(self)
 
     def node_event(self, role, event):
@@ -47,7 +49,7 @@ class Host:
 
     @property
     def busy(self) -> bool:
-        return self.physical_campaigns.busy or self.workload_busy
+        return self.lab_trials.busy or self.physical_campaigns.busy or self.workload_busy
 
     @property
     def workload_busy(self) -> bool:
@@ -86,6 +88,7 @@ class Host:
             "artifact_transfers": self.artifacts.snapshot(),
             "audio_operations": self.audio.snapshot(),
             "radio_runs": self.radio.snapshot(),
+            "lab_trials": self.lab_trials.snapshot(),
             "diagnostic_runs": self.diagnostics.snapshot(),
             "voice_runs": self.voice.snapshot(),
             "physical_campaigns": self.physical_campaigns.snapshot(),
@@ -254,10 +257,16 @@ class Host:
             return node.snapshot()
 
     def require_available_bench(self, owner=None):
-        if self.workload_busy or (
-            self.physical_campaigns.busy and owner is not self.physical_campaigns.owner
+        if (
+            self.workload_busy
+            or (self.physical_campaigns.busy and owner is not self.physical_campaigns.owner)
+            or (self.lab_trials.busy and owner is not self.lab_trials.owner)
         ):
             raise RuntimeError("Another run or campaign owns the bench")
+
+    async def start_lab_trial(self, request):
+        async with self.lock:
+            return await self.lab_trials.start(request)
 
     async def start_campaign(self, plan_id):
         async with self.lock:
@@ -406,6 +415,8 @@ class Host:
             return await self.voice.start(request)
 
     async def stop(self):
+        if self.lab_trials.busy:
+            return await self.lab_trials.stop()
         if self.physical_campaigns.busy:
             return await self.physical_campaigns.cancel(self.physical_campaigns.current["id"])
         async with self.lock:
@@ -431,6 +442,7 @@ class Host:
     async def close(self):
         self.campaign_exports.closing = True
         self.radio.evidence_worker.closing = True
+        await self.lab_trials.close()
         await self.physical_campaigns.close()
         await self.observations.close()
         await self.diagnostics.close()

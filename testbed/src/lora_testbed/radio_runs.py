@@ -17,7 +17,16 @@ from . import __version__, echo_accounting, run_protocol_v2
 from .adapters import require_execution_compatible
 from .artifact_contract_v2 import SHA256, ArtifactID
 from .evidence_worker import SavedEvidenceWorker
-from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
+from .experiments_v2 import (
+    KnownDataPlan,
+    KnownDataSpec,
+    Link,
+    Radio,
+    airtime_us,
+    known_data,
+    preview,
+)
+from .fault_protocol_v2 import Injection
 from .models import StrictModel
 from .physical_adapter import PhysicalAdapter
 from .radio_accounting import failed_ranges, reconcile
@@ -61,6 +70,58 @@ class RadioRunRequest(StrictModel):
         if not timing["fits_selected_duration"]:
             raise ValueError(timing["duration_blocker"])
         return self
+
+
+class LabRadioRunRequest(RadioRunRequest):
+    injection: Injection
+
+    @model_validator(mode="after")
+    def lab_scope(self):
+        target, action, link = self.injection, self.injection.action, self.link
+        if target.message_id != 1 or target.attempt_index != 1:
+            raise ValueError("This trial selects the first attempt or opportunity in one message")
+        start = target.fragment_index * link.fragment_payload_bytes
+        end = (target.fragment_index + ((target.block_size or 1) - 1)) * link.fragment_payload_bytes
+        if end >= self.message_bytes:
+            raise ValueError("Selected fragment or block exceeds the message")
+        if action in ("xor_byte", "replay") and self.security != "aes128_gcm":
+            raise ValueError("This case requires AES-GCM")
+        if (
+            action in ("xor_byte", "replay", "duplicate", "reverse_block")
+            and link.ack_mode != "none"
+        ):
+            raise ValueError("This case requires ACK disabled")
+        if action == "drop_ack" and (link.ack_mode != "stop_wait" or not link.max_retries):
+            raise ValueError("An ACK-suppression trial needs stop-and-wait and a recovery retry")
+        body = min(link.fragment_payload_bytes, self.message_bytes - start)
+        if action == "xor_byte" and target.byte_offset >= 56 + body:
+            raise ValueError("Mutation offset exceeds the selected frame")
+        timing = preview(self.plan())["timing"]
+        budget = self.lab_budget(timing["budget"])
+        if (
+            timing["required_max_duration_ms"] * 1000 + budget["fault_budget_us"]
+            > self.timeout_ms * 1000
+        ):
+            raise ValueError("Additional fault airtime exceeds the selected duration")
+        return self
+
+    def lab_budget(self, ordinary):
+        action = self.injection.action
+        extra = 0
+        if action in ("replay", "duplicate"):
+            capacity = self.link.fragment_payload_bytes
+            body = min(capacity, self.message_bytes - capacity * self.injection.fragment_index)
+            wire = 40 + body + (16 if self.security == "aes128_gcm" else 0)
+            guard = 1_500_000 if action == "replay" else max(20000, self.link.guard_us)
+            extra = airtime_us(self.radio, wire) + 80000 + guard
+        return {
+            **ordinary,
+            "fault_budget_us": extra,
+            "reassembly_timeout_us": ordinary["reassembly_timeout_us"] + extra,
+        }
+
+    def control(self):
+        return RadioRunRequest.model_validate(self.model_dump(exclude={"injection"}))
 
 
 class EchoRadioRunRequest(RadioRunRequest):
@@ -194,6 +255,7 @@ class RadioRuns:
             "accounting",
             "timing",
             "host_transaction",
+            "lab",
             "missing_evidence",
             "error",
             "cleanup",
@@ -306,6 +368,23 @@ class RadioRuns:
                 except ValueError as exc:
                     blockers.append(f"Node {role}: {exc}")
                     break
+            if isinstance(request, LabRadioRunRequest):
+                if not (
+                    node.identity.capabilities.fault_injection
+                    and node.health.capability_availability.fault_injection
+                ):
+                    blockers.append(f"Node {role} needs explicit lab firmware")
+                else:
+                    for name in run_protocol_v2.LAB_FAULT_COMMANDS:
+                        try:
+                            require_execution_compatible(
+                                node.identity.model_dump(),
+                                name,
+                                node.health.capability_availability.model_dump(),
+                            )
+                        except ValueError as exc:
+                            blockers.append(f"Node {role}: {exc}")
+                            break
             limits = node.health.capability_availability.resource_limits.get("execution_limits", {})
             if isinstance(request, EncodedRadioRunRequest) and (
                 limits.get("encoded_source") is not True
@@ -343,7 +422,9 @@ class RadioRuns:
             "ready": not blockers,
             "blockers": list(dict.fromkeys(blockers)),
             "required_nodes": 2,
-            "scope": "one verified echo; requester-local RTT; physical qualification separate"
+            "scope": "one controlled laboratory fault; physical qualification separate"
+            if isinstance(request, LabRadioRunRequest)
+            else "one verified echo; requester-local RTT; physical qualification separate"
             if isinstance(request, EchoRadioRunRequest)
             else "one protected encoded message; physical qualification separate"
             if isinstance(request, EncodedRadioRunRequest)
@@ -431,6 +512,17 @@ class RadioRuns:
                 for r, n in self.nodes.items()
             },
         }
+        if isinstance(request, LabRadioRunRequest):
+            injection = request.injection.model_dump()
+            record["lab"] = {
+                "injection": injection,
+                "role": receiver
+                if injection["stage"] in ("rx_before_reassembly", "tx_before_radio")
+                else source,
+                "budget": request.lab_budget(preview(request.plan())["timing"]["budget"]),
+                "report": None,
+                "fire": None,
+            }
         if isinstance(request, EchoRadioRunRequest):
             record["host_transaction"] = {
                 "start_ns": monotonic_ns(),
@@ -458,7 +550,7 @@ class RadioRuns:
             r["physical_bindings"][role],
             name,
             args,
-            run_id=r["id"] if name.startswith(("session.", "run.")) else None,
+            run_id=r["id"] if name.startswith(("session.", "run.", "fault.")) else None,
             on_record=lambda value: self.trace_command(r, role, value, cleanup),
             key_set_id=key_set_id,
             **kwargs,
@@ -522,6 +614,7 @@ class RadioRuns:
                         or observed["data"]["config_revision"]
                         != r["applied_settings"][role]["config_revision"]
                         or observed["data"]["source_sha256"] != expected
+                        or (r.get("lab") and observed["data"]["budget"] != r["lab"]["budget"])
                     ):
                         raise ValueError(
                             f"Node {role} preparation evidence is missing or inconsistent"
@@ -606,6 +699,41 @@ class RadioRuns:
             "details": details,
         }
 
+    async def maybe_fire_lab_replay(self, r):
+        lab = r["lab"]
+        expected = hashlib.sha256(
+            known_data(r["plan"]["spec"]["source_seed"], 1, r["plan"]["spec"]["message_bytes"])
+        ).hexdigest()
+        receiver_delivered = any(
+            event["role"] == r["receiver"]
+            and event["name"] == "message.result"
+            and event["data"]["status"] == "delivered"
+            and event["data"]["sha256"] == expected
+            for event in r["events"]
+        )
+        source_draining = any(
+            event["role"] == r["sender"]
+            and event["name"] == "run.state"
+            and event["data"]["state"] == "draining"
+            for event in r["events"]
+        )
+        if not (receiver_delivered and source_draining):
+            return
+        report = await self.command(r, r["sender"], "fault.status", {"offset": 0, "limit": 4})
+        if (
+            report["session_id"] != r["session_id"]
+            or report["count"] != 1
+            or len(report["entries"]) != 1
+            or report["entries"][0]["injection_id"] != lab["injection"]["injection_id"]
+            or report["entries"][0]["state"] != "retained"
+            or not report["fire_window_open"]
+        ):
+            raise ValueError("Retained replay is missing or outside its authorized run window")
+        lab["fire"] = await self.command(
+            r, r["sender"], "fault.fire", {"injection_id": lab["injection"]["injection_id"]}
+        )
+        self.save(r)
+
     async def run(self, r, request):
         try:
             self.started = True
@@ -613,7 +741,8 @@ class RadioRuns:
                 raise asyncio.CancelledError
             async with asyncio.timeout(request.timeout_ms / 1000 + 45):
                 plan = request.plan()
-                budget = preview(plan)["timing"]["budget"]
+                lab = r.get("lab")
+                budget = lab["budget"] if lab else preview(plan)["timing"]["budget"]
                 if plan.spec.source in ("known_data", "echo"):
                     r["initial_artifact_ids"] = {}
                     for role in "AB":
@@ -681,6 +810,15 @@ class RadioRuns:
                     if key_set:
                         key_set.close()
                     r["security"]["keys_retired_on_host"] = True
+                if lab:
+                    configured = await self.command(
+                        r,
+                        lab["role"],
+                        "fault.set",
+                        {"injections": [lab["injection"]], "replace": True},
+                    )
+                    if configured["count"] != 1:
+                        raise ValueError("Node did not confirm the selected fault")
                 r["stage"] = "preparing"
                 self.save(r)
                 for role in (r["receiver"], r["sender"]):
@@ -733,6 +871,8 @@ class RadioRuns:
                                 r["summaries"][event["role"]] = event["data"]
                         if len(r["summaries"]) == 2:
                             break
+                        if lab and lab["injection"]["action"] == "replay" and lab["fire"] is None:
+                            await self.maybe_fire_lab_replay(r)
                         await asyncio.sleep(0.01)
                 r["rf_window_closed_at"] = utc_now()
                 r["stage"] = "retrieving"
@@ -751,7 +891,7 @@ class RadioRuns:
                         )
                     allowed_stops = (
                         ("completed", "timeout")
-                        if isinstance(request, EchoRadioRunRequest)
+                        if lab or isinstance(request, EchoRadioRunRequest)
                         else ("completed",)
                     )
                     if r["summaries"][role]["stop_reason"] not in allowed_stops:
@@ -759,7 +899,18 @@ class RadioRuns:
                             f"Node {role} stopped with {r['summaries'][role]['stop_reason']}"
                         )
                     await self.command(r, role, "status.get")
-                if isinstance(request, EchoRadioRunRequest):
+                if lab:
+                    lab["report"] = await self.command(
+                        r, lab["role"], "fault.status", {"offset": 0, "limit": 4}
+                    )
+                delivered = r["summaries"][r["receiver"]]["delivered_messages"]
+                if lab and not delivered:
+                    expected = known_data(request.source_seed, 1, request.message_bytes)
+                    source = await self.retrieve(r, r["sender"], "source")
+                    if source != expected:
+                        raise ValueError("Source readback differs from the independent recipe")
+                    self.register_retirement(r, r["sender"])
+                elif isinstance(request, EchoRadioRunRequest):
                     expected = await self.verify_echo(r, request)
                 else:
                     source = await self.retrieve(r, r["sender"], "source")
@@ -792,9 +943,10 @@ class RadioRuns:
                         if encoded
                         else "independent source recipe plus exact source/recovered readback",
                     }
-                if plan.spec.source == "known_data":
+                if plan.spec.source == "known_data" and (not lab or delivered):
                     self.register_retirement(r, "AB")
-                await self.required_evidence(r, expected)
+                if not lab or delivered:
+                    await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():
                     baseline = r["baseline"][role]
                     if (
