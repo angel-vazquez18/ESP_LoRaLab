@@ -10,9 +10,9 @@ from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 from . import rf_events_v2 as rf
 from . import source_protocol_v2 as source_protocol
 from . import v2
-from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
+from .experiments_v2 import Budget, ContractModel, KnownDataPlan, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "finite_message_execution_v3"
+EXECUTION_PROFILE = "finite_message_execution_v4"
 ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
@@ -40,7 +40,7 @@ CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source")
 
 
 class Capabilities(ContractModel):
-    profile: Literal["finite_message_execution_v3"]
+    profile: Literal["finite_message_execution_v4"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     commands: list[ExecutionName] = Field(min_length=1, max_length=9)
 
@@ -117,8 +117,29 @@ class FixedRateSourceSpec(EncodedSourceSpec):
     max_duration_ms: int = Field(default=90000, ge=60000, le=90000)
 
 
+class EchoSpec(KnownDataSpec):
+    catalog_id: Literal["TIME-01"] = "TIME-01"
+    source: Literal["echo"] = "echo"
+    message_count: Literal[1] = 1
+    message_bytes: int = Field(default=64, ge=1, le=215)
+
+
+class EchoPlan(KnownDataPlan):
+    spec: EchoSpec = Field(default_factory=EchoSpec)
+
+    @model_validator(mode="after")
+    def single_unacknowledged_frame(self):
+        if (
+            self.link.ack_mode != "none"
+            or self.link.max_retries
+            or self.spec.message_bytes > self.link.fragment_payload_bytes
+        ):
+            raise ValueError("Echo requires one unacknowledged fragment without retries")
+        return self
+
+
 class Prepare(ContractModel):
-    spec: KnownDataSpec | EncodedSourceSpec | FixedRateSourceSpec
+    spec: KnownDataSpec | EncodedSourceSpec | FixedRateSourceSpec | EchoSpec
     budget: Budget
 
 

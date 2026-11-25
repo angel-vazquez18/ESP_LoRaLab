@@ -176,6 +176,14 @@ def preview(plan: KnownDataPlan) -> dict:
     """Prepare bounded calculations without connecting nodes or creating a run."""
     spec, radio, link = plan.spec, plan.radio, plan.link
     encoded = spec.source == "encoded_source"
+    echo = spec.source == "echo"
+    if echo and (
+        spec.message_count != 1
+        or spec.message_bytes > link.fragment_payload_bytes
+        or link.ack_mode != "none"
+        or link.max_retries
+    ):
+        raise ValueError("Echo requires one unacknowledged fragment without retries")
     codec_allowance = 5000000 if encoded else 0
     tag_bytes = 16 if spec.security == "aes128_gcm" else 0
     fragments = ceil_div(spec.message_bytes, link.fragment_payload_bytes)
@@ -199,24 +207,28 @@ def preview(plan: KnownDataPlan) -> dict:
     )
     drain = max(2_000_000, retry_horizon)
     # Provisional contract allowances; not measured CPU or hardware performance.
-    processing = 10000 * (spec.message_count + attempts) + codec_allowance * spec.message_count
-    worst_rf = data_us_per_message * spec.message_count * attempts_per_packet
+    processing = (
+        10000 * (spec.message_count + attempts + int(echo)) + codec_allowance * spec.message_count
+    )
+    worst_rf = data_us_per_message * spec.message_count * attempts_per_packet * (2 if echo else 1)
     worst_wait = attempts * ack_timeout
-    guards = max(0, attempts - 1) * link.guard_us
+    guards = max(0, attempts - 1) * link.guard_us + (link.ack_turnaround_us if echo else 0)
     worst_total = worst_rf + worst_wait + guards + processing + drain
     per_message = (
-        data_us_per_message * attempts_per_packet
+        data_us_per_message * attempts_per_packet * (2 if echo else 1)
         + fragments * attempts_per_packet * ack_timeout
         + max(0, fragments * attempts_per_packet - 1) * link.guard_us
-        + 10000 * (1 + fragments * attempts_per_packet)
+        + 10000 * (1 + fragments * attempts_per_packet + int(echo))
+        + (link.ack_turnaround_us if echo else 0)
         + codec_allowance
         + 2_000_000
     )
     nominal = (
-        data_us_per_message * spec.message_count
+        data_us_per_message * spec.message_count * (2 if echo else 1)
         + packets * (link.ack_turnaround_us + ack_airtime if reliable else 0)
         + max(0, packets - 1) * link.guard_us
-        + 10000 * (spec.message_count + packets)
+        + 10000 * (spec.message_count + packets + int(echo))
+        + (link.ack_turnaround_us if echo else 0)
         + codec_allowance * spec.message_count
         + drain
     )
@@ -230,6 +242,8 @@ def preview(plan: KnownDataPlan) -> dict:
         processing_budget_us=processing,
     )
     required = ["radio"]
+    if echo:
+        required.append("echo")
     if fragments > 1:
         required.append("fragmentation")
     if tag_bytes or spec.instrumentation.crypto_samples:
@@ -242,9 +256,9 @@ def preview(plan: KnownDataPlan) -> dict:
         required.append("clock_sync")
     canonical = json.dumps(plan.model_dump(), sort_keys=True, separators=(",", ":")).encode()
     return {
-        "scope": "encoded_message_calculated_preview"
-        if encoded
-        else "known_data_calculated_preview",
+        "scope": "echo_calculated_preview"
+        if echo
+        else ("encoded_message_calculated_preview" if encoded else "known_data_calculated_preview"),
         "execution_available": False,
         "hardware_validated": False,
         "execution_blocker": "The v2 run adapter and RF firmware are not implemented",
@@ -286,7 +300,9 @@ def preview(plan: KnownDataPlan) -> dict:
             "budget": budget.model_dump(),
             "assumptions": [
                 "Requested modem settings; applied radio settings are not yet verified",
-                "Processing allowance: 10000 us per message plus 10000 us per maximum attempt",
+                "Echo allowance: 30000 us processing plus 20000 us responder turnaround"
+                if echo
+                else "Processing allowance: 10000 us per message plus 10000 us per maximum attempt",
                 "Encoded source adds 5000000 us codec allowance; capture/playback are separate"
                 if encoded
                 else "No controlled injections, codec, capture or playback in this preview",

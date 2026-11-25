@@ -592,6 +592,193 @@
         "title": "Command",
         "type": "object"
       },
+      "EchoData": {
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "not": {
+              "const": "0000000000000000"
+            },
+            "pattern": "^[0-9a-f]{16}$",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "request_frame_seq": {
+            "anyOf": [
+              {
+                "maximum": 4294967295,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Frame Seq"
+          },
+          "reply_frame_seq": {
+            "anyOf": [
+              {
+                "maximum": 4294967295,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Frame Seq"
+          },
+          "payload_bytes": {
+            "maximum": 215,
+            "minimum": 1,
+            "title": "Payload Bytes",
+            "type": "integer"
+          },
+          "payload_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Payload Sha256",
+            "type": "string"
+          },
+          "tx_command_us": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tx Command Us"
+          },
+          "reply_accepted_us": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Accepted Us"
+          },
+          "rtt_us": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rtt Us"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "reason": {
+            "maxLength": 96,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "request_frame_seq",
+          "reply_frame_seq",
+          "payload_bytes",
+          "payload_sha256",
+          "tx_command_us",
+          "reply_accepted_us",
+          "rtt_us",
+          "valid",
+          "reason"
+        ],
+        "title": "EchoData",
+        "type": "object"
+      },
+      "EchoResult": {
+        "additionalProperties": false,
+        "properties": {
+          "v": {
+            "const": 2,
+            "default": 2,
+            "title": "V",
+            "type": "integer"
+          },
+          "kind": {
+            "const": "event",
+            "default": "event",
+            "title": "Kind",
+            "type": "string"
+          },
+          "device_id": {
+            "maxLength": 96,
+            "minLength": 1,
+            "title": "Device Id",
+            "type": "string"
+          },
+          "boot_id": {
+            "maxLength": 96,
+            "minLength": 1,
+            "title": "Boot Id",
+            "type": "string"
+          },
+          "node_role": {
+            "enum": [
+              "A",
+              "B"
+            ],
+            "title": "Node Role",
+            "type": "string"
+          },
+          "event_seq": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Event Seq",
+            "type": "integer"
+          },
+          "uptime_us": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Uptime Us",
+            "type": "integer"
+          },
+          "run_id": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "name": {
+            "const": "echo.result",
+            "title": "Name",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/$defs/EchoData"
+          }
+        },
+        "required": [
+          "device_id",
+          "boot_id",
+          "node_role",
+          "event_seq",
+          "uptime_us",
+          "run_id",
+          "name",
+          "data"
+        ],
+        "title": "EchoResult",
+        "type": "object"
+      },
       "HealthEvent": {
         "additionalProperties": false,
         "properties": {
@@ -1923,6 +2110,17 @@
       "SummaryData": {
         "additionalProperties": false,
         "properties": {
+          "echo": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/EchoData"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "role": {
             "enum": [
               "sender",
@@ -2149,6 +2347,7 @@
           "mapping": {
             "ack.result": "#/$defs/AckResult",
             "diagnostic": "#/$defs/HealthEvent",
+            "echo.result": "#/$defs/EchoResult",
             "health": "#/$defs/HealthEvent",
             "message.missing": "#/$defs/Missing",
             "message.result": "#/$defs/MessageResult",
@@ -2183,6 +2382,9 @@
             "$ref": "#/$defs/AckResult"
           },
           {
+            "$ref": "#/$defs/EchoResult"
+          },
+          {
             "$ref": "#/$defs/Rejected"
           },
           {
@@ -2208,7 +2410,7 @@
     "additionalProperties": false,
     "properties": {
       "profile": {
-        "const": "finite_message_execution_v3",
+        "const": "finite_message_execution_v4",
         "title": "Profile",
         "type": "string"
       },
@@ -2573,6 +2775,99 @@
           "title": "Budget",
           "type": "object"
         },
+        "EchoSpec": {
+          "additionalProperties": false,
+          "properties": {
+            "catalog_id": {
+              "const": "TIME-01",
+              "default": "TIME-01",
+              "title": "Catalog Id",
+              "type": "string"
+            },
+            "direction": {
+              "default": "A_TO_B",
+              "enum": [
+                "A_TO_B",
+                "B_TO_A"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "source": {
+              "const": "echo",
+              "default": "echo",
+              "title": "Source",
+              "type": "string"
+            },
+            "message_count": {
+              "const": 1,
+              "default": 1,
+              "title": "Message Count",
+              "type": "integer"
+            },
+            "message_bytes": {
+              "default": 64,
+              "maximum": 215,
+              "minimum": 1,
+              "title": "Message Bytes",
+              "type": "integer"
+            },
+            "source_seed": {
+              "default": 743,
+              "maximum": 4294967295,
+              "minimum": 0,
+              "title": "Source Seed",
+              "type": "integer"
+            },
+            "source_artifact_id": {
+              "default": null,
+              "title": "Source Artifact Id",
+              "type": "null"
+            },
+            "sample_count": {
+              "default": null,
+              "title": "Sample Count",
+              "type": "null"
+            },
+            "security": {
+              "default": "none",
+              "enum": [
+                "none",
+                "aes128_gcm"
+              ],
+              "title": "Security",
+              "type": "string"
+            },
+            "max_duration_ms": {
+              "default": 120000,
+              "maximum": 3600000,
+              "minimum": 1000,
+              "title": "Max Duration Ms",
+              "type": "integer"
+            },
+            "source_duration_ms": {
+              "default": null,
+              "title": "Source Duration Ms",
+              "type": "null"
+            },
+            "instrumentation": {
+              "$ref": "#/$defs/Instrumentation"
+            },
+            "expected_sha256": {
+              "default": null,
+              "title": "Expected Sha256",
+              "type": "null"
+            },
+            "playback": {
+              "const": false,
+              "default": false,
+              "title": "Playback",
+              "type": "boolean"
+            }
+          },
+          "title": "EchoSpec",
+          "type": "object"
+        },
         "EncodedSourceSpec": {
           "additionalProperties": false,
           "properties": {
@@ -2896,6 +3191,9 @@
             },
             {
               "$ref": "#/$defs/FixedRateSourceSpec"
+            },
+            {
+              "$ref": "#/$defs/EchoSpec"
             }
           ],
           "title": "Spec"
@@ -3965,8 +4263,134 @@
       "type": "object"
     },
     "run.summary": {
+      "$defs": {
+        "EchoData": {
+          "additionalProperties": false,
+          "properties": {
+            "session_id": {
+              "not": {
+                "const": "0000000000000000"
+              },
+              "pattern": "^[0-9a-f]{16}$",
+              "title": "Session Id",
+              "type": "string"
+            },
+            "request_frame_seq": {
+              "anyOf": [
+                {
+                  "maximum": 4294967295,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Request Frame Seq"
+            },
+            "reply_frame_seq": {
+              "anyOf": [
+                {
+                  "maximum": 4294967295,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reply Frame Seq"
+            },
+            "payload_bytes": {
+              "maximum": 215,
+              "minimum": 1,
+              "title": "Payload Bytes",
+              "type": "integer"
+            },
+            "payload_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Payload Sha256",
+              "type": "string"
+            },
+            "tx_command_us": {
+              "anyOf": [
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tx Command Us"
+            },
+            "reply_accepted_us": {
+              "anyOf": [
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reply Accepted Us"
+            },
+            "rtt_us": {
+              "anyOf": [
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rtt Us"
+            },
+            "valid": {
+              "title": "Valid",
+              "type": "boolean"
+            },
+            "reason": {
+              "maxLength": 96,
+              "minLength": 1,
+              "title": "Reason",
+              "type": "string"
+            }
+          },
+          "required": [
+            "session_id",
+            "request_frame_seq",
+            "reply_frame_seq",
+            "payload_bytes",
+            "payload_sha256",
+            "tx_command_us",
+            "reply_accepted_us",
+            "rtt_us",
+            "valid",
+            "reason"
+          ],
+          "title": "EchoData",
+          "type": "object"
+        }
+      },
       "additionalProperties": false,
       "properties": {
+        "echo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EchoData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "role": {
           "enum": [
             "sender",

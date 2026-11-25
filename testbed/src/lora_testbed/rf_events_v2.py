@@ -205,7 +205,45 @@ class Missing(Envelope):
     data: MissingData
 
 
+class EchoData(StrictModel):
+    session_id: SessionID
+    request_frame_seq: Sequence | None
+    reply_frame_seq: Sequence | None
+    payload_bytes: int = Field(ge=1, le=215)
+    payload_sha256: SHA256
+    tx_command_us: Counter | None
+    reply_accepted_us: Counter | None
+    rtt_us: Counter | None
+    valid: bool
+    reason: Identifier
+
+    @model_validator(mode="after")
+    def requester_local_interval(self):
+        if self.valid:
+            if (
+                self.reason != "matched"
+                or self.request_frame_seq is None
+                or self.reply_frame_seq is None
+                or self.tx_command_us is None
+                or self.reply_accepted_us is None
+                or self.reply_accepted_us < self.tx_command_us
+                or self.rtt_us != self.reply_accepted_us - self.tx_command_us
+            ):
+                raise ValueError(
+                    "Valid RTT requires a matched request/reply and one ordered local interval"
+                )
+        elif self.rtt_us is not None or self.reply_accepted_us is not None:
+            raise ValueError("Unavailable RTT remains null with a reason")
+        return self
+
+
+class EchoResult(Envelope):
+    name: Literal["echo.result"]
+    data: EchoData
+
+
 class SummaryData(StrictModel):
+    echo: EchoData | None = None
     role: Literal["sender", "receiver"]
     session_id: SessionID
     config_revision: Annotated[int, Field(ge=0, le=2**32 - 1)]
@@ -285,6 +323,7 @@ RFEvent = Annotated[
     | Received
     | Accepted
     | AckResult
+    | EchoResult
     | Rejected
     | Missing
     | MessageResult
