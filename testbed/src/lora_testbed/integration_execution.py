@@ -5,7 +5,14 @@ import hashlib
 from copy import deepcopy
 from uuid import uuid4
 
-from . import content_series, crypto_benchmark_v2, memory_matrix, rf_sweeps, timed_series
+from . import (
+    content_series,
+    crypto_benchmark_v2,
+    memory_matrix,
+    model_series,
+    rf_sweeps,
+    timed_series,
+)
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
@@ -68,6 +75,12 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "model_reference":
+                blockers = []
+            elif case["driver"] == "model_frame":
+                blockers = radio.preflight(model_series.link_request(spec, case, 0))["blockers"]
+            elif case["driver"] == "model_message":
+                blockers = radio.preflight(model_series.message_request(spec, case, 0))["blockers"]
             elif case["driver"] == "memory_unavailable":
                 blockers = [memory_matrix.BLOCKERS[case["group"]]]
             elif case["driver"] == "memory_idle":
@@ -136,16 +149,23 @@ class IntegrationExecution:
         if not planned["ready_case_count"]:
             raise ValueError("No selected matrix cases can run on this bench")
         ready_cases = [case for case in planned["cases"] if case["ready"]]
-        local_drivers = {"serial_matrix", "local_crypto", "memory_idle"}
+        local_drivers = {"serial_matrix", "local_crypto", "memory_idle", "model_reference"}
+        local_only = all(case["driver"] in local_drivers for case in ready_cases)
+        numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
         required = (
-            {case["role"] for case in ready_cases}
-            if all(case["driver"] in local_drivers for case in ready_cases)
+            {case["role"] for case in ready_cases if case["role"] in ("A", "B")}
+            if local_only
             else set(spec.roles)
+        )
+        transport = (
+            "no device"
+            if numerical_only
+            else ("physical USB" if local_only else "physical USB and owned radio runs")
         )
         run = {
             **planned,
             "id": str(uuid4()),
-            "mode": "hardware",
+            "mode": "numerical" if numerical_only else "hardware",
             "status": "running",
             "assessment": "not_assessed",
             "created_at": utc_now(),
@@ -163,6 +183,8 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/content_series.py",
                     "testbed/src/lora_testbed/timed_series.py",
                     "testbed/src/lora_testbed/memory_matrix.py",
+                    "testbed/src/lora_testbed/model_series.py",
+                    "testbed/src/lora_testbed/experiments_v2.py",
                     "testbed/src/lora_testbed/workload_observations.py",
                     "testbed/src/lora_testbed/workload_assessment.py",
                     "testbed/src/lora_testbed/echo_accounting.py",
@@ -174,10 +196,10 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/physical_campaigns.py",
                 )
             },
-            "transport": "physical USB"
-            if all(case["driver"] in local_drivers for case in ready_cases)
-            else "physical USB and owned radio runs",
-            "timing_basis": "per-child node-local and host-monotonic observations",
+            "transport": transport,
+            "timing_basis": "exact rational arithmetic in microseconds"
+            if numerical_only
+            else "per-child node-local and host-monotonic observations",
             "physical_bindings": {role: adapter.bind(role) for role in sorted(required)},
             "full_procedure_passed": False,
         }
@@ -530,6 +552,91 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_model_case(self, run, case, spec, radio, adapter):
+        reference = model_series.reference_result(case)
+        numerical = case["driver"] == "model_reference"
+        if numerical:
+            measurements = reference
+            complete = reference["passed"]
+        else:
+            rows = []
+            for ordinal in range(case["message_count"]):
+                result = await self.matrix_radio_child(
+                    run,
+                    case,
+                    model_series.link_request(spec, case, ordinal),
+                    radio,
+                    adapter,
+                    "isolated_frame",
+                )
+                sample = rf_sweeps.observation(result)
+                if (
+                    sample is None
+                    or sample["frame_bytes"] != case["expected_frame_bytes"]
+                    or not all(
+                        settings["radio"]["ldro_enabled"] == reference["reference_ldro"]
+                        for settings in result["applied_settings"].values()
+                    )
+                ):
+                    continue
+                row = {
+                    "child_run_id": result["id"],
+                    **sample,
+                    "duration_minus_prediction_us": sample["tx_command_to_done_us"]
+                    - sample["predicted_airtime_us"],
+                }
+                rows.append(row)
+                self.ledger.append(run["id"], case["id"], {"frame_observation": row})
+            measurements = model_series.observed_result(reference, rows, case["message_count"])
+            complete = reference["passed"] and len(rows) == case["message_count"]
+        self.ledger.append(run["id"], case["id"], {"model_comparison": measurements})
+        outcome = "pass" if complete else "fail" if not reference["passed"] else "inconclusive"
+        case.update(
+            status="completed",
+            assessment=outcome,
+            measurements=measurements,
+            cleanup_verified=True,
+            assertions=[
+                {
+                    "code": "independent_reference_match"
+                    if numerical
+                    else "matched_frame_observations",
+                    "outcome": outcome,
+                }
+            ],
+        )
+
+    async def matrix_model_message_case(self, run, case, spec, radio, adapter):
+        rows = []
+        for ordinal in range(case["message_count"]):
+            request = model_series.message_request(spec, case, ordinal)
+            result = await self.matrix_radio_child(
+                run, case, request, radio, adapter, "delivery_model"
+            )
+            sample = model_series.message_observation(result, request)
+            if sample is not None:
+                rows.append(sample)
+                self.ledger.append(run["id"], case["id"], {"message_observation": sample})
+        complete = len(rows) == case["message_count"]
+        contained = complete and all(row["within_expanded_budget"] for row in rows)
+        case.update(
+            status="completed",
+            assessment="pass" if contained else "inconclusive",
+            measurements={
+                "requested_messages": case["message_count"],
+                "matched_measurements": len(rows),
+                "contained_in_budget": sum(row["within_expanded_budget"] for row in rows),
+                "physical_agreement_assessed": False,
+            },
+            cleanup_verified=True,
+            assertions=[
+                {
+                    "code": "matched_message_evidence_and_budget_containment",
+                    "outcome": "pass" if contained else "inconclusive",
+                }
+            ],
+        )
+
     async def matrix_memory_case(self, run, case, spec, host):
         adapter, observations = host.adapter, host.observations
         is_link = case["driver"] == "memory_link"
@@ -810,15 +917,22 @@ class IntegrationExecution:
                     await self.matrix_crypto_case(run, case, host)
                 elif case["driver"] in ("memory_idle", "memory_link"):
                     await self.matrix_memory_case(run, case, spec, host)
+                elif case["driver"] in ("model_reference", "model_frame"):
+                    await self.matrix_model_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "model_message":
+                    await self.matrix_model_message_case(run, case, spec, radio, adapter)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
-            run.update(
-                status="completed",
-                assessment="pass"
-                if all(c["assessment"] == "pass" for c in run["cases"])
-                else "inconclusive",
+            assessments = {case["assessment"] for case in run["cases"]}
+            outcome = (
+                "fail"
+                if "fail" in assessments
+                else "pass"
+                if assessments == {"pass"}
+                else "inconclusive"
             )
+            run.update(status="completed", assessment=outcome)
         except asyncio.CancelledError:
             run.update(
                 status="interrupted" if run["reason"] == "Host shutdown" else "cancelled",

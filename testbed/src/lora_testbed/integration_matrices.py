@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from . import content_series, memory_matrix, rf_sweeps, timed_series
+from . import content_series, memory_matrix, model_series, rf_sweeps, timed_series
 from .campaign_plans import CampaignSpec, RadioCase, Template
 from .experiments_v2 import ContractModel
 from .radio_runs import RadioRunRequest
@@ -57,6 +57,7 @@ GROUPS = {
     **content_series.GROUPS,
     **timed_series.GROUPS,
     **memory_matrix.GROUPS,
+    **model_series.GROUPS,
 }
 
 
@@ -86,6 +87,7 @@ class MatrixRequest(ContractModel):
         "TIME-01",
         "SEC-04",
         "MEM-01",
+        "MODEL-01",
     ]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
     roles: list[Literal["A", "B"]] = Field(
@@ -118,12 +120,10 @@ class MatrixRequest(ContractModel):
             if choices is not None and len(choices) != len(set(choices)):
                 raise ValueError("Choose each group, role, direction or transport once")
         if self.subset_sizes is not None and (
-            self.catalog_id not in (*content_series.GROUPS, "MEM-01")
+            self.catalog_id not in (*content_series.GROUPS, "MEM-01", "MODEL-01")
             or any(size < 1 or size > 65537 for size in self.subset_sizes)
         ):
-            raise ValueError(
-                "Size selection belongs to a valid packet, protection or memory series"
-            )
+            raise ValueError("Size selection belongs to a compatible procedure series")
         if self.groups is not None and not set(self.groups) <= set(GROUPS[self.catalog_id]):
             raise ValueError("Choose groups that belong to the selected procedure")
         if self.catalog_id != "SEC-04" and self.diagnostic_iterations != 1000:
@@ -204,6 +204,7 @@ def compile_matrix(request, *, message_limit=65536):
         "IF-01": serial_cases,
         "IF-02": link_cases,
         "IF-03": campaign_cases,
+        "MODEL-01": model_series.cases,
         "TIME-01": timed_series.cases,
         "SEC-04": timed_series.cases,
     }.get(request.catalog_id, rf_sweeps.cases)
@@ -233,6 +234,8 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.diagnostic_iterations == 1000 and len(request.roles) == 2
     elif request.catalog_id == "MEM-01":
         coverage = coverage and request.memory_window_ms == 30000 and len(request.directions) == 2
+    elif request.catalog_id == "MODEL-01":
+        coverage = coverage and request.messages_per_case >= 10 and len(request.directions) == 2
     else:
         coverage = coverage and request.messages_per_case == 100 and len(request.directions) == 2
     plan = {
