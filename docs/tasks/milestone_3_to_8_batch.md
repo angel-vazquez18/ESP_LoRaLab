@@ -606,3 +606,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   Original 19 files preserved. After review PR, continue #76/#77 lab fault hooks,
   then #85 accounting/#89 views and all full procedure matrices. #84 one-way
   calibration still depends on actual pulse setup/capture prerequisites.
+
+- #83: PR #209 (`feat/physical-echo-rtt` → `feat/verified-echo-rtt`) is ready
+  with eight scoped Conventional Commits, shared CLI/API commands, code
+  walkthrough and expected physical checks. Issue/card Testing; no merge.
+  Twenty-eight dedicated cases, full 1,030 cases, final 75 recovery cases and all
+  final shared checks pass; original 19 files unchanged. No physical access.
+  Echo-only artifact retirement now prevents repeated-run exhaustion while
+  preserving user files. Check whether the existing known-data path needs the
+  same verified run-artifact policy before large campaigns; do not delete
+  uploaded encoded source references or failed-readback evidence. Continue the
+  independent #76/#77 fault hooks and the remaining full procedure matrices.
