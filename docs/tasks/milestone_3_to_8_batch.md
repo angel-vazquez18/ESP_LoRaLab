@@ -749,3 +749,8 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   with retained child IDs and scope. Missing long-window replay and
   multiple controlled drops stay blocked. The 1,137-test regression
   and targeted third-workload packet check both passed.
+
+- Grouped packet/security PR #223 is open over #222.
+- VOICE-02 C1 now runs selected three-second references with matched
+  data controls and linked stage evidence. All 19 focused checks pass.
+  The microphone sequence and physical listening remain outstanding.

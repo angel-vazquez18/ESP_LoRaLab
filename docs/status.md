@@ -4,6 +4,16 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Reference voice transport matrix
+
+VOICE-02 now selects saved reference clips and keeps exact encoded
+readback, local stage evidence, and matched 1,200-byte and 64-byte
+known-data comparisons. Native fixtures verified the reference path,
+readiness, comparisons and failure handling across 19 focused tests.
+Lint, dashboard build, contracts and repository checks also passed.
+Attended microphone runs and listening qualification remain open.
+See [reference voice procedures](voice_matrix.md).
+
 ## November 25 — Grouped packet and security lab cases
 
 PKT-02/03 and SEC-02/03 now preview and run supported laboratory cases
