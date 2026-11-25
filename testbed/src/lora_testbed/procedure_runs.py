@@ -193,8 +193,8 @@ class ProcedureService:
         await asyncio.sleep(0)  # Ensure immediate cancellation reaches the finalizer.
         return deepcopy(run)
 
-    def matrix_preview(self, spec, radio):
-        return self.matrices.preview(spec, radio)
+    def matrix_preview(self, spec, radio, voice=None):
+        return self.matrices.preview(spec, radio, voice)
 
     async def start_matrix(self, spec, host, expected_plan_sha256=None):
         return await self.matrices.start(spec, host, expected_plan_sha256)

@@ -13,6 +13,7 @@ from . import (
     model_series,
     rf_sweeps,
     timed_series,
+    voice_matrix,
 )
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
@@ -50,7 +51,7 @@ class IntegrationExecution:
             values.append(maximum)
         return min(values) if values else None
 
-    def preview(self, spec, radio):
+    def preview(self, spec, radio, voice=None):
         limit = self.message_limit(radio) if spec.catalog_id in ("PKT-01", "MEM-01") else None
         plan = compile_matrix(spec, message_limit=limit or 65536)
         rows = []
@@ -77,6 +78,8 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] in ("voice_reference", "voice_operator"):
+                blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "fault_window_unavailable":
                 blockers = ["The retained session cannot yet advance past the replay window"]
             elif case["driver"] == "fault_exhaustion_unavailable":
@@ -152,7 +155,7 @@ class IntegrationExecution:
         radio, adapter = host.radio, host.adapter
         if self.ledger.busy:
             raise RuntimeError("Another procedure owns the bench")
-        planned = self.preview(spec, radio)
+        planned = self.preview(spec, radio, host.voice)
         if expected_plan_sha256 is not None and planned["sha256"] != expected_plan_sha256:
             raise RuntimeError("The matrix plan changed. Preview the cases again.")
         if not planned["ready_case_count"]:
@@ -196,6 +199,8 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/fault_matrices.py",
                     "testbed/src/lora_testbed/fault_accounting.py",
                     "testbed/src/lora_testbed/lab_trials.py",
+                    "testbed/src/lora_testbed/voice_matrix.py",
+                    "testbed/src/lora_testbed/voice_runs.py",
                     "testbed/src/lora_testbed/experiments_v2.py",
                     "testbed/src/lora_testbed/workload_observations.py",
                     "testbed/src/lora_testbed/workload_assessment.py",
@@ -564,6 +569,58 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_voice_case(self, run, case, host):
+        for binding in run["physical_bindings"].values():
+            host.adapter.current(binding)
+        service = host.voice
+        started = await service.start(voice_matrix.request_for(case))
+        identifier, task = started["id"], service.task
+        try:
+            case["voice_run_id"] = identifier
+            self.ledger.save(run)
+            await asyncio.shield(task)
+        finally:
+            if not task.done():
+                await service.stop(identifier)
+            result = service.get(identifier)
+            clean = bool((result.get("cleanup") or {}).get("confirmed"))
+            self.ledger.append(
+                run["id"],
+                case["id"],
+                {
+                    "voice_run_id": identifier,
+                    "radio_run_id": result["radio_run_id"],
+                    "comparison_runs": result["comparisons"],
+                    "status": result["status"],
+                    "error": result["error"],
+                    "cleanup_confirmed": clean,
+                    "voice_evidence": f"/api/voice/runs/{identifier}/inspection",
+                },
+            )
+        if not clean:
+            raise ValueError("Voice child cleanup is unconfirmed")
+        evidence = service.inspect(identifier)
+        report = voice_matrix.summarize(evidence)
+        passed = report["checked_transfer_and_playback"]
+        self.ledger.append(run["id"], case["id"], {"voice_comparison": report})
+        case.update(
+            status="completed",
+            assessment="pass" if passed else "inconclusive",
+            cleanup_verified=True,
+            measurements={
+                "reference_id": case["reference_id"],
+                "checked_transfer_and_playback": passed,
+                "comparison_matches": report["comparisons"],
+                "physical_listening": "pending",
+            },
+            assertions=[
+                {
+                    "code": "exact_encoded_readback_and_two_matched_controls",
+                    "outcome": "pass" if passed else "inconclusive",
+                }
+            ],
+        )
+
     async def matrix_fault_child(self, run, case, request, host):
         for binding in run["physical_bindings"].values():
             host.adapter.current(binding)
@@ -596,7 +653,7 @@ class IntegrationExecution:
                     "reason": record["reason"],
                     "checks": record["checks"],
                     "cleanup_confirmed": clean,
-                    "evidence": f"/api/lab/trials/{identifier}",
+                    "evidence": f"/api/lab-trials/{identifier}",
                 },
             )
         if not clean:
@@ -1000,6 +1057,8 @@ class IntegrationExecution:
                     await self.matrix_model_message_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "fault_series":
                     await self.matrix_fault_case(run, case, spec, host)
+                elif case["driver"] == "voice_reference":
+                    await self.matrix_voice_case(run, case, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)

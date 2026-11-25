@@ -6,8 +6,17 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from . import content_series, fault_matrices, memory_matrix, model_series, rf_sweeps, timed_series
+from . import (
+    content_series,
+    fault_matrices,
+    memory_matrix,
+    model_series,
+    rf_sweeps,
+    timed_series,
+    voice_matrix,
+)
 from .campaign_plans import CampaignSpec, RadioCase, Template
+from .control_v2 import UUID
 from .experiments_v2 import ContractModel
 from .radio_runs import RadioRunRequest
 
@@ -59,11 +68,18 @@ GROUPS = {
     **memory_matrix.GROUPS,
     **model_series.GROUPS,
     **fault_matrices.GROUPS,
+    **voice_matrix.GROUPS,
 }
 
 
 def matrix_options():
-    kinds = {"IF-01": "serial", "IF-03": "campaign", "SEC-04": "local", "MEM-01": "memory"}
+    kinds = {
+        "IF-01": "serial",
+        "IF-03": "campaign",
+        "SEC-04": "local",
+        "MEM-01": "memory",
+        "VOICE-02": "voice",
+    }
     return {
         identifier: {
             "groups": list(groups),
@@ -93,6 +109,7 @@ class MatrixRequest(ContractModel):
         "SEC-04",
         "MEM-01",
         "MODEL-01",
+        "VOICE-02",
     ]
     groups: list[str] | None = Field(default=None, min_length=1, max_length=8)
     roles: list[Literal["A", "B"]] = Field(
@@ -112,6 +129,7 @@ class MatrixRequest(ContractModel):
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
     subset_sizes: list[int] | None = Field(default=None, min_length=1, max_length=11)
+    voice_reference_ids: list[UUID] | None = Field(default=None, min_length=1, max_length=3)
 
     @model_validator(mode="after")
     def selections(self):
@@ -121,6 +139,7 @@ class MatrixRequest(ContractModel):
             self.transports,
             self.directions,
             self.subset_sizes,
+            self.voice_reference_ids,
         ):
             if choices is not None and len(choices) != len(set(choices)):
                 raise ValueError("Choose each group, role, direction or transport once")
@@ -133,6 +152,8 @@ class MatrixRequest(ContractModel):
             raise ValueError("Choose groups that belong to the selected procedure")
         if self.catalog_id != "SEC-04" and self.diagnostic_iterations != 1000:
             raise ValueError("Diagnostic iterations belong to the local crypto procedure")
+        if self.voice_reference_ids is not None and self.catalog_id != "VOICE-02":
+            raise ValueError("Voice references belong to the voice transfer procedure")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
         local = self.catalog_id in ("IF-01", "SEC-04") or (
@@ -212,6 +233,7 @@ def compile_matrix(request, *, message_limit=65536):
         "MODEL-01": model_series.cases,
         **{catalog: fault_matrices.cases for catalog in fault_matrices.GROUPS},
         "TIME-01": timed_series.cases,
+        "VOICE-02": voice_matrix.cases,
         "SEC-04": timed_series.cases,
     }.get(request.catalog_id, rf_sweeps.cases)
     groups = request.groups or list(GROUPS[request.catalog_id])
@@ -240,6 +262,12 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.diagnostic_iterations == 1000 and len(request.roles) == 2
     elif request.catalog_id == "MEM-01":
         coverage = coverage and request.memory_window_ms == 30000 and len(request.directions) == 2
+    elif request.catalog_id == "VOICE-02":
+        coverage = (
+            coverage
+            and len(request.voice_reference_ids or ()) == 3
+            and len(request.directions) == 2
+        )
     elif request.catalog_id in fault_matrices.GROUPS:
         coverage = (
             coverage
