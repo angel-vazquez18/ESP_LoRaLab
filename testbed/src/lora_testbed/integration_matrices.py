@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from . import content_series, memory_matrix, model_series, rf_sweeps, timed_series
+from . import content_series, fault_matrices, memory_matrix, model_series, rf_sweeps, timed_series
 from .campaign_plans import CampaignSpec, RadioCase, Template
 from .experiments_v2 import ContractModel
 from .radio_runs import RadioRunRequest
@@ -58,6 +58,7 @@ GROUPS = {
     **timed_series.GROUPS,
     **memory_matrix.GROUPS,
     **model_series.GROUPS,
+    **fault_matrices.GROUPS,
 }
 
 
@@ -84,6 +85,10 @@ class MatrixRequest(ContractModel):
         "RF-04",
         "PKT-01",
         "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "PKT-02",
+        "PKT-03",
         "TIME-01",
         "SEC-04",
         "MEM-01",
@@ -205,6 +210,7 @@ def compile_matrix(request, *, message_limit=65536):
         "IF-02": link_cases,
         "IF-03": campaign_cases,
         "MODEL-01": model_series.cases,
+        **{catalog: fault_matrices.cases for catalog in fault_matrices.GROUPS},
         "TIME-01": timed_series.cases,
         "SEC-04": timed_series.cases,
     }.get(request.catalog_id, rf_sweeps.cases)
@@ -234,6 +240,12 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.diagnostic_iterations == 1000 and len(request.roles) == 2
     elif request.catalog_id == "MEM-01":
         coverage = coverage and request.memory_window_ms == 30000 and len(request.directions) == 2
+    elif request.catalog_id in fault_matrices.GROUPS:
+        coverage = (
+            coverage
+            and len(request.directions) == 2
+            and (request.catalog_id.startswith("SEC") or request.messages_per_case >= 10)
+        )
     elif request.catalog_id == "MODEL-01":
         coverage = coverage and request.messages_per_case >= 10 and len(request.directions) == 2
     else:

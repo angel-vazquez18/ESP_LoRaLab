@@ -261,14 +261,20 @@ class Host:
 
     def require_available_bench(self, owner=None):
         current_campaign = self.physical_campaigns.current or {}
+        current_trial = self.lab_trials.current or {}
         procedure = self.procedures.current or {}
         nested_campaign = (
             owner is self.physical_campaigns.owner
             and self.procedures.busy
             and current_campaign.get("enclosing_procedure_id") == procedure["id"]
         )
+        nested_trial = (
+            owner is self.lab_trials.owner
+            and self.procedures.busy
+            and current_trial.get("enclosing_procedure_id") == procedure["id"]
+        )
         if (
-            self._workload_busy(include_procedure=not nested_campaign)
+            self._workload_busy(include_procedure=not (nested_campaign or nested_trial))
             or (self.physical_campaigns.busy and owner is not self.physical_campaigns.owner)
             or (self.lab_trials.busy and owner is not self.lab_trials.owner)
         ):

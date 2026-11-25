@@ -68,8 +68,19 @@ class LabTrials:
             ],
         }
 
-    async def start(self, request):
-        self.host.require_available_bench()
+    async def start(self, request, *, _procedure_id=None):
+        if _procedure_id is None:
+            self.host.require_available_bench()
+        else:
+            procedure = self.host.procedures.current or {}
+            if (
+                asyncio.current_task() is not self.host.procedures.task
+                or procedure.get("id") != _procedure_id
+                or self.busy
+                or self.host.physical_campaigns.busy
+                or self.host._workload_busy(include_procedure=False)
+            ):
+                raise RuntimeError("The bound procedure cannot reserve the lab trial")
         ready = self.host.radio.preflight(request)
         if not ready["ready"]:
             raise ValueError("; ".join(ready["blockers"]))
@@ -82,6 +93,7 @@ class LabTrials:
             "outcome": "inconclusive",
             "reason": None,
             "request": request.model_dump(),
+            "enclosing_procedure_id": _procedure_id,
             "hardware_qualified": False,
             "children": {},
             "checks": [],

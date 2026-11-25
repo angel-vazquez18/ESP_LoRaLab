@@ -8,6 +8,7 @@ from uuid import uuid4
 from . import (
     content_series,
     crypto_benchmark_v2,
+    fault_matrices,
     memory_matrix,
     model_series,
     rf_sweeps,
@@ -18,6 +19,7 @@ from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
 from .radio_runs import (
     KeyMismatchRunRequest,
+    LabRadioRunRequest,
     PeerMismatchCheck,
     PeerProfileMismatchCheck,
     RadioRunRequest,
@@ -75,6 +77,13 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "fault_window_unavailable":
+                blockers = ["The retained session cannot yet advance past the replay window"]
+            elif case["driver"] == "fault_exhaustion_unavailable":
+                blockers = ["One trial cannot yet target every allowed arrival or retry"]
+            elif case["driver"] == "fault_series":
+                request = fault_matrices.selected_request(spec, case, case["target_ordinal"] - 1)
+                blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "model_reference":
                 blockers = []
             elif case["driver"] == "model_frame":
@@ -184,6 +193,9 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/timed_series.py",
                     "testbed/src/lora_testbed/memory_matrix.py",
                     "testbed/src/lora_testbed/model_series.py",
+                    "testbed/src/lora_testbed/fault_matrices.py",
+                    "testbed/src/lora_testbed/fault_accounting.py",
+                    "testbed/src/lora_testbed/lab_trials.py",
                     "testbed/src/lora_testbed/experiments_v2.py",
                     "testbed/src/lora_testbed/workload_observations.py",
                     "testbed/src/lora_testbed/workload_assessment.py",
@@ -550,6 +562,71 @@ class IntegrationExecution:
                     "outcome": "pass" if complete else "inconclusive",
                 }
             ],
+        )
+
+    async def matrix_fault_child(self, run, case, request, host):
+        for binding in run["physical_bindings"].values():
+            host.adapter.current(binding)
+        service = host.lab_trials
+        started = await service.start(request, _procedure_id=run["id"])
+        identifier, task = started["id"], service.task
+        try:
+            case.setdefault("trial_ids", []).append(identifier)
+            self.ledger.save(run)
+            await asyncio.shield(task)
+        finally:
+            if not task.done():
+                await service.stop(identifier)
+            record = service.get(identifier)
+            children = {stage: host.radio.get(i) for stage, i in record["children"].items()}
+            clean = all(
+                (entry.get("cleanup") or {}).get("confirmed") for entry in children.values()
+            )
+            self.ledger.append(
+                run["id"],
+                case["id"],
+                {
+                    "trial_id": identifier,
+                    "children": record["children"],
+                    "child_wire_sha256": {
+                        stage: entry["wire_sha256"] for stage, entry in children.items()
+                    },
+                    "status": record["status"],
+                    "outcome": record["outcome"],
+                    "reason": record["reason"],
+                    "checks": record["checks"],
+                    "cleanup_confirmed": clean,
+                    "evidence": f"/api/lab/trials/{identifier}",
+                },
+            )
+        if not clean:
+            raise ValueError("Nested lab trial cleanup is unconfirmed")
+        return record
+
+    async def matrix_fault_case(self, run, case, spec, host):
+        radio, adapter = host.radio, host.adapter
+        outcomes = []
+        for ordinal in range(case["message_count"]):
+            request = fault_matrices.selected_request(spec, case, ordinal)
+            if isinstance(request, LabRadioRunRequest):
+                trial = await self.matrix_fault_child(run, case, request, host)
+                outcomes.append(trial["outcome"])
+            else:
+                child = await self.matrix_radio_child(run, case, request, radio, adapter, "intact")
+                outcomes.append("pass" if self.verified_link_child(child) else "inconclusive")
+        verdict = (
+            "fail"
+            if "fail" in outcomes
+            else "inconclusive"
+            if "inconclusive" in outcomes
+            else "pass"
+        )
+        case.update(
+            status="completed",
+            assessment=verdict,
+            cleanup_verified=True,
+            measurements={"message_outcomes": outcomes, "target_ordinal": case["target_ordinal"]},
+            assertions=[{"code": "complete_matched_series", "outcome": verdict}],
         )
 
     async def matrix_model_case(self, run, case, spec, radio, adapter):
@@ -921,6 +998,8 @@ class IntegrationExecution:
                     await self.matrix_model_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "model_message":
                     await self.matrix_model_message_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "fault_series":
+                    await self.matrix_fault_case(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
