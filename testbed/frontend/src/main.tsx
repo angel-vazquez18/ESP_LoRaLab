@@ -37,6 +37,8 @@ import RunComparison from "./RunComparison";
 import WorkloadObservations from "./WorkloadObservations";
 import PhysicalCampaigns from "./PhysicalCampaigns";
 import type { CampaignState } from "./PhysicalCampaigns";
+import ProcedureMatrix, { type MatrixOption } from "./ProcedureMatrix";
+import "./procedure-matrix.css";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
 type Metrics = {
@@ -110,6 +112,7 @@ type Procedure = {
   scope?: string;
   finished_at: string | null;
   full_procedure_passed: boolean;
+  procedure_revision?: string | null;
 };
 type Historical = {
   id: string;
@@ -133,6 +136,7 @@ type State = {
     active_run:
       (Procedure & { completed_cases: number; case_count: number }) | null;
     runs: Procedure[];
+    matrix_options?: Record<string, MatrixOption>;
   };
   v2_execution: { runs: Historical[]; campaigns: Historical[] };
   runs: Run[];
@@ -370,6 +374,7 @@ function Experiments({ host }: { host: Host }) {
   const [selected, setSelected] = useState("IF-01");
   const [filter, setFilter] = useState("");
   const entry = host.state.catalog.find((e) => e.id === selected);
+  const matrix = host.state.procedures.matrix_options?.[selected];
   return (
     <>
       <Heading
@@ -408,8 +413,8 @@ function Experiments({ host }: { host: Host }) {
                 </strong>
                 <span>{e.node_requirement}</span>
                 <small>
-                  {e.id === "IF-02"
-                    ? "Single-message link check"
+                  {host.state.procedures.matrix_options?.[e.id]
+                    ? "Procedure matrix"
                     : e.preflight.ready
                       ? "Diagnostic check ready"
                       : e.available
@@ -448,22 +453,28 @@ function Experiments({ host }: { host: Host }) {
               <p>
                 <strong>{entry.node_requirement}</strong>
               </p>
-              <p>{entry.scope}</p>
-              {entry.preflight.blockers.length > 0 && (
+              {!matrix && <p>{entry.scope}</p>}
+              {!matrix && entry.preflight.blockers.length > 0 && (
                 <ul>
                   {entry.preflight.blockers.map((b) => (
                     <li key={b}>{b}</li>
                   ))}
                 </ul>
               )}
-              {entry.id !== "IF-01" && (
-                <button className="button secondary" disabled>
-                  {entry.id === "IF-02"
-                    ? "Full procedure pending"
-                    : "Physical runner unavailable"}
-                </button>
-              )}
             </section>
+          )}
+          {matrix && (
+            <ProcedureMatrix
+              key={selected}
+              catalogId={selected}
+              option={matrix}
+              active={host.state.procedures.active_run}
+              saved={host.state.procedures.runs}
+              request={host.request}
+              pending={host.pending}
+              online={host.online}
+              benchBusy={host.state.bench_busy}
+            />
           )}
           {selected === "IF-01" && <DiagnosticCheck host={host} />}
           {selected === "IF-02" && (
@@ -537,7 +548,7 @@ function Results({ host }: { host: Host }) {
       <History
         rows={host.state.procedures.runs}
         base="/api/procedures/runs"
-        label="Diagnostic and historical procedure records"
+        label="Procedure and diagnostic records"
       />
       <History
         rows={host.state.v2_execution.runs}

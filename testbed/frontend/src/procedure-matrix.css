@@ -1,0 +1,32 @@
+.matrix-plan {
+  margin-top: 20px;
+}
+.matrix-cases {
+  display: grid;
+  gap: 1px;
+  padding-left: 27px;
+  margin-bottom: 16px;
+}
+.matrix-cases li {
+  padding: 8px 8px 8px 2px;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.matrix-cases li strong,
+.matrix-cases li span {
+  display: block;
+}
+.matrix-cases li strong,
+.matrix-cases li a {
+  color: var(--text);
+}
+.matrix-pagination {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.matrix-panel h4 {
+  margin: 20px 0 0;
+}
