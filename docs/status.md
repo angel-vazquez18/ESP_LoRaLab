@@ -4,6 +4,17 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Grouped packet and security lab cases
+
+PKT-02/03 and SEC-02/03 now preview and run supported laboratory cases
+through the shared ledger. Targeted faults retain the independent before,
+fault and after controls. The linked packet series records which workload
+was targeted and the exact missing-index evidence. The standard profile
+still runs intact checks. Full regression passed 1,137 tests. A separate
+native check verified the targeted third workload. Long-window replay,
+multi-attempt exhaustion and hardware qualification remain open. See
+[grouped lab cases](fault_matrices.md).
+
 ## November 25 — Airtime and delivery model matrix
 
 MODEL-01 now checks the pinned reference and worksheet numerically, then

@@ -743,3 +743,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   observations and no-ACK, ACK and confirmed one-retry message cases.
   Full make check passed 1,134 tests. Instrumented physical tolerance
   is still separate from node-local TX timing.
+
+- Airtime model PR #222 is open over #221 and linked to #91.
+- The grouped packet/security matrix executes matched lab trials
+  with retained child IDs and scope. Missing long-window replay and
+  multiple controlled drops stay blocked. The 1,137-test regression
+  and targeted third-workload packet check both passed.
