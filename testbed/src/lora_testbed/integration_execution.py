@@ -14,6 +14,7 @@ from . import (
     model_series,
     ops_matrix,
     rf_sweeps,
+    serial_framing,
     timed_series,
     voice_matrix,
 )
@@ -129,7 +130,11 @@ class IntegrationExecution:
                 node = self.ledger.nodes[case["role"]]
                 if case["transport"] != "native_usb":
                     blockers.append("An identified UART transport is required")
-                if case["variant"] not in ("valid_control_cycles", *SERIAL_ERROR_CASES):
+                if case["variant"] not in {
+                    "valid_control_cycles",
+                    *SERIAL_ERROR_CASES,
+                    *serial_framing.VARIANTS,
+                }:
                     blockers.append("The required framing or serial fault fixture is unavailable")
                 if (
                     not node.connected
@@ -226,6 +231,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/procedure_runs.py",
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
+                    "testbed/src/lora_testbed/serial_framing.py",
                     "testbed/src/lora_testbed/campaign_plans.py",
                     "testbed/src/lora_testbed/physical_campaigns.py",
                 )
@@ -253,8 +259,22 @@ class IntegrationExecution:
         def record(document):
             self.ledger.append(run["id"], case["id"], document)
 
+        variant = case["variant"]
+        framing = None
         async with asyncio.timeout(60):
-            if case["variant"] == "valid_control_cycles":
+            if variant in serial_framing.VARIANTS:
+                baseline = await adapter.request(binding, "status.get", on_record=record)
+                adapter.current(binding)
+                status, boundaries = await node.exercise_serial_framing(variant, record)
+                adapter.current(binding)
+                framing = serial_framing.assess_counters(variant, baseline, status)
+                if (
+                    boundaries
+                    and boundaries["checked_boundaries"] != boundaries["expected_boundaries"]
+                ):
+                    framing["outcome"] = "fail"
+                record({"direction": "host_fixture", "counter_assessment": framing})
+            elif variant == "valid_control_cycles":
                 for _ in range(case["cycles"]):
                     adapter.current(binding)
                     await node.exercise_control_cycle(record)
@@ -267,7 +287,8 @@ class IntegrationExecution:
                         raise
                 else:
                     raise ValueError("The invalid request unexpectedly succeeded")
-            status = await adapter.request(binding, "status.get", on_record=record)
+            if framing is None:
+                status = await adapter.request(binding, "status.get", on_record=record)
         after = node.snapshot()
         if (
             status["state"] != "idle"
@@ -277,11 +298,12 @@ class IntegrationExecution:
             or status["telemetry_drops"] != before["health"]["telemetry_drops"]
         ):
             raise ValueError("Serial case did not restore idle control with complete telemetry")
+        outcome = framing["outcome"] if framing is not None else "pass"
         case.update(
             status="completed",
-            assessment="pass",
+            assessment=outcome,
             cleanup_verified=True,
-            assertions=[{"code": case["variant"], "outcome": "pass"}],
+            assertions=[{"code": variant, "outcome": outcome}],
         )
 
     async def matrix_radio_child(self, run, case, request, radio, adapter, purpose):

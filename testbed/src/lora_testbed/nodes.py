@@ -1,6 +1,7 @@
 """Independent physical node sessions; all serial I/O stays outside the event loop."""
 
 import asyncio
+import hashlib
 from collections import deque
 from contextlib import suppress
 from time import monotonic
@@ -21,6 +22,7 @@ from . import (
     physical_wire_v2,
     ptt_contract_v2,
     run_protocol_v2,
+    serial_framing,
     v2,
 )
 from .adapters import (
@@ -331,6 +333,18 @@ class NodeSession:
             raise asyncio.CancelledError
         return written
 
+    def _next_command(self, name, args=None, run_id=None):
+        self.sequence += 1
+        return v2.Command(
+            command_id=str(uuid4()),
+            client_id=self.client_id,
+            command_seq=self.sequence,
+            target_boot_id=self.identity.boot_id if self.identity else None,
+            name=name,
+            run_id=run_id,
+            args=args or {},
+        )
+
     async def request(
         self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None, key_set_id=None
     ):
@@ -435,16 +449,7 @@ class NodeSession:
             protected_setup = (
                 name == "session.open" and (args or {}).get("security") == "aes128_gcm"
             )
-            self.sequence += 1
-            command = v2.Command(
-                command_id=str(uuid4()),
-                client_id=self.client_id,
-                command_seq=self.sequence,
-                target_boot_id=self.identity.boot_id if self.identity else None,
-                name=name,
-                run_id=run_id,
-                args=args or {},
-            )
+            command = self._next_command(name, args, run_id)
             if execution_command:
                 run_protocol_v2.Command.model_validate(command.model_dump())
             if name == "session.open":
@@ -677,6 +682,77 @@ class NodeSession:
         for _, future in self.pending.values():
             if not future.done():
                 future.set_exception(ValueError(reason))
+
+    async def exercise_serial_framing(self, variant, on_record):
+        if variant not in serial_framing.VARIANTS:
+            raise ValueError("Unknown serial framing case")
+        async with self.command_lock:
+            if not self.connected or not self.identity or self.wire_profile != "node_control":
+                raise ValueError("Framing cases require a compatible connected node")
+            commands = [
+                self._next_command("status.get")
+                for _ in range(serial_framing.STATUS_COUNTS.get(variant, 1))
+            ]
+            batches = serial_framing.batches(variant, [v2.encode(cmd) for cmd in commands])
+            start = 0
+            replies = []
+            for chunks, count in batches:
+                selected = commands[start : start + count]
+                replies.extend(await self._framing_burst(chunks, selected, on_record))
+                start += count
+        result = replies[-1].result
+        if variant == "split_every_boundary":
+            checked = await asyncio.to_thread(serial_framing.exercise_decoder, replies[-1])
+            on_record({"direction": "host_fixture", "framing_boundaries": checked})
+        else:
+            checked = None
+        return result, checked
+
+    async def _framing_burst(self, chunks, commands, on_record):
+        futures = [asyncio.get_running_loop().create_future() for _ in commands]
+        for cmd, future in zip(commands, futures, strict=True):
+            self.pending[cmd.command_id] = (cmd.command_seq, future)
+        replies = []
+        try:
+            on_record(
+                {
+                    "direction": "host_fixture",
+                    "serial_writes": [
+                        {"bytes": len(chunk), "sha256": hashlib.sha256(chunk).hexdigest()}
+                        for chunk in chunks
+                    ],
+                }
+            )
+            for cmd in commands:
+                on_record({"direction": "host_to_node", "record": cmd.model_dump()})
+            try:
+                for chunk in chunks:
+                    if await self.write_wire(chunk) != len(chunk):
+                        raise ValueError("Incomplete serial framing probe write")
+                    if not chunk.endswith(b"\n"):
+                        await asyncio.sleep(0.03)
+            except (Exception, asyncio.CancelledError):
+                # Interrupted multi-write input may leave the receiver inside a record.
+                await self.close(release=False)
+                raise
+            async with asyncio.timeout(2):
+                for future in futures:
+                    reply = await asyncio.shield(future)
+                    data = reply.model_dump()
+                    require_public_metadata(data)
+                    on_record({"direction": "node_to_host", "record": data})
+                    if not reply.ok:
+                        raise ValueError(f"{reply.error.code}: {reply.error.message}")
+                    self.accept_health(reply.result)
+                    replies.append(reply)
+        finally:
+            for cmd, future in zip(commands, futures, strict=True):
+                self.pending.pop(cmd.command_id, None)
+                if future.done() and not future.cancelled():
+                    future.exception()
+                else:
+                    future.cancel()
+        return replies
 
     async def exercise_control_cycle(self, on_record):
         if self.control_cycle_active or not self.identity or not self.connected:

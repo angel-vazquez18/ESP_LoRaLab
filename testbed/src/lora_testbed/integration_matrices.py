@@ -31,6 +31,8 @@ SERIAL_GROUPS = {
         "split_every_boundary",
         "representative_board_splits",
         "concatenated_records",
+        "crlf_record",
+        "maximum_size_record",
         "duplicate_key",
         "invalid_utf8",
         "malformed_json",
