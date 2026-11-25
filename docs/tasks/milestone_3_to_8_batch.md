@@ -716,3 +716,10 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   intact follow-up with no keys in evidence. Full `make check` passed 1,122 tests.
   Next grouped software slice can reuse verified echo and local crypto
   benchmarks for TIME-01 and SEC-04.
+
+- Packet/protection PR #218 is open over #217. Issues #70/#71 link to it
+  and retain their remaining software coverage.
+- The timing batch adds execution for the positive TIME-01 echo cohorts
+  and SEC-04 known-answer batches, with per-run raw evidence and no
+  fabricated timing for an unavailable case. The suite passed 1,125
+  tests. The shared dashboard matrix controls are the next review slice.

@@ -4,6 +4,19 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Round-trip and local crypto matrices
+
+TIME-01 now runs matched exact-byte echo cohorts under both protection
+profiles, with requester-local timestamps and explicit exclusions. The
+controlled missing-reply case remains blocked. SEC-04 now runs a single
+role or both, keeping checked timings for encryption, decryption,
+invalid-tag rejection and copy in distinct distributions.
+
+The regression suite passed 1,125 tests. Lint, the dashboard build,
+contract generation and repository checks passed after an evidence-link
+line wrap. Physical qualification remains separate. See
+[round-trip and crypto procedures](timed_series.md).
+
 ## November 25 — Packet boundaries and paired protection
 
 PKT-01 and SEC-01 now share the matrix executor. Packet cases retain exact
