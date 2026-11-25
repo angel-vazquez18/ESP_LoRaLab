@@ -110,6 +110,11 @@ handlers. See [radio driver](radio_driver.md).
 owns prepare reservations, both-role arm/start deadlines, bounded cleanup and
 composes fragment planning, reconstruction, referenced ACKs and the bounded sender
 for one finite message lifecycle and verified artifact delivery.
+`radio/rf_echo.c` owns one immutable pending echo, verified reply matching,
+requester-local RTT, fresh responder sequences and bounded timeout/drain. The
+execution owner composes it with the same radio/security/artifact/cleanup paths.
+See [verified echo behavior](verified_echo_rtt.md).
+
 Both use the real radio port and existing owner/serial writer. The physical host
 `radio_runs.py` shares bench ownership with audio/files/procedures, coordinates
 receiver-first work and separates verified bytes from evidence completeness. Its

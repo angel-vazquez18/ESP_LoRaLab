@@ -1,8 +1,37 @@
 # Consolidated implementation status
 
-Updated November 24, 2026. The host is now physical-only by user decision, replacing
+Updated November 25, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 25 — Verified echo firmware and requester-local timing (#65)
+
+The main node now supports one owned, single-fragment known-data echo request per
+run in either direction, plain or GCM protected. Replies must match session,
+roles, request reference and exact bytes before replay commitment or RTT. The
+responder reserves its own fresh source sequence. Only confirmed request TX
+command and accepted reply timestamps on the requester enter the interval;
+peer clocks and USB arrival times remain separate. Missing replies produce a
+finite timeout with null latency; duplicate/late/invalid frames cannot add samples.
+Pending buffers retire on stop, ownership loss or deadline, without auto-resume.
+Committed artifacts retain their normal independent lifecycle.
+
+Execution advances to exact `finite_message_execution_v4`, with coordinated typed
+intent, result, optional summary and generated metadata. Other wire profiles are
+unchanged, including the diagnostic digest. Echo capability follows actual radio
+availability. No operator echo stub is added: host collection/accounting is #83,
+and the full TIME-01 procedure and physical qualification remain open.
+
+All 37 dedicated echo cases pass, covering actual C/PSA nodes in both directions,
+independent clocks, exact capacity, altered/tagged/reference/session/protection
+rejections, duplicate suppression, timeout/fresh-run recovery, unconfirmed TX and
+stop/lease/disconnect cleanup. The combined full-capability regression passes
+73 cases. Full `make check` passes 1,004 cases without skips, plus lint, frontend,
+contracts and repository/vendor checks. ESP-IDF v6.0.2 build/size succeeds for the
+existing local configuration: image 479,571 bytes. No physical port, reset or
+flash. The existing Starlette/httpx deprecation remains. See
+[policy, walkthrough and expected checks](verified_echo_rtt.md). Next #83 adds
+shared host RTT correlation; hardware pulse review #46/#49 remains separate.
 
 ## November 24 — Shared physical campaign dashboard (#115)
 

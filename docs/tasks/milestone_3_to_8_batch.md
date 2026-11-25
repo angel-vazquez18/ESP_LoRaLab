@@ -571,3 +571,14 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   build/format and three dedicated cases pass. Original 19 files preserved.
   Next #65 echo/RTT firmware on its own branch; #46/#49 pulse wiring/capture and
   #132 physical acceptance remain gated by their actual hardware prerequisites.
+
+
+- November 25: #65 implemented on #206 with one pending verified echo, fresh
+  responder sequence, requester-local TX-command/acceptance RTT, null timeouts,
+  bounded late/duplicate exclusions and cleanup in the actual C radio/security
+  path. Execution v4 coordinates typed intents/results and generated metadata;
+  unrelated profiles remain stable. Thirty-seven echo cases and combined 73
+  full-capability cases pass; full 1,004 cases/all shared checks pass without
+  skips. ESP-IDF v6.0.2 build/size succeeds (479,571-byte image); no physical port,
+  reset or flash. Host collection/accounting #83 is next, then full procedures;
+  #46/#49 pulse review/capture and actual hardware qualification remain gated.

@@ -550,8 +550,10 @@ post-startup interval after three seconds, plus all startup/drain durations.
 This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
-The implemented finite source uses the exact `finite_message_execution_v3`
-policy and bounded `run.source` readback. It starts at nominal elapsed zero,
+The finite source was introduced in `finite_message_execution_v3`. The selected
+execution profile is now `finite_message_execution_v4`, adding finite verified
+echoes while retaining the source contract; use its exact generated schema.
+The source retains bounded `run.source` readback. It starts at nominal elapsed zero,
 retains actual wake times, uses a 0–30 second declared source drain, and keeps
 sender transmission distinct from receiver delivery. See
 [fixed-rate source](fixed_rate_source.md) for queue masks, interval boundaries,
@@ -595,6 +597,11 @@ replay checks and message/audio stage start/end timestamps at their named stages
 These are software observation points with measurable capture latency. Do not
 label `tx_command_us` an exact on-air start. MODEL-01 records radio ramp/command
 overhead separately when comparing command-to-done time with predicted airtime.
+
+The finite firmware echo capability and matching execution v4 result are described
+in [verified echo/RTT](verified_echo_rtt.md). One request is pending per run;
+missing replies have null latency, and late/duplicate/unrelated frames do not
+create additional successful samples. Host orchestration is a separate slice.
 
 RTT is sender-local ECHO_REPLY acceptance minus request `tx_command_us`, including
 both airtimes and peer turnaround. Report success count, timeouts, median and
