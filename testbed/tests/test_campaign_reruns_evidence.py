@@ -561,3 +561,94 @@ def test_offline_verification_enforces_expanded_archive_and_member_bounds(
         monkeypatch.setattr(evidence, "MAX_MEMBERS", 2)
     with pytest.raises(ValueError, match="Expanded|excessive"):
         evidence.verify_campaign_bundle(saved_bundle)
+
+
+def test_slow_campaign_export_does_not_block_control_state_requests(tmp_path, monkeypatch):
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    from lora_testbed.physical_campaign_evidence import CampaignBundle
+
+    started, release = threading.Event(), threading.Event()
+    build = CampaignBundle.build
+
+    def slow(self, identifier):
+        started.set()
+        assert release.wait(5)
+        return build(self, identifier)
+
+    monkeypatch.setattr(CampaignBundle, "build", slow)
+    with TestClient(create_app(data_dir=tmp_path)) as client:
+        result = start(client, plan(client))
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            exported = pool.submit(
+                client.get, f"/api/physical-campaigns/executions/{result['id']}/export"
+            )
+            assert started.wait(2)
+            try:
+                state = pool.submit(client.get, "/api/state").result(timeout=1)
+                assert state.status_code == 200
+            finally:
+                release.set()
+            assert exported.result(timeout=3).status_code == 200
+
+
+def test_cancelled_export_and_host_shutdown_join_worker_before_database_close(
+    tmp_path, monkeypatch
+):
+    import asyncio
+    import threading
+
+    from lora_testbed.campaign_plans import CampaignSpec
+    from lora_testbed.host import Host
+    from lora_testbed.physical_campaign_evidence import CampaignBundle
+
+    started, release = threading.Event(), threading.Event()
+    build = CampaignBundle.build
+
+    def slow(self, identifier):
+        started.set()
+        assert release.wait(5)
+        return build(self, identifier)
+
+    monkeypatch.setattr(CampaignBundle, "build", slow)
+
+    async def scenario():
+        host = Host(tmp_path)
+        saved = host.campaign_plans.create(
+            CampaignSpec.model_validate(
+                {
+                    "name": "Join export",
+                    "templates": [{"label": "missing", "case": {"kind": "memory_probe"}}],
+                }
+            )
+        )
+        result = await host.start_campaign(saved["id"])
+        await host.physical_campaigns.task
+        exporting = asyncio.create_task(host.campaign_exports.export(result["id"]))
+        closing = None
+        try:
+            assert await asyncio.to_thread(started.wait, 2)
+            with pytest.raises(RuntimeError, match="Another campaign export"):
+                await host.campaign_exports.export(result["id"])
+            exporting.cancel()
+            await asyncio.sleep(0)
+            closing = asyncio.create_task(host.close())
+            await asyncio.sleep(0.02)
+            assert not closing.done()
+            with pytest.raises(RuntimeError, match="shutting down"):
+                await host.campaign_exports.export(result["id"])
+            release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await exporting
+            await closing
+            assert not host.campaign_exports.workers
+        finally:
+            release.set()
+            await asyncio.gather(exporting, return_exceptions=True)
+            if closing:
+                await closing
+            else:
+                await host.close()
+
+    asyncio.run(scenario())
