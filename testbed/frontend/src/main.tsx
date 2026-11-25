@@ -453,7 +453,7 @@ function Experiments({ host }: { host: Host }) {
               <p>
                 <strong>{entry.node_requirement}</strong>
               </p>
-              {!matrix && <p>{entry.scope}</p>}
+              <p>{entry.scope}</p>
               {!matrix && entry.preflight.blockers.length > 0 && (
                 <ul>
                   {entry.preflight.blockers.map((b) => (
@@ -468,6 +468,7 @@ function Experiments({ host }: { host: Host }) {
               key={selected}
               catalogId={selected}
               option={matrix}
+              references={host.state.references}
               active={host.state.procedures.active_run}
               saved={host.state.procedures.runs}
               request={host.request}

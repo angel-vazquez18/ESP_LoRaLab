@@ -30,3 +30,15 @@
 .matrix-panel h4 {
   margin: 20px 0 0;
 }
+.matrix-references {
+  flex-basis: 100%;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.matrix-references label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

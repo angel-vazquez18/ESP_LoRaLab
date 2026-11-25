@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export type MatrixOption = {
   groups: string[];
-  kind: "serial" | "local" | "link" | "campaign" | "memory";
+  kind: "serial" | "local" | "link" | "campaign" | "memory" | "voice";
   choose_security: boolean;
 };
 
@@ -50,6 +50,7 @@ type Props = {
   pending: boolean;
   online: boolean;
   benchBusy: boolean;
+  references: { id: string; name: string; sample_count: number }[];
 };
 
 const perPage = 12;
@@ -125,12 +126,14 @@ export default function ProcedureMatrix({
   pending,
   online,
   benchBusy,
+  references,
 }: Props) {
   const [group, setGroup] = useState("");
   const [role, setRole] = useState("both");
   const [direction, setDirection] = useState("both");
   const [security, setSecurity] = useState("none");
   const [size, setSize] = useState("quick");
+  const [referenceIds, setReferenceIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<{
     plan: MatrixPlan;
     body: string;
@@ -141,7 +144,9 @@ export default function ProcedureMatrix({
     option.kind === "serial" ||
     option.kind === "local" ||
     (memory && group === "C1");
-  const selectDirection = option.kind === "link" || (memory && !local);
+  const voice = option.kind === "voice" && group !== "C2";
+  const selectDirection =
+    option.kind === "link" || option.kind === "voice" || (memory && !local);
   const recent = saved.filter(
     (run) =>
       run.catalog_id === catalogId &&
@@ -157,6 +162,8 @@ export default function ProcedureMatrix({
       ...(selectDirection &&
         direction !== "both" && { directions: [direction] }),
       ...(option.choose_security && { rf_security: security }),
+      ...(voice &&
+        referenceIds.length > 0 && { voice_reference_ids: referenceIds }),
       ...(size === "quick" && {
         repetitions: 1,
         ...(option.kind === "serial"
@@ -263,6 +270,38 @@ export default function ProcedureMatrix({
               <option value="B_TO_A">B → A</option>
             </select>
           </label>
+        )}
+        {voice && (
+          <fieldset className="matrix-references">
+            <legend>Three-second reference clips</legend>
+            {references.filter((entry) => entry.sample_count === 24000)
+              .length === 0 && (
+              <p>Upload a 24,000-sample reference in Voice workspace.</p>
+            )}
+            {references
+              .filter((entry) => entry.sample_count === 24000)
+              .map((entry) => (
+                <label key={entry.id}>
+                  <input
+                    type="checkbox"
+                    checked={referenceIds.includes(entry.id)}
+                    disabled={
+                      pending ||
+                      (referenceIds.length === 3 &&
+                        !referenceIds.includes(entry.id))
+                    }
+                    onChange={(event) =>
+                      setReferenceIds(
+                        event.target.checked
+                          ? [...referenceIds, entry.id]
+                          : referenceIds.filter((id) => id !== entry.id),
+                      )
+                    }
+                  />
+                  {entry.name}
+                </label>
+              ))}
+          </fieldset>
         )}
         {option.choose_security && (
           <label>
