@@ -567,7 +567,9 @@ class RadioRuns:
 
     async def cleanup(self, r):
         retired = {}
-        for role, identifier in r.get("retire_echo_artifacts", {}).items():
+        for role, identifier in r.get(
+            "retire_echo_artifacts", r.get("retire_data_artifacts", {})
+        ).items():
             try:
                 await self.command(
                     r, role, "artifact.delete", {"artifact_id": identifier}, cleanup=True
@@ -585,7 +587,15 @@ class RadioRuns:
         return {
             "confirmed": all(detail["confirmed"] for detail in details.values())
             and all(item["confirmed"] for item in retired.values()),
-            **({"retired_echo_artifacts": retired} if retired else {}),
+            **(
+                {
+                    "retired_echo_artifacts"
+                    if r["plan"]["spec"]["source"] == "echo"
+                    else "retired_data_artifacts": retired
+                }
+                if retired
+                else {}
+            ),
             "nodes": {
                 role: "; ".join(detail["steps"])
                 if detail["confirmed"]
@@ -603,7 +613,7 @@ class RadioRuns:
             async with asyncio.timeout(request.timeout_ms / 1000 + 45):
                 plan = request.plan()
                 budget = preview(plan)["timing"]["budget"]
-                if isinstance(request, EchoRadioRunRequest):
+                if plan.spec.source in ("known_data", "echo"):
                     r["initial_artifact_ids"] = {}
                     for role in "AB":
                         listing = await self.command(r, role, "artifact.list")
@@ -781,6 +791,8 @@ class RadioRuns:
                         if encoded
                         else "independent source recipe plus exact source/recovered readback",
                     }
+                if plan.spec.source == "known_data":
+                    self.register_retirement(r, "AB")
                 await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():
                     baseline = r["baseline"][role]
@@ -826,10 +838,15 @@ class RadioRuns:
                 if not r["cleanup"]["confirmed"] and r["status"] == "completed":
                     r["status"] = "failed"
                     r["error"] = (
-                        "Echo cleanup could not retire every verified run artifact"
+                        "Radio cleanup could not retire every verified run artifact"
                         if any(
                             not item["confirmed"]
-                            for item in r["cleanup"].get("retired_echo_artifacts", {}).values()
+                            for item in r["cleanup"]
+                            .get(
+                                "retired_echo_artifacts",
+                                r["cleanup"].get("retired_data_artifacts", {}),
+                            )
+                            .values()
                         )
                         else "Radio cleanup did not confirm both nodes idle"
                     )
@@ -968,14 +985,22 @@ class RadioRuns:
                 raise ValueError("Echo returned bytes differ from the independent source recipe")
             r["verification"]["bytes_equal"] = True
         verified = [r["sender"]] + ([r["receiver"]] if recovered is not None else [])
+        self.register_retirement(r, verified)
+        return expected
+
+    def register_retirement(self, r, roles):
         retirement = {}
-        for role in verified:
+        for role in roles:
             identifier = r["prepared"][role]["artifact_id"]
             if identifier in r["initial_artifact_ids"][role]:
-                raise ValueError("Echo prepared an existing artifact ID; preserving it")
+                raise ValueError("Run prepared an existing artifact ID; preserving it")
             retirement[role] = identifier
-        r["retire_echo_artifacts"] = retirement
-        return expected
+        key = (
+            "retire_echo_artifacts"
+            if r["plan"]["spec"]["source"] == "echo"
+            else "retire_data_artifacts"
+        )
+        r[key] = retirement
 
     async def required_evidence(self, r, expected):
         if r["plan"]["spec"]["source"] == "echo":
