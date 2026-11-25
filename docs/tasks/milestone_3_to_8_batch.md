@@ -697,3 +697,12 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   directions, cancellation and the nested export graph. See
   [integration matrices](../integration_matrices.md). Next experiment family is
   RF-01 to RF-04 with controlled one-factor settings and per-child observations.
+
+- GitHub accepted the shared integration PR #214 over the lab testbed branch,
+  the lab firmware PR #215 over #213, and the lab testbed PR #216 over #215.
+  The shared integration full check passed 1,110 tests and all repository
+  checks. No reviews were merged.
+- The next grouped branch `feat/rf-experiment-sweeps` implements RF-01 to
+  RF-04 case generation and execution through the shared ledger, with separate
+  applied settings, modeled airtime and sender/receiver observations. All 13
+  focused checks passed, including actual native readback at each setting.

@@ -4,6 +4,17 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Grouped RF sweep execution
+
+RF-01 to RF-04 now use seeded factor order, matched direction/repetition source
+seeds, before/after baselines and finite per-setting budgets. The testbed
+verifies applied modem settings, keeps RF-04 receiver power fixed and saves
+per-case matched signal/timing observations and raw child links. The 13 focused
+RF/integration checks passed on isolated native firmware. Full `make check`
+passed 1,118 cases without skips and all shared checks. Bench qualifications,
+comparison plots and full performance assessment remain open. See
+[radio setting sweeps](rf_sweeps.md).
+
 ## November 25 — Shared integration matrix runner
 
 The testbed derives stable case plans for IF-01, IF-02 and IF-03 and uses one
