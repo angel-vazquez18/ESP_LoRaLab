@@ -24,6 +24,7 @@ from .experiments_v2 import (
     Radio,
     airtime_us,
     known_data,
+    ldro_enabled,
     preview,
 )
 from .fault_protocol_v2 import Injection
@@ -69,6 +70,22 @@ class RadioRunRequest(StrictModel):
         timing = preview(self.plan())["timing"]
         if not timing["fits_selected_duration"]:
             raise ValueError(timing["duration_blocker"])
+        return self
+
+
+class PeerMismatchCheck(RadioRunRequest):
+    # Internal negative control, available through the procedure runner.
+    peer_radio: Radio
+
+    @classmethod
+    def from_control(cls, request):
+        peer = request.radio.model_copy(update={"frequency_hz": 916000000})
+        return cls(**request.model_dump(), peer_radio=peer)
+
+    @model_validator(mode="after")
+    def requires_distinct_settings(self):
+        if self.peer_radio == self.radio:
+            raise ValueError("A peer mismatch check needs different settings")
         return self
 
 
@@ -751,19 +768,27 @@ class RadioRuns:
                             item["artifact_id"] for item in listing["artifacts"]
                         ]
                 for role in "AB":
+                    selected = (
+                        request.peer_radio
+                        if isinstance(request, PeerMismatchCheck) and role == r["receiver"]
+                        else plan.radio
+                    )
                     r["applied_settings"][role] = await self.command(
                         r,
                         role,
                         "config.set",
-                        {"radio": plan.radio.model_dump(), "link": plan.link.model_dump()},
+                        {"radio": selected.model_dump(), "link": plan.link.model_dump()},
                     )
                     applied = r["applied_settings"][role]
                     expected = {
-                        **plan.radio.model_dump(),
-                        "ldro_enabled": preview(plan)["timing"]["predicted_ldro_enabled"],
+                        **selected.model_dump(),
+                        "ldro_enabled": ldro_enabled(selected),
                     }
                     if applied["radio"] != expected or applied["link"] != plan.link.model_dump():
                         raise ValueError(f"Node {role} applied settings differ from the request")
+                if isinstance(request, PeerMismatchCheck):
+                    r["configuration_check"] = "peer_mismatch"
+                    raise ValueError("Peer settings mismatch before provisioning and arming")
                 r["stage"] = "provisioning"
                 key_set = EphemeralKeySet() if request.security == "aes128_gcm" else None
                 if key_set:

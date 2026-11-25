@@ -80,6 +80,7 @@ class NodeSession:
         self.tasks = []
         self.pending = {}
         self.command_lock = asyncio.Lock()
+        self.control_cycle_active = False
         self.rf_run_id = None
         self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
@@ -677,10 +678,62 @@ class NodeSession:
             if not future.done():
                 future.set_exception(ValueError(reason))
 
+    async def exercise_control_cycle(self, on_record):
+        if self.control_cycle_active or not self.identity or not self.connected:
+            raise ValueError("A connected node with exclusive control is required")
+        identity = (self.connection_id, self.identity.device_id, self.identity.boot_id)
+        options = {"on_record": on_record, "timeout": 0.75, "retries": 0}
+        self.control_cycle_active = True
+        try:
+            hello = v2.Hello.model_validate(await self.request("hello", **options))
+            require_control_compatible(hello.model_dump())
+            if (hello.device_id, hello.boot_id) != identity[1:]:
+                raise ValueError("Node identity changed during the control cycle")
+            before = await self.request("status.get", **options)
+            if before["node_role"] != self.role or before["state"] != "idle":
+                raise ValueError("Control cycle requires an owned idle node")
+            await self.request("control.keepalive", **options)
+            await self.request("control.release", **options)
+            try:
+                await self.request("status.get", **options)
+            except ValueError as exc:
+                if not str(exc).startswith("NOT_OWNER:"):
+                    raise
+            else:
+                raise ValueError("Status unexpectedly remained available to the released client")
+            await self.request("control.claim", {"node_role": self.role}, **options)
+            after = await self.request("status.get", **options)
+            if (
+                not self.identity
+                or (self.connection_id, self.identity.device_id, self.identity.boot_id) != identity
+                or after["node_role"] != self.role
+                or after["state"] != "idle"
+                or after["uptime_us"] <= before["uptime_us"]
+                or after["telemetry_drops"] != before["telemetry_drops"]
+            ):
+                raise ValueError("Control cycle did not restore the same healthy idle node")
+        except (Exception, asyncio.CancelledError):
+            if (
+                self.connected
+                and self.identity
+                and (self.connection_id, self.identity.device_id, self.identity.boot_id) == identity
+            ):
+                try:
+                    await self.request(
+                        "control.claim", {"node_role": self.role}, timeout=0.5, retries=0
+                    )
+                except (OSError, ValueError, TimeoutError):
+                    await self.close(release=False)
+            raise
+        finally:
+            self.control_cycle_active = False
+
     async def keepalive_loop(self):
         try:
             while self.connected:
                 await asyncio.sleep(1)
+                if self.control_cycle_active:
+                    continue
                 if (
                     self.last_health is not None
                     and health_freshness(monotonic() - self.last_health) == "unresponsive"
