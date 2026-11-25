@@ -252,6 +252,7 @@ static cJSON *echo_result(rf_execution *r)
     else string(r, o, "reply_frame_seq", NULL);
     number(r, o, "payload_bytes", r->plan.bytes);
     string(r, o, "payload_sha256", r->sha_hex);
+    string(r, o, "reply_hex", s.valid ? r->echo_reply_hex : NULL);
     if (s.tx_command_us >= 0) number(r, o, "tx_command_us", s.tx_command_us);
     else string(r, o, "tx_command_us", NULL);
     if (s.valid) {
@@ -812,6 +813,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
     if (p->action == RF_PREPARE)
     {
         r->plan = *p;
+        r->echo_reply_hex[0] = 0;
         r->echo_status = (rf_echo_status){.requester = p->role == p->source,
             .tx_command_us = -1, .accepted_us = -1, .reason = "not_started"};
         r->sender = p->role == p->source;
@@ -1377,6 +1379,16 @@ static void echo_work(rf_execution *r)
     rf_echo_poll(r->echo, &event);
     rf_echo_snapshot(r->echo, &r->echo_status);
     rf_echo_status *status = &r->echo_status;
+    size_t reply_bytes;
+    const uint8_t *reply = rf_echo_reply(r->echo, &reply_bytes);
+    if (reply) {
+        const char *digits = "0123456789abcdef";
+        for (size_t i = 0; i < reply_bytes; i++) {
+            r->echo_reply_hex[2 * i] = digits[reply[i] >> 4];
+            r->echo_reply_hex[2 * i + 1] = digits[reply[i] & 15];
+        }
+        r->echo_reply_hex[2 * reply_bytes] = 0;
+    }
     r->attempts = r->sender ? status->attempts : 0;
     if (event.observed && event.radio.kind == RADIO_EVENT_TX)
     {
@@ -1426,7 +1438,7 @@ static void echo_work(rf_execution *r)
         number(r, o, "message_id", event.header.message);
         number(r, o, "fragment_index", 0);
         number(r, o, "payload_bytes", r->plan.bytes);
-        number(r, o, "accepted_us", r->port.now_us(r->port.context));
+        number(r, o, "accepted_us", event.accepted_us);
         send(r, "rx.accepted", o);
         if (!r->sender && !r->delivered)
         {

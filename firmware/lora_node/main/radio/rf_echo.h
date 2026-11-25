@@ -29,6 +29,7 @@ typedef struct
 typedef struct
 {
     bool observed, decoded, accepted, result_ready;
+    int64_t accepted_us;
     node_radio_event radio;
     rf_echo_header header;
     const char *rejection;
@@ -41,6 +42,7 @@ bool rf_echo_arm(rf_echo *, int64_t deadline);
 bool rf_echo_start(rf_echo *, int64_t deadline);
 void rf_echo_poll(rf_echo *, rf_echo_event *);
 void rf_echo_abort(rf_echo *, const char *reason);
+const uint8_t *rf_echo_reply(const rf_echo *, size_t *bytes);
 void rf_echo_snapshot(const rf_echo *, rf_echo_status *);
 void rf_echo_destroy(rf_echo *);
 void rf_echo_memory(const rf_echo *, node_memory_inventory *);

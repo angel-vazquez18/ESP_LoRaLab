@@ -85,6 +85,7 @@ typedef struct
     rf_ack_receiver *acknowledgments;
     rf_echo *echo;
     rf_echo_status echo_status;
+    char echo_reply_hex[431];
     bool ack_pending, ack_transmitting;
     uint8_t protected_ack_header[40];
     int64_t protected_ack_due;

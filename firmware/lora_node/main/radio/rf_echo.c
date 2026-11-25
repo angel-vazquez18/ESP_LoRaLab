@@ -119,6 +119,7 @@ static bool validate(void *context, const uint8_t header[40], const uint8_t *bod
     else if (s->phase == DRAIN || s->phase == FINISHED ||
              (s->status.requester && now(s) >= s->wait_until)) s->rejection = "late";
     else if (s->status.requester && s->status.tx_command_us < 0) s->rejection = "missing_tx_command";
+    if (!s->rejection && s->status.requester) memcpy(s->frame, body, bytes);
     return s->rejection == NULL;
 }
 static void received(rf_echo *s, rf_echo_event *out)
@@ -152,12 +153,13 @@ static void received(rf_echo *s, rf_echo_event *out)
     else validate(s, event->bytes, event->bytes + 40, s->candidate.bytes);
     if (s->rejection) { out->rejection = s->rejection; return; }
     out->accepted = true;
+    out->accepted_us = now(s);
     s->have_digest = s->port.memory.hash(s->port.memory.context, event->bytes,
                                          event->frame_bytes, s->accepted_digest);
     if (s->status.requester)
     {
         s->status.reply_sequence = s->candidate.sequence;
-        s->status.accepted_us = now(s);
+        s->status.accepted_us = out->accepted_us;
         s->status.valid = true;
         s->status.reason = "matched";
         s->result_pending = true;
@@ -254,6 +256,11 @@ void rf_echo_poll(rf_echo *s, rf_echo_event *out)
     s->result_pending = false;
 }
 void rf_echo_abort(rf_echo *s, const char *reason) { if (s && !s->status.done) fail(s, reason); }
+const uint8_t *rf_echo_reply(const rf_echo *s, size_t *bytes)
+{
+    *bytes = s && s->status.requester && s->status.valid ? s->packet.message_bytes : 0;
+    return *bytes ? s->frame : NULL;
+}
 void rf_echo_snapshot(const rf_echo *s, rf_echo_status *out) { *out = s->status; }
 void rf_echo_destroy(rf_echo *s)
 {

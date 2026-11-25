@@ -153,6 +153,7 @@ def test_real_pair_echoes_exact_bytes_and_reports_only_requester_local_rtt(
         transmitted = next(
             row["data"] for row in pair.events["A"] if row.get("name") == "tx.attempt"
         )
+        assert bytes.fromhex(result["reply_hex"]) == payload
         assert result["request_frame_seq"] == request_sequence
         assert result["tx_command_us"] == transmitted["tx_command_us"]
         assert result["reply_accepted_us"] == pair.a.now()
