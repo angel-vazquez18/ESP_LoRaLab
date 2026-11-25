@@ -4,6 +4,23 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Shared integration matrix runner
+
+The testbed derives stable case plans for IF-01, IF-02 and IF-03 and uses one
+procedure ledger for their serial, radio and campaign evidence. Confirmed
+serial coverage includes claim/release/reclaim and three structured errors.
+IF-02 executes the four declared payload sizes in both directions and verifies
+mismatched applied settings before arming, followed by known-data recovery.
+Campaign execution reuses the existing owner for baseline, pause/resume,
+cancellation, configuration failure, selected reruns and export verification.
+
+The executor retains blocked variants and verifies the complete linked campaign
+graph, including file transfer children. Five dedicated cases and the combined
+45 regression cases passed in the isolated C/radio fixture. Full `make check`
+passed 1,110 tests without skips and all shared checks. Full serial framing
+and reply perturbation, campaign navigation and process restart, and physical
+acceptance remain open. See [integration procedure runner](integration_matrices.md).
+
 ## November 25 — Matched lab trials and evidence (#85)
 
 The testbed runs one selected fault between matched intact controls under one

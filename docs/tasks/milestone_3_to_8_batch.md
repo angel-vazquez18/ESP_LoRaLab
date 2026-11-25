@@ -685,3 +685,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   The isolated browser checked a passing three-child trial, refresh and
   an eight-member evidence hash manifest. No bench hardware was exercised.
   Continue with the shared IF-01/02/03 procedure matrix and evidence runner.
+
+- The lab host branch `feat/lab-trial-evidence` is pushed after final software
+  checks; GitHub returned errors opening the firmware and host PRs. Review
+  branch diffs over their actual dependencies. Keep full hardware qualification
+  issues open.
+- Grouped integration work on `feat/shared-integration-matrices` adds CDR
+  case plans and a shared executor for serial basic/error replies, the IF-02
+  baseline/sizes/peer-mismatch groups and six IF-03 groups. Preview reports
+  blocked serial and campaign variants explicitly. Host fixture verified
+  directions, cancellation and the nested export graph. See
+  [integration matrices](../integration_matrices.md). Next experiment family is
+  RF-01 to RF-04 with controlled one-factor settings and per-child observations.
