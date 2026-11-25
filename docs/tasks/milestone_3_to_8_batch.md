@@ -617,3 +617,15 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   same verified run-artifact policy before large campaigns; do not delete
   uploaded encoded source references or failed-readback evidence. Continue the
   independent #76/#77 fault hooks and the remaining full procedure matrices.
+
+
+- #210 was filed after the actual native known-data probe failed on message 5
+  with RESOURCE_LIMIT. On `fix/repeated-data-artifacts` over #209, generated DATA
+  now uses initial artifact IDs and retires only fresh independently read-back
+  objects. Pre-existing files, failed readbacks and downstream encoded voice
+  objects keep their lifecycle. Six dedicated and combined 20 DATA/echo cases
+  pass, including six consecutive runs in all direction/security combinations,
+  verified host exports and continued close attempts after retirement failure.
+  Full 1,038 cases and all shared checks pass without skips; formatting passes.
+  Original 19 files unchanged. Host-only, no wire/firmware/build/physical access.
+  Finish checks and this bug PR before #76/#77; all full procedures remain open.

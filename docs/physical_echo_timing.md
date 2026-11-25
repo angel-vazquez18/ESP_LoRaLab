@@ -48,8 +48,9 @@ After verified readback, echo cleanup retires only fresh artifacts created by th
 run, checked against an initial artifact listing. Pre-existing files and failed
 readbacks remain intact. Retirement failure stays explicit, still closes both
 sessions and prevents a successful timing finding. This permits repeated echoes
-without exhausting the four node slots; it does not change other workflows' file
-retention policy.
+without exhausting the four node slots. Issue #210 extends the same policy to
+generated DATA; encoded references and downstream voice objects keep their own
+lifecycle. See [physical radio retention](physical_radio_runs.md).
 
 The firmware result now includes `reply_hex`: at most 215 actual accepted
 known-data bytes (430 hex characters), null when unavailable. This is public

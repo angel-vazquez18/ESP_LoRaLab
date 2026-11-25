@@ -4,6 +4,26 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Repeated DATA run artifact retirement (#210)
+
+A native six-message probe reproduced the fifth ordinary DATA run failing with
+RESOURCE_LIMIT because committed source/recovered objects filled all four slots.
+Generated known-data runs now reuse echo's initial-listing/fresh-ID and verified
+readback retirement policy. Host bytes, transfer records and exports remain;
+pre-existing files and failed-readback objects are preserved. Encoded references
+and recovered voice objects retain their existing downstream lifecycle. An
+artifact retirement failure still attempts both bound session closes and remains
+an unsuccessful cleanup, rather than blocking the other node's stop.
+
+Six dedicated cases and the combined 20 DATA/echo cases pass: six consecutive
+messages in each direction/security combination with user files preserved, exact
+readback/export hashes, recoverable readback failure and explicit retirement
+failure with both sessions closed. Full `make check` passes 1,038 cases without
+skips and all lint/frontend/contracts/repository/vendor checks; formatting passes.
+The existing Starlette/httpx deprecation remains. Host-only: no firmware/wire/profile change,
+new IDF build, physical port, reset or flash. Physical acceptance remains open.
+See [retention policy, walkthrough and review checks](physical_radio_runs.md).
+
 ## November 25 — Shared physical echo runs and independent RTT reports (#83)
 
 The common physical radio lifecycle now runs finite echoes in either direction,

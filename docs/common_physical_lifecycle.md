@@ -22,6 +22,9 @@ close that replacement connection.
 - `radio_runs.py`: keeps radio settings, both-node preparation, receiver-first
   arming, five-second start bounds, packet evidence and verified readback.
   It uses common binding/cleanup and retains detailed per-node cleanup results.
+  Generated DATA and echoes retire only fresh run objects after verified host
+  readback, protecting initial artifacts and failed readbacks. Encoded objects
+  remain owned by the downstream voice lifecycle. See `physical_radio_runs.md`.
 - `node_audio.py` / `artifact_transfers.py`: keep finite DMA/codec/manifest rules,
   use the same binding and preserve completed child evidence after parent failure.
   Successful audio jobs also confirm idle before releasing the bench.
