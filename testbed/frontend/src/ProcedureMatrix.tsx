@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export type MatrixOption = {
   groups: string[];
-  kind: "serial" | "local" | "link" | "campaign";
+  kind: "serial" | "local" | "link" | "campaign" | "memory";
   choose_security: boolean;
 };
 
@@ -136,7 +136,12 @@ export default function ProcedureMatrix({
     body: string;
   } | null>(null);
   const [inspected, setInspected] = useState<MatrixRun | null>(null);
-  const local = option.kind === "serial" || option.kind === "local";
+  const memory = option.kind === "memory";
+  const local =
+    option.kind === "serial" ||
+    option.kind === "local" ||
+    (memory && group === "C1");
+  const selectDirection = option.kind === "link" || (memory && !local);
   const recent = saved.filter(
     (run) =>
       run.catalog_id === catalogId &&
@@ -149,7 +154,7 @@ export default function ProcedureMatrix({
       catalog_id: catalogId,
       ...(group && { groups: [group] }),
       ...(local && role !== "both" && { roles: [role] }),
-      ...(option.kind === "link" &&
+      ...(selectDirection &&
         direction !== "both" && { directions: [direction] }),
       ...(option.choose_security && { rf_security: security }),
       ...(size === "quick" && {
@@ -158,7 +163,9 @@ export default function ProcedureMatrix({
           ? { valid_cycles: 1 }
           : option.kind === "local"
             ? { diagnostic_iterations: 10 }
-            : { messages_per_case: 1 }),
+            : memory
+              ? { memory_window_ms: 1000 }
+              : { messages_per_case: 1 }),
       }),
     };
     const body = JSON.stringify(document);
@@ -243,7 +250,7 @@ export default function ProcedureMatrix({
             </select>
           </label>
         )}
-        {option.kind === "link" && (
+        {selectDirection && (
           <label>
             Direction
             <select

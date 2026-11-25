@@ -5,7 +5,7 @@ import hashlib
 from copy import deepcopy
 from uuid import uuid4
 
-from . import content_series, crypto_benchmark_v2, rf_sweeps, timed_series
+from . import content_series, crypto_benchmark_v2, memory_matrix, rf_sweeps, timed_series
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
@@ -42,7 +42,7 @@ class IntegrationExecution:
         return min(values) if values else None
 
     def preview(self, spec, radio):
-        limit = self.message_limit(radio) if spec.catalog_id == "PKT-01" else None
+        limit = self.message_limit(radio) if spec.catalog_id in ("PKT-01", "MEM-01") else None
         plan = compile_matrix(spec, message_limit=limit or 65536)
         rows = []
         for case in plan["cases"]:
@@ -68,6 +68,23 @@ class IntegrationExecution:
                         else control
                     )
                     blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "memory_unavailable":
+                blockers = [memory_matrix.BLOCKERS[case["group"]]]
+            elif case["driver"] == "memory_idle":
+                role = case["role"]
+                blockers = memory_matrix.role_blockers(self.ledger.nodes[role], role)
+            elif case["driver"] == "memory_link":
+                blockers = [
+                    blocker
+                    for role in ("A", "B")
+                    for blocker in memory_matrix.role_blockers(self.ledger.nodes[role], role)
+                ]
+                if limit is None:
+                    blockers.append("Connect both nodes to establish the negotiated memory limit")
+                else:
+                    blockers.extend(
+                        radio.preflight(memory_matrix.link_request(spec, case))["blockers"]
+                    )
             elif case["driver"] == "echo_batch":
                 blockers = radio.preflight(timed_series.echo_request(spec, case))["blockers"]
             elif case["driver"] == "echo_timeout_fixture":
@@ -118,9 +135,11 @@ class IntegrationExecution:
             raise RuntimeError("The matrix plan changed. Preview the cases again.")
         if not planned["ready_case_count"]:
             raise ValueError("No selected matrix cases can run on this bench")
+        ready_cases = [case for case in planned["cases"] if case["ready"]]
+        local_drivers = {"serial_matrix", "local_crypto", "memory_idle"}
         required = (
-            {case["role"] for case in planned["cases"] if case["ready"]}
-            if spec.catalog_id in ("IF-01", "SEC-04")
+            {case["role"] for case in ready_cases}
+            if all(case["driver"] in local_drivers for case in ready_cases)
             else set(spec.roles)
         )
         run = {
@@ -143,6 +162,9 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/rf_sweeps.py",
                     "testbed/src/lora_testbed/content_series.py",
                     "testbed/src/lora_testbed/timed_series.py",
+                    "testbed/src/lora_testbed/memory_matrix.py",
+                    "testbed/src/lora_testbed/workload_observations.py",
+                    "testbed/src/lora_testbed/workload_assessment.py",
                     "testbed/src/lora_testbed/echo_accounting.py",
                     "testbed/src/lora_testbed/crypto_benchmark_v2.py",
                     "testbed/src/lora_testbed/procedure_runs.py",
@@ -153,7 +175,7 @@ class IntegrationExecution:
                 )
             },
             "transport": "physical USB"
-            if spec.catalog_id in ("IF-01", "SEC-04")
+            if all(case["driver"] in local_drivers for case in ready_cases)
             else "physical USB and owned radio runs",
             "timing_basis": "per-child node-local and host-monotonic observations",
             "physical_bindings": {role: adapter.bind(role) for role in sorted(required)},
@@ -508,6 +530,77 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_memory_case(self, run, case, spec, host):
+        adapter, observations = host.adapter, host.observations
+        is_link = case["driver"] == "memory_link"
+        request = memory_matrix.link_request(spec, case) if is_link else None
+        roles = ("A", "B") if is_link else (case["role"],)
+        window = case["observation_ms"]
+        duration = request.timeout_ms + window + 20000 if is_link else window
+        claims, reports, errors = {}, {}, {}
+        result = None
+
+        def claim(role, started):
+            claims[role] = started["observation_id"]
+            case["observation_ids"] = dict(claims)
+            self.ledger.save(run)
+
+        try:
+            for role in roles:
+                binding = run["physical_bindings"][role]
+                adapter.current(binding)
+                started = asyncio.create_task(observations.start_memory(role, duration))
+                try:
+                    claim(role, await asyncio.shield(started))
+                except asyncio.CancelledError:
+                    claim(role, await started)
+                    raise
+            if is_link:
+                result = await self.matrix_radio_child(
+                    run, case, request, host.radio, adapter, "sampled_known_data"
+                )
+                await asyncio.sleep(window / 1000)
+            else:
+                await memory_matrix.wait_for_idle_observation(
+                    adapter, run["physical_bindings"][roles[0]], claims[roles[0]], window
+                )
+        finally:
+            for role, identifier in claims.items():
+                try:
+                    adapter.current(run["physical_bindings"][role])
+                    record = await observations.collect_memory(role, identifier, stop=True)
+                    report = memory_matrix.summary(
+                        record, window, case["run_ids"][0] if case["run_ids"] else None
+                    )
+                    report["cleanup_confirmed"] = not record["evidence"]["memory"]["status"][
+                        "active"
+                    ]
+                    reports[role] = report
+                    self.ledger.append(run["id"], case["id"], {"role": role, "memory": report})
+                except Exception as exc:
+                    errors[role] = str(exc) or type(exc).__name__
+            if errors:
+                self.ledger.append(run["id"], case["id"], {"memory_collection_errors": errors})
+            case["cleanup_verified"] = len(reports) == len(roles) and all(
+                report["cleanup_confirmed"] for report in reports.values()
+            )
+        if not case["cleanup_verified"]:
+            raise ValueError("Memory observation cleanup or readback is unconfirmed")
+        passed = all(report["passed"] for report in reports.values()) and (
+            not is_link or self.verified_link_child(result)
+        )
+        case.update(
+            status="completed",
+            assessment="pass" if passed else "inconclusive",
+            measurements=reports,
+            assertions=[
+                {
+                    "code": "linked_stage_samples_and_idle_recovery" if is_link else "idle_samples",
+                    "outcome": "pass" if passed else "inconclusive",
+                }
+            ],
+        )
+
     async def matrix_campaign_case(self, run, case, spec, host):
         service = host.physical_campaigns
         for binding in run["physical_bindings"].values():
@@ -715,6 +808,8 @@ class IntegrationExecution:
                     await self.matrix_echo_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "local_crypto":
                     await self.matrix_crypto_case(run, case, host)
+                elif case["driver"] in ("memory_idle", "memory_link"):
+                    await self.matrix_memory_case(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
