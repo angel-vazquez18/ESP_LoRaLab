@@ -235,8 +235,9 @@ message-level aggregation. ACK observations never inflate original DATA counts.
 
 `radio/rf_faults` owns laboratory selectors, frame digests and bounded
 scratch/retained storage. Execution controls admission, deadlines and cleanup.
-The sender keeps its original retry bytes and borrows transformed bytes only
-for the selected submission. See [laboratory checks](lab_frame_faults.md).
+Its receiver can drop before insertion or suppress an ACK after acceptance.
+The sender keeps its original retry bytes. A prepared reverse block buffers
+the originals before reordering, and extra duplicates have their own TX events. See [laboratory checks](lab_frame_faults.md).
 
 The session-security contract maps key-bearing fields and provisioning
 persistence boundaries in [security_sessions.md](security_sessions.md). Firmware

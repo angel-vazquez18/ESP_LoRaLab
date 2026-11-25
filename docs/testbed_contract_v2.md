@@ -481,10 +481,10 @@ is started. Record original failure and cleanup failure separately.
 
 ## 9. Controlled faults and CDR assertions
 
-Execution v5 implements the first two actions below for protected generated
-known-data on the default-off laboratory build. The fragment, ACK and scheduling
-actions describe the next planned extension. See [laboratory checks](lab_frame_faults.md)
-for bounds, evidence and cleanup.
+Execution v6 implements these actions for finite generated known-data on
+the optional laboratory build. Receiver selectors count eligible local
+arrivals or ACK opportunities. Scheduling requires ACK disabled. See
+[laboratory checks](lab_frame_faults.md) for bounds, evidence and cleanup.
 
 Each `fault.set` entry has `injection_id` (UUID), `stage`, `action`, `message_id`,
 `fragment_index`, `attempt_index` (1-based), `byte_offset`, `xor_mask` and
@@ -510,8 +510,8 @@ Each `fault.set` entry has `injection_id` (UUID), `stage`, `action`, `message_id
   twice or in reversed blocks of at most 32 within one message. Account for
   injected attempts separately; require unique reassembly and bounded timeout.
 
-Retain up to 16 injection frames for `replay`/mutation; use the message buffer to
-prepare a bounded reorder block. Fault hooks exist only in a declared laboratory
+Reserve up to 16 retained frames for replay and duplication. A separate
+prepared buffer holds at most 32 originals for a reverse block. Fault hooks exist only in a declared laboratory
 test build and never silently activate in normal runs. Fault location is part
 of saved evidence. Do not infer authentication correctness from a CRC failure.
 
@@ -557,8 +557,9 @@ This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
 The finite source was introduced in `finite_message_execution_v3`, followed by
-verified echoes in v4. The selected `finite_message_execution_v5` retains both
-and adds optional laboratory fault controls. Use its exact generated schema.
+verified echoes in v4. The selected `finite_message_execution_v6` retains both
+and adds the fragment and ACK extensions to the laboratory controls introduced
+in v5. Use its exact generated schema.
 The source retains bounded `run.source` readback. It starts at nominal elapsed zero,
 retains actual wake times, uses a 0–30 second declared source drain, and keeps
 sender transmission distinct from receiver delivery. See

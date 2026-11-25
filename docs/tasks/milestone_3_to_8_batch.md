@@ -662,3 +662,12 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - #76 software verification: 59 focused and 1,077 full cases pass without
   skips. Standard and isolated lab ESP-IDF builds pass, and execution v5
   metadata matches. See [laboratory checks](../lab_frame_faults.md).
+
+- PR #213 is ready for #76 on top of #211. The issue and Project card are in
+  Testing. The full check and both ESP-IDF build profiles passed.
+- The grouped lab controls branch implements #77 with receiver-local arrival
+  ordinals, repeatable exact-byte duplicates, and prepared reversal up to 32
+  frames. The 77 focused checks passed. Host reconciliation should require
+  applied target, matching TX/RX wire digests or exact RX arrival, the observed
+  receiver stage and fresh before/after controls. Bind the evidence to both
+  device boots and preserve negative results independently of execution status.

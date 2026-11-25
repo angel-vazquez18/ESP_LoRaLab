@@ -4,6 +4,22 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Laboratory fragment and ACK controls (#77)
+
+Execution v6 adds receiver drop before insertion, ACK suppression after
+acceptance, exact duplicate transmission and prepared reverse blocks up to 32
+frames. A drop does not commit the replay window. A suppressed ACK leaves the
+accepted-frame retry path intact. Lab trace digests and receive timestamps
+support reconciliation with actual arrival, acceptance and rejection records.
+
+The 77 focused native/contract checks pass. Native cases include byte-identical
+recoveries, one delivery across duplicates/retries, protected reversal at capacity
+and the exact missing index after a controlled loss. Full `make check` passed
+1,095 tests without skips, plus lint, dashboard build, contract, repository and
+vendor checks. ESP-IDF v6.0.2 builds passed in the standard (492,123 bytes)
+and lab (492,127 bytes) configurations. See
+[laboratory checks](lab_frame_faults.md) for commands and bench checks.
+
 ## November 25 — Laboratory protected-frame checks (#76)
 
 An explicit build option adds bounded session-scoped post-protection checks and
