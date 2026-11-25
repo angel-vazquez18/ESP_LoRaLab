@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Linked recovery campaign
+
+OPS-01 C7 uses the shared runner to plan 100 uniquely identified cases
+in linked batches with per-batch time and size bounds. The native
+quick check executed ten mixed local/paired cases and independently
+verified its archive and 26 child records. The 43 focused campaign/API
+checks, lint, dashboard build, and contract and repository checks passed.
+See [linked recovery campaign](ops_matrix.md).
+
 ## November 25 — Reference voice transport matrix
 
 VOICE-02 now selects saved reference clips and keeps exact encoded

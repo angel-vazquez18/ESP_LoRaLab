@@ -754,3 +754,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 - VOICE-02 C1 now runs selected three-second references with matched
   data controls and linked stage evidence. All 19 focused checks pass.
   The microphone sequence and physical listening remain outstanding.
+
+- Reference voice PR #224 is open over #223 with #79 linked.
+- OPS-01 C7 now verifies a 100-case linked plan and runs through the
+  shared campaign executor. The ten-case fixture and linked export
+  passed along with the 43 focused campaign/API checks. Disconnect,
+  restart, loss injection and loaded stability remain separate.
