@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Local reference audio matrix
+
+VOICE-01 C3 now runs a saved reference through one node's verified codec
+and playback path and preserves unrelated device artifacts. The 41
+focused audio/voice tests, lint, dashboard build and contract and
+repository checks passed. See [local reference audio](local_voice_matrix.md).
+The microphone schedule, full negative cases and physical listening
+remain open.
+
 ## November 25 — Linked recovery campaign
 
 OPS-01 C7 uses the shared runner to plan 100 uniquely identified cases

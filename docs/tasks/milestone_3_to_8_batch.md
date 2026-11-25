@@ -760,3 +760,9 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   shared campaign executor. The ten-case fixture and linked export
   passed along with the 43 focused campaign/API checks. Disconnect,
   restart, loss injection and loaded stability remain separate.
+
+- Recovery campaign PR #225 is open over #224.
+- VOICE-01 C3 now supports one-node reference upload, verified codec
+  stages, playback command and owned cleanup. The native fixture
+  retained an unrelated preexisting artifact. All 41 focused checks
+  passed. Physical listening remains separate.
