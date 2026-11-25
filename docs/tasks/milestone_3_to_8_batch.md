@@ -536,3 +536,11 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
   software fixtures, not physical qualification. Original 19 files unchanged;
   no firmware/wire/build/flash/physical access. Next #115 campaign controls/UI,
   physical #132 remains blocked on real setup and predecessor acceptance.
+
+- #107: PR #205 (`feat/campaign-reruns-evidence` →
+  `feat/workload-observation-plots`) is ready with scoped commits, walkthrough,
+  expected checks and physical follow-up. Issue/card Testing; no merge. Final
+  full 964 cases and all shared checks pass, plus 27 dedicated cases, formatting
+  and CLI help. The export worker red test reproduced control-loop blocking;
+  the joined bounded worker fixes it. Original 19 files preserved. Starting #115
+  saved-plan/ledger controls, refresh attachment, selected reruns and exports.
