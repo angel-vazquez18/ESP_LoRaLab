@@ -194,7 +194,7 @@ export default function ProcedureMatrix({
     option.kind === "serial" ||
     option.kind === "local" ||
     option.kind === "voice_local" ||
-    (memory && group === "C1");
+    (memory && (group === "C1" || group === "C3"));
   const voice =
     (option.kind === "voice" && group !== "C2") ||
     (option.kind === "voice_local" && (!group || group === "C3"));

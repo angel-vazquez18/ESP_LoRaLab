@@ -11,6 +11,7 @@ from . import (
     fault_matrices,
     local_voice,
     memory_matrix,
+    memory_observation_v2,
     model_series,
     ops_matrix,
     rf_sweeps,
@@ -104,6 +105,25 @@ class IntegrationExecution:
                 blockers = radio.preflight(model_series.link_request(spec, case, 0))["blockers"]
             elif case["driver"] == "model_message":
                 blockers = radio.preflight(model_series.message_request(spec, case, 0))["blockers"]
+            elif case["driver"] == "memory_audio_pair":
+                blockers = [
+                    blocker
+                    for role in ("A", "B")
+                    for blocker in memory_matrix.role_blockers(self.ledger.nodes[role], role)
+                ]
+                if set(spec.roles) != {"A", "B"}:
+                    blockers.append("Select both roles for paired audio memory")
+                elif voice is None:
+                    blockers.append("Paired audio preflight is unavailable")
+                else:
+                    blockers.extend(
+                        voice.preflight(memory_matrix.paired_audio_request(case))["blockers"]
+                    )
+            elif case["driver"] == "memory_audio_local":
+                role = case["role"]
+                blockers = memory_matrix.local_audio_blockers(
+                    self.ledger.nodes[role], role, case["variant"]
+                )
             elif case["driver"] == "memory_unavailable":
                 blockers = [memory_matrix.BLOCKERS[case["group"]]]
             elif case["driver"] == "memory_idle":
@@ -202,6 +222,7 @@ class IntegrationExecution:
             "serial_matrix",
             "local_crypto",
             "memory_idle",
+            "memory_audio_local",
             "model_reference",
             "local_voice_reference",
         }
@@ -1051,6 +1072,141 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_paired_memory_audio(self, run, case, host):
+        observations, voice = host.observations, host.voice
+        window = case["observation_ms"]
+        bindings = run["physical_bindings"]
+        claims, reports, errors = {}, {}, {}
+        child = None
+
+        try:
+            for role in ("A", "B"):
+                host.adapter.current(bindings[role])
+                observer = asyncio.create_task(observations.start_memory(role, window + 120000))
+                try:
+                    started = await asyncio.shield(observer)
+                except asyncio.CancelledError:
+                    claims[role] = (await observer)["observation_id"]
+                    raise
+                claims[role] = started["observation_id"]
+                case["observation_ids"] = dict(claims)
+                self.ledger.save(run)
+            await asyncio.sleep(2 * memory_observation_v2.PERIOD_US / 1_000_000)
+            started = await voice.start(memory_matrix.paired_audio_request(case))
+            identifier, task = started["id"], voice.task
+            try:
+                case["voice_run_id"] = identifier
+                self.ledger.save(run)
+                await asyncio.shield(task)
+            finally:
+                if not task.done():
+                    await voice.stop(identifier)
+                child = voice.get(identifier)
+                self.ledger.append(
+                    run["id"],
+                    case["id"],
+                    {
+                        "voice_run_id": child["id"],
+                        "radio_run_id": child["radio_run_id"],
+                        "audio_jobs": child["jobs"],
+                        "status": child["status"],
+                        "error": child["error"],
+                        "cleanup": child["cleanup"],
+                    },
+                )
+            await asyncio.sleep(window / 1000)
+        finally:
+            for role, identifier in claims.items():
+                try:
+                    host.adapter.current(bindings[role])
+                    record = await observations.collect_memory(role, identifier, stop=True)
+                    result = memory_matrix.paired_audio_summary(
+                        child, host.audio, role, record, window, case["variant"]
+                    )
+                    result["observer_stopped"] = not record["evidence"]["memory"]["status"][
+                        "active"
+                    ]
+                    reports[role] = result
+                    self.ledger.append(run["id"], case["id"], {"role": role, "memory": result})
+                except (OSError, ValueError) as exc:
+                    errors[role] = str(exc)
+            if errors:
+                self.ledger.append(run["id"], case["id"], {"memory_collection_errors": errors})
+            case["cleanup_verified"] = bool(
+                child
+                and child["cleanup"]["confirmed"]
+                and len(reports) == 2
+                and all(report["observer_stopped"] for report in reports.values())
+            )
+        if not case["cleanup_verified"]:
+            raise ValueError("Paired audio and memory cleanup is unconfirmed")
+        completed = child["status"] == "completed" and child["delivery_verified"]
+        playback_ok = child["playback_completed"] == (case["variant"] == "integrated_voice")
+        verdict = (
+            "pass"
+            if completed and playback_ok and all(report["passed"] for report in reports.values())
+            else "inconclusive"
+        )
+        case.update(
+            status="completed",
+            assessment=verdict,
+            measurements=reports,
+            assertions=[{"code": "bound_voice_reassembly_and_idle_recovery", "outcome": verdict}],
+        )
+
+    async def matrix_local_memory_audio(self, run, case, host):
+        role, window = case["role"], case["observation_ms"]
+        binding = run["physical_bindings"][role]
+        observations = host.observations
+        started = child = report = None
+        restored = False
+
+        def emit(document):
+            nonlocal restored
+            if identifier := document.get("audio_operation_id"):
+                case["audio_operation_id"] = identifier
+                self.ledger.save(run)
+            if "audio_artifacts_restored" in document:
+                restored = document["audio_artifacts_restored"]
+            self.ledger.append(run["id"], case["id"], document)
+
+        observer = asyncio.create_task(observations.start_memory(role, window + 45000))
+        try:
+            try:
+                started = await asyncio.shield(observer)
+            except asyncio.CancelledError:
+                started = await observer
+                raise
+            case["observation_ids"] = {role: started["observation_id"]}
+            self.ledger.save(run)
+            await asyncio.sleep(2 * memory_observation_v2.PERIOD_US / 1_000_000)
+            child = await memory_matrix.execute_local_audio(host, case, binding, emit)
+            await asyncio.sleep(window / 1000)
+        finally:
+            if started:
+                try:
+                    host.adapter.current(binding)
+                    record = await observations.collect_memory(
+                        role, started["observation_id"], stop=True
+                    )
+                    report = memory_matrix.local_audio_summary(
+                        record, window, child, case["variant"]
+                    )
+                    stopped = not record["evidence"]["memory"]["status"]["active"]
+                    case["cleanup_verified"] = bool(restored and stopped)
+                    emit({"role": role, "memory": report, "observer_stopped": stopped})
+                except (OSError, ValueError) as exc:
+                    emit({"memory_collection_error": str(exc)})
+        if not case.get("cleanup_verified"):
+            raise ValueError("Memory audio cleanup or readback is unconfirmed")
+        verdict = "pass" if report["passed"] else "inconclusive"
+        case.update(
+            status="completed",
+            assessment=verdict,
+            measurements={role: report},
+            assertions=[{"code": "bound_audio_stage_and_idle_recovery", "outcome": verdict}],
+        )
+
     async def matrix_memory_case(self, run, case, spec, host):
         adapter, observations = host.adapter, host.observations
         is_link = case["driver"] == "memory_link"
@@ -1329,6 +1485,10 @@ class IntegrationExecution:
                     await self.matrix_echo_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "local_crypto":
                     await self.matrix_crypto_case(run, case, host)
+                elif case["driver"] == "memory_audio_pair":
+                    await self.matrix_paired_memory_audio(run, case, host)
+                elif case["driver"] == "memory_audio_local":
+                    await self.matrix_local_memory_audio(run, case, host)
                 elif case["driver"] in ("memory_idle", "memory_link"):
                     await self.matrix_memory_case(run, case, spec, host)
                 elif case["driver"] in ("model_reference", "model_frame"):

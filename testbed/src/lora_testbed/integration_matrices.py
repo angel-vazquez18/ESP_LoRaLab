@@ -167,7 +167,7 @@ class MatrixRequest(ContractModel):
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
         local = self.catalog_id in ("IF-01", "SEC-04", "VOICE-01") or (
-            self.catalog_id == "MEM-01" and set(self.groups or ()) == {"C1"}
+            self.catalog_id == "MEM-01" and bool(self.groups) and set(self.groups) <= {"C1", "C3"}
         )
         if not local and set(self.roles) != {"A", "B"}:
             raise ValueError("The link and campaign procedures require both hardware roles")
