@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+from time import monotonic_ns
 
 import pytest
 from test_multi_fragment_radio import Pair
@@ -352,6 +353,25 @@ def test_memory_limit_reaches_firmware_and_control_recovers_in_each_direction(
     asyncio.run(scenario())
 
 
+def pace_native_clock(peer):
+    # A stalled desktop test process must not look like a missed MCU tick.
+    with peer.lock:
+        core = peer.core
+        core.time = core.now()
+        core.realtime = False
+        last_ns = monotonic_ns()
+        tick = core.tick
+
+        def paced_tick():
+            nonlocal last_ns
+            current_ns = monotonic_ns()
+            elapsed_us = (current_ns - last_ns) // 1000
+            last_ns = current_ns
+            tick(min(elapsed_us, 80000))
+
+        core.tick = paced_tick
+
+
 def test_memory_recovery_records_cancel_and_confirmed_failure_on_same_pair(
     tmp_path, native_library
 ):
@@ -361,6 +381,8 @@ def test_memory_recovery_records_cancel_and_confirmed_failure_on_same_pair(
         bridge = None
         try:
             await pair.connect()
+            for peer in pair.serials.values():
+                pace_native_clock(peer)
             bridge = asyncio.create_task(pair.bridge())
             spec = MatrixRequest(
                 catalog_id="MEM-01",

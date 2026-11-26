@@ -629,7 +629,8 @@ def test_invalid_prepared_bounds_reject_before_buffers_or_rf(native_library, fie
             budget[field] = 0 if field != "reassembly_timeout_us" else 1
         before = native_library.native_radio_transfers()
         rejected = node.request("run.prepare", {"spec": spec, "budget": budget}, run_id=run)
-        assert not rejected["ok"] and rejected["error"]["code"] == "INVALID_ARGUMENT"
+        error = "RESOURCE_LIMIT" if field == "message_max" else "INVALID_ARGUMENT"
+        assert not rejected["ok"] and rejected["error"]["code"] == error
         assert native_library.native_radio_transfers() == before
         assert not node.allocations
         assert node.request("artifact.list")["result"]["artifacts"] == []
