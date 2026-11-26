@@ -4,7 +4,7 @@ import asyncio
 import hashlib
 from collections import deque
 from contextlib import suppress
-from time import monotonic
+from time import monotonic, monotonic_ns
 from uuid import uuid4
 
 import serial
@@ -33,6 +33,7 @@ from .adapters import (
     require_execution_compatible,
 )
 from .session_keys import require_public_metadata, setup_facts, setup_reply
+from .storage import utc_now
 
 
 def discover_ports() -> list[dict]:
@@ -76,6 +77,7 @@ class NodeSession:
         self.connected = False
         self.connection_state = "disconnected"
         self.connection_id = None
+        self.connection_failure = None
         self.last_boot_binding = self.previous_boot_binding = None
         self.active_operation = None
         self.error = None
@@ -295,6 +297,7 @@ class NodeSession:
     async def connect(self, port):
         await self.close()
         self.port, self.error = port, None
+        self.connection_failure = None
         self.identity, self.health = None, None
         self.last_health = None
         self.event_seq = self.event_gaps = self.framing_errors = 0
@@ -619,7 +622,11 @@ class NodeSession:
         decoder = v2.Decoder(adapter=physical_wire_v2.ADAPTER)
         try:
             while self.connected:
-                data = await asyncio.to_thread(self.serial.read, 1024)
+                try:
+                    data = await asyncio.to_thread(self.serial.read, 1024)
+                except OSError as exc:
+                    self.fail(str(exc), source="serial_read", io_error=True)
+                    break
                 records, errors = decoder.feed(data)
                 if self.identity:
                     self.framing_errors += len(errors)
@@ -722,12 +729,22 @@ class NodeSession:
                                 self.active_operation = None
                         self.on_event(self.role, record.model_dump())
         except Exception as exc:
-            self.fail(str(exc))
+            self.fail(str(exc), source="serial_decoder")
         finally:
             if not self.connected and self.serial:
                 await asyncio.to_thread(self.serial.close)
 
-    def fail(self, reason):
+    def fail(self, reason, *, source="connection", io_error=False):
+        if not self.connected:
+            return
+        self.connection_failure = {
+            "connection_id": self.connection_id,
+            "source": source,
+            "kind": "serial_io" if io_error else "control_connection",
+            "reason": reason,
+            "at": utc_now(),
+            "host_monotonic_ns": monotonic_ns(),
+        }
         self.error = reason
         self.connection_state = "error"
         self.connected = False
@@ -1153,7 +1170,7 @@ class NodeSession:
                     raise ValueError("Node health telemetry timed out; reconnect to recover")
                 await self.request("control.keepalive")
         except (OSError, ValueError) as exc:
-            self.fail(str(exc))
+            self.fail(str(exc), source="keepalive")
 
     async def close(self, release=True):
         if release and self.connected and self.identity:

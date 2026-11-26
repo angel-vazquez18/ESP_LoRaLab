@@ -15,6 +15,7 @@ from . import (
     memory_observation_v2,
     model_series,
     ops_matrix,
+    ops_reconnect,
     rf_sweeps,
     serial_compatibility,
     serial_framing,
@@ -110,6 +111,8 @@ class IntegrationExecution:
                 blockers = ops_matrix.restart_blockers(
                     physical_campaigns, ops_matrix.restart_reference(spec, case)
                 )
+            elif case["driver"] == "ops_usb_recovery":
+                blockers = ops_reconnect.blockers(radio, ops_reconnect.reference(spec, case))
             elif case["driver"] == "ops_stability":
                 blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
                 if case["radio_load_period_s"]:
@@ -270,6 +273,7 @@ class IntegrationExecution:
             "model_reference",
             "local_voice_reference",
             "ops_restart_recovery",
+            "ops_usb_recovery",
         }
         local_only = all(case["driver"] in local_drivers for case in ready_cases)
         numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
@@ -321,6 +325,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/node_audio.py",
                     "testbed/src/lora_testbed/voice_runs.py",
                     "testbed/src/lora_testbed/ops_matrix.py",
+                    "testbed/src/lora_testbed/ops_reconnect.py",
                     "testbed/src/lora_testbed/experiments_v2.py",
                     "testbed/src/lora_testbed/workload_observations.py",
                     "testbed/src/lora_testbed/workload_assessment.py",
@@ -974,31 +979,41 @@ class IntegrationExecution:
             ],
         )
 
-    async def matrix_ops_restart(self, run, case, spec, host):
-        reference = ops_matrix.restart_reference(spec, case)
+    async def matrix_ops_connection_evidence(self, run, case, spec, host):
+        restart = case["driver"] == "ops_restart_recovery"
+        if restart:
+            reference = ops_matrix.restart_reference(spec, case)
+            assessor, service = ops_matrix.restart_assessment, host
+        else:
+            reference = ops_reconnect.reference(spec, case)
+            assessor, service = ops_reconnect.assess, host.radio
         try:
-            measurements = await host.campaign_exports.run(
-                ops_matrix.restart_assessment, host, reference
-            )
+            measurements = await host.campaign_exports.run(assessor, service, reference)
         except (OSError, RuntimeError, ValueError) as exc:
             reason = str(exc) or type(exc).__name__
             self.ledger.append(
                 run["id"],
                 case["id"],
-                {"restart_reference": reference.model_dump(), "reason": reason},
+                {"reference": reference.model_dump(), "reason": reason},
             )
             case.update(status="completed", assessment="inconclusive", reason=reason)
             return
-        self.ledger.append(run["id"], case["id"], {"restart_recovery": measurements})
+        if restart:
+            case["campaign_ids"] = [reference.interrupted, reference.recovery]
+            run_ids = [measurements["interrupted_radio_id"], measurements["recovery_radio_id"]]
+            original_assertion = "host_restart_preserved_interrupted_campaign"
+        else:
+            run_ids = [reference.interrupted, reference.recovery]
+            original_assertion = "usb_loss_and_bounded_peer_stop"
+        self.ledger.append(run["id"], case["id"], {"connection_recovery": measurements})
         case.update(
             status="completed",
             assessment="pass",
             cleanup_verified=True,
-            campaign_ids=[reference.interrupted, reference.recovery],
-            run_ids=[measurements["interrupted_radio_id"], measurements["recovery_radio_id"]],
+            run_ids=run_ids,
             measurements=measurements,
             assertions=[
-                {"code": "host_restart_preserved_interrupted_campaign", "outcome": "pass"},
+                {"code": original_assertion, "outcome": "pass"},
                 {"code": "explicit_reconnect_and_verified_fresh_session", "outcome": "pass"},
             ],
         )
@@ -2031,8 +2046,8 @@ class IntegrationExecution:
                     await self.matrix_ops_control_recovery(run, case, spec, host)
                 elif case["driver"] == "ops_telemetry_gap":
                     await self.matrix_ops_telemetry_gap(run, case, spec, host)
-                elif case["driver"] == "ops_restart_recovery":
-                    await self.matrix_ops_restart(run, case, spec, host)
+                elif case["driver"] in ("ops_restart_recovery", "ops_usb_recovery"):
+                    await self.matrix_ops_connection_evidence(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)

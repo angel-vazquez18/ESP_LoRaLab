@@ -1409,6 +1409,14 @@ class RadioRuns:
             )
             r["status"] = "interrupted" if interrupted else "failed"
             r["error"] = str(exc) or type(exc).__name__
+            if interrupted:
+                r["connection_failures"] = {
+                    role: node.connection_failure
+                    for role, node in self.nodes.items()
+                    if node.connection_failure
+                    and node.connection_failure["connection_id"]
+                    == r["physical_bindings"][role]["connection_id"]
+                }
         finally:
             if fixture := r.get("receive_evidence_gap"):
                 self.nodes[fixture["role"]].clear_receive_observation_omission(r["id"])
@@ -1433,6 +1441,8 @@ class RadioRuns:
                     if self.artifacts.busy:
                         await self.artifacts.cancel(transfer)
                 r["cleanup"] = await self.cleanup(r)
+                if r.get("connection_failures"):
+                    r["cleanup_completed_monotonic_ns"] = monotonic_ns()
                 if r["status"] == "completed" and r["evidence_error"]:
                     r["status"] = "failed"
                     r["error"] = "Cleanup evidence incomplete; verified artifacts retained"

@@ -13,7 +13,7 @@ from .campaign_plans import (
     Template,
     digest,
 )
-from .experiments_v2 import known_data
+from .ops_reconnect import archived_radio, verify_saved_known_data
 from .radio_runs import RadioRunRequest
 
 STABILITY_SECONDS = 3600
@@ -32,7 +32,6 @@ GROUPS = {
     },
 }
 BLOCKERS = {
-    "C1": "The attended USB interruption case is unavailable",
     "C2": "The attended board reset case is unavailable",
 }
 
@@ -50,16 +49,18 @@ def cases(request, groups):
                 "campaign_repetitions": min(request.messages_per_case, 10),
             }
             continue
-        for variant, direction, repetition in product(
+        for variant, direction, repetition, target in product(
             GROUPS["OPS-01"][group],
             request.directions,
             range(1, 2 if group == "C6" else request.repetitions + 1),
+            ("A", "B") if group == "C1" else (None,),
         ):
             yield {
                 "group": group,
                 "variant": variant,
                 "repetition": repetition,
                 "driver": {
+                    "C1": "ops_usb_recovery",
                     "C3": "ops_restart_recovery",
                     "C4": "ops_control_recovery",
                     "C5": "ops_telemetry_gap",
@@ -67,6 +68,7 @@ def cases(request, groups):
                 }.get(group, "ops_unavailable"),
                 "role": direction,
                 "direction": direction,
+                **({"target_role": target} if target else {}),
                 **(
                     {
                         "observation_s": request.ops_observation_s,
@@ -163,15 +165,9 @@ def restart_assessment(host, reference):
         if link.get("service") != "radio" or not row.get("preflight", {}).get("ready"):
             raise ValueError("A fresh paired preflight and linked radio child are required")
         child = radio.get(link["id"])
-        wire = child.get("saved_files", {}).get("wire") or {}
-        if (
-            child["plan"]["spec"]["direction"] != reference.direction
-            or not wire.get("length_bytes")
-            or wire.get("sha256") != child.get("wire_sha256")
-            or not child.get("wire_sha256")
-        ):
-            raise ValueError("Radio direction or archived exchange is missing")
-        radio.content(child["id"], "wire")
+        if child["plan"]["spec"]["direction"] != reference.direction:
+            raise ValueError("The radio direction does not match the selected case")
+        archived_radio(radio, child)
         children.append(child)
     old, new = children
     if (
@@ -192,15 +188,7 @@ def restart_assessment(host, reference):
         or not (new.get("accounting") or {}).get("evidence_complete")
     ):
         raise ValueError("The original work and a verified fresh radio session are required")
-    spec = new["plan"]["spec"]
-    size = spec["message_bytes"]
-    if spec["source"] != "known_data" or not 1 <= size <= 65536:
-        raise ValueError("Use a bounded known-data campaign case")
-    expected = known_data(spec["source_seed"], 1, size)
-    for kind in ("source", "recovered"):
-        with radio.content(new["id"], kind).open("rb") as stream:
-            if stream.read(size + 1) != expected:
-                raise ValueError("The recovery archive bytes differ from the saved source recipe")
+    verify_saved_known_data(radio, new)
     return {
         "original": {
             key: original.get(key)
