@@ -47,6 +47,14 @@ planned message has evidence, the case reports the delivery ratio and
 verified useful bits per summed sender TX second. That rate uses the
 node-local transmit command-to-completion windows for the finite children.
 
+The comparison also retains complete-message ratio, accepted-fragment
+rate and application goodput. Each verified rate uses the sum of the
+same finite sender windows and reports its own numerator. A verified
+non-delivery contributes zero useful bytes and a real sender interval.
+If a child window is missing or invalid, the derived cohort rates stay
+unavailable. Host transaction duration uses a separate monotonic clock
+and includes configuration, readback and cleanup.
+
 RSSI and SNR require a CRC-valid receive frame matched to the confirmed
 transmission. Signal stays absent when that record is absent. The case
 ledger keeps the sample count, medians, duration/model outputs and the

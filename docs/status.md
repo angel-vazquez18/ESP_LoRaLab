@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Finite transfer rates
+
+Known-data and RF sweep records now keep unique accepted bytes and verified
+message bytes as independent numerators. Each rate requires a reconciled
+sender transfer window. Host elapsed time remains separate. See
+[transfer-rate definitions](radio_execution.md#finite-transfer-rates).
+
 ## November 25 — Airtime residual review
 
 MODEL-01 saved frame and message observations now support a separate

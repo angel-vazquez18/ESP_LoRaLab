@@ -170,3 +170,14 @@ protected ACK without second delivery. Timing budgets include tag bytes and
 56-byte ACKs. Node GCM capability reflects selected radio availability; ordinary
 host provisioning is implemented in [protected host sessions](protected_host_sessions.md). See [review, checks and physical
 limits](protected_replay.md). No physical RF/security qualification is established.
+
+
+## Finite transfer rates
+
+Verified DATA runs record the first sender TX command through final DATA
+TX completion. Accepted-fragment rate uses unique accepted useful
+fragment bytes. Application goodput uses independently verified complete
+message bytes. Each shares the reconciled sender interval and its
+declared drain setting. A zero or unmatched interval leaves the rates
+unavailable with a reason. The host transaction uses its own monotonic
+clock and includes configuration, readback and cleanup.
