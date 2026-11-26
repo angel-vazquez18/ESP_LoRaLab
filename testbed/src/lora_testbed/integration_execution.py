@@ -130,8 +130,10 @@ class IntegrationExecution:
             elif case["driver"] == "serial_matrix":
                 blockers = []
                 node = self.ledger.nodes[case["role"]]
-                if case["transport"] != "native_usb":
-                    blockers.append("An identified UART transport is required")
+                if node.connected and case["transport"] != node.control_transport():
+                    blockers.append(
+                        f"Node {case['role']} must advertise transport {case['transport']}"
+                    )
                 if case["variant"] not in {
                     "valid_control_cycles",
                     "configuration_unchanged",
@@ -279,6 +281,8 @@ class IntegrationExecution:
         role = case["role"]
         binding = run.get("serial_recovered_bindings", {}).get(role, run["physical_bindings"][role])
         node = adapter.current(binding)
+        if node.control_transport() != case["transport"]:
+            raise ValueError("Selected serial transport changed before the case")
         before = node.snapshot()
 
         def record(document):
@@ -385,6 +389,7 @@ class IntegrationExecution:
             restored["connection_id"] == binding["connection_id"]
             or restored["device_id"] != binding["device_id"]
             or restored["boot_id"] != binding["boot_id"]
+            or node.control_transport() != case["transport"]
             or status["state"] != "idle"
             or status["node_role"] != node.role
         ):

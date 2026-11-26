@@ -23,12 +23,20 @@ export type MatrixRunSummary = {
   completed_cases?: number;
 };
 
+type SerialTransport = "native_usb" | "uart";
+
+const transportLabels: Record<SerialTransport, string> = {
+  native_usb: "Native USB",
+  uart: "UART",
+};
+
 type MatrixCase = {
   id: string;
   group: string;
   variant: string;
   repetition: number;
   role: string;
+  transport?: SerialTransport;
   message_bytes?: number;
   message_count?: number;
   cycles?: number;
@@ -79,7 +87,11 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
           <li key={row.id}>
             <strong>
               {row.group} · {row.variant.replaceAll("_", " ")} ·{" "}
-              {row.role.replace("_TO_", " → ")} · repeat {row.repetition}
+              {row.role.replace("_TO_", " → ")}
+              {row.transport && (
+                <> · {transportLabels[row.transport] ?? row.transport}</>
+              )}{" "}
+              · repeat {row.repetition}
             </strong>
             <span>
               {row.status
@@ -149,6 +161,9 @@ export default function ProcedureMatrix({
 }: Props) {
   const [group, setGroup] = useState("");
   const [role, setRole] = useState("both");
+  const [transport, setTransport] = useState<SerialTransport | "both">(
+    "native_usb",
+  );
   const [direction, setDirection] = useState("both");
   const [security, setSecurity] = useState("none");
   const [size, setSize] = useState("quick");
@@ -181,6 +196,9 @@ export default function ProcedureMatrix({
       catalog_id: catalogId,
       ...(group && { groups: [group] }),
       ...(local && role !== "both" && { roles: [role] }),
+      ...(option.kind === "serial" && {
+        transports: transport === "both" ? ["native_usb", "uart"] : [transport],
+      }),
       ...(selectDirection &&
         direction !== "both" && { directions: [direction] }),
       ...(option.choose_security && { rf_security: security }),
@@ -276,6 +294,23 @@ export default function ProcedureMatrix({
               <option value="both">A and B</option>
               <option value="A">A</option>
               <option value="B">B</option>
+            </select>
+          </label>
+        )}
+        {option.kind === "serial" && (
+          <label>
+            Transport
+            <select
+              value={transport}
+              disabled={pending}
+              onChange={(event) => {
+                setTransport(event.target.value as SerialTransport | "both");
+                setPreview(null);
+              }}
+            >
+              <option value="native_usb">Native USB</option>
+              <option value="uart">UART</option>
+              <option value="both">Both transports</option>
             </select>
           </label>
         )}

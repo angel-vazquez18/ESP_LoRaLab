@@ -253,11 +253,18 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def control_transport(self):
+        if not self.identity:
+            return None
+        declared = self.identity.capabilities.resource_limits.get("control_transport", "native_usb")
+        return declared if declared in ("native_usb", "uart") else None
+
     def snapshot(self):
         age = monotonic() - self.last_health if self.last_health is not None else None
         return {
             "id": self.role,
             "wire_profile": self.wire_profile,
+            "control_transport": self.control_transport(),
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
             "ptt_support": self.ptt_availability(),
