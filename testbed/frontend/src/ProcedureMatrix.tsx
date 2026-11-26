@@ -64,6 +64,7 @@ type MatrixCase = {
     fault_to_cleanup_ms?: number;
     faulted_radio_run?: string;
     recovery_radio_run?: string;
+    reset_proof?: { procedure_id: string; case_id: string };
   };
   ready: boolean;
   blockers: string[];
@@ -223,6 +224,13 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 </a>
               </>
             )}
+            {row.measurements?.reset_proof && (
+              <a
+                href={`${runPath(row.measurements.reset_proof.procedure_id)}/evidence?case_id=${encodeURIComponent(row.measurements.reset_proof.case_id)}`}
+              >
+                Stale-boot rejection evidence
+              </a>
+            )}
             {(row.reason || row.blockers.length > 0) && (
               <span>{row.reason || row.blockers.join(" · ")}</span>
             )}
@@ -289,6 +297,7 @@ export default function ProcedureMatrix({
   const [echoMode, setEchoMode] = useState("default");
   const [restartEvidence, setRestartEvidence] = useState("");
   const [usbEvidence, setUsbEvidence] = useState("");
+  const [resetEvidence, setResetEvidence] = useState("");
   const [evidenceError, setEvidenceError] = useState("");
   const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
@@ -311,6 +320,7 @@ export default function ProcedureMatrix({
   const stability = catalogId === "OPS-01" && group === "C6";
   const restart = catalogId === "OPS-01" && (!group || group === "C3");
   const usb = catalogId === "OPS-01" && (!group || group === "C1");
+  const reset = catalogId === "OPS-01" && (!group || group === "C2");
   const selectDirection =
     option.kind === "link" ||
     option.kind === "voice" ||
@@ -328,6 +338,7 @@ export default function ProcedureMatrix({
     for (const [field, source] of [
       ["ops_restart_evidence", restart ? restartEvidence : ""],
       ["ops_usb_evidence", usb ? usbEvidence : ""],
+      ["ops_reset_evidence", reset ? resetEvidence : ""],
     ]) {
       if (!source.trim()) continue;
       try {
@@ -463,6 +474,21 @@ export default function ProcedureMatrix({
               onChange={(event) => {
                 setEvidenceError("");
                 setUsbEvidence(event.target.value);
+              }}
+              disabled={pending}
+              rows={3}
+              maxLength={4096}
+            />
+          </label>
+        )}
+        {reset && (
+          <label>
+            Saved reset recovery evidence (JSON)
+            <textarea
+              value={resetEvidence}
+              onChange={(event) => {
+                setEvidenceError("");
+                setResetEvidence(event.target.value);
               }}
               disabled={pending}
               rows={3}
