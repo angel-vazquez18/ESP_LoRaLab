@@ -388,6 +388,12 @@ def test_restart_interrupts_paused_campaign_without_connecting_or_resuming(tmp_p
         saved = host.physical_campaigns.get(identifiers["execution"])
         assert saved["status"] == "interrupted"
         assert saved["reason_code"] == "host_restart"
+        assert saved["host_instance_id"] != host.physical_campaigns.instance_id
+        assert (
+            saved["restart_checkpoint"]["status"]
+            == saved["restart_checkpoint"]["stage"]
+            == "paused"
+        )
         assert all(
             case["status"] == "skipped" and case["reason_code"] == "host_restart"
             for case in saved["cases"]
