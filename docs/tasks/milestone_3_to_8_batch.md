@@ -782,7 +782,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | Procedure family | Software entry point | Coverage still open |
 | --- | --- | --- |
 | IF-01–03 | Experiments matrix and `integration-matrix` | Supervised active/paused restart and campaign navigation cases |
-| RF-01–04 | Matched seeded sweeps with applied settings and evidence | Matched latency and bench review of baseline changes |
+| RF-01–04 | Seeded sweeps, applied settings, delivery evidence and matched requester RTT | Full repetitions and bench review of baseline changes |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
@@ -906,3 +906,8 @@ TIME-01 C2 uses two intact controls and one owned echo session with the
 responder stopped before arming. Native evidence verifies a confirmed
 request, bounded requester-local timeout, null RTT and a subsequent reply.
 An absent transmit observation makes the same evidence inconclusive.
+
+Companion echo runs preserve the same complete applied radio and link
+settings and boot identities as their DATA cases. The native power sweep
+checks per-role power readback, seven distinct settings and recorded RTT
+values. The dashboard and CSV retain companion counts and null timeouts.

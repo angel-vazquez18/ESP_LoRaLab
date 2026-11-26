@@ -64,15 +64,35 @@ recorded bench conditions.
 The procedure ZIP contains the raw case ledger and a separate
 `rf-comparison.csv` for individual sweep repetitions. The comparison
 and baseline differences are also in `procedure.json` and the CLI
-`procedure-status` output. Matched RTT comparisons and physical
-qualification remain open. See [the integration runner](integration_matrices.md)
-for the shared lifecycle and export instructions.
+`procedure-status` output.
+
+## Matched round-trip delay
+
+The RF-02 through RF-04 default plans include 100 companion TIME-01 echoes
+per setting, direction and repetition, plus the before/after controls.
+A short DATA-only check keeps its original workload. To add one companion
+echo to the short example, set `rf_echoes_per_case` to `1`. In the dashboard,
+choose **Companion round trips** and **Match workload count**. Use zero or
+**Skip** for DATA-only coverage. RF-01 can also include a companion series.
+
+The testbed verifies the direction, node identities and boots, security
+profile, and each role's applied radio and link settings against the DATA
+case. In a power sweep the requester uses the selected transmit power and
+the responder remains at 2 dBm. Each echo uses requester-local timestamps.
+The separate **Matched round-trip delay** panel and CSV retain valid RTT
+counts, excluded timeouts, and median and nearest-rank p95. Unresolved
+observations stay visible. A timeout contributes no RTT value. DATA and
+echo have separate child evidence and performance metrics.
+
+Physical qualification remains pending. See
+[the integration runner](integration_matrices.md) for the shared lifecycle
+and export instructions.
 
 ```sh
 uv run --project testbed pytest testbed/tests/test_rf_sweeps.py testbed/tests/test_integration_matrices.py -q
 make check
 ```
 
-Expect 16 focused cases. The native fixture covers actual readbacks, the
+The native fixture covers actual readbacks, the
 transmitter/receiver split, planned budgets, observed signal fields and
 inconclusive missing observations.

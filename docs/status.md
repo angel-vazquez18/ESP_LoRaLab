@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Round-trip comparisons for RF sweeps
+
+RF sweeps can now run companion echoes with matched per-role settings.
+The saved dashboard and CSV keep requester-local RTT, verified samples
+and excluded timeouts separate from delivery and transmit measurements.
+RF-02 through RF-04 include the companion series in their default plans.
+See [RF sweep timing](rf_sweeps.md#matched-round-trip-delay).
+
 ## November 25 — Controlled echo timeout
 
 TIME-01 C2 stops the prepared responder before arming and waits for the
