@@ -31,9 +31,6 @@ GROUPS = {
         "C7": ("linked_campaign",),
     },
 }
-BLOCKERS = {
-    "C2": "The attended board reset case is unavailable",
-}
 
 
 def cases(request, groups):
@@ -53,7 +50,7 @@ def cases(request, groups):
             GROUPS["OPS-01"][group],
             request.directions,
             range(1, 2 if group == "C6" else request.repetitions + 1),
-            ("A", "B") if group == "C1" else (None,),
+            ("A", "B") if group in ("C1", "C2") else (None,),
         ):
             yield {
                 "group": group,
@@ -61,11 +58,12 @@ def cases(request, groups):
                 "repetition": repetition,
                 "driver": {
                     "C1": "ops_usb_recovery",
+                    "C2": "ops_reset_recovery",
                     "C3": "ops_restart_recovery",
                     "C4": "ops_control_recovery",
                     "C5": "ops_telemetry_gap",
                     "C6": "ops_stability",
-                }.get(group, "ops_unavailable"),
+                }[group],
                 "role": direction,
                 "direction": direction,
                 **({"target_role": target} if target else {}),

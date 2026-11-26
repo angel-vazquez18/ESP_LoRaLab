@@ -652,9 +652,12 @@ class NodeSession:
                         record.boot_id != self.identity.boot_id
                         or record.device_id != self.identity.device_id
                     ):
-                        raise ValueError(
-                            "Device reset or identity changed; reconnect for a new session"
+                        self.fail(
+                            "Device reset or identity changed; reconnect for a new session",
+                            source="serial_decoder",
+                            observed=(record.device_id, record.boot_id),
                         )
+                        break
                     if isinstance(record, v2.Reply):
                         entry = self.pending.get(record.command_id)
                         if entry and entry[0] == record.command_seq and not entry[1].done():
@@ -734,7 +737,7 @@ class NodeSession:
             if not self.connected and self.serial:
                 await asyncio.to_thread(self.serial.close)
 
-    def fail(self, reason, *, source="connection", io_error=False):
+    def fail(self, reason, *, source="connection", io_error=False, observed=None):
         if not self.connected:
             return
         self.connection_failure = {
@@ -745,6 +748,10 @@ class NodeSession:
             "at": utc_now(),
             "host_monotonic_ns": monotonic_ns(),
         }
+        if observed:
+            self.connection_failure.update(
+                kind="identity_change", observed_device_id=observed[0], observed_boot_id=observed[1]
+            )
         self.error = reason
         self.connection_state = "error"
         self.connected = False

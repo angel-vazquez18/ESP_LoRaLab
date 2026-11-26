@@ -111,15 +111,15 @@ class IntegrationExecution:
                 blockers = ops_matrix.restart_blockers(
                     physical_campaigns, ops_matrix.restart_reference(spec, case)
                 )
-            elif case["driver"] == "ops_usb_recovery":
-                blockers = ops_reconnect.blockers(radio, ops_reconnect.reference(spec, case))
+            elif case["driver"] in ("ops_usb_recovery", "ops_reset_recovery"):
+                blockers = ops_reconnect.blockers(
+                    radio, ops_reconnect.reference(spec, case), self.ledger
+                )
             elif case["driver"] == "ops_stability":
                 blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
                 if case["radio_load_period_s"]:
                     request = ops_matrix.known_data_request(case, spec.seed)
                     blockers.extend(radio.preflight(request)["blockers"])
-            elif case["driver"] == "ops_unavailable":
-                blockers = [ops_matrix.BLOCKERS[case["group"]]]
             elif case["driver"] in ("local_voice_reference", "local_voice_operator"):
                 blockers = local_voice.blockers(voice, case)
             elif case["driver"] in ("voice_reference", "voice_operator"):
@@ -274,6 +274,7 @@ class IntegrationExecution:
             "local_voice_reference",
             "ops_restart_recovery",
             "ops_usb_recovery",
+            "ops_reset_recovery",
         }
         local_only = all(case["driver"] in local_drivers for case in ready_cases)
         numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
@@ -986,7 +987,7 @@ class IntegrationExecution:
             assessor, service = ops_matrix.restart_assessment, host
         else:
             reference = ops_reconnect.reference(spec, case)
-            assessor, service = ops_reconnect.assess, host.radio
+            assessor, service = ops_reconnect.assess, host
         try:
             measurements = await host.campaign_exports.run(assessor, service, reference)
         except (OSError, RuntimeError, ValueError) as exc:
@@ -1004,7 +1005,11 @@ class IntegrationExecution:
             original_assertion = "host_restart_preserved_interrupted_campaign"
         else:
             run_ids = [reference.interrupted, reference.recovery]
-            original_assertion = "usb_loss_and_bounded_peer_stop"
+            original_assertion = (
+                "reset_and_stale_boot_rejection"
+                if case["driver"] == "ops_reset_recovery"
+                else "usb_loss_and_bounded_peer_stop"
+            )
         self.ledger.append(run["id"], case["id"], {"connection_recovery": measurements})
         case.update(
             status="completed",
@@ -2046,7 +2051,11 @@ class IntegrationExecution:
                     await self.matrix_ops_control_recovery(run, case, spec, host)
                 elif case["driver"] == "ops_telemetry_gap":
                     await self.matrix_ops_telemetry_gap(run, case, spec, host)
-                elif case["driver"] in ("ops_restart_recovery", "ops_usb_recovery"):
+                elif case["driver"] in (
+                    "ops_restart_recovery",
+                    "ops_usb_recovery",
+                    "ops_reset_recovery",
+                ):
                     await self.matrix_ops_connection_evidence(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)

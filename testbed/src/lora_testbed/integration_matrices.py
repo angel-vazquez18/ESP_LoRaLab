@@ -117,6 +117,10 @@ class USBEvidenceReference(ContractModel):
     recovery: UUID
 
 
+class ResetEvidenceReference(USBEvidenceReference):
+    stale_boot_procedure: UUID
+
+
 class MatrixRequest(ContractModel):
     catalog_id: Literal[
         "IF-01",
@@ -162,6 +166,9 @@ class MatrixRequest(ContractModel):
     ops_usb_evidence: list[USBEvidenceReference] | None = Field(
         default=None, min_length=1, max_length=12
     )
+    ops_reset_evidence: list[ResetEvidenceReference] | None = Field(
+        default=None, min_length=1, max_length=12
+    )
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
@@ -204,6 +211,7 @@ class MatrixRequest(ContractModel):
             raise ValueError("The stability observation window belongs to OPS-01")
         for group, entries, field in (
             ("C1", self.ops_usb_evidence, "target_role"),
+            ("C2", self.ops_reset_evidence, "target_role"),
             ("C3", self.ops_restart_evidence, "variant"),
         ):
             if not entries:
