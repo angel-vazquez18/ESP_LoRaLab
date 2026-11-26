@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — RF comparison and baseline review
+
+Saved RF sweeps now expose each direction and repetition, the metric
+range and median, and paired before/after baseline changes. The CSV in
+the procedure archive preserves each repetition and its case reference.
+Native tests checked missing evidence and matched controls, and the
+browser verified metric switching and baseline details. See [RF sweeps](rf_sweeps.md).
+
 ## November 25 — RF delivery and unresolved observations
 
 RF-01 through RF-04 now retain independently proven delivery and

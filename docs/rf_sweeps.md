@@ -53,17 +53,26 @@ ledger keeps the sample count, medians, duration/model outputs and the
 linked raw evidence. The dashboard shows the delivery percentage or the
 unresolved count. A case can pass evidence verification with zero delivery.
 
-The current software covers schedule generation, finite execution, setting
-checks and the observation projection. Comparison plots and baseline-drift
-assessment, matched RTT comparisons and bench verification remain
-separate work. See [the integration runner](integration_matrices.md) for the
-shared lifecycle and export instructions.
+Open **Inspect cases** on a saved sweep to compare a metric across
+settings. Each row shows the individual repetitions, unweighted median
+and observed min–max, separated by direction and security profile.
+A missing repetition stays visible in the count. Expand **Before and
+after baselines** to see paired values and their differences at the same
+requested settings. The table retains differences for review under the
+recorded bench conditions.
+
+The procedure ZIP contains the raw case ledger and a separate
+`rf-comparison.csv` for individual sweep repetitions. The comparison
+and baseline differences are also in `procedure.json` and the CLI
+`procedure-status` output. Matched RTT comparisons and physical
+qualification remain open. See [the integration runner](integration_matrices.md)
+for the shared lifecycle and export instructions.
 
 ```sh
 uv run --project testbed pytest testbed/tests/test_rf_sweeps.py testbed/tests/test_integration_matrices.py -q
 make check
 ```
 
-Expect 15 focused cases. The native fixture covers actual readbacks, the
+Expect 16 focused cases. The native fixture covers actual readbacks, the
 transmitter/receiver split, planned budgets, observed signal fields and
 inconclusive missing observations.
