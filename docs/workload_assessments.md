@@ -5,8 +5,9 @@ procedure matrices. Software consistency, execution outcome and physical
 qualification remain separate. No import or readback in this slice sets
 `hardware_qualified` to true. Campaign execution is implemented in #87, and the bounded dashboard plots and
 full downloads in #88 are documented in [memory/source histories](workload_plots.md).
-The full sustained-source procedure (#105) and physical acceptance (#136) remain
-separate work.
+The [sustained-source runner](sustained_voice.md) uses this readback to
+verify sender and receiver evidence before session close. Hardware
+acceptance remains tracked in #136.
 
 ## Source accounting
 
@@ -105,9 +106,9 @@ run success. It paginates frames (16 per page) and snapshots (one per page), che
 stable terminal status, and uses a 45-second collection bound. On a timeout,
 connection change or cancellation after the initial status, partial pages and an
 inconclusive assessment are saved. Shutdown joins collectors before closing the
-store. The parent sustained-source runner still belongs to #105; this command
-alone cannot start a sustained run. Receiver archive collection belongs to that
-parent and is not fabricated by this sender-only readback.
+store. Use the VOICE-03 procedure to start a sustained run and collect
+its receiver archive. The standalone command saves sender evidence
+from an existing owned session.
 
 Physical readback preserves its connection/device/boot binding, current exact
 profile hashes and normalized result bodies. Queue gap accounting conservatively

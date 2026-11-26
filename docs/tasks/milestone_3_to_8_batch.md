@@ -787,7 +787,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
-| VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
+| VOICE-01–04 | Local and paired references, fixed-rate source matrix and `voice-review` | Attended microphone/error cases, calibrated delivery window, listening study and plots |
 | MODEL-01 | Independent vectors and observed frame/message matrices | Instrumented airtime/tolerance, residual plots and full bench study |
 | OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
 
@@ -911,3 +911,11 @@ Companion echo runs preserve the same complete applied radio and link
 settings and boot identities as their DATA cases. The native power sweep
 checks per-role power readback, seven distinct settings and recorded RTT
 values. The dashboard and CSV retain companion counts and null timeouts.
+
+VOICE-03 now runs the ordered sustained profile matrix through normal
+dashboard and CLI entry points, with the producer trace and receiver
+archive collected before session close. The native reference case verified
+3,000 producer frames, a 24,000-byte archive, exact delivery IDs, and
+cleanup. The uncalibrated in-window delivery rate remains unavailable.
+
+The full repository check through matched RF timing passed 1,180 tests.

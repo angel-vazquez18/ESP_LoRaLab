@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Sustained encoded voice runner
+
+VOICE-03 now uses the common radio lifecycle to run the finite producer
+from a verified encoded reference. The saved result joins the sender's
+3,000 frame observations and queue history with the independently checked
+24,000-byte receiver archive. Native tests cover the host workflow and
+missing worker preflight. Full bench repetitions and calibrated in-window
+delivery still require physical evidence. See [VOICE-03](sustained_voice.md).
+
 ## November 25 — Round-trip comparisons for RF sweeps
 
 RF sweeps can now run companion echoes with matched per-role settings.
