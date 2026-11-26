@@ -20,8 +20,8 @@ The matrix saves the underlying campaign reference before it starts
 checking results. Stopping a run cancels the current child and retains
 the partial campaign. The completed export is independently verified
 before reporting a consistency result. Board disconnect/reset, host
-restart, timeout and telemetry perturbation, and full physical campaign
-acceptance remain separate checks.
+restart, telemetry perturbation, and full physical campaign acceptance
+remain separate checks.
 
 ## Idle and loaded stability
 
@@ -58,3 +58,21 @@ samples. Host peak RSS is the process high-water mark. The bounded
 health-buffer counts describe the live data supplied to the dashboard.
 Browser heap use and the hour-long physical trials still require bench
 measurement.
+
+
+## Control rejection and timeout recovery
+
+OPS-01 C4 brackets each controlled case with verified 64-byte transfers
+of the same source bytes in fresh sessions. The transmitter in the
+selected direction is the control target. The invalid configuration
+variant sends the fixed rejected frequency and requires its prior radio
+settings, link settings, and configuration revision to survive unchanged.
+The timeout variant withholds one real reply to a bounded memory
+diagnostic in the host fixture. It records the host timeout and verifies
+that the node completed exactly one diagnostic and returned idle.
+
+In **Experiments**, select **OPS-01**, **C4** and **Quick check**. The
+quick plan covers both controls in both directions. Expect two verified
+transfers per case and an explicit rejection or timeout between them.
+The evidence ZIP retains the original replies, the scope of the
+controlled omission, the matched controls, and cleanup.

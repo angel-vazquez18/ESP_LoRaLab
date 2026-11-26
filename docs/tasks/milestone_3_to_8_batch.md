@@ -789,7 +789,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | Local and paired references, fixed-rate matrix, coded listening and duration review | Attended microphone/error cases, calibrated delivery window and recorded physical listening study |
 | MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
-| OPS-01 | Linked 100-case campaign and idle/loaded stability runner | Full-hour bench evidence, deliberate USB/reset interruptions, restart, and telemetry/timeout recovery |
+| OPS-01 | Linked 100-case campaign and idle/loaded stability runner | Full-hour bench evidence, deliberate USB/reset interruptions, restart, and telemetry-gap recovery |
 
 Keep fixture results and physical qualification records separate. Grouped
 support remains partial where a documented case is unavailable.
@@ -933,3 +933,8 @@ OPS-01 C6 now collects original 1 Hz health records and schedules a
 verified 64-byte transfer each minute in the loaded variant. Native
 checks cover both variants, targeted stop and archive integrity. Full
 physical coverage and browser-side resource measurements remain open.
+
+OPS-01 C4 now verifies invalid configuration and a controlled reply
+timeout between intact radio transfers. Eight native checks passed,
+including both directions and the original serial reply/configuration
+cases.
