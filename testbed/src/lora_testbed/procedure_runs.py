@@ -371,6 +371,11 @@ class ProcedureService:
                         "mode": run["mode"],
                         "hardware_validated": False,
                         "transport": run["transport"],
+                        **(
+                            {"connection_transports": run["connection_transports"]}
+                            if "connection_transports" in run
+                            else {}
+                        ),
                         "timing_basis": run["timing_basis"],
                         "note": run.get("note", "Historical procedure evidence"),
                     }

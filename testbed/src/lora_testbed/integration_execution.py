@@ -212,11 +212,19 @@ class IntegrationExecution:
             if local_only
             else set(spec.roles)
         )
+        transports = {
+            role: self.ledger.nodes[role].control_transport() for role in sorted(required)
+        }
+        labels = {"native_usb": "native USB Serial/JTAG", "uart": "UART0 115200 8N1"}
         transport = (
-            "no device"
-            if numerical_only
-            else ("physical USB" if local_only else "physical USB and owned radio runs")
+            " and ".join(
+                sorted({labels.get(value, "physical serial") for value in transports.values()})
+            )
+            if transports
+            else "no device"
         )
+        if not local_only:
+            transport += " and owned radio runs"
         run = {
             **planned,
             "id": str(uuid4()),
@@ -263,6 +271,7 @@ class IntegrationExecution:
                 )
             },
             "transport": transport,
+            "connection_transports": transports,
             "timing_basis": "exact rational arithmetic in microseconds"
             if numerical_only
             else "per-child node-local and host-monotonic observations",
