@@ -1,11 +1,13 @@
 """Verify grouped timing through the shared bench and durable child evidence."""
 
 import asyncio
+from copy import deepcopy
 
 from test_multi_fragment_radio import Pair
 from test_node_control_native import NativeSerial
 from test_node_control_native import native_library as native_library
 
+from lora_testbed import timed_series
 from lora_testbed.host import Host
 from lora_testbed.integration_matrices import MatrixRequest, compile_matrix
 
@@ -35,7 +37,11 @@ def test_echo_matrix_reconciles_two_samples_per_matched_native_cohort(tmp_path, 
             await pair.connect()
             bridge = asyncio.create_task(pair.bridge())
             spec = MatrixRequest(
-                catalog_id="TIME-01", directions=["A_TO_B"], repetitions=1, messages_per_case=2
+                catalog_id="TIME-01",
+                groups=["C1"],
+                directions=["A_TO_B"],
+                repetitions=1,
+                messages_per_case=2,
             )
             started = await host.start_procedure_matrix(spec)
             async with asyncio.timeout(45):
@@ -43,11 +49,7 @@ def test_echo_matrix_reconciles_two_samples_per_matched_native_cohort(tmp_path, 
             saved = host.procedures.get(started["id"])
             assert saved["status"] == "completed", saved
             assert not saved["hardware_validated"] and not saved["full_procedure_passed"]
-            assert [case["assessment"] for case in saved["cases"]] == ["pass"] * 6 + [
-                "inconclusive"
-            ]
-            assert saved["cases"][-1]["status"] == "blocked"
-            assert saved["cases"][-1]["run_ids"] == []
+            assert [case["assessment"] for case in saved["cases"]] == ["pass"] * 6
             distributions = [
                 row["document"]["round_trip_distribution"]
                 for row in host.procedures.all_evidence(saved["id"])
@@ -110,6 +112,48 @@ def test_crypto_matrix_uses_only_selected_role_and_records_checked_local_timing(
                     assert path["first_call_us"] >= 0
                     assert path["max_us"] >= path["p95_us"] >= path["min_us"]
         finally:
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_controlled_echo_timeout_is_bounded_and_keeps_rtt_unavailable(tmp_path, native_library):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="TIME-01", groups=["C2"], directions=["B_TO_A"], repetitions=1
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(25):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            [case] = saved["cases"]
+            before, missing, after = [host.radio.get(identifier) for identifier in case["run_ids"]]
+            report = case["measurements"]
+            assert report["requester"] == "B" and report["responder"] == "A"
+            assert report["rtt_us"] is None and report["matched_controls"] and report["verified"]
+            assert report["reply_cutoff_us"] <= report["timeout_observed_us"]
+            assert report["timeout_observed_us"] <= report["requester_deadline_us"]
+            assert not missing["timing"]["samples"]
+            assert missing["timing"]["exclusions"][0]["reason"] == "timeout"
+            incomplete = deepcopy(missing)
+            incomplete["events"] = [
+                row for row in incomplete["events"] if row["name"] != "tx.attempt"
+            ]
+            assert not timed_series.controlled_timeout_report(incomplete)["verified"]
+            assert len(pair.frames) == 5
+            assert before["timing"]["n"] == after["timing"]["n"] == 1
+            assert not saved["hardware_validated"]
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
             await host.close()
 
     asyncio.run(scenario())
