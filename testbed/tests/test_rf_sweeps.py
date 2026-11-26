@@ -1,6 +1,11 @@
 """The RF families share the procedure ledger and match settings by direction."""
 
 import asyncio
+import csv
+import hashlib
+import io
+import json
+import zipfile
 from copy import deepcopy
 
 import pytest
@@ -63,6 +68,21 @@ def test_power_sweep_changes_only_transmitter_and_projects_actual_observations(
                 no_rx["events"] = [e for e in no_rx["events"] if e["name"] != "rx.frame"]
                 assert rf_sweeps.observation(no_rx) is None
             assert len(predictions) == 1
+            comparison = saved["sweep_comparison"]
+            assert comparison["factor"] == "tx_power_dbm"
+            assert len(comparison["settings"]) == 7
+            [baseline] = comparison["baselines"]
+            assert (
+                baseline["settings_matched"]
+                and baseline["changes"]["delivery_percent"]["delta"] == 0
+            )
+            with zipfile.ZipFile(io.BytesIO(host.procedures.bundle(saved))) as bundle:
+                sample = bundle.read("rf-comparison.csv")
+                rows = list(csv.DictReader(io.StringIO(sample.decode())))
+                hashes = json.loads(bundle.read("manifest.json"))["sha256"]
+            assert len(rows) == 7 and {row["direction"] for row in rows} == {"B_TO_A"}
+            assert {float(row["delivery_percent"]) for row in rows} == {100}
+            assert hashes["rf-comparison.csv"] == hashlib.sha256(sample).hexdigest()
             assert not saved["hardware_validated"]
         finally:
             if bridge:
@@ -173,3 +193,39 @@ def test_sweep_report_keeps_unresolved_observations_out_of_delivery_and_goodput(
     assert report["observed_non_deliveries"] == 0
     assert report["unique_original_delivery_ratio"] is None
     assert report["useful_bits_per_active_tx_second"] is None
+
+
+def test_saved_comparison_preserves_individual_repetitions_and_matches_before_after():
+    run = compile_matrix(MatrixRequest(catalog_id="RF-02", directions=["A_TO_B"]))
+    for case in run["cases"]:
+        case["status"] = "blocked"
+        if case["value"] != 125000:
+            continue
+        if case["group"] == "C2" and case["repetition"] == 3:
+            continue
+        case["status"] = "completed"
+        ratio = (
+            1.0
+            if case["group"] == "C1" or (case["group"] == "C2" and case["repetition"] == 1)
+            else 0.0
+        )
+        case["measurements"] = {
+            "sample_count": 100,
+            "complete_observation_cohort": True,
+            "unique_original_delivery_ratio": ratio,
+        }
+    comparison = rf_sweeps.compare_saved_cases(run)
+    row = comparison["settings"][0]
+    assert row["value"] == 125000
+    assert row["ranges"]["delivery_percent"] == {"count": 2, "min": 0, "median": 50, "max": 100}
+    assert [trial["values"]["delivery_percent"] for trial in row["repetitions"]] == [100, 0, None]
+    assert row["ranges"]["rssi_dbm"] is None
+    assert [pair["changes"]["delivery_percent"]["delta"] for pair in comparison["baselines"]] == [
+        -100,
+        -100,
+        -100,
+    ]
+    changed = next(case for case in run["cases"] if case["group"] == "C3")
+    changed["requested_settings"] = {"frequency_hz": 916000000}
+    first = rf_sweeps.compare_saved_cases(run)["baselines"][0]
+    assert not first["settings_matched"] and first["changes"]["delivery_percent"]["delta"] is None
