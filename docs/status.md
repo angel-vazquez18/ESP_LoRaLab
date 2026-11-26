@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Competing ownership and lease expiry
+
+IF-01 C6 rejects a competing client, observes the actual unowned idle
+health after absent keepalive and establishes a fresh claim. The native
+one-role fixture verified all six supported default cases and restored
+control after cancellation. Deliberate health silence and physical
+qualification remain open. See [integration procedures](integration_matrices.md).
+
 ## November 25 — Serial configuration rejection
 
 IF-01 C2 now compares radio/link settings and configuration revision

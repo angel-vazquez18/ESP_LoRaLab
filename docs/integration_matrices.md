@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, plus C3 framing and parser recovery. One connected role is enough. | Version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, and C6 competing ownership and lease expiry. One connected role is enough. | Version/schema rejection, reply perturbation, health silence and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -72,6 +72,15 @@ write sizes and SHA-256 hashes, expected and observed firmware counter
 deltas, and idle recovery. Missing rejection counters are inconclusive.
 The case stops if device ownership or connection changes. USB hardware
 qualification and the UART path remain separate.
+
+IF-01 C6 checks a competing client and an expiring lease three times
+per selected role. The live owner refreshes its lease before the competing
+claim. The firmware must return BUSY and leave the original role usable.
+For expiry the testbed pauses keepalive on that connection, records the
+firmware lease deadline and waits for actual unowned idle health. The
+expired client must receive NOT_OWNER. A fresh claim on the same link
+must restore idle status. Interrupted probes attempt to restore control.
+The separate deliberate health-silence case still needs a fixture.
 
 A peer mismatch control verifies applied settings on both roles and stops at
 configuration before session setup or radio arming. Its follow-up restores
