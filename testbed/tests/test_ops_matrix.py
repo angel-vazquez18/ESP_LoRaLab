@@ -148,3 +148,46 @@ def test_ops_stability_tracks_passive_health_and_owns_loaded_transfer_cleanup(
             await host.close()
 
     asyncio.run(scenario())
+
+
+def test_ops_control_faults_preserve_configuration_and_recover_in_both_directions(
+    tmp_path, native_library
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(catalog_id="OPS-01", groups=["C4"], repetitions=1)
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(35):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            assert len(saved["cases"]) == 4
+            for case in saved["cases"]:
+                assert case["cleanup_verified"]
+                result = case["measurements"]
+                assert result["target_role"] == case["direction"][0]
+                before, after = [host.radio.get(identifier) for identifier in case["run_ids"]]
+                assert before["session_id"] != after["session_id"]
+                assert before["verification"]["sha256"] == after["verification"]["sha256"]
+                assert (
+                    before["verification"]["bytes_equal"] and after["verification"]["bytes_equal"]
+                )
+                control = result["control"]
+                if case["variant"] == "invalid_configuration":
+                    assert control["observed_error"] == "INVALID_ARGUMENT"
+                    assert control["configuration_before"] == control["configuration_after"]
+                else:
+                    assert control["timed_out"] and len(control["operation_results"]) == 1
+            assert [role for role, _ in pair.frames] == ["A", "A", "B", "B"] * 2
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
