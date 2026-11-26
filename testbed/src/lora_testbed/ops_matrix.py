@@ -33,7 +33,6 @@ BLOCKERS = {
     "C1": "The attended USB interruption case is unavailable",
     "C2": "The attended board reset case is unavailable",
     "C3": "A supervised host restart fixture is required",
-    "C4": "The invalid configuration/timeout recovery fixture is unavailable",
     "C5": "A controlled telemetry omission fixture is required",
 }
 
@@ -60,7 +59,9 @@ def cases(request, groups):
                 "group": group,
                 "variant": variant,
                 "repetition": repetition,
-                "driver": "ops_stability" if group == "C6" else "ops_unavailable",
+                "driver": {"C4": "ops_control_recovery", "C6": "ops_stability"}.get(
+                    group, "ops_unavailable"
+                ),
                 "role": direction,
                 "direction": direction,
                 **(
@@ -77,7 +78,7 @@ def cases(request, groups):
             }
 
 
-def stability_link_request(case, seed, ordinal=0):
+def known_data_request(case, seed, ordinal=0):
     return RadioRunRequest(direction=case["direction"], source_seed=(seed + ordinal) % 2**32)
 
 

@@ -89,10 +89,23 @@ class IntegrationExecution:
                 blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "ops_campaign":
                 blockers = ops_matrix.ready_blockers(spec, case, campaigns)
+            elif case["driver"] == "ops_control_recovery":
+                request = ops_matrix.known_data_request(case, spec.seed)
+                blockers = radio.preflight(request)["blockers"]
+                node = self.ledger.nodes[case["direction"][0]]
+                if case["variant"] == "invalid_configuration":
+                    if error := node.configuration_probe_blocker():
+                        blockers.append(error)
+                elif node.health is None or "memory_probe" not in (
+                    node.health.capability_availability.resource_limits.get("diag_kinds", ())
+                ):
+                    blockers.append(
+                        "The controlled reply timeout requires the bounded memory probe"
+                    )
             elif case["driver"] == "ops_stability":
                 blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
                 if case["radio_load_period_s"]:
-                    request = ops_matrix.stability_link_request(case, spec.seed)
+                    request = ops_matrix.known_data_request(case, spec.seed)
                     blockers.extend(radio.preflight(request)["blockers"])
             elif case["driver"] == "ops_unavailable":
                 blockers = [ops_matrix.BLOCKERS[case["group"]]]
@@ -328,6 +341,27 @@ class IntegrationExecution:
         await asyncio.sleep(0)
         return deepcopy(run)
 
+    @staticmethod
+    async def configuration_refusal(adapter, binding, record):
+        baseline = await adapter.request(binding, "status.get", on_record=record)
+        reply = await adapter.current(binding).exercise_configuration_rejection(record)
+        after = await adapter.request(binding, "status.get", on_record=record)
+        keys = ("radio", "link", "config_revision")
+        prior = {key: baseline[key] for key in keys}
+        latest = {key: after[key] for key in keys}
+        error = reply.error.code if reply.error else None
+        passed = error == "INVALID_ARGUMENT" and latest == prior
+        assessed = {
+            "direction": "host_assessment",
+            "configuration_before": prior,
+            "configuration_after": latest,
+            "expected_error": "INVALID_ARGUMENT",
+            "observed_error": error,
+            "outcome": "pass" if passed else "fail",
+        }
+        record(assessed)
+        return after, assessed
+
     async def matrix_serial_case(self, run, case, adapter):
         role = case["role"]
         binding = run.get("serial_recovered_bindings", {}).get(role, run["physical_bindings"][role])
@@ -359,26 +393,7 @@ class IntegrationExecution:
                     assessed["outcome"] = "fail"
                 record({"direction": "host_fixture", "counter_assessment": assessed})
             elif variant == "configuration_unchanged":
-                baseline = await adapter.request(binding, "status.get", on_record=record)
-                adapter.current(binding)
-                reply = await node.exercise_configuration_rejection(record)
-                status = await adapter.request(binding, "status.get", on_record=record)
-                keys = ("radio", "link", "config_revision")
-                prior = {key: baseline[key] for key in keys}
-                latest = {key: status[key] for key in keys}
-                error = reply.error.code if reply.error else None
-                outcome = "pass" if error == "INVALID_ARGUMENT" and latest == prior else "fail"
-                assessed = {"outcome": outcome}
-                record(
-                    {
-                        "direction": "host_assessment",
-                        "configuration_before": prior,
-                        "configuration_after": latest,
-                        "expected_error": "INVALID_ARGUMENT",
-                        "observed_error": error,
-                        "outcome": outcome,
-                    }
-                )
+                status, assessed = await self.configuration_refusal(adapter, binding, record)
             elif variant in serial_compatibility.INCOMPATIBILITIES:
                 identity = await adapter.request(binding, "hello", on_record=record)
                 assessed = await self.check_incompatible_hello(node.role, identity, variant)
@@ -839,6 +854,76 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_ops_control_recovery(self, run, case, spec, host):
+        adapter, radio = host.adapter, host.radio
+        request = ops_matrix.known_data_request(case, spec.seed + case["repetition"] - 1)
+        target = case["direction"][0]
+        binding = run["physical_bindings"][target]
+
+        def record(document):
+            self.ledger.append(run["id"], case["id"], {"target_role": target, **document})
+
+        before = await self.matrix_radio_child(run, case, request, radio, adapter, "before_control")
+        initial_ok = bool(self.verified_link_child(before))
+        assessed = {"outcome": "inconclusive"}
+        if initial_ok:
+            try:
+                if case["variant"] == "invalid_configuration":
+                    status, assessed = await self.configuration_refusal(adapter, binding, record)
+                else:
+                    baseline = await adapter.request(binding, "status.get", on_record=record)
+                    assessed = await adapter.current(binding).exercise_reply_recovery(
+                        "lost_reply", record
+                    )
+                    status = await adapter.request(binding, "status.get", on_record=record)
+                    keys = ("radio", "link", "config_revision")
+                    if not assessed["timed_out"] or any(
+                        baseline[key] != status[key] for key in keys
+                    ):
+                        assessed["outcome"] = "fail"
+                    record(assessed)
+                if not ops_matrix.idle_status(status):
+                    raise ValueError("Controlled interruption did not leave the target idle")
+            except (Exception, asyncio.CancelledError):
+                cleanup = await adapter.cleanup(binding, local_work=True, on_record=record)
+                case["cleanup_verified"] = cleanup["confirmed"]
+                record({"controlled_operation_cleanup": cleanup})
+                raise
+
+        restored = await self.matrix_radio_child(
+            run, case, request, radio, adapter, "after_control"
+        )
+        recovered = bool(self.verified_link_child(restored))
+        matched_controls = (
+            initial_ok
+            and recovered
+            and before["session_id"] != restored["session_id"]
+            and before["verification"]["sha256"] == restored["verification"]["sha256"]
+        )
+        assertions = [
+            {"code": case["variant"], "outcome": assessed["outcome"]},
+            {
+                "code": "verified_data_before_and_after_control",
+                "outcome": "pass" if matched_controls else "inconclusive",
+            },
+        ]
+        outcomes = {row["outcome"] for row in assertions}
+        case.update(
+            status="completed",
+            assessment="fail"
+            if "fail" in outcomes
+            else "pass"
+            if outcomes == {"pass"}
+            else "inconclusive",
+            cleanup_verified=True,
+            measurements={
+                "target_role": target,
+                "control": assessed,
+                "recovered": matched_controls,
+            },
+            assertions=assertions,
+        )
+
     async def matrix_ops_stability(self, run, case, spec, host):
         adapter = host.adapter
         bindings = run["physical_bindings"]
@@ -908,7 +993,7 @@ class IntegrationExecution:
                     and scheduled < planned_loads
                     and loop.time() >= started + scheduled * period
                 ):
-                    request = ops_matrix.stability_link_request(case, spec.seed, scheduled)
+                    request = ops_matrix.known_data_request(case, spec.seed, scheduled)
                     append(
                         {
                             "load_scheduled_s": scheduled * period,
@@ -1863,6 +1948,8 @@ class IntegrationExecution:
                     await self.matrix_ops_case(run, case, spec, host)
                 elif case["driver"] == "ops_stability":
                     await self.matrix_ops_stability(run, case, spec, host)
+                elif case["driver"] == "ops_control_recovery":
+                    await self.matrix_ops_control_recovery(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
