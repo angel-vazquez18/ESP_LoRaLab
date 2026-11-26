@@ -4,7 +4,7 @@ import hashlib
 from statistics import median
 
 from .experiments_v2 import Radio, airtime_us, preview
-from .radio_runs import RadioRunRequest, TransmitterPowerRunRequest
+from .radio_runs import SweepRadioRunRequest, TransmitterPowerRunRequest
 
 FACTORS = {
     "RF-01": ("spreading_factor", (7, 8, 9, 10, 11, 12), 7),
@@ -69,14 +69,16 @@ def sweep_request(matrix, case, ordinal):
     }
     if matrix.catalog_id == "RF-04":
         return TransmitterPowerRunRequest(**args, receiver_power_dbm=2)
-    return RadioRunRequest(**args)
+    return SweepRadioRunRequest(**args)
 
 
 def observation(record):
     """Use exact serial-bound observations and node-local TX duration."""
-    if record["status"] != "completed" or not (record.get("accounting") or {}).get(
-        "evidence_complete"
-    ):
+    accounting = record.get("accounting") or {}
+    if record["status"] != "completed" or not accounting.get("evidence_complete"):
+        return None
+    failed_delivery = accounting.get("observed_delivery_failure", False)
+    if not failed_delivery and not (record.get("verification") or {}).get("bytes_equal"):
         return None
     sender, receiver = record["sender"], record["receiver"]
     observed = [
@@ -100,7 +102,7 @@ def observation(record):
         and (event["data"]["session_id"], event["data"]["frame_seq"])
         == (attempt["session_id"], attempt["frame_seq"])
     ]
-    if len(received) != 1:
+    if len(received) > 1 or (not received and not failed_delivery):
         return None
     reported = record["applied_settings"][sender]["radio"]
     settings = Radio.model_validate({k: v for k, v in reported.items() if k != "ldro_enabled"})
@@ -110,19 +112,34 @@ def observation(record):
         "frame_bytes": attempt["frame_bytes"],
         "tx_command_to_done_us": duration,
         "predicted_airtime_us": predicted,
-        "rssi_dbm": received[0]["rssi_dbm"],
-        "snr_db": received[0]["snr_db"],
+        "delivered_messages": accounting["delivered_messages"],
+        "useful_delivered_bytes": record["summaries"][receiver]["useful_delivered_bytes"],
+        "rssi_dbm": received[0]["rssi_dbm"] if received else None,
+        "snr_db": received[0]["snr_db"] if received else None,
     }
 
 
 def report(rows, requested):
+    complete = len(rows) == requested
+    delivered = sum(row["delivered_messages"] for row in rows)
+    seconds = sum(row["tx_command_to_done_us"] for row in rows) / 1_000_000
+    useful_bytes = sum(row["useful_delivered_bytes"] for row in rows)
+    signal = [row for row in rows if row["rssi_dbm"] is not None]
     return {
         "sample_count": len(rows),
         "requested_messages": requested,
-        "complete_observation_cohort": len(rows) == requested,
+        "complete_observation_cohort": complete,
+        "delivered_messages": delivered,
+        "observed_non_deliveries": len(rows) - delivered,
+        "unresolved_messages": requested - len(rows),
+        "unique_original_delivery_ratio": delivered / requested if complete else None,
+        "useful_bits_per_active_tx_second": 8 * useful_bytes / seconds
+        if complete and seconds
+        else None,
+        "signal_sample_count": len(signal),
         "measured_airtime_basis": "sender-local transmit command to completion",
-        "rssi_dbm_median": median(row["rssi_dbm"] for row in rows) if rows else None,
-        "snr_db_median": median(row["snr_db"] for row in rows) if rows else None,
+        "rssi_dbm_median": median(row["rssi_dbm"] for row in signal) if signal else None,
+        "snr_db_median": median(row["snr_db"] for row in signal) if signal else None,
         "tx_command_to_done_us_median": median(row["tx_command_to_done_us"] for row in rows)
         if rows
         else None,

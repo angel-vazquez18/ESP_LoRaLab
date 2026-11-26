@@ -637,9 +637,7 @@ class IntegrationExecution:
                         "observation": sample,
                     },
                 )
-        complete = verified == case["message_count"]
-        if sweep:
-            complete = complete and len(observations) == case["message_count"]
+        complete = (len(observations) if sweep else verified) == case["message_count"]
         case.update(
             status="completed",
             assessment="pass" if complete else "inconclusive",
@@ -651,7 +649,9 @@ class IntegrationExecution:
             cleanup_verified=True,
             assertions=[
                 {
-                    "code": "complete_independent_readbacks",
+                    "code": "complete_rf_observation_cohort"
+                    if sweep
+                    else "complete_independent_readbacks",
                     "outcome": "pass" if complete else "inconclusive",
                 }
             ],

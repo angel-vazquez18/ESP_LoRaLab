@@ -165,6 +165,61 @@ def reconcile(record, expected):
     }
 
 
+def reconcile_sweep_loss(record, source):
+    """Verify observed non-delivery of one confirmed unacknowledged DATA frame."""
+    sender, receiver = record["sender"], record["receiver"]
+    sent, received = record["summaries"][sender], record["summaries"][receiver]
+
+    def events(role, name):
+        return [e["data"] for e in record["events"] if e["role"] == role and e["name"] == name]
+
+    attempts = events(sender, "tx.attempt")
+    if len(attempts) != 1:
+        raise ValueError("RF sweep loss needs exactly one observed transmission")
+    [frame] = attempts
+    tag_bytes = 16 if record["plan"]["spec"]["security"] == "aes128_gcm" else 0
+    missing = failed_ranges(record)
+    if (
+        sent["stop_reason"] != "completed"
+        or received["stop_reason"] != "timeout"
+        or any(summary["telemetry_drops"] for summary in (sent, received))
+        or sent["original_packets"] != 1
+        or sent["tx_attempts"] != 1
+        or sent["useful_source_bytes"] != len(source)
+        or received["radio_observations"] != len(events(receiver, "rx.frame"))
+        or received["failed_messages"] != 1
+        or received["delivered_messages"]
+        or received["accepted_fragments"]
+        or received["useful_delivered_bytes"]
+        or events(receiver, "rx.accepted")
+        or events(receiver, "tx.attempt")
+        or frame["session_id"] != record["session_id"]
+        or frame["message_id"] != 1
+        or frame["fragment_index"] != 0
+        or frame["frame_type"] != "data"
+        or frame["attempt_index"] != 1
+        or frame["status"] != "completed"
+        or frame["frame_bytes"] != 40 + len(source) + tag_bytes
+        or frame["tx_command_us"] != sent["first_tx_command_us"]
+        or frame["tx_done_us"] != sent["last_tx_done_us"]
+        or not missing
+        or not missing["ranges_complete"]
+        or missing["missing_indexes"] != [0]
+    ):
+        raise ValueError("RF sweep evidence does not reconcile a bounded non-delivery")
+    return {
+        "evidence_complete": True,
+        "observed_delivery_failure": True,
+        "data_originals": 1,
+        "data_attempts": 1,
+        "data_retries": 0,
+        "accepted_fragments": 0,
+        "delivered_messages": 0,
+        "unique_original_delivery_ratio": 0.0,
+        "source_sha256": hashlib.sha256(source).hexdigest(),
+    }
+
+
 def failed_ranges(record):
     """Describe only retained failed-message ranges; absence never fills in RF loss."""
     receiver = record["receiver"]

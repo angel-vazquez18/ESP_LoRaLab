@@ -30,7 +30,7 @@ from .experiments_v2 import (
 from .fault_protocol_v2 import Injection
 from .models import StrictModel
 from .physical_adapter import PhysicalAdapter
-from .radio_accounting import failed_ranges, reconcile
+from .radio_accounting import failed_ranges, reconcile, reconcile_sweep_loss
 from .radio_security import assess as assess_security
 from .session_keys import EphemeralKeySet, require_public_metadata
 from .storage import utc_now
@@ -73,7 +73,17 @@ class RadioRunRequest(StrictModel):
         return self
 
 
-class TransmitterPowerRunRequest(RadioRunRequest):
+class SweepRadioRunRequest(RadioRunRequest):
+    message_bytes: Literal[64] = 64
+
+    @model_validator(mode="after")
+    def one_unacknowledged_frame(self):
+        if self.link.ack_mode != "none" or self.link.fragment_payload_bytes < self.message_bytes:
+            raise ValueError("An RF sweep observation needs one unacknowledged DATA frame")
+        return self
+
+
+class TransmitterPowerRunRequest(SweepRadioRunRequest):
     receiver_power_dbm: int = Field(ge=2, le=20)
 
 
@@ -1007,7 +1017,10 @@ class RadioRuns:
                         )
                     allowed_stops = (
                         ("completed", "timeout")
-                        if lab or key_mismatch or isinstance(request, EchoRadioRunRequest)
+                        if lab
+                        or key_mismatch
+                        or isinstance(request, EchoRadioRunRequest)
+                        or (isinstance(request, SweepRadioRunRequest) and role == r["receiver"])
                         else ("completed",)
                     )
                     if r["summaries"][role]["stop_reason"] not in allowed_stops:
@@ -1020,7 +1033,9 @@ class RadioRuns:
                         r, lab["role"], "fault.status", {"offset": 0, "limit": 4}
                     )
                 delivered = r["summaries"][r["receiver"]]["delivered_messages"]
-                if (lab or key_mismatch) and not delivered:
+                sweep_loss = isinstance(request, SweepRadioRunRequest) and not delivered
+                negative_delivery = (lab or key_mismatch or sweep_loss) and not delivered
+                if negative_delivery:
                     expected = known_data(request.source_seed, 1, request.message_bytes)
                     source = await self.retrieve(r, r["sender"], "source")
                     if source != expected:
@@ -1059,9 +1074,11 @@ class RadioRuns:
                         if encoded
                         else "independent source recipe plus exact source/recovered readback",
                     }
-                if plan.spec.source == "known_data" and (not (lab or key_mismatch) or delivered):
+                if plan.spec.source == "known_data" and not negative_delivery:
                     self.register_retirement(r, "AB")
-                if not (lab or key_mismatch) or delivered:
+                if sweep_loss:
+                    r["accounting"] = await asyncio.to_thread(reconcile_sweep_loss, r, expected)
+                elif not negative_delivery:
                     await self.required_evidence(r, expected)
                 for role, node in self.nodes.items():
                     baseline = r["baseline"][role]
