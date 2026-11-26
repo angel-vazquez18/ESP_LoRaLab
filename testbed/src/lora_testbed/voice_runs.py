@@ -39,6 +39,12 @@ class VoiceRunRequest(StrictModel):
         return self
 
 
+class VoiceReassemblyRequest(VoiceRunRequest):
+    """Internal encoded-transfer workload which ends at verified reassembly."""
+
+    include_comparisons: Literal[False] = False
+
+
 class VoiceRuns:
     def __init__(self, store, nodes, artifacts, audio, radio):
         self.store, self.nodes = store, nodes
@@ -172,10 +178,11 @@ class VoiceRuns:
             blockers.append(str(exc))
             samples = request.sample_count
         sender, receiver = ("A", "B") if request.direction == "A_TO_B" else ("B", "A")
-        for role, commands in (
-            (sender, ("audio.encode", "audio.decode")),
-            (receiver, ("audio.decode",)),
-        ):
+        reassembly_only = isinstance(request, VoiceReassemblyRequest)
+        targets = [(sender, ("audio.encode", "audio.decode"))]
+        if not reassembly_only:
+            targets.append((receiver, ("audio.decode",)))
+        for role, commands in targets:
             node = self.nodes[role]
             try:
                 for name in commands:
@@ -231,6 +238,9 @@ class VoiceRuns:
             "status": "running",
             "stage": "source",
             "request": request.model_dump(),
+            "workload": "encoded_reassembly"
+            if isinstance(request, VoiceReassemblyRequest)
+            else "voice_playback",
             "reference": reference,
             "sample_count": ready["sample_count"],
             "sender": sender,
@@ -455,25 +465,28 @@ class VoiceRuns:
                     )
                 record["delivery_verified"] = True
                 self.collect(record)
-                record["stage"] = "decoding"
-                child = await self.audio.start(
-                    receiver,
-                    "decode",
-                    artifact_id=transported["readback_manifests"][receiver]["artifact_id"],
-                )
-                record["jobs"]["decode"] = child["id"]
-                self.save(record)
-                decoded = await self.wait(record, self.audio, child["id"])
-                if not decoded["verified_codec_stage"]:
-                    raise ValueError("Receiver PCM did not pass decode/readback verification")
-                record["stage"] = "playing"
-                child = await self.audio.start(receiver, "play", artifact_id=decoded["artifact_id"])
-                record["jobs"]["playback"] = child["id"]
-                self.save(record)
-                await self.wait(record, self.audio, child["id"])
-                record["playback_completed"] = True
-                self.audio.link_playback(decoded["id"], child["id"])
-                self.collect(record)
+                if not isinstance(request, VoiceReassemblyRequest):
+                    record["stage"] = "decoding"
+                    child = await self.audio.start(
+                        receiver,
+                        "decode",
+                        artifact_id=transported["readback_manifests"][receiver]["artifact_id"],
+                    )
+                    record["jobs"]["decode"] = child["id"]
+                    self.save(record)
+                    decoded = await self.wait(record, self.audio, child["id"])
+                    if not decoded["verified_codec_stage"]:
+                        raise ValueError("Receiver PCM did not pass decode/readback verification")
+                    record["stage"] = "playing"
+                    child = await self.audio.start(
+                        receiver, "play", artifact_id=decoded["artifact_id"]
+                    )
+                    record["jobs"]["playback"] = child["id"]
+                    self.save(record)
+                    await self.wait(record, self.audio, child["id"])
+                    record["playback_completed"] = True
+                    self.audio.link_playback(decoded["id"], child["id"])
+                    self.collect(record)
                 if request.include_comparisons:
                     record["stage"] = "comparisons"
                     for basis, length in (

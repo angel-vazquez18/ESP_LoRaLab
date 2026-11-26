@@ -185,8 +185,16 @@ class NodeAudio:
 
     async def command(self, node, record, name, args=None):
         self.same_boot(node, record)
+
+        def on_record(value):
+            self.wire(record, value)
+            if value["direction"] == "host_to_node" and (
+                name.startswith("audio.") or name == "ptt.arm"
+            ):
+                record.setdefault("workload_command_ids", {})[name] = value["record"]["command_id"]
+
         return await self.adapter.request(
-            record["physical_binding"], name, args, on_record=lambda value: self.wire(record, value)
+            record["physical_binding"], name, args, on_record=on_record
         )
 
     async def wait_result(self, node, record):
