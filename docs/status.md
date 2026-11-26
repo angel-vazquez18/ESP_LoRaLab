@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Controlled echo timeout
+
+TIME-01 C2 stops the prepared responder before arming and waits for the
+requester's real bounded timeout. Two intact echoes bracket the case
+and prove recovery. The timeout is retained with unavailable RTT. See
+[round-trip case instructions](timed_series.md).
+
 ## November 25 — Firmware packet-size rejection
 
 PKT-01 C3 now checks the firmware's max-plus-one reply in the selected
@@ -228,7 +235,7 @@ See [shared procedure controls](integration_matrices.md).
 
 TIME-01 now runs matched exact-byte echo cohorts under both protection
 profiles, with requester-local timestamps and explicit exclusions. The
-controlled missing-reply case remains blocked. SEC-04 now runs a single
+controlled missing-reply follow-up is described above. SEC-04 now runs a single
 role or both, keeping checked timings for encryption, decryption,
 invalid-tag rejection and copy in distinct distributions.
 
