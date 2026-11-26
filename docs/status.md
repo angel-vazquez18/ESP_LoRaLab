@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Campaign restart evidence
+
+Host restart now preserves the active or paused campaign checkpoint
+and a hash of the retained interrupted radio trace. Native child
+processes exercised active transmission and a pause after a verified
+child, with exact archive hashes and fresh connection checks. The
+supervised restart matrix and physical cleanup checks remain open.
+See [integration procedures](integration_matrices.md).
+
 ## November 25 — Serial framing recovery
 
 IF-01 C3 now runs nine framing variants with three default repetitions

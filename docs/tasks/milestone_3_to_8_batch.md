@@ -822,3 +822,9 @@ IF-01 C3 runs all 27 default USB cases per selected role and compares
 device framing counters with the expected rejections. The isolated native
 fixture covers the full one-role schedule and interrupted multi-write cleanup.
 The separate UART and physical qualification remain open.
+
+Campaign restart now retains the original active/paused checkpoint and
+hashes each retained interrupted radio trace. The test restarts an
+isolated host during active transmit and after a settled pause and
+confirms unchanged history, verified archives and fresh follow-up runs.
+Supervised procedure iteration and physical checks are pending.

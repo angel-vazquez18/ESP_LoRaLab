@@ -8,7 +8,7 @@ readiness, assessment and references to its original child evidence.
 | --- | --- | --- |
 | IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim, plus actual invalid argument, unknown command and unavailable command replies. C3 framing and parser recovery. One connected role is enough. | Settings integrity, version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
-| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and process restart in active and paused states. |
+| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
 The full IF-02 plan has 24 positive case groups with 100 messages each and six
 peer mismatch controls. The full IF-03 plan has 25 case groups. Each baseline
@@ -68,6 +68,17 @@ A peer mismatch control verifies applied settings on both roles and stops at
 configuration before session setup or radio arming. Its follow-up restores
 matching settings and verifies bytes. Campaign exports verify the complete
 linked graph, including both file transfers per completed radio child.
+
+When a new host opens a saved active or paused campaign, it records the
+last persisted campaign stage and case ID as the restart checkpoint.
+An active child is interrupted, completed children are retained, and
+unstarted cases are skipped. A radio trace fingerprint taken at startup
+identifies the bytes recovered from disk. It does not establish delivery
+or physical cleanup. Use the saved campaign bundle to verify those bytes.
+The campaign cannot resume and a new run must pass fresh connection and
+ownership preflight. The native subprocess test covers active transmission
+and a settled pause following a completed child. The supervised IF-03 C6
+and OPS-01 C3 schedules and physical acceptance remain open.
 
 The procedure CSV/ZIP contains the case ledger and each child's evidence link.
 Fetch the saved radio/campaign export for the child's complete raw evidence.
