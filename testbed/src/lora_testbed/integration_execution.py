@@ -132,6 +132,7 @@ class IntegrationExecution:
                     blockers.append("An identified UART transport is required")
                 if case["variant"] not in {
                     "valid_control_cycles",
+                    "configuration_unchanged",
                     *SERIAL_ERROR_CASES,
                     *serial_framing.VARIANTS,
                 }:
@@ -147,6 +148,10 @@ class IntegrationExecution:
                     blockers.append(
                         f"Node {case['role']} needs a healthy owned main-control connection"
                     )
+                if case["variant"] == "configuration_unchanged" and (
+                    blocker := node.configuration_probe_blocker()
+                ):
+                    blockers.append(blocker)
             elif case["group"] in ("C1", "C2", "C3", "C4", "C7", "C8"):
                 blockers = radio.preflight(
                     link_request(
@@ -260,20 +265,42 @@ class IntegrationExecution:
             self.ledger.append(run["id"], case["id"], document)
 
         variant = case["variant"]
-        framing = None
+        assessed = None
+        status = None
         async with asyncio.timeout(60):
             if variant in serial_framing.VARIANTS:
                 baseline = await adapter.request(binding, "status.get", on_record=record)
                 adapter.current(binding)
                 status, boundaries = await node.exercise_serial_framing(variant, record)
                 adapter.current(binding)
-                framing = serial_framing.assess_counters(variant, baseline, status)
+                assessed = serial_framing.assess_counters(variant, baseline, status)
                 if (
                     boundaries
                     and boundaries["checked_boundaries"] != boundaries["expected_boundaries"]
                 ):
-                    framing["outcome"] = "fail"
-                record({"direction": "host_fixture", "counter_assessment": framing})
+                    assessed["outcome"] = "fail"
+                record({"direction": "host_fixture", "counter_assessment": assessed})
+            elif variant == "configuration_unchanged":
+                baseline = await adapter.request(binding, "status.get", on_record=record)
+                adapter.current(binding)
+                reply = await node.exercise_configuration_rejection(record)
+                status = await adapter.request(binding, "status.get", on_record=record)
+                keys = ("radio", "link", "config_revision")
+                prior = {key: baseline[key] for key in keys}
+                latest = {key: status[key] for key in keys}
+                error = reply.error.code if reply.error else None
+                outcome = "pass" if error == "INVALID_ARGUMENT" and latest == prior else "fail"
+                assessed = {"outcome": outcome}
+                record(
+                    {
+                        "direction": "host_assessment",
+                        "configuration_before": prior,
+                        "configuration_after": latest,
+                        "expected_error": "INVALID_ARGUMENT",
+                        "observed_error": error,
+                        "outcome": outcome,
+                    }
+                )
             elif variant == "valid_control_cycles":
                 for _ in range(case["cycles"]):
                     adapter.current(binding)
@@ -287,7 +314,7 @@ class IntegrationExecution:
                         raise
                 else:
                     raise ValueError("The invalid request unexpectedly succeeded")
-            if framing is None:
+            if status is None:
                 status = await adapter.request(binding, "status.get", on_record=record)
         after = node.snapshot()
         if (
@@ -298,7 +325,7 @@ class IntegrationExecution:
             or status["telemetry_drops"] != before["health"]["telemetry_drops"]
         ):
             raise ValueError("Serial case did not restore idle control with complete telemetry")
-        outcome = framing["outcome"] if framing is not None else "pass"
+        outcome = assessed["outcome"] if assessed is not None else "pass"
         case.update(
             status="completed",
             assessment=outcome,

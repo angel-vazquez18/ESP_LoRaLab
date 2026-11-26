@@ -698,7 +698,10 @@ class NodeSession:
             replies = []
             for chunks, count in batches:
                 selected = commands[start : start + count]
-                replies.extend(await self._framing_burst(chunks, selected, on_record))
+                for reply in await self._fixed_serial_exchange(chunks, selected, on_record):
+                    if not reply.ok:
+                        raise ValueError(f"{reply.error.code}: {reply.error.message}")
+                    replies.append(reply)
                 start += count
         result = replies[-1].result
         if variant == "split_every_boundary":
@@ -708,7 +711,33 @@ class NodeSession:
             checked = None
         return result, checked
 
-    async def _framing_burst(self, chunks, commands, on_record):
+    def configuration_probe_blocker(self):
+        if not self.connected or not self.identity or not self.health:
+            return "Configuration rejection needs a connected radio node"
+        try:
+            require_execution_compatible(
+                self.identity.model_dump(),
+                "config.set",
+                self.health.capability_availability.model_dump(),
+            )
+        except ValueError as exc:
+            return str(exc)
+        return None
+
+    async def exercise_configuration_rejection(self, on_record):
+        async with self.command_lock:
+            if blocker := self.configuration_probe_blocker():
+                raise ValueError(blocker)
+            args = run_protocol_v2.Configuration(
+                radio=run_protocol_v2.Radio(), link=run_protocol_v2.Link()
+            ).model_dump()
+            # The procedure sends only this fixed, out-of-band frequency.
+            args["radio"]["frequency_hz"] = 0
+            command = self._next_command("config.set", args)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+        return reply
+
+    async def _fixed_serial_exchange(self, chunks, commands, on_record):
         futures = [asyncio.get_running_loop().create_future() for _ in commands]
         for cmd, future in zip(commands, futures, strict=True):
             self.pending[cmd.command_id] = (cmd.command_seq, future)
@@ -728,7 +757,7 @@ class NodeSession:
             try:
                 for chunk in chunks:
                     if await self.write_wire(chunk) != len(chunk):
-                        raise ValueError("Incomplete serial framing probe write")
+                        raise ValueError("Incomplete serial procedure write")
                     if not chunk.endswith(b"\n"):
                         await asyncio.sleep(0.03)
             except (Exception, asyncio.CancelledError):
@@ -736,14 +765,13 @@ class NodeSession:
                 await self.close(release=False)
                 raise
             async with asyncio.timeout(2):
-                for future in futures:
+                for command, future in zip(commands, futures, strict=True):
                     reply = await asyncio.shield(future)
                     data = reply.model_dump()
                     require_public_metadata(data)
                     on_record({"direction": "node_to_host", "record": data})
-                    if not reply.ok:
-                        raise ValueError(f"{reply.error.code}: {reply.error.message}")
-                    self.accept_health(reply.result)
+                    if reply.ok and command.name == "status.get":
+                        self.accept_health(reply.result)
                     replies.append(reply)
         finally:
             for cmd, future in zip(commands, futures, strict=True):
