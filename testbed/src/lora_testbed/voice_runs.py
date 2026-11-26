@@ -16,7 +16,7 @@ from .artifact_contract_v2 import ArtifactID
 from .audio import inspect_pcm
 from .experiments_v2 import Link, Radio
 from .models import StrictModel
-from .radio_runs import EncodedRadioRunRequest, RadioRunRequest
+from .radio_runs import EncodedRadioRunRequest, FixedRateRadioRunRequest, RadioRunRequest
 from .session_keys import require_public_metadata
 from .storage import utc_now
 
@@ -43,6 +43,12 @@ class VoiceReassemblyRequest(VoiceRunRequest):
     """Internal encoded-transfer workload which ends at verified reassembly."""
 
     include_comparisons: Literal[False] = False
+
+
+class SustainedVoiceRequest(VoiceReassemblyRequest):
+    source: Literal["reference"] = "reference"
+    sample_count: Literal[24000] = 24000
+    timeout_ms: Literal[90000] = 90000
 
 
 class VoiceRuns:
@@ -110,6 +116,7 @@ class VoiceRuns:
             "jobs",
             "comparisons",
             "delivery_verified",
+            "source_observation",
             "playback_completed",
             "listening",
             "hardware_qualified",
@@ -158,20 +165,31 @@ class VoiceRuns:
             raise ValueError("Uploaded reference file is unavailable/invalid") from exc
         return reference, pcm
 
+    @staticmethod
+    def radio_request(request, artifact_id, samples, expected_sha256):
+        selected = (
+            FixedRateRadioRunRequest
+            if isinstance(request, SustainedVoiceRequest)
+            else EncodedRadioRunRequest
+        )
+        return selected(
+            direction=request.direction,
+            radio=request.radio,
+            link=request.link,
+            timeout_ms=request.timeout_ms,
+            message_bytes=((samples + 159) // 160) * 8,
+            source_artifact_id=artifact_id,
+            sample_count=samples,
+            expected_sha256=expected_sha256,
+        )
+
     def preflight(self, request):
         blockers = []
         try:
             reference, _ = self.reference(request)
             samples = reference["sample_count"] if reference else request.sample_count
-            transport = EncodedRadioRunRequest(
-                direction=request.direction,
-                radio=request.radio,
-                link=request.link,
-                timeout_ms=request.timeout_ms,
-                message_bytes=((samples + 159) // 160) * 8,
-                source_artifact_id="00000000-0000-0000-0000-000000000000",
-                sample_count=samples,
-                expected_sha256="0" * 64,
+            transport = self.radio_request(
+                request, "00000000-0000-0000-0000-000000000000", samples, "0" * 64
             )
             blockers.extend(self.radio.preflight(transport)["blockers"])
         except ValueError as exc:
@@ -238,7 +256,9 @@ class VoiceRuns:
             "status": "running",
             "stage": "source",
             "request": request.model_dump(),
-            "workload": "encoded_reassembly"
+            "workload": "fixed_rate_encoded"
+            if isinstance(request, SustainedVoiceRequest)
+            else "encoded_reassembly"
             if isinstance(request, VoiceReassemblyRequest)
             else "voice_playback",
             "reference": reference,
@@ -442,20 +462,21 @@ class VoiceRuns:
                 for role in self.nodes:
                     await self.command(record, role, "status.get")
                 child = await self.radio.start(
-                    EncodedRadioRunRequest(
-                        direction=request.direction,
-                        radio=request.radio,
-                        link=request.link,
-                        timeout_ms=request.timeout_ms,
-                        source_artifact_id=encoded["artifact_id"],
-                        sample_count=encoded["sample_count"],
-                        message_bytes=encoded["length_bytes"],
-                        expected_sha256=encoded["sha256"],
+                    self.radio_request(
+                        request, encoded["artifact_id"], encoded["sample_count"], encoded["sha256"]
                     )
                 )
                 record["radio_run_id"] = child["id"]
                 self.save(record)
                 transported = await self.wait(record, self.radio, child["id"])
+                if isinstance(request, SustainedVoiceRequest):
+                    record["source_observation"] = transported["source_observation"]
+                    record["delivery_verified"] = (
+                        record["source_observation"]["delivery"]["assessment"] == "verified"
+                    )
+                    self.collect(record)
+                    outcome = "completed"
+                    return
                 if (
                     not transported["verification"]["bytes_equal"]
                     or transported["verification"]["sha256"] != encoded["sha256"]

@@ -19,6 +19,7 @@ from . import (
     serial_compatibility,
     serial_framing,
     serial_replies,
+    sustained_voice,
     timed_series,
     v2,
     voice_matrix,
@@ -94,6 +95,8 @@ class IntegrationExecution:
                 blockers = local_voice.blockers(voice, case)
             elif case["driver"] in ("voice_reference", "voice_operator"):
                 blockers = voice_matrix.blockers(voice, case)
+            elif case["driver"] == "sustained_voice":
+                blockers = sustained_voice.blockers(voice, case)
             elif case["driver"] == "fault_window_unavailable":
                 blockers = ["The retained session cannot yet advance past the replay window"]
             elif case["driver"] == "fault_series":
@@ -924,7 +927,11 @@ class IntegrationExecution:
         for binding in run["physical_bindings"].values():
             host.adapter.current(binding)
         service = host.voice
-        started = await service.start(voice_matrix.request_for(case))
+        fixed_rate = case["driver"] == "sustained_voice"
+        request = (
+            sustained_voice.request_for(case) if fixed_rate else voice_matrix.request_for(case)
+        )
+        started = await service.start(request)
         identifier, task = started["id"], service.task
         try:
             case["voice_run_id"] = identifier
@@ -946,10 +953,33 @@ class IntegrationExecution:
                     "error": result["error"],
                     "cleanup_confirmed": clean,
                     "voice_evidence": f"/api/voice/runs/{identifier}/inspection",
+                    **(
+                        {"source_observation": result.get("source_observation")}
+                        if fixed_rate
+                        else {}
+                    ),
                 },
             )
         if not clean:
             raise ValueError("Voice child cleanup is unconfirmed")
+        if fixed_rate:
+            assessment = result.get("source_observation") or {}
+            complete = (
+                result["status"] == "completed"
+                and assessment.get("accounting") == "consistent"
+                and assessment.get("delivery", {}).get("assessment") == "verified"
+            )
+            verdict = "pass" if complete else "inconclusive"
+            case.update(
+                status="completed",
+                assessment=verdict,
+                measurements=assessment,
+                cleanup_verified=True,
+                assertions=[
+                    {"code": "fixed_source_accounting_and_receiver_archive", "outcome": verdict}
+                ],
+            )
+            return
         evidence = service.inspect(identifier)
         report = voice_matrix.summarize(evidence)
         passed = report["checked_transfer_and_playback"]
@@ -1668,7 +1698,7 @@ class IntegrationExecution:
                     await self.matrix_model_message_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "fault_series":
                     await self.matrix_fault_case(run, case, spec, host)
-                elif case["driver"] == "voice_reference":
+                elif case["driver"] in ("voice_reference", "sustained_voice"):
                     await self.matrix_voice_case(run, case, host)
                 elif case["driver"] == "local_voice_reference":
                     await self.matrix_local_voice_case(run, case, host)

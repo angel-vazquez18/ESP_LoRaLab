@@ -49,6 +49,9 @@ type MatrixCase = {
     unique_original_delivery_ratio?: number | null;
     unresolved_messages?: number;
     matched_rtt?: { verified: number; timeouts: number; unresolved: number };
+    capacity?: { finding: string };
+    delivery?: { verified_messages: number | null };
+    export?: string;
   };
   ready: boolean;
   blockers: string[];
@@ -137,6 +140,17 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 ? ` · ${row.planned_campaign_cases} campaign cases`
                 : ""}
             </span>
+            {row.measurements?.capacity && (
+              <span>
+                Queue assessment{" "}
+                {row.measurements.capacity.finding.replaceAll("_", " ")}
+                {row.measurements.delivery?.verified_messages != null &&
+                  ` · ${row.measurements.delivery.verified_messages} verified messages`}
+              </span>
+            )}
+            {row.measurements?.export && (
+              <a href={row.measurements.export}>Source assessment</a>
+            )}
             {(row.reason || row.blockers.length > 0) && (
               <span>{row.reason || row.blockers.join(" · ")}</span>
             )}
@@ -214,8 +228,10 @@ export default function ProcedureMatrix({
     option.kind === "local" ||
     option.kind === "voice_local" ||
     (memory && (group === "C1" || group === "C3"));
+  const fixedSource = catalogId === "VOICE-03";
+  const referenceLimit = fixedSource ? 1 : 3;
   const voice =
-    (option.kind === "voice" && group !== "C2") ||
+    (option.kind === "voice" && (fixedSource || group !== "C2")) ||
     (option.kind === "voice_local" && (!group || group === "C3"));
   const selectDirection =
     option.kind === "link" || option.kind === "voice" || (memory && !local);
@@ -370,7 +386,11 @@ export default function ProcedureMatrix({
         )}
         {voice && (
           <fieldset className="matrix-references">
-            <legend>Three-second reference clips</legend>
+            <legend>
+              {fixedSource
+                ? "Three-second reference clip"
+                : "Three-second reference clips"}
+            </legend>
             {references.filter((entry) => entry.sample_count === 24000)
               .length === 0 && (
               <p>Upload a 24,000-sample reference in Voice workspace.</p>
@@ -384,7 +404,7 @@ export default function ProcedureMatrix({
                     checked={referenceIds.includes(entry.id)}
                     disabled={
                       pending ||
-                      (referenceIds.length === 3 &&
+                      (referenceIds.length >= referenceLimit &&
                         !referenceIds.includes(entry.id))
                     }
                     onChange={(event) =>

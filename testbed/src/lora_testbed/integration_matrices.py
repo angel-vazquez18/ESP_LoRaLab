@@ -14,6 +14,7 @@ from . import (
     model_series,
     ops_matrix,
     rf_sweeps,
+    sustained_voice,
     timed_series,
     voice_matrix,
 )
@@ -73,6 +74,7 @@ GROUPS = {
     **model_series.GROUPS,
     **fault_matrices.GROUPS,
     **voice_matrix.GROUPS,
+    **sustained_voice.GROUPS,
     **ops_matrix.GROUPS,
     **local_voice.GROUPS,
 }
@@ -85,6 +87,7 @@ def matrix_options():
         "SEC-04": "local",
         "MEM-01": "memory",
         "VOICE-02": "voice",
+        "VOICE-03": "voice",
         "VOICE-01": "voice_local",
         "OPS-01": "campaign",
     }
@@ -118,6 +121,7 @@ class MatrixRequest(ContractModel):
         "MEM-01",
         "MODEL-01",
         "VOICE-02",
+        "VOICE-03",
         "VOICE-01",
         "OPS-01",
     ]
@@ -163,8 +167,14 @@ class MatrixRequest(ContractModel):
             raise ValueError("Choose groups that belong to the selected procedure")
         if self.catalog_id != "SEC-04" and self.diagnostic_iterations != 1000:
             raise ValueError("Diagnostic iterations belong to the local crypto procedure")
-        if self.voice_reference_ids is not None and self.catalog_id not in ("VOICE-01", "VOICE-02"):
-            raise ValueError("Voice references belong to the voice transfer procedure")
+        if self.voice_reference_ids is not None and self.catalog_id not in (
+            "VOICE-01",
+            "VOICE-02",
+            "VOICE-03",
+        ):
+            raise ValueError("Voice references belong to a voice procedure")
+        if self.catalog_id == "VOICE-03" and len(self.voice_reference_ids or ()) > 1:
+            raise ValueError("Use the same single reference for all fixed-rate profiles")
         if self.rf_echoes_per_case is not None and self.catalog_id not in rf_sweeps.GROUPS:
             raise ValueError("Matched echo count belongs to RF sweep procedures")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
@@ -247,6 +257,7 @@ def compile_matrix(request, *, message_limit=65536):
         **{catalog: fault_matrices.cases for catalog in fault_matrices.GROUPS},
         "TIME-01": timed_series.cases,
         "VOICE-02": voice_matrix.cases,
+        "VOICE-03": sustained_voice.cases,
         "VOICE-01": local_voice.cases,
         "OPS-01": ops_matrix.cases,
         "SEC-04": timed_series.cases,
@@ -287,6 +298,8 @@ def compile_matrix(request, *, message_limit=65536):
             and len(request.voice_reference_ids or ()) == 3
             and len(request.directions) == 2
         )
+    elif request.catalog_id == "VOICE-03":
+        coverage = coverage and bool(request.voice_reference_ids) and len(request.directions) == 2
     elif request.catalog_id in fault_matrices.GROUPS:
         coverage = (
             coverage
