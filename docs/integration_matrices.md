@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation and conflict, and C6 competing ownership and lease expiry. One connected role is enough. | Controlled stale-boot recovery, health silence and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation and conflict, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | Controlled stale-boot recovery and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -96,7 +96,13 @@ For expiry the testbed pauses keepalive on that connection, records the
 firmware lease deadline and waits for actual unowned idle health. The
 expired client must receive NOT_OWNER. A fresh claim on the same link
 must restore idle status. Interrupted probes attempt to restore control.
-The separate deliberate health-silence case still needs a fixture.
+The health-silence variant preserves the original health events in the
+raw ledger and withholds them from the connection's freshness tracker.
+The watchdog must report stale health after three seconds and disconnect
+after the five-second unresponsive threshold. The testbed then opens a
+fresh connection on the same port and verifies the same device and boot
+are idle. Subsequent cases use the new connection binding. The initial
+binding and each change remain in the saved run.
 
 A peer mismatch control verifies applied settings on both roles and stops at
 configuration before session setup or radio arming. Its follow-up restores
