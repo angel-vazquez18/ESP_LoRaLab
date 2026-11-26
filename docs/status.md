@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Idle and loaded bench stability
+
+OPS-01 C6 collects raw 1 Hz health events from both owned nodes,
+schedules a bounded known-data transfer each minute in the loaded
+case, and retains partial evidence on stop. See
+[the stability procedure](ops_matrix.md#idle-and-loaded-stability).
+
 ## November 25 — Saved voice listening review
 
 VOICE-04 now exposes coded playback, checked WAV waveforms, listening
