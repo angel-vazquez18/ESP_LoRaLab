@@ -23,8 +23,6 @@ ENCODED_BYTES = 1200
 
 FIXED_SIZES = (64, 160, 321, 1200, 48000)
 BLOCKERS = {
-    "C3": "The instrumented audio workload matrix is unavailable",
-    "C4": "A device-side resource rejection fixture is required",
     "C5": "A controlled cancellation/failure workload and declared recovery band are required",
 }
 
@@ -53,9 +51,11 @@ def cases(request, groups, limit):
                                 if group == "C3" and variant in LOCAL_AUDIO
                                 else "memory_audio_pair"
                                 if paired
-                                else {"C1": "memory_idle", "C2": "memory_link"}.get(
-                                    group, "memory_unavailable"
-                                )
+                                else {
+                                    "C1": "memory_idle",
+                                    "C2": "memory_link",
+                                    "C4": "memory_resource_refusal",
+                                }.get(group, "memory_unavailable")
                             ),
                             "role": role,
                             "observation_ms": request.memory_window_ms,

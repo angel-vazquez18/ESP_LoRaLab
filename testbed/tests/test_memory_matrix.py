@@ -1,6 +1,7 @@
 """Exercise observer ownership, bounded windows and workload linkage."""
 
 import asyncio
+import json
 
 import pytest
 from test_multi_fragment_radio import Pair
@@ -290,6 +291,58 @@ def test_paired_voice_memory_measures_reassembly_separately_from_playback(
             for role in "AB":
                 assert not (await host.physical[role].request("memory.status"))["active"]
                 assert (await host.physical[role].request("artifact.list"))["artifacts"] == []
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_memory_limit_reaches_firmware_and_control_recovers_in_each_direction(
+    tmp_path, native_library
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(catalog_id="MEM-01", groups=["C4"], repetitions=1)
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(30):
+                await host.procedures.task
+            result = host.procedures.get(started["id"])
+            assert result["status"] == "completed" and result["assessment"] == "pass", result
+            assert len(result["cases"]) == 2
+            for case in result["cases"]:
+                assert case["cleanup_verified"]
+                refusal_id, recovery_id = case["run_ids"]
+                refusal = host.radio.get(refusal_id)
+                evidence = case["measurements"]
+                assert evidence["requested_message_bytes"] == 65537
+                assert evidence["role"] == case["direction"][-1]
+                assert evidence["reply"]["error"]["code"] == "RESOURCE_LIMIT"
+                assert all(evidence["preserved"].values())
+                assert refusal["verification"] is None and not refusal["events"]
+                assert not refusal["prepared"]
+                wire = [
+                    json.loads(row)
+                    for row in host.radio.content(refusal_id, "wire").read_text().splitlines()
+                ]
+                sent = [row["record"] for row in wire if row["direction"] == "host_to_node"]
+                [prepare] = [row for row in sent if row["name"] == "run.prepare"]
+                assert prepare["run_id"] == refusal_id
+                assert prepare["command_id"] == evidence["reply"]["command_id"]
+                assert prepare["args"]["spec"]["message_bytes"] == 65537
+                assert not {"run.arm", "run.start"}.intersection(row["name"] for row in sent)
+                recovery = host.radio.get(recovery_id)
+                assert recovery["verification"]["bytes_equal"]
+                assert recovery["plan"]["spec"]["message_bytes"] == 64
+                assert recovery["cleanup"]["confirmed"]
+            assert not result["hardware_validated"]
         finally:
             if bridge:
                 bridge.cancel()

@@ -31,6 +31,7 @@ from .radio_runs import (
     LabRadioRunRequest,
     PeerMismatchCheck,
     PeerProfileMismatchCheck,
+    PrepareLimitCheck,
     RadioRunRequest,
 )
 from .storage import utc_now
@@ -123,6 +124,12 @@ class IntegrationExecution:
                 role = case["role"]
                 blockers = memory_matrix.local_audio_blockers(
                     self.ledger.nodes[role], role, case["variant"]
+                )
+            elif case["driver"] == "memory_resource_refusal":
+                blockers = (
+                    ["Connect both nodes to establish the negotiated message limit"]
+                    if limit is None
+                    else radio.preflight(RadioRunRequest(direction=case["direction"]))["blockers"]
                 )
             elif case["driver"] == "memory_unavailable":
                 blockers = [memory_matrix.BLOCKERS[case["group"]]]
@@ -505,6 +512,11 @@ class IntegrationExecution:
                     "status": result["status"],
                     "applied_settings": result["applied_settings"],
                     "configuration_check": result.get("configuration_check"),
+                    **(
+                        {"resource_refusal": result["resource_refusal"]}
+                        if "resource_refusal" in result
+                        else {}
+                    ),
                     "verification": result.get("verification"),
                     "accounting": result.get("accounting"),
                     "cleanup_confirmed": cleanup,
@@ -1072,6 +1084,41 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_memory_resource_refusal(self, run, case, radio, adapter):
+        control = RadioRunRequest(direction=case["direction"])
+        probe = PrepareLimitCheck(**control.model_dump(), attempted_bytes=case["message_bytes"])
+        refusal = await self.matrix_radio_child(
+            run, case, probe, radio, adapter, "device_prepare_resource_refusal"
+        )
+        recovery = await self.matrix_radio_child(
+            run, case, control, radio, adapter, "intact_after_resource_refusal"
+        )
+        resource_refused = (
+            refusal["status"] == "completed"
+            and (refusal.get("resource_refusal") or {})
+            .get("reply", {})
+            .get("error", {})
+            .get("code")
+            == "RESOURCE_LIMIT"
+        )
+        recovered = self.verified_link_child(recovery)
+        case.update(
+            status="completed",
+            assessment="pass" if resource_refused and recovered else "fail",
+            cleanup_verified=True,
+            measurements=refusal.get("resource_refusal"),
+            assertions=[
+                {
+                    "code": "device_refused_max_plus_one_before_arming",
+                    "outcome": "pass" if resource_refused else "fail",
+                },
+                {
+                    "code": "recovered_small_known_data_workload",
+                    "outcome": "pass" if recovered else "fail",
+                },
+            ],
+        )
+
     async def matrix_paired_memory_audio(self, run, case, host):
         observations, voice = host.observations, host.voice
         window = case["observation_ms"]
@@ -1485,6 +1532,8 @@ class IntegrationExecution:
                     await self.matrix_echo_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "local_crypto":
                     await self.matrix_crypto_case(run, case, host)
+                elif case["driver"] == "memory_resource_refusal":
+                    await self.matrix_memory_resource_refusal(run, case, radio, adapter)
                 elif case["driver"] == "memory_audio_pair":
                     await self.matrix_paired_memory_audio(run, case, host)
                 elif case["driver"] == "memory_audio_local":

@@ -103,6 +103,12 @@ class PeerMismatchCheck(RadioRunRequest):
         return self
 
 
+class PrepareLimitCheck(RadioRunRequest):
+    message_bytes: Literal[64] = 64
+    security: Literal["none"] = "none"
+    attempted_bytes: int = Field(ge=2, le=65537)
+
+
 class KeyMismatchRunRequest(RadioRunRequest):
     security: Literal["aes128_gcm"] = "aes128_gcm"
 
@@ -835,6 +841,51 @@ class RadioRuns:
         )
         self.save(r)
 
+    async def verify_prepare_refusal(self, r, request, spec, budget):
+        caps = {
+            role: node.health.capability_availability.resource_limits["execution_limits"][
+                "max_message_bytes"
+            ]
+            for role, node in self.nodes.items()
+        }
+        # Offer the request to a node whose own cap would be exceeded.
+        role = min((r["receiver"], r["sender"]), key=caps.__getitem__)
+        evidence = r["resource_refusal"] = {
+            "role": role,
+            "advertised_limits": caps,
+            "requested_message_bytes": request.attempted_bytes,
+        }
+        before = evidence["status_before"] = await self.command(r, role, "status.get")
+        initial = evidence["artifacts_before"] = await self.command(r, role, "artifact.list")
+        reply = await self.same_boot(r, role).exercise_prepare_limit(
+            {"spec": spec.model_dump(), "budget": budget},
+            r["id"],
+            request.attempted_bytes,
+            lambda value: self.trace_command(r, role, value, False),
+        )
+        evidence["reply"] = reply.model_dump()
+        after = evidence["status_after"] = await self.command(r, role, "status.get")
+        listing = evidence["artifacts_after"] = await self.command(r, role, "artifact.list")
+        unchanged = ("config_revision", "radio", "link", "reset_cause")
+        evidence["preserved"] = {
+            "idle": all(
+                status["state"] == "idle" and status["operation_id"] is None
+                for status in (before, after)
+            ),
+            "configuration_and_boot": after["uptime_us"] >= before["uptime_us"]
+            and all(before[key] == after[key] for key in unchanged),
+            "artifacts_and_allocations": initial == listing
+            and before["memory"]["buffers"]["artifacts_reserved"]
+            == after["memory"]["buffers"]["artifacts_reserved"]
+            and before["memory"]["allocation_failures"] == after["memory"]["allocation_failures"],
+            "no_execution_events": not r["events"],
+        }
+        if reply.ok or reply.error.code != "RESOURCE_LIMIT":
+            raise ValueError("Node did not reply RESOURCE_LIMIT to the oversized prepare")
+        if not all(evidence["preserved"].values()):
+            raise ValueError("An oversized prepare changed node state, allocations or artifacts")
+        r["status"] = "completed"
+
     async def run(self, r, request):
         try:
             self.started = True
@@ -938,6 +989,10 @@ class RadioRuns:
                     if key_set:
                         key_set.close()
                     r["security"]["keys_retired_on_host"] = True
+                if isinstance(request, PrepareLimitCheck):
+                    r["stage"] = "resource_refusal"
+                    await self.verify_prepare_refusal(r, request, plan.spec, budget)
+                    return
                 if lab:
                     targets = lab.get("exhaustion_targets", [lab["injection"]])
                     configured = await self.command(

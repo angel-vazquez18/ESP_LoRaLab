@@ -787,6 +787,28 @@ class NodeSession:
             [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
         return reply
 
+    async def exercise_prepare_limit(self, args, run_id, message_bytes, on_record):
+        async with self.command_lock:
+            if not self.connected or not self.identity or not self.health:
+                raise ValueError("Resource refusal needs a compatible connected node")
+            if not run_id or self.rf_run_id != run_id or self.health.state != "idle":
+                raise ValueError("Resource refusal requires the probe's own idle session")
+            availability = self.health.capability_availability
+            require_execution_compatible(
+                self.identity.model_dump(), "run.prepare", availability.model_dump()
+            )
+            limits = availability.resource_limits.get("execution_limits", {})
+            limit = limits.get("max_message_bytes")
+            if type(limit) is not int or not 1 <= limit <= 65536 or message_bytes != limit + 1:
+                raise ValueError("The probe must be exactly one byte above the current node limit")
+            payload = run_protocol_v2.Prepare.model_validate(args).model_dump()
+            if payload["spec"]["source"] != "known_data" or payload["spec"]["security"] != "none":
+                raise ValueError("Resource refusal uses only unprotected known data")
+            payload["spec"]["message_bytes"] = message_bytes
+            command = self._next_command("run.prepare", payload, run_id)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            return reply
+
     async def _fixed_serial_exchange(self, chunks, commands, on_record):
         futures = [asyncio.get_running_loop().create_future() for _ in commands]
         for cmd, future in zip(commands, futures, strict=True):
