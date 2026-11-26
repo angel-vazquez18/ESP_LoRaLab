@@ -1908,17 +1908,22 @@ void rf_execution_tick(rf_execution *r)
                         : status.last_ack_acceptance == RF_SECURE_REPLAY  ? "replay"
                         : status.last_ack_acceptance == RF_SECURE_TOO_OLD ? "too_old"
                                                                           : "invalid_frame");
+        bool ack_received = status.state == RF_SENDER_COMPLETED && status.acks;
+        bool ack_timeout = event.status == RADIO_TIMEOUT;
+        if (event.kind == RADIO_EVENT_RX && (ack_received || ack_timeout))
+        {
+            cJSON *ack = object(r);
+            number(r, ack, "acked_frame_seq", r->fragments.first_sequence + r->wire_fragment);
+            if (ack_received)
+                number(r, ack, "ack_frame_seq", word(event.bytes + 16));
+            else
+                string(r, ack, "ack_frame_seq", NULL);
+            number(r, ack, "attempt_index", status.attempts);
+            string(r, ack, "status", ack_received ? "received" : "timeout");
+            send(r, "ack.result", ack);
+        }
         if (status.state == RF_SENDER_COMPLETED)
         {
-            if (event.kind == RADIO_EVENT_RX && status.acks)
-            {
-                cJSON *ack = object(r);
-                number(r, ack, "acked_frame_seq", r->fragments.first_sequence + r->wire_fragment);
-                number(r, ack, "ack_frame_seq", word(event.bytes + 16));
-                number(r, ack, "attempt_index", status.attempts);
-                string(r, ack, "status", "received");
-                send(r, "ack.result", ack);
-            }
             rf_fault_view duplicate;
             if (rf_faults_duplicate(r->faults, r->wire_fragment, &duplicate))
                 r->duplicate_due = r->port.now_us(r->port.context) + duplicate_guard(&r->plan.link);
