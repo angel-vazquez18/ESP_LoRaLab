@@ -23,8 +23,16 @@ def inspection(identifier):
             "listening": {"heard": "not_checked"},
         },
         "files": {
-            "source": {"available": True, "sha256": "1" * 64, "pcm": {"peaks": [0.1]}},
-            "decoded": {"available": True, "sha256": "2" * 64, "pcm": {"peaks": [0.2]}},
+            "source": {
+                "available": True,
+                "sha256": "1" * 64,
+                "pcm": {"waveform": [{"min": -0.1, "max": 0.1}]},
+            },
+            "decoded": {
+                "available": True,
+                "sha256": "2" * 64,
+                "pcm": {"waveform": [{"min": -0.2, "max": 0.2}]},
+            },
         },
         "stages": [
             {
@@ -43,6 +51,10 @@ def test_voice_review_matches_each_rating_to_an_exact_clip_and_listener():
     requested = Review(run_ids=[key])
     plan = review(requested, inspection)
     assert len(plan["presentation_order"]) == 2
+    assert {clip["waveform"][0]["max"] for clip in plan["clip_key"].values()} == {0.1, 0.2}
+    [distribution] = plan["stage_distributions"]
+    assert distribution["n"] == 1 and distribution["median_us"] == distribution["p95_us"] == 10
+    assert distribution["samples"][0]["run_id"] == key
     assert plan["presentation_order"] == review(requested, inspection)["presentation_order"]
     given = [
         {

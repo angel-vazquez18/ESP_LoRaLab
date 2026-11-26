@@ -1,8 +1,11 @@
 """Pair listening ratings and node-local stages with saved verified voice clips."""
 
 import hashlib
+import json
 from collections import Counter
 from collections.abc import Callable
+from math import ceil
+from statistics import median
 
 from pydantic import Field, model_validator
 
@@ -32,6 +35,55 @@ class Review(StrictModel):
         if len({(r.listener_id, r.clip_code) for r in self.ratings}) != len(self.ratings):
             raise ValueError("Provide one rating per listener and clip")
         return self
+
+
+def stage_distributions(runs):
+    groups = {}
+    for run in runs:
+        configuration = json.dumps(run["radio_and_link"], sort_keys=True)
+        for stage in run["named_stage_timing"]:
+            duration = stage.get("duration_us")
+            if (
+                stage["status"] != "completed"
+                or stage.get("basis") != "node_monotonic_us"
+                or type(duration) is not int
+                or duration < 0
+            ):
+                continue
+            group = groups.setdefault(
+                (run["source"], run["direction"], stage["stage"], stage["role"], configuration),
+                {
+                    "source": run["source"],
+                    "direction": run["direction"],
+                    "stage": stage["stage"],
+                    "role": stage["role"],
+                    "basis": stage["basis"],
+                    "radio_and_link": run["radio_and_link"],
+                    "samples": [],
+                },
+            )
+            group["samples"].append(
+                {
+                    "run_id": run["run_id"],
+                    "duration_us": duration,
+                    "device_id": stage.get("device_id"),
+                    "boot_id": stage.get("boot_id"),
+                }
+            )
+    result = []
+    for group in groups.values():
+        values = sorted(entry["duration_us"] for entry in group["samples"])
+        result.append(
+            {
+                **group,
+                "n": len(values),
+                "minimum_us": values[0],
+                "median_us": median(values),
+                "p95_us": values[ceil(0.95 * len(values)) - 1],
+                "maximum_us": values[-1],
+            }
+        )
+    return result
 
 
 def review(request: Review, inspect: Callable[[str], dict]):
@@ -73,7 +125,7 @@ def review(request: Review, inspect: Callable[[str], dict]):
                 "run_id": identifier,
                 "kind": kind,
                 "sha256": files[kind]["sha256"],
-                "waveform": (files[kind].get("pcm") or {}).get("peaks"),
+                "waveform": (files[kind].get("pcm") or {}).get("waveform"),
                 "wav": f"/api/voice/runs/{identifier}/artifacts/{kind}?as_wav=true",
             }
             entry["ratings"][kind] = {"clip_code": code, "ratings": [], "score_counts": {}}
@@ -111,6 +163,7 @@ def review(request: Review, inspect: Callable[[str], dict]):
         ],
         "clip_key": clips,
         "runs": runs,
+        "stage_distributions": stage_distributions(runs),
         "exclusions": exclusions,
         "rubric": {
             "1": "unintelligible",
