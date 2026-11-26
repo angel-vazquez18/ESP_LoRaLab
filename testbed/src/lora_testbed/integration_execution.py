@@ -14,12 +14,15 @@ from . import (
     model_series,
     ops_matrix,
     rf_sweeps,
+    serial_compatibility,
     serial_framing,
     serial_replies,
     timed_series,
+    v2,
     voice_matrix,
 )
 from .integration_matrices import campaign_intent, compile_matrix, link_request
+from .nodes import NodeSession
 from .paths import REPOSITORY_ROOT
 from .physical_campaign_evidence import verify_campaign_bundle
 from .radio_runs import (
@@ -138,6 +141,7 @@ class IntegrationExecution:
                     "lease_recovery",
                     "conflicting_identity",
                     *serial_replies.VARIANTS,
+                    *serial_compatibility.INCOMPATIBILITIES,
                     *SERIAL_ERROR_CASES,
                     *serial_framing.VARIANTS,
                 }:
@@ -247,6 +251,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/procedure_runs.py",
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
+                    "testbed/src/lora_testbed/serial_compatibility.py",
                     "testbed/src/lora_testbed/serial_framing.py",
                     "testbed/src/lora_testbed/serial_replies.py",
                     "testbed/src/lora_testbed/campaign_plans.py",
@@ -313,6 +318,10 @@ class IntegrationExecution:
                         "outcome": outcome,
                     }
                 )
+            elif variant in serial_compatibility.INCOMPATIBILITIES:
+                identity = await adapter.request(binding, "hello", on_record=record)
+                assessed = await self.check_incompatible_hello(node.role, identity, variant)
+                record(assessed)
             elif variant in serial_replies.VARIANTS:
                 assessed = await node.exercise_reply_recovery(variant, record)
                 record(assessed)
@@ -355,6 +364,42 @@ class IntegrationExecution:
             cleanup_verified=True,
             assertions=[{"code": variant, "outcome": outcome}],
         )
+
+    @staticmethod
+    async def check_incompatible_hello(role, identity, variant):
+        fixture = serial_compatibility.IdentityFixture(v2.Hello.model_validate(identity), variant)
+        candidate = NodeSession(role, lambda *_: None, opener=lambda _: fixture)
+        try:
+            try:
+                await candidate.connect("isolated-compatibility-fixture")
+            except ValueError as exc:
+                error = str(exc)
+            else:
+                error = None
+            closed = fixture.closed and not candidate.connected and candidate.serial is None
+            only_hello = [command["name"] for command in fixture.commands] == ["hello"]
+            passed = (
+                error == f"Node {role}: UNSUPPORTED_VERSION: {fixture.expected_error}"
+                and closed
+                and only_hello
+                and not candidate.tasks
+                and not candidate.pending
+                and candidate.wire_profile is None
+            )
+            return {
+                "direction": "host_fixture",
+                "scope": "isolated bootstrap hello fixture based on an observed node identity",
+                "modified_field": fixture.field,
+                "commands": fixture.commands,
+                "reply": fixture.reply.model_dump() if fixture.reply else None,
+                "expected_error": fixture.expected_error,
+                "connection_error": error,
+                "port_closed": closed,
+                "outcome": "pass" if passed else "fail",
+            }
+        finally:
+            if candidate.serial is not None or candidate.tasks:
+                await candidate.close(release=False)
 
     async def matrix_radio_child(self, run, case, request, radio, adapter, purpose):
         for binding in run["physical_bindings"].values():
