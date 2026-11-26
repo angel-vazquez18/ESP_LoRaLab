@@ -95,8 +95,6 @@ class IntegrationExecution:
                 blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "fault_window_unavailable":
                 blockers = ["The retained session cannot yet advance past the replay window"]
-            elif case["driver"] == "fault_exhaustion_unavailable":
-                blockers = ["One trial cannot yet target every allowed arrival or retry"]
             elif case["driver"] == "fault_series":
                 request = fault_matrices.selected_request(spec, case, case["target_ordinal"] - 1)
                 blockers = radio.preflight(request)["blockers"]

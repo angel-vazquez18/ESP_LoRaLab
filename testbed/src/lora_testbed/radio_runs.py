@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path
 from time import monotonic, monotonic_ns
 from typing import Literal
-from uuid import uuid4
+from uuid import UUID, uuid4, uuid5
 
 from pydantic import Field, model_validator
 
@@ -109,6 +109,7 @@ class PeerProfileMismatchCheck(RadioRunRequest):
 
 class LabRadioRunRequest(RadioRunRequest):
     injection: Injection
+    exhaust_attempts: bool = False
 
     @model_validator(mode="after")
     def lab_scope(self):
@@ -128,6 +129,8 @@ class LabRadioRunRequest(RadioRunRequest):
             raise ValueError("This case requires ACK disabled")
         if action == "drop_ack" and (link.ack_mode != "stop_wait" or not link.max_retries):
             raise ValueError("An ACK-suppression trial needs stop-and-wait and a recovery retry")
+        if self.exhaust_attempts and (action != "drop" or link.ack_mode != "stop_wait"):
+            raise ValueError("All-attempt drops require a stop-and-wait DATA target")
         body = min(link.fragment_payload_bytes, self.message_bytes - start)
         if action == "xor_byte" and target.byte_offset >= 56 + body:
             raise ValueError("Mutation offset exceeds the selected frame")
@@ -155,8 +158,25 @@ class LabRadioRunRequest(RadioRunRequest):
             "reassembly_timeout_us": ordinary["reassembly_timeout_us"] + extra,
         }
 
+    def injections(self):
+        first = self.injection
+        entries = [first]
+        if self.exhaust_attempts:
+            entries.extend(
+                first.model_copy(
+                    update={
+                        "injection_id": str(uuid5(UUID(first.injection_id), str(attempt))),
+                        "attempt_index": attempt,
+                    }
+                )
+                for attempt in range(2, 2 + self.link.max_retries)
+            )
+        return [entry.model_dump() for entry in entries]
+
     def control(self):
-        return RadioRunRequest.model_validate(self.model_dump(exclude={"injection"}))
+        return RadioRunRequest.model_validate(
+            self.model_dump(exclude={"injection", "exhaust_attempts"})
+        )
 
 
 class EchoRadioRunRequest(RadioRunRequest):
@@ -592,6 +612,8 @@ class RadioRuns:
                 "report": None,
                 "fire": None,
             }
+            if request.exhaust_attempts:
+                record["lab"]["exhaustion_targets"] = request.injections()
         if isinstance(request, EchoRadioRunRequest):
             record["host_transaction"] = {
                 "start_ns": monotonic_ns(),
@@ -907,14 +929,12 @@ class RadioRuns:
                         key_set.close()
                     r["security"]["keys_retired_on_host"] = True
                 if lab:
+                    targets = lab.get("exhaustion_targets", [lab["injection"]])
                     configured = await self.command(
-                        r,
-                        lab["role"],
-                        "fault.set",
-                        {"injections": [lab["injection"]], "replace": True},
+                        r, lab["role"], "fault.set", {"injections": targets, "replace": True}
                     )
-                    if configured["count"] != 1:
-                        raise ValueError("Node did not confirm the selected fault")
+                    if configured["count"] != len(targets):
+                        raise ValueError("Node did not confirm the selected fault targets")
                 r["stage"] = "preparing"
                 self.save(r)
                 for role in (r["receiver"], r["sender"]):

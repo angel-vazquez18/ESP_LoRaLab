@@ -53,6 +53,111 @@ def matched_controls(before, run, after):
     )
 
 
+def assess_exhaustion(run, targets, require):
+    lab = run["lab"]
+    sender, receiver = run["sender"], run["receiver"]
+    report = lab.get("report") or {}
+    planned_attempts = list(range(1, run["plan"]["link"]["max_retries"] + 2))
+    target_ids = {target["injection_id"] for target in targets}
+    applied = [
+        event
+        for event in _data(run, receiver, "fault.applied")
+        if event["data"]["injection_id"] in target_ids
+    ]
+    if not require(
+        "every_planned_drop_applied",
+        lab["role"] == receiver
+        and [target["attempt_index"] for target in targets] == planned_attempts
+        and len(applied) == len(targets)
+        and all(
+            all(event["data"][key] == value for key, value in target.items())
+            and event["data"]["session_id"] == run["session_id"]
+            for event, target in zip(applied, targets, strict=True)
+        )
+        and report.get("session_id") == run["session_id"]
+        and report.get("count") == len(targets)
+        and report.get("eof")
+        and report.get("entries")
+        == [
+            {key: value for key, value in event["data"].items() if key != "session_id"}
+            for event in applied
+        ],
+        evidence=_refs(*applied),
+    ):
+        return
+
+    first = applied[0]["data"]
+    sequence, fragment = first["target_frame_seq"], first["fragment_index"]
+    identity = (run["session_id"], sequence, first["message_id"], fragment)
+    digest = first["before_sha256"]
+    attempts = [
+        event for event in _data(run, sender, "tx.attempt") if _identity(event["data"]) == identity
+    ]
+    received = [
+        event for event in _data(run, receiver, "rx.frame") if _identity(event["data"]) == identity
+    ]
+    require(
+        "all_attempts_reused_exact_protected_bytes",
+        [event["data"]["attempt_index"] for event in attempts] == planned_attempts
+        and all(
+            event["data"]["status"] == "completed" and event["data"]["wire_sha256"] == digest
+            for event in attempts
+        ),
+        evidence=_refs(*attempts),
+    )
+    require(
+        "all_drops_match_distinct_crc_valid_arrivals",
+        len(received) == len(targets)
+        and len({event["data"]["rx_done_us"] for event in received}) == len(targets)
+        and all(
+            event["data"]["source_role"] == sender
+            and event["data"]["crc_ok"]
+            and event["data"]["wire_sha256"] == digest
+            and drop["data"]["target_frame_seq"] == sequence
+            and drop["data"]["before_sha256"] == drop["data"]["after_sha256"] == digest
+            and drop["data"]["target_arrived_us"] == event["data"]["rx_done_us"]
+            for event, drop in zip(received, applied, strict=True)
+        ),
+        evidence=_refs(*received, *applied),
+    )
+    responses = [
+        event
+        for event in _data(run, sender, "ack.result")
+        if event["data"]["acked_frame_seq"] == sequence
+    ]
+    send_summary = run["summaries"][sender]
+    receive_summary = run["summaries"][receiver]
+    first_tx = send_summary["first_tx_command_us"]
+    elapsed = responses[-1]["uptime_us"] - first_tx if responses and first_tx is not None else None
+    require(
+        "bounded_ack_exhaustion",
+        [event["data"]["attempt_index"] for event in responses] == planned_attempts
+        and all(event["data"]["status"] == "timeout" for event in responses)
+        and send_summary["stop_reason"] == "timeout"
+        and send_summary["failed_messages"] == 1
+        and elapsed is not None
+        and 0 < elapsed <= run["plan"]["spec"]["max_duration_ms"] * 1000,
+        evidence=_refs(*responses),
+    )
+    accepted = _data(run, receiver, "rx.accepted")
+    ranges = failed_ranges(run)
+    require(
+        "exhaustion_no_partial_delivery",
+        receive_summary["delivered_messages"] == 0
+        and receive_summary["useful_delivered_bytes"] == 0,
+        outcome="fail",
+    )
+    require(
+        "exhaustion_failed_message_and_missing_suffix",
+        receive_summary["failed_messages"] == 1
+        and [event["data"]["fragment_index"] for event in accepted] == list(range(fragment))
+        and send_summary["original_packets"] == fragment + 1
+        and bool(ranges and ranges.get("ranges_complete"))
+        and ranges["missing_indexes"] == list(range(fragment, ranges["fragment_count"])),
+        evidence=_refs(*accepted),
+    )
+
+
 def assess(run, expected):
     checks = []
 
@@ -84,6 +189,9 @@ def assess(run, expected):
         return result()
 
     lab = run["lab"]
+    if targets := lab.get("exhaustion_targets"):
+        assess_exhaustion(run, targets, require)
+        return result()
     selected, role = lab["injection"], lab["role"]
     action = selected["action"]
     sender, receiver = run["sender"], run["receiver"]
@@ -208,6 +316,7 @@ def assess(run, expected):
                 e
                 for e in _data(run, sender, "ack.result")
                 if e["data"]["acked_frame_seq"] == row["target_frame_seq"]
+                and e["data"]["status"] == "received"
             ]
             require(
                 "identical_bounded_retry_and_valid_ack",

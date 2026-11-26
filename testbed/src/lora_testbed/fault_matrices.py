@@ -68,9 +68,7 @@ def retry_cases(request, groups):
             yield {
                 "group": group,
                 "variant": f"{variant}_{policy}_{retries}",
-                "driver": "fault_exhaustion_unavailable"
-                if variant == "dropped_all" and retries
-                else "fault_series",
+                "driver": "fault_series",
                 "role": direction,
                 "direction": direction,
                 "repetition": repetition,
@@ -133,4 +131,7 @@ def selected_request(spec, case, ordinal):
         block_size=4 if action == "reverse_block" else None,
     )
     # A rejected or deliberately incomplete transaction still uses a finite deadline.
-    return LabRadioRunRequest(**options, injection=injection)
+    exhausting = case.get("ack_mode") == "stop_wait" and (
+        variant == "dropped_all" or (variant == "dropped" and not case["max_retries"])
+    )
+    return LabRadioRunRequest(**options, injection=injection, exhaust_attempts=exhausting)
