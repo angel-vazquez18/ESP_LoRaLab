@@ -1,8 +1,15 @@
 # Consolidated implementation status
 
-Updated November 25, 2026. The host is now physical-only by user decision, replacing
+Updated November 26, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 26 — Missing receive evidence
+
+OPS-01 C5 verifies that one missing host observation leaves an explicit
+sequence gap and excludes the child from RF loss and rate accounting.
+The case also verifies the saved bytes and a fresh transfer. See
+[the telemetry-gap procedure](ops_matrix.md#missing-receive-observation).
 
 ## November 26 — Recovery after control rejection and timeout
 

@@ -20,8 +20,7 @@ The matrix saves the underlying campaign reference before it starts
 checking results. Stopping a run cancels the current child and retains
 the partial campaign. The completed export is independently verified
 before reporting a consistency result. Board disconnect/reset, host
-restart, telemetry perturbation, and full physical campaign acceptance
-remain separate checks.
+restart, and full physical campaign acceptance remain separate checks.
 
 ## Idle and loaded stability
 
@@ -76,3 +75,19 @@ quick plan covers both controls in both directions. Expect two verified
 transfers per case and an explicit rejection or timeout between them.
 The evidence ZIP retains the original replies, the scope of the
 controlled omission, the matched controls, and cleanup.
+
+## Missing receive observation
+
+OPS-01 C5 deliberately withholds one CRC-valid DATA receive observation
+at the host boundary, after the line passes wire and identity checks.
+The original is retained as controlled-fault evidence. The next firmware
+event exposes one sequence gap. The host still reads back and checks the
+actual bytes. The faulted child has incomplete measurement evidence, so
+its record excludes RF loss and transfer rates.
+
+In **Experiments**, select **OPS-01**, **C5** and **Quick check**. Expect
+three children per direction. The first and third transfers complete in
+fresh sessions and independently verify the same 64 bytes. The middle
+child records `telemetry_gap`, preserves verified bytes, and confirms
+cleanup. The overall procedure case passes only when it proves both the
+gap and verified recovery. Physical execution remains a bench check.
