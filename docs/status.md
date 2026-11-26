@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Selectable UART control
+
+The firmware has a separate UART0 build at 115200 8N1. IF-01 reads the
+actual declared transport before a case and saves it in the ledger. The
+dashboard and CLI preview native USB and UART independently. See
+[transport setup](integration_matrices.md#serial-transports-for-if-01).
+Physical transport qualification remains open.
+
 ## November 25 — Packet retry exhaustion
 
 PKT-03 C4 now schedules each permitted receive drop in a single trial.

@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation, conflict and stale-boot rejection, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | UART workflow and physical qualification on each transport. |
+| IF-01 Serial interface | Claim, keepalive, release and reclaim on the firmware's selected transport. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation, conflict and stale-boot rejection, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | Physical qualification on native USB and UART. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -131,6 +131,30 @@ The [matrix compiler](../testbed/src/lora_testbed/integration_matrices.py)
 defines the planned coverage. The
 [executor](../testbed/src/lora_testbed/integration_execution.py) uses the
 existing serial, radio, campaign and evidence services.
+
+## Serial transports for IF-01
+
+The default firmware uses native USB Serial/JTAG. The UART build uses
+UART0 at 115200 8N1 with GPIO43 as TX and GPIO44 as RX. From the repository
+root with ESP-IDF active, build the UART image separately:
+
+```sh
+idf.py -C firmware/lora_node -B /tmp/loralab-uart-build \
+  -D SDKCONFIG=/tmp/loralab-uart-sdkconfig \
+  -D 'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.uart.defaults' build
+```
+
+Select the verified board settings separately if the test needs radio or
+audio capability. Power the board through USB-C. Use a 3.3 V logic UART
+adapter. Join grounds and cross TX and RX. On the standard Heltec V4
+pin layout, J2 position 6 is GPIO43/TX and J2 position 5 is GPIO44/RX.
+
+Connect the adapter's serial device in Setup, then choose UART in the
+IF-01 matrix. The CLI takes `"transports": ["uart"]` in its matrix request.
+Preview compares each selected transport with that role's hello record.
+To qualify both transports, keep their runs and evidence separate.
+On a bare UART, loss of communication is bounded by the existing lease
+and host watchdog.
 
 ## Software checks
 

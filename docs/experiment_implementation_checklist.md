@@ -47,8 +47,9 @@ stale-boot case uses a recorded boot transition on the same device.
 - [x] Implement the USB framing, invalid-argument, compatibility, reply fault,
   exact retry, conflict, stale-boot, ownership and lease cases in the shared runner.
 - [x] Add expected-error, side-effect, resynchronization and health recovery assertions.
-- [ ] Complete the UART workflow and collect the complete physical C1–C6 evidence
-  per required node and transport, including the reset and reconnect sequences.
+- [x] Build the selectable UART endpoint and bind serial cases to the announced transport.
+- [ ] Collect complete physical C1–C6 evidence per required node and transport,
+  including the reset and reconnect sequences.
 
 ### 2 IF-02 Verified known-data exchange
 

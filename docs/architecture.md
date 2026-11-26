@@ -63,8 +63,8 @@ main/
 │   ├── esp32_platform.c        ESP-IDF identity, NVS, heap, timer and crypto callbacks
 │   └── esp32_platform.h
 ├── transport/
-│   ├── usb_transport.c         USB read/tick loop and the single protocol writer
-│   └── usb_transport.h
+│   ├── serial_transport.c         USB or UART read/tick loop and the single protocol writer
+│   └── serial_transport.h
 ├── control/
 │   ├── node_control.c          Portable commands, ownership, queues and operation state
 │   └── node_control.h
