@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim, plus actual invalid argument, unknown command and unavailable command replies. C3 framing and parser recovery. One connected role is enough. | Settings integrity, version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, plus C3 framing and parser recovery. One connected role is enough. | Version/schema rejection, reply perturbation, competing control, lease expiry and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -52,6 +52,15 @@ keeps the device, boot and connection bindings. A stopped, interrupted or failed
 child retains its reference and cleanup record. Unavailable cases remain visible
 as blocked. The shared stop command waits for the active case or campaign to
 finish cleanup before returning.
+
+IF-01 C2 runs four variants per role with three default repetitions.
+The configuration variant requires compatible radio firmware. It reads
+applied settings, submits one fixed invalid frequency, then verifies
+the firmware returned `INVALID_ARGUMENT` and the radio, link and revision
+readbacks are unchanged. A node that has yet to apply settings reports
+null radio and link readbacks. The case compares those values and the
+revision as its baseline. Nodes without radio support can still run the
+other three C2 variants.
 
 IF-01 C3 runs nine variants, each repeated three times by default per
 selected role. It checks representative board splits, concatenation, CRLF,

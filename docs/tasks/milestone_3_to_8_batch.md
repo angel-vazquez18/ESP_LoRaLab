@@ -781,7 +781,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 
 | Procedure family | Software entry point | Coverage still open |
 | --- | --- | --- |
-| IF-01–03 | Experiments matrix and `integration-matrix` | Settings integrity, compatibility, reply and ownership perturbations, UART, active/paused restart and campaign navigation cases |
+| IF-01–03 | Experiments matrix and `integration-matrix` | Compatibility, reply and ownership perturbations, UART, active/paused restart and campaign navigation cases |
 | RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, complete performance measurements and drift assessment |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts, invalid ACK and all-attempt exhaustion |
@@ -828,3 +828,8 @@ hashes each retained interrupted radio trace. The test restarts an
 isolated host during active transmit and after a settled pause and
 confirms unchanged history, verified archives and fresh follow-up runs.
 Supervised procedure iteration and physical checks are pending.
+
+IF-01 C2 now records before/after applied radio settings, link settings and
+configuration revision for the firmware rejection. The 12 selected-role
+cases passed against the native fixture. Only the configuration case
+requires radio support.

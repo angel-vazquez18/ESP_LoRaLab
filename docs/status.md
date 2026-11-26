@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Serial configuration rejection
+
+IF-01 C2 now compares radio/link settings and configuration revision
+before and after a firmware-rejected setting. A native one-role
+run verified all 12 default C2 cases. Without a compatible radio, the
+three configuration-case repetitions remain blocked while the command-error
+checks remain available. See [integration procedures](integration_matrices.md).
+
 ## November 25 — Campaign restart evidence
 
 Host restart now preserves the active or paused campaign checkpoint
