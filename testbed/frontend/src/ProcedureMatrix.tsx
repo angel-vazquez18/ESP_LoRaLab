@@ -42,6 +42,10 @@ type MatrixCase = {
   cycles?: number;
   iterations?: number;
   planned_campaign_cases?: number;
+  measurements?: {
+    unique_original_delivery_ratio?: number | null;
+    unresolved_messages?: number;
+  };
   ready: boolean;
   blockers: string[];
   status?: string;
@@ -99,6 +103,13 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 : row.ready
                   ? "Ready"
                   : "Blocked"}
+              {typeof row.measurements?.unique_original_delivery_ratio ===
+              "number"
+                ? ` · ${(100 * row.measurements.unique_original_delivery_ratio).toFixed(1)}% delivered`
+                : ""}
+              {row.measurements?.unresolved_messages
+                ? ` · ${row.measurements.unresolved_messages} unresolved`
+                : ""}
               {row.message_bytes ? ` · ${row.message_bytes} bytes` : ""}
               {row.message_count && row.message_count > 1
                 ? ` · ${row.message_count} messages`
