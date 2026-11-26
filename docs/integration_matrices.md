@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation and conflict, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | Controlled stale-boot recovery and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation, conflict and stale-boot rejection, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | UART workflow and physical qualification on each transport. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -86,8 +86,13 @@ retry, or drop the first reply and accept the retry response. Each case
 requires one independently observed completion. Retried writes must
 have identical bytes and the fixture records their hashes. The
 conflict variant changes bytes under the same cached command identity
-and requires COMMAND_CONFLICT. The stale-boot case needs a controlled
-reboot and stays blocked.
+and requires COMMAND_CONFLICT. To exercise stale-boot rejection, connect
+the same node, reset it and reconnect it to this running testbed. The
+testbed retains the previous observed boot on that role. The case targets
+that boot with a bounded diagnostic and requires STALE_BOOT, zero new
+diagnostic results and fresh idle status on the current boot. The three
+default probes use the observed boot pair. Repeat the reset and reconnect
+sequence when a separate physical boot transition is required.
 
 IF-01 C6 checks a competing client and an expiring lease three times
 per selected role. The live owner refreshes its lease before the competing

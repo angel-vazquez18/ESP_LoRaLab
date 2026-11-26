@@ -40,31 +40,29 @@ firmware, equipment and runner features explicitly blocked.
 
 ### 1 IF-01 Serial interface validation
 
-Existing support: physical hello/ownership/status/uptime diagnostic checks on one
-selected node or A then B. Full C1-C6 qualification remains open.
+The shared [integration runner](integration_matrices.md) implements the
+main-control USB checks. One selected role can run the matrix. The
+stale-boot case uses a recorded boot transition on the same device.
 
-- [ ] Add all required framing, invalid-argument, version/schema, delayed/lost reply,
-  deduplication/conflict, stale boot, competing claim and lease-expiry cases using
-  controlled physical/proxy fixtures with recovery evidence.
-- [ ] Add independent expected-error, single-side-effect and resynchronization assertions.
-- [ ] Execute every variant/repetition independently on each required node/transport;
-  retain exact wire evidence and profile identity. Do not qualify from a smoke check.
+- [x] Implement the USB framing, invalid-argument, compatibility, reply fault,
+  exact retry, conflict, stale-boot, ownership and lease cases in the shared runner.
+- [x] Add expected-error, side-effect, resynchronization and health recovery assertions.
+- [ ] Complete the UART workflow and collect the complete physical C1–C6 evidence
+  per required node and transport, including the reset and reconnect sequences.
 
 ### 2 IF-02 Verified known-data exchange
 
-Existing support: typed contracts, deterministic data/hashes and budget calculator.
-No physical RF runner or main-node radio firmware is implemented.
+The shared radio runner and IF-02 matrix support finite known-data exchange
+with independent source and recovered readback and controlled peer mismatch.
 
-- [ ] Implement physical radio configuration/readback, finite transmit/receive,
-  timestamped packet/message evidence and independent complete-message hashes.
-- [ ] Implement physical adapter/lifecycle and bidirectional content verification,
-  packet/message reconciliation, PDR, goodput and configuration-mismatch rejection.
-- [ ] Execute the complete 1/64/159/160-byte matrix, negative configuration controls
-  and repetitions on two nodes with retained evidence and cleanup/recovery checks.
+- [x] Implement radio settings verification, bounded receive/transmit, timestamped
+  evidence, reconciliation and independent content verification.
+- [ ] Execute the complete 1/64/159/160-byte matrix, negative controls and physical
+  repetitions on two nodes with verified cleanup.
 
 ### 3 IF-03 Automated campaign and persistence
 
-Existing support: historical records and exports. Physical campaign execution is pending.
+The shared campaign runner preserves plan identities, child evidence and restart checkpoints.
 
 - [ ] Implement immutable case plans, applied-setting checks, finite budgets,
   receiver-first ordering, fresh sessions and per-case node/capability preflight.

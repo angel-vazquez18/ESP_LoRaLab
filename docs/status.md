@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Stale-boot rejection
+
+IF-01 C5 now uses two observed boots of the same device to verify that
+the current firmware rejects commands aimed at the prior boot. Native
+checks passed all 15 default one-role reply cases across two boot
+identities. Physical resets, UART support and transport qualification
+remain open. See [integration procedures](integration_matrices.md).
+
 ## November 25 — Serial health watchdog recovery
 
 IF-01 C6 now exercises all nine default one-role cases. The deliberate
