@@ -15,6 +15,7 @@ from . import (
     ops_matrix,
     rf_sweeps,
     serial_framing,
+    serial_replies,
     timed_series,
     voice_matrix,
 )
@@ -135,6 +136,8 @@ class IntegrationExecution:
                     "configuration_unchanged",
                     "competing_claim",
                     "lease_recovery",
+                    "conflicting_identity",
+                    *serial_replies.VARIANTS,
                     *SERIAL_ERROR_CASES,
                     *serial_framing.VARIANTS,
                 }:
@@ -154,6 +157,12 @@ class IntegrationExecution:
                     blocker := node.configuration_probe_blocker()
                 ):
                     blockers.append(blocker)
+                if case["variant"] in serial_replies.VARIANTS and (
+                    not node.health
+                    or "memory_probe"
+                    not in node.health.capability_availability.resource_limits.get("diag_kinds", ())
+                ):
+                    blockers.append("Reply perturbation requires the bounded memory probe")
             elif case["group"] in ("C1", "C2", "C3", "C4", "C7", "C8"):
                 blockers = radio.preflight(
                     link_request(
@@ -239,6 +248,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/radio_runs.py",
                     "testbed/src/lora_testbed/nodes.py",
                     "testbed/src/lora_testbed/serial_framing.py",
+                    "testbed/src/lora_testbed/serial_replies.py",
                     "testbed/src/lora_testbed/campaign_plans.py",
                     "testbed/src/lora_testbed/physical_campaigns.py",
                 )
@@ -303,6 +313,11 @@ class IntegrationExecution:
                         "outcome": outcome,
                     }
                 )
+            elif variant in serial_replies.VARIANTS:
+                assessed = await node.exercise_reply_recovery(variant, record)
+                record(assessed)
+            elif variant == "conflicting_identity":
+                await node.exercise_reply_conflict(record)
             elif variant == "competing_claim":
                 await adapter.request(binding, "control.keepalive", on_record=record)
                 adapter.current(binding)

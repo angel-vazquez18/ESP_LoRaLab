@@ -23,6 +23,7 @@ from . import (
     ptt_contract_v2,
     run_protocol_v2,
     serial_framing,
+    serial_replies,
     v2,
 )
 from .adapters import (
@@ -81,6 +82,7 @@ class NodeSession:
         self.diagnostics = deque(maxlen=100)
         self.tasks = []
         self.pending = {}
+        self._reply_probe = None
         self.command_lock = asyncio.Lock()
         self.control_cycle_active = False
         self.rf_run_id = None
@@ -346,9 +348,20 @@ class NodeSession:
         )
 
     async def request(
-        self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None, key_set_id=None
+        self,
+        name,
+        args=None,
+        timeout=2.0,
+        retries=2,
+        on_record=None,
+        run_id=None,
+        key_set_id=None,
+        *,
+        _reply_probe=None,
     ):
         async with self.command_lock:
+            if _reply_probe is not None and name != "diag.run":
+                raise ValueError("Reply perturbation is limited to the fixed diagnostic case")
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
             execution_command = name in run_protocol_v2.EXECUTION_COMMANDS
@@ -460,6 +473,8 @@ class NodeSession:
                 self.rf_runs.append(run_id)
             future = asyncio.get_running_loop().create_future()
             self.pending[command.command_id] = (command.command_seq, future)
+            if _reply_probe:
+                self._reply_probe = (command.command_id, _reply_probe)
             try:
                 for attempt in range(retries + 1):
                     wire = v2.encode(command)
@@ -567,6 +582,9 @@ class NodeSession:
                             future = asyncio.get_running_loop().create_future()
                             self.pending[command.command_id] = (command.command_seq, future)
             finally:
+                if _reply_probe:
+                    self._reply_probe = None
+                    _reply_probe.close()
                 self.pending.pop(command.command_id, None)
                 if not future.done():
                     future.cancel()
@@ -607,6 +625,9 @@ class NodeSession:
                     if isinstance(record, v2.Reply):
                         entry = self.pending.get(record.command_id)
                         if entry and entry[0] == record.command_seq and not entry[1].done():
+                            if self._reply_probe and self._reply_probe[0] == record.command_id:
+                                if self._reply_probe[1].intercept(record, entry[1]):
+                                    continue
                             entry[1].set_result(record)
                     elif self.identity:
                         if record.name == "memory.sample":
@@ -781,6 +802,75 @@ class NodeSession:
                 else:
                     future.cancel()
         return replies
+
+    async def exercise_reply_recovery(self, variant, on_record):
+        if variant not in serial_replies.VARIANTS:
+            raise ValueError("Unknown reply perturbation case")
+        probe = serial_replies.ReplyProbe(variant, on_record)
+        before = {result["operation_id"] for result in self.operation_results}
+        accepted = None
+        timed_out = False
+        try:
+            accepted = await self.request(
+                "diag.run",
+                {"kind": "memory_probe", "iterations": 1, "payload_bytes": 512},
+                timeout=serial_replies.REPLY_TIMEOUT_S,
+                retries=probe.retries,
+                on_record=probe.record_exchange,
+                _reply_probe=probe,
+            )
+        except ValueError as exc:
+            if probe.retries or not str(exc).startswith("No v2 reply to diag.run;"):
+                raise
+            timed_out = True
+        if not probe.first or not probe.first.ok:
+            raise ValueError("The fixture did not observe an accepted diagnostic reply")
+        operation = control_v2.AcceptedOperation.model_validate(probe.first.result)
+        async with asyncio.timeout(2):
+            while not any(
+                r["operation_id"] == operation.operation_id for r in self.operation_results
+            ):
+                await asyncio.sleep(0.01)
+        results = [r for r in self.operation_results if r["operation_id"] not in before]
+        single_result = (
+            len(results) == 1
+            and results[0]["operation_id"] == operation.operation_id
+            and results[0]["status"] == "completed"
+            and results[0]["result"]["iterations_completed"] == 1
+        )
+        same_wire = (
+            len(probe.write_sha256) == probe.retries + 1 and len(set(probe.write_sha256)) == 1
+        )
+        expected_reply = timed_out if probe.retries == 0 else accepted == probe.first.result
+        passed = (
+            single_result
+            and same_wire
+            and expected_reply
+            and (variant != "delayed_reply" or probe.delivered_delayed)
+        )
+        return {
+            "direction": "host_assessment",
+            "reply_recovery": variant,
+            "timed_out": timed_out,
+            "delayed_reply_delivered": probe.delivered_delayed,
+            "write_sha256": probe.write_sha256,
+            "operation_id": operation.operation_id,
+            "operation_results": results,
+            "outcome": "pass" if passed else "fail",
+        }
+
+    async def exercise_reply_conflict(self, on_record):
+        async with self.command_lock:
+            command = self._next_command("control.keepalive")
+            [prior] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            if not prior.ok:
+                raise ValueError(f"Original keepalive failed: {prior.error.code}")
+            changed = command.model_copy(update={"args": {"unrecognized_parameter": True}})
+            [reply] = await self._fixed_serial_exchange([v2.encode(changed)], [changed], on_record)
+        if reply.ok or reply.error.code != "COMMAND_CONFLICT":
+            raise ValueError(
+                "Reused command identity with changed bytes did not return COMMAND_CONFLICT"
+            )
 
     async def exercise_competing_claim(self, on_record):
         async with self.command_lock:
