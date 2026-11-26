@@ -591,11 +591,12 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             (!p->encoded && (!null_value(s, "source_artifact_id") ||
                              !null_value(s, "sample_count") || !null_value(s, "expected_sha256"))) ||
             !integer(s, "message_count", 1, 10000, p->encoded ? 1 : 100, &count) ||
-            !integer(s, "message_bytes", 1, 65536, 64, &p->bytes) ||
+            !integer(s, "message_bytes", 1, UINT32_MAX, 64, &p->bytes) ||
             (!p->encoded && !integer(s, "source_seed", 0, UINT32_MAX, 743, &p->seed)) ||
             !integer(s, "max_duration_ms", 1000, 3600000, 120000, &p->duration_ms))
             return "INVALID_ARGUMENT";
-        if (count != (p->fixed_source ? 20U : 1U)) return "RESOURCE_LIMIT";
+        if (p->bytes > RF_MAX_MESSAGE_BYTES || count != (p->fixed_source ? 20U : 1U))
+            return "RESOURCE_LIMIT";
         if (p->echo && (p->bytes > link->fragment_payload_bytes || link->ack_requested || link->max_retries))
             return "INVALID_ARGUMENT";
         if (p->fixed_source && (p->bytes != 1200 || p->duration_ms < 60000 || p->duration_ms > 90000 ||

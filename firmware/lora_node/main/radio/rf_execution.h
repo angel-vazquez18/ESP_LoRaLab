@@ -11,6 +11,8 @@
 #include "security/session_crypto.h"
 #include "source/worker.h"
 
+#define RF_MAX_MESSAGE_BYTES 65536U
+
 typedef struct
 {
     void *context;

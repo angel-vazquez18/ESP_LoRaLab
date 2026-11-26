@@ -436,7 +436,7 @@ static cJSON *capabilities(node_control *n, bool enrollment)
         add(n, limits, "execution", execution);
         cJSON *execution_limits=object(n);
         if (!enrollment) {
-        number(n,execution_limits,"max_message_bytes",65536);number(n,execution_limits,"max_messages_per_run",1);
+        number(n,execution_limits,"max_message_bytes",RF_MAX_MESSAGE_BYTES);number(n,execution_limits,"max_messages_per_run",1);
         number(n,execution_limits,"max_fragments_per_message",4096);number(n,execution_limits,"max_duration_ms",3600000);
         number(n,execution_limits,"max_retries",2);
         }
