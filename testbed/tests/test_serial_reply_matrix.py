@@ -22,21 +22,43 @@ def test_reply_perturbation_repeats_exact_command_and_observes_one_operation(
             spec = MatrixRequest(catalog_id="IF-01", groups=["C5"], roles=["A"])
             preview = host.procedures.matrix_preview(spec, host.radio)
             assert preview["ready_case_count"] == 12
+            prior = host.adapter.bind("A")
+            await node.close()
+            node.opener = lambda _: NativeSerial(native_library, boot=2)
+            await node.connect("isolated-native-replies")
+            fresh = host.adapter.bind("A")
+            assert fresh["device_id"] == prior["device_id"] and fresh["boot_id"] != prior["boot_id"]
+            assert host.procedures.matrix_preview(spec, host.radio)["ready_case_count"] == 15
             started = await host.start_procedure_matrix(spec)
             async with asyncio.timeout(15):
                 await host.procedures.task
             saved = host.procedures.get(started["id"])
             assert saved["status"] == "completed", saved
-            assert saved["assessment"] == "inconclusive" and not saved["hardware_validated"]
+            assert saved["assessment"] == "pass" and not saved["hardware_validated"]
             ledger = list(host.procedures.all_evidence(saved["id"]))
             operations = set()
             for case in saved["cases"]:
                 documents = [r["document"] for r in ledger if r["case_id"] == case["id"]]
                 variant = case["variant"]
-                if variant == "stale_boot":
-                    assert case["status"] == "blocked" and not documents
-                    continue
                 assert case["assessment"] == "pass" and case["cleanup_verified"]
+                if variant == "stale_boot":
+                    [observed] = [row for row in documents if "previous_boot" in row]
+                    assert observed["observed_error"] == "STALE_BOOT"
+                    assert observed["unexpected_operation_ids"] == []
+                    assert observed["previous_boot"] == {
+                        k: v for k, v in prior.items() if k != "role"
+                    }
+                    assert observed["current_boot"] == {
+                        k: v for k, v in fresh.items() if k != "role"
+                    }
+                    [command] = [
+                        row["record"]
+                        for row in documents
+                        if row["direction"] == "host_to_node"
+                        and row["record"]["name"] == "diag.run"
+                    ]
+                    assert command["target_boot_id"] == prior["boot_id"]
+                    continue
                 if variant == "conflicting_identity":
                     first, second = [
                         row["record"]
