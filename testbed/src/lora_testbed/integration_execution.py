@@ -141,6 +141,7 @@ class IntegrationExecution:
                     "lease_recovery",
                     "health_silence",
                     "conflicting_identity",
+                    "stale_boot",
                     *serial_replies.VARIANTS,
                     *serial_compatibility.INCOMPATIBILITIES,
                     *SERIAL_ERROR_CASES,
@@ -168,6 +169,8 @@ class IntegrationExecution:
                     not in node.health.capability_availability.resource_limits.get("diag_kinds", ())
                 ):
                     blockers.append("Reply perturbation requires the bounded memory probe")
+                if case["variant"] == "stale_boot" and not node.previous_boot_binding:
+                    blockers.append("Connect the same device before and after a reset")
             elif case["group"] in ("C1", "C2", "C3", "C4", "C7", "C8"):
                 blockers = radio.preflight(
                     link_request(
@@ -329,6 +332,9 @@ class IntegrationExecution:
                 record(assessed)
             elif variant in serial_replies.VARIANTS:
                 assessed = await node.exercise_reply_recovery(variant, record)
+                record(assessed)
+            elif variant == "stale_boot":
+                assessed = await node.exercise_stale_boot(record)
                 record(assessed)
             elif variant == "conflicting_identity":
                 await node.exercise_reply_conflict(record)

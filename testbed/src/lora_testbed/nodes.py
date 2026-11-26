@@ -76,6 +76,7 @@ class NodeSession:
         self.connected = False
         self.connection_state = "disconnected"
         self.connection_id = None
+        self.last_boot_binding = self.previous_boot_binding = None
         self.active_operation = None
         self.error = None
         self.samples = deque(maxlen=90)
@@ -313,6 +314,7 @@ class NodeSession:
             self.health = v2.Health.model_validate(await self.request("status.get"))
             self.last_health = monotonic()
             self.connection_state = "connected"
+            self.record_connected_boot()
             self.note("connected", f"Identified {self.identity.device_id}")
             self.tasks.append(asyncio.create_task(self.keepalive_loop()))
         except Exception as exc:
@@ -320,6 +322,20 @@ class NodeSession:
             self.connection_state = "error"
             self.error = str(exc)
             raise ValueError(f"Node {self.role}: {exc}") from exc
+
+    def record_connected_boot(self):
+        current = {
+            "device_id": self.identity.device_id,
+            "boot_id": self.identity.boot_id,
+            "connection_id": self.connection_id,
+        }
+        prior = self.last_boot_binding
+        if prior and prior["device_id"] == current["device_id"]:
+            if prior["boot_id"] != current["boot_id"]:
+                self.previous_boot_binding = prior
+        else:
+            self.previous_boot_binding = None
+        self.last_boot_binding = current
 
     async def write_wire(self, wire):
         task = asyncio.create_task(asyncio.to_thread(self.serial.write, wire))
@@ -862,6 +878,45 @@ class NodeSession:
             "write_sha256": probe.write_sha256,
             "operation_id": operation.operation_id,
             "operation_results": results,
+            "outcome": "pass" if passed else "fail",
+        }
+
+    async def exercise_stale_boot(self, on_record):
+        async with self.command_lock:
+            prior = self.previous_boot_binding
+            current = self.last_boot_binding
+            if not prior or not current or not self.identity or not self.connected:
+                raise ValueError("Observe the same node on two boots before the stale-boot probe")
+            if (
+                self.identity.device_id != prior["device_id"]
+                or self.identity.boot_id == prior["boot_id"]
+                or current["connection_id"] != self.connection_id
+            ):
+                raise ValueError("The prior boot does not match the selected device transition")
+            existing_operations = {r["operation_id"] for r in self.operation_results}
+            command = self._next_command(
+                "diag.run", {"kind": "memory_probe", "iterations": 1, "payload_bytes": 512}
+            ).model_copy(update={"target_boot_id": prior["boot_id"]})
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+        # Give the event reader time to record any unexpected one-iteration result.
+        await asyncio.sleep(0.10)
+        new_operations = [
+            r["operation_id"]
+            for r in self.operation_results
+            if r["operation_id"] not in existing_operations
+        ]
+        passed = (
+            not reply.ok
+            and reply.error.code == "STALE_BOOT"
+            and reply.error.field == "target_boot_id"
+            and not new_operations
+        )
+        return {
+            "direction": "host_assessment",
+            "previous_boot": prior,
+            "current_boot": current,
+            "observed_error": reply.error.code if reply.error else None,
+            "unexpected_operation_ids": new_operations,
             "outcome": "pass" if passed else "fail",
         }
 
