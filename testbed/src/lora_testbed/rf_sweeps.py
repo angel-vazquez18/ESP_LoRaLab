@@ -7,7 +7,12 @@ from math import isfinite
 from statistics import median
 
 from .experiments_v2 import Radio, airtime_us, preview
-from .radio_runs import SweepRadioRunRequest, TransmitterPowerRunRequest
+from .radio_runs import (
+    EchoRadioRunRequest,
+    SweepRadioRunRequest,
+    TransmitterPowerEchoRunRequest,
+    TransmitterPowerRunRequest,
+)
 
 FACTORS = {
     "RF-01": ("spreading_factor", (7, 8, 9, 10, 11, 12), 7),
@@ -19,6 +24,17 @@ GROUPS = {
     identifier: {"C1": "before_control", "C2": "factor_sweep", "C3": "after_control"}
     for identifier in FACTORS
 }
+
+
+DEFAULT_ECHO_SERIES = {"RF-02", "RF-03", "RF-04"}
+
+
+def echo_count(request):
+    if request.rf_echoes_per_case is not None:
+        return request.rf_echoes_per_case
+    if request.catalog_id in DEFAULT_ECHO_SERIES and request.messages_per_case == 100:
+        return 100
+    return 0
 
 
 def cases(request, groups):
@@ -48,6 +64,7 @@ def cases(request, groups):
                     "direction": direction,
                     "message_bytes": 64,
                     "message_count": request.messages_per_case,
+                    "echo_count": echo_count(request),
                 }
                 child = sweep_request(request, case, 0)
                 timing = preview(child.plan())["timing"]
@@ -73,6 +90,44 @@ def sweep_request(matrix, case, ordinal):
     if matrix.catalog_id == "RF-04":
         return TransmitterPowerRunRequest(**args, receiver_power_dbm=2)
     return SweepRadioRunRequest(**args)
+
+
+def echo_request(matrix, case):
+    data = sweep_request(matrix, case, 0)
+    options = data.model_dump()
+    if isinstance(data, TransmitterPowerRunRequest):
+        return TransmitterPowerEchoRunRequest(**options)
+    return EchoRadioRunRequest(**options)
+
+
+def matched_echo(data, echo):
+    def applied(record):
+        return {
+            role: {key: values[key] for key in ("radio", "link")}
+            for role, values in record["applied_settings"].items()
+        }
+
+    return (
+        data["sender"] == echo["sender"]
+        and data["identities"] == echo["identities"]
+        and data["plan"]["spec"]["security"] == echo["plan"]["spec"]["security"]
+        and applied(data) == applied(echo)
+    )
+
+
+def echo_report(distribution, requested):
+    [group] = distribution["groups"] if len(distribution["groups"]) == 1 else [None]
+    verified = group["n"] if group else 0
+    timeouts = sum(row["reason"] == "timeout" for row in group["exclusions"]) if group else 0
+    return {
+        "requested": requested,
+        "verified": verified,
+        "timeouts": timeouts,
+        "unresolved": requested - verified - timeouts,
+        "median_us": group["median_us"] if group else None,
+        "p95_us": group["p95_us"] if group else None,
+        "clock_scope": "requester_device_and_boot",
+    }
 
 
 def observation(record):
@@ -166,37 +221,52 @@ COMPARISON_METRICS = {
 }
 
 
-def case_measurements(case):
+RTT_METRICS = {
+    "rtt_median_us": ("Median RTT (µs)", "median_us", 1),
+    "rtt_p95_us": ("p95 RTT (µs)", "p95_us", 1),
+}
+
+
+def case_measurements(case, metrics):
     measurements = case.get("measurements") or {}
     complete = case["status"] == "completed" and measurements.get("complete_observation_cohort")
     values = {}
-    for metric, (_, field, ratio) in COMPARISON_METRICS.items():
-        value = measurements.get(field)
-        values[metric] = (
-            value * ratio if complete and type(value) in (int, float) and isfinite(value) else None
-        )
+    timing = measurements.get("matched_rtt") or {}
+    for metric, (_, field, ratio) in metrics.items():
+        if metric in RTT_METRICS:
+            value = timing.get(field) if timing.get("unresolved") == 0 else None
+        else:
+            value = measurements.get(field) if complete else None
+        values[metric] = value * ratio if type(value) in (int, float) and isfinite(value) else None
     return {
         "case_id": case["id"],
         "repetition": case["repetition"],
         "status": case["status"],
         "observations": measurements.get("sample_count", 0),
         "planned_messages": case["message_count"],
+        "rtt_requested": case.get("echo_count", 0),
+        "rtt_verified": timing.get("verified", 0),
+        "rtt_timeouts": timing.get("timeouts", 0),
         "values": values,
     }
 
 
 def compare_saved_cases(run):
+    include_rtt = any(case.get("echo_count") for case in run["cases"])
+    metrics = {**COMPARISON_METRICS, **RTT_METRICS} if include_rtt else COMPARISON_METRICS
     cohorts, controls = {}, {}
     for case in run["cases"]:
         direction = case["direction"]
         if case["group"] == "C2":
-            cohorts.setdefault((direction, case["value"]), []).append(case_measurements(case))
+            cohorts.setdefault((direction, case["value"]), []).append(
+                case_measurements(case, metrics)
+            )
         else:
             controls.setdefault((direction, case["repetition"]), {})[case["group"]] = case
     comparisons = []
     for (direction, setting), trials in sorted(cohorts.items()):
         bands = {}
-        for key in COMPARISON_METRICS:
+        for key in metrics:
             values = [trial["values"][key] for trial in trials if trial["values"][key] is not None]
             bands[key] = (
                 {
@@ -219,16 +289,17 @@ def compare_saved_cases(run):
     baselines = []
     for (direction, repetition), phases in sorted(controls.items()):
         before, after = (phases.get(group) for group in ("C1", "C3"))
-        first = case_measurements(before) if before else None
-        last = case_measurements(after) if after else None
+        first = case_measurements(before, metrics) if before else None
+        last = case_measurements(after, metrics) if after else None
         matched = (
             bool(first and last)
             and before["value"] == after["value"]
             and before["requested_settings"] == after["requested_settings"]
             and first["planned_messages"] == last["planned_messages"]
+            and first["rtt_requested"] == last["rtt_requested"]
         )
         changes = {}
-        for key in COMPARISON_METRICS:
+        for key in metrics:
             initial = first["values"][key] if first else None
             final = last["values"][key] if last else None
             changes[key] = {
@@ -251,7 +322,8 @@ def compare_saved_cases(run):
     return {
         "factor": FACTORS[run["catalog_id"]][0],
         "security": run["request"]["rf_security"],
-        "metrics": {key: info[0] for key, info in COMPARISON_METRICS.items()},
+        "metrics": {key: info[0] for key, info in metrics.items()},
+        "rtt_metrics": list(RTT_METRICS) if include_rtt else [],
         "settings": comparisons,
         "baselines": baselines,
     }
@@ -271,7 +343,10 @@ def comparison_csv(report):
             "status",
             "observations",
             "planned_messages",
-            *COMPARISON_METRICS,
+            "rtt_requested",
+            "rtt_verified",
+            "rtt_timeouts",
+            *report["metrics"],
         ],
     )
     writer.writeheader()

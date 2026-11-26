@@ -218,6 +218,10 @@ class EchoRadioRunRequest(RadioRunRequest):
         )
 
 
+class TransmitterPowerEchoRunRequest(EchoRadioRunRequest):
+    receiver_power_dbm: int = Field(ge=2, le=20)
+
+
 class EchoMissingReplyCheck(EchoRadioRunRequest):
     """Internal TIME-01 case with a deliberately stopped responder."""
 
@@ -628,7 +632,7 @@ class RadioRuns:
         }
         if isinstance(request, KeyMismatchRunRequest):
             record["security"]["controlled_receiver_key_mismatch"] = True
-        if isinstance(request, TransmitterPowerRunRequest):
+        if isinstance(request, (TransmitterPowerRunRequest, TransmitterPowerEchoRunRequest)):
             record["receiver_power_dbm"] = request.receiver_power_dbm
         if isinstance(request, LabRadioRunRequest):
             injection = request.injection.model_dump()
@@ -940,7 +944,9 @@ class RadioRuns:
                     if role == r["receiver"]:
                         if isinstance(request, PeerMismatchCheck):
                             selected = request.peer_radio
-                        elif isinstance(request, TransmitterPowerRunRequest):
+                        elif isinstance(
+                            request, (TransmitterPowerRunRequest, TransmitterPowerEchoRunRequest)
+                        ):
                             selected = plan.radio.model_copy(
                                 update={"tx_power_dbm": request.receiver_power_dbm}
                             )

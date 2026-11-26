@@ -138,6 +138,7 @@ class MatrixRequest(ContractModel):
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
+    rf_echoes_per_case: int | None = Field(default=None, ge=0, le=100)
     subset_sizes: list[int] | None = Field(default=None, min_length=1, max_length=11)
     voice_reference_ids: list[UUID] | None = Field(default=None, min_length=1, max_length=3)
 
@@ -164,6 +165,8 @@ class MatrixRequest(ContractModel):
             raise ValueError("Diagnostic iterations belong to the local crypto procedure")
         if self.voice_reference_ids is not None and self.catalog_id not in ("VOICE-01", "VOICE-02"):
             raise ValueError("Voice references belong to the voice transfer procedure")
+        if self.rf_echoes_per_case is not None and self.catalog_id not in rf_sweeps.GROUPS:
+            raise ValueError("Matched echo count belongs to RF sweep procedures")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
         local = self.catalog_id in ("IF-01", "SEC-04", "VOICE-01") or (
@@ -294,6 +297,8 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.messages_per_case >= 10 and len(request.directions) == 2
     else:
         coverage = coverage and request.messages_per_case == 100 and len(request.directions) == 2
+    if request.catalog_id in rf_sweeps.DEFAULT_ECHO_SERIES:
+        coverage = coverage and rf_sweeps.echo_count(request) == 100
     plan = {
         "procedure_revision": REVISION,
         "catalog_id": request.catalog_id,

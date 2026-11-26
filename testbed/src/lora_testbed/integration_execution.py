@@ -74,6 +74,10 @@ class IntegrationExecution:
                 "content_series",
             ):
                 blockers = radio.preflight(link_request(spec, case, 0))["blockers"]
+                if case.get("echo_count"):
+                    case["echo_blockers"] = radio.preflight(rf_sweeps.echo_request(spec, case))[
+                        "blockers"
+                    ]
             elif case["driver"] == "content_negative":
                 control = content_series.run_request(spec, case, 0)
                 request = (
@@ -618,6 +622,30 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_sweep_echoes(self, run, case, spec, radio, adapter, reference):
+        requested = case["echo_count"]
+        matched = []
+        if not case["echo_blockers"]:
+            request = rf_sweeps.echo_request(spec, case)
+            for _ in range(requested):
+                echo = await self.matrix_radio_child(
+                    run, case, request, radio, adapter, "matched_rtt"
+                )
+                if rf_sweeps.matched_echo(reference, echo):
+                    matched.append(echo["id"])
+        distribution = await radio.collect_echo_distribution(matched) if matched else {"groups": []}
+        report = rf_sweeps.echo_report(distribution, requested)
+        self.ledger.append(
+            run["id"],
+            case["id"],
+            {
+                "matched_rtt": report,
+                "echo_run_ids": matched,
+                "round_trip_distribution": distribution,
+            },
+        )
+        return report
+
     async def matrix_link_case(self, run, case, spec, radio, adapter):
         verified = 0
         sweep = case["driver"] == "rf_sweep"
@@ -638,13 +666,20 @@ class IntegrationExecution:
                     },
                 )
         complete = (len(observations) if sweep else verified) == case["message_count"]
+        timing = (
+            await self.matrix_sweep_echoes(run, case, spec, radio, adapter, result)
+            if case.get("echo_count")
+            else None
+        )
+        matched_complete = timing is None or timing["unresolved"] == 0
         case.update(
             status="completed",
-            assessment="pass" if complete else "inconclusive",
+            assessment="pass" if complete and matched_complete else "inconclusive",
             measurements={
                 "verified_messages": verified,
                 "requested_messages": case["message_count"],
                 **(rf_sweeps.report(observations, case["message_count"]) if sweep else {}),
+                **({"matched_rtt": timing} if timing is not None else {}),
             },
             cleanup_verified=True,
             assertions=[
@@ -653,7 +688,17 @@ class IntegrationExecution:
                     if sweep
                     else "complete_independent_readbacks",
                     "outcome": "pass" if complete else "inconclusive",
-                }
+                },
+                *(
+                    [
+                        {
+                            "code": "matched_requester_clock_echo_cohort",
+                            "outcome": "pass" if matched_complete else "inconclusive",
+                        }
+                    ]
+                    if timing is not None
+                    else []
+                ),
             ],
         )
 
