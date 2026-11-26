@@ -32,5 +32,29 @@ uv run --project testbed lora-testbed integration-matrix memory.json
 For a paired check select C2 and connect both compatible roles. Expect two
 separate memory records linked to the same radio run. The intended operating
 range, frequency of sampled observations and cleanup are explicit in each
-result. C3 audio stages, C4 device-side allocation refusal, and C5 deliberate
-cancellation/failure and declared recovery bounds are still pending.
+result.
+
+## C3 audio stages
+
+Select either role to assess microphone capture, encoding, decoding and
+playback. The capture case saves exactly 24,000 PCM samples. The codec and
+playback cases use a reproducible silent 48,000-byte PCM fixture. Encoding
+and decoding share a codec round trip and report separate stage samples
+linked to the firmware's command identities.
+
+Select both roles for reassembly and integrated voice. Reassembly captures
+and encodes on the sender, then verifies independent readback of the
+1,200-byte encoded artifact on the receiver. The receiver does not decode
+or play it. Integrated voice continues through decoding and playback.
+Both cases save separate observations for each node.
+
+Each tracked stage includes its preceding sample, sampled internal and
+PSRAM minima, the smallest sampled largest free block and the maximum
+sampled bytes in named live buffers. Heap changes use the immediately
+preceding baseline. Sampling may miss a short-lived allocation. Preexisting
+artifacts are preserved. Native fixtures cover the workflows and ownership
+cleanup. Physical microphone capture and speaker playback still require
+bench confirmation.
+
+C4 device-side allocation refusal and C5 deliberate cancellation/failure
+with declared recovery bounds are still pending.

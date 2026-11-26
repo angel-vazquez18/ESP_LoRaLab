@@ -786,7 +786,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
-| MEM-01 | Idle and paired known-data matrix | Instrumented audio stages, device-side limits and induced recovery-band checks |
+| MEM-01 | Idle, known data and instrumented local and paired audio | Device-side limits and induced recovery-band checks |
 | VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
 | MODEL-01 | Independent vectors and observed frame/message matrices | Instrumented airtime/tolerance, residual plots and full bench study |
 | OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
@@ -879,3 +879,9 @@ RF comparisons now retain individual repetitions, their unweighted
 ranges, and paired baseline changes for each direction. The native tests
 verify incomplete cohorts and archive hashes. The browser check verified
 all seven power settings, a second metric and the opened baseline table.
+
+The full repository check through RF sweep comparisons passed 1,171 tests.
+MEM-01 C3 now links capture, codec, reassembly and playback to firmware
+workload IDs and measures sampled memory change against the preceding
+baseline. Twenty-one focused tests passed, including reassembly without
+receiver playback, integrated voice and local capture cancellation.

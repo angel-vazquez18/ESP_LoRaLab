@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Audio stage memory
+
+MEM-01 C3 now records local capture, codec and playback memory, plus
+paired reassembly and integrated voice. Observations link each stage to
+its command or radio run and calculate sampled heap changes against the
+preceding baseline. Native checks cover reassembly without receiver
+playback, integrated playback and capture cancellation. See
+[sampled memory procedures](memory_matrix.md#c3-audio-stages).
+
 ## November 25 — RF comparison and baseline review
 
 Saved RF sweeps now expose each direction and repetition, the metric
@@ -180,7 +189,7 @@ idle measurements. Each observer saves raw events and observed allocation
 lifetimes. Cancelling an idle check stops its own observer. Full
 `make check` passed 1,130 tests and all repository checks. See
 [sampled memory procedures](memory_matrix.md) for supported cases and
-the remaining audio, allocation-rejection and deliberate recovery work.
+the audio stage follow-up and remaining allocation-rejection and recovery work.
 
 ## November 25 — Dashboard matrix controls
 
