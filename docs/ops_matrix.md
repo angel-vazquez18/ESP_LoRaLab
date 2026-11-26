@@ -187,3 +187,44 @@ case. The wrong role, an unconfirmed peer stop or mismatched recovery
 evidence leaves it inconclusive. Host detection timing starts when
 serial read fails. Use the operator's recorded unplug time and physical
 observations to complete the bench timing and lease checks.
+
+## Board reset and stale boot
+
+OPS-01 C2 uses two protected known-data transfers and the existing
+IF-01 stale-boot case. Keep the peer connected to its original role
+throughout. The reset node must report the same device on a new boot.
+
+1. Start a bounded AES-128-GCM known-data transfer. Use the board's
+   reset control while the selected node is active. Record the physical
+   reset time and the interrupted radio run ID.
+2. Wait for confirmed peer cleanup. Reconnect only the reset node,
+   then run **IF-01**, **C5**, **Quick check** for that role. Save the
+   procedure ID. The stale-boot case must pass before the next transfer.
+3. Repeat the original protected known-data request in a fresh session.
+   Save the recovery radio run ID.
+4. In **Experiments**, select **OPS-01**, **C2**, and the required
+   workload. Paste the three IDs into **Saved reset recovery evidence
+   (JSON)**, using the format below. The CLI uses the same rows in
+   `ops_reset_evidence` with `"catalog_id":"OPS-01"` and
+   `"groups":["C2"]`.
+
+```json
+[
+  {
+    "target_role": "B",
+    "direction": "A_TO_B",
+    "repetition": 1,
+    "interrupted": "422ed491-22a7-4319-9949-aee83ab1739f",
+    "stale_boot_procedure": "20db796e-a60a-48fe-9fe9-34022180ee95",
+    "recovery": "09fae31a-4d41-4b87-a544-52cd0c5c8910"
+  }
+]
+```
+
+Expect the selected case to show a different boot, a raw `STALE_BOOT`
+reply, an idle status with no run or keys, and independent provisioning
+and exact readback of the recovery run. A reset may first appear as a
+lost serial connection or as a message carrying the new boot identity.
+Record three repetitions for each node and direction. Bench validation
+still requires the physical stop and lease observations. Cross-node
+clock calibration requires its separate timing procedure.

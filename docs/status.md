@@ -4,6 +4,12 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Board reset and stale boot review
+
+OPS-01 C2 joins an interrupted protected transfer, raw stale-boot and
+idle-state readbacks, and a fresh protected transfer with independent
+keys and bytes. See [board reset and stale boot](ops_matrix.md#board-reset-and-stale-boot).
+
 ## November 26 — USB interruption review
 
 OPS-01 C1 retains serial I/O failure evidence for the exact owned
