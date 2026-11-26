@@ -4,6 +4,12 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — USB interruption review
+
+OPS-01 C1 retains serial I/O failure evidence for the exact owned
+connection, confirms bounded peer cleanup, and verifies the saved bytes
+from an explicit fresh transfer. See [USB loss and reconnect](ops_matrix.md#usb-loss-and-reconnect).
+
 ## November 26 — Active and paused host restart review
 
 OPS-01 C3 links an interrupted campaign and an explicit selected-case

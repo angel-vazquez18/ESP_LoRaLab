@@ -142,3 +142,48 @@ case inconclusive. The original cleanup result and fault reason are
 preserved. Keep both campaign ZIPs with the matrix evidence. An abrupt
 restart can preserve incomplete original cleanup, so record physical
 cessation and lease timing during bench qualification.
+
+## USB loss and reconnect
+
+OPS-01 C1 reviews an interrupted transfer and a fresh known-data transfer
+with the same request. The host records which owned serial connection
+failed and how long it took to finish cleanup. The case requires an
+acknowledged stop, closed session and confirmed idle state on the peer
+that stayed connected. It keeps the original error and the unplugged
+node's unconfirmed cleanup in the record.
+
+1. Connect both bench nodes. Start a bounded known-data transfer with
+   a long enough transmit window to unplug the selected node while it
+   is active. Save the radio run ID and the physical unplug time.
+2. Let the host finish stopping the peer. Reconnect the unplugged node
+   to the same role and leave the other node on its original connection.
+   Use the same saved request for a fresh transfer. Save its run ID.
+3. In **Experiments**, select **OPS-01**, **C1**, and the required
+   workload. Paste the array below into **Saved USB recovery evidence
+   (JSON)** after substituting the radio run IDs. Preview and start.
+
+```json
+[
+  {
+    "target_role": "A",
+    "direction": "A_TO_B",
+    "repetition": 1,
+    "interrupted": "422ed491-22a7-4319-9949-aee83ab1739f",
+    "recovery": "09fae31a-4d41-4b87-a544-52cd0c5c8910"
+  }
+]
+```
+
+For the CLI, put the array in `ops_usb_evidence` in a matrix request
+with `"catalog_id":"OPS-01"`, `"groups":["C1"]` and the chosen
+repetition count. Use `lora-testbed integration-matrix` against the
+running backend. A quick plan has four cases. The full C1 plan covers
+both fault roles, both directions and three repetitions for 12 cases.
+
+Expect a valid case to link both radio archives, report peer cleanup
+within five seconds of host serial failure detection, and verify the
+same source bytes after a fresh session. A missing pair blocks its
+case. The wrong role, an unconfirmed peer stop or mismatched recovery
+evidence leaves it inconclusive. Host detection timing starts when
+serial read fails. Use the operator's recorded unplug time and physical
+observations to complete the bench timing and lease checks.

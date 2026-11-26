@@ -789,7 +789,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | Local and paired references, fixed-rate matrix, coded listening and duration review | Attended microphone/error cases, calibrated delivery window and recorded physical listening study |
 | MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
-| OPS-01 | Linked 100-case campaign, idle/loaded stability, control faults, telemetry-gap recovery, and restart review | Full-hour bench evidence and attended USB/reset and host-restart observations |
+| OPS-01 | Linked 100-case campaign, idle/loaded stability, control faults, telemetry-gap recovery, restart and USB loss review | Board reset review, full-hour bench evidence and attended interruption observations |
 
 Keep fixture results and physical qualification records separate. Grouped
 support remains partial where a documented case is unavailable.
@@ -949,3 +949,8 @@ restart variants. The shared review confirms the interrupted checkpoint
 and verifies the explicitly restarted work using fresh connections and
 independent file checks. Physical interruption timing still requires the
 attended runs.
+
+OPS-01 C1 now checks an owned serial failure, bounded peer cleanup
+and a fresh known-data transfer. Four native interruption cases cover
+either node in both directions. Measured physical unplug, cessation and
+lease behavior still require the attended bench checks.
