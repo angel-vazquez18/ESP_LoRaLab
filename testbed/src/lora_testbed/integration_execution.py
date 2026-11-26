@@ -139,6 +139,7 @@ class IntegrationExecution:
                     "configuration_unchanged",
                     "competing_claim",
                     "lease_recovery",
+                    "health_silence",
                     "conflicting_identity",
                     *serial_replies.VARIANTS,
                     *serial_compatibility.INCOMPATIBILITIES,
@@ -274,7 +275,8 @@ class IntegrationExecution:
         return deepcopy(run)
 
     async def matrix_serial_case(self, run, case, adapter):
-        binding = run["physical_bindings"][case["role"]]
+        role = case["role"]
+        binding = run.get("serial_recovered_bindings", {}).get(role, run["physical_bindings"][role])
         node = adapter.current(binding)
         before = node.snapshot()
 
@@ -282,6 +284,9 @@ class IntegrationExecution:
             self.ledger.append(run["id"], case["id"], document)
 
         variant = case["variant"]
+        if variant == "health_silence":
+            await self.matrix_health_silence(run, case, adapter, node, binding, record)
+            return
         assessed = None
         status = None
         async with asyncio.timeout(60):
@@ -363,6 +368,40 @@ class IntegrationExecution:
             assessment=outcome,
             cleanup_verified=True,
             assertions=[{"code": variant, "outcome": outcome}],
+        )
+
+    async def matrix_health_silence(self, run, case, adapter, node, binding, record):
+        port = node.port
+        assessment = await node.exercise_health_silence(record)
+        record(assessment)
+        await node.connect(port)
+        restored = adapter.bind(node.role)
+        status = await adapter.request(restored, "status.get", on_record=record)
+        if (
+            restored["connection_id"] == binding["connection_id"]
+            or restored["device_id"] != binding["device_id"]
+            or restored["boot_id"] != binding["boot_id"]
+            or status["state"] != "idle"
+            or status["node_role"] != node.role
+        ):
+            await node.close()
+            raise ValueError(
+                "Health-silence recovery did not restore the same idle device and boot"
+            )
+        record(
+            {
+                "direction": "host_assessment",
+                "previous_binding": binding,
+                "recovered_binding": restored,
+            }
+        )
+        run.setdefault("serial_recovered_bindings", {})[node.role] = restored
+        outcome = assessment["outcome"]
+        case.update(
+            status="completed",
+            assessment=outcome,
+            cleanup_verified=True,
+            assertions=[{"code": case["variant"], "outcome": outcome}],
         )
 
     @staticmethod

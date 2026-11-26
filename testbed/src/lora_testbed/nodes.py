@@ -83,6 +83,7 @@ class NodeSession:
         self.tasks = []
         self.pending = {}
         self._reply_probe = None
+        self._health_probe = None
         self.command_lock = asyncio.Lock()
         self.control_cycle_active = False
         self.rf_run_id = None
@@ -672,6 +673,11 @@ class NodeSession:
                             self.memory_samples.append(record.data.model_dump())
                             self.last_memory = monotonic()
                         elif record.name == "health":
+                            if self._health_probe is not None:
+                                value = record.model_dump()
+                                self._health_probe["suppressed_events"].append(value)
+                                self.on_event(self.role, value)
+                                continue
                             self.accept_health(record.data)
                             self.samples.append(
                                 {
@@ -884,6 +890,48 @@ class NodeSession:
             if reply.error.code != "BUSY":
                 raise ValueError(f"Unexpected competing claim reply: {reply.error.code}")
 
+    async def exercise_health_silence(self, on_record):
+        await self.request("status.get", on_record=on_record, timeout=0.75, retries=0)
+        if self._health_probe is not None or self.last_health is None:
+            raise ValueError("A fresh connection is required for the health-silence probe")
+        self._health_probe = probe = {"suppressed_events": [], "unresponsive_at_age_s": None}
+        started = self.last_health
+        stale_age = None
+        try:
+            async with asyncio.timeout(7):
+                while self.connected:
+                    age = monotonic() - started
+                    if stale_age is None and self.snapshot()["connection_state"] == "stale":
+                        stale_age = age
+                    await asyncio.sleep(0.025)
+            disconnected_age = monotonic() - started
+            expected_error = "Node health telemetry timed out; reconnect to recover"
+            unresponsive_age = probe["unresponsive_at_age_s"]
+            passed = (
+                probe["suppressed_events"]
+                and stale_age is not None
+                and 3 < stale_age <= 3.5
+                and unresponsive_age is not None
+                and 5 < unresponsive_age <= disconnected_age <= 6.5
+                and self.error == expected_error
+            )
+            return {
+                "direction": "host_assessment",
+                "health_silence": True,
+                **probe,
+                "stale_at_age_s": stale_age,
+                "disconnected_at_age_s": disconnected_age,
+                "connection_error": self.error,
+                "outcome": "pass" if passed else "fail",
+            }
+        finally:
+            self._health_probe = None
+            if self.connected:
+                try:
+                    await self.request("status.get", timeout=0.75, retries=0)
+                except (OSError, ValueError, TimeoutError):
+                    await self.close(release=False)
+
     async def exercise_lease_recovery(self, on_record):
         if self.control_cycle_active or not self.identity or not self.connected:
             raise ValueError("A connected node with exclusive control is required")
@@ -984,10 +1032,10 @@ class NodeSession:
                 await asyncio.sleep(1)
                 if self.control_cycle_active:
                     continue
-                if (
-                    self.last_health is not None
-                    and health_freshness(monotonic() - self.last_health) == "unresponsive"
-                ):
+                age = monotonic() - self.last_health if self.last_health is not None else None
+                if health_freshness(age) == "unresponsive":
+                    if self._health_probe is not None:
+                        self._health_probe["unresponsive_at_age_s"] = age
                     raise ValueError("Node health telemetry timed out; reconnect to recover")
                 await self.request("control.keepalive")
         except (OSError, ValueError) as exc:
