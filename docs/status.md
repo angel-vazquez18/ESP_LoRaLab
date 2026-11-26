@@ -4,6 +4,15 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Packet retry exhaustion
+
+PKT-03 C4 now schedules each permitted receive drop in a single trial.
+The firmware reports sender ACK timeouts and the host reconciles them
+with exact transmissions, retained drops and receiver missing ranges.
+The native workflow covers no ACK and stop-and-wait with zero, one and
+two retries. See [packet fault matrices](fault_matrices.md) for physical
+bench instructions.
+
 ## November 25 — Stale-boot rejection
 
 IF-01 C5 now uses two observed boots of the same device to verify that

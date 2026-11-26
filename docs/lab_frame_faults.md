@@ -46,6 +46,10 @@ record bound. The host expands that set using the matching schema.
   digests so the host can join actual observations. A rejection can carry
   parsed identity and RX time. These are observed header fields.
   Compare these records with receiver evidence before assessing a case.
+- The sender emits an ACK timeout with the outstanding DATA sequence and
+  attempt number whenever its ACK receive window expires. The multi-target
+  trial requires a distinct observed receiver drop and sender timeout for
+  every allowed attempt, followed by a verified intact control.
 - Cancel, ownership loss and session close disable hooks and clear retained
   bytes. A prepared hook that expires without application is marked missed.
   Control cases, echo and encoded content can still run on the lab build.

@@ -21,8 +21,11 @@ evidence. A missing fault observation yields an inconclusive result.
 - PKT-03 uses 321 useful bytes and 160-byte fragments. It compares
   no ACK and stop-and-wait with zero, one or two retries. It observes
   first-attempt loss and suppresses an ACK for policies that can retry.
-  Exhausting every allowed attempt with one or more retries remains
-  blocked pending a multi-target injection path.
+  C4 schedules one drop for every allowed attempt in the same bounded
+  trial. The sender reports each ACK receive timeout. The testbed
+  verifies the exact reused frame digest, distinct CRC-valid receiver
+  arrivals, no partial delivery, the missing fragment suffix when the
+  sender stops, and a fresh intact recovery control.
 
 Select a matrix in **Experiments**. For a quick SEC-02 run select C1
 or C2 and one direction. Preview requires an owned compatible pair
@@ -31,3 +34,11 @@ the matching arrival, rejection, fresh intact control comparisons and
 cleanup. Inspect the saved case and follow its lab trial link to the
 individual radio records. Standard builds still run intact packet
 cases. A lab result only establishes the recorded fixture conditions.
+
+On a bench, select PKT-03 C4 with matching lab images. Use default
+repetitions for both directions. Inspect the selected third workload
+under each link policy. Stop-and-wait should retain one, two or three
+confirmed attempts and matching ACK timeout events. The no-ACK run
+continues after the targeted drop and reports the one missing index.
+The attempt time is evaluated on the sender's local clock from its
+first TX command through the final observed ACK timeout.

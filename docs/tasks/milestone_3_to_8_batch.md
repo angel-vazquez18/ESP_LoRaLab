@@ -784,7 +784,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | IF-01–03 | Experiments matrix and `integration-matrix` | UART, supervised active/paused restart and campaign navigation cases |
 | RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, complete performance measurements and drift assessment |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
-| PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts, invalid ACK and all-attempt exhaustion |
+| PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle and paired known-data matrix | Instrumented audio stages, device-side limits and induced recovery-band checks |
 | VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
@@ -856,3 +856,11 @@ The supported IF-01 USB matrix now includes stale-boot rejection after
 the testbed observes the same device on two boots. Native regression
 exercised all 15 C5 cases. UART and physical transport qualification
 remain open.
+
+PKT-03 C4 targets all allowed attempts, records ACK receive timeouts and
+checks bounded failure, exact missing ranges and fresh controls. Native
+tests include all reply policies and an incomplete-observation check.
+
+The complete native IF-01 USB schedule passed all 146 cases on both
+roles, retaining 1,202 evidence rows and a hash-verified archive.
+The preceding full repository check passed all 1,166 tests.
