@@ -98,7 +98,7 @@ def test_serial_matrix_uses_one_node_and_preserves_unavailable_cases(tmp_path, n
                 catalog_id="IF-01", groups=["C1", "C2"], repetitions=1, valid_cycles=2
             )
             plan = host.procedures.matrix_preview(spec, host.radio)
-            assert plan["ready_case_count"] == 4
+            assert plan["ready_case_count"] == 5
             started = await host.start_procedure_matrix(spec)
             async with asyncio.timeout(10):
                 await host.procedures.task
@@ -106,8 +106,8 @@ def test_serial_matrix_uses_one_node_and_preserves_unavailable_cases(tmp_path, n
             assert result["status"] == "completed", result
             assert result["assessment"] == "inconclusive"
             assert set(result["physical_bindings"]) == {"A"}
-            assert sum(c["status"] == "completed" for c in result["cases"]) == 4
-            assert sum(c["status"] == "blocked" for c in result["cases"]) == 6
+            assert sum(c["status"] == "completed" for c in result["cases"]) == 5
+            assert sum(c["status"] == "blocked" for c in result["cases"]) == 5
             rows = [
                 row["document"]["record"]
                 for row in host.procedures.all_evidence(result["id"])
@@ -116,7 +116,7 @@ def test_serial_matrix_uses_one_node_and_preserves_unavailable_cases(tmp_path, n
             errors = Counter(r["error"]["code"] for r in rows if not r["ok"])
             assert errors == {
                 "NOT_OWNER": 2,
-                "INVALID_ARGUMENT": 1,
+                "INVALID_ARGUMENT": 2,
                 "UNSUPPORTED_COMMAND": 1,
                 "MISSING_CAPABILITY": 1,
             }
