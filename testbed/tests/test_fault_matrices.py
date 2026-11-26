@@ -122,3 +122,78 @@ def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
 
     monkeypatch.setattr(fault_matrices, "PACKET_FRAGMENT_SIZES", (160,))
     asyncio.run(scenario())
+
+
+def test_retry_exhaustion_accounts_for_every_attempt_timeout_and_missing_fragment(
+    tmp_path, native_library
+):
+    from copy import deepcopy
+
+    from lora_testbed import fault_accounting
+    from lora_testbed.experiments_v2 import known_data
+
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library, lab=True)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="PKT-03",
+                groups=["C4"],
+                directions=["B_TO_A"],
+                messages_per_case=1,
+                repetitions=1,
+            )
+            preview = host.procedures.matrix_preview(spec, host.radio)
+            assert preview["ready_case_count"] == 4
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(75):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            assert not saved["hardware_validated"]
+            for case in saved["cases"]:
+                [identifier] = case["trial_ids"]
+                trial = host.lab_trials.get(identifier)
+                assert trial["outcome"] == "pass" and case["cleanup_verified"]
+                fault = host.radio.get(trial["children"]["fault"])
+                assert fault["summaries"]["A"]["delivered_messages"] == 0
+                assert all(
+                    host.radio.get(trial["children"][name])["verification"]["bytes_equal"]
+                    for name in ("before", "after")
+                )
+                if case["ack_mode"] == "none":
+                    assert fault["missing_evidence"]["missing_indexes"] == [1]
+                    continue
+                assert fault["missing_evidence"]["missing_indexes"] == [1, 2]
+                targets = fault["lab"]["exhaustion_targets"]
+                count = 1 + case["max_retries"]
+                assert len(targets) == fault["lab"]["report"]["count"] == count
+                assert [entry["attempt_index"] for entry in targets] == list(range(1, count + 1))
+                assert len({entry["injection_id"] for entry in targets}) == count
+                assert {entry["state"] for entry in fault["lab"]["report"]["entries"]} == {
+                    "applied"
+                }
+                seq = fault["lab"]["report"]["entries"][0]["target_frame_seq"]
+                acks = [
+                    event
+                    for event in fault["events"]
+                    if event["name"] == "ack.result" and event["data"]["acked_frame_seq"] == seq
+                ]
+                assert [event["data"]["status"] for event in acks] == ["timeout"] * count
+                assert [event["data"]["attempt_index"] for event in acks] == list(
+                    range(1, count + 1)
+                )
+                expected = known_data(spec.seed, 1, 321)
+                incomplete = deepcopy(fault)
+                incomplete["events"].remove(acks[-1])
+                assert fault_accounting.assess(incomplete, expected)["outcome"] == "inconclusive"
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
