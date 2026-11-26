@@ -218,6 +218,13 @@ class EchoRadioRunRequest(RadioRunRequest):
         )
 
 
+class EchoMissingReplyCheck(EchoRadioRunRequest):
+    """Internal TIME-01 case with a deliberately stopped responder."""
+
+    message_bytes: Literal[64] = 64
+    security: Literal["none"] = "none"
+
+
 class EncodedMessagePlan(KnownDataPlan):
     spec: run_protocol_v2.EncodedSourceSpec
 
@@ -1038,17 +1045,31 @@ class RadioRuns:
                     return
                 r["stage"] = "arming"
                 self.save(r)
-                armed = monotonic()  # Conservative: include the receiver arm request/reply.
-                ready = await self.command(
-                    r,
-                    r["receiver"],
-                    "run.arm",
-                    {"config_revision": r["applied_settings"][r["receiver"]]["config_revision"]},
-                )
-                if ready["receiver_ready"] is not True or ready["role"] != "receiver":
-                    raise ValueError("Receiver did not confirm readiness")
-                if (monotonic() - armed) * 1_000_000 >= run_protocol_v2.ARM_WINDOW_US:
-                    raise ValueError("Receiver arm window expired before sender arm")
+                missing_reply = isinstance(request, EchoMissingReplyCheck)
+                if missing_reply:
+                    receiver = r["receiver"]
+                    stop = await self.command(r, receiver, "run.stop", {"reason": "operator"})
+                    idle = await self.command(r, receiver, "status.get")
+                    if idle["state"] != "idle" or idle["run_id"] is not None:
+                        raise ValueError("The controlled echo responder did not stop")
+                    r["echo_timeout_control"] = {"responder_stop": stop, "responder_idle": idle}
+
+                armed = monotonic()  # Include responder arm when the case requests a reply.
+                if not missing_reply:
+                    ready = await self.command(
+                        r,
+                        r["receiver"],
+                        "run.arm",
+                        {
+                            "config_revision": r["applied_settings"][r["receiver"]][
+                                "config_revision"
+                            ]
+                        },
+                    )
+                    if ready["receiver_ready"] is not True or ready["role"] != "receiver":
+                        raise ValueError("Receiver did not confirm readiness")
+                    if (monotonic() - armed) * 1_000_000 >= run_protocol_v2.ARM_WINDOW_US:
+                        raise ValueError("Receiver arm window expired before sender arm")
                 sender_ready = await self.command(
                     r,
                     r["sender"],
@@ -1060,12 +1081,15 @@ class RadioRuns:
                 if (monotonic() - armed) * 1_000_000 >= run_protocol_v2.ARM_WINDOW_US:
                     raise ValueError("Receiver arm window expired before sender start")
                 r["stage"] = "transmitting"
-                await self.command(
+                started = await self.command(
                     r,
                     r["sender"],
                     "run.start",
                     {"config_revision": r["applied_settings"][r["sender"]]["config_revision"]},
                 )
+                if missing_reply:
+                    r["echo_timeout_control"]["requester_start"] = started
+                    r["echo_timeout_control"]["drain_us"] = budget["drain_us"]
                 r["arm_to_start_reply_ms"] = (monotonic() - armed) * 1000
                 if r["arm_to_start_reply_ms"] >= run_protocol_v2.ARM_WINDOW_US / 1000:
                     raise ValueError("Sender start reply exceeded the receiver arm window")
@@ -1107,6 +1131,8 @@ class RadioRuns:
                         or (isinstance(request, SweepRadioRunRequest) and role == r["receiver"])
                         else ("completed",)
                     )
+                    if missing_reply:
+                        allowed_stops = ("timeout",) if role == r["sender"] else ("operator",)
                     if r["summaries"][role]["stop_reason"] not in allowed_stops:
                         raise ValueError(
                             f"Node {role} stopped with {r['summaries'][role]['stop_reason']}"

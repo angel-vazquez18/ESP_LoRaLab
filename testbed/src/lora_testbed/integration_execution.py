@@ -151,7 +151,9 @@ class IntegrationExecution:
             elif case["driver"] == "echo_batch":
                 blockers = radio.preflight(timed_series.echo_request(spec, case))["blockers"]
             elif case["driver"] == "echo_timeout_fixture":
-                blockers = ["A controlled missing-reply fixture is required"]
+                blockers = radio.preflight(timed_series.echo_timeout_request(spec, case))[
+                    "blockers"
+                ]
             elif case["driver"] == "local_crypto":
                 blockers = timed_series.crypto_blockers(self.ledger.nodes[case["role"]])
             elif case["driver"] == "serial_matrix":
@@ -677,6 +679,41 @@ class IntegrationExecution:
                     "code": "requester_local_exact_echo_distribution",
                     "outcome": "pass" if complete else "inconclusive",
                 }
+            ],
+        )
+
+    async def matrix_echo_timeout(self, run, case, spec, radio, adapter):
+        control = timed_series.echo_request(spec, case)
+        trial = timed_series.echo_timeout_request(spec, case)
+        before = await self.matrix_radio_child(
+            run, case, control, radio, adapter, "intact_echo_before"
+        )
+        missing = await self.matrix_radio_child(
+            run, case, trial, radio, adapter, "responder_stopped"
+        )
+        after = await self.matrix_radio_child(
+            run, case, control, radio, adapter, "intact_echo_after"
+        )
+        report = timed_series.controlled_timeout_report(missing)
+        recovered = all(
+            child["status"] == "completed" and child["timing"]["n"] == 1
+            for child in (before, after)
+        )
+        self.ledger.append(run["id"], case["id"], {"controlled_echo_timeout": report})
+        case.update(
+            status="completed",
+            assessment="pass" if report["verified"] and recovered else "inconclusive",
+            cleanup_verified=True,
+            measurements={**report, "matched_controls": recovered},
+            assertions=[
+                {
+                    "code": "bounded_requester_timeout_keeps_rtt_null",
+                    "outcome": "pass" if report["verified"] else "inconclusive",
+                },
+                {
+                    "code": "exact_rtt_before_and_after",
+                    "outcome": "pass" if recovered else "inconclusive",
+                },
             ],
         )
 
@@ -1568,6 +1605,8 @@ class IntegrationExecution:
                     await self.matrix_security_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "echo_batch":
                     await self.matrix_echo_case(run, case, spec, radio, adapter)
+                elif case["driver"] == "echo_timeout_fixture":
+                    await self.matrix_echo_timeout(run, case, spec, radio, adapter)
                 elif case["driver"] == "local_crypto":
                     await self.matrix_crypto_case(run, case, host)
                 elif case["driver"] == "resource_refusal":
