@@ -121,3 +121,55 @@ def test_sweep_applies_each_value_without_changing_other_fields(
             await host.close()
 
     asyncio.run(scenario())
+
+
+def test_sweep_retains_bounded_non_delivery_with_complete_evidence(tmp_path, native_library):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library, drop="data")
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="RF-02",
+                groups=["C2"],
+                directions=["A_TO_B"],
+                repetitions=1,
+                messages_per_case=1,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(55):
+                await host.procedures.task
+            result = host.procedures.get(started["id"])
+            assert result["assessment"] == "pass" and len(result["cases"]) == 3, result
+            first, *intact = result["cases"]
+            report = first["measurements"]
+            assert report["complete_observation_cohort"]
+            assert report["observed_non_deliveries"] == 1 and report["unresolved_messages"] == 0
+            assert report["unique_original_delivery_ratio"] == 0
+            assert report["useful_bits_per_active_tx_second"] == 0
+            assert report["signal_sample_count"] == 0 and report["rssi_dbm_median"] is None
+            assert all(c["measurements"]["unique_original_delivery_ratio"] == 1 for c in intact)
+            [identifier] = first["run_ids"]
+            failed_delivery = host.radio.get(identifier)
+            assert failed_delivery["verification"] is None
+            assert failed_delivery["accounting"]["observed_delivery_failure"]
+            assert failed_delivery["missing_evidence"]["missing_indexes"] == [0]
+            assert failed_delivery["cleanup"]["confirmed"]
+            assert not result["hardware_validated"]
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_sweep_report_keeps_unresolved_observations_out_of_delivery_and_goodput():
+    report = rf_sweeps.report([], 1)
+    assert report["unresolved_messages"] == 1
+    assert report["observed_non_deliveries"] == 0
+    assert report["unique_original_delivery_ratio"] is None
+    assert report["useful_bits_per_active_tx_second"] is None
