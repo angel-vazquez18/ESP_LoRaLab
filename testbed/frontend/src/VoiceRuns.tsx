@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { AudioLines, Play, Square } from "lucide-react";
 import type { HardwareNode } from "./HardwareBench";
 import type { Request } from "./NodeArtifacts";
+import VoiceReview from "./VoiceReview";
+import VoiceWaveform from "./VoiceWaveform";
 import "./voice-runs.css";
 
 type Listening = { heard: string; notes: string; recorded_at: string | null };
@@ -220,24 +222,10 @@ function ClipFile({
           <code>SHA-256 {file.sha256}</code>
           {file.pcm && (
             <>
-              <svg
-                className="audio-waveform"
-                viewBox="0 0 640 120"
-                role="img"
-                aria-label={`${labels[kind]} waveform`}
-              >
-                <line x1="0" y1="60" x2="640" y2="60" />
-                {file.pcm.waveform.map((bin, i, bins) => (
-                  <line
-                    key={i}
-                    className="audio-wave-bin"
-                    x1={((i + 0.5) * 640) / bins.length}
-                    x2={((i + 0.5) * 640) / bins.length}
-                    y1={60 - bin.max * 55}
-                    y2={60 - bin.min * 55}
-                  />
-                ))}
-              </svg>
+              <VoiceWaveform
+                bins={file.pcm.waveform}
+                label={`${labels[kind]} waveform`}
+              />
               <audio
                 key={`${id}:${kind}`}
                 controls
@@ -828,6 +816,16 @@ export default function VoiceRuns({
           </div>
         )}
       </div>
+      <VoiceReview
+        request={request}
+        disabled={pending || !online}
+        candidates={state.runs.filter(
+          (run) =>
+            run.status === "completed" &&
+            run.delivery_verified &&
+            run.playback_completed,
+        )}
+      />
     </section>
   );
 }
