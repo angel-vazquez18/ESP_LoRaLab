@@ -39,3 +39,21 @@ uv run --project testbed lora-testbed integration-matrix model.json
 For C2 plan and run the selected directions against two compatible radios.
 The native fixture covers one unprotected and one protected frame and
 confirms the saved evidence path. Physical markers, tolerance and the complete bench measurement set remain open.
+
+
+## Compare saved predictions and observations
+
+Open **Inspect cases** on a saved C2 or C3 procedure. The comparison
+offers predicted versus observed duration and signed residuals.
+Filter by configuration and protection. Isolated frames use predicted
+airtime and observed TX command-to-done. Message completion uses the
+nominal modeled interval without drain and the observed sender interval
+through its last TX or accepted ACK. The expanded run budget and actual
+retry/ACK evidence remain available separately.
+
+The procedure ZIP includes `model-comparison.csv`, one row per
+linked valid observation with its exact microsecond values, case ID,
+child run ID and capture basis. The archive manifest hashes that CSV.
+C1 saves the arithmetic vectors in its ordinary evidence without
+inventing observed RF points. Instrumented agreement needs an
+independent marker trace and a predeclared tolerance.

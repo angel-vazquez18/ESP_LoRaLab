@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Airtime residual review
+
+MODEL-01 saved frame and message observations now support a separate
+predicted/observed and residual view with configuration filtering and a
+hashed CSV. The report preserves the two capture bases and leaves
+instrumented agreement pending. See [airtime model review](model_series.md).
+
 ## November 25 — Sustained encoded voice runner
 
 VOICE-03 now uses the common radio lifecycle to run the finite producer

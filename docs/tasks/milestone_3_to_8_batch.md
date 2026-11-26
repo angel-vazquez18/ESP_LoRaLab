@@ -788,7 +788,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | Local and paired references, fixed-rate source matrix and `voice-review` | Attended microphone/error cases, calibrated delivery window, listening study and plots |
-| MODEL-01 | Independent vectors and observed frame/message matrices | Instrumented airtime/tolerance, residual plots and full bench study |
+| MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
 | OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
 
 Keep fixture results and physical qualification records separate. Grouped
@@ -919,3 +919,8 @@ archive collected before session close. The native reference case verified
 cleanup. The uncalibrated in-window delivery rate remains unavailable.
 
 The full repository check through matched RF timing passed 1,180 tests.
+
+MODEL-01 review now plots matched observed values and signed residuals
+by configuration. Isolated command-to-done observations and message
+completion retain separate capture bases. The per-observation CSV is
+fingerprinted in the procedure archive.

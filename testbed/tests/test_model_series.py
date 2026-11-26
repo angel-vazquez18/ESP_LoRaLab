@@ -1,6 +1,11 @@
 """Check declared numerical vectors and link them to real native TX evidence."""
 
 import asyncio
+import csv
+import hashlib
+import io
+import json
+import zipfile
 from copy import deepcopy
 
 from test_multi_fragment_radio import Pair
@@ -45,6 +50,7 @@ def test_numerical_comparison_rejects_a_model_disagreement(tmp_path, monkeypatch
             assert saved["mode"] == "numerical" and saved["physical_bindings"] == {}
             assert not saved["hardware_validated"]
             assert all(case["assessment"] == "fail" for case in saved["cases"])
+            assert "model_comparison" not in saved
         finally:
             await host.close()
 
@@ -86,6 +92,17 @@ def test_isolated_frame_matrix_retains_proxy_residuals_instead_of_on_air_claim(
                 assert case["measurements"]["residual_us_median"] is not None
                 [identifier] = case["run_ids"]
                 assert host.radio.get(identifier)["verification"]["bytes_equal"]
+            points = saved["model_comparison"]["points"]
+            assert len(points) == 2
+            for point in points:
+                assert point["basis"] == "isolated_frame" and point["direction"] == "A_TO_B"
+                assert point["residual_us"] == point["measured_us"] - point["predicted_us"]
+            with zipfile.ZipFile(io.BytesIO(host.procedures.bundle(saved))) as archive:
+                table = archive.read("model-comparison.csv")
+                manifest = json.loads(archive.read("manifest.json"))["sha256"]
+            rows = list(csv.DictReader(io.StringIO(table.decode())))
+            assert len(rows) == 2 and {row["frame_bytes"] for row in rows} == {"104", "120"}
+            assert manifest["model-comparison.csv"] == hashlib.sha256(table).hexdigest()
         finally:
             if bridge:
                 bridge.cancel()
@@ -131,6 +148,18 @@ def test_message_model_reconciles_no_ack_ack_and_one_observed_retry(tmp_path, na
             assert evidence[-1]["controlled_retry_checks"]
             assert all(row["within_expanded_budget"] for row in evidence)
             assert not any(row["physical_agreement_assessed"] for row in evidence)
+            points = saved["model_comparison"]["points"]
+            assert {point["configuration"] for point in points} == {
+                "bytes_64_none",
+                "bytes_64_ack",
+                "bytes_64_controlled_retry",
+            }
+            assert all(point["basis"] == "sender_completion" for point in points)
+            assert all(point["security"] == "aes128_gcm" for point in points)
+            for point, record in zip(points, evidence, strict=True):
+                assert point["predicted_us"] == record["modeled_nominal_sender_us"]
+                assert point["measured_us"] == record["observed_sender_completion_us"]
+                assert point["expanded_run_budget_us"] == record["modeled_worst_case_run_us"]
         finally:
             if bridge:
                 bridge.cancel()
