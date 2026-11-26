@@ -230,17 +230,42 @@ class RadioRuns:
         for row in store.db.execute("SELECT document FROM radio_runs_v1").fetchall():
             record = json.loads(row[0])
             if record["status"] not in TERMINAL:
-                record.update(
-                    status="interrupted",
-                    stage="finished",
-                    finished_at=utc_now(),
-                    error="Host restarted; no automatic radio resume",
-                    cleanup={
-                        "confirmed": False,
-                        "reason": "Previous ownership/stop is unconfirmed",
-                    },
-                )
-                self.save(record)
+                self.recover_interrupted(record)
+
+    def recover_interrupted(self, record):
+        record.update(
+            status="interrupted",
+            failure_stage=record.get("failure_stage") or record["stage"],
+            stage="finished",
+            finished_at=utc_now(),
+            reason_code="host_restart",
+            error=record.get("error") or "Host restarted; no automatic radio resume",
+            cleanup={
+                "confirmed": False,
+                "reason": "Previous ownership/stop is unconfirmed",
+            },
+        )
+        # Fingerprint the bytes retained after the crash. Delivery and cleanup
+        # still require their own evidence from the original run.
+        path = self.directory / f"{record['id']}.ndjson"
+        try:
+            if "wire" not in record.get("saved_files", {}) and path.is_file():
+                with path.open("rb") as stream:
+                    size = path.stat().st_size
+                    if size > MAX_WIRE_BYTES:
+                        raise ValueError("Interrupted trace exceeds the radio evidence limit")
+                    checksum = hashlib.file_digest(stream, "sha256").hexdigest()
+                record.setdefault("saved_files", {})["wire"] = {
+                    "length_bytes": size,
+                    "sha256": checksum,
+                    "fingerprint_scope": "retained_after_host_restart",
+                }
+                record.update(wire_bytes=size, wire_sha256=checksum)
+        except (OSError, ValueError):
+            record.setdefault("saved_file_errors", {})["wire"] = (
+                "Interrupted trace could not be fingerprinted within the evidence limit"
+            )
+        self.save(record)
 
     @property
     def busy(self):

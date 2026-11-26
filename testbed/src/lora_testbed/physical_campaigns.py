@@ -56,6 +56,12 @@ class PhysicalCampaigns:
             if record["status"] in TERMINAL:
                 continue
             cases = self.get(record["id"])["cases"]
+            record["restart_checkpoint"] = {
+                "status": record["status"],
+                "stage": record["stage"],
+                "active_case_id": record["active_case_id"],
+                "last_saved_at": record["updated_at"],
+            }
             record.update(
                 status="interrupted",
                 stage="finished",
