@@ -1,7 +1,9 @@
 """Use the firmware transport declaration to select the right IF-01 cases."""
 
 import asyncio
+import io
 import json
+import zipfile
 
 from test_node_control_native import NativeSerial
 from test_node_control_native import native_library as native_library
@@ -60,6 +62,11 @@ def test_if01_selects_firmware_transport_and_retains_unmatched_rows(tmp_path, na
             }
             assert all(case["assessment"] == "pass" for case in record["cases"] if case["ready"])
             assert not record["hardware_validated"]
+            assert record["connection_transports"] == {"A": "native_usb", "B": "uart"}
+            with zipfile.ZipFile(io.BytesIO(host.procedures.bundle(record))) as evidence:
+                provenance = json.loads(evidence.read("provenance.json"))
+            assert provenance["connection_transports"] == record["connection_transports"]
+            assert provenance["transport"] == "UART0 115200 8N1 and native USB Serial/JTAG"
         finally:
             await host.close()
 
