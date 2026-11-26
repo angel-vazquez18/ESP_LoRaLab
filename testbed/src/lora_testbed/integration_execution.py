@@ -8,6 +8,7 @@ from uuid import uuid4
 from . import (
     content_series,
     crypto_benchmark_v2,
+    fault_accounting,
     fault_matrices,
     local_voice,
     memory_matrix,
@@ -22,6 +23,7 @@ from . import (
     v2,
     voice_matrix,
 )
+from .experiments_v2 import known_data
 from .integration_matrices import campaign_intent, compile_matrix, link_request
 from .nodes import NodeSession
 from .paths import REPOSITORY_ROOT
@@ -131,8 +133,13 @@ class IntegrationExecution:
                     if limit is None
                     else radio.preflight(RadioRunRequest(direction=case["direction"]))["blockers"]
                 )
-            elif case["driver"] == "memory_unavailable":
-                blockers = [memory_matrix.BLOCKERS[case["group"]]]
+            elif case["driver"] == "memory_recovery":
+                blockers = [
+                    blocker
+                    for role in ("A", "B")
+                    for blocker in memory_matrix.role_blockers(self.ledger.nodes[role], role)
+                ]
+                blockers.extend(radio.preflight(memory_matrix.recovery_request(case))["blockers"])
             elif case["driver"] == "memory_idle":
                 role = case["role"]
                 blockers = memory_matrix.role_blockers(self.ledger.nodes[role], role)
@@ -1256,18 +1263,30 @@ class IntegrationExecution:
 
     async def matrix_memory_case(self, run, case, spec, host):
         adapter, observations = host.adapter, host.observations
-        is_link = case["driver"] == "memory_link"
-        request = memory_matrix.link_request(spec, case) if is_link else None
-        roles = ("A", "B") if is_link else (case["role"],)
+        recovery = case["driver"] == "memory_recovery"
+        request = (
+            memory_matrix.recovery_request(case)
+            if recovery
+            else memory_matrix.link_request(spec, case)
+            if case["driver"] == "memory_link"
+            else None
+        )
+        roles = ("A", "B") if request else (case["role"],)
         window = case["observation_ms"]
-        duration = request.timeout_ms + window + 20000 if is_link else window
+        duration = request.timeout_ms + window + 20000 if request else window
         claims, reports, errors = {}, {}, {}
+        cleanup_uptimes = {}
         result = None
 
         def claim(role, started):
             claims[role] = started["observation_id"]
             case["observation_ids"] = dict(claims)
             self.ledger.save(run)
+
+        if recovery:
+            self.ledger.append(
+                run["id"], case["id"], {"declared_recovery_band_bytes": case["recovery_band_bytes"]}
+            )
 
         try:
             for role in roles:
@@ -1279,10 +1298,23 @@ class IntegrationExecution:
                 except asyncio.CancelledError:
                     claim(role, await started)
                     raise
-            if is_link:
+            if request:
+                if recovery:
+                    await asyncio.sleep(2 * memory_observation_v2.PERIOD_US / 1_000_000)
                 result = await self.matrix_radio_child(
-                    run, case, request, host.radio, adapter, "sampled_known_data"
+                    run,
+                    case,
+                    request,
+                    host.radio,
+                    adapter,
+                    case["variant"] if recovery else "sampled_known_data",
                 )
+                if recovery:
+                    for role in roles:
+                        status = await adapter.request(run["physical_bindings"][role], "status.get")
+                        if status["state"] != "idle" or status["run_id"] is not None:
+                            raise ValueError(f"Node {role} is not idle after controlled cleanup")
+                        cleanup_uptimes[role] = status["uptime_us"]
                 await asyncio.sleep(window / 1000)
             else:
                 await memory_matrix.wait_for_idle_observation(
@@ -1293,9 +1325,17 @@ class IntegrationExecution:
                 try:
                     adapter.current(run["physical_bindings"][role])
                     record = await observations.collect_memory(role, identifier, stop=True)
-                    report = memory_matrix.summary(
-                        record, window, case["run_ids"][0] if case["run_ids"] else None
-                    )
+                    linked = case["run_ids"][0] if case["run_ids"] else None
+                    if recovery and linked:
+                        report = memory_matrix.recovery_summary(
+                            record,
+                            window,
+                            linked,
+                            case["recovery_band_bytes"],
+                            cleanup_uptimes.get(role),
+                        )
+                    else:
+                        report = memory_matrix.summary(record, window, linked)
                     report["cleanup_confirmed"] = not record["evidence"]["memory"]["status"][
                         "active"
                     ]
@@ -1310,8 +1350,11 @@ class IntegrationExecution:
             )
         if not case["cleanup_verified"]:
             raise ValueError("Memory observation cleanup or readback is unconfirmed")
+        if recovery:
+            await self.finish_memory_recovery(run, case, host, request, result, reports)
+            return
         passed = all(report["passed"] for report in reports.values()) and (
-            not is_link or self.verified_link_child(result)
+            not request or self.verified_link_child(result)
         )
         case.update(
             status="completed",
@@ -1319,10 +1362,55 @@ class IntegrationExecution:
             measurements=reports,
             assertions=[
                 {
-                    "code": "linked_stage_samples_and_idle_recovery" if is_link else "idle_samples",
+                    "code": "linked_stage_samples_and_idle_recovery" if request else "idle_samples",
                     "outcome": "pass" if passed else "inconclusive",
                 }
             ],
+        )
+
+    async def finish_memory_recovery(self, run, case, host, request, child, reports):
+        if case["variant"] == "cancel_and_recover":
+            control = child.get("prepared_cancellation")
+            if control:
+                case["controlled_cancel"] = control
+                self.ledger.append(run["id"], case["id"], control)
+            forced = bool(control and set(control["stop_replies"]) == {"A", "B"})
+            disruption = "pass" if forced and child["status"] == "cancelled" else "inconclusive"
+        else:
+            expected = known_data(request.source_seed, 1, request.message_bytes)
+            fault = fault_accounting.assess(child, expected)
+            self.ledger.append(run["id"], case["id"], {"failed_workload_evidence": fault})
+            disruption = fault["outcome"]
+
+        recovery = await self.matrix_radio_child(
+            run,
+            case,
+            RadioRunRequest(direction=request.direction),
+            host.radio,
+            host.adapter,
+            "intact_after_memory_recovery",
+        )
+        complete = all(report.get("recovery") is not None for report in reports.values())
+        recovered = (
+            all(report["recovery"]["passed"] for report in reports.values()) if complete else False
+        )
+        band = "pass" if recovered else "fail" if complete else "inconclusive"
+        delivery = "pass" if self.verified_link_child(recovery) else "inconclusive"
+        assertions = [
+            {"code": "controlled_workload_interruption", "outcome": disruption},
+            {"code": "sampled_idle_memory_within_declared_band", "outcome": band},
+            {"code": "fresh_small_known_data_delivered", "outcome": delivery},
+        ]
+        outcomes = {row["outcome"] for row in assertions}
+        case.update(
+            status="completed",
+            assessment="fail"
+            if "fail" in outcomes
+            else "pass"
+            if outcomes == {"pass"}
+            else "inconclusive",
+            measurements=reports,
+            assertions=assertions,
         )
 
     async def matrix_campaign_case(self, run, case, spec, host):
@@ -1538,7 +1626,7 @@ class IntegrationExecution:
                     await self.matrix_paired_memory_audio(run, case, host)
                 elif case["driver"] == "memory_audio_local":
                     await self.matrix_local_memory_audio(run, case, host)
-                elif case["driver"] in ("memory_idle", "memory_link"):
+                elif case["driver"] in ("memory_idle", "memory_link", "memory_recovery"):
                     await self.matrix_memory_case(run, case, spec, host)
                 elif case["driver"] in ("model_reference", "model_frame"):
                     await self.matrix_model_case(run, case, spec, radio, adapter)

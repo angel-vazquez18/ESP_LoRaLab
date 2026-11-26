@@ -103,6 +103,13 @@ class PeerMismatchCheck(RadioRunRequest):
         return self
 
 
+class PreparedCancellationCheck(RadioRunRequest):
+    """An internal MEM-01 case that cancels valid work immediately after preparation."""
+
+    message_bytes: Literal[1200] = 1200
+    security: Literal["none"] = "none"
+
+
 class PrepareLimitCheck(RadioRunRequest):
     message_bytes: Literal[64] = 64
     security: Literal["none"] = "none"
@@ -841,6 +848,25 @@ class RadioRuns:
         )
         self.save(r)
 
+    async def cancel_prepared_workload(self, r, request):
+        prepared = {
+            event["role"]: event["event_seq"]
+            for event in r["events"]
+            if event["name"] == "run.prepared"
+        }
+        if set(prepared) != {"A", "B"}:
+            raise ValueError("Controlled cancellation requires prepared evidence from both nodes")
+        r["prepared_cancellation"] = {"prepared_events": prepared, "stop_replies": {}}
+        for role in (r["receiver"], r["sender"]):
+            result = await self.command(r, role, "run.stop", {"reason": "operator"})
+            r["prepared_cancellation"]["stop_replies"][role] = result
+        source = await self.retrieve(r, r["sender"], "source")
+        if source != known_data(request.source_seed, 1, request.message_bytes):
+            raise ValueError("Cancelled source differs from the independent recipe; retained")
+        self.register_retirement(r, r["sender"])
+        r["status"] = "cancelled"
+        r["error"] = "Controlled cancellation of prepared work"
+
     async def verify_prepare_refusal(self, r, request, spec, budget):
         caps = {
             role: node.health.capability_availability.resource_limits["execution_limits"][
@@ -1007,6 +1033,10 @@ class RadioRuns:
                         r, role, "run.prepare", {"spec": plan.spec.model_dump(), "budget": budget}
                     )
                     r["prepared"][role] = await self.prepared(r, role, accepted)
+                if isinstance(request, PreparedCancellationCheck):
+                    r["stage"] = "prepared_cancellation"
+                    await self.cancel_prepared_workload(r, request)
+                    return
                 r["stage"] = "arming"
                 self.save(r)
                 armed = monotonic()  # Conservative: include the receiver arm request/reply.

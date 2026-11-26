@@ -350,3 +350,53 @@ def test_memory_limit_reaches_firmware_and_control_recovers_in_each_direction(
             await host.close()
 
     asyncio.run(scenario())
+
+
+def test_memory_recovery_records_cancel_and_confirmed_failure_on_same_pair(
+    tmp_path, native_library
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library, lab=True)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="MEM-01",
+                groups=["C5"],
+                directions=["A_TO_B"],
+                repetitions=1,
+                memory_window_ms=1000,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(30):
+                await host.procedures.task
+            result = host.procedures.get(started["id"])
+            assert result["status"] == "completed" and result["assessment"] == "pass", result
+            cancelled, failed = result["cases"]
+            assert set(cancelled["controlled_cancel"]["prepared_events"]) == {"A", "B"}
+            stopped = host.radio.get(cancelled["run_ids"][0])
+            assert stopped["status"] == "cancelled"
+            assert stopped["cleanup"]["retired_data_artifacts"]["A"]["confirmed"]
+            assert not any(event["name"] == "tx.attempt" for event in stopped["events"])
+            injected = host.radio.get(failed["run_ids"][0])
+            assert any(
+                event["name"] == "ack.result" and event["data"]["status"] == "timeout"
+                for event in injected["events"]
+            )
+            for case in result["cases"]:
+                assert case["cleanup_verified"]
+                assert host.radio.get(case["run_ids"][1])["verification"]["length_bytes"] == 64
+                for report in case["measurements"].values():
+                    recovery = report["recovery"]
+                    assert recovery["passed"] and recovery["named_buffers_restored"]
+                    assert recovery["regions"]["internal"]["lower_bounds"]
+            assert not result["hardware_validated"]
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())

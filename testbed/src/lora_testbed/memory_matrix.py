@@ -2,8 +2,12 @@
 
 import asyncio
 import hashlib
+from uuid import uuid4
 
 from . import artifact_contract_v2, content_series, memory_observation_v2
+from .experiments_v2 import Link
+from .fault_protocol_v2 import Injection
+from .radio_runs import LabRadioRunRequest, PreparedCancellationCheck, RadioRunRequest
 from .voice_runs import VoiceReassemblyRequest, VoiceRunRequest
 
 GROUPS = {
@@ -22,16 +26,14 @@ PAIRED_AUDIO = frozenset(("reassembly", "integrated_voice"))
 ENCODED_BYTES = 1200
 
 FIXED_SIZES = (64, 160, 321, 1200, 48000)
-BLOCKERS = {
-    "C5": "A controlled cancellation/failure workload and declared recovery band are required",
-}
+RECOVERY_BAND_BYTES = {"internal": 8192, "psram": 4096}
 
 
 def cases(request, groups, limit):
     for group in groups:
         for variant in GROUPS["MEM-01"][group]:
             paired = group == "C3" and variant in PAIRED_AUDIO
-            roles = request.directions if group in ("C2", "C4") or paired else request.roles
+            roles = request.directions if group in ("C2", "C4", "C5") or paired else request.roles
             for role in roles:
                 sizes = (None,)
                 if group == "C2":
@@ -55,13 +57,16 @@ def cases(request, groups, limit):
                                     "C1": "memory_idle",
                                     "C2": "memory_link",
                                     "C4": "memory_resource_refusal",
-                                }.get(group, "memory_unavailable")
+                                    "C5": "memory_recovery",
+                                }[group]
                             ),
                             "role": role,
                             "observation_ms": request.memory_window_ms,
                         }
-                        if paired:
+                        if paired or group == "C5":
                             case["direction"] = role
+                        if group == "C5":
+                            case["recovery_band_bytes"] = RECOVERY_BAND_BYTES.copy()
                         if size is not None:
                             case.update(
                                 message_bytes=size,
@@ -88,6 +93,86 @@ def role_blockers(node, role):
 
 def link_request(spec, case):
     return content_series.run_request(spec, case, 0)
+
+
+def recovery_request(case):
+    request = RadioRunRequest(direction=case["direction"], message_bytes=1200)
+    if case["variant"] == "cancel_and_recover":
+        return PreparedCancellationCheck(**request.model_dump())
+    return LabRadioRunRequest(
+        **request.model_dump(exclude={"link", "security"}),
+        security="aes128_gcm",
+        link=Link(ack_mode="stop_wait", max_retries=0),
+        injection=Injection(
+            injection_id=str(uuid4()),
+            stage="rx_before_reassembly",
+            action="drop",
+            message_id=1,
+            fragment_index=3,
+            attempt_index=1,
+            byte_offset=None,
+            xor_mask=None,
+            block_size=None,
+        ),
+        exhaust_attempts=True,
+    )
+
+
+def recovery_summary(record, duration_ms, linked_run_id, band, cleanup_uptime_us):
+    report = summary(record, duration_ms, linked_run_id)
+    events = [row["data"] for row in record["evidence"]["memory"]["events"]]
+    tracked = [index for index, event in enumerate(events) if event["workload_id"] == linked_run_id]
+    if not report["passed"] or not tracked or tracked[0] == 0 or cleanup_uptime_us is None:
+        return {**report, "recovery": None}
+
+    baseline = events[0]  # The observation starts before an RF session exists.
+    idle = [event for event in events[tracked[-1] + 1 :] if event["taken_us"] >= cleanup_uptime_us]
+    if not idle or idle[-1]["finished_us"] - idle[0]["taken_us"] < (
+        duration_ms * 1000 - 2 * memory_observation_v2.PERIOD_US
+    ):
+        return {**report, "recovery": None}
+    regions = {}
+    within_band = True
+    for region, tolerance in band.items():
+        prior = baseline["memory"][region]
+        after = [event["memory"][region] for event in idle]
+        if prior is None and all(heap is None for heap in after):
+            regions[region] = None
+            continue
+        if prior is None or any(heap is None for heap in after):
+            return {**report, "recovery": None}
+        fields = ("free_bytes", "largest_free_bytes")
+        floor = {key: max(0, prior[key] - tolerance) for key in fields}
+        observed = {key: min(heap[key] for heap in after) for key in fields}
+        regions[region] = {"baseline": prior, "lower_bounds": floor, "observed_min": observed}
+        within_band &= all(observed[key] >= floor[key] for key in fields)
+
+    def inventory(event):
+        return {
+            (item["name"], item["region"], item["requested_bytes"])
+            for item in event["known_buffers"]
+        }
+
+    buffers_restored = all(inventory(event) == inventory(baseline) for event in idle)
+    failures_unchanged = all(
+        event["memory"]["allocation_failures"] == baseline["memory"]["allocation_failures"]
+        for event in idle
+    )
+    return {
+        **report,
+        "recovery": {
+            "baseline_sample_index": baseline["sample_index"],
+            "cleanup_confirmed_uptime_us": cleanup_uptime_us,
+            "first_idle_sample_index": idle[0]["sample_index"],
+            "last_idle_sample_index": idle[-1]["sample_index"],
+            "declared_tolerance_bytes": band,
+            "regions": regions,
+            "heap_within_band": within_band,
+            "named_buffers_restored": buffers_restored,
+            "allocation_failures_unchanged": failures_unchanged,
+            "passed": within_band and buffers_restored and failures_unchanged,
+        },
+    }
 
 
 async def wait_for_idle_observation(adapter, binding, observation_id, duration_ms):
