@@ -133,6 +133,8 @@ class IntegrationExecution:
                 if case["variant"] not in {
                     "valid_control_cycles",
                     "configuration_unchanged",
+                    "competing_claim",
+                    "lease_recovery",
                     *SERIAL_ERROR_CASES,
                     *serial_framing.VARIANTS,
                 }:
@@ -301,6 +303,12 @@ class IntegrationExecution:
                         "outcome": outcome,
                     }
                 )
+            elif variant == "competing_claim":
+                await adapter.request(binding, "control.keepalive", on_record=record)
+                adapter.current(binding)
+                await node.exercise_competing_claim(record)
+            elif variant == "lease_recovery":
+                await node.exercise_lease_recovery(record)
             elif variant == "valid_control_cycles":
                 for _ in range(case["cycles"]):
                     adapter.current(binding)

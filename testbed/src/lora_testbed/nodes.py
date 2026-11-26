@@ -782,6 +782,72 @@ class NodeSession:
                     future.cancel()
         return replies
 
+    async def exercise_competing_claim(self, on_record):
+        async with self.command_lock:
+            command = self._next_command("control.claim", {"node_role": self.role}).model_copy(
+                update={"client_id": str(uuid4()), "command_seq": 1}
+            )
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            if reply.ok:
+                await self.close(release=False)
+                raise ValueError("The competing client unexpectedly acquired ownership")
+            if reply.error.code != "BUSY":
+                raise ValueError(f"Unexpected competing claim reply: {reply.error.code}")
+
+    async def exercise_lease_recovery(self, on_record):
+        if self.control_cycle_active or not self.identity or not self.connected:
+            raise ValueError("A connected node with exclusive control is required")
+        identity = (self.connection_id, self.identity.device_id, self.identity.boot_id)
+        options = {"on_record": on_record, "timeout": 0.75, "retries": 0}
+        self.control_cycle_active = True
+        try:
+            lease = await self.request("control.keepalive", **options)
+            expiry = run_protocol_v2.Lease.model_validate(lease).lease_expires_us
+            async with asyncio.timeout(7):
+                while self.connected:
+                    observed = self.health
+                    if observed.uptime_us >= expiry and observed.node_role is None:
+                        break
+                    await asyncio.sleep(0.025)
+                else:
+                    raise ValueError("Connection closed before lease expiry was observed")
+            if observed.state != "idle" or observed.run_id or observed.operation_id:
+                raise ValueError("Lease expiry did not leave the node idle")
+            on_record(
+                {
+                    "direction": "host_assessment",
+                    "lease_expires_us": expiry,
+                    "expired_health": observed.model_dump(),
+                    "observed_after_us": observed.uptime_us - expiry,
+                }
+            )
+            try:
+                await self.request("status.get", **options)
+            except ValueError as exc:
+                if not str(exc).startswith("NOT_OWNER:"):
+                    raise
+            else:
+                raise ValueError("The expired claim remained usable")
+            await self.request("control.claim", {"node_role": self.role}, **options)
+        except (Exception, asyncio.CancelledError):
+            await self._recover_control_after_probe(identity)
+            raise
+        finally:
+            self.control_cycle_active = False
+
+    async def _recover_control_after_probe(self, identity):
+        if (
+            self.connected
+            and self.identity
+            and (self.connection_id, self.identity.device_id, self.identity.boot_id) == identity
+        ):
+            try:
+                await self.request(
+                    "control.claim", {"node_role": self.role}, timeout=0.5, retries=0
+                )
+            except (OSError, ValueError, TimeoutError):
+                await self.close(release=False)
+
     async def exercise_control_cycle(self, on_record):
         if self.control_cycle_active or not self.identity or not self.connected:
             raise ValueError("A connected node with exclusive control is required")
@@ -817,17 +883,7 @@ class NodeSession:
             ):
                 raise ValueError("Control cycle did not restore the same healthy idle node")
         except (Exception, asyncio.CancelledError):
-            if (
-                self.connected
-                and self.identity
-                and (self.connection_id, self.identity.device_id, self.identity.boot_id) == identity
-            ):
-                try:
-                    await self.request(
-                        "control.claim", {"node_role": self.role}, timeout=0.5, retries=0
-                    )
-                except (OSError, ValueError, TimeoutError):
-                    await self.close(release=False)
+            await self._recover_control_after_probe(identity)
             raise
         finally:
             self.control_cycle_active = False
