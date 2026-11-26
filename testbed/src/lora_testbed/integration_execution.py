@@ -1370,5 +1370,7 @@ class IntegrationExecution:
                         assessment="inconclusive",
                         reason=run["reason"],
                     )
+            if spec.catalog_id in rf_sweeps.FACTORS:
+                run["sweep_comparison"] = rf_sweeps.compare_saved_cases(run)
             run.update(active_case=None, finished_at=utc_now())
             self.ledger.save(run)

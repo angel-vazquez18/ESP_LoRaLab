@@ -1,6 +1,9 @@
 """Seeded one-factor RF settings and a bounded per-child measurement projection."""
 
+import csv
 import hashlib
+import io
+from math import isfinite
 from statistics import median
 
 from .experiments_v2 import Radio, airtime_us, preview
@@ -147,3 +150,141 @@ def report(rows, requested):
         if rows
         else None,
     }
+
+
+COMPARISON_METRICS = {
+    "delivery_percent": ("Delivery (%)", "unique_original_delivery_ratio", 100),
+    "useful_bits_per_tx_second": (
+        "Useful bitrate during TX (bit/s)",
+        "useful_bits_per_active_tx_second",
+        1,
+    ),
+    "rssi_dbm": ("RSSI (dBm)", "rssi_dbm_median", 1),
+    "snr_db": ("SNR (dB)", "snr_db_median", 1),
+    "tx_duration_us": ("Observed TX duration (µs)", "tx_command_to_done_us_median", 1),
+    "airtime_us": ("Modeled airtime (µs)", "predicted_airtime_us_median", 1),
+}
+
+
+def case_measurements(case):
+    measurements = case.get("measurements") or {}
+    complete = case["status"] == "completed" and measurements.get("complete_observation_cohort")
+    values = {}
+    for metric, (_, field, ratio) in COMPARISON_METRICS.items():
+        value = measurements.get(field)
+        values[metric] = (
+            value * ratio if complete and type(value) in (int, float) and isfinite(value) else None
+        )
+    return {
+        "case_id": case["id"],
+        "repetition": case["repetition"],
+        "status": case["status"],
+        "observations": measurements.get("sample_count", 0),
+        "planned_messages": case["message_count"],
+        "values": values,
+    }
+
+
+def compare_saved_cases(run):
+    cohorts, controls = {}, {}
+    for case in run["cases"]:
+        direction = case["direction"]
+        if case["group"] == "C2":
+            cohorts.setdefault((direction, case["value"]), []).append(case_measurements(case))
+        else:
+            controls.setdefault((direction, case["repetition"]), {})[case["group"]] = case
+    comparisons = []
+    for (direction, setting), trials in sorted(cohorts.items()):
+        bands = {}
+        for key in COMPARISON_METRICS:
+            values = [trial["values"][key] for trial in trials if trial["values"][key] is not None]
+            bands[key] = (
+                {
+                    "count": len(values),
+                    "min": min(values),
+                    "median": median(values),
+                    "max": max(values),
+                }
+                if values
+                else None
+            )
+        comparisons.append(
+            {
+                "direction": direction,
+                "value": setting,
+                "repetitions": trials,
+                "ranges": bands,
+            }
+        )
+    baselines = []
+    for (direction, repetition), phases in sorted(controls.items()):
+        before, after = (phases.get(group) for group in ("C1", "C3"))
+        first = case_measurements(before) if before else None
+        last = case_measurements(after) if after else None
+        matched = (
+            bool(first and last)
+            and before["value"] == after["value"]
+            and before["requested_settings"] == after["requested_settings"]
+            and first["planned_messages"] == last["planned_messages"]
+        )
+        changes = {}
+        for key in COMPARISON_METRICS:
+            initial = first["values"][key] if first else None
+            final = last["values"][key] if last else None
+            changes[key] = {
+                "before": initial,
+                "after": final,
+                "delta": final - initial
+                if matched and initial is not None and final is not None
+                else None,
+            }
+        baselines.append(
+            {
+                "direction": direction,
+                "repetition": repetition,
+                "settings_matched": matched,
+                "before_case_id": first["case_id"] if first else None,
+                "after_case_id": last["case_id"] if last else None,
+                "changes": changes,
+            }
+        )
+    return {
+        "factor": FACTORS[run["catalog_id"]][0],
+        "security": run["request"]["rf_security"],
+        "metrics": {key: info[0] for key, info in COMPARISON_METRICS.items()},
+        "settings": comparisons,
+        "baselines": baselines,
+    }
+
+
+def comparison_csv(report):
+    output = io.StringIO(newline="")
+    writer = csv.DictWriter(
+        output,
+        fieldnames=[
+            "direction",
+            "factor",
+            "setting",
+            "security",
+            "repetition",
+            "case_id",
+            "status",
+            "observations",
+            "planned_messages",
+            *COMPARISON_METRICS,
+        ],
+    )
+    writer.writeheader()
+    for setting in report["settings"]:
+        for trial in setting["repetitions"]:
+            writer.writerow(
+                {
+                    "direction": setting["direction"],
+                    "factor": report["factor"],
+                    "setting": setting["value"],
+                    "security": report["security"],
+                    **{key: value for key, value in trial.items() if key != "values"},
+                    **trial["values"],
+                }
+            )
+    return output.getvalue()
