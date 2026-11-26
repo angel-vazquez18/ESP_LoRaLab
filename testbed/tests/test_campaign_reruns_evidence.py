@@ -342,6 +342,169 @@ def test_cold_restart_interrupts_actual_active_or_paused_campaign_without_resume
         asyncio.run(host.close())
 
 
+@pytest.mark.parametrize("state,direction", [("running", "B_TO_A"), ("paused", "A_TO_B")])
+def test_cold_restart_retains_radio_child_and_wire_after_real_campaign_checkpoint(
+    native_library, tmp_path, state, direction
+):
+    import asyncio
+    import subprocess
+    import sys
+    import textwrap
+    from pathlib import Path
+
+    from test_radio_runs import connected_bench, forward_frame
+
+    from lora_testbed.host import Host
+    from lora_testbed.physical_campaign_evidence import CampaignBundle, verify_campaign_bundle
+    from lora_testbed.radio_runs import RadioRunRequest
+
+    script = textwrap.dedent("""
+        import asyncio, hashlib, json, os, sys
+        from pathlib import Path
+        from types import SimpleNamespace
+
+        sys.path.insert(0, sys.argv[3])
+        from test_node_control_native import native_library
+        from test_radio_runs import connected_bench, forward_frame
+        from lora_testbed.campaign_plans import CampaignSpec
+
+        async def wait(get, matches):
+            async with asyncio.timeout(8):
+                while not matches(value := get()):
+                    await asyncio.sleep(.01)
+            return value
+
+        async def main():
+            build = SimpleNamespace(mktemp=lambda _: Path(sys.argv[2]))
+            lib = native_library.__wrapped__(build)
+            host, serials = await connected_bench(Path(sys.argv[1]), lib)
+            state, direction = sys.argv[4:]
+            plan = host.campaign_plans.create(CampaignSpec.model_validate({
+                "name": "RF child restart", "repetitions": 2, "directions": [direction],
+                "templates": [{"label": "known data", "case": {
+                    "kind": "known_data", "request": {"direction": direction, "timeout_ms": 15000}
+                }}],
+            }))
+            execution = await host.start_campaign(plan["id"])
+            lookup = lambda: host.physical_campaigns.get(execution["id"])
+            active = await wait(lookup, lambda r: r["cases"][0]["child"] is not None)
+            identifier = active["cases"][0]["child"]["id"]
+            child = await wait(
+                lambda: host.radio.get(identifier),
+                lambda r: r.get("arm_to_start_reply_ms") is not None,
+            )
+            if state == "paused":
+                host.physical_campaigns.pause(execution["id"])
+                await forward_frame(serials, lib, child["sender"], child["receiver"])
+                active = await wait(lookup, lambda r: r["status"] == "paused")
+                child = host.radio.get(identifier)
+            else:
+                active = lookup()
+            assert active["status"] == state
+            wire = host.radio.content(identifier, "wire").read_bytes()
+            print(json.dumps({
+                "execution_id": execution["id"], "radio_id": identifier,
+                "checkpoint": {key: active[key] for key in ("status", "stage", "active_case_id")},
+                "plan_sha256": plan["plan_sha256"], "session_id": child["session_id"],
+                "wire_sha256": hashlib.sha256(wire).hexdigest(),
+            }), flush=True)
+            os._exit(0)
+
+        asyncio.run(main())
+    """)
+    build = tmp_path / "native-build"
+    build.mkdir()
+    bench = tmp_path / "bench"
+    crash = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(bench),
+            str(build),
+            str(Path(__file__).parent),
+            state,
+            direction,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=45,
+    )
+    assert crash.returncode == 0, crash.stderr
+    captured = json.loads(crash.stdout)
+
+    async def verify():
+        host = Host(bench)
+        try:
+            identifier, radio_id = captured["execution_id"], captured["radio_id"]
+            execution = host.physical_campaigns.get(identifier)
+            child = host.radio.get(radio_id)
+            assert execution["status"] == "interrupted" and not execution["cleanup"]["confirmed"]
+            assert execution["plan_sha256"] == captured["plan_sha256"]
+            assert execution["restart_checkpoint"]["last_saved_at"]
+            for key, value in captured["checkpoint"].items():
+                assert execution["restart_checkpoint"][key] == value
+            first, second = execution["cases"]
+            assert first["child"] == {"service": "radio", "id": radio_id}
+            assert second["status"] == "skipped" and second["child"] is None
+            assert second["reason_code"] == "host_restart"
+            if state == "running":
+                assert first["status"] == child["status"] == "interrupted"
+                assert first["reason_code"] == child["reason_code"] == "host_restart"
+                assert child["failure_stage"] == "transmitting"
+                assert not child["cleanup"]["confirmed"] and not child["verification"]
+                assert (
+                    child["saved_files"]["wire"]["fingerprint_scope"]
+                    == "retained_after_host_restart"
+                )
+            else:
+                assert first["status"] == child["status"] == "completed"
+                assert child["verification"]["bytes_equal"] and child["cleanup"]["confirmed"]
+                assert "fingerprint_scope" not in child["saved_files"]["wire"]
+            assert child["wire_sha256"] == captured["wire_sha256"]
+            assert not host.busy and not any(node.connected for node in host.physical.values())
+            assert not host.radio.preflight(RadioRunRequest(direction=direction))["ready"]
+            with pytest.raises(ValueError, match="not active"):
+                host.physical_campaigns.resume(identifier)
+            bundle = CampaignBundle(host).build(identifier)
+            assert verify_campaign_bundle(bundle)["case_count"] == 2
+            with zipfile.ZipFile(io.BytesIO(bundle)) as archive:
+                trace = archive.read(f"evidence/radio/{radio_id}.ndjson")
+                assert hashlib.sha256(trace).hexdigest() == captured["wire_sha256"]
+                assert any(
+                    row.get("record", {}).get("name") == "run.start"
+                    for row in map(json.loads, trace.splitlines())
+                )
+            path = host.radio.content(radio_id, "wire")
+            path.write_bytes(trace.replace(b'"recorded_at"', b'"recorded_as"', 1))
+            with pytest.raises(ValueError, match="hash"):
+                CampaignBundle(host).build(identifier)
+            path.write_bytes(trace)
+        finally:
+            await host.close()
+
+        fresh, serials = await connected_bench(bench, native_library)
+        try:
+            request = RadioRunRequest(direction=direction)
+            assert fresh.radio.preflight(request)["ready"]
+            assert all(
+                fresh.adapter.bind(role)["connection_id"] != binding["connection_id"]
+                for role, binding in child["physical_bindings"].items()
+            )
+            run = await fresh.start_radio(request)
+            await forward_frame(serials, native_library, child["sender"], child["receiver"])
+            async with asyncio.timeout(8):
+                await fresh.radio.task
+            saved = fresh.radio.get(run["id"])
+            assert saved["verification"]["bytes_equal"]
+            assert saved["session_id"] != captured["session_id"]
+            assert fresh.physical_campaigns.get(identifier) == execution
+        finally:
+            await fresh.close()
+
+    asyncio.run(verify())
+
+
 @pytest.fixture
 def saved_bundle(native_library, tmp_path):
     with TestClient(create_app(data_dir=tmp_path)) as client:
