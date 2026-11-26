@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Saved voice listening review
+
+VOICE-04 now exposes coded playback, checked WAV waveforms, listening
+ratings and downloadable review evidence in the dashboard. Stage plots
+group node-local durations by source, direction and radio/link setting.
+See [saved voice review](voice_quality.md) for the evidence workflow.
+
 ## November 25 — Finite transfer rates
 
 Known-data and RF sweep records now keep unique accepted bytes and verified

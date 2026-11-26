@@ -7,7 +7,19 @@ retains the corresponding source/decoded role, SHA-256, WAV endpoint
 and waveform. It keeps each named stage in its original node clock
 domain and preserves unavailable one-way timing.
 
-Start with a JSON document such as
+In the Voice workspace, open **Saved listening review**, select one or
+more verified voice runs, and prepare the coded playback order. Use the
+clip selector to listen and inspect the waveform, then record the listener
+ID, score and notes. Download the review JSON to retain the submitted
+scores, clip order, code mapping and artifact hashes. Use a coded listener
+ID for shared evidence.
+
+**Stage duration distributions** retains individual samples and minimum,
+median, nearest-rank p95 and maximum by stage, direction, source and
+radio/link configuration. Each duration uses its original node clock.
+The report includes the sample device, boot, and run identities.
+
+For CLI review, start with a JSON document such as
 `{"run_ids":["a-saved-voice-run-uuid"],"seed":743}` and run:
 
 ```sh

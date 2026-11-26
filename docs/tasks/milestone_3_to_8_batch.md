@@ -787,7 +787,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
-| VOICE-01–04 | Local and paired references, fixed-rate source matrix and `voice-review` | Attended microphone/error cases, calibrated delivery window, listening study and plots |
+| VOICE-01–04 | Local and paired references, fixed-rate matrix, coded listening and duration review | Attended microphone/error cases, calibrated delivery window and recorded physical listening study |
 | MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
 | OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
 
@@ -924,3 +924,7 @@ MODEL-01 review now plots matched observed values and signed residuals
 by configuration. Isolated command-to-done observations and message
 completion retain separate capture bases. The per-observation CSV is
 fingerprinted in the procedure archive.
+
+VOICE-04 supports browser-side coded playback, waveform inspection,
+listener ratings and downloadable evidence. Node-local stage timing
+keeps distinct source, direction, role and settings cohorts.
