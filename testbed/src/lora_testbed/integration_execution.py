@@ -64,7 +64,7 @@ class IntegrationExecution:
             values.append(maximum)
         return min(values) if values else None
 
-    def preview(self, spec, radio, voice=None, campaigns=None):
+    def preview(self, spec, radio, voice=None, campaigns=None, physical_campaigns=None):
         limit = self.message_limit(radio) if spec.catalog_id in ("PKT-01", "MEM-01") else None
         plan = compile_matrix(spec, message_limit=limit or 65536)
         rows = []
@@ -106,6 +106,10 @@ class IntegrationExecution:
             elif case["driver"] == "ops_telemetry_gap":
                 request = ops_matrix.known_data_request(case, spec.seed)
                 blockers = radio.preflight(request)["blockers"]
+            elif case["driver"] == "ops_restart_recovery":
+                blockers = ops_matrix.restart_blockers(
+                    physical_campaigns, ops_matrix.restart_reference(spec, case)
+                )
             elif case["driver"] == "ops_stability":
                 blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
                 if case["radio_load_period_s"]:
@@ -250,7 +254,9 @@ class IntegrationExecution:
         radio, adapter = host.radio, host.adapter
         if self.ledger.busy:
             raise RuntimeError("Another procedure owns the bench")
-        planned = self.preview(spec, radio, host.voice, host.campaign_plans)
+        planned = self.preview(
+            spec, radio, host.voice, host.campaign_plans, host.physical_campaigns
+        )
         if expected_plan_sha256 is not None and planned["sha256"] != expected_plan_sha256:
             raise RuntimeError("The matrix plan changed. Preview the cases again.")
         if not planned["ready_case_count"]:
@@ -263,6 +269,7 @@ class IntegrationExecution:
             "memory_audio_local",
             "model_reference",
             "local_voice_reference",
+            "ops_restart_recovery",
         }
         local_only = all(case["driver"] in local_drivers for case in ready_cases)
         numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
@@ -964,6 +971,35 @@ class IntegrationExecution:
                     "code": "verified_data_in_fresh_session_after_gap",
                     "outcome": "pass" if recovered else "inconclusive",
                 },
+            ],
+        )
+
+    async def matrix_ops_restart(self, run, case, spec, host):
+        reference = ops_matrix.restart_reference(spec, case)
+        try:
+            measurements = await host.campaign_exports.run(
+                ops_matrix.restart_assessment, host, reference
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            reason = str(exc) or type(exc).__name__
+            self.ledger.append(
+                run["id"],
+                case["id"],
+                {"restart_reference": reference.model_dump(), "reason": reason},
+            )
+            case.update(status="completed", assessment="inconclusive", reason=reason)
+            return
+        self.ledger.append(run["id"], case["id"], {"restart_recovery": measurements})
+        case.update(
+            status="completed",
+            assessment="pass",
+            cleanup_verified=True,
+            campaign_ids=[reference.interrupted, reference.recovery],
+            run_ids=[measurements["interrupted_radio_id"], measurements["recovery_radio_id"]],
+            measurements=measurements,
+            assertions=[
+                {"code": "host_restart_preserved_interrupted_campaign", "outcome": "pass"},
+                {"code": "explicit_reconnect_and_verified_fresh_session", "outcome": "pass"},
             ],
         )
 
@@ -1995,6 +2031,8 @@ class IntegrationExecution:
                     await self.matrix_ops_control_recovery(run, case, spec, host)
                 elif case["driver"] == "ops_telemetry_gap":
                     await self.matrix_ops_telemetry_gap(run, case, spec, host)
+                elif case["driver"] == "ops_restart_recovery":
+                    await self.matrix_ops_restart(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)

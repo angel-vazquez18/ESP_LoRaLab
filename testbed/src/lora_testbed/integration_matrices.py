@@ -101,6 +101,14 @@ def matrix_options():
     }
 
 
+class RestartEvidenceReference(ContractModel):
+    variant: Literal["restart_active", "restart_paused"]
+    direction: Literal["A_TO_B", "B_TO_A"]
+    repetition: int = Field(ge=1, le=3)
+    interrupted: UUID
+    recovery: UUID
+
+
 class MatrixRequest(ContractModel):
     catalog_id: Literal[
         "IF-01",
@@ -140,6 +148,9 @@ class MatrixRequest(ContractModel):
     diagnostic_iterations: int = Field(default=1000, ge=1, le=1000)
     memory_window_ms: int = Field(default=30000, ge=1000, le=30000)
     ops_observation_s: int = Field(default=ops_matrix.STABILITY_SECONDS, ge=5, le=3600)
+    ops_restart_evidence: list[RestartEvidenceReference] | None = Field(
+        default=None, min_length=1, max_length=12
+    )
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
@@ -180,6 +191,19 @@ class MatrixRequest(ContractModel):
             raise ValueError("Matched echo count belongs to RF sweep procedures")
         if self.catalog_id != "OPS-01" and self.ops_observation_s != ops_matrix.STABILITY_SECONDS:
             raise ValueError("The stability observation window belongs to OPS-01")
+        if self.ops_restart_evidence:
+            if self.catalog_id != "OPS-01" or self.groups is not None and "C3" not in self.groups:
+                raise ValueError("Host restart evidence belongs to OPS-01 C3")
+            entries = self.ops_restart_evidence
+            keys = {(row.variant, row.direction, row.repetition) for row in entries}
+            executions = {value for row in entries for value in (row.interrupted, row.recovery)}
+            if len(keys) != len(entries) or len(executions) != 2 * len(entries):
+                raise ValueError("Use distinct restart cases and campaign executions")
+            if any(
+                row.repetition > self.repetitions or row.direction not in self.directions
+                for row in entries
+            ):
+                raise ValueError("Each restart observation must belong to a selected case")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
         local = self.catalog_id in ("IF-01", "SEC-04", "VOICE-01") or (

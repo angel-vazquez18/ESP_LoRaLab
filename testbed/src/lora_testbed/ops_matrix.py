@@ -11,7 +11,9 @@ from .campaign_plans import (
     MemoryCase,
     RadioCase,
     Template,
+    digest,
 )
+from .experiments_v2 import known_data
 from .radio_runs import RadioRunRequest
 
 STABILITY_SECONDS = 3600
@@ -32,7 +34,6 @@ GROUPS = {
 BLOCKERS = {
     "C1": "The attended USB interruption case is unavailable",
     "C2": "The attended board reset case is unavailable",
-    "C3": "A supervised host restart fixture is required",
 }
 
 
@@ -59,6 +60,7 @@ def cases(request, groups):
                 "variant": variant,
                 "repetition": repetition,
                 "driver": {
+                    "C3": "ops_restart_recovery",
                     "C4": "ops_control_recovery",
                     "C5": "ops_telemetry_gap",
                     "C6": "ops_stability",
@@ -81,6 +83,155 @@ def cases(request, groups):
 
 def known_data_request(case, seed, ordinal=0):
     return RadioRunRequest(direction=case["direction"], source_seed=(seed + ordinal) % 2**32)
+
+
+def restart_reference(spec, case):
+    return next(
+        (
+            reference
+            for reference in spec.ops_restart_evidence or ()
+            if (reference.variant, reference.direction, reference.repetition)
+            == (case["variant"], case["direction"], case["repetition"])
+        ),
+        None,
+    )
+
+
+def restart_blockers(campaigns, reference):
+    if not reference:
+        return ["Attach the interrupted and explicit recovery campaign executions"]
+    if campaigns is None:
+        return ["Saved campaign evidence is unavailable"]
+    try:
+        original, recovery = (
+            campaigns.get(identifier) for identifier in (reference.interrupted, reference.recovery)
+        )
+    except ValueError as exc:
+        return [str(exc)]
+    if (original["status"], recovery["status"]) != ("interrupted", "completed"):
+        return ["Provide an interrupted original and a completed recovery campaign"]
+    return []
+
+
+def restart_assessment(host, reference):
+    campaigns, radio = host.physical_campaigns, host.radio
+    original, recovery = (campaigns.get(i) for i in (reference.interrupted, reference.recovery))
+    checkpoint = original.get("restart_checkpoint") or {}
+    paused = reference.variant == "restart_paused"
+    original_case_id = checkpoint.get("active_case_id")
+    if paused:
+        original_case_id = next(
+            (row["case_id"] for row in original["cases"] if row["status"] == "completed"), None
+        )
+    if (
+        original["status"] != "interrupted"
+        or original["reason_code"] not in {"host_shutdown", "host_restart"}
+        or checkpoint.get("status") != ("paused" if paused else "running")
+        or checkpoint.get("stage") != ("paused" if paused else "child")
+        or original_case_id is None
+        or any(row["status"] in {"running", "pending"} for row in original["cases"])
+        or paused
+        and not any(row["status"] == "skipped" for row in original["cases"])
+    ):
+        raise ValueError("The saved campaign does not prove an interrupted active or paused case")
+    if (
+        recovery["status"] != "completed"
+        or recovery["parent_execution_id"] != original["id"]
+        or recovery["parent_snapshot_sha256"] != digest(original)
+        or recovery["plan_sha256"] != original["plan_sha256"]
+        or recovery["selected_case_ids"] != [original_case_id]
+        or not original.get("host_instance_id")
+        or not recovery.get("host_instance_id")
+        or original["host_instance_id"] == recovery["host_instance_id"]
+    ):
+        raise ValueError("Run the selected case explicitly after restarting the host")
+    for role in "AB":
+        before = original["physical_bindings"].get(role)
+        after = recovery["physical_bindings"].get(role)
+        if (
+            not before
+            or not after
+            or before["device_id"] != after["device_id"]
+            or before["connection_id"] == after["connection_id"]
+        ):
+            raise ValueError("Fresh ownership of the original devices is unconfirmed")
+    [old_case] = [row for row in original["cases"] if row["case_id"] == original_case_id]
+    [new_case] = recovery["cases"]
+    children = []
+    for row in (old_case, new_case):
+        link = row["child"] or {}
+        if link.get("service") != "radio" or not row.get("preflight", {}).get("ready"):
+            raise ValueError("A fresh paired preflight and linked radio child are required")
+        child = radio.get(link["id"])
+        wire = child.get("saved_files", {}).get("wire") or {}
+        if (
+            child["plan"]["spec"]["direction"] != reference.direction
+            or not wire.get("length_bytes")
+            or wire.get("sha256") != child.get("wire_sha256")
+            or not child.get("wire_sha256")
+        ):
+            raise ValueError("Radio direction or archived exchange is missing")
+        radio.content(child["id"], "wire")
+        children.append(child)
+    old, new = children
+    if (
+        (paused and old["status"] != "completed")
+        or (
+            not paused
+            and (
+                old["status"] not in {"cancelled", "interrupted"}
+                or old["failure_stage"] != "transmitting"
+            )
+        )
+        or new["status"] != "completed"
+        or old["session_id"] == new["session_id"]
+        or old["plan"] != new["plan"]
+        or not recovery["cleanup"]["confirmed"]
+        or not new["cleanup"]["confirmed"]
+        or not (new.get("verification") or {}).get("bytes_equal")
+        or not (new.get("accounting") or {}).get("evidence_complete")
+    ):
+        raise ValueError("The original work and a verified fresh radio session are required")
+    spec = new["plan"]["spec"]
+    size = spec["message_bytes"]
+    if spec["source"] != "known_data" or not 1 <= size <= 65536:
+        raise ValueError("Use a bounded known-data campaign case")
+    expected = known_data(spec["source_seed"], 1, size)
+    for kind in ("source", "recovered"):
+        with radio.content(new["id"], kind).open("rb") as stream:
+            if stream.read(size + 1) != expected:
+                raise ValueError("The recovery archive bytes differ from the saved source recipe")
+    return {
+        "original": {
+            key: original.get(key)
+            for key in (
+                "id",
+                "status",
+                "reason_code",
+                "reason",
+                "cleanup",
+                "finished_at",
+                "host_instance_id",
+            )
+        },
+        "checkpoint": checkpoint,
+        "plan_sha256": original["plan_sha256"],
+        "interrupted_radio_id": old["id"],
+        "interrupted_wire_sha256": old["wire_sha256"],
+        "recovery": {
+            key: recovery[key]
+            for key in (
+                "id",
+                "status",
+                "created_at",
+                "cleanup",
+                "host_instance_id",
+            )
+        },
+        "recovery_radio_id": new["id"],
+        "recovery_wire_sha256": new["wire_sha256"],
+        "verification": new["verification"],
+    }
 
 
 def verified_receive_gap(trial):

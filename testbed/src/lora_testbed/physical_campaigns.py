@@ -36,6 +36,7 @@ class PhysicalCampaigns:
     def __init__(self, host):
         self.host, self.store = host, host.store
         self.current = self.task = None
+        self.instance_id = str(uuid4())
         self.wake = asyncio.Event()
         self.owner = object()  # Only internal dispatch can bypass the campaign's own reservation.
         self.store.db.executescript("""
@@ -56,12 +57,7 @@ class PhysicalCampaigns:
             if record["status"] in TERMINAL:
                 continue
             cases = self.get(record["id"])["cases"]
-            record["restart_checkpoint"] = {
-                "status": record["status"],
-                "stage": record["stage"],
-                "active_case_id": record["active_case_id"],
-                "last_saved_at": record["updated_at"],
-            }
+            record.setdefault("restart_checkpoint", self.restart_checkpoint(record))
             record.update(
                 status="interrupted",
                 stage="finished",
@@ -89,6 +85,16 @@ class PhysicalCampaigns:
                     self.save(record, case, commit=False)
                 record["case_counts"] = dict(Counter(case["status"] for case in cases))
                 self.save(record, commit=False)
+
+    @staticmethod
+    def restart_checkpoint(record):
+        return {
+            "status": record["status"],
+            "stage": record["stage"],
+            "active_case_id": record["active_case_id"],
+            "last_saved_at": record["updated_at"],
+            "observed_at": utc_now(),
+        }
 
     @property
     def busy(self):
@@ -213,6 +219,7 @@ class PhysicalCampaigns:
         }
         record = {
             "id": identifier,
+            "host_instance_id": self.instance_id,
             "created_at": utc_now(),
             "finished_at": None,
             "plan_id": plan_id,
@@ -640,6 +647,8 @@ class PhysicalCampaigns:
             and record["status"] not in TERMINAL
             and record["stage"] != "cleanup"
         ):
+            if code == "host_shutdown":
+                record["restart_checkpoint"] = self.restart_checkpoint(record)
             record.update(
                 cancel_requested=True,
                 cancel_reason_code=code,

@@ -603,7 +603,9 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/procedures/matrix/preview")
     async def procedure_matrix_preview(body: MatrixRequest):
         host = app.state.host
-        return host.procedures.matrix_preview(body, host.radio, host.voice, host.campaign_plans)
+        return host.procedures.matrix_preview(
+            body, host.radio, host.voice, host.campaign_plans, host.physical_campaigns
+        )
 
     @app.post("/api/procedures/matrix", status_code=202)
     async def procedure_matrix_start(
