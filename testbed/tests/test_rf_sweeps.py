@@ -229,3 +229,54 @@ def test_saved_comparison_preserves_individual_repetitions_and_matches_before_af
     changed["requested_settings"] = {"frequency_hz": 916000000}
     first = rf_sweeps.compare_saved_cases(run)["baselines"][0]
     assert not first["settings_matched"] and first["changes"]["delivery_percent"]["delta"] is None
+
+
+def test_power_sweep_compares_requester_local_rtt_at_matched_applied_power(
+    tmp_path, native_library
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="RF-04",
+                groups=["C2"],
+                directions=["A_TO_B"],
+                repetitions=1,
+                messages_per_case=1,
+                rf_echoes_per_case=1,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(65):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            for case in saved["cases"]:
+                data, echo = [host.radio.get(i) for i in case["run_ids"]]
+                assert rf_sweeps.matched_echo(data, echo)
+                assert echo["applied_settings"]["A"]["radio"]["tx_power_dbm"] == case["value"]
+                assert echo["applied_settings"]["B"]["radio"]["tx_power_dbm"] == 2
+                result = case["measurements"]["matched_rtt"]
+                assert result["verified"] == 1 and result["unresolved"] == 0
+                assert result["median_us"] == echo["timing"]["samples"][0]["rtt_us"] > 0
+                shifted = deepcopy(echo)
+                shifted["applied_settings"]["B"]["radio"]["tx_power_dbm"] += 1
+                assert not rf_sweeps.matched_echo(data, shifted)
+            assert set(saved["sweep_comparison"]["rtt_metrics"]) == {"rtt_median_us", "rtt_p95_us"}
+            with zipfile.ZipFile(io.BytesIO(host.procedures.bundle(saved))) as archive:
+                rows = list(csv.DictReader(io.StringIO(archive.read("rf-comparison.csv").decode())))
+            assert len(rows) == 7
+            assert all(
+                row["rtt_verified"] == "1" and float(row["rtt_median_us"]) > 0 for row in rows
+            )
+            assert not saved["hardware_validated"]
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
