@@ -1733,5 +1733,11 @@ class IntegrationExecution:
                     )
             if spec.catalog_id in rf_sweeps.FACTORS:
                 run["sweep_comparison"] = rf_sweeps.compare_saved_cases(run)
+            if spec.catalog_id == "MODEL-01":
+                comparison = model_series.observed_comparison(
+                    run, self.ledger.all_evidence(run["id"])
+                )
+                if comparison["points"]:
+                    run["model_comparison"] = comparison
             run.update(active_case=None, finished_at=utc_now())
             self.ledger.save(run)

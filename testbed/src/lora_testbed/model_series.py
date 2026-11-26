@@ -1,5 +1,7 @@
 """Check the airtime model and retain source-local residual observations."""
 
+import csv
+import io
 from fractions import Fraction
 from itertools import product
 from math import ceil
@@ -148,6 +150,75 @@ def link_request(spec, case, ordinal):
     )
 
 
+def observed_comparison(run, ledger_rows):
+    cases = {case["id"]: case for case in run["cases"]}
+    points = []
+    for evidence in ledger_rows:
+        doc = evidence["document"]
+        case = cases.get(evidence["case_id"])
+        if case is None:
+            continue
+        if "frame_observation" in doc and case["group"] == "C2":
+            observed = doc["frame_observation"]
+            basis = "isolated_frame"
+            identifier = observed["child_run_id"]
+            predicted = observed["predicted_airtime_us"]
+            measured = observed["tx_command_to_done_us"]
+            expanded = None
+        elif "message_observation" in doc and case["group"] == "C3":
+            observed = doc["message_observation"]
+            basis = "sender_completion"
+            identifier = observed["child_run_id"]
+            predicted = observed["modeled_nominal_sender_us"]
+            measured = observed["observed_sender_completion_us"]
+            expanded = observed["modeled_worst_case_run_us"]
+        else:
+            continue
+        points.append(
+            {
+                "basis": basis,
+                "direction": case["direction"],
+                "configuration": case["variant"],
+                "repetition": case["repetition"],
+                "case_id": case["id"],
+                "child_run_id": identifier,
+                "message_bytes": case["message_bytes"],
+                "frame_bytes": observed.get("frame_bytes"),
+                "security": case["security"] if basis == "isolated_frame" else observed["security"],
+                "predicted_us": predicted,
+                "measured_us": measured,
+                "residual_us": measured - predicted,
+                "expanded_run_budget_us": expanded,
+                "within_expanded_budget": observed.get("within_expanded_budget"),
+            }
+        )
+    return {"points": points, "physical_agreement_assessed": False}
+
+
+def comparison_csv(comparison):
+    output = io.StringIO(newline="")
+    fields = (
+        "basis",
+        "direction",
+        "configuration",
+        "repetition",
+        "case_id",
+        "child_run_id",
+        "message_bytes",
+        "frame_bytes",
+        "security",
+        "predicted_us",
+        "measured_us",
+        "residual_us",
+        "expanded_run_budget_us",
+        "within_expanded_budget",
+    )
+    writer = csv.DictWriter(output, fieldnames=fields)
+    writer.writeheader()
+    writer.writerows(comparison["points"])
+    return output.getvalue()
+
+
 def observed_result(reference, rows, requested):
     return {
         **reference,
@@ -231,7 +302,9 @@ def message_observation(record, request):
     observed_us = completion - first_tx
     return {
         "child_run_id": record["id"],
+        "security": request.security,
         "modeled_nominal_run_us": budget["nominal_duration_us"],
+        "modeled_nominal_sender_us": budget["nominal_duration_us"] - budget["budget"]["drain_us"],
         "modeled_worst_case_run_us": budget["worst_case_duration_us"],
         "modeled_frame_airtime_total_us": sum(
             airtime_us(radio, event["data"]["frame_bytes"]) for event in complete

@@ -9,7 +9,7 @@ import zipfile
 from copy import deepcopy
 from uuid import uuid4
 
-from . import control_v2, rf_sweeps, v2
+from . import control_v2, model_series, rf_sweeps, v2
 from .adapters import require_control_compatible
 from .integration_execution import IntegrationExecution
 from .integration_matrices import matrix_options
@@ -366,6 +366,8 @@ class ProcedureService:
             save("cases.csv", self.csv(run).encode())
             if comparison := run.get("sweep_comparison"):
                 save("rf-comparison.csv", rf_sweeps.comparison_csv(comparison).encode())
+            if comparison := run.get("model_comparison"):
+                save("model-comparison.csv", model_series.comparison_csv(comparison).encode())
             save(
                 "provenance.json",
                 json.dumps(
