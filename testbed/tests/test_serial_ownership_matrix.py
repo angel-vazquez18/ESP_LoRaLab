@@ -14,26 +14,51 @@ def test_serial_ownership_matrix_observes_conflict_and_lease_expiry(tmp_path, na
     async def scenario():
         host = Host(tmp_path)
         node = host.physical["B"]
-        serial = NativeSerial(native_library)
-        node.opener = lambda _: serial
+
+        class ReopenableSerial(NativeSerial):
+            def open(self, _):
+                with self.lock:
+                    self.closed = False
+                return self
+
+            def close(self):
+                with self.lock:
+                    self.closed = True
+
+        serial = ReopenableSerial(native_library)
+        node.opener = serial.open
         try:
             await node.connect("isolated-lease-node-b")
             spec = MatrixRequest(catalog_id="IF-01", groups=["C6"], roles=["B"])
             preview = host.procedures.matrix_preview(spec, host.radio)
-            assert preview["ready_case_count"] == 6
+            assert preview["ready_case_count"] == 9
             started = await host.start_procedure_matrix(spec)
-            async with asyncio.timeout(30):
+            async with asyncio.timeout(50):
                 await host.procedures.task
             saved = host.procedures.get(started["id"])
-            assert saved["status"] == "completed" and saved["assessment"] == "inconclusive", saved
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
             assert not saved["hardware_validated"]
             ledger = list(host.procedures.all_evidence(saved["id"]))
             for case in saved["cases"]:
                 rows = [row["document"] for row in ledger if row["case_id"] == case["id"]]
-                if case["variant"] == "health_silence":
-                    assert case["status"] == "blocked" and not rows
-                    continue
                 assert case["assessment"] == "pass" and case["cleanup_verified"]
+                if case["variant"] == "health_silence":
+                    [silence] = [r for r in rows if r.get("health_silence")]
+                    assert silence["suppressed_events"]
+                    assert {event["name"] for event in silence["suppressed_events"]} == {"health"}
+                    assert 3 < silence["stale_at_age_s"] <= 3.5
+                    assert (
+                        5
+                        < silence["unresponsive_at_age_s"]
+                        <= silence["disconnected_at_age_s"]
+                        <= 6.5
+                    )
+                    [restored] = [r for r in rows if "recovered_binding" in r]
+                    prior, current = restored["previous_binding"], restored["recovered_binding"]
+                    assert prior["device_id"] == current["device_id"]
+                    assert prior["boot_id"] == current["boot_id"]
+                    assert prior["connection_id"] != current["connection_id"]
+                    continue
                 replies = [row["record"] for row in rows if row["direction"] == "node_to_host"]
                 assert replies[-1]["result"]["node_role"] == "B"
                 if case["variant"] == "lease_recovery":
@@ -52,8 +77,11 @@ def test_serial_ownership_matrix_observes_conflict_and_lease_expiry(tmp_path, na
                     assert claim["client_id"] != node.client_id
                     assert [r["error"]["code"] for r in replies if not r["ok"]] == ["BUSY"]
             assert node.health.state == "idle" and not node.pending
+            assert saved["serial_recovered_bindings"]["B"] == host.adapter.bind("B")
+            assert node._health_probe is None
         finally:
             await host.close()
+            serial.core.close()
 
     asyncio.run(scenario())
 
