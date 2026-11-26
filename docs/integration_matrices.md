@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C5 reply perturbation and conflict, and C6 competing ownership and lease expiry. One connected role is enough. | Version/schema rejection, controlled stale-boot recovery, health silence and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation and conflict, and C6 competing ownership and lease expiry. One connected role is enough. | Controlled stale-boot recovery, health silence and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -73,6 +73,13 @@ deltas, and idle recovery. Missing rejection counters are inconclusive.
 The case stops if device ownership or connection changes. USB hardware
 qualification and the UART path remain separate.
 
+IF-01 C4 uses a fresh hello from the connected role as the baseline.
+A separate one-shot hello fixture changes the advertised wire version,
+contract version, or schema digest. The ordinary handshake must reject
+that precise incompatibility, close the fixture port and send only hello.
+The three variants each have three default repetitions per role. The
+case records the observed identity and the altered fixture separately.
+
 IF-01 C5 uses a bounded host fixture on a single memory probe. It can
 drop one reply and require a timeout, delay delivery until after one
 retry, or drop the first reply and accept the retry response. Each case
@@ -100,8 +107,8 @@ When a new host opens a saved active or paused campaign, it records the
 last persisted campaign stage and case ID as the restart checkpoint.
 An active child is interrupted, completed children are retained, and
 unstarted cases are skipped. A radio trace fingerprint taken at startup
-identifies the bytes recovered from disk. It does not establish delivery
-or physical cleanup. Use the saved campaign bundle to verify those bytes.
+identifies the bytes recovered from disk. Use the saved campaign bundle to
+verify those bytes and check the separate delivery and cleanup records.
 The campaign cannot resume and a new run must pass fresh connection and
 ownership preflight. The native subprocess test covers active transmission
 and a settled pause following a completed child. The supervised IF-03 C6

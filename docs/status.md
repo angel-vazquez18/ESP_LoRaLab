@@ -4,6 +4,13 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Serial compatibility gate
+
+IF-01 C4 now runs the production handshake against isolated wire version,
+contract version and schema digest mismatches. All nine default one-role
+cases rejected the expected mismatch and closed the fixture port before
+claim. See [integration procedures](integration_matrices.md).
+
 ## November 25 — Correlated reply perturbations
 
 IF-01 C5 now verifies one dropped reply, delayed delivery, an exact
