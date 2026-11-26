@@ -40,12 +40,15 @@ type MatrixCase = {
   transport?: SerialTransport;
   message_bytes?: number;
   message_count?: number;
+  echo_count?: number;
+  echo_blockers?: string[];
   cycles?: number;
   iterations?: number;
   planned_campaign_cases?: number;
   measurements?: {
     unique_original_delivery_ratio?: number | null;
     unresolved_messages?: number;
+    matched_rtt?: { verified: number; timeouts: number; unresolved: number };
   };
   ready: boolean;
   blockers: string[];
@@ -119,6 +122,15 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
               {row.message_count && row.message_count > 1
                 ? ` · ${row.message_count} messages`
                 : ""}
+              {Boolean(row.echo_count) && (
+                <>
+                  {" "}
+                  ·{" "}
+                  {row.measurements?.matched_rtt
+                    ? `${row.measurements.matched_rtt.verified}/${row.echo_count} RTT samples`
+                    : `${row.echo_count} planned echoes`}
+                </>
+              )}
               {row.cycles && row.cycles > 1 ? ` · ${row.cycles} cycles` : ""}
               {row.iterations ? ` · ${row.iterations} iterations` : ""}
               {row.planned_campaign_cases
@@ -127,6 +139,11 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
             </span>
             {(row.reason || row.blockers.length > 0) && (
               <span>{row.reason || row.blockers.join(" · ")}</span>
+            )}
+            {Boolean(row.echo_blockers?.length) && (
+              <span>
+                Matched RTT unavailable · {row.echo_blockers?.join(" · ")}
+              </span>
             )}
             {runId && (
               <a
@@ -183,6 +200,8 @@ export default function ProcedureMatrix({
   const [direction, setDirection] = useState("both");
   const [security, setSecurity] = useState("none");
   const [size, setSize] = useState("quick");
+  const [echoMode, setEchoMode] = useState("default");
+  const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<{
     plan: MatrixPlan;
@@ -218,6 +237,11 @@ export default function ProcedureMatrix({
       ...(selectDirection &&
         direction !== "both" && { directions: [direction] }),
       ...(option.choose_security && { rf_security: security }),
+      ...(rfSweep &&
+        echoMode !== "default" && {
+          rf_echoes_per_case:
+            echoMode === "skip" ? 0 : size === "quick" ? 1 : 100,
+        }),
       ...(voice &&
         referenceIds.length > 0 && { voice_reference_ids: referenceIds }),
       ...(size === "quick" && {
@@ -376,6 +400,20 @@ export default function ProcedureMatrix({
               ))}
           </fieldset>
         )}
+        {rfSweep && (
+          <label>
+            Companion round trips
+            <select
+              value={echoMode}
+              disabled={pending}
+              onChange={(event) => setEchoMode(event.target.value)}
+            >
+              <option value="default">Procedure default</option>
+              <option value="matched">Match workload count</option>
+              <option value="skip">Skip</option>
+            </select>
+          </label>
+        )}
         {option.choose_security && (
           <label>
             Security
@@ -473,10 +511,19 @@ export default function ProcedureMatrix({
             {inspected.hardware_validated ? "recorded" : "pending"}
           </p>
           {inspected.sweep_comparison && (
-            <RFSweepComparison
-              key={`sweep-${inspected.id}`}
-              data={inspected.sweep_comparison}
-            />
+            <>
+              <RFSweepComparison
+                key={`sweep-${inspected.id}`}
+                data={inspected.sweep_comparison}
+              />
+              {Boolean(inspected.sweep_comparison.rtt_metrics?.length) && (
+                <RFSweepComparison
+                  key={`rtt-${inspected.id}`}
+                  data={inspected.sweep_comparison}
+                  timing
+                />
+              )}
+            </>
           )}
           <Cases
             key={inspected.id}
