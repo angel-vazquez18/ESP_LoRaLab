@@ -58,6 +58,8 @@ type MatrixCase = {
     health?: Record<string, { samples: number; reasons: string[] }>;
     planned_loads?: number;
     verified_loads?: number;
+    original?: { id: string; cleanup: { confirmed: boolean } };
+    recovery?: { id: string };
   };
   ready: boolean;
   blockers: string[];
@@ -177,6 +179,26 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
             {row.measurements?.export && (
               <a href={row.measurements.export}>Source assessment</a>
             )}
+            {row.measurements?.original && row.measurements.recovery && (
+              <>
+                <span>
+                  Original cleanup{" "}
+                  {row.measurements.original.cleanup.confirmed
+                    ? "confirmed"
+                    : "unconfirmed"}
+                </span>
+                <a
+                  href={`/api/physical-campaigns/executions/${row.measurements.original.id}/export`}
+                >
+                  Interrupted campaign evidence
+                </a>
+                <a
+                  href={`/api/physical-campaigns/executions/${row.measurements.recovery.id}/export`}
+                >
+                  Recovery campaign evidence
+                </a>
+              </>
+            )}
             {(row.reason || row.blockers.length > 0) && (
               <span>{row.reason || row.blockers.join(" · ")}</span>
             )}
@@ -241,6 +263,8 @@ export default function ProcedureMatrix({
   const [security, setSecurity] = useState("none");
   const [size, setSize] = useState("quick");
   const [echoMode, setEchoMode] = useState("default");
+  const [restartEvidence, setRestartEvidence] = useState("");
+  const [restartError, setRestartError] = useState("");
   const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<{
@@ -260,6 +284,7 @@ export default function ProcedureMatrix({
     (option.kind === "voice" && (fixedSource || group !== "C2")) ||
     (option.kind === "voice_local" && (!group || group === "C3"));
   const stability = catalogId === "OPS-01" && group === "C6";
+  const restart = catalogId === "OPS-01" && (!group || group === "C3");
   const selectDirection =
     option.kind === "link" ||
     option.kind === "voice" ||
@@ -273,6 +298,19 @@ export default function ProcedureMatrix({
   );
 
   async function previewCases() {
+    let restartRows: unknown = null;
+    if (restart && restartEvidence.trim()) {
+      try {
+        restartRows = JSON.parse(restartEvidence);
+        if (!Array.isArray(restartRows) || !restartRows.length) {
+          throw new Error("Expected a nonempty JSON array");
+        }
+      } catch {
+        setRestartError("Enter the restart evidence as a nonempty JSON array.");
+        return;
+      }
+    }
+    setRestartError("");
     const document = {
       catalog_id: catalogId,
       ...(group && { groups: [group] }),
@@ -290,6 +328,7 @@ export default function ProcedureMatrix({
         }),
       ...(voice &&
         referenceIds.length > 0 && { voice_reference_ids: referenceIds }),
+      ...(Array.isArray(restartRows) && { ops_restart_evidence: restartRows }),
       ...(size === "quick" && {
         repetitions: 1,
         ...(catalogId === "OPS-01" && { ops_observation_s: 10 }),
@@ -370,6 +409,23 @@ export default function ProcedureMatrix({
             <option value="default">Procedure defaults</option>
           </select>
         </label>
+        {restart && (
+          <label>
+            Saved restart evidence (JSON)
+            <textarea
+              value={restartEvidence}
+              onChange={(event) => {
+                setRestartError("");
+                setRestartEvidence(event.target.value);
+              }}
+              disabled={pending}
+              rows={3}
+              maxLength={4096}
+              aria-invalid={Boolean(restartError)}
+            />
+            {restartError && <span role="alert">{restartError}</span>}
+          </label>
+        )}
         {local && (
           <label>
             Node
