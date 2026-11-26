@@ -141,6 +141,15 @@ def test_full_host_multi_fragment_readback_and_originals(
             assert result["accounting"]["data_originals"] == count
             assert result["accounting"]["data_attempts"] == count
             assert result["accounting"]["unique_original_delivery_ratio"] == 1
+            account = result["accounting"]
+            window = account["sender_transfer_window"]
+            assert window["duration_us"] == tx["last_tx_done_us"] - tx["first_tx_command_us"]
+            assert (
+                account["accepted_fragment_bytes"] == account["verified_delivered_bytes"] == length
+            )
+            assert account["accepted_fragment_bps"] == account["goodput_bps"]
+            assert account["goodput_bps"] == 8_000_000 * length / window["duration_us"]
+            assert result["host_transaction"]["elapsed_ns"] > 0
             assert not result["hardware_qualified"]
         finally:
             if bridge:

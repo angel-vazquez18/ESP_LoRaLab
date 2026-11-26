@@ -169,6 +169,10 @@ def test_sweep_retains_bounded_non_delivery_with_complete_evidence(tmp_path, nat
             assert report["observed_non_deliveries"] == 1 and report["unresolved_messages"] == 0
             assert report["unique_original_delivery_ratio"] == 0
             assert report["useful_bits_per_active_tx_second"] == 0
+            assert report["complete_message_ratio"] == 0
+            assert report["goodput_bps"] == report["accepted_fragment_bps"] == 0
+            assert report["summed_sender_transfer_us"] > 0
+            assert report["whole_transaction_ns_median"] > 0
             assert report["signal_sample_count"] == 0 and report["rssi_dbm_median"] is None
             assert all(c["measurements"]["unique_original_delivery_ratio"] == 1 for c in intact)
             [identifier] = first["run_ids"]
@@ -193,6 +197,9 @@ def test_sweep_report_keeps_unresolved_observations_out_of_delivery_and_goodput(
     assert report["observed_non_deliveries"] == 0
     assert report["unique_original_delivery_ratio"] is None
     assert report["useful_bits_per_active_tx_second"] is None
+    assert report["accepted_fragment_bps"] is None
+    assert report["goodput_bps"] is None
+    assert report["transfer_rate_unavailable_reason"]
 
 
 def test_saved_comparison_preserves_individual_repetitions_and_matches_before_after():
