@@ -56,7 +56,7 @@ def test_ops_quick_campaign_verifies_local_and_paired_children_and_exports(
             await pair.connect()
             bridge = asyncio.create_task(pair.bridge())
             spec = MatrixRequest(
-                catalog_id="OPS-01", groups=["C5", "C7"], messages_per_case=1, repetitions=1
+                catalog_id="OPS-01", groups=["C3", "C7"], messages_per_case=1, repetitions=1
             )
             started = await host.start_procedure_matrix(spec)
             async with asyncio.timeout(50):
@@ -184,6 +184,66 @@ def test_ops_control_faults_preserve_configuration_and_recover_in_both_direction
                 else:
                     assert control["timed_out"] and len(control["operation_results"]) == 1
             assert [role for role, _ in pair.frames] == ["A", "A", "B", "B"] * 2
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_ops_receive_gap_preserves_verified_bytes_and_excludes_rf_loss(tmp_path, native_library):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(catalog_id="OPS-01", groups=["C5"], repetitions=1)
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(35):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            assert len(saved["cases"]) == 2
+            for case in saved["cases"]:
+                assert case["cleanup_verified"] and case["assessment"] == "pass", case
+                result = case["measurements"]
+                assert result["excluded_from_rf_loss_analysis"] and result["verified_recovery"]
+                before, trial, after = [
+                    host.radio.get(identifier) for identifier in case["run_ids"]
+                ]
+                assert len({child["session_id"] for child in (before, trial, after)}) == 3
+                assert before["status"] == after["status"] == "completed"
+                assert trial["status"] == "failed" and trial["cleanup"]["confirmed"]
+                assert all(child["verification"]["bytes_equal"] for child in (before, trial, after))
+                assert (
+                    len({child["verification"]["sha256"] for child in (before, trial, after)}) == 1
+                )
+                accounting = trial["accounting"]
+                assert accounting["reason_code"] == "telemetry_gap"
+                assert accounting["evidence_complete"] is False
+                assert "unique_original_delivery_ratio" not in accounting
+                assert "goodput_bps" not in accounting
+                fixture = result["fixture"]
+                receiver = trial["receiver"]
+                assert (
+                    fixture["role"] == receiver and fixture["omitted_event"]["name"] == "rx.frame"
+                )
+                assert fixture["omitted_event"]["run_id"] == trial["id"]
+                assert fixture["deltas"][receiver] == {
+                    "event_gaps": 1,
+                    "framing_errors": 0,
+                    "telemetry_drops": 0,
+                }
+                assert not any(
+                    event["role"] == receiver and event["name"] == "rx.frame"
+                    for event in trial["events"]
+                )
+            assert [role for role, _ in pair.frames] == ["A"] * 3 + ["B"] * 3
+            assert all(not node.rf_run_id for node in host.physical.values())
         finally:
             if bridge:
                 bridge.cancel()
