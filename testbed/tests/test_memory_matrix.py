@@ -248,6 +248,8 @@ def test_paired_voice_memory_measures_reassembly_separately_from_playback(
         bridge = None
         try:
             await pair.connect()
+            for peer in pair.serials.values():
+                pace_native_clock(peer)
             bridge = asyncio.create_task(pair.bridge())
             spec = MatrixRequest(
                 catalog_id="MEM-01",
