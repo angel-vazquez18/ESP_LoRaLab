@@ -651,6 +651,7 @@ class NativeSerial:
             ptt=ptt,
             display=display,
             display_status=display_status,
+            source_worker=source_worker,
             lab_faults=lab_faults,
         )
         self.lock = threading.RLock()
