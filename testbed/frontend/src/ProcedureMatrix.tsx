@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RFSweepComparison, { type SweepComparison } from "./RFSweepComparison";
 
 export type MatrixOption = {
   groups: string[];
@@ -62,7 +63,11 @@ type MatrixPlan = {
 };
 
 type MatrixRun = MatrixPlan &
-  MatrixRunSummary & { hardware_validated: boolean; reason: string | null };
+  MatrixRunSummary & {
+    hardware_validated: boolean;
+    reason: string | null;
+    sweep_comparison?: SweepComparison;
+  };
 
 type Props = {
   catalogId: string;
@@ -467,6 +472,12 @@ export default function ProcedureMatrix({
             Physical qualification{" "}
             {inspected.hardware_validated ? "recorded" : "pending"}
           </p>
+          {inspected.sweep_comparison && (
+            <RFSweepComparison
+              key={`sweep-${inspected.id}`}
+              data={inspected.sweep_comparison}
+            />
+          )}
           <Cases
             key={inspected.id}
             rows={inspected.cases}

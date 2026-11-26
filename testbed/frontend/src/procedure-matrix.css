@@ -42,3 +42,95 @@
   align-items: center;
   gap: 8px;
 }
+
+.rf-sweep-comparison {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.rf-sweep-controls {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rf-sweep-controls h4 {
+  margin: 0;
+}
+
+.rf-sweep-plot {
+  margin: 20px 0;
+}
+
+.rf-sweep-plot ol {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 4px 0 0;
+  list-style: none;
+}
+
+.rf-sweep-row,
+.rf-sweep-axis {
+  display: grid;
+  grid-template-columns: 6rem minmax(5rem, 1fr) minmax(12rem, 1fr);
+  align-items: center;
+  column-gap: 12px;
+}
+
+.rf-sweep-axis > span:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rf-sweep-axis,
+.rf-sweep-row > span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.rf-sweep-track {
+  height: 20px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  margin: 0 4px;
+}
+
+.rf-sweep-range,
+.rf-sweep-point {
+  position: absolute;
+  display: block;
+  background: var(--accent);
+  top: 50%;
+}
+
+.rf-sweep-range {
+  height: 2px;
+}
+
+.rf-sweep-point {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rf-sweep-comparison details {
+  overflow-x: auto;
+}
+
+@media (max-width: 660px) {
+  .rf-sweep-row,
+  .rf-sweep-axis {
+    grid-template-columns: 5rem minmax(5rem, 1fr);
+  }
+
+  .rf-sweep-row > span {
+    grid-column: 2;
+  }
+}
