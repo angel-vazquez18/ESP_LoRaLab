@@ -25,7 +25,7 @@ idf_component_register(
         "platform/esp32_platform.c"
         "platform/esp32_ptt.c"
         "platform/esp32_display.c"
-        "transport/usb_transport.c"
+        "transport/serial_transport.c"
         "control/node_control.c"
         "memory/observations.c"
         "input/ptt_gate.c"
@@ -36,7 +36,7 @@ idf_component_register(
         "protocol/secure_json.c"
         "protocol/chunk_bytes.c"
     INCLUDE_DIRS "." "radio/vendor/sx126x"
-    REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support
+    REQUIRES esp_driver_usb_serial_jtag esp_driver_uart esp_timer esp_system esp_hw_support
              esp_driver_i2s esp_driver_spi esp_driver_gpio esp_driver_i2c
              nvs_flash espressif__cjson mbedtls heap esp_app_format loralab_codec2
 )

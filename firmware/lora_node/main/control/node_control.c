@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef ESP_PLATFORM
+#include "sdkconfig.h"
+#endif
+
 #include "codec2_dependency.h"
 #include "audio/codec_clip.h"
 #include "generated/codec_profile.h"
@@ -345,6 +350,11 @@ static cJSON *capabilities(node_control *n, bool enrollment)
     }
     add(n, o, "radio_limits", radio);
     if (enrollment) {
+#ifdef CONFIG_LORALAB_CONTROL_UART0
+        string(n, limits, "control_transport", "uart");
+#else
+        string(n, limits, "control_transport", "native_usb");
+#endif
         number(n, limits, "max_record_bytes", NODE_RECORD_BYTES);
         number(n, limits, "reply_queue_records", NODE_REPLY_SLOTS);
         number(n, limits, "telemetry_queue_records", NODE_EVENT_SLOTS);

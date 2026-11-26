@@ -2,7 +2,7 @@
 
 #include "control/node_control.h"
 #include "platform/esp32_platform.h"
-#include "transport/usb_transport.h"
+#include "transport/serial_transport.h"
 
 void app_main(void)
 {
@@ -12,5 +12,5 @@ void app_main(void)
     node_control *node = node_control_create(&platform);
     ESP_ERROR_CHECK(node ? ESP_OK : ESP_ERR_NO_MEM);
 
-    usb_transport_run(node);
+    serial_transport_run(node);
 }

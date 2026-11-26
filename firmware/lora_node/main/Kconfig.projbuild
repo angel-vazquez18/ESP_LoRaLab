@@ -1,3 +1,14 @@
+menu "LoRaLab control transport"
+config LORALAB_CONTROL_UART0
+    bool "Use UART0 GPIO43/TX and GPIO44/RX for node control"
+    depends on !ESP_CONSOLE_UART_DEFAULT && !ESP_CONSOLE_UART_CUSTOM
+    default n
+    help
+        Select UART0 at 115200 8N1 for the same NDJSON control protocol.
+        Use a 3.3 V logic USB-to-UART adapter and a common ground.
+        Native USB Serial/JTAG remains the default control transport.
+endmenu
+
 menu "LoRaLab physical audio configuration"
 config LORALAB_AUDIO_PLAYBACK
     bool "Amplifier/speaker connected to the documented board pins"
