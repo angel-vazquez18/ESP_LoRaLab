@@ -784,7 +784,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | IF-01–03 | Experiments matrix and `integration-matrix` | Supervised active/paused restart and campaign navigation cases |
 | RF-01–04 | Matched seeded sweeps with applied settings and evidence | Matched latency and bench review of baseline changes |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
-| PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts and invalid ACK |
+| PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
@@ -896,3 +896,8 @@ protected delivery failure. Both measurements compare post-cleanup samples
 against declared bounds, verify named buffer release and link a fresh
 64-byte recovery transfer. The cancellation case verifies and retires only
 the source artifact that it prepared.
+
+PKT-01 C3 now uses the firmware size-refusal check in both security
+profiles. The native cases observed unchanged device state, no arming,
+and exact recovery data. The protected fixture verified fresh key-set
+identities and redacted wire evidence.

@@ -8,9 +8,11 @@ PKT-01 plans the declared lengths around 160-byte fragment boundaries, plus
 the negotiated maximum minus one and maximum. The host selects the lower
 advertised limit from the two nodes, deduplicates matching lengths and keeps
 cases beyond supported limits visible. Each case records the expected number
-of fragments and the final fragment length. The max-plus-one case verifies a
-host preflight rejection, then runs an intact message. Board-side over-limit
-and buffer-recovery measurements stay in the physical acceptance procedure.
+of fragments and the final fragment length. The max-plus-one case sends one
+prepare request to the limiting firmware under the selected security profile.
+It requires an actual `RESOURCE_LIMIT` reply before arming, unchanged
+configuration and artifact inventory, then a fresh verified 64-byte transfer.
+Protected cases retire the prior session and provision fresh keys for recovery.
 
 SEC-01 pairs unprotected and AES-GCM runs at 16, 64, 160 and 321 bytes with
 the same settings, direction and source seed. The retained TX records expose
@@ -55,8 +57,8 @@ uv run --project testbed pytest testbed/tests/test_content_series.py testbed/tes
 make check
 ```
 
-Expect 17 focused cases. The isolated native pair verified boundary
-reconstruction, host rejection plus recovery, exact tag overhead by frame,
+The isolated native pair verified boundary reconstruction, firmware refusal
+and recovery for both security profiles, exact tag overhead by frame,
 wrong-key authentication at the receiver, separate profile rejection and
 redacted evidence. Read [integration matrices](integration_matrices.md) for
 case evidence and shared ownership behavior.

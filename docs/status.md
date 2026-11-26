@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Firmware packet-size rejection
+
+PKT-01 C3 now checks the firmware's max-plus-one reply in the selected
+security profile. Saved cases retain proof of idle state and a verified
+64-byte recovery transfer. The protected case retires the original
+session before allocating fresh keys for recovery. See
+[packet boundary procedures](content_series.md).
+
 ## November 25 — Memory cleanup after cancellation and failure
 
 MEM-01 C5 now stops an allocated transfer before arming and exercises a
