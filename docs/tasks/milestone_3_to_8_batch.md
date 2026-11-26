@@ -782,7 +782,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | Procedure family | Software entry point | Coverage still open |
 | --- | --- | --- |
 | IF-01–03 | Experiments matrix and `integration-matrix` | Supervised active/paused restart and campaign navigation cases |
-| RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, complete performance measurements and drift assessment |
+| RF-01–04 | Matched seeded sweeps with applied settings and evidence | Comparison plots, matched latency and drift assessment |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
@@ -869,3 +869,8 @@ The optional UART profile and default USB profile both built under
 ESP-IDF v6.0.2. A mixed-transport native fixture passed 73 matching cases
 for each role, retained 146 unmatched case rows and verified all archive
 hashes. The preceding repository check passed 1,167 tests.
+
+RF-01 through RF-04 now distinguish verified delivery, bounded
+non-delivery and unresolved outcomes. A complete case retains the
+delivery ratio, counted signal and useful data per active TX second.
+The native fixture verified a mixed RF-02 cohort with an omitted frame.

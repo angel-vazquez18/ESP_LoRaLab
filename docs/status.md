@@ -4,6 +4,14 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — RF delivery and unresolved observations
+
+RF-01 through RF-04 now retain independently proven delivery and
+bounded non-delivery. The testbed reports a complete-cohort delivery
+ratio, useful bits per active TX second and the available signal
+sample count. Missing evidence stays unresolved. A native fixture
+verified one dropped and two intact RF-02 settings. See [RF sweeps](rf_sweeps.md).
+
 ## November 25 — Selectable UART control
 
 The firmware has a separate UART0 build at 115200 8N1. IF-01 reads the
