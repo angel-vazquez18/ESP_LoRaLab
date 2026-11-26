@@ -139,6 +139,7 @@ class MatrixRequest(ContractModel):
     valid_cycles: int = Field(default=10, ge=1, le=10)
     diagnostic_iterations: int = Field(default=1000, ge=1, le=1000)
     memory_window_ms: int = Field(default=30000, ge=1000, le=30000)
+    ops_observation_s: int = Field(default=ops_matrix.STABILITY_SECONDS, ge=5, le=3600)
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
@@ -177,6 +178,8 @@ class MatrixRequest(ContractModel):
             raise ValueError("Use the same single reference for all fixed-rate profiles")
         if self.rf_echoes_per_case is not None and self.catalog_id not in rf_sweeps.GROUPS:
             raise ValueError("Matched echo count belongs to RF sweep procedures")
+        if self.catalog_id != "OPS-01" and self.ops_observation_s != ops_matrix.STABILITY_SECONDS:
+            raise ValueError("The stability observation window belongs to OPS-01")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
             raise ValueError("Memory window belongs to the memory procedure")
         local = self.catalog_id in ("IF-01", "SEC-04", "VOICE-01") or (
@@ -184,7 +187,12 @@ class MatrixRequest(ContractModel):
         )
         if not local and set(self.roles) != {"A", "B"}:
             raise ValueError("The link and campaign procedures require both hardware roles")
-        if self.catalog_id in ("IF-03", "OPS-01") and set(self.directions) != {"A_TO_B", "B_TO_A"}:
+        one_stability_direction = self.catalog_id == "OPS-01" and self.groups == ["C6"]
+        if (
+            self.catalog_id in ("IF-03", "OPS-01")
+            and not one_stability_direction
+            and set(self.directions) != {"A_TO_B", "B_TO_A"}
+        ):
             raise ValueError("Campaign procedures require both directions")
         return self
 
@@ -310,6 +318,8 @@ def compile_matrix(request, *, message_limit=65536):
         coverage = coverage and request.messages_per_case >= 10 and len(request.directions) == 2
     else:
         coverage = coverage and request.messages_per_case == 100 and len(request.directions) == 2
+    if request.catalog_id == "OPS-01":
+        coverage = coverage and request.ops_observation_s == ops_matrix.STABILITY_SECONDS
     if request.catalog_id in rf_sweeps.DEFAULT_ECHO_SERIES:
         coverage = coverage and rf_sweeps.echo_count(request) == 100
     plan = {

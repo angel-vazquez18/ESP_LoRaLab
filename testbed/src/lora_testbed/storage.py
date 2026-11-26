@@ -129,6 +129,17 @@ class Store:
         )
         self.db.commit()
 
+    def node_observation_cursor(self):
+        return self.db.execute("SELECT coalesce(max(id), 0) FROM node_observations").fetchone()[0]
+
+    def node_health_after(self, cursor):
+        rows = self.db.execute(
+            "SELECT id, role, received_at, document FROM node_observations WHERE id>? "
+            "AND json_extract(document,'$.name')='health' ORDER BY id LIMIT 128",
+            (cursor,),
+        )
+        return [dict(row) | {"document": json.loads(row["document"])} for row in rows]
+
     def memory_observation_records(self, role, observation_id):
         rows = self.db.execute(
             "SELECT document FROM node_observations WHERE role=? "

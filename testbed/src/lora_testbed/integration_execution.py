@@ -89,6 +89,11 @@ class IntegrationExecution:
                 blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "ops_campaign":
                 blockers = ops_matrix.ready_blockers(spec, case, campaigns)
+            elif case["driver"] == "ops_stability":
+                blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
+                if case["radio_load_period_s"]:
+                    request = ops_matrix.stability_link_request(case, spec.seed)
+                    blockers.extend(radio.preflight(request)["blockers"])
             elif case["driver"] == "ops_unavailable":
                 blockers = [ops_matrix.BLOCKERS[case["group"]]]
             elif case["driver"] in ("local_voice_reference", "local_voice_operator"):
@@ -831,6 +836,158 @@ class IntegrationExecution:
                     "code": "complete_public_vector_timing_samples",
                     "outcome": "pass" if complete else "inconclusive",
                 }
+            ],
+        )
+
+    async def matrix_ops_stability(self, run, case, spec, host):
+        adapter = host.adapter
+        bindings = run["physical_bindings"]
+        baseline = {}
+        for role, binding in bindings.items():
+            baseline[role] = await adapter.request(binding, "status.get")
+            if not ops_matrix.idle_status(baseline[role]):
+                raise ValueError(f"Node {role} changed state before stability observation")
+        cursor = host.store.node_observation_cursor()
+        windows = {
+            role: ops_matrix.HealthWindow(binding, adapter.current(binding), baseline[role])
+            for role, binding in bindings.items()
+        }
+        loop = asyncio.get_running_loop()
+        started = loop.time()
+        duration = case["observation_s"]
+        deadline = started + duration
+        period = case["radio_load_period_s"]
+        planned_loads = (duration + period - 1) // period if period else 0
+        load = None
+        verified = 0
+        scheduled = 0
+        resources = ops_matrix.observed_host_resources(self.ledger.nodes)
+
+        def append(record):
+            self.ledger.append(run["id"], case["id"], record)
+
+        def collect_health(final=None):
+            nonlocal cursor
+            events = []
+            for row in host.store.node_health_after(cursor):
+                cursor = row["id"]
+                role = row["role"]
+                event = row["document"]
+                if role not in windows:
+                    continue
+                if final and event["data"]["uptime_us"] > final[role]["uptime_us"]:
+                    continue
+                windows[role].observe(event)
+                events.append(row)
+            if events:
+                append({"periodic_health": events})
+
+        append(
+            {
+                "baseline_status": baseline,
+                "baseline_identities": {
+                    role: adapter.current(binding).identity.model_dump()
+                    for role, binding in bindings.items()
+                },
+                "start_node_observation_cursor": cursor,
+                "host_monotonic_s": started,
+                **resources,
+            }
+        )
+        try:
+            while loop.time() < deadline:
+                for binding in bindings.values():
+                    node = adapter.current(binding)
+                    if node.last_health is None or loop.time() - node.last_health > 3:
+                        raise ValueError(f"Node {binding['role']} health is no longer fresh")
+                if load is not None and load.done():
+                    verified += int(bool(self.verified_link_child(load.result())))
+                    load = None
+                if (
+                    load is None
+                    and scheduled < planned_loads
+                    and loop.time() >= started + scheduled * period
+                ):
+                    request = ops_matrix.stability_link_request(case, spec.seed, scheduled)
+                    append(
+                        {
+                            "load_scheduled_s": scheduled * period,
+                            "load_started_s": loop.time() - started,
+                        }
+                    )
+                    load = asyncio.create_task(
+                        self.matrix_radio_child(
+                            run, case, request, host.radio, adapter, "stability_known_data"
+                        )
+                    )
+                    scheduled += 1
+                collect_health()
+                append(
+                    {
+                        "host_elapsed_s": loop.time() - started,
+                        **ops_matrix.observed_host_resources(self.ledger.nodes),
+                    }
+                )
+                await asyncio.sleep(max(0, min(1, deadline - loop.time())))
+            if load is not None and load.done():
+                verified += int(bool(self.verified_link_child(load.result())))
+                load = None
+        finally:
+            if load is not None:
+                load.cancel()
+                await asyncio.gather(load, return_exceptions=True)
+            final = {}
+            cleanup_errors = {}
+            for role, binding in bindings.items():
+                try:
+                    status = await adapter.request(binding, "status.get", timeout=0.75, retries=0)
+                    if status["state"] != "idle" or status["run_id"] is not None:
+                        raise ValueError(
+                            "The node did not confirm idle after stability observation"
+                        )
+                    final[role] = status
+                except (OSError, ValueError, TimeoutError) as exc:
+                    cleanup_errors[role] = str(exc)
+            collect_health(final if len(final) == len(bindings) else None)
+            case["cleanup_verified"] = not cleanup_errors
+            append(
+                {
+                    "final_status": final,
+                    "cleanup_errors": cleanup_errors,
+                    "last_node_observation_cursor": cursor,
+                }
+            )
+
+        if cleanup_errors:
+            raise ValueError("Stability observation cleanup could not confirm both nodes idle")
+        reports = {
+            role: window.finish(adapter.current(bindings[role]), final[role], loaded=bool(period))
+            for role, window in windows.items()
+        }
+        health_complete = all(not report["reasons"] for report in reports.values())
+        loads_complete = verified == planned_loads
+        case.update(
+            status="completed",
+            assessment="pass" if health_complete and loads_complete else "inconclusive",
+            measurements={
+                "requested_seconds": duration,
+                "observed_host_seconds": loop.time() - started,
+                "scheduled_loads": scheduled,
+                "planned_loads": planned_loads,
+                "verified_loads": verified,
+                "health": reports,
+                "host_resources_before": resources,
+                "host_resources_after": ops_matrix.observed_host_resources(self.ledger.nodes),
+            },
+            assertions=[
+                {
+                    "code": "bound_periodic_health_with_no_telemetry_loss",
+                    "outcome": "pass" if health_complete else "inconclusive",
+                },
+                {
+                    "code": "all_scheduled_stability_transfers_verified",
+                    "outcome": "pass" if loads_complete else "inconclusive",
+                },
             ],
         )
 
@@ -1704,6 +1861,8 @@ class IntegrationExecution:
                     await self.matrix_local_voice_case(run, case, host)
                 elif case["driver"] == "ops_campaign":
                     await self.matrix_ops_case(run, case, spec, host)
+                elif case["driver"] == "ops_stability":
+                    await self.matrix_ops_stability(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)
