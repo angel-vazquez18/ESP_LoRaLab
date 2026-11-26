@@ -19,8 +19,8 @@ Choose **Procedure defaults** to request the full 100-case campaign.
 The matrix saves the underlying campaign reference before it starts
 checking results. Stopping a run cancels the current child and retains
 the partial campaign. The completed export is independently verified
-before reporting a consistency result. Board disconnect/reset, host
-restart, and full physical campaign acceptance remain separate checks.
+before reporting a consistency result. Physical qualification uses the
+full campaign and its saved evidence.
 
 ## Idle and loaded stability
 
@@ -91,3 +91,54 @@ fresh sessions and independently verify the same 64 bytes. The middle
 child records `telemetry_gap`, preserves verified bytes, and confirms
 cleanup. The overall procedure case passes only when it proves both the
 gap and verified recovery. Physical execution remains a bench check.
+
+## Active and paused host restart
+
+OPS-01 C3 reviews pairs of saved campaign executions. Both the interrupted
+campaign and the explicit selected-case rerun are needed. The review can
+run after disconnecting the nodes.
+
+1. Create an ordered campaign of at least two bounded known-data cases
+   in one direction. For the active variant, stop the host while a
+   known-data child is transmitting. Select a long enough transfer to
+   catch that stage. For the paused variant, request pause during the
+   first transfer and wait for **Paused** between cases before stopping
+   the host.
+2. Start the backend with the same data directory. Open the saved
+   execution and check that it is interrupted. Reconnect the same two
+   nodes to their original roles. In the interrupted execution, select
+   exactly the interrupted child for an active restart, or the first
+   completed child for a paused restart, and choose **Rerun selected
+   cases**. Retain the IDs of both executions.
+3. In **Experiments**, select **OPS-01**, **C3**, and the required
+   workload. Paste the array below into **Saved restart evidence
+   (JSON)**, substituting the execution IDs. Preview and start the
+   assessment. Use a separate pair of IDs for each case. A quick plan
+   has four cases. The default plan has 12, with three repetitions of
+   each variant in both directions.
+
+```json
+[
+  {
+    "variant": "restart_active",
+    "direction": "A_TO_B",
+    "repetition": 1,
+    "interrupted": "422ed491-22a7-4319-9949-aee83ab1739f",
+    "recovery": "09fae31a-4d41-4b87-a544-52cd0c5c8910"
+  }
+]
+```
+
+The CLI uses the same input array in `ops_restart_evidence` alongside
+`"catalog_id":"OPS-01"`, `"groups":["C3"]` and the chosen repetition count.
+Save that JSON object as `restart.json`, then run
+`uv run --project testbed lora-testbed integration-matrix restart.json`.
+
+Expect a pass for each pair with a saved shutdown/restart checkpoint,
+new host and connection identities, a fresh preflight, a fresh radio
+session, complete recovery telemetry and matching archived bytes.
+Unattached cases are blocked. Missing or damaged records leave that
+case inconclusive. The original cleanup result and fault reason are
+preserved. Keep both campaign ZIPs with the matrix evidence. An abrupt
+restart can preserve incomplete original cleanup, so record physical
+cessation and lease timing during bench qualification.

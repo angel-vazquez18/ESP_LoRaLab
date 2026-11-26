@@ -4,6 +4,13 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Active and paused host restart review
+
+OPS-01 C3 links an interrupted campaign and an explicit selected-case
+rerun across a host restart. It checks fresh ownership and preflight,
+re-verifies archived radio data, and preserves the original checkpoint
+and cleanup outcome. See [restart review](ops_matrix.md#active-and-paused-host-restart).
+
 ## November 26 — Missing receive evidence
 
 OPS-01 C5 verifies that one missing host observation leaves an explicit
