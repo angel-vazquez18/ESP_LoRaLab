@@ -56,7 +56,7 @@ def cases(request, groups, limit):
                                 else {
                                     "C1": "memory_idle",
                                     "C2": "memory_link",
-                                    "C4": "memory_resource_refusal",
+                                    "C4": "resource_refusal",
                                     "C5": "memory_recovery",
                                 }[group]
                             ),

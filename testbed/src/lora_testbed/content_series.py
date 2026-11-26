@@ -37,7 +37,13 @@ def cases(request, groups, message_limit):
                         "group": group,
                         "variant": variant,
                         "repetition": repetition,
-                        "driver": "content_series" if group != "C3" else "content_negative",
+                        "driver": (
+                            "content_series"
+                            if group != "C3"
+                            else "resource_refusal"
+                            if request.catalog_id == "PKT-01"
+                            else "content_negative"
+                        ),
                         "role": direction,
                         "direction": direction,
                         "message_bytes": size,

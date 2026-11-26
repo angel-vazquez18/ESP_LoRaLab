@@ -802,8 +802,10 @@ class NodeSession:
             if type(limit) is not int or not 1 <= limit <= 65536 or message_bytes != limit + 1:
                 raise ValueError("The probe must be exactly one byte above the current node limit")
             payload = run_protocol_v2.Prepare.model_validate(args).model_dump()
-            if payload["spec"]["source"] != "known_data" or payload["spec"]["security"] != "none":
-                raise ValueError("Resource refusal uses only unprotected known data")
+            if payload["spec"]["source"] != "known_data":
+                raise ValueError("Resource refusal uses only prepared known data")
+            if self.health.security_ready != (payload["spec"]["security"] == "aes128_gcm"):
+                raise ValueError("Resource refusal requires the selected owned security profile")
             payload["spec"]["message_bytes"] = message_bytes
             command = self._next_command("run.prepare", payload, run_id)
             [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)

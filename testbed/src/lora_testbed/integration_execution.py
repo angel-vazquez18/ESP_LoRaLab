@@ -75,20 +75,13 @@ class IntegrationExecution:
             ):
                 blockers = radio.preflight(link_request(spec, case, 0))["blockers"]
             elif case["driver"] == "content_negative":
-                if spec.catalog_id == "PKT-01" and limit is not None:
-                    blockers = radio.preflight(RadioRunRequest(direction=case["direction"]))[
-                        "blockers"
-                    ]
-                elif spec.catalog_id == "PKT-01":
-                    blockers = ["Connect both nodes to establish the negotiated message limit"]
-                else:
-                    control = content_series.run_request(spec, case, 0)
-                    request = (
-                        KeyMismatchRunRequest(**control.model_dump())
-                        if case["variant"] == "wrong_key"
-                        else control
-                    )
-                    blockers = radio.preflight(request)["blockers"]
+                control = content_series.run_request(spec, case, 0)
+                request = (
+                    KeyMismatchRunRequest(**control.model_dump())
+                    if case["variant"] == "wrong_key"
+                    else control
+                )
+                blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "ops_campaign":
                 blockers = ops_matrix.ready_blockers(spec, case, campaigns)
             elif case["driver"] == "ops_unavailable":
@@ -127,11 +120,11 @@ class IntegrationExecution:
                 blockers = memory_matrix.local_audio_blockers(
                     self.ledger.nodes[role], role, case["variant"]
                 )
-            elif case["driver"] == "memory_resource_refusal":
+            elif case["driver"] == "resource_refusal":
                 blockers = (
                     ["Connect both nodes to establish the negotiated message limit"]
                     if limit is None
-                    else radio.preflight(RadioRunRequest(direction=case["direction"]))["blockers"]
+                    else radio.preflight(self.resource_control_request(case))["blockers"]
                 )
             elif case["driver"] == "memory_recovery":
                 blockers = [
@@ -576,50 +569,6 @@ class IntegrationExecution:
                 {
                     "code": "matched_settings_recovered_delivery",
                     "outcome": "pass" if recovered else "inconclusive",
-                },
-            ],
-        )
-
-    async def matrix_oversize_case(self, run, case, spec, radio, adapter):
-        rejected = False
-        reason = None
-        try:
-            request = RadioRunRequest(
-                direction=case["direction"],
-                message_bytes=case["message_bytes"],
-                timeout_ms=300000,
-            )
-        except ValueError:
-            rejected = case["message_bytes"] > 65536
-            reason = "Request exceeds the testbed's model limit"
-        else:
-            preflight = radio.preflight(request)
-            rejected = any("max_message_bytes" in value for value in preflight["blockers"])
-            reason = "; ".join(preflight["blockers"])
-        self.ledger.append(
-            run["id"],
-            case["id"],
-            {
-                "source": "read-only host preflight",
-                "requested_message_bytes": case["message_bytes"],
-                "advertised_message_limit": self.message_limit(radio),
-                "rejection_observed": rejected,
-                "reason": reason,
-            },
-        )
-        control = RadioRunRequest(direction=case["direction"], security=case["security"])
-        recovered = await self.matrix_radio_child(
-            run, case, control, radio, adapter, "intact_after_oversize_preflight"
-        )
-        passed = rejected and self.verified_link_child(recovered)
-        case.update(
-            status="completed",
-            assessment="pass" if passed else "inconclusive",
-            cleanup_verified=True,
-            assertions=[
-                {
-                    "code": "host_oversize_rejection_and_recovery",
-                    "outcome": "pass" if passed else "inconclusive",
                 },
             ],
         )
@@ -1091,8 +1040,12 @@ class IntegrationExecution:
             ],
         )
 
-    async def matrix_memory_resource_refusal(self, run, case, radio, adapter):
-        control = RadioRunRequest(direction=case["direction"])
+    @staticmethod
+    def resource_control_request(case):
+        return RadioRunRequest(direction=case["direction"], security=case["security"])
+
+    async def matrix_resource_refusal(self, run, case, radio, adapter):
+        control = self.resource_control_request(case)
         probe = PrepareLimitCheck(**control.model_dump(), attempted_bytes=case["message_bytes"])
         refusal = await self.matrix_radio_child(
             run, case, probe, radio, adapter, "device_prepare_resource_refusal"
@@ -1612,16 +1565,13 @@ class IntegrationExecution:
                 elif case["driver"] == "peer_mismatch":
                     await self.matrix_mismatch_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "content_negative":
-                    if spec.catalog_id == "SEC-01":
-                        await self.matrix_security_case(run, case, spec, radio, adapter)
-                    else:
-                        await self.matrix_oversize_case(run, case, spec, radio, adapter)
+                    await self.matrix_security_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "echo_batch":
                     await self.matrix_echo_case(run, case, spec, radio, adapter)
                 elif case["driver"] == "local_crypto":
                     await self.matrix_crypto_case(run, case, host)
-                elif case["driver"] == "memory_resource_refusal":
-                    await self.matrix_memory_resource_refusal(run, case, radio, adapter)
+                elif case["driver"] == "resource_refusal":
+                    await self.matrix_resource_refusal(run, case, radio, adapter)
                 elif case["driver"] == "memory_audio_pair":
                     await self.matrix_paired_memory_audio(run, case, host)
                 elif case["driver"] == "memory_audio_local":

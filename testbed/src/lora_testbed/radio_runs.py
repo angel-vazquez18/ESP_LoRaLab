@@ -112,7 +112,6 @@ class PreparedCancellationCheck(RadioRunRequest):
 
 class PrepareLimitCheck(RadioRunRequest):
     message_bytes: Literal[64] = 64
-    security: Literal["none"] = "none"
     attempted_bytes: int = Field(ge=2, le=65537)
 
 
@@ -892,7 +891,7 @@ class RadioRuns:
         evidence["reply"] = reply.model_dump()
         after = evidence["status_after"] = await self.command(r, role, "status.get")
         listing = evidence["artifacts_after"] = await self.command(r, role, "artifact.list")
-        unchanged = ("config_revision", "radio", "link", "reset_cause")
+        unchanged = ("config_revision", "radio", "link", "reset_cause", "security_ready")
         evidence["preserved"] = {
             "idle": all(
                 status["state"] == "idle" and status["operation_id"] is None
