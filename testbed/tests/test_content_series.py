@@ -52,12 +52,15 @@ def test_content_series_runs_boundary_cases_and_separate_security_modes(
                 assert saved["assessment"] == "pass"
                 assert {c["message_bytes"] for c in saved["cases"]} == {160, 161, 65537}
                 assert len(pair.frames) == 8
-                negative = [
-                    e["document"]
-                    for e in host.procedures.all_evidence(saved["id"])
-                    if e["document"].get("source") == "read-only host preflight"
-                ]
-                assert len(negative) == 2 and all(e["rejection_observed"] for e in negative)
+                negative = [case for case in saved["cases"] if case["group"] == "C3"]
+                assert len(negative) == 2
+                for case in negative:
+                    rejected, recovered = [host.radio.get(run_id) for run_id in case["run_ids"]]
+                    assert not rejected["events"] and not rejected["prepared"]
+                    assert (
+                        rejected["resource_refusal"]["reply"]["error"]["code"] == "RESOURCE_LIMIT"
+                    )
+                    assert recovered["verification"]["bytes_equal"]
             else:
                 assert saved["assessment"] == "inconclusive"
                 assert Counter(c["status"] for c in saved["cases"]) == {
@@ -120,6 +123,49 @@ def test_wrong_key_rejection_and_profile_preflight_keep_secrets_private(tmp_path
             assert '"tx_key_hex":' not in trace and '"rx_key_hex":' not in trace
             assert len(wrong_key["run_ids"]) == 3 and len(profile["run_ids"]) == 2
             assert len(pair.frames) == 5
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
+
+
+def test_protected_packet_limit_retires_keys_before_verified_recovery(tmp_path, native_library):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="PKT-01",
+                groups=["C3"],
+                repetitions=1,
+                directions=["A_TO_B"],
+                rf_security="aes128_gcm",
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(20):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["status"] == "completed" and saved["assessment"] == "pass", saved
+            [case] = saved["cases"]
+            rejected, recovered = [host.radio.get(identifier) for identifier in case["run_ids"]]
+            evidence = rejected["resource_refusal"]
+            assert evidence["reply"]["error"]["code"] == "RESOURCE_LIMIT"
+            assert evidence["status_before"]["security_ready"] is True
+            assert evidence["status_after"]["security_ready"] is True
+            assert evidence["preserved"]["no_execution_events"]
+            assert rejected["cleanup"]["confirmed"] and rejected["security"]["keys_retired_on_host"]
+            assert recovered["verification"]["bytes_equal"] and recovered["cleanup"]["confirmed"]
+            assert recovered["security"]["key_set_id"] != rejected["security"]["key_set_id"]
+            trace = host.radio.content(rejected["id"], "wire").read_text()
+            assert '"name":"run.arm"' not in trace and '"name":"run.start"' not in trace
+            assert '"tx_key_hex":' not in trace and '"rx_key_hex":' not in trace
+            assert len(pair.frames) == 1
         finally:
             if bridge:
                 bridge.cancel()
