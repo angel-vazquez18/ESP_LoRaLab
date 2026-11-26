@@ -4,6 +4,21 @@ Updated November 25, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 25 — Memory cleanup after cancellation and failure
+
+MEM-01 C5 now stops an allocated transfer before arming and exercises a
+known missing fragment on lab firmware. Pre-session and post-cleanup
+memory samples establish whether both nodes returned to declared bounds.
+A verified 64-byte transfer checks recovery on the same pair. See
+[the recovery procedure](memory_matrix.md#c5-cancellation-and-failed-workload-recovery).
+
+## November 25 — Oversized request memory check
+
+MEM-01 C4 now sends the pair's advertised maximum plus one to the
+limiting firmware, requires `RESOURCE_LIMIT` before arming and verifies a
+fresh 64-byte transfer. Native checks passed in both directions. See
+[the refusal procedure](memory_matrix.md#c4-oversized-preparation).
+
 ## November 25 — Audio stage memory
 
 MEM-01 C3 now records local capture, codec and playback memory, plus
@@ -189,7 +204,7 @@ idle measurements. Each observer saves raw events and observed allocation
 lifetimes. Cancelling an idle check stops its own observer. Full
 `make check` passed 1,130 tests and all repository checks. See
 [sampled memory procedures](memory_matrix.md) for supported cases and
-the audio stage follow-up and remaining allocation-rejection and recovery work.
+the audio, allocation-rejection and deliberate recovery cases.
 
 ## November 25 — Dashboard matrix controls
 

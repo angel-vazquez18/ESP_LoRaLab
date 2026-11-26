@@ -56,5 +56,44 @@ artifacts are preserved. Native fixtures cover the workflows and ownership
 cleanup. Physical microphone capture and speaker playback still require
 bench confirmation.
 
-C4 device-side allocation refusal and C5 deliberate cancellation/failure
-with declared recovery bounds are still pending.
+## C4 oversized preparation
+
+Select C4 with both roles connected. Each direction sends a single known-data
+prepare request one byte above the negotiated message limit to a node that
+advertises that limit. With equal limits, the receiver is the target, so
+selecting both directions tests both nodes. The firmware returns
+`RESOURCE_LIMIT` before allocating RF workload buffers. The testbed records
+the actual reply, pre/post health and artifact inventories, then closes the
+session. It does not send arm or start commands for the oversized case. A
+fresh session must deliver and verify 64 known bytes on the same pair.
+
+The saved case links the refusal and recovery records. Compare configuration,
+boot identity, reserved artifact bytes and allocation-failure counters to
+check for unintended activity. Both directions passed in the native fixture.
+Physical confirmation of the refusal remains pending.
+
+## C5 cancellation and failed-workload recovery
+
+Select C5 with two compatible nodes. The cancellation case prepares a
+1,200-byte known-data transfer on both roles, then issues stop before
+arming. The testbed reads back the sender artifact and removes it only
+after verifying its bytes and confirming that its ID belongs to this run.
+
+The failure case requires lab firmware. It drops one selected fragment of
+a protected 1,200-byte transfer after three accepted fragments. Stop-and-wait
+with zero retries gives one planned attempt. The testbed verifies the actual
+drop, the correlated ACK timeout, the missing suffix and zero partial
+delivery. The negative child is recorded as the expected bounded failure.
+
+The plan declares recovery tolerances of 8,192 internal bytes and 4,096
+PSRAM bytes. Each is the maximum permitted reduction in sampled free bytes
+and largest free block from the first idle sample, taken before opening the
+session. After both nodes confirm cleanup, the observers measure the selected
+idle window. Named live buffers and the allocation-failure counter must
+return to their pre-run values. An absent PSRAM region stays unavailable.
+Review the linked memory histories for the observation interval, named
+allocations, sampled minima and their declared lower bounds.
+
+Each case ends with a fresh, independently verified 64-byte transfer on
+the same pair. Both controlled paths passed on the native fixture.
+Full-window repetitions and hardware qualification remain bench work.

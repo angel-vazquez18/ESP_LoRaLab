@@ -186,8 +186,10 @@ Existing support: finite typed 10 Hz/stage memory observations, named requested
 buffers and observed lifetimes (#73), plus durable collection and independent
 sample/stage assessment (#82). Imported and physical-readback evidence remain
 distinct; missing observations are inconclusive and true peaks unavailable.
-Full procedure cases, recovery criteria, plots and physical acceptance below
-remain open; see [assessment scope](workload_assessments.md).
+The shared runner includes C1–C5, sampled heap and named buffer recovery bounds,
+and memory histories. See [case instructions](memory_matrix.md) and
+[memory plots](workload_plots.md). Full repetitions and physical acceptance
+remain open.
 
 - [ ] Add named buffer allocations/lifetimes, stage entry/exit observations and
   10 Hz internal/PSRAM samples during RF, codec, artifacts and audio workloads.

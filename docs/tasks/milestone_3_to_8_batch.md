@@ -786,7 +786,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices and exact packet fault trials | Device-side resource rejection, same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Echo matrix and offline `clock-evaluate` | Controlled missing reply, live pulse calibration, loaded measurements and calibrated delay |
-| MEM-01 | Idle, known data and instrumented local and paired audio | Device-side limits and induced recovery-band checks |
+| MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | One-node and paired reference matrices, source assessment/readback and `voice-review` | Attended microphone/error cases, complete common host sustained-source runner, listening study and plots |
 | MODEL-01 | Independent vectors and observed frame/message matrices | Instrumented airtime/tolerance, residual plots and full bench study |
 | OPS-01 | Linked recovery campaign matrix with all 100 fixture cases verified | Physical campaign acceptance, deliberate USB and reset interruptions, restart, telemetry/timeouts and loaded stability |
@@ -885,3 +885,14 @@ MEM-01 C3 now links capture, codec, reassembly and playback to firmware
 workload IDs and measures sampled memory change against the preceding
 baseline. Twenty-one focused tests passed, including reassembly without
 receiver playback, integrated voice and local capture cancellation.
+
+MEM-01 C4 sends max plus one over the typed control connection and requires
+a resource refusal, unchanged idle health and artifacts, and a successful
+64-byte recovery run. The native pair passed both directions with observed
+65,537-byte refusals and no arm/start commands for the oversized requests.
+
+MEM-01 C5 records controlled cancellation of prepared work and a confirmed
+protected delivery failure. Both measurements compare post-cleanup samples
+against declared bounds, verify named buffer release and link a fresh
+64-byte recovery transfer. The cancellation case verifies and retires only
+the source artifact that it prepared.

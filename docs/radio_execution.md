@@ -22,6 +22,8 @@ identifies the vocabulary, not an implementation promise.
    denominator 5 means 4/5; it is not the driver's numeric enum. Applied power is
    a configured setting, not a calibrated antenna-power measurement.
 3. `run.prepare` supplies the bounded source specification and calculated budget.
+   A size above the advertised message limit returns `RESOURCE_LIMIT`
+   before workload allocation or arming.
    Acceptance is not completion: wait for the correlated preparation result and
    `run.prepared` evidence before arming.
 4. Arm the receiver and wait for `receiver_ready = true`, then arm the sender
