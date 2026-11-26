@@ -111,6 +111,19 @@ class PreparedCancellationCheck(RadioRunRequest):
     security: Literal["none"] = "none"
 
 
+class ReceiveEvidenceGapCheck(RadioRunRequest):
+    """Internal OPS-01 case with one omitted host receive observation."""
+
+    message_bytes: Literal[64] = 64
+    security: Literal["none"] = "none"
+
+    @model_validator(mode="after")
+    def one_frame(self):
+        if self.link.fragment_payload_bytes < self.message_bytes or self.link.ack_mode != "none":
+            raise ValueError("The receive evidence fixture requires one unacknowledged DATA frame")
+        return self
+
+
 class PrepareLimitCheck(RadioRunRequest):
     message_bytes: Literal[64] = 64
     attempted_bytes: int = Field(ge=2, le=65537)
@@ -1194,6 +1207,24 @@ class RadioRuns:
                         r, role, "run.prepare", {"spec": plan.spec.model_dump(), "budget": budget}
                     )
                     r["prepared"][role] = await self.prepared(r, role, accepted)
+                if isinstance(request, ReceiveEvidenceGapCheck):
+                    receiver = r["receiver"]
+                    r["receive_evidence_gap"] = {"role": receiver, "omitted_event": None}
+
+                    def on_omit(event):
+                        r["receive_evidence_gap"]["omitted_event"] = event
+                        self.trace_command(
+                            r,
+                            receiver,
+                            {
+                                "direction": "host_fixture",
+                                "perturbation": "omit_one_rx_frame",
+                                "record": event,
+                            },
+                            False,
+                        )
+
+                    self.same_boot(r, receiver).set_receive_observation_omission(r["id"], on_omit)
                 if isinstance(request, PreparedCancellationCheck):
                     r["stage"] = "prepared_cancellation"
                     await self.cancel_prepared_workload(r, request)
@@ -1379,6 +1410,21 @@ class RadioRuns:
             r["status"] = "interrupted" if interrupted else "failed"
             r["error"] = str(exc) or type(exc).__name__
         finally:
+            if fixture := r.get("receive_evidence_gap"):
+                self.nodes[fixture["role"]].clear_receive_observation_omission(r["id"])
+                fixture["deltas"] = {
+                    role: {
+                        "event_gaps": node.event_gaps - r["baseline"][role]["event_gaps"],
+                        "framing_errors": node.framing_errors
+                        - r["baseline"][role]["framing_errors"],
+                        "telemetry_drops": (
+                            node.health.telemetry_drops - r["baseline"][role]["telemetry_drops"]
+                            if node.health
+                            else None
+                        ),
+                    }
+                    for role, node in self.nodes.items()
+                }
             self.cleaning_up = True
             r["stage"] = "stopping"
             # Persistence must not prevent the physical sessions from being closed.
@@ -1592,10 +1638,16 @@ class RadioRuns:
                     self.nodes[role].event_gaps != r["baseline"][role]["event_gaps"]
                     for role in "AB"
                 ):
-                    raise ValueError(
+                    reason = (
                         "Required radio observations are missing; "
                         "RF delivery and telemetry loss differ"
                     )
+                    r["accounting"] = {
+                        "evidence_complete": False,
+                        "reason_code": "telemetry_gap",
+                        "reason": reason,
+                    }
+                    raise ValueError(reason)
         try:
             r["accounting"] = reconcile(r, expected)
         except ValueError as exc:

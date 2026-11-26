@@ -36,6 +36,7 @@ from .radio_runs import (
     PeerProfileMismatchCheck,
     PrepareLimitCheck,
     RadioRunRequest,
+    ReceiveEvidenceGapCheck,
 )
 from .storage import utc_now
 
@@ -102,6 +103,9 @@ class IntegrationExecution:
                     blockers.append(
                         "The controlled reply timeout requires the bounded memory probe"
                     )
+            elif case["driver"] == "ops_telemetry_gap":
+                request = ops_matrix.known_data_request(case, spec.seed)
+                blockers = radio.preflight(request)["blockers"]
             elif case["driver"] == "ops_stability":
                 blockers = ops_matrix.stability_role_blockers(self.ledger.nodes)
                 if case["radio_load_period_s"]:
@@ -922,6 +926,45 @@ class IntegrationExecution:
                 "recovered": matched_controls,
             },
             assertions=assertions,
+        )
+
+    async def matrix_ops_telemetry_gap(self, run, case, spec, host):
+        adapter, radio = host.adapter, host.radio
+        control = ops_matrix.known_data_request(case, spec.seed + case["repetition"] - 1)
+        before = await self.matrix_radio_child(run, case, control, radio, adapter, "before_gap")
+        probe = ReceiveEvidenceGapCheck(**control.model_dump())
+        trial = await self.matrix_radio_child(run, case, probe, radio, adapter, "omitted_rx_frame")
+        after = await self.matrix_radio_child(run, case, control, radio, adapter, "after_gap")
+        proved = ops_matrix.verified_receive_gap(trial)
+        same_data = all(
+            self.verified_link_child(child)
+            and child["verification"]["sha256"] == (trial.get("verification") or {}).get("sha256")
+            for child in (before, after)
+        )
+        sessions = {child["session_id"] for child in (before, trial, after)}
+        recovered = same_data and len(sessions) == 3
+        evidence = {
+            "fixture": trial.get("receive_evidence_gap"),
+            "excluded_from_rf_loss_analysis": proved,
+            "verified_recovery": recovered,
+            "retained_readback": trial.get("verification"),
+        }
+        self.ledger.append(run["id"], case["id"], {"telemetry_gap_assessment": evidence})
+        case.update(
+            status="completed",
+            assessment="pass" if proved and recovered else "inconclusive",
+            cleanup_verified=True,
+            measurements=evidence,
+            assertions=[
+                {
+                    "code": "observed_gap_excludes_rf_loss_inference",
+                    "outcome": "pass" if proved else "inconclusive",
+                },
+                {
+                    "code": "verified_data_in_fresh_session_after_gap",
+                    "outcome": "pass" if recovered else "inconclusive",
+                },
+            ],
         )
 
     async def matrix_ops_stability(self, run, case, spec, host):
@@ -1950,6 +1993,8 @@ class IntegrationExecution:
                     await self.matrix_ops_stability(run, case, spec, host)
                 elif case["driver"] == "ops_control_recovery":
                     await self.matrix_ops_control_recovery(run, case, spec, host)
+                elif case["driver"] == "ops_telemetry_gap":
+                    await self.matrix_ops_telemetry_gap(run, case, spec, host)
                 else:
                     await self.matrix_link_case(run, case, spec, radio, adapter)
                 self.ledger.save(run)

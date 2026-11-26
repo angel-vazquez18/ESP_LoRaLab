@@ -33,7 +33,6 @@ BLOCKERS = {
     "C1": "The attended USB interruption case is unavailable",
     "C2": "The attended board reset case is unavailable",
     "C3": "A supervised host restart fixture is required",
-    "C5": "A controlled telemetry omission fixture is required",
 }
 
 
@@ -59,9 +58,11 @@ def cases(request, groups):
                 "group": group,
                 "variant": variant,
                 "repetition": repetition,
-                "driver": {"C4": "ops_control_recovery", "C6": "ops_stability"}.get(
-                    group, "ops_unavailable"
-                ),
+                "driver": {
+                    "C4": "ops_control_recovery",
+                    "C5": "ops_telemetry_gap",
+                    "C6": "ops_stability",
+                }.get(group, "ops_unavailable"),
                 "role": direction,
                 "direction": direction,
                 **(
@@ -80,6 +81,32 @@ def cases(request, groups):
 
 def known_data_request(case, seed, ordinal=0):
     return RadioRunRequest(direction=case["direction"], source_seed=(seed + ordinal) % 2**32)
+
+
+def verified_receive_gap(trial):
+    fixture = trial.get("receive_evidence_gap") or {}
+    omitted = fixture.get("omitted_event") or {}
+    receiver, sender = trial["receiver"], trial["sender"]
+    accounting = trial.get("accounting") or {}
+    return (
+        trial["status"] == "failed"
+        and trial["failure_stage"] == "retrieving"
+        and accounting.get("reason_code") == "telemetry_gap"
+        and trial["cleanup"]["confirmed"]
+        and (trial.get("verification") or {}).get("bytes_equal") is True
+        and accounting.get("evidence_complete") is False
+        and fixture.get("role") == receiver
+        and omitted.get("run_id") == trial["id"]
+        and omitted.get("name") == "rx.frame"
+        and not any(
+            event["role"] == receiver and event["name"] == "rx.frame" for event in trial["events"]
+        )
+        and fixture.get("deltas")
+        == {
+            sender: {"event_gaps": 0, "framing_errors": 0, "telemetry_drops": 0},
+            receiver: {"event_gaps": 1, "framing_errors": 0, "telemetry_drops": 0},
+        }
+    )
 
 
 def stability_role_blockers(nodes):

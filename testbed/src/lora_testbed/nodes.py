@@ -85,6 +85,7 @@ class NodeSession:
         self.pending = {}
         self._reply_probe = None
         self._health_probe = None
+        self._receive_observation_omission = None
         self.command_lock = asyncio.Lock()
         self.control_cycle_active = False
         self.rf_run_id = None
@@ -300,6 +301,7 @@ class NodeSession:
         self.startup_records = 0
         self.rf_run_id = None
         self.rf_runs = deque(maxlen=8)
+        self._receive_observation_omission = None
         self.wire_profile = None
         self.active_operation = None
         self.operation_results.clear()
@@ -687,6 +689,8 @@ class NodeSession:
                             raise ValueError("Operation event outside negotiated diagnostic schema")
                         if record.event_seq <= self.event_seq:
                             continue
+                        if self.omit_matching_receive_observation(record):
+                            continue
                         if self.event_seq:
                             self.event_gaps += record.event_seq - self.event_seq - 1
                         self.event_seq = record.event_seq
@@ -760,6 +764,30 @@ class NodeSession:
         else:
             checked = None
         return result, checked
+
+    def set_receive_observation_omission(self, run_id, on_omit):
+        if self.rf_run_id != run_id or not run_id or self._receive_observation_omission:
+            raise ValueError("Receive observation omission requires the exact owned radio run")
+        self._receive_observation_omission = (run_id, on_omit)
+
+    def clear_receive_observation_omission(self, run_id):
+        if self._receive_observation_omission and self._receive_observation_omission[0] == run_id:
+            self._receive_observation_omission = None
+
+    def omit_matching_receive_observation(self, record):
+        omission = self._receive_observation_omission
+        if (
+            omission is None
+            or record.run_id != omission[0]
+            or self.rf_run_id != omission[0]
+            or record.name != "rx.frame"
+            or record.data.frame_type != "data"
+            or not record.data.crc_ok
+        ):
+            return False
+        self._receive_observation_omission = None
+        omission[1](record.model_dump())
+        return True
 
     def configuration_probe_blocker(self):
         if not self.connected or not self.identity or not self.health:
