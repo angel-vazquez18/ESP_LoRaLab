@@ -175,7 +175,7 @@ def airtime_us(radio: Radio, frame_bytes: int) -> int:
 def preview(plan: KnownDataPlan) -> dict:
     """Prepare bounded calculations without connecting nodes or creating a run."""
     spec, radio, link = plan.spec, plan.radio, plan.link
-    encoded = spec.source == "encoded_source"
+    encoded = spec.source in ("encoded_source", "fixed_rate_encoded")
     echo = spec.source == "echo"
     if echo and (
         spec.message_count != 1
@@ -184,7 +184,7 @@ def preview(plan: KnownDataPlan) -> dict:
         or link.max_retries
     ):
         raise ValueError("Echo requires one unacknowledged fragment without retries")
-    codec_allowance = 5000000 if encoded else 0
+    codec_allowance = 5000000 if spec.source == "encoded_source" else 0
     tag_bytes = 16 if spec.security == "aes128_gcm" else 0
     fragments = ceil_div(spec.message_bytes, link.fragment_payload_bytes)
     last_bytes = spec.message_bytes - (fragments - 1) * link.fragment_payload_bytes
@@ -306,7 +306,7 @@ def preview(plan: KnownDataPlan) -> dict:
                 if echo
                 else "Processing allowance: 10000 us per message plus 10000 us per maximum attempt",
                 "Encoded source adds 5000000 us codec allowance; capture/playback are separate"
-                if encoded
+                if codec_allowance
                 else "No controlled injections, codec, capture or playback in this preview",
                 "Worst case includes every permitted ACK timeout and inter-attempt guard",
                 "Airtime predictions do not predict delivery, RSSI/SNR or measured goodput",

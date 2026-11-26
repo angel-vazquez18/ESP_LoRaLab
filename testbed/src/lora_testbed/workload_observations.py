@@ -111,9 +111,9 @@ class WorkloadObservations:
         async with self.operation():
             return await self._collect_memory(role, observation_id, stop)
 
-    async def collect_source(self, role, run_id):
+    async def collect_source(self, role, run_id, *, parent_radio=None):
         async with self.operation():
-            return await self._collect_source(role, run_id)
+            return await self._collect_source(role, run_id, parent_radio)
 
     async def _start_memory(self, role, duration_ms):
         binding = self.adapter.bind(role)
@@ -156,8 +156,10 @@ class WorkloadObservations:
             },
         )
 
-    async def _collect_source(self, role, run_id):
-        binding = self.adapter.bind(role)
+    async def _collect_source(self, role, run_id, parent_radio):
+        binding = parent_radio["binding"] if parent_radio else self.adapter.bind(role)
+        if binding["role"] != role:
+            raise ValueError("Source role does not match the parent run's binding")
         node = self.adapter.current(binding)
         if node.rf_run_id != run_id:
             raise ValueError("Source readback requires the currently owned RF session")
@@ -214,16 +216,24 @@ class WorkloadObservations:
             errors.append("Source readback was cancelled; retained pages are partial")
         except (OSError, ValueError, TimeoutError) as exc:
             errors.append(str(exc))
+        gaps = node.event_gaps + getattr(getattr(node, "health", None), "telemetry_drops", 0)
+        gap_scope = "Observed connection gaps plus latest boot-wide reported drops"
+        if parent_radio:
+            baseline = parent_radio["baseline"]
+            gaps = max(0, gaps - (baseline["event_gaps"] + baseline["telemetry_drops"]))
+            gap_scope = "Bound sender gaps and reported drops since parent RF preflight"
         evidence = AssessmentRequest(
             parent_run_id=run_id,
             source={
                 "status": initial.status,
                 "frames": frames,
                 "queue_samples": samples,
-                "execution_status": "unavailable",
-                "telemetry_gaps": node.event_gaps
-                + getattr(getattr(node, "health", None), "telemetry_drops", 0),
+                "execution_status": "completed"
+                if parent_radio and not cancelled
+                else "unavailable",
+                "telemetry_gaps": gaps,
                 "collection_errors": errors,
+                "delivery": parent_radio["delivery"] if parent_radio else None,
             },
         )
         record = self.save(
@@ -235,13 +245,14 @@ class WorkloadObservations:
                 "source_policy": source.POLICY,
                 "execution_profile": run_protocol_v2.EXECUTION_PROFILE,
                 "execution_schema_sha256": run_protocol_v2.schema_digest(),
-                "gap_scope": "Observed connection gaps plus latest boot-wide reported drops; "
-                "no per-run baseline was inferred",
+                "gap_scope": gap_scope,
                 "raw_reports": reports,
-                "execution_status_basis": "Parent RF outcome was not collected; "
-                "worker terminal state does not imply RF completion",
-                "delivery": "Receiver/archive collection belongs to the parent run; "
-                "not inferred from sender counters",
+                "execution_status_basis": "Both RF terminal summaries confirmed"
+                if parent_radio
+                else "Parent RF outcome was not collected",
+                "delivery": parent_radio["receiver_provenance"]
+                if parent_radio
+                else "No receiver archive was collected",
             },
         )
         if cancelled:

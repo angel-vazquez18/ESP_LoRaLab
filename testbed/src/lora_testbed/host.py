@@ -34,10 +34,12 @@ class Host:
         self.procedures = ProcedureService(self.store, self.physical)
         self.artifacts = ArtifactTransfers(self.store, self.physical, self.adapter)
         self.audio = NodeAudio(self.store, self.physical, self.artifacts, self.adapter)
-        self.radio = RadioRuns(self.store, self.physical, self.artifacts, self.adapter)
+        self.observations = WorkloadObservations(self.store, self.adapter)
+        self.radio = RadioRuns(
+            self.store, self.physical, self.artifacts, self.adapter, self.observations
+        )
         self.voice = VoiceRuns(self.store, self.physical, self.artifacts, self.audio, self.radio)
         self.campaign_plans = CampaignPlans(self.store, self.campaign_case_preflight)
-        self.observations = WorkloadObservations(self.store, self.adapter)
         self.physical_campaigns = PhysicalCampaigns(self)
         self.lab_trials = LabTrials(self)
         self.campaign_exports = CampaignExports(self)

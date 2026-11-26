@@ -1,6 +1,7 @@
 """Bounded physical known-data message workflow; this is not full IF-02 qualification."""
 
 import asyncio
+import base64
 import hashlib
 import io
 import json
@@ -257,6 +258,49 @@ class EncodedRadioRunRequest(RadioRunRequest):
         )
 
 
+class FixedRateMessagePlan(KnownDataPlan):
+    spec: run_protocol_v2.FixedRateSourceSpec
+
+
+class FixedRateRadioRunRequest(EncodedRadioRunRequest):
+    message_bytes: Literal[1200] = 1200
+    sample_count: Literal[24000] = 24000
+    timeout_ms: Literal[90000] = 90000
+
+    def plan(self):
+        return FixedRateMessagePlan(
+            radio=self.radio,
+            link=self.link,
+            spec=run_protocol_v2.FixedRateSourceSpec(
+                direction=self.direction,
+                source_artifact_id=self.source_artifact_id,
+                expected_sha256=self.expected_sha256,
+            ),
+        )
+
+    @model_validator(mode="after")
+    def finite_subset(self):
+        if self.link.max_retries > 2:
+            raise ValueError("Fixed-rate trials support at most two retries")
+        return self
+
+    def budget(self):
+        single = EncodedMessagePlan(
+            radio=self.radio,
+            link=self.link,
+            spec=run_protocol_v2.EncodedSourceSpec(
+                direction=self.direction,
+                source_artifact_id=self.source_artifact_id,
+                expected_sha256=self.expected_sha256,
+                message_bytes=self.message_bytes,
+                sample_count=self.sample_count,
+                max_duration_ms=self.timeout_ms,
+            ),
+        )
+        calculated = preview(single)["timing"]["budget"]
+        return {**calculated, "reassembly_timeout_us": 90_000_000}
+
+
 class PreparedArtifact(StrictModel):
     artifact_id: ArtifactID
     artifact_state: Literal["committed", "reserved"]
@@ -265,9 +309,10 @@ class PreparedArtifact(StrictModel):
 
 
 class RadioRuns:
-    def __init__(self, store, nodes, artifacts, adapter=None):
+    def __init__(self, store, nodes, artifacts, adapter=None, observations=None):
         self.store, self.nodes, self.artifacts = store, nodes, artifacts
         self.adapter = adapter or PhysicalAdapter(nodes)
+        self.observations = observations
         self.current = self.task = None
         self.started = self.stop_requested = self.cleaning_up = False
         self.stop_lock = asyncio.Lock()
@@ -368,6 +413,7 @@ class RadioRuns:
             "accounting",
             "timing",
             "host_transaction",
+            "source_observation",
             "lab",
             "missing_evidence",
             "error",
@@ -458,6 +504,10 @@ class RadioRuns:
             and request.security != request.peer_security
         ):
             blockers.append("Peer security profile mismatch")
+        fixed_source = isinstance(request, FixedRateRadioRunRequest)
+        fixed_sender = "A" if request.direction == "A_TO_B" else "B"
+        if fixed_source and self.observations is None:
+            blockers.append("The source observation service is unavailable")
         ids = set()
         for role, node in self.nodes.items():
             if not node.connected or node.identity is None:
@@ -504,6 +554,22 @@ class RadioRuns:
                             blockers.append(f"Node {role}: {exc}")
                             break
             limits = node.health.capability_availability.resource_limits.get("execution_limits", {})
+            if fixed_source:
+                if role == fixed_sender and (
+                    node.identity.capabilities.resource_limits.get("execution_limits", {}).get(
+                        "fixed_rate_encoded"
+                    )
+                    is not True
+                ):
+                    blockers.append(f"Node {role} lacks the independent fixed-rate source worker")
+                try:
+                    require_execution_compatible(
+                        node.identity.model_dump(),
+                        "run.source",
+                        node.health.capability_availability.model_dump(),
+                    )
+                except ValueError as exc:
+                    blockers.append(f"Node {role}: {exc}")
             if isinstance(request, EncodedRadioRunRequest) and (
                 limits.get("encoded_source") is not True
                 or node.identity.capabilities.resource_limits.get("execution_limits", {}).get(
@@ -544,6 +610,8 @@ class RadioRuns:
             if isinstance(request, LabRadioRunRequest)
             else "one verified echo; requester-local RTT; physical qualification separate"
             if isinstance(request, EchoRadioRunRequest)
+            else "60-second protected fixed-rate source with at most 30 seconds of drain"
+            if fixed_source
             else "one protected encoded message; physical qualification separate"
             if isinstance(request, EncodedRadioRunRequest)
             else "one known-data message with selected security; physical bring-up only",
@@ -707,13 +775,13 @@ class RadioRuns:
                     spec = r["plan"]["spec"]
                     expected = (
                         spec["expected_sha256"]
-                        if spec["source"] == "encoded_source"
+                        if spec["source"] in ("encoded_source", "fixed_rate_encoded")
                         else hashlib.sha256(
                             known_data(spec["source_seed"], 1, spec["message_bytes"])
                         ).hexdigest()
                     )
                     if (
-                        spec["source"] == "encoded_source"
+                        spec["source"] in ("encoded_source", "fixed_rate_encoded")
                         and role == r["sender"]
                         and value["artifact_id"] != spec["source_artifact_id"]
                     ):
@@ -760,12 +828,14 @@ class RadioRuns:
             raise ValueError(f"Node {role} readback failed: {saved.get('error')}")
         manifest = saved["manifest"]
         spec = r["plan"]["spec"]
-        encoded = spec["source"] == "encoded_source"
+        archive = spec["source"] == "fixed_rate_encoded" and role == r["receiver"]
+        encoded = spec["source"] in ("encoded_source", "fixed_rate_encoded") and not archive
         expected_format = "codec2_3200_v1" if encoded else "known_data"
+        expected_length = 24000 if archive else spec["message_bytes"]
         if (
             manifest["artifact_id"] != prepared["artifact_id"]
             or manifest["format"] != expected_format
-            or manifest["length_bytes"] != spec["message_bytes"]
+            or manifest["length_bytes"] != expected_length
             or (not (encoded and role == r["sender"]) and manifest["kind"] != kind)
         ):
             raise ValueError(f"Node {role} returned inconsistent RF artifact metadata")
@@ -922,6 +992,78 @@ class RadioRuns:
             raise ValueError("An oversized prepare changed node state, allocations or artifacts")
         r["status"] = "completed"
 
+    async def collect_fixed_rate_evidence(self, r, request):
+        sender, receiver = r["sender"], r["receiver"]
+        for role, node in self.nodes.items():
+            baseline = r["baseline"][role]
+            summary = r["summaries"][role]
+            if any(
+                (
+                    node.event_gaps != baseline["event_gaps"],
+                    node.framing_errors != baseline["framing_errors"],
+                    node.health.telemetry_drops != baseline["telemetry_drops"],
+                    summary["telemetry_drops"],
+                    summary["cleanup_errors"],
+                )
+            ):
+                raise ValueError(f"Node {role} did not retain complete fixed-source telemetry")
+        observed = await self.command(r, receiver, "run.source")
+        recovered = await self.retrieve(r, receiver, "recovered")
+        reference = await self.retrieve(r, sender, "source")
+        archive_sha = hashlib.sha256(recovered).hexdigest()
+        delivered = [
+            event["data"]
+            for event in r["events"]
+            if event["role"] == receiver
+            and event["name"] == "message.result"
+            and event["data"]["status"] == "delivered"
+        ]
+        ids = observed["delivered_message_ids"]
+        if (
+            observed["status"] is not None
+            or observed["archive_artifact_id"] != r["prepared"][receiver]["artifact_id"]
+            or observed["archive_sha256"] != archive_sha
+            or hashlib.sha256(reference).hexdigest() != request.expected_sha256
+            or sorted(row["message_id"] for row in delivered) != ids
+            or len(ids) != r["summaries"][receiver]["delivered_messages"]
+            or any(row["sha256"] != request.expected_sha256 for row in delivered)
+        ):
+            raise ValueError("Fixed-source receiver summary, events or archive identity differ")
+        snapshot = {
+            "binding": r["physical_bindings"][sender],
+            "baseline": r["baseline"][sender],
+            "receiver_provenance": {
+                "binding": r["physical_bindings"][receiver],
+                "archive_manifest": r["readback_manifests"][receiver],
+                "status_reply": observed,
+            },
+            "delivery": {
+                "message_ids": ids,
+                "reference_b64": base64.b64encode(reference).decode(),
+                "archive_b64": base64.b64encode(recovered).decode(),
+                "archive_sha256": archive_sha,
+            },
+        }
+        record = await self.observations.collect_source(sender, r["id"], parent_radio=snapshot)
+        assessment = record["assessments"]["source"]
+        r["source_observation"] = {
+            "id": record["id"],
+            "sha256": record["evidence_sha256"],
+            "accounting": assessment["accounting"]["status"],
+            "capacity": assessment["capacity"],
+            "delivery": assessment["delivery"],
+            "export": f"/api/workload-assessments/{record['id']}/export",
+        }
+        verified = assessment["delivery"]["assessment"] == "verified"
+        if verified:
+            self.register_retirement(r, receiver)
+        r["accounting"] = {
+            "evidence_complete": verified and assessment["accounting"]["status"] == "consistent",
+            "scope": "fixed_rate_encoded",
+        }
+        if not verified:
+            raise ValueError("Fixed-source receiver archive bytes did not verify")
+
     async def run(self, r, request):
         try:
             self.started = True
@@ -931,8 +1073,15 @@ class RadioRuns:
                 plan = request.plan()
                 lab = r.get("lab")
                 key_mismatch = isinstance(request, KeyMismatchRunRequest)
-                budget = lab["budget"] if lab else preview(plan)["timing"]["budget"]
-                if plan.spec.source in ("known_data", "echo"):
+                fixed_source = isinstance(request, FixedRateRadioRunRequest)
+                budget = (
+                    request.budget()
+                    if fixed_source
+                    else lab["budget"]
+                    if lab
+                    else preview(plan)["timing"]["budget"]
+                )
+                if plan.spec.source in ("known_data", "echo", "fixed_rate_encoded"):
                     r["initial_artifact_ids"] = {}
                     for role in "AB":
                         listing = await self.command(r, role, "artifact.list")
@@ -1148,6 +1297,10 @@ class RadioRuns:
                     lab["report"] = await self.command(
                         r, lab["role"], "fault.status", {"offset": 0, "limit": 4}
                     )
+                if fixed_source:
+                    await self.collect_fixed_rate_evidence(r, request)
+                    r["status"] = "completed"
+                    return
                 delivered = r["summaries"][r["receiver"]]["delivered_messages"]
                 sweep_loss = isinstance(request, SweepRadioRunRequest) and not delivered
                 negative_delivery = (lab or key_mismatch or sweep_loss) and not delivered
@@ -1473,6 +1626,11 @@ class RadioRuns:
         record = self.get(identifier)
         require_public_metadata(record)
         members = {"run.json": json.dumps(record, indent=2).encode()}
+        if link := record.get("source_observation"):
+            assessment = self.observations.get(link["id"])
+            if assessment["evidence_sha256"] != link["sha256"]:
+                raise ValueError("Fixed-source assessment evidence differs from the saved link")
+            members["fixed-source-assessment.json"] = json.dumps(assessment).encode()
         for kind in ("source", "recovered", "wire"):
             if kind in record["available_content"] or kind in record.get("saved_files", {}):
                 path = self.content(identifier, kind)
