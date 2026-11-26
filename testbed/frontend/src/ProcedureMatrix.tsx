@@ -38,6 +38,7 @@ type MatrixCase = {
   variant: string;
   repetition: number;
   role: string;
+  target_role?: string;
   transport?: SerialTransport;
   message_bytes?: number;
   message_count?: number;
@@ -60,6 +61,9 @@ type MatrixCase = {
     verified_loads?: number;
     original?: { id: string; cleanup: { confirmed: boolean } };
     recovery?: { id: string };
+    fault_to_cleanup_ms?: number;
+    faulted_radio_run?: string;
+    recovery_radio_run?: string;
   };
   ready: boolean;
   blockers: string[];
@@ -179,6 +183,26 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
             {row.measurements?.export && (
               <a href={row.measurements.export}>Source assessment</a>
             )}
+            {row.target_role && <span>Interrupt Node {row.target_role}</span>}
+            {row.measurements?.faulted_radio_run &&
+              row.measurements.recovery_radio_run && (
+                <>
+                  <span>
+                    Peer cleanup confirmed in{" "}
+                    {row.measurements.fault_to_cleanup_ms?.toFixed(1)} ms
+                  </span>
+                  <a
+                    href={`/api/radio/runs/${row.measurements.faulted_radio_run}/export`}
+                  >
+                    Interrupted transfer archive
+                  </a>
+                  <a
+                    href={`/api/radio/runs/${row.measurements.recovery_radio_run}/export`}
+                  >
+                    Recovery transfer archive
+                  </a>
+                </>
+              )}
             {row.measurements?.original && row.measurements.recovery && (
               <>
                 <span>
@@ -264,7 +288,8 @@ export default function ProcedureMatrix({
   const [size, setSize] = useState("quick");
   const [echoMode, setEchoMode] = useState("default");
   const [restartEvidence, setRestartEvidence] = useState("");
-  const [restartError, setRestartError] = useState("");
+  const [usbEvidence, setUsbEvidence] = useState("");
+  const [evidenceError, setEvidenceError] = useState("");
   const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<{
@@ -285,6 +310,7 @@ export default function ProcedureMatrix({
     (option.kind === "voice_local" && (!group || group === "C3"));
   const stability = catalogId === "OPS-01" && group === "C6";
   const restart = catalogId === "OPS-01" && (!group || group === "C3");
+  const usb = catalogId === "OPS-01" && (!group || group === "C1");
   const selectDirection =
     option.kind === "link" ||
     option.kind === "voice" ||
@@ -298,19 +324,24 @@ export default function ProcedureMatrix({
   );
 
   async function previewCases() {
-    let restartRows: unknown = null;
-    if (restart && restartEvidence.trim()) {
+    const evidence: Record<string, unknown[]> = {};
+    for (const [field, source] of [
+      ["ops_restart_evidence", restart ? restartEvidence : ""],
+      ["ops_usb_evidence", usb ? usbEvidence : ""],
+    ]) {
+      if (!source.trim()) continue;
       try {
-        restartRows = JSON.parse(restartEvidence);
-        if (!Array.isArray(restartRows) || !restartRows.length) {
+        const rows: unknown = JSON.parse(source);
+        if (!Array.isArray(rows) || !rows.length) {
           throw new Error("Expected a nonempty JSON array");
         }
+        evidence[field] = rows;
       } catch {
-        setRestartError("Enter the restart evidence as a nonempty JSON array.");
+        setEvidenceError("Enter the saved evidence as a nonempty JSON array.");
         return;
       }
     }
-    setRestartError("");
+    setEvidenceError("");
     const document = {
       catalog_id: catalogId,
       ...(group && { groups: [group] }),
@@ -328,7 +359,7 @@ export default function ProcedureMatrix({
         }),
       ...(voice &&
         referenceIds.length > 0 && { voice_reference_ids: referenceIds }),
-      ...(Array.isArray(restartRows) && { ops_restart_evidence: restartRows }),
+      ...evidence,
       ...(size === "quick" && {
         repetitions: 1,
         ...(catalogId === "OPS-01" && { ops_observation_s: 10 }),
@@ -415,17 +446,31 @@ export default function ProcedureMatrix({
             <textarea
               value={restartEvidence}
               onChange={(event) => {
-                setRestartError("");
+                setEvidenceError("");
                 setRestartEvidence(event.target.value);
               }}
               disabled={pending}
               rows={3}
               maxLength={4096}
-              aria-invalid={Boolean(restartError)}
             />
-            {restartError && <span role="alert">{restartError}</span>}
           </label>
         )}
+        {usb && (
+          <label>
+            Saved USB recovery evidence (JSON)
+            <textarea
+              value={usbEvidence}
+              onChange={(event) => {
+                setEvidenceError("");
+                setUsbEvidence(event.target.value);
+              }}
+              disabled={pending}
+              rows={3}
+              maxLength={4096}
+            />
+          </label>
+        )}
+        {evidenceError && <span role="alert">{evidenceError}</span>}
         {local && (
           <label>
             Node
