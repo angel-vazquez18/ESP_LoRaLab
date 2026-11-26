@@ -46,6 +46,8 @@ type MatrixCase = {
   cycles?: number;
   iterations?: number;
   planned_campaign_cases?: number;
+  observation_s?: number;
+  radio_load_period_s?: number | null;
   measurements?: {
     unique_original_delivery_ratio?: number | null;
     unresolved_messages?: number;
@@ -53,6 +55,9 @@ type MatrixCase = {
     capacity?: { finding: string };
     delivery?: { verified_messages: number | null };
     export?: string;
+    health?: Record<string, { samples: number; reasons: string[] }>;
+    planned_loads?: number;
+    verified_loads?: number;
   };
   ready: boolean;
   blockers: string[];
@@ -138,10 +143,29 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
               )}
               {row.cycles && row.cycles > 1 ? ` · ${row.cycles} cycles` : ""}
               {row.iterations ? ` · ${row.iterations} iterations` : ""}
+              {row.observation_s
+                ? ` · ${row.observation_s} seconds of health telemetry`
+                : ""}
+              {row.radio_load_period_s
+                ? ` · Transfer every ${row.radio_load_period_s} seconds`
+                : ""}
               {row.planned_campaign_cases
                 ? ` · ${row.planned_campaign_cases} campaign cases`
                 : ""}
             </span>
+            {row.observation_s && row.measurements?.health && (
+              <span>
+                {Object.entries(row.measurements.health)
+                  .map(
+                    ([role, health]) =>
+                      `Node ${role} · ${health.samples} health samples`,
+                  )
+                  .join(" · ")}
+                {row.measurements.planned_loads
+                  ? ` · ${row.measurements.verified_loads}/${row.measurements.planned_loads} transfers verified`
+                  : ""}
+              </span>
+            )}
             {row.measurements?.capacity && (
               <span>
                 Queue assessment{" "}
@@ -235,8 +259,12 @@ export default function ProcedureMatrix({
   const voice =
     (option.kind === "voice" && (fixedSource || group !== "C2")) ||
     (option.kind === "voice_local" && (!group || group === "C3"));
+  const stability = catalogId === "OPS-01" && group === "C6";
   const selectDirection =
-    option.kind === "link" || option.kind === "voice" || (memory && !local);
+    option.kind === "link" ||
+    option.kind === "voice" ||
+    (memory && !local) ||
+    stability;
   const recent = saved.filter(
     (run) =>
       run.catalog_id === catalogId &&
@@ -264,6 +292,7 @@ export default function ProcedureMatrix({
         referenceIds.length > 0 && { voice_reference_ids: referenceIds }),
       ...(size === "quick" && {
         repetitions: 1,
+        ...(catalogId === "OPS-01" && { ops_observation_s: 10 }),
         ...(option.kind === "serial"
           ? { valid_cycles: 1 }
           : option.kind === "local"
