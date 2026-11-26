@@ -3,6 +3,49 @@
 import hashlib
 
 
+def transfer_rates(record, transmissions, accepted_bytes, delivered_bytes):
+    sender = record["sender"]
+    summary = record["summaries"][sender]
+    first, last = summary["first_tx_command_us"], summary["last_tx_done_us"]
+    complete = [row for row in transmissions if row["status"] == "completed"]
+    valid = (
+        bool(complete)
+        and first is not None
+        and last is not None
+        and first < last
+        and all(
+            row["tx_command_us"] is not None and row["tx_done_us"] is not None for row in complete
+        )
+        and min(row["tx_command_us"] for row in complete) == first
+        and max(row["tx_done_us"] for row in complete) == last
+    )
+    interval_us = last - first if valid else None
+    drain_us = next(
+        (
+            row["data"]["budget"]["drain_us"]
+            for row in record["events"]
+            if row["role"] == sender and row["name"] == "run.prepared"
+        ),
+        None,
+    )
+    return {
+        "sender_transfer_window": {
+            "basis": "sender first DATA TX command through final DATA TX done",
+            "first_tx_command_us": first,
+            "last_tx_done_us": last,
+            "duration_us": interval_us,
+            "configured_drain_us": drain_us,
+            "unavailable_reason": None
+            if valid
+            else "Sender window is zero or differs from DATA observations",
+        },
+        "accepted_fragment_bytes": accepted_bytes,
+        "verified_delivered_bytes": delivered_bytes,
+        "accepted_fragment_bps": 8_000_000 * accepted_bytes / interval_us if valid else None,
+        "goodput_bps": 8_000_000 * delivered_bytes / interval_us if valid else None,
+    }
+
+
 def reconcile(record, expected):
     sender, receiver = record["sender"], record["receiver"]
     link = record["plan"]["link"]
@@ -162,6 +205,9 @@ def reconcile(record, expected):
         "valid_ack_observations": len(ack_rx),
         "unique_original_delivery_ratio": len(unique) / len(originals),
         "receiver_duplicates": rx["duplicates"],
+        **transfer_rates(
+            record, transmissions, sum(row["payload_bytes"] for row in accepted), len(expected)
+        ),
     }
 
 
@@ -216,6 +262,10 @@ def reconcile_sweep_loss(record, source):
         "accepted_fragments": 0,
         "delivered_messages": 0,
         "unique_original_delivery_ratio": 0.0,
+        "receiver_duplicates": received["duplicates"],
+        "ack_transmissions": 0,
+        "valid_ack_observations": 0,
+        **transfer_rates(record, attempts, 0, 0),
         "source_sha256": hashlib.sha256(source).hexdigest(),
     }
 

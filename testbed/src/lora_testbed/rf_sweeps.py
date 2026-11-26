@@ -172,6 +172,9 @@ def observation(record):
         "predicted_airtime_us": predicted,
         "delivered_messages": accounting["delivered_messages"],
         "useful_delivered_bytes": record["summaries"][receiver]["useful_delivered_bytes"],
+        "accepted_fragment_bytes": accounting.get("accepted_fragment_bytes"),
+        "sender_transfer_window": accounting.get("sender_transfer_window"),
+        "whole_transaction_ns": (record.get("host_transaction") or {}).get("elapsed_ns"),
         "rssi_dbm": received[0]["rssi_dbm"] if received else None,
         "snr_db": received[0]["snr_db"] if received else None,
     }
@@ -182,6 +185,11 @@ def report(rows, requested):
     delivered = sum(row["delivered_messages"] for row in rows)
     seconds = sum(row["tx_command_to_done_us"] for row in rows) / 1_000_000
     useful_bytes = sum(row["useful_delivered_bytes"] for row in rows)
+    windows = [(row.get("sender_transfer_window") or {}).get("duration_us") for row in rows]
+    accepted = [row.get("accepted_fragment_bytes") for row in rows]
+    full_timing = complete and all(value is not None and value > 0 for value in windows)
+    total_us = sum(windows) if full_timing else None
+    host_times = [row.get("whole_transaction_ns") for row in rows]
     signal = [row for row in rows if row["rssi_dbm"] is not None]
     return {
         "sample_count": len(rows),
@@ -191,6 +199,18 @@ def report(rows, requested):
         "observed_non_deliveries": len(rows) - delivered,
         "unresolved_messages": requested - len(rows),
         "unique_original_delivery_ratio": delivered / requested if complete else None,
+        "complete_message_ratio": delivered / requested if complete else None,
+        "summed_sender_transfer_us": total_us,
+        "accepted_fragment_bps": 8_000_000 * sum(accepted) / total_us
+        if total_us and all(n is not None for n in accepted)
+        else None,
+        "goodput_bps": 8_000_000 * useful_bytes / total_us if total_us else None,
+        "whole_transaction_ns_median": median(host_times)
+        if complete and all(value is not None and value > 0 for value in host_times)
+        else None,
+        "transfer_rate_unavailable_reason": None
+        if full_timing
+        else "One or more finite child transfer windows are unverified",
         "useful_bits_per_active_tx_second": 8 * useful_bytes / seconds
         if complete and seconds
         else None,
@@ -209,6 +229,9 @@ def report(rows, requested):
 
 COMPARISON_METRICS = {
     "delivery_percent": ("Delivery (%)", "unique_original_delivery_ratio", 100),
+    "accepted_fragment_bps": ("Accepted fragment rate (bit/s)", "accepted_fragment_bps", 1),
+    "goodput_bps": ("Verified application goodput (bit/s)", "goodput_bps", 1),
+    "host_transaction_ms": ("Host transaction (ms)", "whole_transaction_ns_median", 1 / 1_000_000),
     "useful_bits_per_tx_second": (
         "Useful bitrate during TX (bit/s)",
         "useful_bits_per_active_tx_second",

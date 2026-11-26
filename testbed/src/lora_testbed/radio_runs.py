@@ -651,6 +651,12 @@ class RadioRuns:
             "identities": {r: n.identity.model_dump() for r, n in self.nodes.items()},
             "physical_bindings": {role: self.adapter.bind(role) for role in self.nodes},
             "host_version": __version__,
+            "host_transaction": {
+                "start_ns": monotonic_ns(),
+                "end_ns": None,
+                "elapsed_ns": None,
+                "scope": "host_configuration_through_readback_and_cleanup",
+            },
             "host_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             "host_sources": {
                 name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
@@ -716,12 +722,6 @@ class RadioRuns:
             if request.exhaust_attempts:
                 record["lab"]["exhaustion_targets"] = request.injections()
         if isinstance(request, EchoRadioRunRequest):
-            record["host_transaction"] = {
-                "start_ns": monotonic_ns(),
-                "end_ns": None,
-                "elapsed_ns": None,
-                "scope": "host_configuration_through_readback_and_cleanup",
-            }
             record["timing"] = None
         self.current = record
         self.started = self.stop_requested = self.cleaning_up = False
@@ -1444,10 +1444,10 @@ class RadioRuns:
                         if r["status"] == "completed":
                             r["status"] = "failed"
                 r["wire_sha256"] = r["saved_files"].get("wire", {}).get("sha256")
+                transaction = r["host_transaction"]
+                transaction["end_ns"] = monotonic_ns()
+                transaction["elapsed_ns"] = transaction["end_ns"] - transaction["start_ns"]
                 if isinstance(request, EchoRadioRunRequest):
-                    transaction = r["host_transaction"]
-                    transaction["end_ns"] = monotonic_ns()
-                    transaction["elapsed_ns"] = transaction["end_ns"] - transaction["start_ns"]
                     r["timing"] = echo_accounting.assess(r)
                     if (
                         r["status"] == "completed"
