@@ -134,3 +134,30 @@
     grid-column: 2;
   }
 }
+
+.model-comparison figure {
+  margin: 16px 0 0;
+}
+.model-comparison canvas {
+  display: block;
+  width: min(100%, 720px);
+  height: auto;
+  margin-top: 10px;
+}
+.model-directions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.model-directions span::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #4a9df0;
+}
+.model-directions span + span::before {
+  background: #ea9660;
+}

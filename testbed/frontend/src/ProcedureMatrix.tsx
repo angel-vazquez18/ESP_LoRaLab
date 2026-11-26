@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ModelComparison, { type ModelComparisonData } from "./ModelComparison";
 import RFSweepComparison, { type SweepComparison } from "./RFSweepComparison";
 
 export type MatrixOption = {
@@ -73,6 +74,7 @@ type MatrixRun = MatrixPlan &
     hardware_validated: boolean;
     reason: string | null;
     sweep_comparison?: SweepComparison;
+    model_comparison?: ModelComparisonData;
   };
 
 type Props = {
@@ -544,6 +546,12 @@ export default function ProcedureMatrix({
                 />
               )}
             </>
+          )}
+          {inspected.model_comparison && (
+            <ModelComparison
+              key={`model-${inspected.id}`}
+              data={inspected.model_comparison}
+            />
           )}
           <Cases
             key={inspected.id}
