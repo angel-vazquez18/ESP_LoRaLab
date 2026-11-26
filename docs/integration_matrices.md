@@ -6,7 +6,7 @@ readiness, assessment and references to its original child evidence.
 
 | Procedure | Executable software coverage | Remaining coverage |
 | --- | --- | --- |
-| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, and C6 competing ownership and lease expiry. One connected role is enough. | Version/schema rejection, reply perturbation, health silence and UART-specific cases. |
+| IF-01 Serial interface | Main-control USB claim, keepalive, release and reclaim. C2 command errors and configuration preservation, C3 framing and parser recovery, C5 reply perturbation and conflict, and C6 competing ownership and lease expiry. One connected role is enough. | Version/schema rejection, controlled stale-boot recovery, health silence and UART-specific cases. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
 | IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
 
@@ -72,6 +72,15 @@ write sizes and SHA-256 hashes, expected and observed firmware counter
 deltas, and idle recovery. Missing rejection counters are inconclusive.
 The case stops if device ownership or connection changes. USB hardware
 qualification and the UART path remain separate.
+
+IF-01 C5 uses a bounded host fixture on a single memory probe. It can
+drop one reply and require a timeout, delay delivery until after one
+retry, or drop the first reply and accept the retry response. Each case
+requires one independently observed completion. Retried writes must
+have identical bytes and the fixture records their hashes. The
+conflict variant changes bytes under the same cached command identity
+and requires COMMAND_CONFLICT. The stale-boot case needs a controlled
+reboot and stays blocked.
 
 IF-01 C6 checks a competing client and an expiring lease three times
 per selected role. The live owner refreshes its lease before the competing
