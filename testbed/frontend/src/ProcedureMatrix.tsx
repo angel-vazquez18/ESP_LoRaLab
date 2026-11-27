@@ -68,6 +68,10 @@ type MatrixCase = {
     reset_proof?: { procedure_id: string; case_id: string };
     campaign_trials?: number;
     browser_continuity?: { refresh: boolean; navigation: boolean };
+    capture_wav?: string;
+    decoded_wav?: string;
+    encoded_artifact?: string;
+    listening?: { heard: "heard" | "not_heard" | "not_checked" };
   };
   ready: boolean;
   blockers: string[];
@@ -271,6 +275,27 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                   : "unobserved"}
               </span>
             )}
+            {row.measurements?.capture_wav && (
+              <>
+                <a href={row.measurements.capture_wav}>
+                  {row.group === "C4"
+                    ? "Recovery capture WAV"
+                    : "Original microphone WAV"}
+                </a>
+                {row.measurements.decoded_wav && (
+                  <a href={row.measurements.decoded_wav}>Decoded WAV</a>
+                )}
+                {row.measurements.encoded_artifact && (
+                  <a href={row.measurements.encoded_artifact}>Codec 2 bytes</a>
+                )}
+                {row.measurements.listening && (
+                  <span>
+                    Playback{" "}
+                    {row.measurements.listening.heard.replaceAll("_", " ")}
+                  </span>
+                )}
+              </>
+            )}
             {row.measurements?.export && (
               <a href={row.measurements.export}>Source assessment</a>
             )}
@@ -401,6 +426,7 @@ export default function ProcedureMatrix({
   const [restartEvidence, setRestartEvidence] = useState("");
   const [usbEvidence, setUsbEvidence] = useState("");
   const [resetEvidence, setResetEvidence] = useState("");
+  const [localVoiceEvidence, setLocalVoiceEvidence] = useState("");
   const [evidenceError, setEvidenceError] = useState("");
   const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
@@ -426,6 +452,8 @@ export default function ProcedureMatrix({
     (catalogId === "OPS-01" && (!group || group === "C3")) || campaignRestart;
   const usb = catalogId === "OPS-01" && (!group || group === "C1");
   const reset = catalogId === "OPS-01" && (!group || group === "C2");
+  const localVoiceReview =
+    catalogId === "VOICE-01" && (!group || group === "C1" || group === "C2");
   const selectDirection =
     option.kind === "link" ||
     option.kind === "voice" ||
@@ -447,6 +475,7 @@ export default function ProcedureMatrix({
       ],
       ["ops_usb_evidence", usb ? usbEvidence : ""],
       ["ops_reset_evidence", reset ? resetEvidence : ""],
+      ["local_voice_evidence", localVoiceReview ? localVoiceEvidence : ""],
     ]) {
       if (!source.trim()) continue;
       try {
@@ -601,6 +630,21 @@ export default function ProcedureMatrix({
               disabled={pending}
               rows={3}
               maxLength={4096}
+            />
+          </label>
+        )}
+        {localVoiceReview && (
+          <label>
+            Saved microphone and playback evidence (JSON)
+            <textarea
+              value={localVoiceEvidence}
+              onChange={(event) => {
+                setEvidenceError("");
+                setLocalVoiceEvidence(event.target.value);
+              }}
+              disabled={pending}
+              rows={3}
+              maxLength={16384}
             />
           </label>
         )}
