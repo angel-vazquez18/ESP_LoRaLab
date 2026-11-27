@@ -22,6 +22,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from . import (
     audio_contract_v2,
     campaign_browser,
+    clock_analysis,
     control_v2,
     crypto_benchmark_v2,
     memory_observation_v2,
@@ -613,6 +614,20 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         return host.procedures.matrix_preview(
             body, host.radio, host.voice, host.campaign_plans, host.physical_campaigns
         )
+
+    @app.post("/api/procedures/clock/evaluate")
+    async def evaluate_clock_evidence(request: Request):
+        evidence = bytearray()
+        async for chunk in request.stream():
+            if len(evidence) + len(chunk) > clock_analysis.MAX_EVIDENCE_BYTES:
+                raise HTTPException(status_code=413, detail="Clock evidence exceeds 1 MiB")
+            evidence.extend(chunk)
+        try:
+            return clock_analysis.assess_json(bytes(evidence))
+        except ValueError:
+            raise HTTPException(
+                status_code=422, detail="The JSON file does not match the TIME-02 evidence format"
+            ) from None
 
     @app.post("/api/procedures/matrix", status_code=202)
     async def procedure_matrix_start(

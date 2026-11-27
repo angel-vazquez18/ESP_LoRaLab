@@ -1,5 +1,7 @@
 """Validate saved paired pulses and project explicit one-way timing phases."""
 
+import hashlib
+import json
 from fractions import Fraction
 from itertools import pairwise
 from math import ceil
@@ -10,12 +12,13 @@ from pydantic import Field
 from .control_v2 import UUID
 from .experiments_v2 import SHA256
 from .models import StrictModel
-from .v2 import Counter, Identifier
+from .v2 import Counter, Identifier, unique_object
 
 EXPECTED_PULSES = 32
 INTERVAL_US = 100_000
 MAX_AGE_US = 2_000_000
 MAX_UNCERTAINTY_US = 1000
+MAX_EVIDENCE_BYTES = 1_048_576
 
 
 class ClockIdentity(StrictModel):
@@ -192,3 +195,10 @@ def assess(evidence):
         "observations": rows,
         "raw": evidence.model_dump(),
     }
+
+
+def assess_json(raw: bytes):
+    if len(raw) > MAX_EVIDENCE_BYTES:
+        raise ValueError("Clock evidence exceeds 1 MiB")
+    document = ClockEvidence.model_validate(json.loads(raw, object_pairs_hook=unique_object))
+    return {**assess(document), "input_sha256": hashlib.sha256(raw).hexdigest()}
