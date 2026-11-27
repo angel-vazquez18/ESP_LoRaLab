@@ -19,7 +19,7 @@ struct rf_sender
     uint64_t session;
     uint8_t source, destination;
     int64_t deadline;
-    bool used, pending, ack_requested;
+    bool used, pending, ack_requested, wrong_ack_reference;
     node_radio_event observation;
 };
 static uint64_t ceil_div(uint64_t n, uint64_t d) { return (n + d - 1) / d; }
@@ -169,7 +169,13 @@ static bool accept_ack(void *context, const uint8_t header[40], const uint8_t *b
 {
     (void)body;
     rf_sender *s = context;
-    return !bytes && rf_ack_header_matches(header, s->frame);
+    bool matches = !bytes && rf_ack_header_matches(header, s->frame);
+    s->wrong_ack_reference = header[3] == 2 && !bytes && !matches;
+    return matches;
+}
+bool rf_sender_wrong_ack_reference(const rf_sender *s)
+{
+    return s->wrong_ack_reference;
 }
 static bool matching_ack(rf_sender *s, const node_radio_event *event)
 {
@@ -256,6 +262,7 @@ static void advance(rf_sender *s)
     else if (s->status.state == RF_SENDER_ACK)
     {
         s->status.last_ack_acceptance = RF_SECURE_REJECTED;
+        s->wrong_ack_reference = false;
         if (event.status == RADIO_DONE && event.crc_ok && matching_ack(s, &event))
         {
             s->status.acks++;

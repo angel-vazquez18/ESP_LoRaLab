@@ -1329,7 +1329,6 @@ static void rejected_at(rf_execution *r, const char *reason, const rf_data_view 
         number(r, o, "frame_seq", header->frame_sequence);
         number(r, o, "message_id", header->message_id);
         number(r, o, "fragment_index", header->fragment_index);
-        number(r, o, "rx_done_us", rx_done);
     } else {
         string(r, o, "session_id", NULL);
         string(r, o, "source_role", NULL);
@@ -1337,6 +1336,8 @@ static void rejected_at(rf_execution *r, const char *reason, const rf_data_view 
         string(r, o, "message_id", NULL);
         string(r, o, "fragment_index", NULL);
     }
+    if (rx_done >= 0)
+        number(r, o, "rx_done_us", rx_done);
     string(r, o, "stage",
            eq(reason, "wrong_session") || eq(reason, "wrong_source") ? "session"
            : eq(reason, "content_mismatch") || eq(reason, "wrong_reference") || eq(reason, "wrong_message") ? "reassembly"
@@ -1904,11 +1905,13 @@ void rf_execution_tick(rf_execution *r)
         rf_sender_snapshot(r->transmitter, &status);
         if (r->plan.protected_mode && event.kind == RADIO_EVENT_RX && event.signal_valid &&
             event.crc_ok && status.last_ack_acceptance != RF_SECURE_ACCEPTED)
-            rejected(r, status.last_ack_acceptance == RF_SECURE_AUTH_FAILED
-                            ? "authentication_failed"
-                        : status.last_ack_acceptance == RF_SECURE_REPLAY  ? "replay"
-                        : status.last_ack_acceptance == RF_SECURE_TOO_OLD ? "too_old"
-                                                                          : "invalid_frame");
+            rejected_at(r, status.last_ack_acceptance == RF_SECURE_AUTH_FAILED
+                               ? "authentication_failed"
+                           : status.last_ack_acceptance == RF_SECURE_REPLAY  ? "replay"
+                           : status.last_ack_acceptance == RF_SECURE_TOO_OLD ? "too_old"
+                           : rf_sender_wrong_ack_reference(r->transmitter)  ? "wrong_reference"
+                                                                             : "invalid_frame",
+                        NULL, event.done_us);
         bool ack_received = status.state == RF_SENDER_COMPLETED && status.acks;
         bool ack_timeout = event.status == RADIO_TIMEOUT;
         if (event.kind == RADIO_EVENT_RX && (ack_received || ack_timeout))

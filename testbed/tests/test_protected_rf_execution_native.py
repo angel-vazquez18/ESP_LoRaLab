@@ -126,7 +126,7 @@ def sent(node):
     return output.raw[:size]
 
 
-def ack_for(data, sequence):
+def ack_for(data, sequence, *, reference=None):
     header = bytearray(data[:40])
     original = header[16:20]
     header[3] = 2
@@ -134,7 +134,7 @@ def ack_for(data, sequence):
     header[5], header[6] = header[6], header[5]
     header[16:20] = sequence.to_bytes(4, "big")
     header[32:34] = bytes(2)
-    header[34:38] = original
+    header[34:38] = original if reference is None else reference.to_bytes(4, "big")
     return bytes(header) + AESGCM(KEY_B).encrypt(bytes(header[8:20]), b"", bytes(header))
 
 
@@ -195,7 +195,8 @@ def test_receiver_reacks_exact_authenticated_retry_with_a_fresh_nonce_and_one_de
         node.close()
 
 
-def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequence(native_library):
+@pytest.mark.parametrize("reason", ["authentication_failed", "wrong_reference"])
+def test_invalid_protected_ack_does_not_advance_or_consume_sequence(native_library, reason):
     node = NativeNode(native_library, radio=native_library.native_radio_create())
     try:
         run, revision = protected_setup(node, ack=True, sender=True)
@@ -211,15 +212,19 @@ def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequen
         node.tick()
         node.drain()
         good = ack_for(original, 1)
-        bad = bytearray(good)
-        bad[-1] ^= 1
-        native_library.native_radio_inject(node.radio, bytes(bad), len(bad), 2)
+        if reason == "authentication_failed":
+            bad = good[:-1] + bytes([good[-1] ^ 1])
+        else:
+            bad = ack_for(original, 1, reference=2)
+        native_library.native_radio_inject(node.radio, bad, len(bad), 2)
         node.tick()
         rejected = node.drain()
-        assert any(
-            r.get("name") == "rx.rejected" and r["data"]["stage"] == "authentication"
-            for r in rejected
-        )
+        [arrival] = [row["data"] for row in rejected if row.get("name") == "rx.frame"]
+        [decision] = [row["data"] for row in rejected if row.get("name") == "rx.rejected"]
+        assert arrival["crc_ok"] and decision["rx_done_us"] == arrival["rx_done_us"]
+        assert decision["reason"] == reason
+        assert not any(row.get("name") == "ack.result" for row in rejected)
+        assert sent(node) == original
         plan = KnownDataPlan(
             link=Link(fragment_payload_bytes=16, ack_mode="stop_wait"),
             spec=KnownDataSpec(
@@ -228,7 +233,8 @@ def test_sender_retries_exact_ciphertext_and_bad_ack_tag_does_not_consume_sequen
         )
         timeout = preview(plan)["timing"]["budget"]["ack_timeout_us"]
         node.tick(timeout + 1)
-        node.drain()
+        [expired] = [row["data"] for row in node.drain() if row.get("name") == "ack.result"]
+        assert (expired["status"], expired["attempt_index"]) == ("timeout", 1)
         node.tick(50001)
         node.drain()
         assert sent(node) == original

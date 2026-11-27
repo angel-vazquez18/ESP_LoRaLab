@@ -34,6 +34,7 @@ bool rf_sender_begin(rf_sender *, const void *frame, size_t frame_bytes, uint16_
 /* One retained radio observation; a blocked consumer prevents further attempts. */
 bool rf_sender_poll(rf_sender *, node_radio_event *observation);
 void rf_sender_snapshot(const rf_sender *, rf_sender_status *);
+bool rf_sender_wrong_ack_reference(const rf_sender *);
 void rf_sender_cancel(rf_sender *);
 
 // Borrow a session owner before beginning work; retained retries never invoke seal.
