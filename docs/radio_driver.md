@@ -56,10 +56,12 @@ idf.py -C firmware/lora_node -B "$build_dir/build" \
   build
 ```
 
-Use `sdkconfig.heltec-v43.defaults` for a confirmed V4.3 R2 board. Verify its
-audio pin map separately before enabling capture. GPIO5 drives the V4.3 radio
-front end and conflicts with the original microphone WS assignment. Review the
-configured board profile in the node details before using the radio on the bench.
+For a confirmed V4.3 R2 board with the original wiring, use
+`sdkconfig.heltec-v43.defaults;sdkconfig.playback.defaults` in place of the
+last two defaults above. This enables RF and the existing amplifier. GPIO5 drives
+the V4.3 radio front end and conflicts with the original microphone WS assignment.
+Capture needs a revised pin map and matching wiring. Review the configured board
+profile in the node details before using the radio on the bench.
 
 ## Review and verification
 
