@@ -302,7 +302,9 @@ def test_failed_or_cancelled_rf_never_plays_partial_voice_and_following_clip_suc
                 result = await host.voice.stop(started["id"])
                 assert result["status"] == "cancelled"
             else:
-                result = await finished(host.voice, started["id"])
+                async with asyncio.timeout(request.timeout_ms / 1000 + 10):
+                    await host.voice.task
+                result = host.voice.get(started["id"])
                 assert result["status"] == "failed"
             assert not result["delivery_verified"] and not result["playback_completed"]
             assert pair.serials["B"].audio.starts == 0
