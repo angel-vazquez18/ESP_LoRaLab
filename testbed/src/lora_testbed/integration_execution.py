@@ -1470,6 +1470,7 @@ class IntegrationExecution:
     async def matrix_fault_case(self, run, case, spec, host):
         radio, adapter = host.radio, host.adapter
         outcomes = []
+        intact_evidence = []
         for ordinal in range(case["message_count"]):
             request = fault_matrices.selected_request(spec, case, ordinal)
             if isinstance(request, LabRadioRunRequest):
@@ -1477,7 +1478,13 @@ class IntegrationExecution:
                 outcomes.append(trial["outcome"])
             else:
                 child = await self.matrix_radio_child(run, case, request, radio, adapter, "intact")
-                outcomes.append("pass" if self.verified_link_child(child) else "inconclusive")
+                if run["catalog_id"] == "PKT-02" and case["group"] == "C1":
+                    evidence = fault_matrices.intact_packet_evidence(child, request, radio.content)
+                    intact_evidence.append(evidence)
+                    self.ledger.append(run["id"], case["id"], {"intact_packet": evidence})
+                    outcomes.append(evidence["outcome"])
+                else:
+                    outcomes.append("pass" if self.verified_link_child(child) else "inconclusive")
         verdict = (
             "fail"
             if "fail" in outcomes
@@ -1489,7 +1496,11 @@ class IntegrationExecution:
             status="completed",
             assessment=verdict,
             cleanup_verified=True,
-            measurements={"message_outcomes": outcomes, "target_ordinal": case["target_ordinal"]},
+            measurements={
+                "message_outcomes": outcomes,
+                "target_ordinal": case["target_ordinal"],
+                **({"intact_packets": intact_evidence} if intact_evidence else {}),
+            },
             assertions=[{"code": "complete_matched_series", "outcome": verdict}],
         )
 

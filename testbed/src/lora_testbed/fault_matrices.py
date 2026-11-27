@@ -1,9 +1,10 @@
 """Plan repeatable cases around the existing matched-control lab trial service."""
 
+from hashlib import sha256
 from itertools import product
 from uuid import uuid4
 
-from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, preview
+from .experiments_v2 import KnownDataPlan, KnownDataSpec, Link, Radio, known_data, preview
 from .fault_protocol_v2 import Injection
 from .radio_runs import LabRadioRunRequest, RadioRunRequest
 
@@ -54,6 +55,58 @@ def cases(request, groups):
             "target_ordinal": min(3, count) if packet else 1,
             "session_scope": "one finite session per message with separate intact controls",
         }
+
+
+def intact_packet_evidence(run, request, read_content):
+    """Recheck both archived artifacts and every fragment of an intact workload."""
+    expected = known_data(request.source_seed, 1, request.message_bytes)
+    digest = sha256(expected).hexdigest()
+    capacity = request.link.fragment_payload_bytes
+    count = (len(expected) + capacity - 1) // capacity
+    expected_lengths = [min(capacity, len(expected) - index * capacity) for index in range(count)]
+    verified = run.get("verification") or {}
+    totals = run.get("accounting") or {}
+    received = [
+        row["data"]
+        for row in run["events"]
+        if row["role"] == run["receiver"] and row["name"] == "rx.accepted"
+    ]
+    try:
+        matches = {
+            kind: read_content(run["id"], kind).read_bytes() == expected
+            for kind in ("source", "recovered")
+        }
+    except (OSError, ValueError):
+        matches = {}
+    complete = (
+        run["status"] == "completed"
+        and not run.get("evidence_error")
+        and bool((run.get("cleanup") or {}).get("confirmed"))
+        and verified.get("bytes_equal") is True
+        and verified.get("sha256") == digest
+        and totals.get("evidence_complete") is True
+        and totals.get("data_originals") == totals.get("data_attempts") == count
+        and totals.get("accepted_fragments") == count
+        and totals.get("delivered_messages") == 1
+        and len(received) == count
+        and {row["fragment_index"]: row["payload_bytes"] for row in received}
+        == dict(enumerate(expected_lengths))
+        and all(row["session_id"] == run["session_id"] for row in received)
+        and matches == {"source": True, "recovered": True}
+    )
+    return {
+        "outcome": "pass" if complete else "inconclusive",
+        "run_id": run["id"],
+        "session_id": run["session_id"],
+        "source_seed": request.source_seed,
+        "expected_sha256": digest,
+        "expected_fragment_lengths": expected_lengths,
+        "observed_fragments": [
+            {"index": row["fragment_index"], "length_bytes": row["payload_bytes"]}
+            for row in received
+        ],
+        "archive_matches": matches,
+    }
 
 
 def retry_cases(request, groups):

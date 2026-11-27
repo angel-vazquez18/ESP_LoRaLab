@@ -80,6 +80,60 @@ def test_security_cases_reuse_three_bound_child_runs(tmp_path, native_library, i
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize("direction", ["A_TO_B", "B_TO_A"])
+def test_intact_packet_retains_exact_archive_and_fragment_lengths(
+    tmp_path, native_library, direction
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="PKT-02",
+                groups=["C1"],
+                directions=[direction],
+                messages_per_case=1,
+                repetitions=1,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(60):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            assert saved["assessment"] == "pass", saved
+            assert not saved["hardware_validated"]
+            assert [
+                (
+                    row["fragment_payload_bytes"],
+                    row["measurements"]["intact_packets"][0]["expected_fragment_lengths"][-1],
+                )
+                for row in saved["cases"]
+            ] == [(16, 16), (64, 48), (160, 80), (199, 6)]
+
+            case = saved["cases"][-1]
+            [identifier] = case["run_ids"]
+            request = fault_matrices.selected_request(spec, case, 0)
+            result = host.radio.get(identifier)
+            assert result["cleanup"]["confirmed"]
+            assert case["measurements"]["intact_packets"][0]["archive_matches"] == {
+                "source": True,
+                "recovered": True,
+            }
+            archive = host.radio.content(identifier, "recovered")
+            archive.write_bytes(b"x" * 1200)
+            reviewed = fault_matrices.intact_packet_evidence(result, request, host.radio.content)
+            assert reviewed["outcome"] == "inconclusive"
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    asyncio.run(scenario())
+
+
 def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
     tmp_path, native_library, monkeypatch
 ):
