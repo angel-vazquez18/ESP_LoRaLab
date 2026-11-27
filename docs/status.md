@@ -4,6 +4,11 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Reordered fragment evidence
+
+PKT-02 C4 now checks the complete planned order across confirmed sender
+attempts, matching CRC-valid arrivals, and receiver insertions.
+
 ## November 27 — Duplicate fragment evidence
 
 The PKT-02 duplicate case now requires exactly two arrivals of the selected

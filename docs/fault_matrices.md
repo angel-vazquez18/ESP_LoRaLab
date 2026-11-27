@@ -26,6 +26,9 @@ evidence. A missing fault observation yields an inconclusive result.
   index other than the selected missing fragment.
   The duplicate case ties one accepted insertion to the original arrival and
   one explicit replay or duplicate rejection to the second matching arrival.
+  The reorder case matches the complete planned index order against sender TX,
+  CRC-valid arrival and receiver insertion. Matching frame digests tie each
+  receive observation to the transmitted bytes.
 - PKT-03 uses 321 useful bytes and 160-byte fragments. It compares
   no ACK and stop-and-wait with zero, one or two retries. It observes
   first-attempt loss and suppresses an ACK for policies that can retry.
