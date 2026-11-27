@@ -36,6 +36,31 @@ GPIO5 for RF control. Building it with the old GPIO5 microphone-WS capture profi
 fails deliberately. Keep GNSS disconnected where audio uses GNSS pins. The R8
 variant is unsupported. Keep USB pins 19/20 and OLED pins 17/18/21 reserved.
 
+## Match the bench firmware to the board
+
+The Bench overview shows USB connection and radio readiness separately. An
+older audio image can answer USB control while lacking an RF execution profile.
+The radio readiness message distinguishes an older image, an unselected board,
+a driver error and an incompatible execution schema. A ready radio has reported
+successful initialization and can accept configuration.
+
+Use a fresh SDK configuration for the chosen revision. From the repository root
+with ESP-IDF active, the following example builds the standard V4.2 image with
+the original documented microphone and amplifier wiring.
+
+```sh
+build_dir="$(mktemp -d /tmp/lora-v42-radio.XXXXXX)"
+idf.py -C firmware/lora_node -B "$build_dir/build" \
+  -DSDKCONFIG="$build_dir/sdkconfig" \
+  '-DSDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.heltec-v42.defaults;sdkconfig.audio.defaults' \
+  build
+```
+
+Use `sdkconfig.heltec-v43.defaults` for a confirmed V4.3 R2 board. Verify its
+audio pin map separately before enabling capture. GPIO5 drives the V4.3 radio
+front end and conflicts with the original microphone WS assignment. Review the
+configured board profile in the node details before using the radio on the bench.
+
 ## Review and verification
 
 Read the small public bus interface in `node_radio.h`, initialization/cleanup in

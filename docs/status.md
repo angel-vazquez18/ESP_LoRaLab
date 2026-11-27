@@ -4,6 +4,15 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Radio readiness and board profiles
+
+Two USB-connected boards reported firmware `b96c0ca-dirty` with radio
+unavailable and no RF execution profile. The matching source tree predates
+the radio driver. The Bench overview and RF preflight now surface the
+reason for an unavailable radio. Firmware distinguishes an unselected
+profile, driver startup failures and an absent driver. Explicit build
+defaults select the confirmed V4.2 or V4.3 R2 profile.
+
 ## November 27 — Shared-session packet matrix
 
 The PKT-02 runner now uses one protected session per case and preserves
