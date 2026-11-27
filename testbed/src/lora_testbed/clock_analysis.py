@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from bisect import bisect_right
 from fractions import Fraction
 from itertools import pairwise
 from math import ceil
@@ -66,9 +67,9 @@ class ClockEvidence(StrictModel):
 def capture_problem(evidence):
     if evidence.a.identity.device_id == evidence.b.identity.device_id:
         return "capture_requires_distinct_devices"
+    if len(evidence.a.edges) != len(evidence.b.edges) or len(evidence.a.edges) < EXPECTED_PULSES:
+        return "incorrect_pulse_count"
     for capture in (evidence.a, evidence.b):
-        if len(capture.edges) != EXPECTED_PULSES:
-            return "incorrect_pulse_count"
         for left, right in pairwise(capture.edges):
             if right.index != left.index + 1:
                 return "missing_duplicate_or_reordered_pulse"
@@ -80,8 +81,12 @@ def capture_problem(evidence):
     return None
 
 
-def fit(evidence):
-    a, b = ([edge.local_us for edge in capture.edges] for capture in (evidence.a, evidence.b))
+def fit_window(evidence, end):
+    start = end - EXPECTED_PULSES + 1
+    a, b = (
+        [edge.local_us for edge in capture.edges[start : end + 1]]
+        for capture in (evidence.a, evidence.b)
+    )
     n = EXPECTED_PULSES
     x = [value - b[0] for value in b]
     y = [value - a[0] for value in a]
@@ -94,17 +99,38 @@ def fit(evidence):
     residual = ceil(
         max(abs(target - (scale * source + offset)) for source, target in zip(b, a, strict=True))
     )
-    return scale, offset, residual
+    quantization = ceil(evidence.a.quantum_us + scale * evidence.b.quantum_us)
+    bounds = evidence.capture_bounds
+    uncertainty = residual + quantization + bounds.skew_us if bounds is not None else None
+    mapping = {
+        "scale": [scale.numerator, scale.denominator],
+        "offset_us": [offset.numerator, offset.denominator],
+        "residual_us": residual,
+        "quantization_us": quantization,
+        "capture_skew_us": bounds.skew_us if bounds else None,
+        "base_uncertainty_us": uncertainty,
+        "reference_update_us": a[-1],
+        "first_pulse_index": evidence.a.edges[start].index,
+        "last_pulse_index": evidence.a.edges[end].index,
+    }
+    problem = None
+    if bounds is None:
+        problem = "missing_instrument_bounds"
+    elif uncertainty > MAX_UNCERTAINTY_US:
+        problem = "uncertainty_exceeds_limit"
+    return mapping, scale, offset, problem
 
 
-def project_observation(evidence, observation, scale, offset, base_uncertainty):
-    sender, receiver = (
+def clock_identities_match(evidence, observation):
+    identities = (
         (evidence.a.identity, evidence.b.identity)
         if observation.sender_role == "A"
         else (evidence.b.identity, evidence.a.identity)
     )
-    if (observation.sender_clock, observation.receiver_clock) != (sender, receiver):
-        return {"reason": "device_boot_or_capture_changed"}
+    return (observation.sender_clock, observation.receiver_clock) == identities
+
+
+def project_observation(evidence, observation, mapping, scale, offset):
     if (
         observation.application_accept_us is not None
         and observation.application_accept_us < observation.rx_done_us
@@ -122,12 +148,12 @@ def project_observation(evidence, observation, scale, offset, base_uncertainty):
         if observation.application_accept_us is not None
         else None
     )
-    latest = evidence.a.edges[-1].local_us
+    latest = mapping["reference_update_us"]
     if tx < latest:
         return {"reason": "sample_precedes_calibration_update"}
     age_us = ceil(max(tx, rx, accept if accept is not None else rx) - latest)
     assert evidence.capture_bounds is not None
-    uncertainty = base_uncertainty + ceil(
+    uncertainty = mapping["base_uncertainty_us"] + ceil(
         Fraction(age_us * evidence.capture_bounds.drift_ppm, 1_000_000)
     )
     if age_us > MAX_AGE_US:
@@ -146,38 +172,42 @@ def project_observation(evidence, observation, scale, offset, base_uncertainty):
 
 
 def assess(evidence):
-    problem = capture_problem(evidence)
+    capture_error = capture_problem(evidence)
     mapping = None
-    if problem is None:
-        scale, offset, residual = fit(evidence)
-        quantization = ceil(evidence.a.quantum_us + scale * evidence.b.quantum_us)
-        bounds = evidence.capture_bounds
-        uncertainty = residual + quantization + bounds.skew_us if bounds is not None else None
-        mapping = {
-            "scale": [scale.numerator, scale.denominator],
-            "offset_us": [offset.numerator, offset.denominator],
-            "residual_us": residual,
-            "quantization_us": quantization,
-            "capture_skew_us": bounds.skew_us if bounds else None,
-            "base_uncertainty_us": uncertainty,
-            "reference_update_us": evidence.a.edges[-1].local_us,
-        }
-        if bounds is None:
-            problem = "missing_instrument_bounds"
-        elif uncertainty > MAX_UNCERTAINTY_US:
-            problem = "uncertainty_exceeds_limit"
-
+    windows = []
+    problem = capture_error
+    if capture_error is None:
+        windows = [
+            fit_window(evidence, end) for end in range(EXPECTED_PULSES - 1, len(evidence.a.edges))
+        ]
+        mapping, _, _, problem = windows[-1]
+    updates = {
+        role: [edge.local_us for edge in capture.edges[EXPECTED_PULSES - 1 :]]
+        for role, capture in (("A", evidence.a), ("B", evidence.b))
+    }
     rows = []
     for obs in evidence.observations:
-        result = (
-            {"reason": problem}
-            if problem
-            else project_observation(evidence, obs, scale, offset, uncertainty)
-        )
+        selected = bisect_right(updates[obs.sender_role], obs.tx_command_us) - 1
+        index = None
+        if capture_error is not None:
+            result = {"reason": capture_error}
+        elif not clock_identities_match(evidence, obs):
+            result = {"reason": "device_boot_or_capture_changed"}
+        elif selected < 0:
+            result = {"reason": "sample_precedes_calibration_update"}
+        else:
+            update, scale, offset, window_error = windows[selected]
+            index = update["last_pulse_index"]
+            result = (
+                {"reason": window_error}
+                if window_error
+                else project_observation(evidence, obs, update, scale, offset)
+            )
         rows.append(
             {
                 "frame_id": obs.frame_id,
                 "sender_role": obs.sender_role,
+                "calibration_update_pulse_index": index,
                 "valid": result["reason"] is None,
                 "tx_command_to_rx_done_us": None,
                 "tx_command_to_application_accept_us": None,
@@ -192,6 +222,10 @@ def assess(evidence):
         "eligible": problem is None,
         "reason": problem,
         "mapping": mapping,
+        "mapping_updates": [
+            {**update, "eligible": issue is None, "reason": issue}
+            for update, _, _, issue in windows
+        ],
         "observations": rows,
         "raw": evidence.model_dump(),
     }

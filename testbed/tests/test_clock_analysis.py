@@ -135,6 +135,75 @@ def test_reset_expiry_and_growth_beyond_uncertainty_invalidate_only_the_affected
     ]
 
 
+def append_pulses(evidence, count):
+    for role, interval in (("a", 100010), ("b", 100000)):
+        edges = evidence[role]["edges"]
+        last = edges[-1]
+        edges.extend(
+            {"index": last["index"] + i, "local_us": last["local_us"] + i * interval}
+            for i in range(1, count + 1)
+        )
+
+
+def test_rolling_fit_selects_latest_prior_update_in_each_sender_domain():
+    evidence = reference_case()
+    append_pulses(evidence, 3)
+    late = deepcopy(evidence["observations"][1])
+    for field, step in (("tx_command_us", 100000), ("rx_done_us", 100010)):
+        late[field] += 3 * step
+    early = deepcopy(evidence["observations"][0])
+    early["tx_command_us"] -= 60_000
+    evidence["observations"].extend([late, early])
+
+    report = assess(ClockEvidence.model_validate(evidence))
+    assert [window["last_pulse_index"] for window in report["mapping_updates"]] == [41, 42, 43, 44]
+    assert report["mapping"]["first_pulse_index"] == 13
+    assert [row["calibration_update_pulse_index"] for row in report["observations"]] == [
+        41,
+        41,
+        44,
+        None,
+    ]
+    assert [row["tx_command_to_rx_done_us"] for row in report["observations"]] == [
+        10001,
+        10001,
+        10001,
+        None,
+    ]
+    assert report["observations"][-1]["reason"] == "sample_precedes_calibration_update"
+
+
+def test_invalid_recent_window_is_not_replaced_by_an_older_eligible_fit():
+    evidence = reference_case()
+    append_pulses(evidence, 1)
+    evidence["a"]["edges"][-1]["local_us"] += 90
+    evidence["capture_bounds"]["skew_us"] = 950
+    late = deepcopy(evidence["observations"][0])
+    late["tx_command_us"] += 100010
+    late["rx_done_us"] += 100000
+    late["application_accept_us"] += 100000
+    evidence["observations"].append(late)
+
+    report = assess(ClockEvidence.model_validate(evidence))
+    assert not report["eligible"]
+    assert [window["eligible"] for window in report["mapping_updates"]] == [True, False]
+    assert report["observations"][0]["valid"]
+    assert report["observations"][-1]["reason"] == "uncertainty_exceeds_limit"
+    assert report["observations"][-1]["calibration_update_pulse_index"] == 42
+    assert report["observations"][-1]["tx_command_to_rx_done_us"] is None
+
+
+def test_discontinuous_capture_does_not_hide_a_missing_edge_with_a_rolling_fit():
+    evidence = reference_case()
+    append_pulses(evidence, 2)
+    evidence["b"]["edges"][-2]["index"] += 1
+    report = assess(ClockEvidence.model_validate(evidence))
+    assert not report["eligible"] and not report["mapping_updates"]
+    assert {row["reason"] for row in report["observations"]} == {
+        "missing_duplicate_or_reordered_pulse"
+    }
+
+
 def test_cli_emits_offline_model_with_reproducible_input_hash(tmp_path):
     path = tmp_path / "pulses.json"
     path.write_text(json.dumps(reference_case()))
@@ -147,6 +216,7 @@ def test_cli_emits_offline_model_with_reproducible_input_hash(tmp_path):
 
 def test_clock_import_api_and_cli_keep_exact_source_hash_and_results(tmp_path):
     evidence = reference_case()
+    append_pulses(evidence, 2)
     invalid = deepcopy(evidence["observations"][0])
     invalid["frame_id"] = "reset"
     invalid["receiver_clock"]["boot_id"] = "boot-B-later"
