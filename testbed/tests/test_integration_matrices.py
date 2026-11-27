@@ -159,7 +159,7 @@ def test_campaign_matrix_executes_baseline_pause_resume_and_cancel(tmp_path, nat
             bridge = asyncio.create_task(pair.bridge())
             spec = MatrixRequest(
                 catalog_id="IF-03",
-                groups=["C1", "C2", "C3", "C4", "C5", "C7", "C8"],
+                groups=["C1", "C2", "C3", "C4", "C6", "C7", "C8"],
                 repetitions=1,
                 messages_per_case=2,
             )
@@ -169,10 +169,12 @@ def test_campaign_matrix_executes_baseline_pause_resume_and_cancel(tmp_path, nat
             saved = host.procedures.get(started["id"])
             assert saved["status"] == "completed", saved
             assert saved["assessment"] == "inconclusive"
-            baseline, paused, cancelled, config, blocked, rerun, exported = saved["cases"]
+            baseline, paused, cancelled, config, blocked_active, blocked_paused, rerun, exported = (
+                saved["cases"]
+            )
             supported = (baseline, paused, cancelled, config, rerun, exported)
             assert [c["assessment"] for c in supported] == ["pass"] * 6, supported
-            assert blocked["status"] == "blocked"
+            assert blocked_active["status"] == blocked_paused["status"] == "blocked"
             failed = host.physical_campaigns.get(config["campaign_ids"][0])
             assert failed["status"] == "failed" and failed["case_counts"]["skipped"] == 11
             selected = host.physical_campaigns.get(rerun["campaign_ids"][1])
