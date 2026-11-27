@@ -1,4 +1,6 @@
-# Reference voice comparison matrix
+# Two-node voice comparison matrix
+
+## Reference voice
 
 VOICE-02 C1 uses up to three explicitly selected three-second 8 kHz mono
 PCM references. Each reference has 24,000 samples. The default plan
@@ -21,7 +23,45 @@ check runs one selected clip and retains the encoded/recovered hashes
 and two distinct data comparisons. The CLI accepts the same reference IDs
 as `voice_reference_ids` in an `integration-matrix` request.
 
-C2 remains blocked until microphone cases have a coordinated utterance
-schedule. The reference matrix keeps listening pending until a person
-records playback observations. Cross-node one-way delay requires
-separately qualified calibration.
+The reference matrix keeps listening pending until a person records
+playback observations. Cross-node one-way delay requires separately
+qualified calibration.
+
+## Microphone-origin voice
+
+1. Connect both compatible roles in **Voice workspace**. Choose the
+   microphone source, direction, 24,000 samples and both data
+   comparisons. Speak the planned utterance into the transmitter's
+   microphone when the run starts.
+2. Listen to the receiver and record the result on the completed
+   voice run. Keep its run ID. Repeat with the other node as the
+   microphone source and use separate records for each utterance
+   and repetition.
+3. In **Experiments**, select **VOICE-02**, **C2** and the required
+   direction and workload. Paste the saved run IDs into **Saved
+   microphone voice runs (JSON)**. Preview and run the review. The
+   saved review can run after both nodes are disconnected.
+
+```json
+[
+  {
+    "direction": "A_TO_B",
+    "utterance": 1,
+    "repetition": 1,
+    "voice_run_id": "422ed491-22a7-4319-9949-aee83ab1739f"
+  }
+]
+```
+
+The CLI uses the same array in `voice_microphone_evidence` on the C2
+matrix request. The full plan has 18 cases, with three utterances and
+three repetitions in each direction.
+
+Each reviewed case links the source and decoded WAVs, exact recovered
+Codec 2 bytes, and the voice inspection. Expect a non-silent 48,000-byte
+microphone capture, a verified 150-frame/1,200-byte protected transfer,
+playback on the receiver, and separate 1,200-byte and 64-byte comparisons
+with fresh sessions and matched settings. Missing listening or a damaged
+archive leaves the case inconclusive. A saved report of inaudible
+playback fails its listening assertion. Full physical repetitions and
+cross-node timing qualification remain separate.

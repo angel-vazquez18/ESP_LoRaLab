@@ -4,6 +4,13 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Microphone-origin RF voice review
+
+VOICE-02 C2 reviews protected microphone-origin runs in both
+directions. It checks the saved capture, receiver bytes and playback,
+independent matched data transfers, and the operator listening record.
+See [the two-node voice matrix](voice_matrix.md).
+
 ## November 27 — Local microphone, codec and recovery cases
 
 VOICE-01 reviews saved raw and codec playback against the original

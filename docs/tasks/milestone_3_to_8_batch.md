@@ -787,7 +787,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
-| VOICE-01–04 | Local microphone, codec and error controls, paired references, fixed-rate matrix, coded listening and duration review | Attended RF microphone cases, calibrated delivery window and recorded physical listening study |
+| VOICE-01–04 | Local microphone and error controls, paired RF voice/data, fixed-rate matrix, coded listening and duration review | Physical utterance repetitions, calibrated delivery window and recorded listening study |
 | MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
 | OPS-01 | All seven case groups, including USB loss, reset and host restart reviews | Full-hour bench evidence and attended interruption observations |
 
@@ -975,3 +975,7 @@ sender windows keep the timing comparison inconclusive.
 VOICE-01 now reviews raw and coded local playback from verified saved
 microphone operations. Its negative controls record explicit errors,
 an actual capture cancellation and a fresh verified recovery.
+
+VOICE-02 C2 now checks saved microphone-origin runs, independent matched
+data transfers and receiver listening in both directions. The result
+retains the original and decoded WAVs and exact encoded readback links.
