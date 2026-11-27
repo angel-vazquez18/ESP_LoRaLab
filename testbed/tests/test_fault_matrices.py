@@ -29,6 +29,12 @@ def test_fault_plans_preserve_required_variants_and_planned_target():
             assert all(case["target_ordinal"] == 3 for case in plan["cases"])
             case = next(c for c in plan["cases"] if c["group"] == "C2")
             assert fault_matrices.selected_request(spec, case, 2).injection.message_id == 1
+    replay_cases = compile_matrix(MatrixRequest(catalog_id="SEC-03"))["cases"]
+    old_window = [case for case in replay_cases if case["group"] == "C2"]
+    assert len(old_window) == 6
+    assert {case["message_count"] for case in old_window} == {132}
+    assert all(case["driver"] == "fault_window_unavailable" for case in old_window)
+
     spec = MatrixRequest(catalog_id="SEC-02")
     cases = compile_matrix(spec)["cases"]
     offsets = {

@@ -38,22 +38,25 @@ def cases(request, groups):
     ):
         variant = GROUPS[request.catalog_id][group]
         count = min(10, request.messages_per_case) if packet else 1
+        old_window = variant == "old_window_replay"
         yield {
             "group": group,
             "variant": f"{variant}_{fragment_bytes}" if packet else variant,
             "repetition": repetition,
-            "driver": (
-                "fault_window_unavailable" if variant == "old_window_replay" else "fault_series"
-            ),
+            "driver": "fault_window_unavailable" if old_window else "fault_series",
             "role": direction,
             "direction": direction,
             "message_bytes": 1200 if packet else 64,
-            "message_count": count,
+            "message_count": 132 if old_window else count,
             "fragment_payload_bytes": fragment_bytes,
             "security": "aes128_gcm",
             "action": variant,
             "target_ordinal": min(3, count) if packet else 1,
-            "session_scope": "one finite session per message with separate intact controls",
+            "session_scope": (
+                "one retained session spanning 129 subsequent originals and fresh recovery"
+                if old_window
+                else "one finite session per message with separate intact controls"
+            ),
         }
 
 
