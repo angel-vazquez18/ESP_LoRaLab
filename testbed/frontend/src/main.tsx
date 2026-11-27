@@ -38,6 +38,7 @@ import WorkloadObservations from "./WorkloadObservations";
 import PhysicalCampaigns from "./PhysicalCampaigns";
 import type { CampaignState } from "./PhysicalCampaigns";
 import ProcedureMatrix, { type MatrixOption } from "./ProcedureMatrix";
+import ClockEvidenceReview from "./ClockEvidenceReview";
 import "./procedure-matrix.css";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
@@ -416,11 +417,13 @@ function Experiments({ host }: { host: Host }) {
                 <small>
                   {host.state.procedures.matrix_options?.[e.id]
                     ? "Procedure matrix"
-                    : e.preflight.ready
-                      ? "Diagnostic check ready"
-                      : e.available
-                        ? "Connect a node"
-                        : "Implementation pending"}
+                    : e.id === "TIME-02"
+                      ? "Saved timing review"
+                      : e.preflight.ready
+                        ? "Diagnostic check ready"
+                        : e.available
+                          ? "Connect a node"
+                          : "Implementation pending"}
                 </small>
               </button>
             ))}
@@ -479,6 +482,9 @@ function Experiments({ host }: { host: Host }) {
             />
           )}
           {selected === "IF-01" && <DiagnosticCheck host={host} />}
+          {selected === "TIME-02" && (
+            <ClockEvidenceReview online={host.online} />
+          )}
           {selected === "IF-02" && (
             <KnownDataPreview request={host.request} pending={host.pending} />
           )}
