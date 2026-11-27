@@ -1,0 +1,55 @@
+{
+  "scope": "C5 through-hole resistor substitution: original firmware and project requirement source documents remain unchanged.",
+  "files_checked": 8,
+  "all_unchanged": true,
+  "files": [
+    {
+      "file": "KICAD_PCB_DESIGN_PROMPT.md",
+      "original_sha256": "b175033ae1b7cfb29fcc6a948bf8834dd770000cdb19744e0f93301771d9872d",
+      "current_sha256": "b175033ae1b7cfb29fcc6a948bf8834dd770000cdb19744e0f93301771d9872d",
+      "unchanged": true
+    },
+    {
+      "file": "include/pins.h",
+      "original_sha256": "37dcfd82a6418f512fc7619df277d4fb6bf131c7722e3d78b62f71f79c8d7170",
+      "current_sha256": "37dcfd82a6418f512fc7619df277d4fb6bf131c7722e3d78b62f71f79c8d7170",
+      "unchanged": true
+    },
+    {
+      "file": "include/config.h",
+      "original_sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "current_sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "unchanged": true
+    },
+    {
+      "file": "platformio.ini",
+      "original_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "current_sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "unchanged": true
+    },
+    {
+      "file": "README.md",
+      "original_sha256": "2783af39064c774255c8fee2d6866fef8c4ddb1ada2629cf86b5707c27907ab2",
+      "current_sha256": "2783af39064c774255c8fee2d6866fef8c4ddb1ada2629cf86b5707c27907ab2",
+      "unchanged": true
+    },
+    {
+      "file": "BENCH_VALIDATION.md",
+      "original_sha256": "01329d4b64c7b7ea74a3a7c9690d5ba886f4acd1328249a1a399f27c5b85ae6e",
+      "current_sha256": "01329d4b64c7b7ea74a3a7c9690d5ba886f4acd1328249a1a399f27c5b85ae6e",
+      "unchanged": true
+    },
+    {
+      "file": "docs/LORA_INTEGRITY_BENCH.md",
+      "original_sha256": "2eea8fb8ac1b4bb7c27c893867120b98afbea0c92f50eaa964c12f886840bdd2",
+      "current_sha256": "2eea8fb8ac1b4bb7c27c893867120b98afbea0c92f50eaa964c12f886840bdd2",
+      "unchanged": true
+    },
+    {
+      "file": "output/schematics/Heltec_V4_R2_Wiring_RevB.svg",
+      "original_sha256": "dfebf879a27540670b700f7459cd5635b0d941714cd376a1de76f13e65fe76de",
+      "current_sha256": "dfebf879a27540670b700f7459cd5635b0d941714cd376a1de76f13e65fe76de",
+      "unchanged": true
+    }
+  ]
+}

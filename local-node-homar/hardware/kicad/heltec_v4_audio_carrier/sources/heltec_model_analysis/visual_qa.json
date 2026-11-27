@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-24",
+  "native_preview": "review/pcb-3d-isometric.png",
+  "preview_sha256": "659e1fe66d7fd6bc24be876aae6e8264fc55641135c1b4c8d64c9b81b98441b4",
+  "visual_review": "PASS: upright isometric camera with USB at the back and PTT at the front; header rows aligned; OLED bracket over source retention axes; four heads and support positions plausible; no obvious lateral interference in perspective view; dark display does not imply powered operation.",
+  "limits": "5mm Heltec gap is a visual assembly assumption. No physical underside clearance, mechanical tolerance or electrical test performed.",
+  "revision": "C5",
+  "isometric_camera_rotation_degrees": [
+    -54.7356,
+    0,
+    -45
+  ]
+}

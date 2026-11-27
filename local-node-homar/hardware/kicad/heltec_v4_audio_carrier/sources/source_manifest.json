@@ -1,0 +1,316 @@
+{
+  "checked_on": "2026-11-24",
+  "status": "Current C5 design references; actual owned-part physical fit unverified",
+  "physically_measured_values": 0,
+  "sources": [
+    {
+      "id": "heltec_pinmap",
+      "title": "Heltec standard V4 pin map",
+      "url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Pinmap/V4_pinmap.png",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "R2 map; do not substitute V4-R8.",
+      "local_file": "sources/heltec-v4-pinmap.png",
+      "downloaded": true,
+      "bytes": 610298,
+      "sha256": "2562d799970eb2ac231fee0679093e4207019af0800a24b169ae72a98a89988f"
+    },
+    {
+      "id": "heltec_schematic",
+      "title": "Heltec HTIT-WB32LAF V4.3 schematic",
+      "url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/HTIT-WB32LAF_V4.3.pdf",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Header JP4.2 is VUSB before F1. Header names differ from datasheet J2/J3.",
+      "local_file": "sources/heltec-v4_3-schematic.pdf",
+      "downloaded": true,
+      "bytes": 279891,
+      "sha256": "b846f7bbdb156ad938e3df34b8803de63e8180b9895417d6206e2094f429a2e1"
+    },
+    {
+      "id": "heltec_datasheet",
+      "title": "Heltec V4.3.1 standard R2 datasheet",
+      "url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Pages9/10 pin tables;13 power;14 whole-board typical currents;15 mechanics. Mixed revision footers; actual V4.3 assembly must be checked.",
+      "local_file": "sources/heltec-v4_3_1-datasheet.pdf",
+      "downloaded": true,
+      "bytes": 1206853,
+      "sha256": "0564d85ff8b466d8a5354a3e81d7ce1ad5839aa3456b4e09b9685c1656e49846"
+    },
+    {
+      "id": "heltec_step",
+      "title": "Heltec V4.3.1 reference STEP",
+      "url": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/3D/HTIT-WB32LAF_V4.3.1%281%29.step",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Downloaded reference; no measured registration to owned V4.3 assembly. Do not call model placement validated.",
+      "local_file": "models/reference/heltec-v4_3_1-reference.step",
+      "downloaded": true,
+      "bytes": 14323941,
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df"
+    },
+    {
+      "id": "heltec_r2_product",
+      "title": "Heltec R2 product",
+      "url": "https://heltec.org/project/wifi-lora-32-v4-r2",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Generic /wifi-lora-32-v4 URL now describes R8; use fixed R2 documents for pin mapping."
+    },
+    {
+      "id": "heltec_faq",
+      "title": "Heltec V4 product FAQ",
+      "url": "https://heltec.org/project/wifi-lora-32-v4/",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "FPC antenna on OLED bracket; plastic retention screws. No numeric carrier copper/hardware keepout established; generic page now R8."
+    },
+    {
+      "id": "inmp441",
+      "title": "TDK INMP441 DS-INMP441-00 Rev1.1",
+      "url": "https://product.tdk.com/system/files/dam/doc/product/sw_piezo/mic/mems-mic/data_sheet/inmp441.pdf",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Read through web PDF; direct download HTTP403. Bare-IC mechanics do not define round breakout.",
+      "local_file": null,
+      "downloaded": false
+    },
+    {
+      "id": "max98357",
+      "title": "ADI MAX98357A/B Rev16 datasheet",
+      "url": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX98357A-MAX98357B.pdf",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-documented",
+      "note": "Read through web PDF; direct download timed out. IC pinout does not define purple breakout.",
+      "local_file": null,
+      "downloaded": false
+    },
+    {
+      "id": "oshpark_4swift",
+      "title": "OSH Park 4 Layer Super Swift",
+      "url": "https://docs.oshpark.com/services/four-layer-swift/",
+      "accessed_on": "2026-11-24",
+      "classification": "fabricator-documented",
+      "note": "Checked2026-11-24; fixed fabrication stack governs. Recheck at manufacturing handoff."
+    },
+    {
+      "id": "oshpark_kicad",
+      "title": "OSH Park KiCad design rules",
+      "url": "https://docs.oshpark.com/design-tools/kicad/kicad-design-rules/",
+      "accessed_on": "2026-11-24",
+      "classification": "fabricator-documented",
+      "note": "Special inner drill clearance requires independent review; generic DRC alone is insufficient."
+    },
+    {
+      "id": "speaker_candidate",
+      "title": "Alrhso 1W8ohm cavity speaker listing B0GX6GZFJ2",
+      "url": "https://www.amazon.com/dp/B0GX6GZFJ2",
+      "accessed_on": "2026-11-24",
+      "classification": "seller-candidate-unmatched",
+      "note": "Brand/rating matches local clue, but owned order/part identity absent. Listing's connector wording is not a validated JST series. Ignore unsupported logic-level/no-amplifier claims. No drawing."
+    },
+    {
+      "id": "user_amp_drawing",
+      "title": "Latest user-supplied MAX98357A layout drawing",
+      "url": "User image supplied in chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-provided-dimensioned-image",
+      "note": "Active body 17.7 x 19 mm; seven-pin header pitch 2.54 mm; mount-hole horizontal center spacing 12.6 mm; mount center to bottom 16.7 mm; indicated speaker-row to header-row spacing 15.4 mm. Image is not to scale and does not establish all absolute datums or hole sizes. No pixel scaling used.",
+      "local_file": "sources/user-max98357a-layout-drawing.png",
+      "downloaded": true,
+      "bytes": 883682,
+      "sha256": "9d45543cff54a64631f907e9cb3fecc5d2197fccaecefc52ca25857271dbac73"
+    },
+    {
+      "id": "user_amp_circuit_example_1",
+      "title": "User-supplied amplifier circuit example",
+      "url": "User image supplied in chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "reference-example-not-owned-board-proof",
+      "note": "Generic example with floating gain labeled 9 dB and output filtering is not adopted as owned-module population. Project Rev B GAIN-to-GND remains +12 dB. Do not add the pictured output filter to the carrier.",
+      "local_file": "sources/user-amplifier-circuit-example-1.png",
+      "downloaded": true,
+      "bytes": 275649,
+      "sha256": "3b51ab931745475654aa3c16801fd7c02c9f641986991b20bdf8d5ea04c006ce"
+    },
+    {
+      "id": "user_mic_image",
+      "title": "User-provided INMP441 dimension image",
+      "url": "User image supplied in chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-provided-image",
+      "note": "14mm body. Red12mm annotation is not pin-row spacing; the adopted pin grid comes from mic_cad_reference. Acoustic-face-up is the assembly assumption.",
+      "local_file": "sources/user-inmp441-dimension-image.png",
+      "downloaded": true,
+      "bytes": 371056,
+      "sha256": "862041bc962bc422224aadc8598654d63e1f0d08d961dbe0a05c356bf5cd1db0"
+    },
+    {
+      "id": "ptt_selected_listing",
+      "title": "OCR TPBS02 / 10Value tactile assortment, selected 6 x 6 x 8 mm",
+      "url": "https://www.amazon.com/dp/B01MRP025V?th=1",
+      "accessed_on": "2026-11-24",
+      "classification": "user-selected-seller-listing",
+      "note": "User selected the 6 x 6 x 8 mm 4-pin through-hole variant. Package list confirms this size. No exact contact-pairing schematic, hole pitch, pin-size or drill drawing found. Generic tactile footprints are not verified for this part."
+    },
+    {
+      "id": "user_ptt_image",
+      "title": "User-provided PTT size selection image",
+      "url": "User image supplied in chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-provided-image",
+      "note": "Selected body 6 x 6 mm and nominal 8 mm height. Image does not dimension terminal centers, lead cross-section or contact pairing.",
+      "local_file": "sources/user-ptt-switch-dimension-image.png",
+      "downloaded": true,
+      "bytes": 692990,
+      "sha256": "b5d4e0a7f7ce9ea0acc19c4e4568725ed8acc354991d65cac968c9edf9d2e2a2"
+    },
+    {
+      "id": "user_speaker_ptt_revision",
+      "title": "User override: direct speaker connection and tactile PTT",
+      "url": "User chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-instruction-current",
+      "note": "Speaker connects directly to amplifier outputs. SW1 is fitted directly between GPIO39/PTT_N and GND. Carrier70x90mm."
+    },
+    {
+      "id": "user_mic_reference_circuit",
+      "title": "User microphone reference circuit and pulldown choice",
+      "url": "User image supplied in chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-provided-reference-not-population-proof",
+      "note": "Reference R2 is a100k SD pulldown marked not fitted if on the module. No extra carrier pulldown is fitted. Reference C15/R5 do not verify owned-module population; L/R is grounded.",
+      "local_file": "sources/user-inmp441-reference-circuit.png",
+      "downloaded": true,
+      "bytes": 264409,
+      "sha256": "f080822616c2b85b667101f2903b0987765504f73bc1bc3dd648d6d218955f70"
+    },
+    {
+      "id": "mic_cad_reference",
+      "title": "Authored community INMP441 reference CAD",
+      "url": "https://github.com/barafael/inmp441-breakout-kicad/blob/816ee4424e4765e0214c96a88f26b3a16a51b17a/inmp441.pretty/inmp441.kicad_mod",
+      "accessed_on": "2026-11-24",
+      "classification": "reference-routing-with-owned-fit-hold",
+      "note": "14 mm body,2.54 pitch,7.62 rows and3 mm center reference. Not owned-part mechanical certification. MIT license archived beside file.",
+      "local_file": "sources/footprint_reference/barafael-inmp441-reference.kicad_mod",
+      "downloaded": true,
+      "bytes": 981,
+      "sha256": "184f7686eafa6d9ec6fc3510dd406c3f502fc2e29648d331dc795747d6cab1ba"
+    },
+    {
+      "id": "ptt_reference",
+      "title": "C&K PTS645 reference pattern, not owned OCR identity",
+      "url": "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts645-series-datasheet?assetguid=d58fc8a8-f6e1-4527-ab68-27635e632e39",
+      "accessed_on": "2026-11-24",
+      "classification": "reference-routing-with-owned-fit-hold",
+      "note": "6.5 x4.5 mm; paired contacts across6.5 mm. KiCad1.1 drill/2.0 pads are selected reference, not C&K1.0 drill. Archives in footprint_reference/switch."
+    },
+    {
+      "id": "rf_reservation",
+      "title": "Carrier RF engineering reservation",
+      "url": "Engineering decision based on Heltec R2 datasheet page7",
+      "accessed_on": "2026-11-24",
+      "classification": "reference-routing-with-owned-fit-hold",
+      "note": "Carrier engineering reservation x13..33,y54..85mm; not a manufacturer-specified numerical keepout. Actual antenna fit and RF performance remain unverified."
+    },
+    {
+      "id": "user_passive_population",
+      "title": "User override: reduce removable and optional carrier passives",
+      "url": "User chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-instruction-current",
+      "note": "Direct copper, one R8 1k through-hole carbon resistor (EEEEE, 1/2 W, 5%) and 13 test pads. No carrier capacitors; existing module bypassing retained."
+    },
+    {
+      "id": "user_ptt_population_and_labels",
+      "title": "User override: fitted PTT and concise annotations",
+      "url": "User chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-instruction-current",
+      "note": "SW1 is fitted and current CAD annotations are concise. Firmware unchanged; physical assembly not performed."
+    },
+    {
+      "id": "kicad_ptt_h8_model",
+      "title": "KiCad standard SW_PUSH_6mm_H8mm STEP model",
+      "url": "Installed KiCad 10 standard 3D model library: Button_Switch_THT.3dshapes/SW_PUSH_6mm_H8mm.step",
+      "accessed_on": "2026-11-24",
+      "classification": "representative-library-model-not-owned-part-certification",
+      "note": "Copied to project models/SW_PUSH_6mm_H8mm.step; offset (-3.25,+2.25,0) mm recenters the library origin. C5 fitted SW1 preview; not an OCR manufacturer model.",
+      "local_file": "models/SW_PUSH_6mm_H8mm.step",
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969",
+      "bytes": 179948
+    },
+    {
+      "id": "user_resistor_selection",
+      "title": "User prototype resistor choice: EEEEE 1 kohm, 1/2 W, 5% carbon through-hole",
+      "url": "User chat, 2026-11-24",
+      "accessed_on": "2026-11-24",
+      "classification": "user-instruction-current",
+      "note": "Replace the carrier R8 SMD part with the available axial through-hole resistor. Nominal resistance and circuit function remain unchanged; exact EEEEE body/lead drawing has not been established.",
+      "local_file": "sources/USER_OVERRIDES.md",
+      "created_locally": true,
+      "bytes": 2064,
+      "sha256": "a24cbde252c7f809cb13d253ef4cdaa47b1ca8fa8dae7764b5bb16ca8792568c"
+    },
+    {
+      "id": "eeee_resistor_listing",
+      "title": "EEEEE carbon-film 1/2 W 5% assortment listing B0G4LVC5RY",
+      "url": "https://www.amazon.com/dp/B0G4LVC5RY",
+      "accessed_on": "2026-11-24",
+      "classification": "matching-seller-listing-not-mechanical-drawing",
+      "note": "Matching brand/rating assortment reference. No exact body-length, body-diameter or lead-diameter drawing established; does not identify the owned lot or prove footprint fit.",
+      "local_file": null,
+      "downloaded": false
+    },
+    {
+      "id": "carbon_resistor_reference",
+      "title": "Royal Ohm CFR carbon-film resistor reference drawing",
+      "url": "https://www.tme.eu/Document/29f58ab8e2ccd3fbcb10a82637aa83de/cfr.pdf",
+      "accessed_on": "2026-11-24",
+      "classification": "manufacturer-reference-not-owned-part-identity",
+      "note": "Half-watt reference body up to 10 x 3.5 mm. Carrier adopts a 10.0 x 3.6 mm envelope with 15.24 mm formed pitch and 1.0 mm drills / 2.0 mm pads. Royal Ohm is not the owned EEEEE part; compare the actual resistor before assembly.",
+      "local_file": null,
+      "downloaded": false
+    },
+    {
+      "id": "axial_resistor_visual",
+      "title": "Authored 1 kohm 1/2 W carbon axial resistor visual",
+      "url": "Project-authored representative geometry",
+      "accessed_on": "2026-11-24",
+      "classification": "authored-representative-model-not-manufacturer-cad",
+      "note": "Brown-black-red-gold bands; horizontal 10.0 x 3.6 mm reference body and 15.24 mm lead pitch. Visual dimensions are engineering choices pending owned-part fit.",
+      "local_file": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "created_locally": true,
+      "bytes": 80021,
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0"
+    },
+    {
+      "id": "current_reference_notes",
+      "title": "Current C5 reference findings",
+      "url": "Project-authored source summary",
+      "accessed_on": "2026-11-24",
+      "classification": "authored-source-summary",
+      "local_file": "sources/RESEARCH_FINDINGS.md",
+      "created_locally": true,
+      "note": "Summarizes cited reference geometry, electrical sources and pending physical checks; not a measurement record.",
+      "bytes": 6659,
+      "sha256": "c685ebf64770de59bd256bccf7032f12bcf41c4193873ce06385953db299c925"
+    },
+    {
+      "id": "current_ptt_reference_notes",
+      "title": "Current PTT reference-pattern notes",
+      "url": "Project-authored reference summary",
+      "accessed_on": "2026-11-24",
+      "classification": "authored-source-summary",
+      "local_file": "sources/footprint_reference/switch/FINDINGS.txt",
+      "created_locally": true,
+      "note": "C5 assembly population with unchanged reference switch geometry; actual OCR fit and contact pairing unverified.",
+      "bytes": 1517,
+      "sha256": "736a23d8ee32227297fe7394a81d05f3df56a606f5d9e5ea27ece7254b4e3021"
+    }
+  ],
+  "revision": "C5",
+  "local_file_base": "project root"
+}

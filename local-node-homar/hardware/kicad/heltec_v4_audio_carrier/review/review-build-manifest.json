@@ -1,0 +1,49 @@
+{
+  "revision": "C5",
+  "input_pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "input_schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+  "files": [
+    {
+      "name": "design-review.pdf",
+      "sha256": "60d350193408dc183dedbda06ebfa9f56fa57054f26953cfbb9cb22f98c5d2af",
+      "pages": 5
+    },
+    {
+      "name": "mechanical-check-1to1.pdf",
+      "sha256": "df88397b8dfacc00286d67dde893b75be8456f9ef7c8180c6b2b81a9f7be6b72",
+      "pages": 1
+    },
+    {
+      "name": "pcb-3d-top.png",
+      "sha256": "7f644e9d67b3bcc0be4788f3c4b0f0c27f35c2e2451aaa979942fb79be4c10e5",
+      "pixels": [
+        1768,
+        2072
+      ]
+    },
+    {
+      "name": "pcb-3d-bottom.png",
+      "sha256": "5137849f2252baf2c12d8d9628ee01fcf0c00bf249a50bee875e9304ec001a37",
+      "pixels": [
+        1768,
+        2072
+      ]
+    },
+    {
+      "name": "pcb-3d-isometric.png",
+      "sha256": "659e1fe66d7fd6bc24be876aae6e8264fc55641135c1b4c8d64c9b81b98441b4",
+      "pixels": [
+        2272,
+        2072
+      ]
+    },
+    {
+      "name": "pcb-3d-all-views.png",
+      "sha256": "eff88a180d9356ee9d528a794fae7b0239a196ae3ad788e41dba64c39d13030f",
+      "pixels": [
+        3600,
+        1950
+      ]
+    }
+  ]
+}

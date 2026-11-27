@@ -1,0 +1,73 @@
+{
+  "reason": "Top-only fillet preserves a flat base and continuous roof; all-edge fillet is superseded.",
+  "top_edge_indices": [
+    2,
+    6,
+    10,
+    12
+  ],
+  "operations": [
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDStrengthBand1",
+        "values": {
+          "Edges": [
+            [
+              2,
+              0.2,
+              0.2
+            ],
+            [
+              6,
+              0.2,
+              0.2
+            ],
+            [
+              10,
+              0.2,
+              0.2
+            ],
+            [
+              12,
+              0.2,
+              0.2
+            ]
+          ]
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDStrengthBand2",
+        "values": {
+          "Edges": [
+            [
+              2,
+              0.2,
+              0.2
+            ],
+            [
+              6,
+              0.2,
+              0.2
+            ],
+            [
+              10,
+              0.2,
+              0.2
+            ],
+            [
+              12,
+              0.2,
+              0.2
+            ]
+          ]
+        },
+        "recompute": true
+      }
+    }
+  ]
+}

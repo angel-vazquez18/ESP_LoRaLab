@@ -1,0 +1,505 @@
+{
+  "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-v4-carrier-c5\\design\\BOM.csv",
+  "source_sha256": "2afd54f7e1e711753dbf6f84366796552d84f6726bb122c14b6f597dd9a792da",
+  "checks_total": 52,
+  "checks_passed": 52,
+  "checks_failed": 0,
+  "scope": "Revision consistency only; does not validate purchasable MPNs, actual stocked parts or module pin-fit measurements.",
+  "checks": [
+    {
+      "check": "BOM references unique",
+      "passed": true,
+      "evidence": [
+        "U1",
+        "U2",
+        "JAMP1",
+        "U3",
+        "LS1",
+        "R8",
+        "SW1",
+        "TP1",
+        "TP2",
+        "TP3",
+        "TP4",
+        "TP5",
+        "TP6",
+        "TP7",
+        "TP8",
+        "TP9",
+        "TP10",
+        "TP11",
+        "TP12",
+        "TP13",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "HDR_U1",
+        "HDR_U2"
+      ]
+    },
+    {
+      "check": "No removed speaker or PTT connectors",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "JAMP1 single7pin amplifier interconnect",
+      "passed": true,
+      "evidence": {
+        "Reference": "JAMP1",
+        "Quantity": "1",
+        "Value": "AMP 1x07 solder pins",
+        "Footprint": "Carrier:MAX98357A_H7_2p54_PROVISIONAL",
+        "Population": "FIT / SOLDERED MODULE PINS",
+        "Rating": "2.54mm pitch soldered pin strip; supplied pin dimensions and current rating require verification",
+        "Assembly note": "Soldered pin interconnect between carrier and existing U3, not a wire cable or speaker connector. User drawing: 17.7x19mm body and 2.54mm pitch. Numeric pin1 VIN,2 GND,3 SD_MODE,4 GAIN,5 DIN,6 BCLK,7 LRC. Header-to-body datum and drill remain provisional.",
+        "Datasheet": ""
+      }
+    },
+    {
+      "check": "HDR_U2 is microphone pins only",
+      "passed": true,
+      "evidence": {
+        "Reference": "HDR_U2",
+        "Quantity": "2 strips of 3 pins",
+        "Value": "Microphone soldered interconnect pins",
+        "Footprint": "U2 reference 2.54mm pitch / 7.62mm row spacing",
+        "Population": "REFERENCE FIT HOLD / VERIFY BEFORE ORDER",
+        "Rating": "Actual lead size, drill fit and standoff TBD",
+        "Assembly note": "Reference grid adopted for routing; validate actual module contacts, acoustic/solder face UP and underside clearance. Carrier drills 1.1mm and 3mm standoff remain provisional. JAMP1 separately supplies amplifier pins.",
+        "Datasheet": ""
+      }
+    },
+    {
+      "check": "No duplicate amplifier header supply row",
+      "passed": true,
+      "evidence": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "HDR_U1",
+        "HDR_U2",
+        "JAMP1",
+        "LS1",
+        "R8",
+        "SW1",
+        "TP1",
+        "TP10",
+        "TP11",
+        "TP12",
+        "TP13",
+        "TP2",
+        "TP3",
+        "TP4",
+        "TP5",
+        "TP6",
+        "TP7",
+        "TP8",
+        "TP9",
+        "U1",
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "check": "External speaker has no PCB footprint",
+      "passed": true,
+      "evidence": {
+        "Reference": "LS1",
+        "Quantity": "1",
+        "Value": "Existing speaker",
+        "Footprint": "",
+        "Population": "EXISTING / EXTERNAL WIRES",
+        "Rating": "8 ohm nominal; verify actual speaker power rating",
+        "Assembly note": "Existing off-board speaker. Direct insulated wires from U3 SPK+/SPK- terminals to LS1; no carrier connector, copper route or mounting reservation. Neither terminal is GND.",
+        "Datasheet": ""
+      }
+    },
+    {
+      "check": "U3 mounts through JAMP1",
+      "passed": true,
+      "evidence": {
+        "Reference": "U3",
+        "Quantity": "1",
+        "Value": "Purple MAX98357A daughterboard",
+        "Footprint": "",
+        "Population": "EXISTING / MOUNT VIA JAMP1",
+        "Rating": "",
+        "Assembly note": "U3 is mechanically mounted on the carrier through soldered JAMP1. CAD off-board flag means daughterboard circuitry is not a separate carrier footprint. GAIN to GND retains RevB +12dB. Inspect actual module SD pull-up/straps and bypass; generic example R1 population is unverified. One external R8 pulldown only. Speaker wires attach directly to U3 terminals. The carrier uses direct power and signal traces, with no isolation links or additional carrier bypass capacitors. Retain existing module bypassing; inspect its actual population.",
+        "Datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf"
+      }
+    },
+    {
+      "check": "SW1 nominal6x6x8 fitted",
+      "passed": true,
+      "evidence": {
+        "Reference": "SW1",
+        "Quantity": "1",
+        "Value": "PTT 6x6x8mm",
+        "Footprint": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING",
+        "Population": "FIT",
+        "Rating": "Exact switch contact rating pending verification",
+        "Assembly note": "OCR TPBS02 normally-open 6x6x8mm tactile; FIT. Reference 6.5x4.5mm grid, contact1 to GPIO39/PTT_N and contact2 to GND. Verify owned-switch pairing/fit. Firmware remains ENABLE_PTT=false; enabled code uses INPUT_PULLUP.",
+        "Datasheet": "https://www.amazon.com/dp/B01MRP025V"
+      }
+    },
+    {
+      "check": "No unused optional or link passive BOM rows",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Only carrier passive is existing1k SD pulldown",
+      "passed": true,
+      "evidence": {
+        "Reference": "R8",
+        "Quantity": "1",
+        "Value": "1k",
+        "Footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+        "Population": "FIT",
+        "Rating": "EEEEE carbon axial through-hole; 1/2 W; 5%",
+        "Assembly note": "Single SD_MODE-to-GND pulldown. Horizontal reference: 10.0x3.6mm body envelope; 15.24mm formed lead pitch; 1.0mm drills and 2.0mm pads. Verify owned EEEEE body/lead fit before forming leads. Non-polarized; brown-black-red-gold bands. About 3.3mA at 3.3V nominal; reset target SD<0.08V.",
+        "Datasheet": "https://www.amazon.com/dp/B0G4LVC5RY"
+      }
+    },
+    {
+      "check": "BOM contains every electrical component",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Only mechanical and pin-strip additions beyond electrical BOM",
+      "passed": true,
+      "evidence": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "HDR_U1",
+        "HDR_U2"
+      ]
+    },
+    {
+      "check": "U1 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "Carrier:Heltec_V4_R2_2x18_PROVISIONAL",
+        "schematic": "Carrier:Heltec_V4_R2_2x18_PROVISIONAL"
+      }
+    },
+    {
+      "check": "U1 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "U2 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "Carrier:INMP441_ROUND_2p54x7p62_REFERENCE",
+        "schematic": "Carrier:INMP441_ROUND_2p54x7p62_REFERENCE"
+      }
+    },
+    {
+      "check": "U2 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "JAMP1 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "Carrier:MAX98357A_H7_2p54_PROVISIONAL",
+        "schematic": "Carrier:MAX98357A_H7_2p54_PROVISIONAL"
+      }
+    },
+    {
+      "check": "JAMP1 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT / SOLDERED MODULE PINS",
+        "schematic": false
+      }
+    },
+    {
+      "check": "U3 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "",
+        "schematic": ""
+      }
+    },
+    {
+      "check": "U3 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "EXISTING / MOUNT VIA JAMP1",
+        "schematic": false
+      }
+    },
+    {
+      "check": "LS1 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "",
+        "schematic": ""
+      }
+    },
+    {
+      "check": "LS1 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "EXISTING / EXTERNAL WIRES",
+        "schematic": false
+      }
+    },
+    {
+      "check": "R8 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+        "schematic": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal"
+      }
+    },
+    {
+      "check": "R8 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "SW1 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING",
+        "schematic": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING"
+      }
+    },
+    {
+      "check": "SW1 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP1 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP1 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP2 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP2 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP3 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP3 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP4 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP4 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP5 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP5 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP6 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP6 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP7 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP7 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP8 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP8 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP9 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP9 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP10 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP10 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP11 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP11 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP12 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP12 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    },
+    {
+      "check": "TP13 BOM footprint matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "TestPoint:TestPoint_Pad_D1.5mm",
+        "schematic": "TestPoint:TestPoint_Pad_D1.5mm"
+      }
+    },
+    {
+      "check": "TP13 BOM DNP matches schematic",
+      "passed": true,
+      "evidence": {
+        "BOM": "FIT",
+        "schematic": false
+      }
+    }
+  ]
+}

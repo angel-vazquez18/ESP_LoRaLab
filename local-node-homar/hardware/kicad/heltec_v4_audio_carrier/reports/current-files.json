@@ -1,0 +1,636 @@
+{
+  "revision": "C5",
+  "scope": "All current project files except this manifest and live KiCad lock/preferences files.",
+  "files": [
+    {
+      "path": "ASSEMBLY_AND_BRINGUP.txt",
+      "bytes": 3849,
+      "sha256": "112eabb986a0e03ee338881f9964fe5f7dabe9c051abd0e116ec010edf31edcf"
+    },
+    {
+      "path": "Bill_of_Materials.csv",
+      "bytes": 2620,
+      "sha256": "4f656331fd5b32bf7b16ce74216159e25319225f64a753d5dbdad1af5da86eae"
+    },
+    {
+      "path": "Bill_of_Materials.xlsx",
+      "bytes": 8156,
+      "sha256": "a53e15a2bf7c07518ef9bf393c6a1fd596b5eb0cde4f22903134c00d017cbcfe"
+    },
+    {
+      "path": "BOM.csv",
+      "bytes": 6097,
+      "sha256": "2afd54f7e1e711753dbf6f84366796552d84f6726bb122c14b6f597dd9a792da"
+    },
+    {
+      "path": "electrical_manifest.json",
+      "bytes": 18071,
+      "sha256": "0753aa939866bb3899b8b8e908546fc2aad292d575f692d011a38ea5f0852389"
+    },
+    {
+      "path": "fabrication/oshpark/checks/board-geometric-audit.json",
+      "bytes": 28220,
+      "sha256": "47d090425dbf2b1851abc517528bef7588d0b6320948eb20c4716c49cd531787"
+    },
+    {
+      "path": "fabrication/oshpark/checks/drc.json",
+      "bytes": 1138,
+      "sha256": "8774cbb0cbf431d9a584f58be1ea36d2a66ad5128ff35e19abbc81cbcbbee970"
+    },
+    {
+      "path": "fabrication/oshpark/checks/drill-report.txt",
+      "bytes": 885,
+      "sha256": "21daab5a73fa909f8c0d20ae80d507c98afd5fa2f8cd5d4997c8c541155e4390"
+    },
+    {
+      "path": "fabrication/oshpark/checks/erc.json",
+      "bytes": 1054,
+      "sha256": "b66cf40ba22f3dd8026547ec3ee92da8f863c97d12ff597f07566635383222a6"
+    },
+    {
+      "path": "fabrication/oshpark/checks/gerber-validation.json",
+      "bytes": 8868,
+      "sha256": "b0e1827084518d32a54057c9a48553f63e4dfa2b64bc7fde426893b420795e17"
+    },
+    {
+      "path": "fabrication/oshpark/heltec_v4_audio_carrier_C5_OSHPARK.zip",
+      "bytes": 143477,
+      "sha256": "9212d3b5cf9f3d57076ebaee2265bd9376615be50f2797a45725c418032a745b"
+    },
+    {
+      "path": "fabrication/oshpark/preview-bottom.png",
+      "bytes": 124207,
+      "sha256": "0539187153df7d0a8046334b920eb8a3d86029cdbc5a429abfa8019980e81fb7"
+    },
+    {
+      "path": "fabrication/oshpark/preview-top.png",
+      "bytes": 135981,
+      "sha256": "8f794fc4ae7bed11569e3e4ac5175d9f7bdb4e36f66bb44748c9b2e4160db2cf"
+    },
+    {
+      "path": "fabrication/oshpark/README.txt",
+      "bytes": 4607,
+      "sha256": "fcfa9babdfb0e94728abd96dde8de601643c118f6913e447cfaf249ce1b6d93f"
+    },
+    {
+      "path": "fabrication/oshpark/submission-manifest.json",
+      "bytes": 5287,
+      "sha256": "a36b043ef160dae55428c6ce279200970aed56f33b26af85392305469d24b121"
+    },
+    {
+      "path": "footprints/Carrier.pretty/Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+      "bytes": 5997,
+      "sha256": "8ede4645625f96394b347930afa926b0cbc3f0e8382ffd60bfa2cb30b34ca618"
+    },
+    {
+      "path": "footprints/Carrier.pretty/INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+      "bytes": 2105,
+      "sha256": "72d4143eafa0d6b5753d3059b7806af8ce62d5f107c86ce3a457f94291e6e5dd"
+    },
+    {
+      "path": "footprints/Carrier.pretty/MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+      "bytes": 1984,
+      "sha256": "0c88dddcf4263020aee8a122b766646a94550c44675319a4ec68f908bb223f48"
+    },
+    {
+      "path": "footprints/Carrier.pretty/R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+      "bytes": 1465,
+      "sha256": "e7c8afc6883686e2038a6a131d354540dd64a2bb10af58db93448f0c38770a49"
+    },
+    {
+      "path": "footprints/Carrier.pretty/SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+      "bytes": 1380,
+      "sha256": "8ce725547be7cd4916bad58ab71958c4bf9fd0fee8cadca0b6e546d901608fa3"
+    },
+    {
+      "path": "footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+      "bytes": 1665,
+      "sha256": "b96327f07f717662b4309a5d62e50fa67f97a583902042c0d2f0975599aba459"
+    },
+    {
+      "path": "fp-lib-table",
+      "bytes": 314,
+      "sha256": "ec5fd0255b432cf34ef019b5c3810774faeb9e7f254022e2afe86b7ed3dd4bf4"
+    },
+    {
+      "path": "heltec_pin_mapping.csv",
+      "bytes": 1141,
+      "sha256": "ef6bc4283ef546f8c564da4b2e95c664062aab4363ec3ed54ce25cd8e6cfdfe5"
+    },
+    {
+      "path": "heltec_v4_audio_carrier.kicad_dru",
+      "bytes": 123,
+      "sha256": "b46dcb26a4057ccf29bf3d3ee55f0f025343c75d60c4d9755e0509db14c6d1ed"
+    },
+    {
+      "path": "heltec_v4_audio_carrier.kicad_pcb",
+      "bytes": 506420,
+      "sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553"
+    },
+    {
+      "path": "heltec_v4_audio_carrier.kicad_pro",
+      "bytes": 15813,
+      "sha256": "07af4ecf140bb01cadea140e10ed4ade6447a5c42611608bf7aaa03b1b89929f"
+    },
+    {
+      "path": "heltec_v4_audio_carrier.kicad_sch",
+      "bytes": 69091,
+      "sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6"
+    },
+    {
+      "path": "models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "path": "models/detailed-models.json",
+      "bytes": 2095,
+      "sha256": "be69dd073dee4d6a2f11ea2054624080f47ecbda269646bf4dbdf24448849bcd"
+    },
+    {
+      "path": "models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "bytes": 60036,
+      "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122"
+    },
+    {
+      "path": "models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "bytes": 898775,
+      "sha256": "d8fba5c104beb055cf5f4d7277aac1004ad2c7bd5dacb8e74b682fda1c6de900"
+    },
+    {
+      "path": "models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "path": "models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "bytes": 840190,
+      "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8"
+    },
+    {
+      "path": "models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "path": "models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "bytes": 638862,
+      "sha256": "a221a03f0858b28defde118762c12c702e1a0da3b26a3ffc4ee86f0291a65bf5"
+    },
+    {
+      "path": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "bytes": 80021,
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0"
+    },
+    {
+      "path": "models/reference/heltec-v4_3_1-reference.step",
+      "bytes": 14323941,
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df"
+    },
+    {
+      "path": "models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "path": "models/SW_PUSH_6mm_H8mm.step",
+      "bytes": 179948,
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969"
+    },
+    {
+      "path": "reports/AUDIT_RESULT.txt",
+      "bytes": 786,
+      "sha256": "9d34114ad29e9bda63ddc96dcdd3e350415d1fe9a293133031bf6874529ab48b"
+    },
+    {
+      "path": "reports/bom_audit.json",
+      "bytes": 14628,
+      "sha256": "1c9de4beddf03f207e78b59b09a78f3adcf9185bb002c7ae6f6ed399e091947f"
+    },
+    {
+      "path": "reports/connectivity_audit.json",
+      "bytes": 99030,
+      "sha256": "b7d6ff1a2a00609792fdfcebf0d458d7b0f7a072235b6426c931e0caeec2133e"
+    },
+    {
+      "path": "reports/current-assembly.json",
+      "bytes": 3415,
+      "sha256": "026f4cd21f8b7375233df84dd657d2a1b3e91abd47e148214b6b134047dadeed"
+    },
+    {
+      "path": "reports/electrical.net.xml",
+      "bytes": 47724,
+      "sha256": "0b6c0859b961801219015633ef2f808b36f685b3dc08c3edeb4e49259a1e2b92"
+    },
+    {
+      "path": "reports/package-verification.json",
+      "bytes": 9241,
+      "sha256": "c6f49cdf9f118858b3279ddcb12ccf109ed65010724f8bc6249aef75ad2e8cec"
+    },
+    {
+      "path": "reports/pcb-drc.json",
+      "bytes": 1116,
+      "sha256": "f12a8d89fbe035315598354185b0c9cefd2f717fce6e3f7b3e075842013f9b86"
+    },
+    {
+      "path": "reports/pcb_manifest.json",
+      "bytes": 37222,
+      "sha256": "51626af224dee5caef0fafddc58e1d035e2e6c6d76c7dc089110f4041c38a2c1"
+    },
+    {
+      "path": "reports/requirements_review.json",
+      "bytes": 22534,
+      "sha256": "52e47fefb55f3382416f0d35840d213026aac516ba90487046b691d9b6146e64"
+    },
+    {
+      "path": "reports/resistor-prototype-change.json",
+      "bytes": 1074,
+      "sha256": "b8919b7fab517fdbee4358f17756bb2e9249cc28d4a22732188e80cea716689a"
+    },
+    {
+      "path": "reports/route_lengths.csv",
+      "bytes": 289,
+      "sha256": "231fda0b9e719c5cb7417e8cede5ccd0746daf32fece4ed4a4f092fa8f234b76"
+    },
+    {
+      "path": "reports/routing_audit.json",
+      "bytes": 25893,
+      "sha256": "21db088849493a515ef41c7f7822b2acf81e62960cf219b372db3e340840b8e0"
+    },
+    {
+      "path": "reports/schematic-erc.json",
+      "bytes": 1032,
+      "sha256": "0e85b34d5f61eba82c1ed069e94d171620ba4d7263e1c5cb49d38e7eb1af8e04"
+    },
+    {
+      "path": "reports/source_facts.json",
+      "bytes": 9190,
+      "sha256": "50598e1726bc8076a4da5d0e2306259c828c3ee293a519aa963c5b3d26e55c19"
+    },
+    {
+      "path": "reports/source_integrity.json",
+      "bytes": 2344,
+      "sha256": "ba0f0bd75ac434ef132277042f858f20d564549b00c8b5d864e43ce36557b52b"
+    },
+    {
+      "path": "reports/user_measurements.json",
+      "bytes": 5911,
+      "sha256": "30f824be98b6ddf6124d53687443c12df18e83bb39685c5d07b1f95bea2333c1"
+    },
+    {
+      "path": "reports/user_overrides.json",
+      "bytes": 7791,
+      "sha256": "aa78da67d8da879209856d44ebedde95f9a672ad1000fc6aef0db2e3e9526102"
+    },
+    {
+      "path": "review/bottom-copper-plot.png",
+      "bytes": 73405,
+      "sha256": "758af7ff1977ae7d13ec131210528d63a999af181704036d0c9ce7d5d0e69d59"
+    },
+    {
+      "path": "review/bottom-review.pdf",
+      "bytes": 42089,
+      "sha256": "e9dccaae7e8680a893c89559d2aa6f18c790ab92e1956918cb8f699ed0ceb484"
+    },
+    {
+      "path": "review/bottom-review.svg",
+      "bytes": 97551,
+      "sha256": "72df8bf70d29fe977055adbb1e24f23c4f043a0c80a369dadb1f87732ac2da86"
+    },
+    {
+      "path": "review/copper-layer-1.png",
+      "bytes": 49337,
+      "sha256": "fac41d8bd38d71d71de551f751938bb926df00307ee315334093f56c36c77a5e"
+    },
+    {
+      "path": "review/copper-layer-2.png",
+      "bytes": 57258,
+      "sha256": "4499dadaa0f393177c9b4ff601e4f5467f475b8f68aafb202dcab19d89a1a4f3"
+    },
+    {
+      "path": "review/copper-layer-3.png",
+      "bytes": 59347,
+      "sha256": "919a0fc08dbd1656aed69ace2ba30d66b5e029b6b1dc1a150eda1d5afa1b4359"
+    },
+    {
+      "path": "review/copper-layer-4.png",
+      "bytes": 60347,
+      "sha256": "b1dbf0df609d64a8e689aa474b761d240892f89a22a2b9da6d9b6d1f52525f74"
+    },
+    {
+      "path": "review/copper-layer-review.pdf",
+      "bytes": 128425,
+      "sha256": "9f7fe83983711c9fbbdc255bd7eac5a8f30da2c84fa897d2a1e377688594c4fc"
+    },
+    {
+      "path": "review/design-review-1.png",
+      "bytes": 272591,
+      "sha256": "de3ac7480a25ba8baeff6214785c241c872bb74da08fcc18db7323cc45d98da8"
+    },
+    {
+      "path": "review/design-review-2.png",
+      "bytes": 160834,
+      "sha256": "150d8d8a5912bf8ff2585215a19a72b701837ed992a6d70e9bf773438aaf5904"
+    },
+    {
+      "path": "review/design-review-3.png",
+      "bytes": 190113,
+      "sha256": "ba9f89aa22a322a6eb678d393705cc0d5a0248a85d904934b8e5ade463399a04"
+    },
+    {
+      "path": "review/design-review-4.png",
+      "bytes": 179267,
+      "sha256": "1a096793847a93ec01997594a2b5a54f4fcda7bdf987b200eb0a0c7b5cd1ebd0"
+    },
+    {
+      "path": "review/design-review-5.png",
+      "bytes": 210451,
+      "sha256": "446371fda39cb5418f07c9f53a8a6cf25938b4812feafe70f937acec7e8fca88"
+    },
+    {
+      "path": "review/design-review.pdf",
+      "bytes": 1797519,
+      "sha256": "60d350193408dc183dedbda06ebfa9f56fa57054f26953cfbb9cb22f98c5d2af"
+    },
+    {
+      "path": "review/mechanical-check-1to1-1.png",
+      "bytes": 218534,
+      "sha256": "49eda7e3104e5784d476375dd0f6eb7191f2375e93d57440b7fce2e07695a129"
+    },
+    {
+      "path": "review/mechanical-check-1to1.pdf",
+      "bytes": 51610,
+      "sha256": "df88397b8dfacc00286d67dde893b75be8456f9ef7c8180c6b2b81a9f7be6b72"
+    },
+    {
+      "path": "review/pcb-3d-all-views.png",
+      "bytes": 734826,
+      "sha256": "eff88a180d9356ee9d528a794fae7b0239a196ae3ad788e41dba64c39d13030f"
+    },
+    {
+      "path": "review/pcb-3d-bottom.png",
+      "bytes": 354359,
+      "sha256": "5137849f2252baf2c12d8d9628ee01fcf0c00bf249a50bee875e9304ec001a37"
+    },
+    {
+      "path": "review/pcb-3d-clearance.png",
+      "bytes": 259886,
+      "sha256": "6c52d9a325c1bbd15743dbccf1eb2b559b820cac9637ae6a99ceb1dcdfc9f31f"
+    },
+    {
+      "path": "review/pcb-3d-isometric.png",
+      "bytes": 634552,
+      "sha256": "659e1fe66d7fd6bc24be876aae6e8264fc55641135c1b4c8d64c9b81b98441b4"
+    },
+    {
+      "path": "review/pcb-3d-top.png",
+      "bytes": 553787,
+      "sha256": "7f644e9d67b3bcc0be4788f3c4b0f0c27f35c2e2451aaa979942fb79be4c10e5"
+    },
+    {
+      "path": "review/review-build-manifest.json",
+      "bytes": 1324,
+      "sha256": "21fa8e88ae56e4cee6f42455bb36420878276b8cb68c066b2771add04017147b"
+    },
+    {
+      "path": "review/schematic-1.png",
+      "bytes": 184475,
+      "sha256": "3041a8ed8b2d7700e1799120c67eb29864d9e09ce6a8008bf14dbbd40922fd6e"
+    },
+    {
+      "path": "review/schematic.pdf",
+      "bytes": 133704,
+      "sha256": "c45d7ce5fac5c9777b243aa9bbcf031faea66e8070b0041ec36e2aabbc7fdc6c"
+    },
+    {
+      "path": "review/schematic.svg",
+      "bytes": 1284416,
+      "sha256": "9d794e68e50a371450acb9b93724177a9529e0d115dad899846f747149151c69"
+    },
+    {
+      "path": "review/top-assembly.pdf",
+      "bytes": 48450,
+      "sha256": "20c4cce5d5262934dbd828d149adfb821ad68b254e13be879d2aac2e0a2d4e8c"
+    },
+    {
+      "path": "review/top-assembly.png",
+      "bytes": 99839,
+      "sha256": "cf2bfe9423614a0a909ae082903fbe8a979397263ccd4d7bf19cd9e684838156"
+    },
+    {
+      "path": "review/top-assembly.svg",
+      "bytes": 138030,
+      "sha256": "8b2b9c3f3140a568cfdbdd2bd3673372cb354d6a94aa5bb42ae449abf809959f"
+    },
+    {
+      "path": "sources/fabrication_source_rules.json",
+      "bytes": 1135,
+      "sha256": "e7ca760e3b356eb36bdb222311f3d676c02baee122c56e94e00f0c47c708bb22"
+    },
+    {
+      "path": "sources/footprint_reference/barafael-commit.json",
+      "bytes": 3392,
+      "sha256": "8bdf8f241e2d847211632d90cb78848f177d2c7691306bba3c334c5ae53543ee"
+    },
+    {
+      "path": "sources/footprint_reference/barafael-inmp441-reference.kicad_mod",
+      "bytes": 981,
+      "sha256": "184f7686eafa6d9ec6fc3510dd406c3f502fc2e29648d331dc795747d6cab1ba"
+    },
+    {
+      "path": "sources/footprint_reference/barafael-inmp441-reference.lib",
+      "bytes": 461,
+      "sha256": "8f37333ae7bcd83600a572569538d705c4aeb3cecc69f38ed486751fb907bc15"
+    },
+    {
+      "path": "sources/footprint_reference/barafael-LICENSE.txt",
+      "bytes": 1072,
+      "sha256": "aa2977457f9c601e21549efe81b45681c2bed6db896411022e71a9dae1197d94"
+    },
+    {
+      "path": "sources/footprint_reference/barafael-README.md",
+      "bytes": 378,
+      "sha256": "be0c0bcdcd3fa476704c313ad1e674ca38ecbf53c341da035dc1c552b79c33cd"
+    },
+    {
+      "path": "sources/footprint_reference/inmp441_reference_evidence.json",
+      "bytes": 7316,
+      "sha256": "5fa2b75a3fd38215d594b9f0a8c6998a7bae503daf7144f86f24b7bf6a1c3c88"
+    },
+    {
+      "path": "sources/footprint_reference/INMP441_REFERENCE_FOOTPRINT.md",
+      "bytes": 1430,
+      "sha256": "cf451081c3fb1698f61f3a599d92e88ae308897e271b33fc0e551fe48118bce2"
+    },
+    {
+      "path": "sources/footprint_reference/inmp441_reference_pad_mapping.csv",
+      "bytes": 576,
+      "sha256": "e743b71fdab0503a164653c8c2ebd9a0119926cebe09753eb172a7cfdd56ce20"
+    },
+    {
+      "path": "sources/footprint_reference/switch/FINDINGS.txt",
+      "bytes": 1517,
+      "sha256": "736a23d8ee32227297fe7394a81d05f3df56a606f5d9e5ea27ece7254b4e3021"
+    },
+    {
+      "path": "sources/footprint_reference/switch/installed-SW_PUSH_6mm-reference.kicad_mod",
+      "bytes": 6016,
+      "sha256": "e284d5bbfb435ef0ad577512ffc7da06ea7cf5c87753287922d89e84c7f4a2a7"
+    },
+    {
+      "path": "sources/footprint_reference/switch/manufacturer-pts645-conrad-mirror.pdf",
+      "bytes": 364199,
+      "sha256": "e0a555e8a53597507a4ec0b11f206035167e36f309ae10ee063213c4ba9a3268"
+    },
+    {
+      "path": "sources/footprint_reference/switch/pts645-page2-reference.png",
+      "bytes": 217167,
+      "sha256": "483d120e66acd782bfb1efc62aac74cff361f7599204b8b44f55436eacf30578"
+    },
+    {
+      "path": "sources/footprint_reference/switch/reference-pattern.json",
+      "bytes": 3222,
+      "sha256": "4e02c7dc8dbe941b378cfe96e8ba48174c827e88a1c5c3606772035e13af4c35"
+    },
+    {
+      "path": "sources/heltec-mechanical-page15.png",
+      "bytes": 289120,
+      "sha256": "ac015539345d8e7f103780ea1a933a4a12f7ab65ba03d7648d97d9209a5ae325"
+    },
+    {
+      "path": "sources/heltec-power-page13.png",
+      "bytes": 270243,
+      "sha256": "be7b12c27e28bca5cf249bee3ef98998c73669924d90af244a24917756ece9de"
+    },
+    {
+      "path": "sources/heltec-schematic-review.png",
+      "bytes": 763501,
+      "sha256": "0a3a3efc01eae69eb33b8116fa30408d8f39d8375a82a9d8e905fd56f338c9bd"
+    },
+    {
+      "path": "sources/heltec-v4-pinmap.png",
+      "bytes": 610298,
+      "sha256": "2562d799970eb2ac231fee0679093e4207019af0800a24b169ae72a98a89988f"
+    },
+    {
+      "path": "sources/heltec-v4_3-schematic.pdf",
+      "bytes": 279891,
+      "sha256": "b846f7bbdb156ad938e3df34b8803de63e8180b9895417d6206e2094f429a2e1"
+    },
+    {
+      "path": "sources/heltec-v4_3_1-datasheet.pdf",
+      "bytes": 1206853,
+      "sha256": "0564d85ff8b466d8a5354a3e81d7ce1ad5839aa3456b4e09b9685c1656e49846"
+    },
+    {
+      "path": "sources/heltec_header_pinmap.json",
+      "bytes": 913,
+      "sha256": "931e5e2266cf3adf0b26095b3c79df8387490f891ecd4077f6f6fb88957323a9"
+    },
+    {
+      "path": "sources/heltec_model_analysis/model_placement_and_addon.json",
+      "bytes": 4529,
+      "sha256": "18a97d28e2ae1f20f6f258581038147d81cfb4467b78c5a4891f72367a3942ab"
+    },
+    {
+      "path": "sources/heltec_model_analysis/official-r2-product-detail.png",
+      "bytes": 337749,
+      "sha256": "1bea5a590916087cc724e95d8831f3305a14ade44d9482b3ae22cab1b780767c"
+    },
+    {
+      "path": "sources/heltec_model_analysis/official-r2-product-front.png",
+      "bytes": 484729,
+      "sha256": "95493c5c59f8a5f9168df25d159f8b4e4fc76c965570e7450f4f06376a3abb01"
+    },
+    {
+      "path": "sources/heltec_model_analysis/README.md",
+      "bytes": 1609,
+      "sha256": "628ee05d47b43707853141f25a33560bf2d99c8c879afc8cc469a7f440f080c0"
+    },
+    {
+      "path": "sources/heltec_model_analysis/registration_check.json",
+      "bytes": 203,
+      "sha256": "9b095c53ffeff7a3af883031bdcb4fc160a8e1173966b5477e5cacaff2cc8b5e"
+    },
+    {
+      "path": "sources/heltec_model_analysis/step_inspection.json",
+      "bytes": 110250,
+      "sha256": "b373489167d88983d0ca051605b5b2be97351e1f93bb2be35af80dd3526244b9"
+    },
+    {
+      "path": "sources/heltec_model_analysis/visual_qa.json",
+      "bytes": 723,
+      "sha256": "a08341413b846f92ace8a1134743b64ea247e7ebcaa8c9f8fbd2796438f6c7cd"
+    },
+    {
+      "path": "sources/mechanical_measurements.csv",
+      "bytes": 18954,
+      "sha256": "2c0501451b3ca107fe799213fdeef37a04790262ffa3164c9eff52d5a88095a8"
+    },
+    {
+      "path": "sources/power_budget.json",
+      "bytes": 4543,
+      "sha256": "cf8bf2d8e5278b03714834029cc0c414a9fe84ed2fc99bc17ff69ce350191977"
+    },
+    {
+      "path": "sources/PTT_SWITCH_RESEARCH.md",
+      "bytes": 1497,
+      "sha256": "38e265c95bdcb1483ae7e7f9155345e3bd86602209f8386c0d89de9bdda179fd"
+    },
+    {
+      "path": "sources/RESEARCH_FINDINGS.md",
+      "bytes": 6659,
+      "sha256": "c685ebf64770de59bd256bccf7032f12bcf41c4193873ce06385953db299c925"
+    },
+    {
+      "path": "sources/source_manifest.json",
+      "bytes": 16631,
+      "sha256": "44abf4813c5b51be045d5c37d6edf4b44b1a0c15569529e27619eef673532432"
+    },
+    {
+      "path": "sources/user-amplifier-circuit-example-1.png",
+      "bytes": 275649,
+      "sha256": "3b51ab931745475654aa3c16801fd7c02c9f641986991b20bdf8d5ea04c006ce"
+    },
+    {
+      "path": "sources/user-inmp441-dimension-image.png",
+      "bytes": 371056,
+      "sha256": "862041bc962bc422224aadc8598654d63e1f0d08d961dbe0a05c356bf5cd1db0"
+    },
+    {
+      "path": "sources/user-inmp441-reference-circuit.png",
+      "bytes": 264409,
+      "sha256": "f080822616c2b85b667101f2903b0987765504f73bc1bc3dd648d6d218955f70"
+    },
+    {
+      "path": "sources/user-max98357a-layout-drawing.png",
+      "bytes": 883682,
+      "sha256": "9d45543cff54a64631f907e9cb3fecc5d2197fccaecefc52ca25857271dbac73"
+    },
+    {
+      "path": "sources/user-ptt-switch-dimension-image.png",
+      "bytes": 692990,
+      "sha256": "b5d4e0a7f7ce9ea0acc19c4e4568725ed8acc354991d65cac968c9edf9d2e2a2"
+    },
+    {
+      "path": "sources/USER_OVERRIDES.md",
+      "bytes": 2064,
+      "sha256": "a24cbde252c7f809cb13d253ef4cdaa47b1ca8fa8dae7764b5bb16ca8792568c"
+    },
+    {
+      "path": "START_HERE.txt",
+      "bytes": 3189,
+      "sha256": "9fcf08e80b18c7db3360c3d9829c3186db7da2223b15c79d921ebf8d85f9a1ba"
+    },
+    {
+      "path": "sym-lib-table",
+      "bytes": 162,
+      "sha256": "03775047c1467a2ee105d1ab2896426603f77a82cc6921aa5f001b6d8c1cbcc9"
+    },
+    {
+      "path": "symbols/Carrier.kicad_sym",
+      "bytes": 16987,
+      "sha256": "1ab5a9dcbf0ee84522f605ad9c70b399774a14f113b239f0796edd451534c9f7"
+    }
+  ]
+}

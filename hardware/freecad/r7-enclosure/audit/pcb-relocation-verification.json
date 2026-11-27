@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "verified_utc": "2026-11-25T19:08:56.909240+00:00",
+  "baseline_sha256": "1171efb220241711e4425e6aee6cdb6817560d79c8021e5547892f0445d0a20f",
+  "files_checked": 367,
+  "scope_counts": {
+    "workspace_c5_design": 117,
+    "c5_fabrication_handoff": 66,
+    "assigned_component_step": 1,
+    "local_hardware": 129,
+    "local_exports": 2,
+    "current_heltec_firmware/include": 4,
+    "current_heltec_firmware/src": 1,
+    "current_heltec_firmware/lib": 7,
+    "current_heltec_firmware/test": 11,
+    "current_heltec_firmware/tools": 5,
+    "current_heltec_firmware/platformio.ini": 1,
+    "workspace_legacy_firmware/include": 4,
+    "workspace_legacy_firmware/src": 1,
+    "workspace_legacy_firmware/lib": 4,
+    "workspace_legacy_firmware/test": 10,
+    "workspace_legacy_firmware/tools": 3,
+    "workspace_legacy_firmware/platformio.ini": 1
+  },
+  "added": [],
+  "missing": [],
+  "changed": [],
+  "original_baseline_preserved": true,
+  "historical_verification_preserved": true,
+  "relocated_scopes": [
+    "c5_fabrication_handoff",
+    "assigned_component_step"
+  ],
+  "scope_roots": {
+    "workspace_c5_design": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-v4-carrier-c5\\design",
+    "c5_fabrication_handoff": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\r7-enclosure\\references\\pcb-fabrication-baseline",
+    "assigned_component_step": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\r7-enclosure\\references\\components\\C5-detailed-assembly.step",
+    "local_hardware": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\hardware",
+    "local_exports": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\exports",
+    "current_heltec_firmware/include": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\include",
+    "current_heltec_firmware/src": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\src",
+    "current_heltec_firmware/lib": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\lib",
+    "current_heltec_firmware/test": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\test",
+    "current_heltec_firmware/tools": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\tools",
+    "current_heltec_firmware/platformio.ini": "C:\\Users\\Homar\\Documents\\Arduino\\ESP_LoRaLab\\local-node-homar\\platformio.ini",
+    "workspace_legacy_firmware/include": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\include",
+    "workspace_legacy_firmware/src": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\src",
+    "workspace_legacy_firmware/lib": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\lib",
+    "workspace_legacy_firmware/test": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\test",
+    "workspace_legacy_firmware/tools": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\tools",
+    "workspace_legacy_firmware/platformio.ini": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\esp32-audio-chunker-test\\platformio.ini"
+  },
+  "relocation": {
+    "c5_fabrication_handoff": {
+      "original": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\pcb-fabrication",
+      "current": "references/pcb-fabrication-baseline"
+    },
+    "assigned_component_step": {
+      "original": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step",
+      "current": "references/components/C5-detailed-assembly.step"
+    }
+  },
+  "statement": "Original 367 protected files have identical hashes, sizes and scope-relative membership. Only documented enclosure-related reference locations changed; PCB and firmware bytes were not modified."
+}

@@ -1,0 +1,252 @@
+{
+  "source_root": "../../..",
+  "files": {
+    "KICAD_PCB_DESIGN_PROMPT.md": {
+      "sha256": "b175033ae1b7cfb29fcc6a948bf8834dd770000cdb19744e0f93301771d9872d",
+      "line_count": 227
+    },
+    "include/pins.h": {
+      "sha256": "37dcfd82a6418f512fc7619df277d4fb6bf131c7722e3d78b62f71f79c8d7170",
+      "line_count": 56
+    },
+    "include/config.h": {
+      "sha256": "f0e875db9caf60cdad8401d58e6bffec25dd2084ed6518f9b80e8caea44ec37d",
+      "line_count": 111
+    },
+    "platformio.ini": {
+      "sha256": "995de78e2d8d64f5468f95b1afa5a375495b014e04a4a96bd8b002ab2ceb13e3",
+      "line_count": 135
+    },
+    "README.md": {
+      "sha256": "2783af39064c774255c8fee2d6866fef8c4ddb1ada2629cf86b5707c27907ab2",
+      "line_count": 694
+    },
+    "BENCH_VALIDATION.md": {
+      "sha256": "01329d4b64c7b7ea74a3a7c9690d5ba886f4acd1328249a1a399f27c5b85ae6e",
+      "line_count": 633
+    },
+    "docs/LORA_INTEGRITY_BENCH.md": {
+      "sha256": "2eea8fb8ac1b4bb7c27c893867120b98afbea0c92f50eaa964c12f886840bdd2",
+      "line_count": 273
+    },
+    "output/schematics/Heltec_V4_R2_Wiring_RevB.svg": {
+      "sha256": "dfebf879a27540670b700f7459cd5635b0d941714cd376a1de76f13e65fe76de",
+      "line_count": 282
+    }
+  },
+  "heltec_firmware_pins": {
+    "MIC_BCLK": 4,
+    "MIC_WS": 6,
+    "MIC_SD": 38,
+    "SPK_BCLK": 40,
+    "SPK_WS": 41,
+    "SPK_DOUT": 47,
+    "SPK_SD": 48,
+    "PTT_BUTTON": 39
+  },
+  "evidence": {
+    "ptt_disabled": [
+      {
+        "path": "include/config.h",
+        "line": 17,
+        "text": "constexpr bool ENABLE_PTT = false;  // Deferred until actual LoRa transport is verified."
+      }
+    ],
+    "sample_rate": [
+      {
+        "path": "include/config.h",
+        "line": 23,
+        "text": "constexpr uint32_t AUDIO_SAMPLE_RATE_HZ = 8000;"
+      }
+    ],
+    "pcm_bits": [
+      {
+        "path": "include/config.h",
+        "line": 24,
+        "text": "constexpr uint16_t AUDIO_BITS_PER_SAMPLE = 16;"
+      }
+    ],
+    "pcm_channels": [
+      {
+        "path": "include/config.h",
+        "line": 25,
+        "text": "constexpr uint8_t AUDIO_CHANNELS = 1;"
+      }
+    ],
+    "board_variant": [
+      {
+        "path": "platformio.ini",
+        "line": 55,
+        "text": "board = heltec_wifi_lora_32_V4"
+      }
+    ],
+    "s3_wire_format": [
+      {
+        "path": "README.md",
+        "line": 116,
+        "text": "On ESP32-S3, speaker output uses 32-bit stereo I2S slots at 512 kHz BCLK,"
+      }
+    ],
+    "speaker_unresolved": [
+      {
+        "path": "BENCH_VALIDATION.md",
+        "line": 132,
+        "text": "passed listening tests, but neither Heltec speaker has yet been confirmed"
+      }
+    ],
+    "speaker_reported_silent": [
+      {
+        "path": "BENCH_VALIDATION.md",
+        "line": 185,
+        "text": "- The user subsequently reported not hearing the tones; audible speaker output"
+      }
+    ],
+    "speaker_identity": [
+      {
+        "path": "BENCH_VALIDATION.md",
+        "line": 385,
+        "text": "is an Alrhso 1 W / 8 ohm cavity speaker, soldered across the output pads. Header and"
+      }
+    ],
+    "radio_internal": [
+      {
+        "path": "docs/LORA_INTEGRITY_BENCH.md",
+        "line": 95,
+        "text": "The onboard radio connections are NSS8, SCK9, MOSI10, MISO11, RESET12, BUSY13 and DIO1=14. The V4.3 FEM setup uses GPIO7 HIGH, GPIO2 HIGH and GPIO5 HIGH, with DIO2 controlling the RF switch and receive in bypass mode. DIO3 supplies the 1.8 V TCXO. These are configured by [`src/lora_bench.cpp`](../src/lora_bench.cpp); no external LoRa signal wiring is needed. GPIO46 belongs to a different FEM arrangement and is not used by this V4.3 bench."
+      }
+    ],
+    "radio_excludes_audio": [
+      {
+        "path": "docs/LORA_INTEGRITY_BENCH.md",
+        "line": 3,
+        "text": "This bench transfers one existing, unchanged three-second PCM recording between two physical SX1262 radios. It checks the reconstructed bytes on the receiving board against the source. Microphone capture, speaker playback, PTT and live voice streaming are outside this test. The amplifier stays muted through GPIO48 LOW; the radio firmware does not start I2S. Current firmware `lora-integrity-3-timing` retains the onboard OLED progress display and advertises `timing_schema: 1` for measured chunking/dechunking intervals."
+      }
+    ],
+    "fabrication_hold": [
+      {
+        "path": "KICAD_PCB_DESIGN_PROMPT.md",
+        "line": 214,
+        "text": "Do not release manufacturing files as production-ready while module geometry, pad order, acoustic-port geometry or antenna clearance remains provisional. Continue the schematic and dimensioned placement work with clearly marked placeholders, and list the exact measurements needed to finish. A schematic/DRC pass cannot validate a guessed footprint."
+      }
+    ],
+    "no_device_tests": [
+      {
+        "path": "KICAD_PCB_DESIGN_PROMPT.md",
+        "line": 11,
+        "text": "Work in `esp32-audio-chunker-test`. Put the resulting design in `hardware/kicad/heltec_v4_audio_carrier/`. Preserve existing firmware and test evidence. This task does not authorize fabrication orders, firmware uploads, or device tests."
+      }
+    ]
+  },
+  "expected_signal_paths": [
+    {
+      "signal": "MIC_BCLK",
+      "gpio": 4,
+      "heltec_pad": "J3_15",
+      "endpoint": "U2:SCK/BCLK",
+      "direction": "Heltec -> microphone",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "MIC_WS",
+      "gpio": 6,
+      "heltec_pad": "J3_17",
+      "endpoint": "U2:WS",
+      "direction": "Heltec -> microphone",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "MIC_DATA",
+      "gpio": 38,
+      "heltec_pad": "J3_11",
+      "endpoint": "U2:SD/DATA",
+      "direction": "microphone -> Heltec",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "AMP_BCLK",
+      "gpio": 40,
+      "heltec_pad": "J3_09",
+      "endpoint": "U3:BCLK",
+      "direction": "Heltec -> amplifier",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "AMP_WS",
+      "gpio": 41,
+      "heltec_pad": "J3_08",
+      "endpoint": "U3:LRC/WS",
+      "direction": "Heltec -> amplifier",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "AMP_DATA",
+      "gpio": 47,
+      "heltec_pad": "J2_13",
+      "endpoint": "U3:DIN",
+      "direction": "Heltec -> amplifier",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "AMP_SD",
+      "gpio": 48,
+      "heltec_pad": "J2_14",
+      "endpoint": "U3:SD/MODE",
+      "direction": "Heltec -> amplifier",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component"
+    },
+    {
+      "signal": "PTT_N",
+      "gpio": 39,
+      "heltec_pad": "J3_10",
+      "endpoint": "SW1:logical contact1 / PTT_N; opposite contact2 GND",
+      "direction": "active-low input to Heltec",
+      "series_component": null,
+      "connection": "Direct copper; no carrier series/isolation component",
+      "population": "SW1 FIT",
+      "firmware_requirement": "GPIO39 input with pullup and debounce; firmware not modified"
+    }
+  ],
+  "current_revision": "C5",
+  "user_revision_interpretation": "Current C5 uses EEEEE R8 1k / 1/2 W / 5% carbon axial through-hole, direct copper, fitted SW1 and unchanged firmware GPIO assignments.",
+  "source_root_base": "KiCad project directory",
+  "user_resistor_selection": {
+    "reference": "R8",
+    "brand": "EEEEE",
+    "resistance_ohm": 1000,
+    "rated_power_W": 0.5,
+    "tolerance_percent": 5,
+    "construction": "Carbon axial through-hole",
+    "population": "FIT",
+    "function": "Single AMP_SD / SD_MODE to GND pulldown",
+    "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+    "reference_geometry_mm": {
+      "body_length": 10.0,
+      "body_diameter": 3.6,
+      "formed_lead_pitch": 15.24,
+      "carrier_drill": 1.0,
+      "carrier_pad": 2.0
+    },
+    "geometry_basis": "Conservative horizontal reference; Royal Ohm half-watt carbon-film drawing is not an exact EEEEE specification.",
+    "physical_fit_status": "Actual owned body length/diameter, lead diameter and formed-pitch fit remain unmeasured.",
+    "color_bands": [
+      "brown",
+      "black",
+      "red",
+      "gold"
+    ],
+    "model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+    "model_status": "Authored representative geometry, not EEEEE manufacturer CAD",
+    "selection_source_id": "user_resistor_selection",
+    "reference_source_ids": [
+      "eeee_resistor_listing",
+      "carbon_resistor_reference"
+    ]
+  }
+}

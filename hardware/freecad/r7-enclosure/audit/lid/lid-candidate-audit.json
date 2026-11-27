@@ -1,0 +1,538 @@
+{
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19"
+  },
+  "geometry": {
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 28272.652356931463,
+      "bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        8.0,
+        74.39999999999999,
+        94.39999999999999,
+        24.700000000000003
+      ]
+    },
+    "SpeakerRetainer": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 1078.2839843941174,
+      "bounds_mm": [
+        39.5,
+        38.0,
+        13.2,
+        69.5,
+        53.5,
+        16.4
+      ]
+    },
+    "MicrophoneShroud": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 364.7604990553859,
+      "bounds_mm": [
+        48.54684289839183,
+        24.546842898391834,
+        13.0,
+        60.45315710160817,
+        36.45315710160817,
+        21.2
+      ]
+    },
+    "OLEDReinforcement": {
+      "valid": true,
+      "closed": true,
+      "solids": 2,
+      "volume_mm3": 74.95605357929814,
+      "bounds_mm": [
+        12.5,
+        42.2,
+        22.0,
+        33.50000000000004,
+        73.9,
+        22.7
+      ]
+    },
+    "SpeakerTieAnchor": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 34.818241476732936,
+      "bounds_mm": [
+        68.3,
+        53.6,
+        16.8,
+        70.0,
+        59.0,
+        21.2
+      ]
+    },
+    "ReferenceSpeakerTie": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 68.8834588475316,
+      "bounds_mm": [
+        65.2,
+        54.05,
+        13.6,
+        71.3,
+        58.55,
+        19.35
+      ]
+    },
+    "ReferenceSpeakerNuts": {
+      "valid": true,
+      "closed": true,
+      "solids": 2,
+      "volume_mm3": 37.906518919211365,
+      "bounds_mm": [
+        41.190598923241495,
+        40.0,
+        13.399999999999997,
+        67.8094010767585,
+        49.0,
+        15.0
+      ]
+    },
+    "AddedLidMaterial": {
+      "valid": true,
+      "closed": true,
+      "solids": 4,
+      "volume_mm3": 451.2430798288478,
+      "bounds_mm": [
+        10.200000000000001,
+        24.546842898391834,
+        13.0,
+        70.0,
+        76.15,
+        24.700000000000003
+      ]
+    },
+    "SpeakerTieLipRelief": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 4.042500000000022,
+      "bounds_mm": [
+        70.1,
+        54.55,
+        19.25,
+        72.2,
+        58.05,
+        19.8
+      ]
+    },
+    "ReferenceSpeakerEnvelope": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 525.0,
+      "bounds_mm": [
+        47.0,
+        42.0,
+        16.9,
+        62.0,
+        52.0,
+        20.4
+      ]
+    },
+    "ReferenceSpeakerLeadA": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 26.875406254208837,
+      "bounds_mm": [
+        52.17461848608738,
+        46.2199693749849,
+        13.883003501627957,
+        67.98126284064327,
+        79.58126284064326,
+        18.90880366636059
+      ]
+    },
+    "ReferenceSpeakerLeadB": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 22.392161250003223,
+      "bounds_mm": [
+        55.68102581152189,
+        47.12014666313295,
+        13.878122369066688,
+        66.88126284064326,
+        78.38126284064326,
+        18.909351877557278
+      ]
+    },
+    "ReferenceSpeakerScrewShafts": {
+      "valid": true,
+      "closed": true,
+      "solids": 2,
+      "volume_mm3": 75.3982236861551,
+      "bounds_mm": [
+        42.5,
+        41.0,
+        12.900000000000002,
+        66.5,
+        48.0,
+        24.900000000000002
+      ]
+    }
+  },
+  "actual_electronics": {
+    "SpeakerRetainer": {
+      "objects_scanned": 2949,
+      "exact_booleans": 0,
+      "hits": [],
+      "minimum_mm": 1.490167260248681,
+      "nearest_source_index": 1070,
+      "exact_distances": 7
+    },
+    "ReferenceSpeakerNuts": {
+      "objects_scanned": 2949,
+      "exact_booleans": 0,
+      "hits": [],
+      "minimum_mm": 3.8863101339223296,
+      "nearest_source_index": 2143,
+      "exact_distances": 14
+    },
+    "AddedLidMaterial": {
+      "objects_scanned": 2949,
+      "exact_booleans": 1013,
+      "hits": [],
+      "minimum_mm": 0.6999999999999993,
+      "nearest_source_index": 1104,
+      "exact_distances": 1734
+    },
+    "ReferenceSpeakerTie": {
+      "objects_scanned": 2949,
+      "exact_booleans": 0,
+      "hits": [],
+      "minimum_mm": 3.6689418672487455,
+      "nearest_source_index": 1715,
+      "exact_distances": 16
+    }
+  },
+  "pairs": {
+    "SpeakerRetainer__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.5
+    },
+    "SpeakerRetainer__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 23.27530358833863
+    },
+    "SpeakerRetainer__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 20.731315623973817
+    },
+    "SpeakerRetainer__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 24.2
+    },
+    "SpeakerRetainer__ReferenceBatteryEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 16.2
+    },
+    "SpeakerRetainer__Coax": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.120873580779815
+    },
+    "SpeakerRetainer__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.2847016996447118
+    },
+    "SpeakerRetainer__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.3181071327057483
+    },
+    "SpeakerRetainer__ReferenceSpeakerEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.5
+    },
+    "SpeakerRetainer__ReferenceSpeakerScrewShafts": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.19999999999998652
+    },
+    "MicrophoneShroud__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 10.6
+    },
+    "MicrophoneShroud__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 10.283020910791965
+    },
+    "MicrophoneShroud__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 7.983020910791964
+    },
+    "MicrophoneShroud__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 24.0
+    },
+    "MicrophoneShroud__ReferenceBatteryEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 16.0
+    },
+    "MicrophoneShroud__Coax": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 11.471096155065597
+    },
+    "MicrophoneShroud__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 12.080102388780332
+    },
+    "MicrophoneShroud__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 12.898097727754358
+    },
+    "MicrophoneShroud__ReferenceSpeakerEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 6.0
+    },
+    "MicrophoneShroud__ReferenceSpeakerScrewShafts": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 9.413830462839549
+    },
+    "SpeakerTieAnchor__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.0
+    },
+    "SpeakerTieAnchor__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 41.955868309854594
+    },
+    "SpeakerTieAnchor__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 39.6558683098546
+    },
+    "SpeakerTieAnchor__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 29.210808837314797
+    },
+    "SpeakerTieAnchor__ReferenceBatteryEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 25.183783926542223
+    },
+    "SpeakerTieAnchor__Coax": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 19.37050318087191
+    },
+    "SpeakerTieAnchor__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.4999999999999858
+    },
+    "SpeakerTieAnchor__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.5999999999999943
+    },
+    "SpeakerTieAnchor__ReferenceSpeakerEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 6.592138442565337
+    },
+    "SpeakerTieAnchor__ReferenceSpeakerScrewShafts": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 11.019339757008014
+    },
+    "ReferenceSpeakerTie__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.7000000000000028
+    },
+    "ReferenceSpeakerTie__PTTPlunger": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 41.976652322767436
+    },
+    "ReferenceSpeakerTie__PTTStopCup": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 39.539698589989584
+    },
+    "ReferenceSpeakerTie__BatteryCover": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 26.0
+    },
+    "ReferenceSpeakerTie__ReferenceBatteryEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 21.709543384632035
+    },
+    "ReferenceSpeakerTie__Coax": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 19.29593502345353
+    },
+    "ReferenceSpeakerTie__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.5360549254874907
+    },
+    "ReferenceSpeakerTie__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.2499999999999858
+    },
+    "ReferenceSpeakerTie__ReferenceSpeakerEnvelope": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 4.420689991392746
+    },
+    "ReferenceSpeakerTie__ReferenceSpeakerScrewShafts": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 11.153212436957773
+    },
+    "EnclosureLid__SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "SpeakerRetainer__ReferenceSpeakerNuts": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.7763568394002505e-15
+    },
+    "SpeakerTieAnchor__ReferenceSpeakerTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.14999999999999858
+    }
+  },
+  "native_property_basis": {
+    "SpeakerRetainerBlank": {
+      "type": "Part::Box",
+      "placement": "Placement [Pos=(39.5,38,13.8), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Height",
+          "SpeakerParameters.B11"
+        ],
+        [
+          "Length",
+          "SpeakerParameters.B1 + 15"
+        ],
+        [
+          "Placement",
+          "placement(vector(SpeakerParameters.B4 - SpeakerParameters.B1 / 2 - 7.5; SpeakerParameters.B5 - SpeakerParameters.B2 / 2 - 4; SpeakerParameters.B6 - SpeakerParameters.B7 - SpeakerParameters.B3 - SpeakerParameters.B8 - SpeakerParameters.B11); rotation(0; 0; 0))"
+        ],
+        [
+          "Width",
+          "SpeakerParameters.B2 + 5.5"
+        ]
+      ]
+    },
+    "SpeakerRetainerWindow": {
+      "type": "Part::Box",
+      "placement": "Placement [Pos=(48,43,13.7), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Height",
+          "SpeakerParameters.B11 + 0.2"
+        ],
+        [
+          "Length",
+          "SpeakerParameters.B1 - 2"
+        ],
+        [
+          "Placement",
+          "placement(vector(SpeakerParameters.B4 - SpeakerParameters.B1 / 2 + 1; SpeakerParameters.B5 - SpeakerParameters.B2 / 2 + 1; SpeakerParameters.B6 - SpeakerParameters.B7 - SpeakerParameters.B3 - SpeakerParameters.B8 - SpeakerParameters.B11 - 0.1); rotation(0; 0; 0))"
+        ],
+        [
+          "Width",
+          "SpeakerParameters.B2 - 2"
+        ]
+      ]
+    },
+    "SpeakerNutPocket1": {
+      "type": "Part::Prism",
+      "placement": "Placement [Pos=(43.5,47,13.7), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Circumradius",
+          "4.3 / sqrt(3)"
+        ],
+        [
+          "Height",
+          "1.9"
+        ],
+        [
+          "Placement",
+          "placement(vector(SpeakerParameters.B4 - SpeakerParameters.B1 / 2 - 3.5; SpeakerParameters.B5; SpeakerParameters.B6 - SpeakerParameters.B7 - SpeakerParameters.B3 - SpeakerParameters.B8 - SpeakerParameters.B11 - 0.1); rotation(0; 0; 0))"
+        ]
+      ]
+    },
+    "SpeakerNutPocket2": {
+      "type": "Part::Prism",
+      "placement": "Placement [Pos=(65.5,42,13.7), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Circumradius",
+          "4.3 / sqrt(3)"
+        ],
+        [
+          "Height",
+          "1.9"
+        ],
+        [
+          "Placement",
+          "placement(vector(SpeakerParameters.B4 + SpeakerParameters.B1 / 2 + 3.5; SpeakerParameters.B5 - 5; SpeakerParameters.B6 - SpeakerParameters.B7 - SpeakerParameters.B3 - SpeakerParameters.B8 - SpeakerParameters.B11 - 0.1); rotation(0; 0; 0))"
+        ]
+      ]
+    },
+    "ReferenceSpeakerNutBlank1": {
+      "type": "Part::Prism",
+      "placement": "Placement [Pos=(43.5,47,14), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Placement",
+          "placement(vector(43.5; 47; 14); rotation(0; 0; 0))"
+        ]
+      ]
+    },
+    "ReferenceSpeakerNutBore1": {
+      "type": "Part::Cylinder",
+      "placement": "Placement [Pos=(43.5,47,13.9), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Placement",
+          "placement(vector(43.5; 47; 13.9); rotation(0; 0; 0))"
+        ]
+      ]
+    },
+    "SpeakerScrewHole1": {
+      "type": "Part::Cylinder",
+      "placement": "Placement [Pos=(43.5,47,13.6), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [
+        [
+          "Height",
+          "12"
+        ],
+        [
+          "Placement",
+          "placement(vector(SpeakerParameters.B4 - SpeakerParameters.B1 / 2 - 3.5; SpeakerParameters.B5; SpeakerParameters.B6 - SpeakerParameters.B7 - SpeakerParameters.B3 - SpeakerParameters.B8 - SpeakerParameters.B11 - 0.2); rotation(0; 0; 0))"
+        ],
+        [
+          "Radius",
+          "1.2"
+        ]
+      ]
+    },
+    "LidWithClamps": {
+      "type": "Part::MultiFuse",
+      "placement": "Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]",
+      "expressions": [],
+      "Shapes": [
+        "LidPlate",
+        "LocatingLip",
+        "LidClamp1",
+        "LidClamp2",
+        "LidClamp3",
+        "LidClamp4",
+        "OLEDLowerRim",
+        "SpeakerMountFrame"
+      ]
+    }
+  },
+  "ok": true,
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step": true
+  }
+}

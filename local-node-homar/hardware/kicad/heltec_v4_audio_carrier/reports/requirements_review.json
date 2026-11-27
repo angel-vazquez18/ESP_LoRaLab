@@ -1,0 +1,440 @@
+{
+  "revision": "C5",
+  "release": "PHYSICAL FIT AND HARDWARE VALIDATION PENDING",
+  "interpretation": "ERC,DRC and independent audits validate CAD connectivity/routing. Actual fit,power,acoustic/RF and audible operation remain untested.",
+  "current_design": {
+    "board_mm": [
+      70,
+      90
+    ],
+    "layers": 4,
+    "ptt": "SW1 FIT",
+    "carrier_resistor": "R8: EEEEE 1k, 1/2 W, 5% carbon axial through-hole",
+    "carrier_capacitors": 0,
+    "dnp": [],
+    "test_pads": 13,
+    "firmware": "ENABLE_PTT=false; unchanged",
+    "resistor_footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal"
+  },
+  "user_choices_file": "reports/user_overrides.json",
+  "validation": {
+    "revision": "C5",
+    "pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+    "schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+    "erc_violations": 0,
+    "drc_violations": 0,
+    "unconnected_items": 0,
+    "schematic_parity": 0,
+    "checks": {
+      "connectivity": {
+        "passed": 518,
+        "total": 518
+      },
+      "routing": {
+        "passed": 26,
+        "total": 26
+      },
+      "bom": {
+        "passed": 52,
+        "total": 52
+      }
+    },
+    "track_count": 116,
+    "via_count": 38,
+    "report_sha256": {
+      "schematic-erc.json": "0e85b34d5f61eba82c1ed069e94d171620ba4d7263e1c5cb49d38e7eb1af8e04",
+      "pcb-drc.json": "f12a8d89fbe035315598354185b0c9cefd2f717fce6e3f7b3e075842013f9b86",
+      "connectivity_audit.json": "b7d6ff1a2a00609792fdfcebf0d458d7b0f7a072235b6426c931e0caeec2133e",
+      "routing_audit.json": "21db088849493a515ef41c7f7822b2acf81e62960cf219b372db3e340840b8e0",
+      "bom_audit.json": "1c9de4beddf03f207e78b59b09a78f3adcf9185bb002c7ae6f6ed399e091947f"
+    }
+  },
+  "requirements": [
+    {
+      "id": "ELEC_MIC_BCLK",
+      "category": "connectivity",
+      "requirement": "U1 J3_15 (GPIO4) connects directly to U2.SCK on MIC_BCLK.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_MIC_WS",
+      "category": "connectivity",
+      "requirement": "U1 J3_17 (GPIO6) connects directly to U2.WS on MIC_WS.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_MIC_DATA",
+      "category": "connectivity",
+      "requirement": "U1 J3_11 (GPIO38) connects directly to U2.SD on MIC_DATA.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_AMP_BCLK",
+      "category": "connectivity",
+      "requirement": "U1 J3_09 (GPIO40) connects directly to JAMP1.6 / U3.BCLK on AMP_BCLK.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_AMP_WS",
+      "category": "connectivity",
+      "requirement": "U1 J3_08 (GPIO41) connects directly to JAMP1.7 / U3.LRC on AMP_WS.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_AMP_DATA",
+      "category": "connectivity",
+      "requirement": "U1 J2_13 (GPIO47) connects directly to JAMP1.5 / U3.DIN on AMP_DATA.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_AMP_SD",
+      "category": "connectivity",
+      "requirement": "U1 J2_14 (GPIO48) connects directly to JAMP1.3 / U3.SD_MODE on AMP_SD.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_PTT_N",
+      "category": "connectivity",
+      "requirement": "U1 J3_10 GPIO39 connects directly to fitted SW1 logical contact1/PTT_N; contact2 is GND.",
+      "verification": "Inspect exported netlist membership and serialized routed path; no series or isolation component.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_3V3",
+      "category": "connectivity",
+      "requirement": "U2 VDD is supplied from U1 J3_02 on +3V3_MIC; never connect it to 5V.",
+      "verification": "Netlist connectivity and rail exclusion.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_5V",
+      "category": "connectivity",
+      "requirement": "Heltec J2_02 USB-derived 5V connects directly to amplifier VIN on +5V_AMP; no removable supply link remains.",
+      "verification": "Check direct U1 J2_02 to JAMP1.1/U3.VIN connectivity and absence of R9.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_GND",
+      "category": "connectivity",
+      "requirement": "Both U1 J3_01 and J2_01 join microphone GND/LR, amplifier GND/GAIN and common carrier GND.",
+      "verification": "Netlist node membership; no split ground net.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_SD_PULLDOWN",
+      "category": "connectivity",
+      "requirement": "R8 is the sole carrier resistor: EEEEE 1k, 1/2 W, 5% carbon axial through-hole from AMP_SD to GND, preserving the amplifier shutdown pulldown.",
+      "verification": "Check R8 endpoints/value, through-hole footprint and BOM specification, plus direct GPIO48-to-AMP_SD connection.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_MIC_PULLDOWN",
+      "category": "connectivity",
+      "requirement": "No additional carrier SD pulldown; use existing microphone module circuitry. L/R is grounded.",
+      "verification": "Verify no R10 symbol, PCB footprint or BOM row; existing module population remains unverified.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_SPEAKER",
+      "category": "connectivity",
+      "requirement": "LS1 wires directly to U3 SPK+/SPK-. Neither output is GND; the carrier has no speaker connector or mounting area.",
+      "verification": "Assert net inequality and exact speaker endpoint sets.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_I2S_SEPARATE",
+      "category": "connectivity",
+      "requirement": "MIC_BCLK and AMP_BCLK remain distinct; MIC_WS and AMP_WS remain distinct.",
+      "verification": "Netlist distinctness check before and after series links.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_I2S_LINKS",
+      "category": "connectivity",
+      "requirement": "Six I2S signals use direct copper.",
+      "verification": "Check direct module-to-Heltec net membership and continuous routed copper; no R1-R6.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_SD_ISOLATION",
+      "category": "connectivity",
+      "requirement": "GPIO48 connects directly to amplifier SD/MODE; R8 1k pulls AMP_SD to GND.",
+      "verification": "Check direct GPIO48-to-JAMP1.3/U3.SD_MODE connectivity and absence of R7.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_PTT_POPULATION",
+      "category": "population",
+      "requirement": "SW1 is fitted; its normally-open contact connects GPIO39/PTT_N to GND.",
+      "verification": "Check SW1 FIT/no-DNP in schematic, PCB and BOM; direct GPIO39/PTT_N connection; R11 absent.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_UNUSED",
+      "category": "connectivity",
+      "requirement": "Unused Heltec pins have NC marks and no external nets; J2_03/04 Ve are never used as5V/3V3.",
+      "verification": "Unused set against official36pin table; ERC.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_RESERVED",
+      "category": "connectivity",
+      "requirement": "No added GPIO15-18 connections; internal radio8-14/FEM2,5,7/OLED17,18,21/Vext36 remain onboard only.",
+      "verification": "Symbol pins and module footprint no auxiliary pads; netlist external-node count.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_NO_MCLK",
+      "category": "connectivity",
+      "requirement": "No MCLK or level shifter added.",
+      "verification": "Component/netlist enumeration.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ELEC_CAPS",
+      "category": "population",
+      "requirement": "No carrier capacitors. Existing module bypassing remains; inspect population and rail behavior during hardware validation.",
+      "verification": "Verify C1-C4 are absent from schematic, PCB and BOM; record existing module bypass inspection as a hardware gate.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "POWER_SINGLE_SOURCE",
+      "category": "power",
+      "requirement": "Only Heltec USB powers this revision; no assumed battery5V, solar or independent amp supply.",
+      "verification": "Power entry netlist and documentation.",
+      "review_status": "CAD/reference review complete; physical validation pending"
+    },
+    {
+      "id": "POWER_BUDGET",
+      "category": "power",
+      "requirement": "Budget MCU, radio TX, OLED, microphone and amplifier together; upstream5V path/cable/source rating is separately unverified until evidence supports it.",
+      "verification": "Document calculated budget, uncertainties, expected drop and later load-measurement plan.",
+      "review_status": "CAD/reference review complete; physical validation pending"
+    },
+    {
+      "id": "MECH_HEADERS",
+      "category": "mechanical",
+      "requirement": "Heltec composite footprint has unique36 pad IDs J2_01..18/J3_01..18 matching symbol;2.54pitch/22.86row spacing/43.18span.",
+      "verification": "Independent pad-set/map/pitch calculation from PCB.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_ROTATION",
+      "category": "mechanical",
+      "requirement": "Display-facing USB-down reference becomes USB-up placement by180degree rotation; top view J3right/J2left, pin1 nearest USB/top.",
+      "verification": "Transform audit using pad coordinates, not visual expectation alone.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_MODULES",
+      "category": "mechanical",
+      "requirement": "Use researched reference U2 footprint with14mm body,2.54mm columns,7.62mm rows and3mm central NPTH; use four-leg SW1 reference6.5x4.5 contact geometry. Both are candidate patterns pending owned-part fit. JAMP1 models7 amplifier carrier contacts at image-supported2.54 pitch; header/body datum,drill and pin fit remain provisional. U3/LS1 logical symbols are excluded from PCB.",
+      "verification": "Footprint geometry provenance record and fabrication hold.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_ACOUSTIC",
+      "category": "mechanical",
+      "requirement": "The carrier provides a centered3mm microphone aperture and4mm copper exclusion. Verify alignment and acoustic orientation against the owned module.",
+      "verification": "Physical dimensions or explicit hold; acoustic keepout review.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_RF",
+      "category": "mechanical",
+      "requirement": "Preserve Heltec FPC antenna, LoRa coax access and bend; numerical keepout needs vendor guidance or RF validation.",
+      "verification": "Manufacturer source and physical comparison; no invented verified keepout.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_USB",
+      "category": "mechanical",
+      "requirement": "USB mating face toward top; plug fully insertable/removable; PRG/RST/OLED accessible.",
+      "verification": "Mechanical-envelope interference check with correct connector datum.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_HOLES",
+      "category": "mechanical",
+      "requirement": "Four carrier3.2NPTH holes at proposed(4,4),(66,4),(4,86),(66,86);7diam hardware clearance; independent of OLED screws.",
+      "verification": "Coordinates, drill type and copper/component clearance audit.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_HEIGHT",
+      "category": "mechanical",
+      "requirement": "Preview uses5mm Heltec and3mm audio-module underside gaps; verify real standoffs, underside parts and actuator clearance.",
+      "verification": "Dimensioned drawing and measurement record.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "MECH_FIT",
+      "category": "mechanical",
+      "requirement": "70x90mm carrier; reference module/switch/resistor clearances require physical verification. Speaker mounting is external.",
+      "verification": "Placement envelopes, physical1:1check and unresolved dimensions.",
+      "review_status": "CAD/reference review complete; physical validation pending",
+      "note": "Reference geometry does not establish fit of the owned parts."
+    },
+    {
+      "id": "FAB_STACK",
+      "category": "fabrication",
+      "requirement": "Four layers: F.Cu signals; In1 commonGND; In2 local power/GND; B.Cu power/slow/GND. Fixed OSHPark FR408-HR1.6mm ENIG stack.",
+      "verification": "PCB stackup serialized values vs current service.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "FAB_CLEARANCE",
+      "category": "fabrication",
+      "requirement": "Logic0.25width/0.20clearance, mic3V3 0.50/0.20, amp5V1.00/0.25; copper-edge0.50. Speaker output nets have no carrier copper.",
+      "verification": "Net classes and DRC rules; document any narrow pad escapes.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "FAB_VIAS",
+      "category": "fabrication",
+      "requirement": "Conventional through vias0.80pad/0.40drill; no blind/buried or filled via-in-pad.",
+      "verification": "PCB via inventory.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "FAB_INNER_DRILL",
+      "category": "fabrication",
+      "requirement": "At least0.254plated drill edge-to-unrelated inner copper; retain unused annular rings or independently inspect antipads.",
+      "verification": "Custom hole-clearance rule and annular-ring preservation check.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "FAB_MASK",
+      "category": "fabrication",
+      "requirement": "Mask expansion0.0508,min mask web0.1016,hole-hole0.127, silk stroke>=0.127.",
+      "verification": "Settings/rules and DRC.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ROUTE_I2S",
+      "category": "routing",
+      "requirement": "Direct I2S over continuousGND, preferF.Cu,<50mm target where possible; list actual route lengths/deviations; no unrelated serpentine matching.",
+      "verification": "Route inventory/length report and reference-plane continuity.",
+      "review_status": "CAD checked",
+      "note": "AMP_DATA is63.922mm due RF-reservation detour; preferred50mm target is exceeded."
+    },
+    {
+      "id": "ROUTE_SPEAKER",
+      "category": "routing",
+      "requirement": "No speaker outputs route through the carrier. Direct external paired leads attach only to amplifier SPK+/SPK- terminals, stay clear of microphone and mechanical hazards, and never connect to GND.",
+      "verification": "Geometry and netlist review.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ROUTE_GND",
+      "category": "routing",
+      "requirement": "Common uninterrupted reference and return; amp current not through narrow mic supply/return.",
+      "verification": "Zone connectivity and high-current path audit.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "TEST_ACCESS",
+      "category": "test_access",
+      "requirement": "Test pads for GND/3V3/5V, mic3signals, amp4signals,PTT; nearbyGND for clock/data probes.",
+      "verification": "Testpoint-net inventory and accessible coordinates.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "LABELS",
+      "category": "assembly",
+      "requirement": "Use concise current component, pin, supply and orientation labels.",
+      "verification": "Review rendered PCB and schematic for stale labels, legibility and collisions.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "ASSEMBLY",
+      "category": "assembly",
+      "requirement": "Fit modules, JAMP1, EEEEE R8 1k / 1/2 W / 5% carbon axial through-hole and SW1. Mount R8 horizontally with 15.24 mm formed pitch after confirming owned-part fit. Speaker wires directly to amplifier. Preserve test pads and mounting hardware; no carrier capacitors or removable links.",
+      "verification": "Verify simplified BOM and assembly procedure; preserve physical 1:1 fit check.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "POWER_ISOLATION",
+      "category": "assembly",
+      "requirement": "The complete assembly powers together from Heltec USB-C. No removable power or signal links remain. Remove power before any wiring change or desoldering; do not drive an amplifier whose supply is disconnected.",
+      "verification": "Assembly instructions describe direct connections and powered-off troubleshooting without obsolete R4-R7/R9 procedures.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "VALIDATE_ERC",
+      "category": "validation",
+      "requirement": "Run ERC; fix unintended issues and document justified exceptions.",
+      "verification": "Machine-readable ERC result and explanation.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "VALIDATE_DRC",
+      "category": "validation",
+      "requirement": "Run DRC with schematic parity and check zero unrouted connections; retain verified filled zones.",
+      "verification": "Machine-readable DRC + schematic/PCB parity check.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "VALIDATE_MAPPING",
+      "category": "validation",
+      "requirement": "Independently validate symbol-pad-net mapping,zero unintended shorts/merges,not only visual routing.",
+      "verification": "Exported netlist+PCB reconciliation.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "DELIVERABLES",
+      "category": "deliverables",
+      "requirement": "Editable native CAD and local libraries/models, updated BOM, mechanical record, assembly notes and schematic PDF. Separate top, bottom and isometric assembled PNGs, plus a combined three-view PNG.",
+      "verification": "Final file inventory with stable relative paths.",
+      "review_status": "CAD checked"
+    },
+    {
+      "id": "FAB_HOLD",
+      "category": "release",
+      "requirement": "No production-ready fabrication files while geometry/pad order/acoustic/RF remain provisional; do not manufacture draft placeholders.",
+      "verification": "Prominent draft markers and release checklist; no fabricated measurement claims.",
+      "review_status": "CAD/reference review complete; physical validation pending"
+    },
+    {
+      "id": "HARDWARE_STATUS",
+      "category": "release",
+      "requirement": "CAD checks do not establish physical fit,audible Heltec output,RF range or integrated audio-radio behavior.",
+      "verification": "Final report distinguishes CAD/mechanical/hardware results.",
+      "review_status": "CAD/reference review complete; physical validation pending"
+    },
+    {
+      "id": "HARDWARE_PLAN",
+      "category": "release",
+      "requirement": "Use ASSEMBLY_AND_BRINGUP.txt for later bench acceptance; no physical tests, firmware uploads or fabrication orders performed.",
+      "verification": "Acceptance plan and task action history.",
+      "review_status": "CAD/reference review complete; physical validation pending"
+    },
+    {
+      "id": "MECH_R8",
+      "category": "mechanical",
+      "requirement": "R8 adopts a 10.0 x 3.6 mm body envelope, 15.24 mm horizontal formed pitch, 1.0 mm drills and 2.0 mm pads. Confirm actual EEEEE body, lead diameter and board clearance before assembly; no exact owned-part mechanical drawing is established.",
+      "verification": "Compare the owned resistor with the 1:1 drawing; measure body length/diameter and lead diameter, then check horizontal formed pitch, hole fit, lead trimming and nearby clearances.",
+      "review_status": "Reference geometry adopted; actual owned-part fit pending",
+      "note": "The 3D resistor is an authored visual approximation; power rating alone does not establish package dimensions."
+    }
+  ],
+  "route_length_method": "Shortest serialized planar copper path directly from Heltec pad to module header pad. Includes the copper connections replacing former series resistor footprints. Testpoint branches and via vertical length excluded. This is not an electrical-delay model.",
+  "route_lengths_file": "reports/route_lengths.csv",
+  "power_budget_file": "sources/power_budget.json",
+  "validation_provenance": "C5 native schematic/PCB and current regenerated audit reports; hashes recorded below."
+}

@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "release_ready": true,
+  "pages": 9,
+  "pdf": "C5-R7-Manufacturing-Drawings.pdf",
+  "pdf_sha256": "54c1fd1c98cc209ed4ed176ff7d0941ebe770d68abae3e59b2802625bdb4d61e",
+  "geometry_sha256": "58f840dde7680c889dda13f5dec010bc6849add82c3bec3cbfc60f3e2d553d72",
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "step_sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a",
+  "text_checks": true,
+  "visual_review_pending": false,
+  "reviewed_pdf_sha256": "54c1fd1c98cc209ed4ed176ff7d0941ebe770d68abae3e59b2802625bdb4d61e",
+  "visual_review": "All nine final A3 pages rendered with Poppler at 100 dpi and inspected. Seven part orthographic sets, nominal overall dimensions and interface tables are legible; three assembled sections retain actual electronics; load-path and process-flow arrows are visible; labels do not overlap geometry or clip. Sources are approved native/STEP, not draft candidates.",
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\documentation\\manufacturing\\manufacturing-geometry.json": "58f840dde7680c889dda13f5dec010bc6849add82c3bec3cbfc60f3e2d553d72",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\cad\\LoRa-Enclosure-C5-R7-Reinforced.step": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\cad\\LoRa-Enclosure-C5-R7-Reinforced.FCStd": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37"
+  },
+  "read_only_extraction": true,
+  "machine_code_generated": false
+}

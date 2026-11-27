@@ -1,0 +1,5011 @@
+{
+  "root": [
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "App::DocumentObjectGroup",
+          "name": "R7SupersededConstruction",
+          "properties": {
+            "Label": "History - superseded enclosure features",
+            "Group": [
+              "SpeakerMountUntrimmed",
+              "SpeakerRetainerCutters",
+              "SpeakerPassage",
+              "SpeakerTieSlot1",
+              "SpeakerTieSlot2",
+              "AntennaPassage"
+            ]
+          },
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Error executing tool create_object"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SupersededConstruction",
+          "values": {
+            "Group": [
+              "SpeakerMountUntrimmed",
+              "SpeakerRetainerCutters",
+              "SpeakerPassage",
+              "SpeakerTieSlot1",
+              "SpeakerTieSlot2",
+              "AntennaPassage"
+            ]
+          },
+          "recompute": false,
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SupersededConstruction\",\n  \"label\": \"History - superseded enclosure features\",\n  \"set\": {\n    \"set\": [\n      \"Group\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SupersededConstruction",
+          "label": "History - superseded enclosure features",
+          "set": {
+            "set": [
+              "Group"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_create",
+        "args": {
+          "name": "R7Parameters",
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7Parameters\",\n  \"label\": \"R7Parameters\",\n  \"type_id\": \"Spreadsheet::Sheet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7Parameters",
+          "label": "R7Parameters",
+          "type_id": "Spreadsheet::Sheet"
+        },
+        "isError": false
+      }
+    }
+  ],
+  "coupon": [
+    {
+      "i": 0,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7CouponPlate",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponPlate\",\n  \"label\": \"R7CouponPlate\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponPlate",
+          "label": "R7CouponPlate",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 1,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponPlate",
+          "expressions": {
+            "Length": "50",
+            "Width": "32",
+            "Height": "3.2",
+            "Placement": "placement(vector(0;0;0);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponPlate\",\n  \"label\": \"R7CouponPlate\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponPlate",
+          "label": "R7CouponPlate",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 2,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7CouponPlate",
+          "radius": 0.5,
+          "name": "R7CouponPlateRounded"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponPlateRounded\",\n  \"label\": \"R7CouponPlateRounded\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponPlateRounded",
+          "label": "R7CouponPlateRounded",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 3,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponInsertBossNominal",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertBossNominal\",\n  \"label\": \"R7CouponInsertBossNominal\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertBossNominal",
+          "label": "R7CouponInsertBossNominal",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 4,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponInsertBossNominal",
+          "expressions": {
+            "Radius": "3.5",
+            "Height": "6",
+            "Placement": "placement(vector(8;8;0);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertBossNominal\",\n  \"label\": \"R7CouponInsertBossNominal\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertBossNominal",
+          "label": "R7CouponInsertBossNominal",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 5,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponInsertBossTrial",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertBossTrial\",\n  \"label\": \"R7CouponInsertBossTrial\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertBossTrial",
+          "label": "R7CouponInsertBossTrial",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 6,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponInsertBossTrial",
+          "expressions": {
+            "Radius": "3.5",
+            "Height": "6",
+            "Placement": "placement(vector(19;8;0);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertBossTrial\",\n  \"label\": \"R7CouponInsertBossTrial\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertBossTrial",
+          "label": "R7CouponInsertBossTrial",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 7,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponGuideBoss",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponGuideBoss\",\n  \"label\": \"R7CouponGuideBoss\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponGuideBoss",
+          "label": "R7CouponGuideBoss",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 8,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponGuideBoss",
+          "expressions": {
+            "Radius": "6",
+            "Height": "3.6",
+            "Placement": "placement(vector(39;9;0);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponGuideBoss\",\n  \"label\": \"R7CouponGuideBoss\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponGuideBoss",
+          "label": "R7CouponGuideBoss",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 9,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponInsertPilotNominal",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertPilotNominal\",\n  \"label\": \"R7CouponInsertPilotNominal\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertPilotNominal",
+          "label": "R7CouponInsertPilotNominal",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 10,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponInsertPilotNominal",
+          "expressions": {
+            "Radius": "2.2",
+            "Height": "5.1",
+            "Placement": "placement(vector(8;8;1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertPilotNominal\",\n  \"label\": \"R7CouponInsertPilotNominal\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertPilotNominal",
+          "label": "R7CouponInsertPilotNominal",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 11,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponInsertPilotTrial",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertPilotTrial\",\n  \"label\": \"R7CouponInsertPilotTrial\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertPilotTrial",
+          "label": "R7CouponInsertPilotTrial",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 12,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponInsertPilotTrial",
+          "expressions": {
+            "Radius": "2.25",
+            "Height": "5.1",
+            "Placement": "placement(vector(19;8;1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponInsertPilotTrial\",\n  \"label\": \"R7CouponInsertPilotTrial\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponInsertPilotTrial",
+          "label": "R7CouponInsertPilotTrial",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 13,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponGuideBore",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponGuideBore\",\n  \"label\": \"R7CouponGuideBore\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponGuideBore",
+          "label": "R7CouponGuideBore",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 14,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponGuideBore",
+          "expressions": {
+            "Radius": "4.4",
+            "Height": "3.8",
+            "Placement": "placement(vector(39;9;-0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponGuideBore\",\n  \"label\": \"R7CouponGuideBore\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponGuideBore",
+          "label": "R7CouponGuideBore",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 15,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Prism",
+          "name": "R7CouponNut42",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut42\",\n  \"label\": \"R7CouponNut42\",\n  \"type_id\": \"Part::Prism\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut42",
+          "label": "R7CouponNut42",
+          "type_id": "Part::Prism"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 16,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNut42",
+          "expressions": {
+            "Polygon": "6",
+            "Circumradius": "2.4248711305964283",
+            "Height": "1.9",
+            "Placement": "placement(vector(8;23;1.4);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut42\",\n  \"label\": \"R7CouponNut42\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Polygon\",\n      \"Circumradius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut42",
+          "label": "R7CouponNut42",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Polygon",
+              "Circumradius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 17,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Prism",
+          "name": "R7CouponNut43",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut43\",\n  \"label\": \"R7CouponNut43\",\n  \"type_id\": \"Part::Prism\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut43",
+          "label": "R7CouponNut43",
+          "type_id": "Part::Prism"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 18,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNut43",
+          "expressions": {
+            "Polygon": "6",
+            "Circumradius": "2.482606157515391",
+            "Height": "1.9",
+            "Placement": "placement(vector(21;23;1.4);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut43\",\n  \"label\": \"R7CouponNut43\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Polygon\",\n      \"Circumradius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut43",
+          "label": "R7CouponNut43",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Polygon",
+              "Circumradius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 19,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Prism",
+          "name": "R7CouponNut44",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut44\",\n  \"label\": \"R7CouponNut44\",\n  \"type_id\": \"Part::Prism\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut44",
+          "label": "R7CouponNut44",
+          "type_id": "Part::Prism"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 20,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNut44",
+          "expressions": {
+            "Polygon": "6",
+            "Circumradius": "2.5403411844343537",
+            "Height": "1.9",
+            "Placement": "placement(vector(34;23;1.4);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNut44\",\n  \"label\": \"R7CouponNut44\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Polygon\",\n      \"Circumradius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNut44",
+          "label": "R7CouponNut44",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Polygon",
+              "Circumradius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 21,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponNutHole42",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole42\",\n  \"label\": \"R7CouponNutHole42\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole42",
+          "label": "R7CouponNutHole42",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 22,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNutHole42",
+          "expressions": {
+            "Radius": "1.2",
+            "Height": "3.4",
+            "Placement": "placement(vector(8;23;-0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole42\",\n  \"label\": \"R7CouponNutHole42\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole42",
+          "label": "R7CouponNutHole42",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 23,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponNutHole43",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole43\",\n  \"label\": \"R7CouponNutHole43\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole43",
+          "label": "R7CouponNutHole43",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 24,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNutHole43",
+          "expressions": {
+            "Radius": "1.2",
+            "Height": "3.4",
+            "Placement": "placement(vector(21;23;-0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole43\",\n  \"label\": \"R7CouponNutHole43\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole43",
+          "label": "R7CouponNutHole43",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 25,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7CouponNutHole44",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole44\",\n  \"label\": \"R7CouponNutHole44\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole44",
+          "label": "R7CouponNutHole44",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 26,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponNutHole44",
+          "expressions": {
+            "Radius": "1.2",
+            "Height": "3.4",
+            "Placement": "placement(vector(34;23;-0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponNutHole44\",\n  \"label\": \"R7CouponNutHole44\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponNutHole44",
+          "label": "R7CouponNutHole44",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 27,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "R7CouponMaterial",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponMaterial\",\n  \"label\": \"R7CouponMaterial\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponMaterial",
+          "label": "R7CouponMaterial",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 28,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponMaterial",
+          "values": {
+            "Shapes": [
+              "R7CouponPlateRounded",
+              "R7CouponInsertBossNominal",
+              "R7CouponInsertBossTrial",
+              "R7CouponGuideBoss"
+            ],
+            "Refine": true,
+            "Visibility": false
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponMaterial\",\n  \"label\": \"R7CouponMaterial\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\",\n      \"Refine\",\n      \"Visibility\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponMaterial",
+          "label": "R7CouponMaterial",
+          "set": {
+            "set": [
+              "Shapes",
+              "Refine",
+              "Visibility"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 29,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "R7CouponCutters",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponCutters\",\n  \"label\": \"R7CouponCutters\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponCutters",
+          "label": "R7CouponCutters",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 30,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CouponCutters",
+          "values": {
+            "Shapes": [
+              "R7CouponInsertPilotNominal",
+              "R7CouponInsertPilotTrial",
+              "R7CouponGuideBore",
+              "R7CouponNut42",
+              "R7CouponNut43",
+              "R7CouponNut44",
+              "R7CouponNutHole42",
+              "R7CouponNutHole43",
+              "R7CouponNutHole44"
+            ],
+            "Refine": true,
+            "Visibility": false
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CouponCutters\",\n  \"label\": \"R7CouponCutters\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\",\n      \"Refine\",\n      \"Visibility\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CouponCutters",
+          "label": "R7CouponCutters",
+          "set": {
+            "set": [
+              "Shapes",
+              "Refine",
+              "Visibility"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 31,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "R7CouponMaterial",
+          "object2_name": "R7CouponCutters",
+          "result_name": "R7FitCoupon"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7FitCoupon\",\n  \"label\": \"R7FitCoupon\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7FitCoupon",
+          "label": "R7FitCoupon",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 32,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7FitCoupon",
+          "values": {
+            "Refine": true,
+            "Label": "OPTIONAL - fit coupon (not installed)"
+          },
+          "expressions": {
+            "Placement": "placement(vector(100;0;0);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7FitCoupon\",\n  \"label\": \"OPTIONAL - fit coupon (not installed)\",\n  \"set\": {\n    \"set\": [\n      \"Refine\",\n      \"Label\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7FitCoupon",
+          "label": "OPTIONAL - fit coupon (not installed)",
+          "set": {
+            "set": [
+              "Refine",
+              "Label"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "lid": [
+    {
+      "i": 0,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "SpeakerParameters",
+          "cell": "B11",
+          "value": 3.2
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B11\",\n  \"value\": 3.2,\n  \"computed\": 3.2\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B11",
+          "value": 3.2,
+          "computed": 3.2
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 1,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSpeakerNutBlank1",
+          "expressions": {
+            "Placement": "placement(vector(43.5;47;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.2);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerNutBlank1\",\n  \"label\": \"ReferenceSpeakerNutBlank1\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerNutBlank1",
+          "label": "ReferenceSpeakerNutBlank1",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 2,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSpeakerNutBore1",
+          "expressions": {
+            "Placement": "placement(vector(43.5;47;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerNutBore1\",\n  \"label\": \"ReferenceSpeakerNutBore1\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerNutBore1",
+          "label": "ReferenceSpeakerNutBore1",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 3,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSpeakerNutBlank2",
+          "expressions": {
+            "Placement": "placement(vector(65.5;42;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.2);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerNutBlank2\",\n  \"label\": \"ReferenceSpeakerNutBlank2\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerNutBlank2",
+          "label": "ReferenceSpeakerNutBlank2",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 4,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSpeakerNutBore2",
+          "expressions": {
+            "Placement": "placement(vector(65.5;42;SpeakerParameters.B6-SpeakerParameters.B7-SpeakerParameters.B3-SpeakerParameters.B8-SpeakerParameters.B11+0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerNutBore2\",\n  \"label\": \"ReferenceSpeakerNutBore2\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerNutBore2",
+          "label": "ReferenceSpeakerNutBore2",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 5,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7MicrophoneShroudBlank",
+          "properties": {
+            "Radius": 5.5,
+            "Height": 8.2,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBlank\",\n  \"label\": \"R7MicrophoneShroudBlank\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBlank",
+          "label": "R7MicrophoneShroudBlank",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 6,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7MicrophoneShroudBlank",
+          "expressions": {
+            "Placement": "placement(vector(54.5;30.5;13);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBlank\",\n  \"label\": \"R7MicrophoneShroudBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBlank",
+          "label": "R7MicrophoneShroudBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 7,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7MicrophoneShroudBlank",
+          "radius": 0.4,
+          "edges": [
+            "Edge1",
+            "Edge2",
+            "Edge3"
+          ],
+          "name": "R7MicrophoneShroudRounded"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudRounded\",\n  \"label\": \"R7MicrophoneShroudRounded\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudRounded",
+          "label": "R7MicrophoneShroudRounded",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 8,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "R7MicrophoneShroudBore",
+          "properties": {
+            "Radius": 4,
+            "Height": 8.5,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBore\",\n  \"label\": \"R7MicrophoneShroudBore\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBore",
+          "label": "R7MicrophoneShroudBore",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 9,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7MicrophoneShroudBore",
+          "expressions": {
+            "Placement": "placement(vector(54.5;30.5;12.9);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBore\",\n  \"label\": \"R7MicrophoneShroudBore\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBore",
+          "label": "R7MicrophoneShroudBore",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 10,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "R7MicrophoneShroudRounded",
+          "object2_name": "R7MicrophoneShroudBore",
+          "result_name": "R7MicrophoneShroud"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroud\",\n  \"label\": \"R7MicrophoneShroud\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroud",
+          "label": "R7MicrophoneShroud",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 11,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDStrengthBandBlank1",
+          "properties": {
+            "Length": 21,
+            "Width": 2.3500000000000014,
+            "Height": 0.6999999999999993,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBandBlank1\",\n  \"label\": \"R7OLEDStrengthBandBlank1\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBandBlank1",
+          "label": "R7OLEDStrengthBandBlank1",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 12,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank1",
+          "expressions": {
+            "Placement": "placement(vector(12.5;42.2;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBandBlank1\",\n  \"label\": \"R7OLEDStrengthBandBlank1\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBandBlank1",
+          "label": "R7OLEDStrengthBandBlank1",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 13,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank1",
+          "radius": 0.2,
+          "edges": [
+            "Edge1",
+            "Edge2",
+            "Edge3",
+            "Edge4",
+            "Edge5",
+            "Edge6",
+            "Edge7",
+            "Edge8",
+            "Edge9",
+            "Edge10",
+            "Edge11",
+            "Edge12"
+          ],
+          "name": "R7OLEDStrengthBand1"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBand1\",\n  \"label\": \"R7OLEDStrengthBand1\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBand1",
+          "label": "R7OLEDStrengthBand1",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 14,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDStrengthBandBlank2",
+          "properties": {
+            "Length": 21,
+            "Width": 2.3499999999999943,
+            "Height": 0.6999999999999993,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBandBlank2\",\n  \"label\": \"R7OLEDStrengthBandBlank2\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBandBlank2",
+          "label": "R7OLEDStrengthBandBlank2",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 15,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank2",
+          "expressions": {
+            "Placement": "placement(vector(12.5;71.55;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBandBlank2\",\n  \"label\": \"R7OLEDStrengthBandBlank2\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBandBlank2",
+          "label": "R7OLEDStrengthBandBlank2",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 16,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank2",
+          "radius": 0.2,
+          "edges": [
+            "Edge1",
+            "Edge2",
+            "Edge3",
+            "Edge4",
+            "Edge5",
+            "Edge6",
+            "Edge7",
+            "Edge8",
+            "Edge9",
+            "Edge10",
+            "Edge11",
+            "Edge12"
+          ],
+          "name": "R7OLEDStrengthBand2"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBand2\",\n  \"label\": \"R7OLEDStrengthBand2\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBand2",
+          "label": "R7OLEDStrengthBand2",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 17,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "R7OLEDStrengthMask",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthMask\",\n  \"label\": \"R7OLEDStrengthMask\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthMask",
+          "label": "R7OLEDStrengthMask",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 18,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDStrengthMask",
+          "values": {
+            "Shapes": [
+              "R7OLEDStrengthBand1",
+              "R7OLEDStrengthBand2"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthMask\",\n  \"label\": \"R7OLEDStrengthMask\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthMask",
+          "label": "R7OLEDStrengthMask",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 19,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "OLEDBezelRecess",
+          "object2_name": "R7OLEDStrengthMask",
+          "result_name": "R7OLEDRecessCutter"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDRecessCutter\",\n  \"label\": \"R7OLEDRecessCutter\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDRecessCutter",
+          "label": "R7OLEDRecessCutter",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 20,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7SpeakerTieAnchorBlank",
+          "properties": {
+            "Length": 1.7000000000000028,
+            "Width": 5.399999999999999,
+            "Height": 4.399999999999999,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieAnchorBlank\",\n  \"label\": \"R7SpeakerTieAnchorBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieAnchorBlank",
+          "label": "R7SpeakerTieAnchorBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 21,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SpeakerTieAnchorBlank",
+          "expressions": {
+            "Placement": "placement(vector(68.3;53.6;16.8);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieAnchorBlank\",\n  \"label\": \"R7SpeakerTieAnchorBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieAnchorBlank",
+          "label": "R7SpeakerTieAnchorBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 22,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7SpeakerTieAnchorBlank",
+          "radius": 0.4,
+          "edges": [
+            "Edge1",
+            "Edge2",
+            "Edge3",
+            "Edge4",
+            "Edge5",
+            "Edge6",
+            "Edge7",
+            "Edge8",
+            "Edge9",
+            "Edge10",
+            "Edge11",
+            "Edge12"
+          ],
+          "name": "R7SpeakerTieAnchorRounded"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieAnchorRounded\",\n  \"label\": \"R7SpeakerTieAnchorRounded\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieAnchorRounded",
+          "label": "R7SpeakerTieAnchorRounded",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 23,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7SpeakerTieSlot",
+          "properties": {
+            "Length": 1.8999999999999915,
+            "Width": 3,
+            "Height": 0.8000000000000007,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieSlot\",\n  \"label\": \"R7SpeakerTieSlot\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieSlot",
+          "label": "R7SpeakerTieSlot",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 24,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SpeakerTieSlot",
+          "expressions": {
+            "Placement": "placement(vector(68.2;54.8;18.7);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieSlot\",\n  \"label\": \"R7SpeakerTieSlot\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieSlot",
+          "label": "R7SpeakerTieSlot",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 25,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "R7SpeakerTieAnchorRounded",
+          "object2_name": "R7SpeakerTieSlot",
+          "result_name": "R7SpeakerTieAnchor"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieAnchor\",\n  \"label\": \"R7SpeakerTieAnchor\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieAnchor",
+          "label": "R7SpeakerTieAnchor",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 26,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7SpeakerTieOuterBlank",
+          "properties": {
+            "Length": 6.099999999999994,
+            "Width": 2.5,
+            "Height": 3.3500000000000014,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieOuterBlank\",\n  \"label\": \"R7SpeakerTieOuterBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieOuterBlank",
+          "label": "R7SpeakerTieOuterBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 27,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SpeakerTieOuterBlank",
+          "expressions": {
+            "Placement": "placement(vector(65.2;55.05;16);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieOuterBlank\",\n  \"label\": \"R7SpeakerTieOuterBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieOuterBlank",
+          "label": "R7SpeakerTieOuterBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 28,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7SpeakerTieOuterBlank",
+          "radius": 0.8,
+          "edges": [
+            "Edge2",
+            "Edge4",
+            "Edge6",
+            "Edge8"
+          ],
+          "name": "R7SpeakerTieOuter"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieOuter\",\n  \"label\": \"R7SpeakerTieOuter\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieOuter",
+          "label": "R7SpeakerTieOuter",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 29,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7SpeakerTieInnerBlank",
+          "properties": {
+            "Length": 5.199999999999989,
+            "Width": 2.6999999999999957,
+            "Height": 2.4499999999999993,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieInnerBlank\",\n  \"label\": \"R7SpeakerTieInnerBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieInnerBlank",
+          "label": "R7SpeakerTieInnerBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 30,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SpeakerTieInnerBlank",
+          "expressions": {
+            "Placement": "placement(vector(65.65;54.95;16.45);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieInnerBlank\",\n  \"label\": \"R7SpeakerTieInnerBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieInnerBlank",
+          "label": "R7SpeakerTieInnerBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 31,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7SpeakerTieInnerBlank",
+          "radius": 0.35,
+          "edges": [
+            "Edge2",
+            "Edge4",
+            "Edge6",
+            "Edge8"
+          ],
+          "name": "R7SpeakerTieInner"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieInner\",\n  \"label\": \"R7SpeakerTieInner\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieInner",
+          "label": "R7SpeakerTieInner",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 32,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "R7SpeakerTieOuter",
+          "object2_name": "R7SpeakerTieInner",
+          "result_name": "R7SpeakerTieLoop"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieLoop\",\n  \"label\": \"R7SpeakerTieLoop\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieLoop",
+          "label": "R7SpeakerTieLoop",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 33,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7SpeakerTieHeadBlank",
+          "properties": {
+            "Length": 3,
+            "Width": 3.6000000000000014,
+            "Height": 2.1000000000000014,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieHeadBlank\",\n  \"label\": \"R7SpeakerTieHeadBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieHeadBlank",
+          "label": "R7SpeakerTieHeadBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 34,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7SpeakerTieHeadBlank",
+          "expressions": {
+            "Placement": "placement(vector(68;54.5;14.2);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieHeadBlank\",\n  \"label\": \"R7SpeakerTieHeadBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieHeadBlank",
+          "label": "R7SpeakerTieHeadBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 35,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7SpeakerTieHeadBlank",
+          "radius": 0.3,
+          "edges": [
+            "Edge1",
+            "Edge2",
+            "Edge3",
+            "Edge4",
+            "Edge5",
+            "Edge6",
+            "Edge7",
+            "Edge8",
+            "Edge9",
+            "Edge10",
+            "Edge11",
+            "Edge12"
+          ],
+          "name": "R7SpeakerTieHead"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7SpeakerTieHead\",\n  \"label\": \"R7SpeakerTieHead\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7SpeakerTieHead",
+          "label": "R7SpeakerTieHead",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 36,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "ReferenceSpeakerTie",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerTie\",\n  \"label\": \"ReferenceSpeakerTie\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerTie",
+          "label": "ReferenceSpeakerTie",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 37,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSpeakerTie",
+          "values": {
+            "Shapes": [
+              "R7SpeakerTieLoop",
+              "R7SpeakerTieHead"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSpeakerTie\",\n  \"label\": \"ReferenceSpeakerTie\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSpeakerTie",
+          "label": "ReferenceSpeakerTie",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "band_repair": [
+    {
+      "operation": {
+        "tool": "delete_object",
+        "args": {
+          "object_name": "R7OLEDStrengthBand1",
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank1",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDStrengthBand1",
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBand1\",\n  \"label\": \"R7OLEDStrengthBand1\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBand1",
+          "label": "R7OLEDStrengthBand1",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "delete_object",
+        "args": {
+          "object_name": "R7OLEDStrengthBand2",
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDStrengthBandBlank2",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDStrengthBand2",
+          "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthBand2\",\n  \"label\": \"R7OLEDStrengthBand2\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthBand2",
+          "label": "R7OLEDStrengthBand2",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    }
+  ],
+  "corner_returns": [
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDCornerReturn1Blank",
+          "properties": {
+            "Length": 2.3000000000000007,
+            "Width": 1.2000000000000028,
+            "Height": 0.7,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn1Blank\",\n  \"label\": \"R7OLEDCornerReturn1Blank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn1Blank",
+          "label": "R7OLEDCornerReturn1Blank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDCornerReturn1Blank",
+          "expressions": {
+            "Placement": "placement(vector(12.5;44.4;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn1Blank\",\n  \"label\": \"R7OLEDCornerReturn1Blank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn1Blank",
+          "label": "R7OLEDCornerReturn1Blank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDCornerReturn1Blank",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDCornerReturn1"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn1\",\n  \"label\": \"R7OLEDCornerReturn1\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn1",
+          "label": "R7OLEDCornerReturn1",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDCornerReturn2Blank",
+          "properties": {
+            "Length": 2.3000000000000007,
+            "Width": 1.2000000000000028,
+            "Height": 0.7,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn2Blank\",\n  \"label\": \"R7OLEDCornerReturn2Blank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn2Blank",
+          "label": "R7OLEDCornerReturn2Blank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDCornerReturn2Blank",
+          "expressions": {
+            "Placement": "placement(vector(12.5;70.5;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn2Blank\",\n  \"label\": \"R7OLEDCornerReturn2Blank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn2Blank",
+          "label": "R7OLEDCornerReturn2Blank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDCornerReturn2Blank",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDCornerReturn2"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn2\",\n  \"label\": \"R7OLEDCornerReturn2\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn2",
+          "label": "R7OLEDCornerReturn2",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDCornerReturn3Blank",
+          "properties": {
+            "Length": 2.3000000000000007,
+            "Width": 1.2000000000000028,
+            "Height": 0.7,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn3Blank\",\n  \"label\": \"R7OLEDCornerReturn3Blank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn3Blank",
+          "label": "R7OLEDCornerReturn3Blank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDCornerReturn3Blank",
+          "expressions": {
+            "Placement": "placement(vector(31.2;44.4;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn3Blank\",\n  \"label\": \"R7OLEDCornerReturn3Blank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn3Blank",
+          "label": "R7OLEDCornerReturn3Blank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDCornerReturn3Blank",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDCornerReturn3"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn3\",\n  \"label\": \"R7OLEDCornerReturn3\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn3",
+          "label": "R7OLEDCornerReturn3",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7OLEDCornerReturn4Blank",
+          "properties": {
+            "Length": 2.3000000000000007,
+            "Width": 1.2000000000000028,
+            "Height": 0.7,
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn4Blank\",\n  \"label\": \"R7OLEDCornerReturn4Blank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn4Blank",
+          "label": "R7OLEDCornerReturn4Blank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDCornerReturn4Blank",
+          "expressions": {
+            "Placement": "placement(vector(31.2;70.5;22);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn4Blank\",\n  \"label\": \"R7OLEDCornerReturn4Blank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn4Blank",
+          "label": "R7OLEDCornerReturn4Blank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7OLEDCornerReturn4Blank",
+          "radius": 0.2,
+          "edges": [
+            "Edge2",
+            "Edge6",
+            "Edge10",
+            "Edge12"
+          ],
+          "name": "R7OLEDCornerReturn4"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDCornerReturn4\",\n  \"label\": \"R7OLEDCornerReturn4\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDCornerReturn4",
+          "label": "R7OLEDCornerReturn4",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    }
+  ],
+  "mic_parameters": [
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "A1",
+          "value": "Microphone shroud outer diameter (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A1\",\n  \"value\": \"Microphone shroud outer diameter (mm)\",\n  \"computed\": \"Microphone shroud outer diameter (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A1",
+          "value": "Microphone shroud outer diameter (mm)",
+          "computed": "Microphone shroud outer diameter (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "B1",
+          "value": 11
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B1\",\n  \"value\": 11,\n  \"computed\": 11\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B1",
+          "value": 11,
+          "computed": 11
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "A2",
+          "value": "Microphone shroud inner diameter (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A2\",\n  \"value\": \"Microphone shroud inner diameter (mm)\",\n  \"computed\": \"Microphone shroud inner diameter (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A2",
+          "value": "Microphone shroud inner diameter (mm)",
+          "computed": "Microphone shroud inner diameter (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "B2",
+          "value": 8
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B2\",\n  \"value\": 8,\n  \"computed\": 8\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B2",
+          "value": 8,
+          "computed": 8
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "A3",
+          "value": "Microphone shroud lower Z (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A3\",\n  \"value\": \"Microphone shroud lower Z (mm)\",\n  \"computed\": \"Microphone shroud lower Z (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A3",
+          "value": "Microphone shroud lower Z (mm)",
+          "computed": "Microphone shroud lower Z (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "R7Parameters",
+          "cell": "B3",
+          "value": 13
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B3\",\n  \"value\": 13,\n  \"computed\": 13\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B3",
+          "value": 13,
+          "computed": 13
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7MicrophoneShroudBlank",
+          "expressions": {
+            "Radius": "R7Parameters.B1/2",
+            "Height": "Parameters.B44+0.2-R7Parameters.B3",
+            "Placement": "placement(vector(Parameters.B22;Parameters.B23;R7Parameters.B3);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBlank\",\n  \"label\": \"R7MicrophoneShroudBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBlank",
+          "label": "R7MicrophoneShroudBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7MicrophoneShroudBore",
+          "expressions": {
+            "Radius": "R7Parameters.B2/2",
+            "Height": "Parameters.B44+0.4-R7Parameters.B3",
+            "Placement": "placement(vector(Parameters.B22;Parameters.B23;R7Parameters.B3-0.1);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7MicrophoneShroudBore\",\n  \"label\": \"R7MicrophoneShroudBore\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7MicrophoneShroudBore",
+          "label": "R7MicrophoneShroudBore",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "lid_links": [
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7OLEDStrengthMask",
+          "values": {
+            "Shapes": [
+              "R7OLEDStrengthBand1",
+              "R7OLEDStrengthBand2",
+              "R7OLEDCornerReturn1",
+              "R7OLEDCornerReturn2",
+              "R7OLEDCornerReturn3",
+              "R7OLEDCornerReturn4"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7OLEDStrengthMask\",\n  \"label\": \"R7OLEDStrengthMask\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7OLEDStrengthMask",
+          "label": "R7OLEDStrengthMask",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "LidWithClamps",
+          "values": {
+            "Shapes": [
+              "LidPlate",
+              "LocatingLip",
+              "LidClamp1",
+              "LidClamp2",
+              "LidClamp3",
+              "LidClamp4",
+              "OLEDLowerRim",
+              "SpeakerMountFrame",
+              "R7MicrophoneShroud",
+              "R7SpeakerTieAnchor"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"LidWithClamps\",\n  \"label\": \"LidWithClamps\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "LidWithClamps",
+          "label": "LidWithClamps",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "LidCutters",
+          "values": {
+            "Shapes": [
+              "LidScrew1",
+              "LidScrew2",
+              "LidScrew3",
+              "LidScrew4",
+              "OLEDWindow",
+              "MicrophonePort",
+              "PTTGuide",
+              "ResetAccess",
+              "ProgramAccess",
+              "PTTStopScrew1",
+              "PTTStopScrew2",
+              "MicrophoneVent1",
+              "MicrophoneVent2",
+              "MicrophoneVent3",
+              "MicrophoneVent4",
+              "MicrophoneVent5",
+              "MicrophoneVent6",
+              "R7OLEDRecessCutter",
+              "OLEDHeadRelief1",
+              "OLEDHeadRelief2",
+              "OLEDHeadRelief3",
+              "OLEDHeadRelief4",
+              "SpeakerScrewHole1",
+              "SpeakerScrewHole2",
+              "SpeakerGrille1",
+              "SpeakerGrille2",
+              "SpeakerGrille3",
+              "SpeakerGrille4",
+              "SpeakerGrille5",
+              "SpeakerGrille6",
+              "SpeakerGrille7",
+              "SpeakerGrille8",
+              "SpeakerGrille9",
+              "SpeakerLeadRelief"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"LidCutters\",\n  \"label\": \"LidCutters\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "LidCutters",
+          "label": "LidCutters",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "antenna": [
+    {
+      "i": 0,
+      "operation": {
+        "tool": "spreadsheet_create",
+        "args": {
+          "name": "AntennaParameters"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"AntennaParameters\",\n  \"label\": \"AntennaParameters\",\n  \"type_id\": \"Spreadsheet::Sheet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "AntennaParameters",
+          "label": "AntennaParameters",
+          "type_id": "Spreadsheet::Sheet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 1,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A1",
+          "value": "Rear-key parallel jaw gap (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A1\",\n  \"value\": \"Rear-key parallel jaw gap (mm)\",\n  \"computed\": \"Rear-key parallel jaw gap (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A1",
+          "value": "Rear-key parallel jaw gap (mm)",
+          "computed": "Rear-key parallel jaw gap (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 2,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B1",
+          "value": 8.4
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B1\",\n  \"value\": 8.4,\n  \"computed\": 8.4\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B1",
+          "value": 8.4,
+          "computed": 8.4
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 3,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A2",
+          "value": "Illustrative rear hex AF (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A2\",\n  \"value\": \"Illustrative rear hex AF (mm)\",\n  \"computed\": \"Illustrative rear hex AF (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A2",
+          "value": "Illustrative rear hex AF (mm)",
+          "computed": "Illustrative rear hex AF (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 4,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B2",
+          "value": 8
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B2\",\n  \"value\": 8,\n  \"computed\": 8\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B2",
+          "value": 8,
+          "computed": 8
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 5,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A3",
+          "value": "Key guide clearance per side (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A3\",\n  \"value\": \"Key guide clearance per side (mm)\",\n  \"computed\": \"Key guide clearance per side (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A3",
+          "value": "Key guide clearance per side (mm)",
+          "computed": "Key guide clearance per side (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 6,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B3",
+          "value": 0.3
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B3\",\n  \"value\": 0.3,\n  \"computed\": 0.3\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B3",
+          "value": 0.3,
+          "computed": 0.3
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 7,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A4",
+          "value": "Key top Z (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A4\",\n  \"value\": \"Key top Z (mm)\",\n  \"computed\": \"Key top Z (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A4",
+          "value": "Key top Z (mm)",
+          "computed": "Key top Z (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 8,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B4",
+          "value": 20.3
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B4\",\n  \"value\": 20.3,\n  \"computed\": 20.3\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B4",
+          "value": 20.3,
+          "computed": 20.3
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 9,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A5",
+          "value": "Coax reference centerline bend (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A5\",\n  \"value\": \"Coax reference centerline bend (mm)\",\n  \"computed\": \"Coax reference centerline bend (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A5",
+          "value": "Coax reference centerline bend (mm)",
+          "computed": "Coax reference centerline bend (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 10,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B5",
+          "value": 10
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B5\",\n  \"value\": 10,\n  \"computed\": 10\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B5",
+          "value": 10,
+          "computed": 10
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 11,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "A6",
+          "value": "Coax reference OD (mm)"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"A6\",\n  \"value\": \"Coax reference OD (mm)\",\n  \"computed\": \"Coax reference OD (mm)\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "A6",
+          "value": "Coax reference OD (mm)",
+          "computed": "Coax reference OD (mm)"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 12,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "AntennaParameters",
+          "cell": "B6",
+          "value": 1.32
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B6\",\n  \"value\": 1.32,\n  \"computed\": 1.32\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B6",
+          "value": 1.32,
+          "computed": 1.32
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 13,
+      "operation": {
+        "tool": "spreadsheet_set_cell",
+        "args": {
+          "spreadsheet_name": "Parameters",
+          "cell": "B99",
+          "value": 4.2
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"cell\": \"B99\",\n  \"value\": 4.2,\n  \"computed\": 4.2\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "cell": "B99",
+          "value": 4.2,
+          "computed": 4.2
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 14,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMAKeyCarrierBlank",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyCarrierBlank\",\n  \"label\": \"SMAKeyCarrierBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyCarrierBlank",
+          "label": "SMAKeyCarrierBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 15,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMAKeyCarrierBlank",
+          "expressions": {
+            "Length": "17.0",
+            "Width": "4.400000000000006",
+            "Height": "11.400000000000002",
+            "Placement": "placement(vector(38.5;87.8;9.2);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyCarrierBlank\",\n  \"label\": \"SMAKeyCarrierBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyCarrierBlank",
+          "label": "SMAKeyCarrierBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 16,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "SMAKeyCarrierBlank",
+          "radius": 0.4,
+          "name": "SMAKeyCarrier"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyCarrier\",\n  \"label\": \"SMAKeyCarrier\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyCarrier",
+          "label": "SMAKeyCarrier",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 17,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMAKeyPocket",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyPocket\",\n  \"label\": \"SMAKeyPocket\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyPocket",
+          "label": "SMAKeyPocket",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 18,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMAKeyPocket",
+          "expressions": {
+            "Length": "14+2*AntennaParameters.B3",
+            "Width": "2+2*AntennaParameters.B3",
+            "Height": "10.8",
+            "Placement": "placement(vector(Parameters.B40-7-AntennaParameters.B3;89.6-AntennaParameters.B3;10.4);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyPocket\",\n  \"label\": \"SMAKeyPocket\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyPocket",
+          "label": "SMAKeyPocket",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 19,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMAKeyBlank",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyBlank\",\n  \"label\": \"SMAKeyBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyBlank",
+          "label": "SMAKeyBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 20,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMAKeyBlank",
+          "expressions": {
+            "Length": "14",
+            "Width": "2",
+            "Height": "AntennaParameters.B4-10.4",
+            "Placement": "placement(vector(Parameters.B40-7;89.6;10.4);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyBlank\",\n  \"label\": \"SMAKeyBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyBlank",
+          "label": "SMAKeyBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 21,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "SMAKeyBlank",
+          "radius": 0.3,
+          "name": "SMAKeyRounded"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyRounded\",\n  \"label\": \"SMAKeyRounded\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyRounded",
+          "label": "SMAKeyRounded",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 22,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMAKeyJawRelief",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyJawRelief\",\n  \"label\": \"SMAKeyJawRelief\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyJawRelief",
+          "label": "SMAKeyJawRelief",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 23,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMAKeyJawRelief",
+          "expressions": {
+            "Length": "AntennaParameters.B1",
+            "Width": "2.2",
+            "Height": "8.9",
+            "Placement": "placement(vector(Parameters.B40-AntennaParameters.B1/2;89.5;10.3);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyJawRelief\",\n  \"label\": \"SMAKeyJawRelief\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyJawRelief",
+          "label": "SMAKeyJawRelief",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 24,
+      "operation": {
+        "tool": "boolean_operation",
+        "args": {
+          "operation": "cut",
+          "object1_name": "SMAKeyRounded",
+          "object2_name": "SMAKeyJawRelief",
+          "result_name": "SMAKey"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKey\",\n  \"label\": \"SMAKey\",\n  \"type_id\": \"Part::Cut\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKey",
+          "label": "SMAKey",
+          "type_id": "Part::Cut"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 25,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7CoaxAnchorBodyBlank",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorBodyBlank\",\n  \"label\": \"R7CoaxAnchorBodyBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorBodyBlank",
+          "label": "R7CoaxAnchorBodyBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 26,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CoaxAnchorBodyBlank",
+          "expressions": {
+            "Length": "6.5",
+            "Width": "5.799999999999997",
+            "Height": "4",
+            "Placement": "placement(vector(55;84;14);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorBodyBlank\",\n  \"label\": \"R7CoaxAnchorBodyBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorBodyBlank",
+          "label": "R7CoaxAnchorBodyBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 27,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7CoaxAnchorBodyBlank",
+          "radius": 0.4,
+          "name": "R7CoaxAnchorBody"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorBody\",\n  \"label\": \"R7CoaxAnchorBody\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorBody",
+          "label": "R7CoaxAnchorBody",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 28,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7CoaxAnchorNeckBlank",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorNeckBlank\",\n  \"label\": \"R7CoaxAnchorNeckBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorNeckBlank",
+          "label": "R7CoaxAnchorNeckBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 29,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CoaxAnchorNeckBlank",
+          "expressions": {
+            "Length": "1.5",
+            "Width": "3.0",
+            "Height": "4",
+            "Placement": "placement(vector(60;89.2;14);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorNeckBlank\",\n  \"label\": \"R7CoaxAnchorNeckBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorNeckBlank",
+          "label": "R7CoaxAnchorNeckBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 30,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7CoaxAnchorNeckBlank",
+          "radius": 0.4,
+          "name": "R7CoaxAnchorNeck"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchorNeck\",\n  \"label\": \"R7CoaxAnchorNeck\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchorNeck",
+          "label": "R7CoaxAnchorNeck",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 31,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "R7CoaxAnchor",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchor\",\n  \"label\": \"R7CoaxAnchor\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchor",
+          "label": "R7CoaxAnchor",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 32,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CoaxAnchor",
+          "values": {
+            "Shapes": [
+              "R7CoaxAnchorBody",
+              "R7CoaxAnchorNeck"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxAnchor\",\n  \"label\": \"R7CoaxAnchor\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxAnchor",
+          "label": "R7CoaxAnchor",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 33,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "R7CoaxTieSlotBlank",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxTieSlotBlank\",\n  \"label\": \"R7CoaxTieSlotBlank\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxTieSlotBlank",
+          "label": "R7CoaxTieSlotBlank",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 34,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7CoaxTieSlotBlank",
+          "expressions": {
+            "Length": "3.0",
+            "Width": "6.0",
+            "Height": "1.5",
+            "Placement": "placement(vector(56.5;83.9;15.2);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxTieSlotBlank\",\n  \"label\": \"R7CoaxTieSlotBlank\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxTieSlotBlank",
+          "label": "R7CoaxTieSlotBlank",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 35,
+      "operation": {
+        "tool": "fillet_edges",
+        "args": {
+          "object_name": "R7CoaxTieSlotBlank",
+          "radius": 0.35,
+          "name": "R7CoaxTieSlot"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7CoaxTieSlot\",\n  \"label\": \"R7CoaxTieSlot\",\n  \"type_id\": \"Part::Fillet\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7CoaxTieSlot",
+          "label": "R7CoaxTieSlot",
+          "type_id": "Part::Fillet"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 36,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMAKeyLipRelief",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyLipRelief\",\n  \"label\": \"SMAKeyLipRelief\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyLipRelief",
+          "label": "SMAKeyLipRelief",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 37,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMAKeyLipRelief",
+          "expressions": {
+            "Length": "17.799999999999997",
+            "Width": "4.599999999999994",
+            "Height": "2.1999999999999993",
+            "Placement": "placement(vector(38.1;87.4;18.8);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMAKeyLipRelief\",\n  \"label\": \"SMAKeyLipRelief\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMAKeyLipRelief",
+          "label": "SMAKeyLipRelief",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 38,
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Box",
+          "name": "SMATieLipRelief",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMATieLipRelief\",\n  \"label\": \"SMATieLipRelief\",\n  \"type_id\": \"Part::Box\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMATieLipRelief",
+          "label": "SMATieLipRelief",
+          "type_id": "Part::Box"
+        },
+        "isError": false
+      }
+    },
+    {
+      "i": 39,
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "SMATieLipRelief",
+          "expressions": {
+            "Length": "5.299999999999997",
+            "Width": "1.2999999999999972",
+            "Height": "2",
+            "Placement": "placement(vector(55.35;89.8;19);rotation(0;0;0))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"SMATieLipRelief\",\n  \"label\": \"SMATieLipRelief\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Length\",\n      \"Width\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "SMATieLipRelief",
+          "label": "SMATieLipRelief",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Length",
+              "Width",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "antenna_references": [
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Prism",
+          "name": "ReferenceSMAFixedHexR7",
+          "properties": {
+            "Visibility": false,
+            "Polygon": 6
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMAFixedHexR7\",\n  \"label\": \"ReferenceSMAFixedHexR7\",\n  \"type_id\": \"Part::Prism\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMAFixedHexR7",
+          "label": "ReferenceSMAFixedHexR7",
+          "type_id": "Part::Prism"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSMAFixedHexR7",
+          "expressions": {
+            "Circumradius": "AntennaParameters.B2/sqrt(3)",
+            "Height": "2.6",
+            "Placement": "placement(vector(Parameters.B40;89.4;Parameters.B96);rotation(0;30;-90))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMAFixedHexR7\",\n  \"label\": \"ReferenceSMAFixedHexR7\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Circumradius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMAFixedHexR7",
+          "label": "ReferenceSMAFixedHexR7",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Circumradius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::Cylinder",
+          "name": "ReferenceSMATailR7",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMATailR7\",\n  \"label\": \"ReferenceSMATailR7\",\n  \"type_id\": \"Part::Cylinder\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMATailR7",
+          "label": "ReferenceSMATailR7",
+          "type_id": "Part::Cylinder"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSMATailR7",
+          "expressions": {
+            "Radius": "3",
+            "Height": "7.4",
+            "Placement": "placement(vector(Parameters.B40;82;Parameters.B96);rotation(0;0;-90))"
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMATailR7\",\n  \"label\": \"ReferenceSMATailR7\",\n  \"set\": {\n    \"set\": [],\n    \"expressions_cleared\": [],\n    \"expressions_set\": [\n      \"Radius\",\n      \"Height\",\n      \"Placement\"\n    ]\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMATailR7",
+          "label": "ReferenceSMATailR7",
+          "set": {
+            "set": [],
+            "expressions_cleared": [],
+            "expressions_set": [
+              "Radius",
+              "Height",
+              "Placement"
+            ]
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "Part::MultiFuse",
+          "name": "ReferenceSMARearBodyR7",
+          "properties": {
+            "Visibility": false
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMARearBodyR7\",\n  \"label\": \"ReferenceSMARearBodyR7\",\n  \"type_id\": \"Part::MultiFuse\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMARearBodyR7",
+          "label": "ReferenceSMARearBodyR7",
+          "type_id": "Part::MultiFuse"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "ReferenceSMARearBodyR7",
+          "values": {
+            "Shapes": [
+              "ReferenceSMAFixedHexR7",
+              "ReferenceSMATailR7"
+            ]
+          },
+          "recompute": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"ReferenceSMARearBodyR7\",\n  \"label\": \"ReferenceSMARearBodyR7\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "ReferenceSMARearBodyR7",
+          "label": "ReferenceSMARearBodyR7",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "antenna_links": [
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "BaseWithSupports",
+        "values": {
+          "Shapes": [
+            "BaseShell",
+            "PCBSupport1",
+            "PCBSupport2",
+            "PCBSupport3",
+            "PCBSupport4",
+            "SupportFoot1",
+            "SupportFoot2",
+            "SupportFoot3",
+            "SupportFoot4",
+            "BatteryBayTube",
+            "RearPost1",
+            "RearWeb1",
+            "RearPost2",
+            "RearWeb2",
+            "RearPost3",
+            "RearWeb3",
+            "RearPost4",
+            "RearWeb4",
+            "BatteryHarnessHood",
+            "SMABacking",
+            "SMAKeyCarrier",
+            "R7CoaxAnchor"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"BaseWithSupports\",\n  \"label\": \"BaseWithSupports\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "BaseWithSupports",
+          "label": "BaseWithSupports",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "BaseCutters",
+        "values": {
+          "Shapes": [
+            "InsertPocket1",
+            "InsertPocket2",
+            "InsertPocket3",
+            "InsertPocket4",
+            "ScrewTipRelief1",
+            "ScrewTipRelief2",
+            "ScrewTipRelief3",
+            "ScrewTipRelief4",
+            "USBAccess",
+            "RearInsertBore1",
+            "RearInsertBore2",
+            "RearInsertBore3",
+            "RearInsertBore4",
+            "BatteryHarnessChase",
+            "SMABulkheadBore",
+            "SMARearRelief",
+            "SMAKeyPocket",
+            "R7CoaxTieSlot"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"BaseCutters\",\n  \"label\": \"BaseCutters\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "BaseCutters",
+          "label": "BaseCutters",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "LidCutters",
+        "values": {
+          "Shapes": [
+            "LidScrew1",
+            "LidScrew2",
+            "LidScrew3",
+            "LidScrew4",
+            "OLEDWindow",
+            "MicrophonePort",
+            "PTTGuide",
+            "ResetAccess",
+            "ProgramAccess",
+            "PTTStopScrew1",
+            "PTTStopScrew2",
+            "MicrophoneVent1",
+            "MicrophoneVent2",
+            "MicrophoneVent3",
+            "MicrophoneVent4",
+            "MicrophoneVent5",
+            "MicrophoneVent6",
+            "R7OLEDRecessCutter",
+            "OLEDHeadRelief1",
+            "OLEDHeadRelief2",
+            "OLEDHeadRelief3",
+            "OLEDHeadRelief4",
+            "SpeakerScrewHole1",
+            "SpeakerScrewHole2",
+            "SpeakerGrille1",
+            "SpeakerGrille2",
+            "SpeakerGrille3",
+            "SpeakerGrille4",
+            "SpeakerGrille5",
+            "SpeakerGrille6",
+            "SpeakerGrille7",
+            "SpeakerGrille8",
+            "SpeakerGrille9",
+            "SpeakerLeadRelief",
+            "SMAKeyLipRelief",
+            "SMATieLipRelief"
+          ]
+        },
+        "recompute": true,
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"LidCutters\",\n  \"label\": \"LidCutters\",\n  \"set\": {\n    \"set\": [\n      \"Shapes\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "LidCutters",
+          "label": "LidCutters",
+          "set": {
+            "set": [
+              "Shapes"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    }
+  ],
+  "grouping": [
+    {
+      "operation": {
+        "tool": "create_object",
+        "args": {
+          "type_id": "App::DocumentObjectGroup",
+          "name": "R7Construction",
+          "properties": {
+            "Label": "R7 construction features"
+          }
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7Construction\",\n  \"label\": \"R7 construction features\",\n  \"type_id\": \"App::DocumentObjectGroup\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7Construction",
+          "label": "R7 construction features",
+          "type_id": "App::DocumentObjectGroup"
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "cam_set_properties",
+        "args": {
+          "object_name": "R7Construction",
+          "values": {
+            "Group": [
+              "R7CouponPlate",
+              "R7CouponPlateRounded",
+              "R7CouponInsertBossNominal",
+              "R7CouponInsertBossTrial",
+              "R7CouponGuideBoss",
+              "R7CouponInsertPilotNominal",
+              "R7CouponInsertPilotTrial",
+              "R7CouponGuideBore",
+              "R7CouponNut42",
+              "R7CouponNut43",
+              "R7CouponNut44",
+              "R7CouponNutHole42",
+              "R7CouponNutHole43",
+              "R7CouponNutHole44",
+              "R7CouponMaterial",
+              "R7CouponCutters",
+              "R7MicrophoneShroudBlank",
+              "R7MicrophoneShroudRounded",
+              "R7MicrophoneShroudBore",
+              "R7MicrophoneShroud",
+              "R7OLEDStrengthBandBlank1",
+              "R7OLEDStrengthBand1",
+              "R7OLEDStrengthBandBlank2",
+              "R7OLEDStrengthBand2",
+              "R7OLEDStrengthMask",
+              "R7OLEDRecessCutter",
+              "R7SpeakerTieAnchorBlank",
+              "R7SpeakerTieAnchorRounded",
+              "R7SpeakerTieSlot",
+              "R7SpeakerTieAnchor",
+              "R7SpeakerTieOuterBlank",
+              "R7SpeakerTieOuter",
+              "R7SpeakerTieInnerBlank",
+              "R7SpeakerTieInner",
+              "R7SpeakerTieLoop",
+              "R7SpeakerTieHeadBlank",
+              "R7SpeakerTieHead",
+              "R7OLEDCornerReturn1Blank",
+              "R7OLEDCornerReturn1",
+              "R7OLEDCornerReturn2Blank",
+              "R7OLEDCornerReturn2",
+              "R7OLEDCornerReturn3Blank",
+              "R7OLEDCornerReturn3",
+              "R7OLEDCornerReturn4Blank",
+              "R7OLEDCornerReturn4",
+              "SMAKeyCarrierBlank",
+              "SMAKeyCarrier",
+              "SMAKeyPocket",
+              "SMAKeyBlank",
+              "SMAKeyRounded",
+              "SMAKeyJawRelief",
+              "R7CoaxAnchorBodyBlank",
+              "R7CoaxAnchorBody",
+              "R7CoaxAnchorNeckBlank",
+              "R7CoaxAnchorNeck",
+              "R7CoaxAnchor",
+              "R7CoaxTieSlotBlank",
+              "R7CoaxTieSlot",
+              "SMAKeyLipRelief",
+              "SMATieLipRelief",
+              "ReferenceSMAFixedHexR7",
+              "ReferenceSMATailR7"
+            ]
+          },
+          "recompute": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"name\": \"R7Construction\",\n  \"label\": \"R7 construction features\",\n  \"set\": {\n    \"set\": [\n      \"Group\"\n    ],\n    \"expressions_cleared\": [],\n    \"expressions_set\": []\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "name": "R7Construction",
+          "label": "R7 construction features",
+          "set": {
+            "set": [
+              "Group"
+            ],
+            "expressions_cleared": [],
+            "expressions_set": []
+          }
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "R7Construction",
+          "visible": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": false\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": false
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "R7SupersededConstruction",
+          "visible": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": false\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": false
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "ReferenceSMARearBody",
+          "visible": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": false\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": false
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "ReferenceSMARearBodyR7",
+          "visible": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": true\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": true
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "SMAKey",
+          "visible": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": true\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": true
+        },
+        "isError": false
+      }
+    },
+    {
+      "operation": {
+        "tool": "set_object_visibility",
+        "args": {
+          "object_name": "R7FitCoupon",
+          "visible": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"visible\": false\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "visible": false
+        },
+        "isError": false
+      }
+    }
+  ]
+}

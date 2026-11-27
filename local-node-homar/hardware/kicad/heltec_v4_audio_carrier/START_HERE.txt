@@ -1,0 +1,59 @@
+HELTEC V4 R2 AUDIO CARRIER - C5
+KiCad 10.0.8 | 2026-11-24
+
+Open heltec_v4_audio_carrier.kicad_pro in KiCad.
+The 70 x 90 mm four-layer carrier uses project-local symbols, footprints and
+models. This folder contains the current design and supporting references.
+
+ASSEMBLY
+U1: Heltec WiFi LoRa 32 V4.3 R2, USB-up (J2 left, J3 right).
+U2: round INMP441 module; acoustic/solder face up, L/R grounded.
+U3: MAX98357A module on the JAMP1 seven-pin interconnect; GAIN grounded.
+R8: EEEEE 1 kohm, 1/2 W, 5% carbon axial through-hole pulldown.
+It is the only carrier passive; mount horizontally and solder both leads.
+SW1: fitted 6 x 6 x 8 mm normally-open PTT switch, GPIO39/PTT_N to GND.
+LS1: external speaker wired directly to amplifier SPK+ and SPK-.
+Neither speaker terminal is GND. TP1-TP13 are exposed copper test pads.
+Signal and power paths are direct copper. The carrier has no capacitors or
+jumper resistors; it uses the existing breakout-module circuitry.
+
+PTT
+The reference footprint uses a 6.5 x 4.5 mm contact grid, 2 mm pads and 1.1 mm
+holes. The upper pair is contact1/PTT_N; the lower pair is contact2/GND.
+Verify actual switch pairing and fit. Pressed reads LOW with an input pullup.
+Firmware remains ENABLE_PTT=false; the enabled path uses INPUT_PULLUP.
+
+VALIDATION
+Current CAD checks and route data are in reports/. Physical fit and hardware
+operation have not been tested. Compare the 1:1 sheet with the owned parts
+before fabrication. Check pin identity, holes, header registration, underside
+clearance, acoustic opening, USB/coax access and antenna/enclosure clearance.
+The RF reservation is an engineering allowance. Preview gaps are 5 mm for
+Heltec and 3 mm for audio modules. USB supply capacity, module bypassing and
+audible playback need bench validation. AMP_DATA exceeds the preferred 50 mm
+route length because of its RF-reservation detour.
+
+FILES
+Bill_of_Materials.xlsx             Assembly BOM with editable board quantity
+Bill_of_Materials.csv              Assembly BOM for one board
+BOM.csv                            Detailed CAD component and hardware inventory
+ASSEMBLY_AND_BRINGUP.txt             Assembly and hardware checks
+review/design-review.pdf            Design review
+review/mechanical-check-1to1.pdf     Actual-size fit sheet; print at 100%
+review/schematic.pdf                Electrical schematic
+review/top-assembly.png             PCB top view
+review/copper-layer-review.pdf      Native copper layers
+review/pcb-3d-top.png                Assembled top view
+review/pcb-3d-bottom.png             Assembled bottom view
+review/pcb-3d-isometric.png          Assembled isometric view
+review/pcb-3d-all-views.png          Top, bottom and isometric together
+models/3D_MODEL_NOTES.txt            Model provenance and approximations
+sources/USER_OVERRIDES.md            Current design decisions
+reports/                           CAD checks and route data
+
+FABRICATION
+fabrication/oshpark/heltec_v4_audio_carrier_C5_OSHPARK.zip
+  PCB-only prototype upload for OSH Park; see the accompanying README.
+  Confirm owned-part fit before ordering. Components are assembled separately.
+
+No fabrication order, firmware upload or physical assembly has been performed.

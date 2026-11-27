@@ -1,0 +1,38 @@
+{
+  "checked_on": "2026-11-24",
+  "source_ids": [
+    "oshpark_4swift",
+    "oshpark_kicad"
+  ],
+  "service": "4 Layer Super Swift",
+  "material": "FR408-HR190Tg",
+  "nominal_thickness_mm": 1.6,
+  "finish": "ENIG",
+  "mask": "purple both sides",
+  "Cu_dielectric_sequence_mm": [
+    0.0432,
+    0.1999,
+    0.0175,
+    0.9906,
+    0.0175,
+    0.1999,
+    0.0432
+  ],
+  "prepreg_Dk_1GHz": 3.61,
+  "min_trace_mm": 0.127,
+  "min_spacing_mm": 0.127,
+  "min_annular_ring_mm": 0.1016,
+  "min_drill_mm": 0.254,
+  "min_slot_mm": 0.508,
+  "copper_edge_mm": 0.381,
+  "plated_drill_to_inner_copper_mm": 0.254,
+  "min_mask_web_mm": 0.1016,
+  "drill_size_tolerance_mm": 0.0635,
+  "drill_position_tolerance_mm": 0.0508,
+  "outline_cutter_diameter_mm": 1.72,
+  "internal_cutter_diameter_mm": 1.01,
+  "KiCad_mask_expansion_mm": 0.0508,
+  "KiCad_hole_to_hole_mm": 0.127,
+  "ordinary_through_vias_only": true,
+  "retention_note": "Retain unused annular rings or verify inner antipads. Service stack governs; listed nominal stack sum need not equal rounded1.6mm nominal total. Recheck current service at handoff."
+}

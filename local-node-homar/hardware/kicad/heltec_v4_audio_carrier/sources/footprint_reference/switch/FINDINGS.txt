@@ -1,0 +1,29 @@
+PTT SWITCH REFERENCE - CURRENT C5
+
+SW1 is the selected OCR TPBS02 / Amazon B01MRP025V 6 x 6 x 8 mm
+normally-open tactile switch. It is fitted in the design.
+
+The adopted reference grid is 6.5 x 4.5 mm, from KiCad SW_PUSH_6mm and
+the C&K PTS645 straight THT drawing. This does not identify the owned OCR
+switch as a C&K part. Verify its actual fit and contact pairing.
+
+Centered native footprint coordinates (X right, Y down):
+  pad1 / PTT_N: (-3.25,-2.25), (+3.25,-2.25)
+  pad2 / GND:   (-3.25,+2.25), (+3.25,+2.25)
+Each 6.5 mm pair is permanently common; pressing joins the two groups.
+The carrier joins each pair in copper. GPIO39 connects directly to PTT_N.
+
+Carrier pads are 2 mm with 1.1 mm drills, matching the KiCad reference.
+The manufacturer reference shows 1.0 mm holes; the owned lead fit is untested.
+The representative 8 mm-high KiCad STEP is fitted at (-3.25,+2.25,0) mm
+to recenter its original pad-based origin on the carrier footprint.
+
+Firmware is unchanged: ENABLE_PTT=false. Its enabled branch uses GPIO39
+INPUT_PULLUP. Check active-low behavior and debounce when enabling it.
+
+Preserved evidence: installed-SW_PUSH_6mm-reference.kicad_mod,
+manufacturer-pts645-conrad-mirror.pdf, pts645-page2-reference.png.
+Sources:
+https://www.amazon.com/dp/B01MRP025V
+https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts645-series-datasheet?assetguid=d58fc8a8-f6e1-4527-ab68-27635e632e39
+https://gitlab.com/kicad/libraries/kicad-footprints/-/blob/master/Button_Switch_THT.pretty/SW_PUSH_6mm.kicad_mod

@@ -1,0 +1,4 @@
+(version 1)
+(rule "OSH Park inner drilled hole clearance"
+  (layer inner)
+  (constraint hole_clearance (min 0.254mm)))

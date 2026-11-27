@@ -1,0 +1,107 @@
+{
+  "U1": {
+    "footprint_file": "Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+    "models": [
+      {
+        "file": "reference/heltec-v4_3_1-reference.step",
+        "rotation": [
+          0,
+          0,
+          90
+        ],
+        "offset": [
+          0,
+          23.749,
+          6.55871926
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "file": "Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "JAMP1": {
+    "footprint_file": "MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+    "models": [
+      {
+        "file": "MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "U2": {
+    "footprint_file": "INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+    "models": [
+      {
+        "file": "INMP441_ROUND_DETAILED_VISUAL.wrl",
+        "scale": [
+          0.3937007874,
+          0.3937007874,
+          0.3937007874
+        ]
+      }
+    ]
+  },
+  "SW1": {
+    "footprint_file": "SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+    "models": [
+      {
+        "file": "SW_PUSH_6mm_H8mm.step",
+        "offset": [
+          -3.25,
+          2.25,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  "R8": {
+    "footprint_file": "R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+    "models": [
+      {
+        "file": "R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "status": "Representative EEEEE1k0.5W5% carbon axial,10x3.6mm reference body,15.24mm pitch; verify actual fit."
+  },
+  "revision": "C5"
+}

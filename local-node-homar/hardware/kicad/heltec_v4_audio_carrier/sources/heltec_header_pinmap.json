@@ -1,0 +1,48 @@
+{
+  "orientation": "OLED facing viewer, USB bottom: J3 left, J2 right; position1 nearest USB. Rotate identities with module.",
+  "J2": [
+    "GND",
+    "5V/VUSB",
+    "Ve",
+    "Ve",
+    "GPIO44/RX",
+    "GPIO43/TX",
+    "RST/CHIP_PU",
+    "GPIO0/USER_KEY",
+    "GPIO36/VextCtrl",
+    "GPIO35/LED",
+    "GPIO34",
+    "GPIO33",
+    "GPIO47",
+    "GPIO48",
+    "GPIO26",
+    "GPIO21/OLED_RST",
+    "GPIO20/USB_D+",
+    "GPIO19/USB_D-"
+  ],
+  "J3": [
+    "GND",
+    "3V3",
+    "3V3",
+    "GPIO37/ADC_Ctrl",
+    "GPIO46",
+    "GPIO45",
+    "GPIO42/GNSS_RST",
+    "GPIO41/GNSS_PPS",
+    "GPIO40/GNSS_Wakeup",
+    "GPIO39/GNSS_TX",
+    "GPIO38/GNSS_RX",
+    "GPIO1/VBAT_Read",
+    "GPIO2/FEM_EN",
+    "GPIO3",
+    "GPIO4",
+    "GPIO5",
+    "GPIO6",
+    "GPIO7/VFEM_Control"
+  ],
+  "source_ids": [
+    "heltec_pinmap",
+    "heltec_schematic",
+    "heltec_datasheet"
+  ]
+}

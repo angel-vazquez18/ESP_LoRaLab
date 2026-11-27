@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.FCBak
+*.FCStd1
+references/components/C5-detailed-assembly.step
+references/pcb-fabrication-baseline/
+references/electronics-source/original-fabrication/
+pcb-fabrication/
+R7-Enclosure-Package.zip

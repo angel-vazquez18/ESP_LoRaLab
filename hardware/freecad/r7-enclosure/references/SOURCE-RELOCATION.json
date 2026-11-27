@@ -1,0 +1,1302 @@
+{
+  "purpose": "Preserve all PCB/source bytes from retired enclosure folders. No PCB or firmware changes. Duplicate byte-identical files share destinations.",
+  "old_root": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5",
+  "files": [
+    {
+      "source": "revision-r4-battery/pcb-fabrication/BASELINE-C5-README.txt",
+      "destination": "references/pcb-fabrication-baseline/BASELINE-C5-README.txt",
+      "bytes": 3943,
+      "sha256": "67aa31758f53aa5eb78d8b537014f17ffabd93ec7f43f9aa9a80f9f1b70a303b"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/baseline-package-manifest.json",
+      "destination": "references/pcb-fabrication-baseline/baseline-package-manifest.json",
+      "bytes": 13131,
+      "sha256": "98b5094baa913fc095b7b5b38c6bbb3fb5cd1c9833519c302290945441cbebc4"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/bom/C5-assembly-source.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-assembly-source.csv",
+      "bytes": 2620,
+      "sha256": "4f656331fd5b32bf7b16ce74216159e25319225f64a753d5dbdad1af5da86eae"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/bom/C5-CAD-inventory-source.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-CAD-inventory-source.csv",
+      "bytes": 6097,
+      "sha256": "2afd54f7e1e711753dbf6f84366796552d84f6726bb122c14b6f597dd9a792da"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/bom/C5-Electronics-BOM.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-Electronics-BOM.csv",
+      "bytes": 1661,
+      "sha256": "d9c6b8bfd8f7346e591d668c3ffa91c9b155ad8ea57dec4150d0a38e77c5d36a"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/bom/C5-Electronics-BOM.xlsx",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-Electronics-BOM.xlsx",
+      "bytes": 5720,
+      "sha256": "3930b937b8256a0cbb8b50c70f99e5aff27fb86d7df3ae9a36b8cc656f8b3f7f"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/bom/electronics-bom.json",
+      "destination": "references/pcb-fabrication-baseline/bom/electronics-bom.json",
+      "bytes": 3054,
+      "sha256": "7a24ebc15fe8ce65d9827ab55c76d7653be99e5b01198feadefb29ef864cb605"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/C5-PCB-Gerbers-and-Drills.zip",
+      "destination": "references/pcb-fabrication-baseline/C5-PCB-Gerbers-and-Drills.zip",
+      "bytes": 143463,
+      "sha256": "bdd3df7fcdd190e3a5ee7a3594744575df04f48f2e92f50dcc8cb890c87c00f7"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/board-geometric-audit.json",
+      "destination": "references/pcb-fabrication-baseline/checks/board-geometric-audit.json",
+      "bytes": 15807,
+      "sha256": "ce110db2b7708d665170c10efb76375214796d637fce595fbe659d1001b5ef1a"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/bom-formula-scan.json",
+      "destination": "references/pcb-fabrication-baseline/checks/bom-formula-scan.json",
+      "bytes": 60,
+      "sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/cam-validation.json",
+      "destination": "references/pcb-fabrication-baseline/checks/cam-validation.json",
+      "bytes": 3570,
+      "sha256": "083471071960010d7d4ce80ddd7a4b6ec30fcfd30b6bdd7f09d570025bfb3d98"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/cli-log.json",
+      "destination": "references/pcb-fabrication-baseline/checks/cli-log.json",
+      "bytes": 6437,
+      "sha256": "c22eaddd1573d4c34d9b3ba8603abe94ebe7fbc4b98670c2293678f1c401af56"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/drc.json",
+      "destination": "references/pcb-fabrication-baseline/checks/drc.json",
+      "bytes": 1138,
+      "sha256": "d34a5f1537c440ff0d0691511e005219a78108fd5bb000d45b23a01a065576eb"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/drill-report.txt",
+      "destination": "references/pcb-fabrication-baseline/checks/drill-report.txt",
+      "bytes": 885,
+      "sha256": "b688375a1b935c84af3026aab76977234a520b7a8d8e52d0379bc4b3a48550f0"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/checks/erc.json",
+      "destination": "references/pcb-fabrication-baseline/checks/erc.json",
+      "bytes": 1054,
+      "sha256": "d6eb2e0e0d5382e8b64d8e89b2837d3759c9606589d037fc03731fb99d061837"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/FABRICATION-VALIDATION.json",
+      "destination": "references/pcb-fabrication-baseline/FABRICATION-VALIDATION.json",
+      "bytes": 12126,
+      "sha256": "f69bc6666ef375289d487c3512a0ab2890c156bc6d12e3927699dc4a0b624991"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "bytes": 125670,
+      "sha256": "23e753c6eb2fcfdf7fc20fbfad95ff0cc2418ac9e823537a414c2d5660c3068d"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "bytes": 61218,
+      "sha256": "e70652c48778b10ebf84cc317a1c9ddd9ca97b3c5accee49b42a2dfbb697c3d1"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "bytes": 68222,
+      "sha256": "1c7f1145692e7e177be570a969c036c22d9983803aec9b70690ea065e5299fde"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "bytes": 730,
+      "sha256": "efdb56f9a5639a3497b4cf6029c547610554827bb59c535d306a6e44aabec3dd"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "bytes": 11839,
+      "sha256": "6c030d93832cf17940dbe1f19fbcaea7c15c9debd6fd4798438368c0f733c8f6"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "bytes": 73035,
+      "sha256": "61f4fc080edb173a9840a8427f1c6cf849e2f6b4fedd068ac8951ee0effe2071"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "bytes": 113669,
+      "sha256": "5eb9f25f25e4371bae4882f1af42134f84323f8f5d530a48795b66fd41a3f0a2"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "bytes": 120278,
+      "sha256": "1f3e83980292eb875e92be5f9ea65a0848951e1fcf1c01b78c8f70250f81d7af"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "bytes": 163566,
+      "sha256": "3051cb576ba226c478f7239c57c6aa140af09e82211c5a7916a88aafa06c16c2"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "bytes": 3511,
+      "sha256": "b492e1a3c97496ba8b34cf7c6c204078e53d9cb1bc69418c0a28fb4faa43218e"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "bytes": 12925,
+      "sha256": "fb8273e201b1f209a00d3151aaa9974e81766ad664a4786a56865c45202165ea"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "bytes": 485,
+      "sha256": "9aa1d7b1165f914e5996adcebaa995944cf75bfc5f8dc2a0bb0b4561675405bf"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "bytes": 15092,
+      "sha256": "31994d7a6c3b656e2d9edccb1db0abb3d3b9945e3187050698030b4b60d26b08"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "bytes": 1953,
+      "sha256": "f0b58b900e3f4c498e6dc665ff186835ba9eefe46ac890328fbd31d4523d0ae2"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/prepare_r4_fabrication.py",
+      "destination": "references/pcb-fabrication-baseline/prepare_r4_fabrication.py",
+      "bytes": 3099,
+      "sha256": "0d26e0eee2009500f5b97b9c6514d724640d19e1c274b11df9fdd45d359411d1"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/README.txt",
+      "destination": "references/pcb-fabrication-baseline/README.txt",
+      "bytes": 2616,
+      "sha256": "0a477d690eb42f5624bc12c3fdd13d310aac9503b0b9beca06350a82a91150e2"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/cam-bottom.png",
+      "destination": "references/pcb-fabrication-baseline/review/cam-bottom.png",
+      "bytes": 100741,
+      "sha256": "f5152bcb424448bd04641a49573cbea413ebc41f219cde4c0fdd2da39397094d"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/cam-bottom.svg",
+      "destination": "references/pcb-fabrication-baseline/review/cam-bottom.svg",
+      "bytes": 193529,
+      "sha256": "184a78e98db8b714d9deac6efc268b848a8ac07f14aeacc09b18bf3e2f59427d"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/cam-top.png",
+      "destination": "references/pcb-fabrication-baseline/review/cam-top.png",
+      "bytes": 109263,
+      "sha256": "318445063a1a5ef9bea519c1151af6d84051053791d2509194fc7ec221c8bed4"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/cam-top.svg",
+      "destination": "references/pcb-fabrication-baseline/review/cam-top.svg",
+      "bytes": 161645,
+      "sha256": "413bae5eb5dae78a6452fff12249bdd9e964bf45c725b3f60b37ca7282a7198f"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/electronics-bom.png",
+      "destination": "references/pcb-fabrication-baseline/review/electronics-bom.png",
+      "bytes": 70810,
+      "sha256": "04c0947a4dd4d7146ecc802e4825d8c95036236896a5e6835e681311bceafa32"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/mechanical-check-1to1.pdf",
+      "destination": "references/pcb-fabrication-baseline/review/mechanical-check-1to1.pdf",
+      "bytes": 51610,
+      "sha256": "df88397b8dfacc00286d67dde893b75be8456f9ef7c8180c6b2b81a9f7be6b72"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/PCB-ASSEMBLY-AND-BRINGUP.txt",
+      "destination": "references/pcb-fabrication-baseline/review/PCB-ASSEMBLY-AND-BRINGUP.txt",
+      "bytes": 3849,
+      "sha256": "112eabb986a0e03ee338881f9964fe5f7dabe9c051abd0e116ec010edf31edcf"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/schematic.pdf",
+      "destination": "references/pcb-fabrication-baseline/review/schematic.pdf",
+      "bytes": 133704,
+      "sha256": "c45d7ce5fac5c9777b243aa9bbcf031faea66e8070b0041ec36e2aabbc7fdc6c"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/review/top-assembly.png",
+      "destination": "references/pcb-fabrication-baseline/review/top-assembly.png",
+      "bytes": 99839,
+      "sha256": "cf2bfe9423614a0a909ae082903fbe8a979397263ccd4d7bf19cd9e684838156"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/Carrier.pretty/Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+      "bytes": 5997,
+      "sha256": "8ede4645625f96394b347930afa926b0cbc3f0e8382ffd60bfa2cb30b34ca618"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/Carrier.pretty/INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+      "bytes": 2105,
+      "sha256": "72d4143eafa0d6b5753d3059b7806af8ce62d5f107c86ce3a457f94291e6e5dd"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/Carrier.pretty/MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+      "bytes": 1984,
+      "sha256": "0c88dddcf4263020aee8a122b766646a94550c44675319a4ec68f908bb223f48"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/Carrier.pretty/R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+      "bytes": 1465,
+      "sha256": "e7c8afc6883686e2038a6a131d354540dd64a2bb10af58db93448f0c38770a49"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/Carrier.pretty/SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+      "bytes": 1380,
+      "sha256": "8ce725547be7cd4916bad58ab71958c4bf9fd0fee8cadca0b6e546d901608fa3"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+      "bytes": 1665,
+      "sha256": "b96327f07f717662b4309a5d62e50fa67f97a583902042c0d2f0975599aba459"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/fp-lib-table",
+      "destination": "references/pcb-fabrication-baseline/source/fp-lib-table",
+      "bytes": 314,
+      "sha256": "ec5fd0255b432cf34ef019b5c3810774faeb9e7f254022e2afe86b7ed3dd4bf4"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_dru",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_dru",
+      "bytes": 123,
+      "sha256": "b46dcb26a4057ccf29bf3d3ee55f0f025343c75d60c4d9755e0509db14c6d1ed"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_pcb",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_pcb",
+      "bytes": 506420,
+      "sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_prl",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_prl",
+      "bytes": 2310,
+      "sha256": "20dc97eab7314648186cffa0a8b78a6d3124598c17133e84d54cf0c5056e9400"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_pro",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_pro",
+      "bytes": 15813,
+      "sha256": "07af4ecf140bb01cadea140e10ed4ade6447a5c42611608bf7aaa03b1b89929f"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_sch",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_sch",
+      "bytes": 69091,
+      "sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/3D_MODEL_NOTES.txt",
+      "destination": "references/pcb-fabrication-baseline/source/models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/detailed-models.json",
+      "destination": "references/pcb-fabrication-baseline/source/models/detailed-models.json",
+      "bytes": 2095,
+      "sha256": "be69dd073dee4d6a2f11ea2054624080f47ecbda269646bf4dbdf24448849bcd"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "destination": "references/pcb-fabrication-baseline/source/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "bytes": 60036,
+      "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "destination": "references/pcb-fabrication-baseline/source/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "bytes": 898775,
+      "sha256": "d8fba5c104beb055cf5f4d7277aac1004ad2c7bd5dacb8e74b682fda1c6de900"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "destination": "references/pcb-fabrication-baseline/source/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "destination": "references/pcb-fabrication-baseline/source/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "bytes": 840190,
+      "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "destination": "references/pcb-fabrication-baseline/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "destination": "references/pcb-fabrication-baseline/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "bytes": 638862,
+      "sha256": "a221a03f0858b28defde118762c12c702e1a0da3b26a3ffc4ee86f0291a65bf5"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "destination": "references/pcb-fabrication-baseline/source/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "bytes": 80021,
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/reference/heltec-v4_3_1-reference.step",
+      "destination": "references/pcb-fabrication-baseline/source/models/reference/heltec-v4_3_1-reference.step",
+      "bytes": 14323941,
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/reference/README.txt",
+      "destination": "references/pcb-fabrication-baseline/source/models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/models/SW_PUSH_6mm_H8mm.step",
+      "destination": "references/pcb-fabrication-baseline/source/models/SW_PUSH_6mm_H8mm.step",
+      "bytes": 179948,
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/sym-lib-table",
+      "destination": "references/pcb-fabrication-baseline/source/sym-lib-table",
+      "bytes": 162,
+      "sha256": "03775047c1467a2ee105d1ab2896426603f77a82cc6921aa5f001b6d8c1cbcc9"
+    },
+    {
+      "source": "revision-r4-battery/pcb-fabrication/source/symbols/Carrier.kicad_sym",
+      "destination": "references/pcb-fabrication-baseline/source/symbols/Carrier.kicad_sym",
+      "bytes": 16987,
+      "sha256": "1ab5a9dcbf0ee84522f605ad9c70b399774a14f113b239f0796edd451534c9f7"
+    },
+    {
+      "source": "detailed-import/source-project/exploded-view.kicad_pcb",
+      "destination": "references/electronics-source/detailed-project/exploded-view.kicad_pcb",
+      "bytes": 508118,
+      "sha256": "d956955eb0f7c070ff93c65a84b37c4785a7126266005aae2f90988bba81d357"
+    },
+    {
+      "source": "detailed-import/source-project/exploded-view.kicad_prl",
+      "destination": "references/electronics-source/detailed-project/exploded-view.kicad_prl",
+      "bytes": 2300,
+      "sha256": "d938530749a6f5d2bea3d56a902d2285ed8bbcd7cb9191ac4c80b9ac620d34ca"
+    },
+    {
+      "source": "detailed-import/source-project/fit-checked-assembled-cutaway.kicad_pcb",
+      "destination": "references/electronics-source/detailed-project/fit-checked-assembled-cutaway.kicad_pcb",
+      "bytes": 510906,
+      "sha256": "4a83a66312da95768b08ab49dd6029dd20734f0740e8ecd0b11b4dc4692a6eb4"
+    },
+    {
+      "source": "detailed-import/source-project/fit-checked-assembled-cutaway.kicad_prl",
+      "destination": "references/electronics-source/detailed-project/fit-checked-assembled-cutaway.kicad_prl",
+      "bytes": 2316,
+      "sha256": "a64d6d3e16758d03ac6058dfa9cc585aaca9b2c98cb1299af3b4d0ee70642c55"
+    },
+    {
+      "source": "detailed-import/source-project/fit-checked-exploded-view.kicad_pcb",
+      "destination": "references/electronics-source/detailed-project/fit-checked-exploded-view.kicad_pcb",
+      "bytes": 510934,
+      "sha256": "110e5ce381b93f30c39e302be64a86612ff3b974b895acffc5792cb2f1392d18"
+    },
+    {
+      "source": "detailed-import/source-project/fit-checked-exploded-view.kicad_prl",
+      "destination": "references/electronics-source/detailed-project/fit-checked-exploded-view.kicad_prl",
+      "bytes": 2312,
+      "sha256": "dfc2eadfa01990741f13e0e55746c5b49caf459e1dd0e0a8e8adb799390ed2be"
+    },
+    {
+      "source": "detailed-import/source-project/heltec_v4_audio_carrier.kicad_pcb",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_pcb",
+      "bytes": 506420,
+      "sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553"
+    },
+    {
+      "source": "detailed-import/source-project/heltec_v4_audio_carrier.kicad_prl",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_prl",
+      "bytes": 2310,
+      "sha256": "20dc97eab7314648186cffa0a8b78a6d3124598c17133e84d54cf0c5056e9400"
+    },
+    {
+      "source": "detailed-import/source-project/heltec_v4_audio_carrier.kicad_pro",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_pro",
+      "bytes": 15813,
+      "sha256": "07af4ecf140bb01cadea140e10ed4ade6447a5c42611608bf7aaa03b1b89929f"
+    },
+    {
+      "source": "detailed-import/source-project/models/3D_MODEL_NOTES.txt",
+      "destination": "references/electronics-source/detailed-project/models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "source": "detailed-import/source-project/models/detailed-models.json",
+      "destination": "references/electronics-source/detailed-project/models/detailed-models.json",
+      "bytes": 2095,
+      "sha256": "be69dd073dee4d6a2f11ea2054624080f47ecbda269646bf4dbdf24448849bcd"
+    },
+    {
+      "source": "detailed-import/source-project/models/enclosure-presentation/enclosure-base.wrl",
+      "destination": "references/electronics-source/detailed-project/models/enclosure-presentation/enclosure-base.wrl",
+      "bytes": 79528,
+      "sha256": "58ebde9745d92c4a420dce208a70157e3e8b6f7de3c4f7d72f811dd9e2192302"
+    },
+    {
+      "source": "detailed-import/source-project/models/enclosure-presentation/enclosure-lid.wrl",
+      "destination": "references/electronics-source/detailed-project/models/enclosure-presentation/enclosure-lid.wrl",
+      "bytes": 73290,
+      "sha256": "bb1b933f307a95147c6ee9237e49af3c324884f27fad85431f08a798fed0cf9d"
+    },
+    {
+      "source": "detailed-import/source-project/models/enclosure-presentation/ptt-plunger.wrl",
+      "destination": "references/electronics-source/detailed-project/models/enclosure-presentation/ptt-plunger.wrl",
+      "bytes": 13834,
+      "sha256": "344c54c1e0069c3053c650a98ea66f1befc2b8ff9a22b71a3f408d6b9275070e"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_base.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_base.wrl",
+      "bytes": 282540,
+      "sha256": "06affb87d550021efc83b4b0dce8b236bcd067ed972801032ac228a8305f439d"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_lid.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_lid.wrl",
+      "bytes": 308697,
+      "sha256": "f2d59862b1b5805f82e91b98c203a5b77ce7ec20164da854dc049a0e256b5024"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_nut1.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_nut1.wrl",
+      "bytes": 59947,
+      "sha256": "5a780ee318e0ac19690f2a673afbaa10a77682cfdeb317f7b2b6dda24052afcc"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_nut2.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_nut2.wrl",
+      "bytes": 59947,
+      "sha256": "78d55e2b35786346653aa1755f08c9cbcbcbab71b2e03c19364ee260d63817e8"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_ptt.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_ptt.wrl",
+      "bytes": 43365,
+      "sha256": "84fe0d8c513251e7943c9e33ba75c2cdd945c7fe3f5f11781e3b072eef45bda0"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_screw1.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_screw1.wrl",
+      "bytes": 80641,
+      "sha256": "8a75e0194937c193675158044f10ad648d0ac9f879f84a1138251307e9f73956"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_screw2.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_screw2.wrl",
+      "bytes": 80641,
+      "sha256": "7ac42ce3ec5c56e1baeaa2bb88db6b5d0bae22fb74459cb64505a83cbef56664"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-cutaway/cut_stop.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-cutaway/cut_stop.wrl",
+      "bytes": 87693,
+      "sha256": "ba97417f42d0dbade55b71f95d01005e9eae72ae9a4945b443dfa12e1a689912"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_base.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_base.wrl",
+      "bytes": 128736,
+      "sha256": "51dfda0e94728b264ac8e2b8815caa25017dcfed2c233703f34a3acab96460ac"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_lid.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_lid.wrl",
+      "bytes": 106050,
+      "sha256": "17ba83f43e138fd849fe788c1f7ec7af535dab15a92a3930334881ab7a6b1210"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_nut1.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_nut1.wrl",
+      "bytes": 157072,
+      "sha256": "12fe9078856a1eec90a641b6b57ed998fb628d195214c8eae3983f01143a1fe9"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_nut2.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_nut2.wrl",
+      "bytes": 157072,
+      "sha256": "1e78ae006605b0c928d2e657c4229b1f917bb328ede1838bf61161d412100647"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_ptt.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_ptt.wrl",
+      "bytes": 20497,
+      "sha256": "33e885a8a8c90a557b54ddeb03527fe12b93f6f6966968dafb81f75402a96b93"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_screw1.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_screw1.wrl",
+      "bytes": 311318,
+      "sha256": "f2f40db41d0838c2d2efe97860bb7f5febbbd4e2896591e401114677d3ff97ac"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_screw2.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_screw2.wrl",
+      "bytes": 311318,
+      "sha256": "2436acae7a130423699376c552c2e203c47568b8a3a844ac5e16c0c76245aa2a"
+    },
+    {
+      "source": "detailed-import/source-project/models/fit-checked-presentation/mech_stop.wrl",
+      "destination": "references/electronics-source/detailed-project/models/fit-checked-presentation/mech_stop.wrl",
+      "bytes": 39161,
+      "sha256": "6403f99438c10788de26ab41db595510cd74febe5a8718a1f19d1f7161a044ea"
+    },
+    {
+      "source": "detailed-import/source-project/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.step",
+      "destination": "references/electronics-source/detailed-project/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.step",
+      "bytes": 878215,
+      "sha256": "e6616a11ec9a1f6af563856cd3115ca33ea35c89da0fe49d7e6a6bb51b29a434"
+    },
+    {
+      "source": "detailed-import/source-project/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "destination": "references/electronics-source/detailed-project/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "bytes": 60036,
+      "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122"
+    },
+    {
+      "source": "detailed-import/source-project/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "bytes": 898775,
+      "sha256": "d8fba5c104beb055cf5f4d7277aac1004ad2c7bd5dacb8e74b682fda1c6de900"
+    },
+    {
+      "source": "detailed-import/source-project/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "source": "detailed-import/source-project/models/INMP441_ROUND_DETAILED_VISUAL.step",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.step",
+      "bytes": 10014519,
+      "sha256": "369b2acc978028aa121624b8247864a977c53d792a3ce6e567b1a0532a09f6bc"
+    },
+    {
+      "source": "detailed-import/source-project/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "bytes": 840190,
+      "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8"
+    },
+    {
+      "source": "detailed-import/source-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "destination": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "source": "detailed-import/source-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.step",
+      "destination": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.step",
+      "bytes": 7318822,
+      "sha256": "35f82b990a3efc9a7f6ac26f87376b3ebf1960856609065ff261dcd228bfd9ea"
+    },
+    {
+      "source": "detailed-import/source-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "destination": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "bytes": 638862,
+      "sha256": "a221a03f0858b28defde118762c12c702e1a0da3b26a3ffc4ee86f0291a65bf5"
+    },
+    {
+      "source": "detailed-import/source-project/models/R_Axial_Carbon_1k_0p5W_P15p24.step",
+      "destination": "references/electronics-source/detailed-project/models/R_Axial_Carbon_1k_0p5W_P15p24.step",
+      "bytes": 1595953,
+      "sha256": "b555427670a6aeae1ac6426998fe9c1f3ad794219d30f46c6ce48b60ad74d0d2"
+    },
+    {
+      "source": "detailed-import/source-project/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "destination": "references/electronics-source/detailed-project/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "bytes": 80021,
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0"
+    },
+    {
+      "source": "detailed-import/source-project/models/reference/heltec-v4_3_1-reference.step",
+      "destination": "references/electronics-source/detailed-project/models/reference/heltec-v4_3_1-reference.step",
+      "bytes": 14323941,
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df"
+    },
+    {
+      "source": "detailed-import/source-project/models/reference/README.txt",
+      "destination": "references/electronics-source/detailed-project/models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "source": "detailed-import/source-project/models/SW_PUSH_6mm_H8mm.step",
+      "destination": "references/electronics-source/detailed-project/models/SW_PUSH_6mm_H8mm.step",
+      "bytes": 179948,
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969"
+    },
+    {
+      "source": "detailed-import/source-project/vrml-step-conversion-audit.json",
+      "destination": "references/electronics-source/detailed-project/vrml-step-conversion-audit.json",
+      "bytes": 8276,
+      "sha256": "83ca184a4bd8a7053be1e0c61d101343e7b0662c8a369badc2bac112f08bbc9f"
+    },
+    {
+      "source": "final-design/pcb-fabrication/bom/C5-assembly-source.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-assembly-source.csv",
+      "bytes": 2620,
+      "sha256": "4f656331fd5b32bf7b16ce74216159e25319225f64a753d5dbdad1af5da86eae"
+    },
+    {
+      "source": "final-design/pcb-fabrication/bom/C5-CAD-inventory-source.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-CAD-inventory-source.csv",
+      "bytes": 6097,
+      "sha256": "2afd54f7e1e711753dbf6f84366796552d84f6726bb122c14b6f597dd9a792da"
+    },
+    {
+      "source": "final-design/pcb-fabrication/bom/C5-Electronics-BOM.csv",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-Electronics-BOM.csv",
+      "bytes": 1661,
+      "sha256": "d9c6b8bfd8f7346e591d668c3ffa91c9b155ad8ea57dec4150d0a38e77c5d36a"
+    },
+    {
+      "source": "final-design/pcb-fabrication/bom/C5-Electronics-BOM.xlsx",
+      "destination": "references/pcb-fabrication-baseline/bom/C5-Electronics-BOM.xlsx",
+      "bytes": 5720,
+      "sha256": "3930b937b8256a0cbb8b50c70f99e5aff27fb86d7df3ae9a36b8cc656f8b3f7f"
+    },
+    {
+      "source": "final-design/pcb-fabrication/bom/electronics-bom.json",
+      "destination": "references/pcb-fabrication-baseline/bom/electronics-bom.json",
+      "bytes": 3054,
+      "sha256": "7a24ebc15fe8ce65d9827ab55c76d7653be99e5b01198feadefb29ef864cb605"
+    },
+    {
+      "source": "final-design/pcb-fabrication/build_electronics_bom.mjs",
+      "destination": "references/electronics-source/original-fabrication/build_electronics_bom.mjs",
+      "bytes": 5031,
+      "sha256": "1d564d88c9f6b31e71fb0301734c97b2bcc26c42ad9812ee6a4c40929cf2baf4"
+    },
+    {
+      "source": "final-design/pcb-fabrication/build_fabrication.py",
+      "destination": "references/electronics-source/original-fabrication/build_fabrication.py",
+      "bytes": 2824,
+      "sha256": "173c60138e4cf5c98a1e120430b8a286b8839249642a1b49c17aea8bd2a696ad"
+    },
+    {
+      "source": "final-design/pcb-fabrication/C5-PCB-Gerbers-and-Drills.zip",
+      "destination": "references/pcb-fabrication-baseline/C5-PCB-Gerbers-and-Drills.zip",
+      "bytes": 143463,
+      "sha256": "bdd3df7fcdd190e3a5ee7a3594744575df04f48f2e92f50dcc8cb890c87c00f7"
+    },
+    {
+      "source": "final-design/pcb-fabrication/check_native_board.py",
+      "destination": "references/electronics-source/original-fabrication/check_native_board.py",
+      "bytes": 1622,
+      "sha256": "7693bedf67fcda3fdb3c55eeebf04ada57e16834c78bca82474e790291c0a0e1"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/board-geometric-audit.json",
+      "destination": "references/pcb-fabrication-baseline/checks/board-geometric-audit.json",
+      "bytes": 15807,
+      "sha256": "ce110db2b7708d665170c10efb76375214796d637fce595fbe659d1001b5ef1a"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/bom-formula-scan.json",
+      "destination": "references/pcb-fabrication-baseline/checks/bom-formula-scan.json",
+      "bytes": 60,
+      "sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/cam-validation.json",
+      "destination": "references/pcb-fabrication-baseline/checks/cam-validation.json",
+      "bytes": 3570,
+      "sha256": "083471071960010d7d4ce80ddd7a4b6ec30fcfd30b6bdd7f09d570025bfb3d98"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/cli-log.json",
+      "destination": "references/pcb-fabrication-baseline/checks/cli-log.json",
+      "bytes": 6437,
+      "sha256": "c22eaddd1573d4c34d9b3ba8603abe94ebe7fbc4b98670c2293678f1c401af56"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/drc.json",
+      "destination": "references/pcb-fabrication-baseline/checks/drc.json",
+      "bytes": 1138,
+      "sha256": "d34a5f1537c440ff0d0691511e005219a78108fd5bb000d45b23a01a065576eb"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/drill-report.txt",
+      "destination": "references/pcb-fabrication-baseline/checks/drill-report.txt",
+      "bytes": 885,
+      "sha256": "b688375a1b935c84af3026aab76977234a520b7a8d8e52d0379bc4b3a48550f0"
+    },
+    {
+      "source": "final-design/pcb-fabrication/checks/erc.json",
+      "destination": "references/pcb-fabrication-baseline/checks/erc.json",
+      "bytes": 1054,
+      "sha256": "d6eb2e0e0d5382e8b64d8e89b2837d3759c9606589d037fc03731fb99d061837"
+    },
+    {
+      "source": "final-design/pcb-fabrication/finalize_manifest.py",
+      "destination": "references/electronics-source/original-fabrication/finalize_manifest.py",
+      "bytes": 2237,
+      "sha256": "38368948e6ebe5aa6a3b7c2e4f0091e75aec5b8524bc79507587f1824a164d33"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "bytes": 125670,
+      "sha256": "23e753c6eb2fcfdf7fc20fbfad95ff0cc2418ac9e823537a414c2d5660c3068d"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "bytes": 61218,
+      "sha256": "e70652c48778b10ebf84cc317a1c9ddd9ca97b3c5accee49b42a2dfbb697c3d1"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "bytes": 68222,
+      "sha256": "1c7f1145692e7e177be570a969c036c22d9983803aec9b70690ea065e5299fde"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "bytes": 730,
+      "sha256": "efdb56f9a5639a3497b4cf6029c547610554827bb59c535d306a6e44aabec3dd"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "bytes": 11839,
+      "sha256": "6c030d93832cf17940dbe1f19fbcaea7c15c9debd6fd4798438368c0f733c8f6"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "bytes": 73035,
+      "sha256": "61f4fc080edb173a9840a8427f1c6cf849e2f6b4fedd068ac8951ee0effe2071"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "bytes": 113669,
+      "sha256": "5eb9f25f25e4371bae4882f1af42134f84323f8f5d530a48795b66fd41a3f0a2"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "bytes": 120278,
+      "sha256": "1f3e83980292eb875e92be5f9ea65a0848951e1fcf1c01b78c8f70250f81d7af"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "bytes": 163566,
+      "sha256": "3051cb576ba226c478f7239c57c6aa140af09e82211c5a7916a88aafa06c16c2"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "bytes": 3511,
+      "sha256": "b492e1a3c97496ba8b34cf7c6c204078e53d9cb1bc69418c0a28fb4faa43218e"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "bytes": 12925,
+      "sha256": "fb8273e201b1f209a00d3151aaa9974e81766ad664a4786a56865c45202165ea"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "bytes": 485,
+      "sha256": "9aa1d7b1165f914e5996adcebaa995944cf75bfc5f8dc2a0bb0b4561675405bf"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "bytes": 15092,
+      "sha256": "31994d7a6c3b656e2d9edccb1db0abb3d3b9945e3187050698030b4b60d26b08"
+    },
+    {
+      "source": "final-design/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "destination": "references/pcb-fabrication-baseline/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "bytes": 1953,
+      "sha256": "f0b58b900e3f4c498e6dc665ff186835ba9eefe46ac890328fbd31d4523d0ae2"
+    },
+    {
+      "source": "final-design/pcb-fabrication/package-manifest.json",
+      "destination": "references/pcb-fabrication-baseline/baseline-package-manifest.json",
+      "bytes": 13131,
+      "sha256": "98b5094baa913fc095b7b5b38c6bbb3fb5cd1c9833519c302290945441cbebc4"
+    },
+    {
+      "source": "final-design/pcb-fabrication/README.txt",
+      "destination": "references/pcb-fabrication-baseline/BASELINE-C5-README.txt",
+      "bytes": 3943,
+      "sha256": "67aa31758f53aa5eb78d8b537014f17ffabd93ec7f43f9aa9a80f9f1b70a303b"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/cam-bottom.png",
+      "destination": "references/pcb-fabrication-baseline/review/cam-bottom.png",
+      "bytes": 100741,
+      "sha256": "f5152bcb424448bd04641a49573cbea413ebc41f219cde4c0fdd2da39397094d"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/cam-bottom.svg",
+      "destination": "references/pcb-fabrication-baseline/review/cam-bottom.svg",
+      "bytes": 193529,
+      "sha256": "184a78e98db8b714d9deac6efc268b848a8ac07f14aeacc09b18bf3e2f59427d"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/cam-top.png",
+      "destination": "references/pcb-fabrication-baseline/review/cam-top.png",
+      "bytes": 109263,
+      "sha256": "318445063a1a5ef9bea519c1151af6d84051053791d2509194fc7ec221c8bed4"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/cam-top.svg",
+      "destination": "references/pcb-fabrication-baseline/review/cam-top.svg",
+      "bytes": 161645,
+      "sha256": "413bae5eb5dae78a6452fff12249bdd9e964bf45c725b3f60b37ca7282a7198f"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/electronics-bom.png",
+      "destination": "references/pcb-fabrication-baseline/review/electronics-bom.png",
+      "bytes": 70810,
+      "sha256": "04c0947a4dd4d7146ecc802e4825d8c95036236896a5e6835e681311bceafa32"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/mechanical-check-1to1.pdf",
+      "destination": "references/pcb-fabrication-baseline/review/mechanical-check-1to1.pdf",
+      "bytes": 51610,
+      "sha256": "df88397b8dfacc00286d67dde893b75be8456f9ef7c8180c6b2b81a9f7be6b72"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/PCB-ASSEMBLY-AND-BRINGUP.txt",
+      "destination": "references/pcb-fabrication-baseline/review/PCB-ASSEMBLY-AND-BRINGUP.txt",
+      "bytes": 3849,
+      "sha256": "112eabb986a0e03ee338881f9964fe5f7dabe9c051abd0e116ec010edf31edcf"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/schematic.pdf",
+      "destination": "references/pcb-fabrication-baseline/review/schematic.pdf",
+      "bytes": 133704,
+      "sha256": "c45d7ce5fac5c9777b243aa9bbcf031faea66e8070b0041ec36e2aabbc7fdc6c"
+    },
+    {
+      "source": "final-design/pcb-fabrication/review/top-assembly.png",
+      "destination": "references/pcb-fabrication-baseline/review/top-assembly.png",
+      "bytes": 99839,
+      "sha256": "cf2bfe9423614a0a909ae082903fbe8a979397263ccd4d7bf19cd9e684838156"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/Carrier.pretty/Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/Heltec_V4_R2_2x18_PROVISIONAL.kicad_mod",
+      "bytes": 5997,
+      "sha256": "8ede4645625f96394b347930afa926b0cbc3f0e8382ffd60bfa2cb30b34ca618"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/Carrier.pretty/INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/INMP441_ROUND_2p54x7p62_REFERENCE.kicad_mod",
+      "bytes": 2105,
+      "sha256": "72d4143eafa0d6b5753d3059b7806af8ce62d5f107c86ce3a457f94291e6e5dd"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/Carrier.pretty/MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/MAX98357A_H7_2p54_PROVISIONAL.kicad_mod",
+      "bytes": 1984,
+      "sha256": "0c88dddcf4263020aee8a122b766646a94550c44675319a4ec68f908bb223f48"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/Carrier.pretty/R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/R_Axial_Carbon_0p5W_P15p24_Horizontal.kicad_mod",
+      "bytes": 1465,
+      "sha256": "e7c8afc6883686e2038a6a131d354540dd64a2bb10af58db93448f0c38770a49"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/Carrier.pretty/SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/Carrier.pretty/SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING.kicad_mod",
+      "bytes": 1380,
+      "sha256": "8ce725547be7cd4916bad58ab71958c4bf9fd0fee8cadca0b6e546d901608fa3"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+      "destination": "references/pcb-fabrication-baseline/source/footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+      "bytes": 1665,
+      "sha256": "b96327f07f717662b4309a5d62e50fa67f97a583902042c0d2f0975599aba459"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/fp-lib-table",
+      "destination": "references/pcb-fabrication-baseline/source/fp-lib-table",
+      "bytes": 314,
+      "sha256": "ec5fd0255b432cf34ef019b5c3810774faeb9e7f254022e2afe86b7ed3dd4bf4"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_dru",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_dru",
+      "bytes": 123,
+      "sha256": "b46dcb26a4057ccf29bf3d3ee55f0f025343c75d60c4d9755e0509db14c6d1ed"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_pcb",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_pcb",
+      "bytes": 506420,
+      "sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_prl",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_prl",
+      "bytes": 2310,
+      "sha256": "20dc97eab7314648186cffa0a8b78a6d3124598c17133e84d54cf0c5056e9400"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_pro",
+      "destination": "references/electronics-source/detailed-project/heltec_v4_audio_carrier.kicad_pro",
+      "bytes": 15813,
+      "sha256": "07af4ecf140bb01cadea140e10ed4ade6447a5c42611608bf7aaa03b1b89929f"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/heltec_v4_audio_carrier.kicad_sch",
+      "destination": "references/pcb-fabrication-baseline/source/heltec_v4_audio_carrier.kicad_sch",
+      "bytes": 69091,
+      "sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/3D_MODEL_NOTES.txt",
+      "destination": "references/electronics-source/detailed-project/models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/detailed-models.json",
+      "destination": "references/electronics-source/detailed-project/models/detailed-models.json",
+      "bytes": 2095,
+      "sha256": "be69dd073dee4d6a2f11ea2054624080f47ecbda269646bf4dbdf24448849bcd"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "destination": "references/electronics-source/detailed-project/models/Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "bytes": 60036,
+      "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.mesh.json",
+      "bytes": 898775,
+      "sha256": "d8fba5c104beb055cf5f4d7277aac1004ad2c7bd5dacb8e74b682fda1c6de900"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "destination": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "bytes": 840190,
+      "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "destination": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "destination": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "bytes": 638862,
+      "sha256": "a221a03f0858b28defde118762c12c702e1a0da3b26a3ffc4ee86f0291a65bf5"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "destination": "references/electronics-source/detailed-project/models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "bytes": 80021,
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/reference/heltec-v4_3_1-reference.step",
+      "destination": "references/electronics-source/detailed-project/models/reference/heltec-v4_3_1-reference.step",
+      "bytes": 14323941,
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/reference/README.txt",
+      "destination": "references/electronics-source/detailed-project/models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/models/SW_PUSH_6mm_H8mm.step",
+      "destination": "references/electronics-source/detailed-project/models/SW_PUSH_6mm_H8mm.step",
+      "bytes": 179948,
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/sym-lib-table",
+      "destination": "references/pcb-fabrication-baseline/source/sym-lib-table",
+      "bytes": 162,
+      "sha256": "03775047c1467a2ee105d1ab2896426603f77a82cc6921aa5f001b6d8c1cbcc9"
+    },
+    {
+      "source": "final-design/pcb-fabrication/source/symbols/Carrier.kicad_sym",
+      "destination": "references/pcb-fabrication-baseline/source/symbols/Carrier.kicad_sym",
+      "bytes": 16987,
+      "sha256": "1ab5a9dcbf0ee84522f605ad9c70b399774a14f113b239f0796edd451534c9f7"
+    },
+    {
+      "source": "final-design/pcb-fabrication/verify_cam.py",
+      "destination": "references/electronics-source/original-fabrication/verify_cam.py",
+      "bytes": 4718,
+      "sha256": "9bafca3b31eab3c4cc83035dc5afd84a9002a2ef7ac9d73c0ee8d19c30b7b233"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/BASELINE-R4-FABRICATION-VALIDATION.json",
+      "destination": "pcb-fabrication/BASELINE-R4-FABRICATION-VALIDATION.json",
+      "bytes": 12126,
+      "sha256": "f69bc6666ef375289d487c3512a0ab2890c156bc6d12e3927699dc4a0b624991"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/bom/C5-Electronics-BOM.csv",
+      "destination": "pcb-fabrication/bom/C5-Electronics-BOM.csv",
+      "bytes": 1661,
+      "sha256": "d9c6b8bfd8f7346e591d668c3ffa91c9b155ad8ea57dec4150d0a38e77c5d36a"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/bom/C5-Electronics-BOM.xlsx",
+      "destination": "pcb-fabrication/bom/C5-Electronics-BOM.xlsx",
+      "bytes": 5720,
+      "sha256": "3930b937b8256a0cbb8b50c70f99e5aff27fb86d7df3ae9a36b8cc656f8b3f7f"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/C5-PCB-Gerbers-and-Drills.zip",
+      "destination": "pcb-fabrication/C5-PCB-Gerbers-and-Drills.zip",
+      "bytes": 143463,
+      "sha256": "bdd3df7fcdd190e3a5ee7a3594744575df04f48f2e92f50dcc8cb890c87c00f7"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Cu.gbl",
+      "bytes": 125670,
+      "sha256": "23e753c6eb2fcfdf7fc20fbfad95ff0cc2418ac9e823537a414c2d5660c3068d"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Mask.gbs",
+      "bytes": 61218,
+      "sha256": "e70652c48778b10ebf84cc317a1c9ddd9ca97b3c5accee49b42a2dfbb697c3d1"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "bytes": 68222,
+      "sha256": "1c7f1145692e7e177be570a969c036c22d9983803aec9b70690ea065e5299fde"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "bytes": 730,
+      "sha256": "efdb56f9a5639a3497b4cf6029c547610554827bb59c535d306a6e44aabec3dd"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Cu.gtl",
+      "bytes": 11839,
+      "sha256": "6c030d93832cf17940dbe1f19fbcaea7c15c9debd6fd4798438368c0f733c8f6"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Mask.gts",
+      "bytes": 73035,
+      "sha256": "61f4fc080edb173a9840a8427f1c6cf849e2f6b4fedd068ac8951ee0effe2071"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "bytes": 113669,
+      "sha256": "5eb9f25f25e4371bae4882f1af42134f84323f8f5d530a48795b66fd41a3f0a2"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-In1_Cu.g1",
+      "bytes": 120278,
+      "sha256": "1f3e83980292eb875e92be5f9ea65a0848951e1fcf1c01b78c8f70250f81d7af"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-In2_Cu.g2",
+      "bytes": 163566,
+      "sha256": "3051cb576ba226c478f7239c57c6aa140af09e82211c5a7916a88aafa06c16c2"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-job.gbrjob",
+      "bytes": 3511,
+      "sha256": "b492e1a3c97496ba8b34cf7c6c204078e53d9cb1bc69418c0a28fb4faa43218e"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH-drl_map.pdf",
+      "bytes": 12925,
+      "sha256": "fb8273e201b1f209a00d3151aaa9974e81766ad664a4786a56865c45202165ea"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-NPTH.drl",
+      "bytes": 485,
+      "sha256": "9aa1d7b1165f914e5996adcebaa995944cf75bfc5f8dc2a0bb0b4561675405bf"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH-drl_map.pdf",
+      "bytes": 15092,
+      "sha256": "31994d7a6c3b656e2d9edccb1db0abb3d3b9945e3187050698030b4b60d26b08"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "destination": "pcb-fabrication/gerbers/heltec_v4_audio_carrier-PTH.drl",
+      "bytes": 1953,
+      "sha256": "f0b58b900e3f4c498e6dc665ff186835ba9eefe46ac890328fbd31d4523d0ae2"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/R7-PRESERVED-PCB-MANIFEST.json",
+      "destination": "pcb-fabrication/R7-PRESERVED-PCB-MANIFEST.json",
+      "bytes": 7447,
+      "sha256": "1c24954607884604144398b96a7a2e2e5233753e49e45a5dbe7d01f46592a4db"
+    },
+    {
+      "source": "revision-r7-enclosure/pcb-fabrication/README.txt",
+      "destination": "pcb-fabrication/README.txt",
+      "bytes": 2110,
+      "sha256": "f18e45561c93846b35a5ea0ac2175edf74dd8be08ca03d7f25cac13600620917"
+    },
+    {
+      "source": "final-design/views/presentation/assembled.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/assembled.kicad_pcb",
+      "bytes": 515513,
+      "sha256": "717a5db6f57d111f1ae121ae12f4c945f200726d14960599f7690f6b1f5f87fd"
+    },
+    {
+      "source": "final-design/views/presentation/cutaway.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/cutaway.kicad_pcb",
+      "bytes": 511045,
+      "sha256": "6dc04ff4974a31a6275b31eaa84bcc0456e660c0380ddd422f7154913d4d0388"
+    },
+    {
+      "source": "final-design/views/presentation/exploded.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/exploded.kicad_pcb",
+      "bytes": 515509,
+      "sha256": "73366903e6b5292f3114c536d5094af090bb72bcba6fdaac12847ae5e63fdfe4"
+    },
+    {
+      "source": "final-design/views/presentation/top-open.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/top-open.kicad_pcb",
+      "bytes": 509391,
+      "sha256": "f0d91bbc419affec44a42c68e331e9bcfa02944325843e4d2ffa5d7255bafd47"
+    },
+    {
+      "source": "revision-r4-battery/documentation/presentation/battery-assembled.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/battery-assembled.kicad_pcb",
+      "bytes": 512467,
+      "sha256": "d81905a3d860dd9655597d410d4bf21b2f520e8a06f90a56c54cd7e639574f65"
+    },
+    {
+      "source": "revision-r4-battery/documentation/presentation/battery-cutaway.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/battery-cutaway.kicad_pcb",
+      "bytes": 510767,
+      "sha256": "c0a15afa02534efe346289a2fd78a608ae1d12a662b8bf4ff25527450c28cc28"
+    },
+    {
+      "source": "revision-r4-battery/documentation/presentation/battery-exploded.kicad_pcb",
+      "destination": "references/electronics-source/presentation-inputs/battery-exploded.kicad_pcb",
+      "bytes": 510688,
+      "sha256": "49da46827d5c085153130c1d1f9bd79d93fda8e8115932791f3ad2a7379dbbd3"
+    },
+    {
+      "source": "detailed-import/C5-detailed-assembly.step",
+      "destination": "references/components/C5-detailed-assembly.step",
+      "bytes": 76201161,
+      "sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19"
+    },
+    {
+      "source": "detailed-import/board-only.step",
+      "destination": "references/components/board-only.step",
+      "bytes": 1745308,
+      "sha256": "d622e27bd7aeff9b5b07a8151cf9fd1445a693803ab4d45a653a8e9cf7318d83"
+    },
+    {
+      "source": "detailed-import/READ-ME.txt",
+      "destination": "references/components/provenance/READ-ME.txt",
+      "bytes": 3345,
+      "sha256": "112595df5b542a37c0ce9b5962342d2badb552c4bb308afca782415f789d3a7c"
+    },
+    {
+      "source": "detailed-import/MIC-SCALE-CORRECTION.txt",
+      "destination": "references/components/provenance/MIC-SCALE-CORRECTION.txt",
+      "bytes": 1485,
+      "sha256": "cc6280734371ff06edaa09085f5e6f52389f2bf53dae76e39361b7d1cf0c8309"
+    },
+    {
+      "source": "detailed-import/corrected-assembly-check.json",
+      "destination": "references/components/provenance/corrected-assembly-check.json",
+      "bytes": 873,
+      "sha256": "9b0dfccc8bad813385c4cfb43a768966c65213925e77f9b6c23685a3213e19e8"
+    },
+    {
+      "source": "detailed-import/native-import-object-audit.json",
+      "destination": "references/components/provenance/native-import-object-audit.json",
+      "bytes": 1072056,
+      "sha256": "032b2fe98ebbaf2e782fd5e4ea7809bef6d4d21025c66595422e8e879a2bd9a8"
+    },
+    {
+      "source": "detailed-import/detailed-export-sha256.json",
+      "destination": "references/components/provenance/detailed-export-sha256.json",
+      "bytes": 467,
+      "sha256": "5f6df5f561a64604aecfc7799d6514a17d4df70c22433b06932e8e902d0fdeb0"
+    },
+    {
+      "source": "detailed-import/native-microphone-check.json",
+      "destination": "references/components/provenance/native-microphone-check.json",
+      "bytes": 182,
+      "sha256": "c0896530f755fd7d9a431168b30d85e41ef2a1737aa51df3833ab6a670f00b51"
+    }
+  ]
+}

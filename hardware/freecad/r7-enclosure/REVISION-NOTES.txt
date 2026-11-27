@@ -1,0 +1,66 @@
+C5 R7 - ENCLOSURE IMPROVEMENTS
+2026-11-25
+
+This revision implements enclosure-only changes after the R6 design review.
+The PCB is already in fabrication. Its geometry, component placement, mounting
+datums, Gerbers, drills and firmware remain the existing baseline. The integrity
+guard checks 367 protected files for both byte and membership changes.
+
+CHANGES
+- Reinforced speaker retainer: nut-bearing roof increased from 0.8 to 1.4 mm;
+  retainer thickness increased from 2.6 to 3.2 mm. Speaker position and the
+  original hard-stop plane are retained.
+- Local OLED short-edge bands and corner returns strengthen the sampled thin
+  roof regions while preserving the 0.50 mm nominal glass-to-rim gap, aperture,
+  display position and main long-edge outer face.
+- Noncontact microphone shroud directs the existing acoustic path. The modeled
+  minimum clearance to the actual assigned microphone features is 0.70 mm.
+- Separate loose cable-tie guides retain the speaker pair and coax position.
+  Conservative tie-head references and local lip reliefs were checked.
+- Removable SMA anti-rotation key fits a guided pocket and is retained by the
+  closed lid. The existing round bulkhead bore and seating wall are preserved.
+- R10 reference coax route provides a practical routing target with a 132.165 mm
+  centerline. Actual cable length, slack and bend limits must be checked.
+- Optional fit coupon supports first-article insert, nut and plunger checks.
+
+CONFIGURATION
+Seven installed printed parts: base, lid, battery cover, PTT plunger, PTT stop
+cup, speaker retainer and SMA key. The optional fit coupon is an eighth part and
+is not installed. The battery cover, PTT plunger and PTT cup geometry is retained
+from R6. No electrical redesign is included.
+
+FILES AND USE
+cad/ contains the native parametric FCStd and neutral STEP after local approval.
+printing/ contains the approved multipart 3MF master and individual STL/3MF files.
+craftcloud/upload/ contains one part per file, translated to a nonnegative origin.
+craftcloud/optional-coupon/ keeps the coupon separate from the seven-part order.
+documentation/ contains the dimensioned change drawing, hardware BOM, assembly
+sequence and first-article inspection record.
+interactive/ contains the assembled, exploded and cutaway inspection viewer.
+audit/ contains geometry, unchanged-PCB and file-validation evidence.
+
+Upload only one format per part, not both STL and 3MF, at 100% scale in mm.
+The combined master and STEP include the offset coupon; do not submit them as a
+single fused print. The Craftcloud directory is the intended upload set.
+No order, replacement PCB release, machine G-code or firmware update is performed
+by this enclosure revision. The user separately authorized publishing the
+validated FreeCAD development archive and project-adoption documentation.
+
+LIMITS TO RESOLVE ON THE FIRST ARTICLE
+The SMA reference rear body is an unmeasured 8 mm across-flats assumption and
+the nominal key gap is 8.4 mm. Measure the owned fixed rear body and adjust the
+parametric key if necessary; a mounting-nut measurement is not equivalent.
+The 0.25 mm PTT switch depression remains provisional until the actual switch is
+measured. Inspect the owned OLED stack, battery/USB plug combination, speaker
+frame and service slack before closing the enclosure. The detailed inspection
+record identifies these interfaces. Geometry checks do not establish impact,
+torque, ingress, thermal or acoustic performance ratings.
+
+The amplifier remains USB powered. The previously recorded battery-only
+enable/firmware commissioning issue is outside this enclosure-only revision.
+
+RELEASE STATUS
+The package builder refuses to produce the handoff ZIP until approved native
+exports, exact source comparisons, print-file validation, documentation review,
+saved-native viewer checks and the protected-file guard all pass. A draft viewer
+or candidate BREP alone is not a released manufacturing file.

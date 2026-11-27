@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "scope": "Derived candidate geometry and in-memory topology only; not a manufacturing export or physical fit qualification.",
+  "native_source_modified": false,
+  "optional_not_installed": true,
+  "display_translation_mm": [
+    100,
+    0,
+    0
+  ],
+  "plan_sha256": "20dccfd405a3abe340bd42165154d8d06365044bea4b4855fa795b8306e29207",
+  "brep_sha256": "815eb7a69b35e4923940a07874770e0a1589f247ba80a94c85e7cd3cd4ecd8b8",
+  "volume_mm3": 4882.630268459653,
+  "bounds_mm": [
+    100.0,
+    -1.1102230246251565e-16,
+    -1.1102230246251565e-16,
+    150.0,
+    32.0,
+    6.0
+  ],
+  "valid": true,
+  "closed": true,
+  "solids": 1,
+  "mesh": {
+    "triangles": 2436,
+    "vertices": 1212,
+    "bad_edges": 0,
+    "inconsistent_winding": 0,
+    "degenerate": 0,
+    "components": 1
+  },
+  "dimensions": {
+    "plate": [
+      50,
+      32,
+      3.2
+    ],
+    "insert_pilots": [
+      4.4,
+      4.5
+    ],
+    "insert_pilot_depth": 5,
+    "insert_floor": 1,
+    "boss_outer_diameter": 7,
+    "guide_bore": 8.8,
+    "guide_depth": 3.6,
+    "hex_pockets_AF": [
+      4.2,
+      4.3,
+      4.4
+    ],
+    "hex_depth": 1.8,
+    "nut_bearing_roof": 1.4,
+    "screw_bores": 2.4
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "revision": "C5",
+  "status": "CAD and CAM checks passed; owned-part mechanical fit unverified",
+  "board_size_mm": [
+    70,
+    90
+  ],
+  "copper_layer_order": [
+    "F.Cu",
+    "In1.Cu",
+    "In2.Cu",
+    "B.Cu"
+  ],
+  "gerber_count": 9,
+  "drill_file_count": 2,
+  "plated_drill_hits": 93,
+  "nonplated_drill_hits": 5,
+  "all_drill_positions_and_diameters_match_native_board": true,
+  "outline_closed": true,
+  "maximum_drill_coordinate_rounding_mm": 0.0005000000000023874,
+  "outline_size_uses_line_center_not_plot_stroke": true,
+  "same_absolute_origin_all_files": true,
+  "parser": "Gerbonara 1.6.3",
+  "parser_notices": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-c5-oshpark\\gerbers\\heltec_v4_audio_carrier-NPTH.drl:14 \"G90\": G90 header statement found after end of header",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-c5-oshpark\\gerbers\\heltec_v4_audio_carrier-PTH.drl:16 \"G90\": G90 header statement found after end of header"
+  ],
+  "parser_notice_explanation": "KiCad emits explicit G90 absolute positioning after the Excellon header. Parser accepts it; every drill hit was compared to native board coordinates.",
+  "archive_integrity_passed": true,
+  "archive_round_trip_parse_passed": true,
+  "native_pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "native_schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+  "archive_sha256": "9212d3b5cf9f3d57076ebaee2265bd9376615be50f2797a45725c418032a745b",
+  "layers": [
+    {
+      "layer": "top/copper",
+      "filename": "heltec_v4_audio_carrier-F_Cu.gtl",
+      "objects": 188,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Copper",
+          "L1",
+          "Top"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "d9c9e32ebee36c8217e35e7e0e52d49212768882e3978b95c7cd27bfaf4ae995"
+    },
+    {
+      "layer": "top/mask",
+      "filename": "heltec_v4_audio_carrier-F_Mask.gts",
+      "objects": 69,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Soldermask",
+          "Top"
+        ],
+        ".FilePolarity": [
+          "Negative"
+        ]
+      },
+      "sha256": "f1528d0923e31ea0222e01e6abde66cd4a377e5ba6a20a37624093aa509d9a27"
+    },
+    {
+      "layer": "top/silk",
+      "filename": "heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "objects": 805,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Legend",
+          "Top"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "0577b7a3c5eb0dcff35f03ab11b2bca028fe5d8297855195353d803c2d650618"
+    },
+    {
+      "layer": "bottom/copper",
+      "filename": "heltec_v4_audio_carrier-B_Cu.gbl",
+      "objects": 118,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Copper",
+          "L4",
+          "Bot"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "adbe64cf0ec2b0daa2fe4556a17965ef51c1a0c409671121b041eb725d51c369"
+    },
+    {
+      "layer": "bottom/mask",
+      "filename": "heltec_v4_audio_carrier-B_Mask.gbs",
+      "objects": 56,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Soldermask",
+          "Bot"
+        ],
+        ".FilePolarity": [
+          "Negative"
+        ]
+      },
+      "sha256": "4245f2b7e00bf8a533202d1d0b24a4c22cdef3b6ba6f7a68b63a8cb44232b154"
+    },
+    {
+      "layer": "bottom/silk",
+      "filename": "heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "objects": 185,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Legend",
+          "Bot"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "c778462c72531c721a3257996f3d2ffabe2b97f21855effdcee09f14b028cabb"
+    },
+    {
+      "layer": "inner_1/copper",
+      "filename": "heltec_v4_audio_carrier-In1_Cu.g1",
+      "objects": 94,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Copper",
+          "L2",
+          "Inr"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "2c37eeccc85758764bda65d67ae6e98cfbf209259303eef5db6634e6c7453e31"
+    },
+    {
+      "layer": "inner_2/copper",
+      "filename": "heltec_v4_audio_carrier-In2_Cu.g2",
+      "objects": 106,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Copper",
+          "L3",
+          "Inr"
+        ],
+        ".FilePolarity": [
+          "Positive"
+        ]
+      },
+      "sha256": "ca96a0430b2ec6508b286c0868ed47e81c7d28a53c30ee0e2e488bf7a4261b09"
+    },
+    {
+      "layer": "mechanical/outline",
+      "filename": "heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "objects": 4,
+      "file_attributes": {
+        ".GenerationSoftware": [
+          "KiCad",
+          "Pcbnew",
+          "10.0.8"
+        ],
+        ".CreationDate": [
+          "2026-11-24T09:48:09-05:00"
+        ],
+        ".ProjectId": [
+          "heltec_v4_audio_carrier",
+          "68656c74-6563-45f7-9634-5f617564696f",
+          "C5"
+        ],
+        ".SameCoordinates": [
+          "Original"
+        ],
+        ".FileFunction": [
+          "Profile",
+          "NP"
+        ]
+      },
+      "sha256": "deed9630043801b722cc176838c500cb78bddc69c0576ba0fc2d71601c1abee3"
+    }
+  ],
+  "visual_inspection": "PASS: top/bottom copper-mask-silkscreen composites and all four copper outputs inspected; intact outline, open PTH/NPTH holes, ground pours, RF clearance and legible C5 labels."
+}

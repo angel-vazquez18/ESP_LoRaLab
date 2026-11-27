@@ -1,0 +1,15 @@
+{
+  "revision": "C5-R7-Reinforced",
+  "current_directory": ".",
+  "index": "README.md",
+  "native": "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd",
+  "native_sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37",
+  "viewer": "interactive/qa/r7-preview.html",
+  "drawings": "documentation/manufacturing/C5-R7-Manufacturing-Drawings.pdf",
+  "printing": "craftcloud/upload",
+  "status": "Prototype fit design; physical first-article inspection remains required",
+  "pcb_changed": false,
+  "firmware_changed": false,
+  "order_placed": false,
+  "organization_note": "Single active R7 enclosure folder. Prior enclosure revisions are retained in Git history, not as active manufacturing alternatives."
+}

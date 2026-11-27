@@ -1,0 +1,166 @@
+{
+  "revision": "C5",
+  "prepared_on": "2026-11-24",
+  "service": "OSH Park 4 Layer Super Swift",
+  "purpose": "Bare prototype PCB fabrication; assembly performed separately by owner",
+  "status": "CAD and CAM checks passed; actual owned-part mechanical fit unverified",
+  "board_mm": [
+    70,
+    90
+  ],
+  "copper_layers": 4,
+  "nominal_thickness_mm": 1.6,
+  "native_pcb_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "native_schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+  "archive": "heltec_v4_audio_carrier_C5_OSHPARK.zip",
+  "archive_files": [
+    {
+      "filename": "heltec_v4_audio_carrier-B_Cu.gbl",
+      "bytes": 125670,
+      "sha256": "adbe64cf0ec2b0daa2fe4556a17965ef51c1a0c409671121b041eb725d51c369"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-B_Mask.gbs",
+      "bytes": 61218,
+      "sha256": "4245f2b7e00bf8a533202d1d0b24a4c22cdef3b6ba6f7a68b63a8cb44232b154"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-B_Silkscreen.gbo",
+      "bytes": 68222,
+      "sha256": "c778462c72531c721a3257996f3d2ffabe2b97f21855effdcee09f14b028cabb"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-Edge_Cuts.gm1",
+      "bytes": 730,
+      "sha256": "deed9630043801b722cc176838c500cb78bddc69c0576ba0fc2d71601c1abee3"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-F_Cu.gtl",
+      "bytes": 11839,
+      "sha256": "d9c9e32ebee36c8217e35e7e0e52d49212768882e3978b95c7cd27bfaf4ae995"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-F_Mask.gts",
+      "bytes": 73035,
+      "sha256": "f1528d0923e31ea0222e01e6abde66cd4a377e5ba6a20a37624093aa509d9a27"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-F_Silkscreen.gto",
+      "bytes": 113669,
+      "sha256": "0577b7a3c5eb0dcff35f03ab11b2bca028fe5d8297855195353d803c2d650618"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-In1_Cu.g1",
+      "bytes": 120278,
+      "sha256": "2c37eeccc85758764bda65d67ae6e98cfbf209259303eef5db6634e6c7453e31"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-In2_Cu.g2",
+      "bytes": 163566,
+      "sha256": "ca96a0430b2ec6508b286c0868ed47e81c7d28a53c30ee0e2e488bf7a4261b09"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-NPTH.drl",
+      "bytes": 485,
+      "sha256": "bf24aaee140d8f1c2c300e1b625997e983915053f81bdbaa1f6b1d77582a51e2"
+    },
+    {
+      "filename": "heltec_v4_audio_carrier-PTH.drl",
+      "bytes": 1953,
+      "sha256": "f7012d8e55bea06075dbfa55d23c6b4d80043d20f7713169338d36a2e86a51ba"
+    }
+  ],
+  "files": [
+    {
+      "path": "checks/board-geometric-audit.json",
+      "bytes": 28220,
+      "sha256": "47d090425dbf2b1851abc517528bef7588d0b6320948eb20c4716c49cd531787"
+    },
+    {
+      "path": "checks/drc.json",
+      "bytes": 1138,
+      "sha256": "8774cbb0cbf431d9a584f58be1ea36d2a66ad5128ff35e19abbc81cbcbbee970"
+    },
+    {
+      "path": "checks/drill-report.txt",
+      "bytes": 885,
+      "sha256": "21daab5a73fa909f8c0d20ae80d507c98afd5fa2f8cd5d4997c8c541155e4390"
+    },
+    {
+      "path": "checks/erc.json",
+      "bytes": 1054,
+      "sha256": "b66cf40ba22f3dd8026547ec3ee92da8f863c97d12ff597f07566635383222a6"
+    },
+    {
+      "path": "checks/gerber-validation.json",
+      "bytes": 8868,
+      "sha256": "b0e1827084518d32a54057c9a48553f63e4dfa2b64bc7fde426893b420795e17"
+    },
+    {
+      "path": "heltec_v4_audio_carrier_C5_OSHPARK.zip",
+      "bytes": 143477,
+      "sha256": "9212d3b5cf9f3d57076ebaee2265bd9376615be50f2797a45725c418032a745b"
+    },
+    {
+      "path": "preview-bottom.png",
+      "bytes": 124207,
+      "sha256": "0539187153df7d0a8046334b920eb8a3d86029cdbc5a429abfa8019980e81fb7"
+    },
+    {
+      "path": "preview-top.png",
+      "bytes": 135981,
+      "sha256": "8f794fc4ae7bed11569e3e4ac5175d9f7bdb4e36f66bb44748c9b2e4160db2cf"
+    },
+    {
+      "path": "README.txt",
+      "bytes": 4607,
+      "sha256": "fcfa9babdfb0e94728abd96dde8de601643c118f6913e447cfaf249ce1b6d93f"
+    }
+  ],
+  "export_tool": "KiCad CLI 10.0.8",
+  "independent_parser": "Gerbonara 1.6.3",
+  "gerber_options": {
+    "layers": [
+      "F.Cu",
+      "In1.Cu",
+      "In2.Cu",
+      "B.Cu",
+      "F.Mask",
+      "B.Mask",
+      "F.Silkscreen",
+      "B.Silkscreen",
+      "Edge.Cuts"
+    ],
+    "x2": true,
+    "netlist_attributes": true,
+    "positive_copper": true,
+    "common_layers": [],
+    "subtract_soldermask_from_silkscreen": true,
+    "absolute_origin": true,
+    "precision": 6
+  },
+  "drill_options": {
+    "format": "Excellon",
+    "units": "mm",
+    "origin": "absolute",
+    "zeros": "decimal",
+    "mirror_y": false,
+    "oval_mode": "alternate",
+    "separate_pth_npth": true
+  },
+  "checks": {
+    "erc_violations": 0,
+    "drc_violations": 0,
+    "unconnected_items": 0,
+    "schematic_parity_issues": 0,
+    "drill_hits": 98,
+    "plated_hits": 93,
+    "nonplated_hits": 5,
+    "archive_round_trip_parse": true
+  },
+  "official_sources": [
+    "https://docs.oshpark.com/services/four-layer-swift/",
+    "https://docs.oshpark.com/design-tools/kicad/",
+    "https://docs.oshpark.com/design-tools/kicad/generating-kicad-gerbers/"
+  ]
+}
