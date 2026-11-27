@@ -569,6 +569,11 @@ class IntegrationExecution:
                     ),
                     "verification": result.get("verification"),
                     "accounting": result.get("accounting"),
+                    **(
+                        {"protection_observation": content_series.protection_observation(result)}
+                        if run["catalog_id"] == "SEC-01" and case["driver"] == "content_series"
+                        else {}
+                    ),
                     "cleanup_confirmed": cleanup,
                     "wire_sha256": result.get("wire_sha256"),
                     "error": result.get("error"),
@@ -2115,5 +2120,20 @@ class IntegrationExecution:
                 )
                 if comparison["points"]:
                     run["model_comparison"] = comparison
+            if spec.catalog_id == "SEC-01":
+                run["security_comparison"] = content_series.compare_protection(
+                    run["cases"],
+                    lambda case_id: {
+                        row["document"]["ordinal"]: row["document"]
+                        for row in self.ledger.evidence(
+                            run["id"], limit=spec.messages_per_case, case_id=case_id
+                        )
+                        if "protection_observation" in row["document"]
+                    },
+                )
+                if run["assessment"] == "pass" and any(
+                    row["status"] != "complete" for row in run["security_comparison"]
+                ):
+                    run["assessment"] = "inconclusive"
             run.update(active_case=None, finished_at=utc_now())
             self.ledger.save(run)
