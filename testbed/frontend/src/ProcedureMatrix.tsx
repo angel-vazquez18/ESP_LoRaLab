@@ -67,6 +67,7 @@ type MatrixCase = {
     recovery_radio_run?: string;
     reset_proof?: { procedure_id: string; case_id: string };
     campaign_trials?: number;
+    browser_continuity?: { refresh: boolean; navigation: boolean };
   };
   ready: boolean;
   blockers: string[];
@@ -181,6 +182,18 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 {row.measurements.capacity.finding.replaceAll("_", " ")}
                 {row.measurements.delivery?.verified_messages != null &&
                   ` · ${row.measurements.delivery.verified_messages} verified messages`}
+              </span>
+            )}
+            {row.measurements?.browser_continuity && (
+              <span>
+                Navigation{" "}
+                {row.measurements.browser_continuity.navigation
+                  ? "observed"
+                  : "unobserved"}
+                {" · "}Refresh{" "}
+                {row.measurements.browser_continuity.refresh
+                  ? "observed"
+                  : "unobserved"}
               </span>
             )}
             {row.measurements?.export && (

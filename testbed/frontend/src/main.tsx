@@ -142,6 +142,7 @@ type State = {
   runs: Run[];
   campaigns: Historical[];
   physical_campaigns: CampaignState;
+  campaign_view_observation_id?: string | null;
   references: Reference[];
 };
 const empty: State = {
@@ -769,6 +770,30 @@ function App() {
   const host = useHost();
   const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState<View>("bench");
+  const [documentId] = useState(() => crypto.randomUUID());
+  const observation = host.state.campaign_view_observation_id;
+  useEffect(() => {
+    if (!observation) return;
+    const storageKey = "loralab-campaign-view-tab";
+    const tabId = sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
+    sessionStorage.setItem(storageKey, tabId);
+    const entry = performance.getEntriesByType("navigation")[0] as
+      PerformanceNavigationTiming | undefined;
+    void fetch(
+      `/api/physical-campaigns/executions/${encodeURIComponent(observation)}/view-observation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tab_id: tabId,
+          document_id: documentId,
+          view,
+          navigation_type: entry?.type ?? "unknown",
+        }),
+        keepalive: true,
+      },
+    ).catch(() => {});
+  }, [observation, documentId, view]);
   const navigate = (next: View) => {
     location.hash = next;
     setView(next);
@@ -855,6 +880,12 @@ function App() {
           </div>
         </header>
         <main>
+          {observation && (
+            <div className="notice" role="status">
+              From Campaigns, visit another view, return to Campaigns, and
+              reload this tab while the campaign is running.
+            </div>
+          )}
           {active && (
             <div className="notice" role="status">
               <span>
