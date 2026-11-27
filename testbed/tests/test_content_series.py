@@ -2,11 +2,13 @@
 
 import asyncio
 from collections import Counter
+from copy import deepcopy
 
 import pytest
 from test_multi_fragment_radio import Pair
 from test_node_control_native import native_library as native_library
 
+from lora_testbed.content_series import compare_protection
 from lora_testbed.host import Host
 from lora_testbed.integration_matrices import MatrixRequest, compile_matrix
 
@@ -84,6 +86,49 @@ def test_content_series_runs_boundary_cases_and_separate_security_modes(
                         assert paired[direction, size, "aes128_gcm"] == [
                             length + 16 for length in paired[direction, size, "none"]
                         ]
+                assert len(saved["security_comparison"]) == 4
+                for row in saved["security_comparison"]:
+                    plain, secure = row["unprotected"], row["protected"]
+                    assert row["matched_pairs"] == row["timed_pairs"] == 1
+                    assert row["overhead_bytes"] == (16 if row["message_bytes"] == 64 else 48)
+                    assert secure["wire_bytes"] - plain["wire_bytes"] == row["overhead_bytes"]
+                    for metrics in (plain, secure):
+                        assert metrics["unique_original_delivery_ratio"] == 1
+                        assert metrics["delivered_bytes"] == row["message_bytes"]
+                        assert metrics["goodput_bps"] == (
+                            row["message_bytes"]
+                            * 8_000_000
+                            / metrics["sender_transfer_duration_us"]
+                        )
+                candidates = [
+                    case
+                    for case in saved["cases"]
+                    if case["driver"] == "content_series"
+                    and case["message_bytes"] == 64
+                    and case["direction"] == "A_TO_B"
+                ]
+                sample_rows = {
+                    case["id"]: {
+                        row["document"]["ordinal"]: row["document"]
+                        for row in host.procedures.evidence(saved["id"], case_id=case["id"])
+                    }
+                    for case in candidates
+                }
+                secure_case = next(
+                    case["id"] for case in candidates if case["security"] == "aes128_gcm"
+                )
+                mismatched = deepcopy(sample_rows)
+                mismatched[secure_case][1]["protection_observation"]["source_seed"] += 1
+                [bad_source] = compare_protection(candidates, mismatched.get)
+                assert bad_source["status"] == "inconclusive" and bad_source["matched_pairs"] == 0
+                assert "overhead_bytes" not in bad_source
+                sample_rows[secure_case][1]["accounting"]["sender_transfer_window"][
+                    "duration_us"
+                ] = None
+                [untimed] = compare_protection(candidates, sample_rows.get)
+                assert untimed["status"] == "inconclusive" and untimed["timed_pairs"] == 0
+                assert untimed["overhead_bytes"] == 16
+                assert untimed["protected"]["goodput_bps"] is None
         finally:
             if bridge:
                 bridge.cancel()
