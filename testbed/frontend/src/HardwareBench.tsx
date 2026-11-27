@@ -617,13 +617,16 @@ export default function HardwareBench({
                 <span>USB serial port</span>
                 <select
                   aria-label={`Node ${node.id} serial port`}
-                  value={selected[node.id] ?? ""}
+                  value={(node.connected ? node.port : selected[node.id]) ?? ""}
                   disabled={node.connected || pending}
                   onChange={(e) =>
                     setSelected((s) => ({ ...s, [node.id]: e.target.value }))
                   }
                 >
                   <option value="">Select a device…</option>
+                  {node.connected && node.port && !ports.some((p) => p.device === node.port) && (
+                    <option value={node.port}>{node.port}</option>
+                  )}
                   {ports.map((p) => (
                     <option key={p.device} value={p.device}>
                       {p.device} · {p.description}
