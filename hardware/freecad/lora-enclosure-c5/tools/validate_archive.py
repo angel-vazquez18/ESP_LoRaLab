@@ -21,15 +21,31 @@ NATIVE = [
     "fit-checked/exploded-view/LoRa-Enclosure-C5-Exploded-With-Hardware.FCStd",
     "fit-checked/cutaway-view/LoRa-Enclosure-C5-Assembled-Cutaway.FCStd",
     "final-design/cad/LoRa-Enclosure-C5-R1.FCStd",
+    "revision-r2-oled/cad/LoRa-Enclosure-C5-R2-OLED.FCStd",
+    "revision-r3-oled-gap/cad/LoRa-Enclosure-C5-R3-OLED.FCStd",
+    "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.FCStd",
 ]
 FINAL_PASS_FLAGS = [
     "final-design/audit/final-export-validation.json",
     "final-design/audit/final-actual-clearance.json",
     "final-design/documentation/DOCUMENT-VALIDATION.json",
+    "revision-r4-battery/audit/r4-battery-fit-validation.json",
+    "revision-r4-battery/audit/r4-export-validation.json",
+    "revision-r4-battery/documentation/DOCUMENT-VALIDATION.json",
+    "revision-r4-battery/craftcloud/UPLOAD-VALIDATION.json",
+    "revision-r4-battery/manufacturing/MANUFACTURING-VALIDATION.json",
+    "revision-r4-battery/bom/BOM-VALIDATION.json",
 ]
 PARTS = ["enclosure-base", "enclosure-lid", "ptt-plunger", "ptt-stop-cup"]
 REQUIRED = NATIVE + FINAL_PASS_FLAGS + [
-    "README.md", "SOURCE-NOTICES.md", ".gitattributes", ".gitignore",
+    "README.md", "SOURCE-NOTICES.md", ".gitattributes", ".gitignore", "CURRENT-RELEASE.json",
+    "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.step",
+    "revision-r4-battery/documentation/C5-R4-Battery-Integration.pdf",
+    "revision-r4-battery/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt",
+    "revision-r4-battery/research/BATTERY-CONNECTION-REVIEW.txt",
+    *[f"revision-r4-battery/craftcloud/upload/C5-R4-{p}-mm.{ext}"
+      for p in ("enclosure-base","enclosure-lid","ptt-plunger","ptt-stop-cup","battery-cover")
+      for ext in ("stl","3mf")],
     "tools/extract_reference_assembly.py", "tools/validate_archive.py",
     "detailed-import/C5-detailed-assembly.step.zip",
     "final-design/cad/LoRa-Enclosure-C5-R1.step",
@@ -145,7 +161,7 @@ def validate(root):
 
     native_found = {p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file() and p.suffix.lower() == ".fcstd"}
     if native_found != set(NATIVE):
-        failures.append("Native FCStd milestone set is not exactly the expected six documents")
+        failures.append("Native FCStd milestone set is not exactly the expected nine documents")
     checks["native_fcstd"] = []
     for name in NATIVE:
         try:

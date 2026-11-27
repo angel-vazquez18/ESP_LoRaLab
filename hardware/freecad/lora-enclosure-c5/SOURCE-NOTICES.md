@@ -65,3 +65,11 @@ The proposed printing process is described by
 Supplier catalog data, CAD fit calculations, and the comparable-switch travel
 assumption do not qualify the actual printed/assembled mechanism. Review the
 prototype acceptance conditions before physical use or production release.
+
+## R4 battery packaging reference
+
+The battery envelope is project-authored packaging geometry based on the user's
+Meshnology product image (68 x 35 x 10 mm) with a conservative 36 mm width. It is
+not a manufacturer CAD model or a qualified expansion allowance. Product artwork
+is not republished in this archive. See the [Meshnology battery specifications](https://meshnology.com/collections/frontpage/products/3-7v-3000mah-rechargeable-battery-for-arduino-esp32)
+and the R4 connection review for source links, connector and charging limits.

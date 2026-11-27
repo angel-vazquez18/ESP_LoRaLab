@@ -1,144 +1,118 @@
 # LoRa enclosure: FreeCAD development archive
 
-This directory records the parametric enclosure development for Homar's C5
-Heltec carrier, including the PTT stop mechanism, actual-component fit review,
-interactive mechanism illustration, and R1 manufacturing handoff. It adds CAD
-development assets and supporting evidence; it does not change firmware,
-electrical connections, PCB layout, or hardware qualification status.
+## Current prototype: R4 battery housing
 
-## Start with revision R1
+R4 is the adopted enclosure revision. It adds a separate rear compartment for
+the Meshnology 3.7 V / 3000 mAh LiPo, a removable cover, soft-strap retention and
+a cable route to Heltec BAT. The PCB and the R3 nominal 0.50 mm OLED clearance
+remain fixed. This archive changes no firmware, PCB layout, or upstream hardware
+profile. It records Homar's C5 carrier variant, which differs from the generic
+ESP_LoRaLab bench wiring.
 
-- [Editable FreeCAD model](final-design/cad/LoRa-Enclosure-C5-R1.FCStd)
-  and [four-part STEP](final-design/cad/LoRa-Enclosure-C5-R1.step).
-- [Dimensioned technical drawings](final-design/documentation/Enclosure-Technical-Drawings.pdf)
-  and [engineering dossier](final-design/documentation/Enclosure-Engineering-Dossier.pdf).
-- [Four-view assembly sheet](final-design/views/C5-R1-assembly-views.png),
-  [assembly cutaway](final-design/views/assembled-cutaway.png), and
-  [view provenance](final-design/views/VIEW-NOTES.txt).
-- [STL exports](final-design/printing/) and [Craftcloud STL/3MF files](final-design/craftcloud/upload/).
-  Each supplier file contains one part, at millimetre scale. Upload four STL
-  files **or** four 3MF alternatives, with quantity one each for one prototype.
-- [Craftcloud specification](final-design/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt)
-  and [supplier notes](final-design/craftcloud/production-notes.txt).
-- [Assembly BOM](final-design/bom/LoRa-C5-R1-Complete-BOM.xlsx),
-  [CSV companion](final-design/bom/LoRa-C5-R1-Complete-BOM.csv), and
-  [CNC-shop STEP/DXF handoff](final-design/cnc/).
-- [Revision record](final-design/DESIGN-REVISION.txt),
-  [final geometry/export checks](final-design/audit/final-export-validation.json),
-  and [final actual-component clearance checks](final-design/audit/final-actual-clearance.json).
+- [Editable FreeCAD model](revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.FCStd)
+  and [five-part STEP](revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.step).
+- [Battery integration and dimensioned section](revision-r4-battery/documentation/C5-R4-Battery-Integration.pdf),
+  [manufacturing drawings and CNC-shop inputs](revision-r4-battery/manufacturing/),
+  [cutaway](revision-r4-battery/documentation/battery-cutaway.png),
+  [assembled](revision-r4-battery/documentation/battery-assembled.png) and
+  [exploded view](revision-r4-battery/documentation/battery-exploded.png).
+- [Complete R4 BOM](revision-r4-battery/bom/) and
+  [hardware/assembly addendum](revision-r4-battery/HARDWARE-ADDENDUM.txt).
+- [Craftcloud STL/3MF set](revision-r4-battery/craftcloud/upload/) and
+  [order specification](revision-r4-battery/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt).
+  Upload five STL files **or** five 3MF alternatives, one of each, millimetres,
+  100 percent scale. Proposed process: unfilled MJF PA12. No order was placed.
+- [Revision notes](revision-r4-battery/REVISION-NOTES.txt),
+  [mechanical audit](revision-r4-battery/audit/r4-battery-fit-validation.json),
+  [export audit](revision-r4-battery/audit/r4-export-validation.json), and
+  [current-release marker](CURRENT-RELEASE.json).
 
-R1 reduces the shell height to 24.6 mm, adds seven diameter-1.6 mm microphone
-openings, opens the USB notch to the lid seam, increases sliding/registration
-allowances, and specifies M3 x 22 closure screws and ruthex RX-M3x5x4 inserts.
-The model leaves approximately 1.00 mm from the reference display glass to the
-lid underside plane and 0.70 mm to the tallest modeled OLED screw.
+The conservative cell envelope is 68 x 36 x 10 mm, within a 14 mm-deep bay. A
+continuous 2.4 mm separator protects the pouch from the carrier underside. The
+printed shell is 78.8 x 104 x 41 mm including the local rear cable hood, excluding
+button and screw-head projections. The cover adds four M3 x 6 screws and four
+inserts outside the pouch footprint. Do not substitute M3 x 8 in the blind holes.
 
-This is a **first-article prototype**. The assigned models include manufacturer
-geometry, authored supplements, and representative parts. The 0.25 mm PTT
-switch depression remains provisional. Inspect the delivered dimensions,
-owned display/header stack, microphone inlet, insert fit, USB cable access,
-and gentle switch actuation/release before accepting a physical assembly.
-Default printing tolerances do not establish the stop mechanism's accuracy.
-No physical load, drop, acoustic, thermal, RF, or sealing qualification is claimed.
+This is a **prototype release**, not physical qualification. Confirm the actual
+pack envelope, noncompressive retention, polarity/keying, lead slack and
+simultaneous USB/battery plug fit. The assumed battery plug clears modeled solids
+but overlaps the generic USB-overmould reservation. Confirm the pack's permissible
+charging current before qualifying Heltec charging. The battery supplies Heltec
+BAT only; the C5 amplifier remains USB-powered. The reviewed local-node-homar
+audio firmware enables AMP_SD without USB; battery-only commissioning requires a
+verified speaker-disabled Heltec build. No firmware was changed or flashed.
+See the [connection review](revision-r4-battery/research/BATTERY-CONNECTION-REVIEW.txt).
+These C5 findings do not redefine the separate upstream bench profile.
 
-## Native development milestones
+## Revision history and design evidence
 
-The six native documents retain the progression and feature history. Use the
-R1 files above for the current prototype handoff. Presentation offsets and
-cutaways in earlier documents are for inspection.
-
-| Stage | Native document | Purpose |
+| Revision | Purpose | Native CAD / evidence |
 | --- | --- | --- |
-| Initial parametric case | [LoRa-Enclosure-C5.FCStd](LoRa-Enclosure-C5.FCStd) | Spreadsheet-driven base, lid, and plunger with reference envelopes. |
-| Detailed electronics | [LoRa-Enclosure-C5-Detailed-Exploded.FCStd](LoRa-Enclosure-C5-Detailed-Exploded.FCStd) | Assigned PCB/component geometry and corrected 14 mm microphone, exploded for review. |
-| PTT fit revision | [LoRa-Enclosure-C5-Fit-Checked.FCStd](fit-checked/LoRa-Enclosure-C5-Fit-Checked.FCStd) | Four printed parts, with the stop cup and component-clearance evidence. |
-| Hardware assembly | [LoRa-Enclosure-C5-Exploded-With-Hardware.FCStd](fit-checked/exploded-view/LoRa-Enclosure-C5-Exploded-With-Hardware.FCStd) | Exploded cup, plunger, screws, nuts, and actual electronics. |
-| Assembled section | [LoRa-Enclosure-C5-Assembled-Cutaway.FCStd](fit-checked/cutaway-view/LoRa-Enclosure-C5-Assembled-Cutaway.FCStd) | Assembled cutaway and PTT section used by the mechanism illustration. |
-| Current R1 | [LoRa-Enclosure-C5-R1.FCStd](final-design/cad/LoRa-Enclosure-C5-R1.FCStd) | Lower shell, microphone pattern, updated fits and selected mounting hardware. |
+| Initial / fit-checked | Parametric enclosure, actual-model fit and PTT stop development | Root FCStd files and [fit studies](fit-checked/) |
+| R1 | Lower shell, seven microphone holes, USB opening, revised fits and mounting | [Original manufacturing handoff](final-design/); historical, superseded |
+| R2 | Bring OLED toward the exterior window face | [R2 CAD and section](revision-r2-oled/) |
+| R3 | Reduce nominal OLED inner-rim gap to 0.50 mm | [R3 CAD and section](revision-r3-oled-gap/) |
+| R4 | Add separate battery bay/cover and Heltec lead route; retain R3 top/PTT | [Current five-part release](revision-r4-battery/) |
 
-The native files were developed with FreeCAD 1.1. Open the relevant document,
-edit its `Parameters` spreadsheet, and recompute before generating replacement
-exports. CSV parameter files are historical snapshots, not live-linked inputs.
-The [initial operation record](native-build-operations.json) and
-[stop-cup operation record](fit-checked/native-stop-operations.json) describe
-native feature construction; they are not independent replay programs.
+R1's [engineering dossier](final-design/documentation/Enclosure-Engineering-Dossier.pdf)
+and [technical drawings](final-design/documentation/Enclosure-Technical-Drawings.pdf)
+retain earlier design decisions. Their dimensions/order files are historical;
+use R4 for a new complete assembly. The assigned electronics mix manufacturer
+CAD, authored supplements and representative models; the battery/plug are explicitly
+packaging references, not manufacturer battery CAD. The PTT's 0.25 mm travel
+remains a comparable-switch assumption awaiting the owned switch's qualification.
 
-## Interactive PTT illustration
-
-The [PTT viewer](fit-checked/ptt-motion/ptt-cutaway-animation.html) illustrates
-the earlier fit-checked mechanism. It is **prior-revision educational geometry**,
-not an R1 manufacturing model. It supports looping motion, speed control,
-manual camera inspection, part/load-path explanations, guided highlighting,
-camera locking, transparency, and keyboard navigation.
-
-With the model focused, Left/Right step through the load path, Space controls
-playback, L toggles camera lock, and T toggles shell transparency. Native form
-controls retain their normal keyboard behavior. The HTML is a visualization
-fragment; a normal browser host may supply the theme styles used by its UI.
-
-The fragment builder is portable and needs only Node.js and the adjacent source
-files. From the repository root:
+The [interactive PTT illustration](fit-checked/ptt-motion/ptt-cutaway-animation.html)
+shows an earlier fit-checked mechanism and supports loop/speed, camera lock,
+transparency, load-path guidance and keyboard controls. It is educational geometry,
+not the R4 manufacturing source. Rebuild its fragment with:
 
 ```sh
 node hardware/freecad/lora-enclosure-c5/fit-checked/ptt-motion/build_animation_fragment.cjs
 ```
 
-It combines the template and the mesh, contact-patch, and load-path JSON into
-the checked-in HTML. The checked-in geometry is self-contained and requires no
-remote component library. Mesh regeneration uses the historical cutaway FCStd
-and FreeCAD Python. Browser test recipes preserve their original workstation
-runtime paths; they must be adapted to a local Playwright/browser installation.
+## Verification and reuse
 
-## Verify and reproduce
+Native files were developed with FreeCAD 1.1. Edit their `Parameters` spreadsheet
+and recompute before generating replacement exports. Parameter CSVs and operation
+records are historical evidence, not independent replay programs.
 
-Run the archive check with ordinary Python 3.10 or newer, from the repository root:
+Run the portable archive check from repository root with ordinary Python 3.10+:
 
 ```sh
 python hardware/freecad/lora-enclosure-c5/tools/validate_archive.py
-```
-
-The checker validates manifest coverage and hashes, required artifacts, archive
-scope, file sizes, all six FCStd ZIP containers, and the saved final pass flags.
-It does not rerun geometric calculations or claim physical qualification.
-
-The corrected detailed assembly STEP is stored losslessly compressed. To
-verify it without extracting, or to reconstruct the ignored local file:
-
-```sh
 python hardware/freecad/lora-enclosure-c5/tools/extract_reference_assembly.py --verify-only
-python hardware/freecad/lora-enclosure-c5/tools/extract_reference_assembly.py
 ```
 
-The helper checks the exact 76,201,161-byte member and its original SHA-256.
-It never overwrites a mismatching existing STEP. The reconstructed file is
-ignored by Git; its compressed source is tracked. Clearance audits and
-component-section extraction use that reference assembly. The final export
-checker also uses the prior fit-checked FCStd and its mesh checker.
+The checker validates manifest coverage/hashes, nine native document containers,
+required artifacts, file scope and retained pass flags. It does not substitute
+for CAD recomputation or physical checks. The reference helper can reconstruct
+the ignored 76,201,161-byte detailed assembly STEP from its lossless ZIP; it never
+overwrites mismatching data. Remove `--verify-only` to extract it.
 
-Original recipes remain development evidence. Some require FreeCAD's Python,
-KiCad, ReportLab, browser tooling, or an external copy of the unchanged C5 KiCad
-project. For example, `final-design/views/build_final_views.py` references the
-original `pcb-fabrication/source` location; supply that external project or
-adapt the input path to rerun it. Already-generated native CAD, views, drawings,
-and manufacturing models are included. PCB projects, Gerbers/drills, runtimes,
-caches, installation repositories, and full engineering bundles containing
-those files are deliberately excluded from this FreeCAD-only archive.
+R4 native geometry, exact STEP solids and closed print meshes were checked before
+publication. Supplier uploads translate the mesh origin only, without scaling.
+The CNC handoff provides exact solid models and drawings for shop review. Machine
+selection, workholding, cutters, postprocessing and simulated/proved toolpaths
+remain the shop's responsibility; no machine-specific G-code is supplied.
 
-## Provenance and scope
+Some original generation recipes require FreeCAD Python, KiCad, ReportLab,
+spreadsheet/browser tooling or the external C5 KiCad source project. Workstation
+paths in historical reports identify provenance and may require local adaptation.
+The exact printed models, PDF diagrams and source hashes are retained. The
+portable archive check itself has no external CAD/runtime dependency.
 
-`ARCHIVE-MANIFEST.json` records the repository payload bytes. Earlier reports
-retain source hashes and the original `C:/Users/Homar/...` workstation paths.
-Interpret `output/enclosure-c5/` in those records as this directory; paths to
-the separate KiCad project and old runtime installations identify external
-inputs. These historical paths are provenance, not portable execution paths.
-Some historical documents mention full-package files or screenshot folders
-that are intentionally not duplicated here. Start with the links in this README.
+## Archive scope
 
-The BOM and PDF records retain assembly context, including unchanged electronics.
-They do not introduce a PCB or firmware change. CNC files are a shop quotation
-and process-planning handoff; the DXFs contain reference projections and no
-machine toolpaths or controller G-code. Craftcloud notes describe a proposed
-prototype configuration; no quote, order, or payment is represented by this archive.
+All upstream PR changes live under `hardware/freecad/lora-enclosure-c5/`. The
+archive includes FreeCAD development, machining/printing exports, BOM assembly
+context and supporting diagrams/audits. Gerbers, drills, PCB/schematic source,
+firmware, runtime dependencies, private credentials and mixed full-release ZIPs
+are excluded. The unchanged PCB fabrication set is prepared separately in the
+local full engineering package; enclosure changes do not create a new PCB revision.
 
-See [source notices](SOURCE-NOTICES.md) for component/model attribution and
-the limits of the reference geometry.
+`ARCHIVE-MANIFEST.json` records the published bytes. Historical reports may name
+files intentionally outside this CAD-only archive; `output/enclosure-c5/` maps to
+this directory. [Source notices](SOURCE-NOTICES.md) retain component attribution.
+No physical load, drop, acoustic, thermal, RF, sealing or battery qualification
+is claimed by this release, and no purchase/order is represented.

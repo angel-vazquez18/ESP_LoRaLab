@@ -1,0 +1,499 @@
+{
+  "scope": "Saved native/STEP equality, lid mesh integrity and transform-aware 3MF readback; no physical qualification.",
+  "brep_bounds_method": "optimalBoundingBox(useTriangulation=False, useShapeTolerance=False); trims rather than support-surface overrun",
+  "files": {
+    "native": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\cad\\LoRa-Enclosure-C5-R3-OLED.FCStd",
+      "bytes": 17038416,
+      "sha256": "57f535488ac286e72e6a9f33ff3ffc29532e826844323bb8ec2bd9fdbbfd4480"
+    },
+    "step": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\cad\\LoRa-Enclosure-C5-R3-OLED.step",
+      "bytes": 212194,
+      "sha256": "556914995a9515760e1851aed7e270c7114225fdd206d966817cca50bd9a604f"
+    },
+    "stl": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\printing\\C5-R3-enclosure-lid-mm.stl",
+      "bytes": 184184,
+      "sha256": "95961c437f633d28aff0e61ac3d833f855df812a50b0f4cb49010ec40f6b749b"
+    },
+    "3mf": {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r3-oled-gap\\printing\\C5-R3-enclosure-lid-mm.3mf",
+      "bytes": 34494,
+      "sha256": "1028dd05dabc349c754702fbab12b0f4064cb1c4ad901e79c4dcb2aa883ab0dd"
+    }
+  },
+  "parts": {
+    "EnclosureBase": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 33773.931667349985,
+        "bounds_mm": [
+          -4.400000000000001,
+          -4.400000000000001,
+          0.0,
+          74.39999999999999,
+          94.39999999999999,
+          21.0
+        ]
+      },
+      "step": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 33773.93166734987,
+        "bounds_mm": [
+          -4.4,
+          -4.4,
+          0.0,
+          74.4,
+          94.4,
+          21.0
+        ]
+      },
+      "step_index": 0,
+      "comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "absolute_volume_difference_mm3": 1.1641532182693481e-10,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      }
+    },
+    "EnclosureLid": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 27193.68704325208,
+        "bounds_mm": [
+          -4.4000001000000015,
+          -4.4000001000000015,
+          8.0,
+          74.40000009999999,
+          94.40000009999999,
+          24.600000100000003
+        ]
+      },
+      "step": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 27193.68704325205,
+        "bounds_mm": [
+          -4.400000100000001,
+          -4.400000100000001,
+          8.0,
+          74.4000001,
+          94.4000001,
+          24.600000100000006
+        ]
+      },
+      "step_index": 1,
+      "comparison": {
+        "max_bounds_difference_mm": 1.4210854715202004e-14,
+        "absolute_volume_difference_mm3": 2.9103830456733704e-11,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      }
+    },
+    "PTTPlunger": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 459.9291644855457,
+        "bounds_mm": [
+          45.0,
+          3.0,
+          16.2,
+          57.0,
+          15.0,
+          26.400000000000002
+        ]
+      },
+      "step": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 459.9291644855456,
+        "bounds_mm": [
+          45.0,
+          3.0,
+          16.2,
+          57.0,
+          15.0,
+          26.4
+        ]
+      },
+      "step_index": 2,
+      "comparison": {
+        "max_bounds_difference_mm": 3.552713678800501e-15,
+        "absolute_volume_difference_mm3": 1.1368683772161603e-13,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      }
+    },
+    "PTTStopCup": {
+      "native": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 650.9008562343834,
+        "bounds_mm": [
+          39.0,
+          0.6999999999999993,
+          17.15,
+          63.0,
+          17.3,
+          21.0
+        ]
+      },
+      "step": {
+        "valid": true,
+        "closed": true,
+        "solids": 1,
+        "volume_mm3": 650.9008562344043,
+        "bounds_mm": [
+          39.0,
+          0.6999999999999993,
+          17.15,
+          63.0,
+          17.3,
+          21.0
+        ]
+      },
+      "step_index": 3,
+      "comparison": {
+        "max_bounds_difference_mm": 0.0,
+        "absolute_volume_difference_mm3": 2.091837814077735e-11,
+        "symmetric_difference_volume_mm3": 0.0,
+        "matches": true
+      }
+    }
+  },
+  "failures": [],
+  "limitations": [
+    "STL/3MF to B-rep comparison uses bounds and volume, not pointwise surface deviation.",
+    "Manifold checks do not prove absence of self-intersections or mechanical strength.",
+    "Electronics fit is independently documented in r3-oled-fit-validation.json."
+  ],
+  "native_archive": {
+    "file": "LoRa-Enclosure-C5-R3-OLED.FCStd",
+    "ok": true,
+    "bytes": 17038416,
+    "zip_integrity": "passed",
+    "archive_members": 12412,
+    "document_xml": "parsed",
+    "native_final_feature_types": {
+      "EnclosureBase": "Part::Cut",
+      "EnclosureLid": "Part::Cut",
+      "PTTPlunger": "Part::MultiFuse",
+      "PTTStopCup": "Part::Cut"
+    },
+    "expected_final_feature_types": {
+      "EnclosureBase": "Part::Cut",
+      "EnclosureLid": "Part::Cut",
+      "PTTPlunger": "Part::MultiFuse",
+      "PTTStopCup": "Part::Cut"
+    },
+    "expression_engine_elements": 3336,
+    "expression_entries": 229,
+    "parameters_type": "Spreadsheet::Sheet",
+    "failures": []
+  },
+  "parameters": {
+    "B8": {
+      "value": 13.0,
+      "expected": 13,
+      "expression": "13"
+    },
+    "B44": {
+      "value": 21.0,
+      "expected": 21,
+      "expression": "=B43 + B8"
+    },
+    "B47": {
+      "value": 24.6,
+      "expected": 24.6,
+      "expression": "=B44 + B9"
+    },
+    "B73": {
+      "value": 1.6,
+      "expected": 1.6,
+      "expression": "1.6"
+    },
+    "B74": {
+      "value": 2.0,
+      "expected": 2,
+      "expression": "2"
+    },
+    "B75": {
+      "value": 2.5,
+      "expected": 2.5,
+      "expression": "=B9 - B73 + B78"
+    },
+    "B76": {
+      "value": 22.1,
+      "expected": 22.1,
+      "expression": "=B79 + B73"
+    },
+    "B77": {
+      "value": 0.1,
+      "expected": 0.1,
+      "expression": "0.1"
+    },
+    "B78": {
+      "value": 0.5,
+      "expected": 0.5,
+      "expression": "0.5"
+    },
+    "B79": {
+      "value": 20.5,
+      "expected": 20.5,
+      "expression": "=B44 - B78"
+    },
+    "B80": {
+      "value": 2.2,
+      "expected": 2.2,
+      "expression": "2.2"
+    },
+    "B81": {
+      "value": 14.0,
+      "expected": 14,
+      "expression": "14"
+    },
+    "B82": {
+      "value": 29.0,
+      "expected": 29,
+      "expression": "29"
+    }
+  },
+  "native_recess_links": {
+    "type": "Part::Loft",
+    "solid": true,
+    "ruled": true,
+    "profiles": [
+      "OLEDRecessFloor",
+      "OLEDRecessTop"
+    ],
+    "linked_to_lid_cutters": true
+  },
+  "native_lower_rim_links": {
+    "type": "Part::Box",
+    "linked_to_lid_fuse": true,
+    "expressions": {
+      "Height": "Parameters.B78 + 0.2",
+      "Length": "Parameters.B20 + 2 * Parameters.B74",
+      "Placement": "placement(vector(Parameters.B18 - Parameters.B20 / 2 - Parameters.B74; Parameters.B19 - Parameters.B21 / 2 - Parameters.B74; Parameters.B79); rotation(0; 0; 0))",
+      "Width": "Parameters.B21 + 2 * Parameters.B74"
+    }
+  },
+  "native_head_reliefs": [
+    {
+      "name": "OLEDHeadRelief1",
+      "type": "Part::Cylinder",
+      "radius_mm": 2.2,
+      "linked_to_lid_cutters": true,
+      "expressions": {
+        "Height": "Parameters.B78 + 0.1",
+        "Placement": "placement(vector(Parameters.B18 + -1 * Parameters.B81 / 2; Parameters.B19 + -1 * Parameters.B82 / 2; Parameters.B79 - 0.1); rotation(0; 0; 0))",
+        "Radius": "Parameters.B80"
+      }
+    },
+    {
+      "name": "OLEDHeadRelief2",
+      "type": "Part::Cylinder",
+      "radius_mm": 2.2,
+      "linked_to_lid_cutters": true,
+      "expressions": {
+        "Height": "Parameters.B78 + 0.1",
+        "Placement": "placement(vector(Parameters.B18 + 1 * Parameters.B81 / 2; Parameters.B19 + -1 * Parameters.B82 / 2; Parameters.B79 - 0.1); rotation(0; 0; 0))",
+        "Radius": "Parameters.B80"
+      }
+    },
+    {
+      "name": "OLEDHeadRelief3",
+      "type": "Part::Cylinder",
+      "radius_mm": 2.2,
+      "linked_to_lid_cutters": true,
+      "expressions": {
+        "Height": "Parameters.B78 + 0.1",
+        "Placement": "placement(vector(Parameters.B18 + -1 * Parameters.B81 / 2; Parameters.B19 + 1 * Parameters.B82 / 2; Parameters.B79 - 0.1); rotation(0; 0; 0))",
+        "Radius": "Parameters.B80"
+      }
+    },
+    {
+      "name": "OLEDHeadRelief4",
+      "type": "Part::Cylinder",
+      "radius_mm": 2.2,
+      "linked_to_lid_cutters": true,
+      "expressions": {
+        "Height": "Parameters.B78 + 0.1",
+        "Placement": "placement(vector(Parameters.B18 + 1 * Parameters.B81 / 2; Parameters.B19 + 1 * Parameters.B82 / 2; Parameters.B79 - 0.1); rotation(0; 0; 0))",
+        "Radius": "Parameters.B80"
+      }
+    }
+  ],
+  "step_solid_count": 4,
+  "recompute": {
+    "EnclosureBase": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "max_bounds_difference_mm": 0.0,
+      "absolute_volume_difference_mm3": 0.0,
+      "symmetric_difference_volume_mm3": 0.0,
+      "matches": true
+    }
+  },
+  "stl": {
+    "topology": {
+      "file": "C5-R3-enclosure-lid-mm.stl",
+      "ok": true,
+      "bytes": 184184,
+      "format": "binary",
+      "triangles": 3682,
+      "unique_vertices_after_rounding": 1809,
+      "bbox_mm": {
+        "min": [
+          -4.400000095367432,
+          -4.400000095367432,
+          8.0
+        ],
+        "max": [
+          74.4000015258789,
+          94.4000015258789,
+          24.600000381469727
+        ],
+        "size": [
+          78.80000162124634,
+          98.80000162124634,
+          16.600000381469727
+        ]
+      },
+      "undirected_edges": 5523,
+      "edge_incidence_histogram": {
+        "2": 5523
+      },
+      "nonmanifold_edges": 0,
+      "boundary_edges": 0,
+      "inconsistent_winding_edges": 0,
+      "degenerate_triangles": 0,
+      "connected_components": 1,
+      "component_triangle_counts": [
+        3682
+      ],
+      "signed_volume_mm3": 27192.7099539945,
+      "absolute_volume_mm3": 27192.7099539945,
+      "failures": []
+    },
+    "native_comparison": {
+      "assembly_coordinate_bounds_difference_mm": 1.4258789207133304e-06,
+      "relative_volume_error": 3.593073848447665e-05,
+      "matches": true
+    }
+  },
+  "3mf": {
+    "unit": "millimeter",
+    "model_resource": "3D/3dmodel.model",
+    "mesh_objects": 1,
+    "build_items": 1,
+    "applied_transforms": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "triangle_count": 3682,
+    "zip_integrity": "passed",
+    "topology": {
+      "file": "C5-R3-enclosure-lid-mm.3mf",
+      "ok": true,
+      "bytes": 34494,
+      "format": "3mf_transform_resolved",
+      "triangles": 3682,
+      "unique_vertices_after_rounding": 1809,
+      "bbox_mm": {
+        "min": [
+          -4.4,
+          -4.4,
+          8.0
+        ],
+        "max": [
+          74.4,
+          94.4,
+          24.6
+        ],
+        "size": [
+          78.80000000000001,
+          98.80000000000001,
+          16.6
+        ]
+      },
+      "undirected_edges": 5523,
+      "edge_incidence_histogram": {
+        "2": 5523
+      },
+      "nonmanifold_edges": 0,
+      "boundary_edges": 0,
+      "inconsistent_winding_edges": 0,
+      "degenerate_triangles": 0,
+      "connected_components": 1,
+      "component_triangle_counts": [
+        3682
+      ],
+      "signed_volume_mm3": 27192.699840352398,
+      "absolute_volume_mm3": 27192.699840352398,
+      "failures": []
+    },
+    "native_comparison": {
+      "assembly_coordinate_bounds_difference_mm": 1.0000000116860974e-07,
+      "relative_volume_error": 3.630264988021521e-05,
+      "matches": true
+    },
+    "same_triangles_as_stl_at_1e_minus_5_mm": false,
+    "stl_comparison": {
+      "max_bounds_difference_mm": 1.5258789005656581e-06,
+      "absolute_volume_difference_mm3": 0.010113642103533493,
+      "relative_volume_difference": 3.7192475926982183e-07,
+      "corresponding_triangle_max_vertex_difference_mm": 4.9809265137312764e-05,
+      "coordinate_round_trip_tolerance_mm": 0.0001,
+      "relative_volume_tolerance": 1e-06,
+      "precision_note": "STL float32 and FreeCAD 3MF XML decimal serialization differ; ordered triangles compared with vertex permutation."
+    }
+  },
+  "source_files_unchanged": {
+    "native": true,
+    "step": true,
+    "stl": true,
+    "3mf": true
+  },
+  "ok": true
+}

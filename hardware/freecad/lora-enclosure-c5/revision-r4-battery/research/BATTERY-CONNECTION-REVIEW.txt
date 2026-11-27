@@ -1,0 +1,233 @@
+LoRa C5 / R4 battery compartment - electrical and connection review
+2026-11-24 | Read-only project and manufacturer-reference review
+
+Accepted scope
+The user selected a compartment and a direct Heltec battery connection only.
+The C5 amplifier power circuit, PCB, firmware and USB power path are unchanged.
+The compartment must not be described as enabling a fully battery-operated
+walkie-talkie: speaker playback still requires the existing USB supply.
+
+Battery identity and mechanical input
+The user identifies a Meshnology 3.7 V, 3000 mAh, model 103665 LiPo pack.
+The supplied dimensional image explicitly shows a 68 x 35 x 10 mm body and
+66 mm battery lead. The 530 mm dimension belongs to the separate USB charging
+cable, which is not stored inside the enclosure. No manufacturing tolerance,
+growth allowance or strain-relief dimensions are supplied by that image.
+The model code is not a substitute for the pictured finished-pack dimensions.
+A 36 mm conservative body width is an engineering envelope allowance, not a
+claim that the pictured pack measures 36 mm. Verify the owned wrapped pack,
+protection-board end and actual connector before production.
+
+Manufacturer battery evidence
+Meshnology's current product page describes a 3.7 V, 3000 mAh soft-pack battery,
+a Micro JST 1.25 mm connector, built-in overcharge/over-discharge/short-circuit
+protection, and a separate included USB charging cable rated 300 mA. It offers
+variants for N32/N33/N35/N39 and another N37 variant. The page does not provide
+a full cell datasheet or maximum continuous charge/discharge current for the
+owned 103665 pack. Do not treat the included cable's 300 mA output as the cell's
+maximum allowed charging current. Do not substitute specifications from an
+unrelated 103665 manufacturer. The exact keyed connector family/part number
+and pack-end pin numbering are not established by the marketing name alone.
+Source [1]. The manufacturer's N39 documentation separately confirms a
+Heltec V4 product supplied with a 3000 mAh battery, supporting capacity-level
+compatibility but not proving the user's particular pack polarity [4].
+
+Heltec V4.3.1 connection
+Use the lithium-battery port, JP2 in the V4.3 schematic, not the nearby solar
+connector JP3. Heltec calls its battery interface SH1.25-2P in the project
+datasheet. Its specified battery range is 3.3 to 4.2 V, typical 3.7 V.
+The diagram establishes JP2 pin 1 = VBAT positive and pin 2 = GND.
+Connect the battery positive lead to VBAT and negative lead to GND. Identify
+actual pin orientation from the board markings/schematic and verify voltage
+and polarity at the mating plug before connection; matching pitch and red/
+black wire colors alone are insufficient to establish pin assignment.
+If a harness extension is needed, use a matching polarized two-pin 1.25 mm
+pair and verify end-to-end polarity. No adapter length is qualified by this
+electrical review; the measured cable route controls the required length.
+Sources [2], [3].
+
+Charging
+Heltec's datasheet lists 500 mA charging with 5 V USB. The V4.3 schematic uses
+a CN3165 and annotates a nominal constant-current setting of 540 mA with
+R13 = 2.2 kohm. Confirm the exact pack permits that charging current before
+using Heltec USB charging; this review found no primary pack current rating.
+The manufacturer's included external charging lead is an alternative for a
+disconnected pack. Do not parallel it with the Heltec charger on the same
+connected battery. The two-wire pack has no separate temperature-sense lead.
+The drawing does not establish cell-temperature supervision. Sources [1]-[3].
+
+Existing C5 power circuit - exact project evidence
+The current KiCad netlist has a direct /+5V_AMP net containing only:
+  U1 J2_02 (5V_USB), JAMP1 pin 1 (VIN), U3 VIN, and TP3 pin 1.
+There is no carrier fuse, diode OR, boost converter, battery switch or
+alternative supply on that net. The Heltec schematic ties this exported
+header pin to VUSB, ahead of F1, and does not boost the battery to that rail.
+The battery can supply the Heltec and its regulated 3V3 microphone rail;
+PTT is a GPIO-to-ground switch and is not a separate powered module.
+Battery-only operation does not power the amplifier through its current VIN
+connection. Do not jumper VBAT onto /+5V_AMP: that would join the pack to the
+USB VBUS path rather than implement a managed dual-source supply.
+
+Local evidence files, relative to the workspace root:
+  output/heltec-v4-carrier-c5/design/reports/electrical.net.xml
+  output/heltec-v4-carrier-c5/design/heltec_pin_mapping.csv
+  output/heltec-v4-carrier-c5/design/ASSEMBLY_AND_BRINGUP.txt (Power section)
+  output/heltec-v4-carrier-c5/design/sources/RESEARCH_FINDINGS.md
+The 3V3 microphone net contains U1 J3_02, U2 VDD and TP2.
+
+Battery-only signal constraint
+The /AMP_SD net directly joins Heltec GPIO48 (U1 J2_14) to JAMP1 pin 3 and
+U3 SD_MODE, with R8 providing a 1 kohm pull-down. Analog Devices specifies
+SD_MODE within -0.3 V to VDD + 0.3 V. With USB absent, the amplifier VIN/VDD
+is unpowered, so actively driving GPIO48 HIGH exceeds this input rating and
+may back-power the amplifier. The pull-down does not protect an input driven
+HIGH by the ESP32. Hold AMP_SD LOW whenever the amplifier supply is absent;
+merely stopping audio samples does not establish that this requirement is met.
+The same datasheet explicitly permits LRCLK/BCLK/DIN up to 6 V independently
+of VDD, so the SD_MODE restriction should not be incorrectly generalized to
+those three audio inputs. Source [5], p4 Absolute Maximum Ratings.
+The normal C5-compatible audio firmware has a specific battery-only startup
+conflict, detailed below. Firmware changes and operating tests remain outside
+this mechanical revision.
+
+Read-only firmware commissioning review (2026-11-24)
+Inspected the actual local project at:
+  C:/Users/Homar/Documents/Arduino/ESP_LoRaLab/local-node-homar
+This is the Heltec audio bench source matching C5's GPIO48 amplifier enable.
+It is distinct from the old esp32-audio-chunker-test workspace copy, whose
+legacy ESP32 profile uses GPIO27, and from other firmware images in ESP_LoRaLab.
+The currently flashed image on either physical device was not read or verified.
+
+Exact source trace, relative to that local-node-homar directory:
+  include/pins.h:19 - Heltec SPK_SD = GPIO_NUM_48; line18 specifies USB5V VIN.
+  include/config.h:11-16 - AUDIO_ENABLE_SPEAKER defaults to 1 and determines
+    Config::ENABLE_SPEAKER.
+  platformio.ini:53-67,71-85 - normal heltec_v4_r2/com6/com7 environments
+    select the Heltec pin mapping and do not disable the speaker.
+  src/main.cpp:565-578 - setup waits 1 second, initializes board support,
+    and calls audio.begin() without checking USB/VUSB presence.
+  lib/audio/audio_manager.cpp:177-179 - begin explicitly drives SPK_SD LOW,
+    then calls configureSpeakerI2S when Config::ENABLE_SPEAKER is true.
+  lib/audio/audio_manager.cpp:333-337 - the ESP32-S3 path starts I2S clocks,
+    waits the 20 ms startup settling interval, then drives SPK_SD HIGH.
+    No amplifier-supply presence condition guards the HIGH write.
+  lib/audio/audio_manager.cpp:355-356 - clocks remain running from startup,
+    including idle, recording and playback/error clears.
+  lib/audio/audio_manager.cpp:471-474 - stopSpeaker only clears DMA audio;
+    its comment explicitly states that neither clocks nor SD are stopped.
+Searching src, lib and include found no VBUS/VUSB, USB-present/power or
+battery-supply detection path gating amplifier enable.
+
+Conclusion: assuming normal I2S initialization succeeds, this ordinary Heltec
+audio build drives GPIO48 HIGH on a battery-only boot even without an audio
+command. With the retained USB-only amplifier supply absent, that exceeds
+the SD_MODE input rating described above. It also leaves SD HIGH if USB is
+removed after a successful USB-powered startup. The standard audio image is
+not suitable for battery-only commissioning with this unchanged carrier.
+
+Required commissioning prerequisite, not performed by this revision:
+Use a verified Heltec-profile build with AUDIO_ENABLE_SPEAKER=0 (or a later
+properly qualified supply-aware implementation) before connecting the pack
+for operation without USB. Source inspection shows that with the flag zero,
+begin still executes outputLow(SPK_SD) at line177 and short-circuits the
+configureSpeakerI2S call at line179. outputLow at lines36-43 disconnects the
+GPIO-matrix route, selects a pull-down, preloads LOW and sets output mode.
+Therefore the expected software behavior is an actively driven LOW on
+GPIO48 after successful GPIO initialization; this is stronger than relying
+only on the carrier's 1 kohm pull-down. GPIO startup/transition behavior and
+the actual SD_MODE voltage still require bench measurement. The existing
+mic_only environment inherits esp32dev and uses the legacy pin profile;
+do not select it unchanged for the Heltec. Preserve the Heltec board/profile
+and add the speaker-disable setting in a separately authorized firmware task.
+Do not merely mute playback or unplug the speaker: neither removes the
+electrical SD_MODE drive into the unpowered amplifier.
+No firmware edit, build, flash, reset, serial-port access or battery test was
+performed. Source analysis is not a claim about an installed image or a
+measured waveform. Before battery-only testing, verify the installed image
+and measure the shutdown input LOW through boot and USB removal.
+
+SHA256 of the inspected files (immutable evidence for these line references):
+  lib/audio/audio_manager.cpp
+    325690d1cc009cec288e22db9447b7c3517704557bfbcd44f086548cd9975c62
+  include/pins.h
+    fb3f89b592bd736f275a11b38c18a6001a63b745788410be220078aecdaeb0c5
+  include/config.h
+    60581917a40e3151830f15e0e5a2359049471b3805447dfc851405d5a48b845b
+  src/main.cpp
+    6a152523adab47ae5b71ffa7fb9f375fb6189056aa35e1f1e5c1d06ecf3694d6
+  platformio.ini
+    11de9f5be483d313ca12f6411f5509a4bdb94eaa13a622e45cd2b8fca1540295
+
+Connector location for enclosure routing
+The existing manufacturer STEP inspection identifies battery connector JP2.
+Its source-model bounds are:
+  X -0.211652346 .. 4.978347788
+  Y  0.750808981 .. 8.400809023
+  Z -4.958718848 .. -1.558718228
+The current project registration is:
+  enclosure X = 23 + source Y
+  enclosure Y = 88.159 - source X
+  enclosure Z = 14.55871926 + source Z
+Therefore the nominal assembled battery-connector envelope is:
+  X 23.750809 .. 31.400809
+  Y 83.180652 .. 88.370652
+  Z  9.600000 .. 13.000001 mm
+This is near the USB end, beneath the module. P3 is the eight-pin GNSS
+connector, not the battery connector. The mechanical feasibility review
+subsequently inspected the source STEP cavity and exposed contact ends:
+the mouth faces source -X, which maps to enclosure +Y, with the mouth near
+Y = 88.37065 mm. See audit/jp2-orientation.png in this R4 directory.
+This identifies insertion direction; it does not qualify the user's plug,
+actual mated protrusion, cable bend radius or service clearance.
+Source model/provenance:
+  output/heltec-v4-carrier-c5/design/sources/heltec_model_analysis/step_inspection.json
+  output/heltec-v4-carrier-c5/design/sources/heltec_model_analysis/model_placement_and_addon.json
+
+Reference connector geometry, not an approved replacement part
+Molex 532610271 and mating 510210200 are useful PicoBlade 1.25 mm references.
+The header's 7.65 x approximately 5.2 x 3.4 mm envelope matches the nominal
+STEP envelope, but dimensional agreement alone does not establish the exact
+installed manufacturer/part or prove the supplied pack's connector mates.
+The 510210200 drawing gives a 4.25 mm width and 3.95 mm housing depth;
+the 532610271 drawing sheet 2 contains a mated view. Its 5.2 mm reference
+dimension must not be treated as 5.2 mm of plug projecting outside the socket.
+The exact dimension-arrow endpoints were not visually qualified in this
+electrical review, so no derived external protrusion is released. Sources
+[6] and [7]. Hardware fit and polarity verification still control selection.
+
+Mechanical integration implications
+Provide a smooth isolated pocket, separation from exposed solder/header pins,
+retention without rigid compression of the pouch, accessible cable strain
+relief and room to unplug the battery for service. Leave dimensional margin
+around the wrapped/protected pack. The enclosure clearance is not a certified
+swelling, thermal, impact or cell-safety qualification. Do not reserve space
+for an unspecified boost converter: the user explicitly retained the original
+USB-powered amplifier circuit for this revision.
+
+Primary references (checked 2026-11-24)
+[1] Meshnology battery product page - connector, protection, 3000 mAh rating,
+    included charger specification and variant descriptions:
+    https://meshnology.com/collections/frontpage/products/3-7v-3000mah-rechargeable-battery-for-arduino-esp32
+[2] Heltec WiFi LoRa 32 V4.3.1 datasheet - p12 battery interface and supply;
+    p13 supply ranges/output; p14 charge-current table:
+    https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf
+    Existing project copy: output/heltec-v4-carrier-c5/design/sources/heltec-v4_3_1-datasheet.pdf
+[3] Heltec V4.3 schematic - sheet1 top-left power section, JP2, U4 and R13;
+    top-right exported header VUSB connection:
+    https://resource.heltec.cn/download/WiFi_LoRa_32_V4/Schematic/HTIT-WB32LAF_V4.3.pdf
+    Existing project copy: output/heltec-v4-carrier-c5/design/sources/heltec-v4_3-schematic.pdf
+[4] Meshnology N39 official wiki - V4 platform and 3000 mAh battery package:
+    https://wiki.meshnology.com/N39/Meshnology%20N39/
+[5] Analog Devices MAX98357A/MAX98357B datasheet, Rev16, February 2026 - p4
+    absolute input voltage limits for SD_MODE and the digital audio inputs:
+    https://www.analog.com/media/en/technical-documentation/data-sheets/MAX98357A-MAX98357B.pdf
+[6] Molex 510210200 receptacle housing drawing 510210000-SD, Rev C, sheet 1:
+    https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/510/51021/510210200_sd.pdf
+[7] Molex 532610271 header drawing 532610001-SD, Rev E1, sheets 1-2:
+    https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/532/53261/532610271_sd.pdf
+
+Review status
+Electrical architecture and nominal interface identified. Physical plug fit,
+actual polarity, pack current limits, measured route length and operating
+tests are not established by the CAD revision. No PCB or firmware file was
+modified by this review.
