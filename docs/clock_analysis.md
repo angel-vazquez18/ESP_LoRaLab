@@ -15,7 +15,15 @@ and age-based drift. It excludes frames outside the 2-second update
 window or above 1,000 microseconds of total uncertainty. Invalid or
 missing phases are recorded with no delay value and a reason.
 
-Run the assessment on saved evidence.
+In **Experiments**, open **TIME-02** and select a saved JSON file
+under **Review saved pulse evidence**. Choose **Evaluate evidence**
+to see pulse-fit eligibility, residual, uncertainty, and the two
+receiver phases for each observed frame. Invalid frame rows keep their
+reason and show unavailable delay. **Download timing report**
+preserves the original input fingerprint, submitted records, and exact
+fit coefficients. The file limit is 1 MiB.
+
+The CLI applies the same evaluator to the original file bytes.
 
 ```sh
 uv run --project testbed lora-testbed clock-evaluate pulses.json > timing-report.json
@@ -32,8 +40,7 @@ and optional application-acceptance times in the original node domains.
 See the [typed fixture](../testbed/tests/test_clock_analysis.py) for a
 complete example.
 
-The report retains the submitted evidence and file SHA-256. Its
-eligibility field describes the calculation on that evidence. Physical
-qualification still requires the capture and marker wiring, review of
-the referenced instrument evidence, and loaded bench checks. The
-offline command does not read ports or install a live mapping.
+The report retains the submitted evidence and file SHA-256. Eligibility
+applies to the input dataset. Physical qualification still requires the
+capture and marker wiring, review of the referenced instrument evidence,
+live mapping, and loaded bench checks.

@@ -4,6 +4,13 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Saved clock evidence review
+
+TIME-02 accepts saved pulse and frame evidence in the dashboard and
+CLI. The report keeps the exact file fingerprint, separate receiver
+phases, and reasons for excluding samples. See
+[the timing review](clock_analysis.md).
+
 ## November 27 — Microphone-origin RF voice review
 
 VOICE-02 C2 reviews protected microphone-origin runs in both

@@ -785,7 +785,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | RF-01–04 | Seeded sweeps, applied settings, delivery evidence and matched requester RTT | Full repetitions and bench review of baseline changes |
 | SEC-01–04 | Matched GCM rate and overhead review, mutation, replay and local benchmark matrices | Old-window replay and full physical repeated batches |
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
-| TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
+| TIME-01–02 | Matched echo, controlled timeout and shared saved-pulse assessment | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
 | VOICE-01–04 | Local microphone and error controls, paired RF voice/data, fixed-rate matrix, coded listening and duration review | Physical utterance repetitions, calibrated delivery window and recorded listening study |
 | MODEL-01 | Independent vectors, frame/message matrices and measured residual plots | Instrumented airtime/tolerance and full bench study |
@@ -979,3 +979,7 @@ an actual capture cancellation and a fresh verified recovery.
 VOICE-02 C2 now checks saved microphone-origin runs, independent matched
 data transfers and receiver listening in both directions. The result
 retains the original and decoded WAVs and exact encoded readback links.
+
+The TIME-02 dashboard and CLI now evaluate the same original evidence
+bytes. The browser preserves raw values in the downloaded report and
+shows independent delay phases, uncertainty, and excluded samples.
