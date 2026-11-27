@@ -4,6 +4,13 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Full campaign restart review
+
+IF-03 C6 previews the prescribed campaign for each active/paused restart.
+Its saved review checks the plan and case order, protects the interrupted
+history, and verifies an explicit fresh transfer. See
+[IF-03 restart](integration_matrices.md#if-03-active-and-paused-campaign-restart).
+
 ## November 26 — Board reset and stale boot review
 
 OPS-01 C2 joins an interrupted protected transfer, raw stale-boot and

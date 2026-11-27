@@ -959,3 +959,7 @@ OPS-01 C2 now checks either node on a new boot, a saved stale-boot
 rejection and unkeyed idle readback, and an exact transfer using an
 independently provisioned protected session. Cross-node timing remains
 in the separate clock calibration procedure.
+
+IF-03 C6 reviews the active and paused restart variants against the
+prescribed six-series campaign and verifies an explicit fresh rerun.
+Missing cases, altered setup and damaged raw evidence stay visible.

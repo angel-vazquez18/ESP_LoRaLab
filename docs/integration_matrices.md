@@ -8,7 +8,7 @@ readiness, assessment and references to its original child evidence.
 | --- | --- | --- |
 | IF-01 Serial interface | Claim, keepalive, release and reclaim on the firmware's selected transport. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation, conflict and stale-boot rejection, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | Physical qualification on native USB and UART. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
-| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, selected reruns, concurrent-start rejection and verified exports. | Refresh/navigation across a live case and the supervised operator restart matrix. |
+| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, active/paused restart review, selected reruns, concurrent-start rejection and verified exports. | Live refresh/navigation and physical qualification. |
 
 The full IF-02 plan has 24 positive case groups with 100 messages each and six
 peer mismatch controls. The full IF-03 plan has 25 case groups. Each baseline
@@ -122,8 +122,9 @@ identifies the bytes recovered from disk. Use the saved campaign bundle to
 verify those bytes and check the separate delivery and cleanup records.
 The campaign cannot resume and a new run must pass fresh connection and
 ownership preflight. The native subprocess test covers active transmission
-and a settled pause following a completed child. The supervised IF-03 C6
-and OPS-01 C3 schedules and physical acceptance remain open.
+and a settled pause following a completed child. OPS-01 C3 reviews individual
+directional cases. IF-03 C6 adds the exact campaign workload and saved order
+checks described below.
 
 The procedure CSV/ZIP contains the case ledger and each child's evidence link.
 Fetch the saved radio/campaign export for the child's complete raw evidence.
@@ -131,6 +132,44 @@ The [matrix compiler](../testbed/src/lora_testbed/integration_matrices.py)
 defines the planned coverage. The
 [executor](../testbed/src/lora_testbed/integration_execution.py) uses the
 existing serial, radio, campaign and evidence services.
+
+## IF-03 active and paused campaign restart
+
+1. In **Experiments**, select **IF-03**, **C6** and the desired workload.
+   Preview and use **Download campaign setup** on the case you intend to
+   record. **Quick check** uses six transfers. **Procedure defaults**
+   uses six series of 100 transfers, with both restart variants repeated
+   three times.
+2. In **Campaigns**, choose **Import plan settings** using that JSON file,
+   then start the saved plan. Stop and restart the backend during a child
+   transmission for the active variant. For the paused variant, request
+   pause during the first transfer and stop the host only after the saved
+   campaign displays **Paused**.
+3. Start the backend with the same data directory. Reconnect both roles
+   to the original devices. From the interrupted execution, select and
+   explicitly rerun the interrupted active child or the first completed
+   child from a paused execution. Record both execution IDs.
+4. Return to **IF-03**, **C6** with the same workload. Paste a row like
+   the one below into **Saved restart evidence (JSON)**. Preview and run
+   the assessment. It verifies the original case order and terminal
+   states, the fresh preflight and session, and the recovery bytes.
+
+```json
+[
+  {
+    "variant": "restart_paused",
+    "repetition": 1,
+    "interrupted": "422ed491-22a7-4319-9949-aee83ab1739f",
+    "recovery": "09fae31a-4d41-4b87-a544-52cd0c5c8910"
+  }
+]
+```
+
+CLI users can save the case's `campaign_request` from the preview with
+`lora-testbed campaign-plan`. Submit the evidence array as
+`campaign_restart_evidence` in the IF-03 C6 matrix request. Keep both
+campaign ZIPs alongside the procedure ZIP. A pair from a different
+workload or an altered archive leaves the case inconclusive.
 
 ## Serial transports for IF-01
 
