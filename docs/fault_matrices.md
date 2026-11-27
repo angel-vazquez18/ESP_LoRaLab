@@ -12,7 +12,10 @@ evidence. A missing fault observation yields an inconclusive result.
 - SEC-03 C1 replays the exact protected frame from a confirmed initial
   delivery while the receiver is still armed. C2 requires advancing
   the same retained session beyond the 128-frame replay window.
-  That case remains blocked.
+  The planner now shows 132 original messages per C2 case. The isolated native
+  session check accepts 129 consecutive new sequences, rejects the original
+  before a second insertion, and accepts the final fresh messages. Physical C2
+  still needs firmware and host support for a retained multi-message run.
 - PKT-02 uses 1200 useful bytes and 16/64/160/199-byte fragment settings.
   Each series places the loss, duplicate or reversed block in the
   third workload at the default ten-message count. Each workload

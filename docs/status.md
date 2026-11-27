@@ -4,6 +4,12 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Replay window continuity
+
+SEC-03 C2 plans 132 originals per case. The isolated firmware test verifies a
+continuous receive window, one explicit too-old result and fresh delivery
+under the same session state. The physical retained-session runner remains open.
+
 ## November 27 — Protected ACK rejection
 
 The sender distinguishes authenticated ACKs with a wrong DATA reference from
