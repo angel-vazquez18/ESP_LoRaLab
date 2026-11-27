@@ -47,6 +47,7 @@ type MatrixCase = {
   cycles?: number;
   iterations?: number;
   planned_campaign_cases?: number;
+  campaign_request?: Record<string, unknown>;
   observation_s?: number;
   radio_load_period_s?: number | null;
   measurements?: {
@@ -65,6 +66,7 @@ type MatrixCase = {
     faulted_radio_run?: string;
     recovery_radio_run?: string;
     reset_proof?: { procedure_id: string; case_id: string };
+    campaign_trials?: number;
   };
   ready: boolean;
   blockers: string[];
@@ -206,6 +208,11 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
               )}
             {row.measurements?.original && row.measurements.recovery && (
               <>
+                {row.measurements.campaign_trials && (
+                  <span>
+                    {row.measurements.campaign_trials} campaign trials retained
+                  </span>
+                )}
                 <span>
                   Original cleanup{" "}
                   {row.measurements.original.cleanup.confirmed
@@ -229,6 +236,14 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 href={`${runPath(row.measurements.reset_proof.procedure_id)}/evidence?case_id=${encodeURIComponent(row.measurements.reset_proof.case_id)}`}
               >
                 Stale-boot rejection evidence
+              </a>
+            )}
+            {!runId && row.campaign_request && (
+              <a
+                href={`data:application/json,${encodeURIComponent(JSON.stringify(row.campaign_request, null, 2))}`}
+                download={`${row.id}-campaign.json`}
+              >
+                Download campaign setup
               </a>
             )}
             {(row.reason || row.blockers.length > 0) && (
@@ -318,7 +333,9 @@ export default function ProcedureMatrix({
     (option.kind === "voice" && (fixedSource || group !== "C2")) ||
     (option.kind === "voice_local" && (!group || group === "C3"));
   const stability = catalogId === "OPS-01" && group === "C6";
-  const restart = catalogId === "OPS-01" && (!group || group === "C3");
+  const campaignRestart = catalogId === "IF-03" && (!group || group === "C6");
+  const restart =
+    (catalogId === "OPS-01" && (!group || group === "C3")) || campaignRestart;
   const usb = catalogId === "OPS-01" && (!group || group === "C1");
   const reset = catalogId === "OPS-01" && (!group || group === "C2");
   const selectDirection =
@@ -336,7 +353,10 @@ export default function ProcedureMatrix({
   async function previewCases() {
     const evidence: Record<string, unknown[]> = {};
     for (const [field, source] of [
-      ["ops_restart_evidence", restart ? restartEvidence : ""],
+      [
+        campaignRestart ? "campaign_restart_evidence" : "ops_restart_evidence",
+        restart ? restartEvidence : "",
+      ],
       ["ops_usb_evidence", usb ? usbEvidence : ""],
       ["ops_reset_evidence", reset ? resetEvidence : ""],
     ]) {
