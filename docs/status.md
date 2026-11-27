@@ -4,6 +4,12 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Dashboard navigation and reload
+
+IF-03 C5 records dashboard navigation and reloads during its active
+campaign and verifies continuity against the retained trial and radio
+records. See [dashboard continuity](integration_matrices.md#if-03-dashboard-navigation-and-reload).
+
 ## November 26 — Full campaign restart review
 
 IF-03 C6 previews the prescribed campaign for each active/paused restart.

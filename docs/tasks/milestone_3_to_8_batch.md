@@ -781,7 +781,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 
 | Procedure family | Software entry point | Coverage still open |
 | --- | --- | --- |
-| IF-01–03 | Experiments matrix and `integration-matrix` | Supervised active/paused restart and campaign navigation cases |
+| IF-01–03 | Experiments matrix and `integration-matrix`, including campaign restart and navigation | Full physical repetitions and evidence |
 | RF-01–04 | Seeded sweeps, applied settings, delivery evidence and matched requester RTT | Full repetitions and bench review of baseline changes |
 | SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
@@ -963,3 +963,7 @@ in the separate clock calibration procedure.
 IF-03 C6 reviews the active and paused restart variants against the
 prescribed six-series campaign and verifies an explicit fresh rerun.
 Missing cases, altered setup and damaged raw evidence stay visible.
+
+IF-03 C5 captures navigation and reload on the same dashboard tab
+while the original campaign continues. The assessment needs both
+actions, verified transfer results and idle cleanup.

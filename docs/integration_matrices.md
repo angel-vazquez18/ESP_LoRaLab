@@ -8,7 +8,7 @@ readiness, assessment and references to its original child evidence.
 | --- | --- | --- |
 | IF-01 Serial interface | Claim, keepalive, release and reclaim on the firmware's selected transport. C2 command errors and configuration preservation, C3 framing and parser recovery, C4 compatibility rejection, C5 reply perturbation, conflict and stale-boot rejection, and C6 ownership, lease expiry and health watchdog. One connected role is enough. | Physical qualification on native USB and UART. |
 | IF-02 Known-data exchange | Four payload lengths (1, 64, 159 and 160 bytes), both roles, seeded repetitions, and deliberate peer mismatch with a verified restored configuration. | Full bench repetitions and qualification of the physical timing and delivery conditions. |
-| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, active/paused restart review, selected reruns, concurrent-start rejection and verified exports. | Live refresh/navigation and physical qualification. |
+| IF-03 Campaign persistence | Baseline, pause/resume, cancellation, configuration failure, live refresh/navigation, active/paused restart review, selected reruns, concurrent-start rejection and verified exports. | Attended physical qualification. |
 
 The full IF-02 plan has 24 positive case groups with 100 messages each and six
 peer mismatch controls. The full IF-03 plan has 25 case groups. Each baseline
@@ -170,6 +170,28 @@ CLI users can save the case's `campaign_request` from the preview with
 `campaign_restart_evidence` in the IF-03 C6 matrix request. Keep both
 campaign ZIPs alongside the procedure ZIP. A pair from a different
 workload or an altered archive leaves the case inconclusive.
+
+## IF-03 dashboard navigation and reload
+
+Select **IF-03**, **C5** and preview the matrix with both owned nodes
+connected. Start the ready cases, open **Campaigns**, and wait for the
+dashboard observation prompt. In that browser tab, visit another view,
+return to **Campaigns**, and reload the page while the campaign is
+still running. Repeat the sequence for each active C5 case.
+
+The host saves each transition against the active campaign, trial, radio
+run and host instance. The campaign must complete in the saved order,
+verify every message and confirm idle cleanup. Observations from two
+different browser tabs, a finished campaign or an unrelated execution
+cannot prove continuity. The case stays inconclusive if either action
+is missing. The procedure ZIP contains the observation records and
+case assessment.
+
+The CLI starts and reviews the same procedure. Use
+`lora-testbed integration-matrix` with `"catalog_id":"IF-03"` and
+`"groups":["C5"]`, then perform the browser actions during the run.
+The quick six-transfer fixture is useful for automated checks. Choose
+the full workload for the attended run so there is time to navigate.
 
 ## Serial transports for IF-01
 

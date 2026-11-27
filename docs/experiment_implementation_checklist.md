@@ -65,9 +65,9 @@ with independent source and recovered readback and controlled peer mismatch.
 
 The shared campaign runner preserves plan identities, child evidence and restart checkpoints.
 
-- [ ] Implement immutable case plans, applied-setting checks, finite budgets,
+- [x] Implement immutable case plans, applied-setting checks, finite budgets,
   receiver-first ordering, fresh sessions and per-case node/capability preflight.
-- [ ] Add pause/resume, cancel, failed configuration, refresh, host restart,
+- [x] Add pause/resume, cancel, failed configuration, refresh, host restart,
   selected rerun, ownership and export-integrity checks through the physical adapter.
 - [ ] Execute every procedure configuration/repetition, including active/paused
   interruption; preserve blocked, failed, interrupted and skipped evidence.
