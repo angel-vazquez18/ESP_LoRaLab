@@ -648,8 +648,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
 
     @app.post("/api/procedures/stop")
     async def stop_procedure(expected_run_id: control_v2.UUID | None = None):
-        async with app.state.host.lock:
-            return await app.state.host.procedures.stop(expected_run_id=expected_run_id)
+        return await app.state.host.procedures.stop(expected_run_id=expected_run_id)
 
     @app.post("/api/experiments/{catalog_id}/preflight")
     async def experiment_preflight(catalog_id: str, body: PreflightRequest):
@@ -713,8 +712,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
 
     @app.post("/api/v2/stop")
     async def stop_v2():
-        async with app.state.host.lock:
-            return await app.state.host.procedures.stop()
+        return await app.state.host.procedures.stop()
 
     def require_v2_run(identity):
         record = app.state.host.records.run(identity)

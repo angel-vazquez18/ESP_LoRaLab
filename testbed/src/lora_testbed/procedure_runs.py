@@ -309,11 +309,13 @@ class ProcedureService:
     async def stop(self, shutdown=False, *, expected_run_id=None):
         if expected_run_id is not None and (not self.busy or self.current["id"] != expected_run_id):
             raise RuntimeError("This procedure is no longer active")
-        if self.busy:
-            self.current["reason"] = "Host shutdown" if shutdown else "Stopped by operator"
-            self.task.cancel()
-            await self.task
-        return self.get(expected_run_id) if expected_run_id else deepcopy(self.current)
+        run, task = self.current, self.task
+        if task is not None and not task.done():
+            if not task.cancelling():
+                run["reason"] = "Host shutdown" if shutdown else "Stopped by operator"
+                task.cancel()
+            await asyncio.shield(task)
+        return self.get(expected_run_id) if expected_run_id else deepcopy(run)
 
     def csv(self, run):
         output = io.StringIO(newline="")

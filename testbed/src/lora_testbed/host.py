@@ -440,13 +440,13 @@ class Host:
             return await self.voice.start(request)
 
     async def stop(self):
-        if self.lab_trials.busy:
-            return await self.lab_trials.stop()
         if self.procedures.busy and (
             not self.physical_campaigns.busy
             or self.physical_campaigns.current.get("enclosing_procedure_id")
         ):
             return await self.procedures.stop()
+        if self.lab_trials.busy:
+            return await self.lab_trials.stop()
         if self.physical_campaigns.busy:
             return await self.physical_campaigns.cancel(self.physical_campaigns.current["id"])
         async with self.lock:

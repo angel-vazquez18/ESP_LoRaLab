@@ -4,6 +4,21 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Merge-review cancellation corrections
+
+Global Stop now cancels the owning procedure before its nested lab trial, so a
+stopped trial cannot advance to another RF case. Procedure-stop endpoints release
+the bench lock before awaiting nested cleanup. Repeated Stop calls cancel the
+procedure once and shield cleanup from cancellation of an HTTP caller.
+
+Four isolated cancellation regression cases pass. The Windows review host used
+import-only placeholders for unavailable POSIX modules; these cases do not use
+file locking, resource accounting, serial ports or firmware fixtures. The full
+host/native suite and ESP-IDF target builds remain unverified on this host because
+their POSIX/native toolchain prerequisites are unavailable. Lint, dashboard build
+and formatting, generated contracts, repository invariants and pinned Codec 2
+resource checks pass. No physical qualification or flashing was performed.
+
 ## November 27 — Shared-session packet matrix
 
 The PKT-02 runner now uses one protected session per case and preserves
