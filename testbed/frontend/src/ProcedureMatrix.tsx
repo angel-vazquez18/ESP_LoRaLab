@@ -72,6 +72,7 @@ type MatrixCase = {
     decoded_wav?: string;
     encoded_artifact?: string;
     listening?: { heard: "heard" | "not_heard" | "not_checked" };
+    voice_inspection?: string;
   };
   ready: boolean;
   blockers: string[];
@@ -296,6 +297,11 @@ function Cases({ rows, runId }: { rows: MatrixCase[]; runId?: string }) {
                 )}
               </>
             )}
+            {row.measurements?.voice_inspection && (
+              <a href={row.measurements.voice_inspection}>
+                Voice transfer and matched data evidence
+              </a>
+            )}
             {row.measurements?.export && (
               <a href={row.measurements.export}>Source assessment</a>
             )}
@@ -427,6 +433,7 @@ export default function ProcedureMatrix({
   const [usbEvidence, setUsbEvidence] = useState("");
   const [resetEvidence, setResetEvidence] = useState("");
   const [localVoiceEvidence, setLocalVoiceEvidence] = useState("");
+  const [remoteVoiceEvidence, setRemoteVoiceEvidence] = useState("");
   const [evidenceError, setEvidenceError] = useState("");
   const rfSweep = /^RF-0[1-4]$/.test(catalogId);
   const [referenceIds, setReferenceIds] = useState<string[]>([]);
@@ -454,6 +461,8 @@ export default function ProcedureMatrix({
   const reset = catalogId === "OPS-01" && (!group || group === "C2");
   const localVoiceReview =
     catalogId === "VOICE-01" && (!group || group === "C1" || group === "C2");
+  const remoteVoiceReview =
+    catalogId === "VOICE-02" && (!group || group === "C2");
   const selectDirection =
     option.kind === "link" ||
     option.kind === "voice" ||
@@ -476,6 +485,10 @@ export default function ProcedureMatrix({
       ["ops_usb_evidence", usb ? usbEvidence : ""],
       ["ops_reset_evidence", reset ? resetEvidence : ""],
       ["local_voice_evidence", localVoiceReview ? localVoiceEvidence : ""],
+      [
+        "voice_microphone_evidence",
+        remoteVoiceReview ? remoteVoiceEvidence : "",
+      ],
     ]) {
       if (!source.trim()) continue;
       try {
@@ -645,6 +658,21 @@ export default function ProcedureMatrix({
               disabled={pending}
               rows={3}
               maxLength={16384}
+            />
+          </label>
+        )}
+        {remoteVoiceReview && (
+          <label>
+            Saved microphone voice runs (JSON)
+            <textarea
+              value={remoteVoiceEvidence}
+              onChange={(event) => {
+                setEvidenceError("");
+                setRemoteVoiceEvidence(event.target.value);
+              }}
+              disabled={pending}
+              rows={3}
+              maxLength={8192}
             />
           </label>
         )}
