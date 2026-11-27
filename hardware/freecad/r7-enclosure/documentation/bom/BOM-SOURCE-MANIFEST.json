@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\bom\\complete-bom.json": "7e1d099d4a0681c861a9522c4fbf14ff9ca4255f7987887ac664a6476a4f3964",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\pcb-fabrication\\bom\\C5-Electronics-BOM.csv": "d9c6b8bfd8f7346e591d668c3ffa91c9b155ad8ea57dec4150d0a38e77c5d36a",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\documentation\\R7-ASSEMBLY-AND-INSPECTION.txt": "ce64941497c3e47ada86c1e6567f177bdfd106c95360656665232cdd25ce8ec4"
+  },
+  "rows": 37,
+  "pcb_component_rows_unchanged": 9,
+  "offboard_speaker_and_antenna_configuration_updated": true,
+  "default_installed_printed_quantity": 7,
+  "default_optional_coupon_quantity": 0
+}

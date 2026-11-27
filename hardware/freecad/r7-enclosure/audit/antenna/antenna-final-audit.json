@@ -1,0 +1,349 @@
+{
+  "ok": true,
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\lid\\EnclosureLid.brep": "0b707a6c2b076a2639d2beddf03c114558b5b148f1cfa0fbc4f0c8526949f271",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\EnclosureBase.brep": "cf796ab5c9b9e2afcebfca46c17a39b0e2e89c2d636dc9c012b010bfb7d353be",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\SMAKey.brep": "29a64781fd4a42293d3192af71bc05c2c22e8c0bb1903d9ee49d9e2175894dc2",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\CoaxR10Final.brep": "622f7725aa133e211a24a92af1577417e8526a42b9ae560de8d1a600462bec3a",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\ReferenceCoaxTie.brep": "838801d0508f7e79479566c6da454432f5087783c5a665484284f49273fc2bdd",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\ReferenceSMARearBodyR7.brep": "7f020f99ee24c982d181d336454c94842f62e96186ad14c9c93cd676bc3f4e8f",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\antenna-native-plan.json": "0e52420e10b3ebca7d72f24fc7630936b94fb59b1991b4fdfe1309e4f2cd2fa1"
+  },
+  "source_files_unchanged": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\lid\\EnclosureLid.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\EnclosureBase.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\SMAKey.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\CoaxR10Final.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\ReferenceCoaxTie.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\ReferenceSMARearBodyR7.brep": true,
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\antenna-native-plan.json": true
+  },
+  "final_lid_sha256": "549394369525150dbd5f283e28e4e9b01d555f988ff77e654a737a37728ad755",
+  "geometry": {
+    "EnclosureBase": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 48953.97126049492
+    },
+    "SMAKey": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 127.71968977810899
+    },
+    "CoaxR10Final": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 180.86513113054065
+    },
+    "ReferenceCoaxTie": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 77.86630551078171
+    },
+    "ReferenceSMARearBodyR7": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 353.3366979188109
+    },
+    "EnclosureLid": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 28233.156356931726
+    },
+    "SpeakerRetainer": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 1078.2839843941174
+    },
+    "SpeakerTie": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 68.88345884753164
+    },
+    "ReferenceSpeakerLeadA": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 26.875406254208837
+    },
+    "ReferenceSpeakerLeadB": {
+      "valid": true,
+      "closed": true,
+      "solids": 1,
+      "volume_mm3": 22.392161250003223
+    }
+  },
+  "pairs": {
+    "SMAKey__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "SMAKey__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.6999999999999993
+    },
+    "SMAKey__SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 36.099999999999994
+    },
+    "SMAKey__SpeakerTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 33.76979051434557
+    },
+    "SMAKey__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 10.227287449589403
+    },
+    "SMAKey__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 12.056772928262937
+    },
+    "CoaxR10Final__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.6400000000000006
+    },
+    "CoaxR10Final__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.48547711752675937
+    },
+    "CoaxR10Final__SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.1321918636841675
+    },
+    "CoaxR10Final__SpeakerTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 6.502758593237037
+    },
+    "CoaxR10Final__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.7211088875742695
+    },
+    "CoaxR10Final__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.3362390373884612
+    },
+    "ReferenceCoaxTie__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.14494897427831432
+    },
+    "ReferenceCoaxTie__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.3999999999999915
+    },
+    "ReferenceCoaxTie__SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 25.50304164920856
+    },
+    "ReferenceCoaxTie__SpeakerTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 21.66168598296293
+    },
+    "ReferenceCoaxTie__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.3435419723885674
+    },
+    "ReferenceCoaxTie__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 1.2737568443061182
+    },
+    "ReferenceSMARearBodyR7__EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    },
+    "ReferenceSMARearBodyR7__EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 2.3811978464830013
+    },
+    "ReferenceSMARearBodyR7__SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 28.5
+    },
+    "ReferenceSMARearBodyR7__SpeakerTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 28.89849342152708
+    },
+    "ReferenceSMARearBodyR7__ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 4.417759981246349
+    },
+    "ReferenceSMARearBodyR7__ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 7.839771173237074
+    },
+    "Coax__tie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.14000000000000057
+    },
+    "Key__body": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.20000000000000284
+    },
+    "base__lid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.0
+    }
+  },
+  "key_stop_checks": [
+    {
+      "key_offset_mm": [
+        -0.3,
+        -0.3,
+        0
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.0974417780812407
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        -0.3,
+        0
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.0974417780812666
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        -0.3,
+        0.7
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.0974417780812455
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        -0.3,
+        0.7
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.0974417780812655
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        0.3,
+        0
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.1552018716644594
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        0.3,
+        0
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.1552018716644936
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        0.3,
+        0.7
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.155201871664468
+    },
+    {
+      "key_offset_mm": [
+        -0.3,
+        0.3,
+        0.7
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.1552018716644912
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        -0.3,
+        0
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.0974417780812884
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        -0.3,
+        0
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.097441778081265
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        -0.3,
+        0.7
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.097441778081288
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        -0.3,
+        0.7
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.097441778081269
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        0.3,
+        0
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.1552018716645185
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        0.3,
+        0
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.155201871664492
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        0.3,
+        0.7
+      ],
+      "body_rotation_deg": -8,
+      "interference_mm3": 1.1552018716645194
+    },
+    {
+      "key_offset_mm": [
+        0.3,
+        0.3,
+        0.7
+      ],
+      "body_rotation_deg": 8,
+      "interference_mm3": 1.155201871664502
+    }
+  ],
+  "native_reference_prism_symmetric_difference_mm3": 0.0,
+  "route": "route-r10-audit.json",
+  "component_check": "candidate-audit.json; added material and key/tie source unchanged; R10 components independently checked",
+  "limits": [
+    "Key8.4mm jaw assumes measured-equivalent8mmAF rearhex; actualhardware must be gauged.",
+    "Geometricrotationstopproof is not a torque/drop rating.",
+    "R10route uses1.32mmOD reference; actualusablelength,flexibility,head dimensions remain to verify.",
+    "Finallid was rebased to latestcorner-return lid before these checks."
+  ]
+}

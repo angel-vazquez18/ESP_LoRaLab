@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "rows": 37,
+  "unique_references": 37,
+  "default_installed_prints": 7,
+  "optional_coupon_default": 0,
+  "pcb_modified": false,
+  "build_quantity_test": true,
+  "coupon_enable_restore_test": true,
+  "visual_review_pending": false,
+  "visual_review": "All 37 item rows plus notes/source layout inspected. Correct Unicode dimensions, visible title and quantities, no clipped content. Quantity control and optional coupon enable/restore tests passed; formula scan found zero errors.",
+  "reviewed_xlsx_sha256": "04b9493c6c3548ce2cf1c62164b695d56e16288d304dc70bb3f1a7d5c62b928e",
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\documentation\\bom\\R7-complete-bom.json": "e0bfd0753ba1b2fb51f81e49bb3daf9164d31ea0b9e2c044f01b7940282f9cb1"
+  },
+  "files": {
+    "xlsx": "04b9493c6c3548ce2cf1c62164b695d56e16288d304dc70bb3f1a7d5c62b928e",
+    "csv": "e9cd8468ec944a8006cb0c1f79eb6498fa9480db2a8f646554c9b03f7dd4411d"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "mesh_tolerance_mm": 0.02,
+  "writes": [
+    {
+      "tool": "save_document",
+      "args": {
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"path\": \"C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd\"\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd"
+        },
+        "isError": false
+      }
+    },
+    {
+      "tool": "export_step",
+      "args": {
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "object_names": [
+          "EnclosureBase",
+          "EnclosureLid",
+          "PTTPlunger",
+          "PTTStopCup",
+          "BatteryCover",
+          "SpeakerRetainer",
+          "SMAKey",
+          "R7FitCoupon"
+        ],
+        "file_path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.step"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"path\": \"C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.step\",\n  \"object_count\": 8\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/cad/LoRa-Enclosure-C5-R7-Reinforced.step",
+          "object_count": 8
+        },
+        "isError": false
+      }
+    },
+    {
+      "tool": "export_3mf",
+      "args": {
+        "doc_name": "LoRa_Enclosure_C5_Fit_Checked",
+        "object_names": [
+          "EnclosureBase",
+          "EnclosureLid",
+          "PTTPlunger",
+          "PTTStopCup",
+          "BatteryCover",
+          "SpeakerRetainer",
+          "SMAKey",
+          "R7FitCoupon"
+        ],
+        "file_path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/printing/C5-R7-all-parts-mm.3mf",
+        "mesh_tolerance": 0.02
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"path\": \"C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/printing/C5-R7-all-parts-mm.3mf\",\n  \"object_count\": 8\n}"
+          }
+        ],
+        "structuredContent": {
+          "success": true,
+          "path": "C:/Users/Homar/Documents/ChatGPT/LoRa-Walkie-Talkies/output/enclosure-c5/revision-r7-enclosure/printing/C5-R7-all-parts-mm.3mf",
+          "object_count": 8
+        },
+        "isError": false
+      }
+    }
+  ]
+}

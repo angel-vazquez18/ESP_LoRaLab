@@ -1,0 +1,35 @@
+R7 enclosure inspection viewer
+
+The viewer is a derived inspection aid. Printing and machining use the released
+R7 CAD and manufacturing files, not its capped display cuts or exploded offsets.
+
+The populated C5 PCB and all 2,949 assigned source objects retain their existing
+placements and overview mesh coordinates. The battery, speaker shape, fasteners,
+SMA hardware, wires and ties remain fit references, with measured-hardware checks
+listed in the R7 assembly/inspection instructions.
+
+R7 view changes: reinforced lid relief edges, noncontact microphone shroud,
+thicker speaker-retainer nut roofs, speaker lead retention, removable SMA key,
+and a 10 mm nominal bend-radius coax route. The 0.50 mm OLED datum gap, PCB
+positions, battery bay and speaker electrical connection are retained.
+
+Controls include assembled/exploded/cutaway modes, rotate/zoom, shell transparency,
+individual part selection/visibility, nine clickable fit dimensions, and focused
+speaker/SMA/coax/microphone inspections. Exploded cable positions are illustrative
+disconnections; they do not imply that the installed cables stretch.
+
+The original release checks bound saved native solids to audited geometry,
+verified packed coordinates and triangle indices, and checked eighteen dimension
+endpoints against exact Boolean section surfaces. Display coordinates use
+0.001 mm quantization. Original evidence JSON is retained without alteration.
+
+For this consolidated release, tools/rebuild_r7_viewer.py (one directory above)
+reconstructs the published fragment exactly from the retained transports. It is
+read-only by default and has no older-revision dependency. This is exact asset
+reconstruction, not fresh CAD tessellation. Editing the CAD requires new meshes,
+section witnesses and release review before a new viewer can be called approved.
+
+prepare_inputs.py provides a separate read-only FreeCAD check of the current
+native and retained reference inputs with global component placements. Browser
+reruns use portable runtime configuration and write to new output directories.
+See ../tools/README-viewer.md for commands, limitations and provenance details.

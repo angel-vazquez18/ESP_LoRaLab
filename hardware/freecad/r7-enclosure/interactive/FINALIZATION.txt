@@ -1,0 +1,22 @@
+R7 consolidated viewer status
+
+The current R7 native was approved and the viewer was finalized before
+consolidation. Native, fragment, preview, compact geometry and three published
+view images are preserved. Original evidence JSON is immutable historical data.
+
+Verify exact reconstruction using ordinary Python:
+  python -B tools/rebuild_r7_viewer.py
+  python -B interactive/validate_portability.py
+
+These commands are run from the release root and do not require older revisions.
+An optional current-native inspection is available with FreeCAD's Python:
+  python -B interactive/prepare_inputs.py
+
+For optional browser reruns, configure a new output directory and the installed
+Playwright/browser as documented in tools/README-viewer.md. Published evidence
+and PNGs are not overwritten. Newly exported images require visual review.
+
+Exact reconstruction does not regenerate meshes from edited CAD. The former
+revision-dependent exporters were retired. Future geometry changes require a
+fresh candidate export and engineering review, including globally placed PCB
+components, local sections, dimension witnesses, source binding and browser QA.

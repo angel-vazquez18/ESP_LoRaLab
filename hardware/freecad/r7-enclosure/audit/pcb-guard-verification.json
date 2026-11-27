@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "verified_utc": "2026-11-25T14:23:42.268557+00:00",
+  "baseline_sha256": "1171efb220241711e4425e6aee6cdb6817560d79c8021e5547892f0445d0a20f",
+  "files_checked": 367,
+  "scope_counts": {
+    "workspace_c5_design": 117,
+    "c5_fabrication_handoff": 66,
+    "assigned_component_step": 1,
+    "local_hardware": 129,
+    "local_exports": 2,
+    "current_heltec_firmware/include": 4,
+    "current_heltec_firmware/src": 1,
+    "current_heltec_firmware/lib": 7,
+    "current_heltec_firmware/test": 11,
+    "current_heltec_firmware/tools": 5,
+    "current_heltec_firmware/platformio.ini": 1,
+    "workspace_legacy_firmware/include": 4,
+    "workspace_legacy_firmware/src": 1,
+    "workspace_legacy_firmware/lib": 4,
+    "workspace_legacy_firmware/test": 10,
+    "workspace_legacy_firmware/tools": 3,
+    "workspace_legacy_firmware/platformio.ini": 1
+  },
+  "added": [],
+  "missing": [],
+  "changed": [],
+  "statement": "PCB, manufacturing handoff and firmware bytes/membership unchanged within the recorded scopes."
+}

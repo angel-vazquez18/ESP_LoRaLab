@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "zip": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\LoRa-C5-R7-Enclosure-Prototype-Package.zip",
+  "bytes": 31879227,
+  "sha256": "da72d92d3ae4d641527e58171b7fee4ea28d083b23fa682e921c2c0e426c00b7",
+  "file_count": 250,
+  "manifest_sha256": "8109c1762825c672bd217767b761e39ca6e68db603e46c70e7e622d66d691868",
+  "pcb_guard_files": 367,
+  "order_placed": false
+}

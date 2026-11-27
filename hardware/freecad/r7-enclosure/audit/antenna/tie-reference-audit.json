@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "reference": "ReferenceCoaxTie.brep",
+  "sha256": "838801d0508f7e79479566c6da454432f5087783c5a665484284f49273fc2bdd",
+  "head_bounds_mm": [
+    55.75,
+    79,
+    16,
+    60.25,
+    83.5,
+    18.7
+  ],
+  "strap_bounds_mm": [
+    55.75,
+    79.0,
+    15.6,
+    60.25,
+    90.7,
+    20.6
+  ],
+  "component_bounds_source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r5-sma\\interactive\\routing\\component-bounds.json",
+  "component_bounds_sha256": "8c7e2b43bc3c4e922e0243532d26d0bcc027667b0d5deb2e7538481f24be74b4",
+  "component_count": 2949,
+  "aabb_intersections": 0,
+  "minimum_conservative_component_clearance_mm": 3.6199999639996747,
+  "nearest_index": 2121,
+  "note": "Head moved0.4mm up; complete tie boundingboxexcludesall2949assigned componentbounds. Exact wire/lid/nativeintersections checkedbyfinalize_audit.py."
+}

@@ -1,0 +1,162 @@
+{
+  "operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn1Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn1Blank",
+        "expressions": {
+          "Placement": "placement(vector(12.5;44.4;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn1Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn1"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn2Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn2Blank",
+        "expressions": {
+          "Placement": "placement(vector(12.5;70.5;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn2Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn2"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn3Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn3Blank",
+        "expressions": {
+          "Placement": "placement(vector(31.2;44.4;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn3Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn3"
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "type_id": "Part::Box",
+        "name": "R7OLEDCornerReturn4Blank",
+        "properties": {
+          "Length": 2.3000000000000007,
+          "Width": 1.2000000000000028,
+          "Height": 0.6999999999999993,
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "object_name": "R7OLEDCornerReturn4Blank",
+        "expressions": {
+          "Placement": "placement(vector(31.2;70.5;22);rotation(0;0;0))"
+        },
+        "recompute": true
+      }
+    },
+    {
+      "tool": "fillet_edges",
+      "args": {
+        "object_name": "R7OLEDCornerReturn4Blank",
+        "radius": 0.2,
+        "edges": [
+          "Edge2",
+          "Edge6",
+          "Edge10",
+          "Edge12"
+        ],
+        "name": "R7OLEDCornerReturn4"
+      }
+    }
+  ],
+  "link_deltas_to_merge": {
+    "R7OLEDStrengthMask": {
+      "append": [
+        "R7OLEDCornerReturn1",
+        "R7OLEDCornerReturn2",
+        "R7OLEDCornerReturn3",
+        "R7OLEDCornerReturn4"
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "kind": "current-R7-release",
+  "checked_utc": "2026-11-25T19:08:57.906850+00:00",
+  "checks": {
+    "identities_and_current_native": {
+      "native_documents": 1,
+      "printed_parts": 8,
+      "global_component_objects": 2949,
+      "historical_sources_required": false,
+      "component_reference_verified": true
+    },
+    "manufacturing_meshes": {
+      "files_checked": 32,
+      "exact_3mf_and_float32_stl_geometry": true,
+      "installed_parts": 7,
+      "optional_coupon_parts": 1,
+      "order_placed": false
+    },
+    "documentation_bom_cnc": {
+      "manufacturing_pages": 9,
+      "global_component_sections_corrected": true,
+      "bom_reviewed": true,
+      "cnc_geometry_exact": true,
+      "machine_code_supplied": false
+    },
+    "interactive_viewer": {
+      "ok": true,
+      "overview": {
+        "parts": 50,
+        "triangles": 326330,
+        "sha256": "26e61947021f6c42db91c50ec9c16487e3750d768d826afe9024c0dea9257680"
+      },
+      "focus": {
+        "parts": 101,
+        "triangles": 89170,
+        "sha256": "b23758a7b2f09590877a8818e8a3bec36db65bb17aba77ec0c33e789692565c0"
+      },
+      "dimensions": 9,
+      "fragment_sha256": "f18d7d5754b6f5e1e8f7aa43e7c128639d35b0a2b46ef785c0a830af0bb6c620",
+      "preview_sha256": "abd264e629183f1381d92b5010b20e6d0258888bc85e424492094d9199c43c3d",
+      "preview_fragment_matches": true,
+      "exact_text_reconstruction": true,
+      "exact_byte_reconstruction": true,
+      "writes": false
+    },
+    "protected_pcb_evidence": {
+      "protected_files_in_recorded_guard": 367,
+      "historical_reports_preserved": true,
+      "local_pcb_payload_verified": true,
+      "full_pcb_baseline_verified": true,
+      "firmware_external_files_reread": false
+    }
+  },
+  "failures": [],
+  "scope": "Current artifact integrity, exact approved-mesh reconstruction and saved current global-placement CAD proof; no physical qualification or old-revision recomputation."
+}

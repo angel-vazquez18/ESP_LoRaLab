@@ -1,0 +1,65 @@
+{
+  "head_bounds": [
+    66.8,
+    54.05,
+    13.6,
+    71.3,
+    58.55,
+    16.3
+  ],
+  "actual_electronics": {
+    "objects_scanned": 2949,
+    "exact_booleans": 0,
+    "hits": [],
+    "minimum_mm": 3.6689418672487455,
+    "nearest_source_index": 1715,
+    "exact_distances": 16
+  },
+  "pairs": {
+    "EnclosureBase": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.7000000000000028
+    },
+    "EnclosureLid": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.14999999999999858
+    },
+    "SMAKey": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 33.76979051434557
+    },
+    "CoaxR10Final": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 6.502758593237037
+    },
+    "ReferenceCoaxTie": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 21.66168598296293
+    },
+    "SpeakerTieAnchor": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.14999999999999858
+    },
+    "SpeakerRetainer": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.5499999999999972
+    },
+    "ReferenceSpeakerLeadA": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.5360549254874907
+    },
+    "ReferenceSpeakerLeadB": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.2499999999999858
+    },
+    "MicrophoneShroud": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 21.173737227162263
+    },
+    "RelievedLocatingLip": {
+      "intersection_mm3": 0.0,
+      "distance_mm": 0.4499999999999993
+    }
+  },
+  "ok": true
+}

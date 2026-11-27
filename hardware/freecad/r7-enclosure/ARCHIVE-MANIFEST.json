@@ -1,0 +1,1277 @@
+{
+  "revision": "R7",
+  "scope": "FreeCAD enclosure development files only; no PCB source, Gerbers, drills, firmware or orders.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 273,
+      "sha256": "6b221852962af65e84e026efbb10c3a08746acd444de68d929fbc38c65b23300"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 215,
+      "sha256": "9e584dd0a0e1f2e2e69141c2650d09da298e28b052ba6cdc427bb120260a2777"
+    },
+    {
+      "path": "approved-exports.json",
+      "bytes": 3171,
+      "sha256": "af8fc3bc2c007a20a2c4724af7c76831ee119121186e86692ea0ab375ae028ea"
+    },
+    {
+      "path": "audit/antenna/AddedBaseMaterial.brep",
+      "bytes": 337293,
+      "sha256": "3980508204dda3d781dd78d41d2333071a40f9275a4894612ef6272b337fc8b0"
+    },
+    {
+      "path": "audit/antenna/antenna-final-audit.json",
+      "bytes": 10706,
+      "sha256": "2e114cd2c650fc027e17008c3d5f660ba9c9cc821a3b636c0563e047a815e8cb"
+    },
+    {
+      "path": "audit/antenna/antenna-native-plan.json",
+      "bytes": 13116,
+      "sha256": "0e52420e10b3ebca7d72f24fc7630936b94fb59b1991b4fdfe1309e4f2cd2fa1"
+    },
+    {
+      "path": "audit/antenna/candidate-audit.json",
+      "bytes": 28023,
+      "sha256": "93e9c77f2db63083bf66ae3a52f66c3e34fbc9e73c2d9fc02bc644c901579c7e"
+    },
+    {
+      "path": "audit/antenna/CoaxR10Final.brep",
+      "bytes": 15171,
+      "sha256": "622f7725aa133e211a24a92af1577417e8526a42b9ae560de8d1a600462bec3a"
+    },
+    {
+      "path": "audit/antenna/EnclosureBase.brep",
+      "bytes": 315902,
+      "sha256": "cf796ab5c9b9e2afcebfca46c17a39b0e2e89c2d636dc9c012b010bfb7d353be"
+    },
+    {
+      "path": "audit/antenna/EnclosureLid.brep",
+      "bytes": 309933,
+      "sha256": "549394369525150dbd5f283e28e4e9b01d555f988ff77e654a737a37728ad755"
+    },
+    {
+      "path": "audit/antenna/ReferenceCoaxTie.brep",
+      "bytes": 42747,
+      "sha256": "838801d0508f7e79479566c6da454432f5087783c5a665484284f49273fc2bdd"
+    },
+    {
+      "path": "audit/antenna/ReferenceSMARearBodyR7.brep",
+      "bytes": 4492,
+      "sha256": "7f020f99ee24c982d181d336454c94842f62e96186ad14c9c93cd676bc3f4e8f"
+    },
+    {
+      "path": "audit/antenna/route-r10-audit.json",
+      "bytes": 11103,
+      "sha256": "33bb6f7d5a45021256e2185c32a8dab9b6e2e837548a22d98b2eb306a7a836c0"
+    },
+    {
+      "path": "audit/antenna/SMAAnchor.brep",
+      "bytes": 52810,
+      "sha256": "6e2f88df44477bad87b1d96246c496db13e1d6205fa8b361933186f8cd4c5b32"
+    },
+    {
+      "path": "audit/antenna/SMAAnchorSlot.brep",
+      "bytes": 22148,
+      "sha256": "0b6d1d0af0e7f2c998bf3f808af890a4b492e9c338fa284bc096cc16361411c6"
+    },
+    {
+      "path": "audit/antenna/SMAKey.brep",
+      "bytes": 28225,
+      "sha256": "29a64781fd4a42293d3192af71bc05c2c22e8c0bb1903d9ee49d9e2175894dc2"
+    },
+    {
+      "path": "audit/antenna/SMAKeyCarrier.brep",
+      "bytes": 21842,
+      "sha256": "7a8d031f2487b5465459a2a0a1e3886e295ba081e01ce3964d1e9b24147822d3"
+    },
+    {
+      "path": "audit/antenna/SMAKeyLipRelief.brep",
+      "bytes": 3752,
+      "sha256": "ca7d4f0ed80f3c2b578b4a7d01e6ed25256bf23db961c29c4fcaf1aeb6a090ca"
+    },
+    {
+      "path": "audit/antenna/SMAKeyPocket.brep",
+      "bytes": 3758,
+      "sha256": "f5d31edc55d2481a46886db12faeef73b16802e93fc9592a1a4db22b6e116d20"
+    },
+    {
+      "path": "audit/antenna/SMATieLipRelief.brep",
+      "bytes": 3372,
+      "sha256": "a3b9a02f2c598e4a8c742c18774260f044ad565f02a71ae1cec774ad3f7d1838"
+    },
+    {
+      "path": "audit/antenna/tie-reference-audit.json",
+      "bytes": 918,
+      "sha256": "21221d6dca662f2dcaa956f03ac7ebfd04aac066d896da94c0a57bc342d83106"
+    },
+    {
+      "path": "audit/CLEANUP-RECORD.json",
+      "bytes": 923,
+      "sha256": "a06be41af998633be2e45201da89f837cef9acf75b61e871db32abf44676566d"
+    },
+    {
+      "path": "audit/consolidation-validation.json",
+      "bytes": 5510,
+      "sha256": "c44798dd4657b019da9db5df2b9f18b6167dcbe979972880840776d55fd5fd15"
+    },
+    {
+      "path": "audit/current-native-validation.json",
+      "bytes": 6415,
+      "sha256": "1e65b747c72e5c1871b76279d76fd76c9b7ba3059919a6392cf02cc46782ed07"
+    },
+    {
+      "path": "audit/derived-print-validation.json",
+      "bytes": 75231,
+      "sha256": "1c6a6982a612b3f2b11555d40ae9cd0fb7ce465f4e31d414282272bad1fb214e"
+    },
+    {
+      "path": "audit/fit-coupon-audit.json",
+      "bytes": 1249,
+      "sha256": "9bd22d34fe5ae3519449e6e6a6921e25e61dcdc0f92dd71cd7148e1a144e49c9"
+    },
+    {
+      "path": "audit/fit-coupon-native-operations.json",
+      "bytes": 9429,
+      "sha256": "d2fa1cab5e9c145478ff52b6bc9a63e51297d61b55ddc7bf273dfdd9ff2955de"
+    },
+    {
+      "path": "audit/fit-coupon-plan.json",
+      "bytes": 2888,
+      "sha256": "20dccfd405a3abe340bd42165154d8d06365044bea4b4855fa795b8306e29207"
+    },
+    {
+      "path": "audit/lid/AddedLidMaterial.brep",
+      "bytes": 122122,
+      "sha256": "b195d78be3a09d0aa1729d51d054ef987a8d216a8fc53dbbad242928254ba2b5"
+    },
+    {
+      "path": "audit/lid/corner-return-probe.json",
+      "bytes": 100819,
+      "sha256": "29ca2bbd7351f9aa2ed0698eb91ebecd2845eca09fcc47ce4674c6c1b9a46c8a"
+    },
+    {
+      "path": "audit/lid/EnclosureLid.brep",
+      "bytes": 303632,
+      "sha256": "0b707a6c2b076a2639d2beddf03c114558b5b148f1cfa0fbc4f0c8526949f271"
+    },
+    {
+      "path": "audit/lid/EnclosureLidWithCornerReturns.brep",
+      "bytes": 300096,
+      "sha256": "c5e1de8fa851ec3630d8c622f6f52a651e82ca63e77d5d01799e55163fa18054"
+    },
+    {
+      "path": "audit/lid/larger-head-native-addendum.json",
+      "bytes": 396,
+      "sha256": "0bdedf766db1aa574e628580be532716d0c45b2448b793901ee807479ae6d3a0"
+    },
+    {
+      "path": "audit/lid/larger-speaker-tie-audit.json",
+      "bytes": 1517,
+      "sha256": "78d34f54b2b4d9a6ac72444c4af7aee47de214a6b8fc98332390f9f69c92f1a9"
+    },
+    {
+      "path": "audit/lid/lid-candidate-audit.json",
+      "bytes": 15188,
+      "sha256": "5374980262004b9865035adaf665fabce157a9c775ba4df62bd4147195cc8cf1"
+    },
+    {
+      "path": "audit/lid/MicrophoneShroud.brep",
+      "bytes": 3496,
+      "sha256": "6a197af58a24978013e447cd814e72d9fb2e68a0e085f8e77b02bc5f3094e476"
+    },
+    {
+      "path": "audit/lid/native-lid-operation-plan-corrected.json",
+      "bytes": 13911,
+      "sha256": "e12e02dcfbf9d43d1d2f9986575bf0df30e522b033a8f6d2ebc5314a94d63221"
+    },
+    {
+      "path": "audit/lid/native-lid-operation-plan-final.json",
+      "bytes": 18633,
+      "sha256": "384d49e76b35673564c645132f35c99c7b7b8e7d6d5babf5594c3db6716f20df"
+    },
+    {
+      "path": "audit/lid/native-lid-operation-plan.json",
+      "bytes": 14233,
+      "sha256": "349b0ed21eec06bcd52c409a79f83020086dd56436b74202adb20e204aa5ac01"
+    },
+    {
+      "path": "audit/lid/oled-band-fillet-addendum.json",
+      "bytes": 1345,
+      "sha256": "7542220b5f37221b76b989c60c94440d0c38f9081510891015f2ce1f10637750"
+    },
+    {
+      "path": "audit/lid/oled-corner-returns-addendum.json",
+      "bytes": 3891,
+      "sha256": "0b8ad8139039fc9b5080dfcf529af0a58141de9b8a6a8f8e5974e8c655888917"
+    },
+    {
+      "path": "audit/lid/oled-roof-witnesses.json",
+      "bytes": 75916,
+      "sha256": "a5ece0beb3572dafa6cb8a3a3f8657c8aa9b8e99a02ff9dbe6bb7a9b56c3ef41"
+    },
+    {
+      "path": "audit/lid/OLEDReinforcement.brep",
+      "bytes": 68209,
+      "sha256": "59a8fc02f5194e2b97334ce684c056fbc5eb3e7fe04cf651fcdb92ab457dd144"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerEnvelope.brep",
+      "bytes": 2940,
+      "sha256": "66686bb1c51f95e809955b37259eb767f6a775faf4f2e1dd397805bde6028da9"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerLeadA.brep",
+      "bytes": 8967,
+      "sha256": "bfa6864324286cdeb57007541417da6b7345323be4c8efc6f432b4adf44bbfe5"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerLeadB.brep",
+      "bytes": 8913,
+      "sha256": "5d34db6a7b5069e30730762a1cc28c3967ecb92b99dbb3a2e67f313d76e49bbd"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerNuts.brep",
+      "bytes": 8730,
+      "sha256": "6b3bb611b3f21129bff7ca46722ca4dd3803cbaf76e648c59ed023a9483155f7"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerScrewShafts.brep",
+      "bytes": 2231,
+      "sha256": "24b3d6b8c9270301141e6ac5dae3c75a605cc7f3db15c1cfb4af80bac636659c"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerTie.brep",
+      "bytes": 43708,
+      "sha256": "a7c37dc4ee03daf46f2650ee974c2d33a63a86a5aff8244dfd8f2a510eca407d"
+    },
+    {
+      "path": "audit/lid/ReferenceSpeakerTieLargeHead.brep",
+      "bytes": 43708,
+      "sha256": "a7c37dc4ee03daf46f2650ee974c2d33a63a86a5aff8244dfd8f2a510eca407d"
+    },
+    {
+      "path": "audit/lid/speaker-tie-lip-relief-native-addendum.json",
+      "bytes": 594,
+      "sha256": "93c184afe902134526d11955033a3e1f704cb1ae744c5ab2f35ea96143fbdf04"
+    },
+    {
+      "path": "audit/lid/SpeakerRetainer.brep",
+      "bytes": 40072,
+      "sha256": "fd521658988ce70277edc9b0e6839d6a86c453d9cb7359e5f856ff81db7cb5ad"
+    },
+    {
+      "path": "audit/lid/SpeakerTieAnchor.brep",
+      "bytes": 26843,
+      "sha256": "0a42741f5dc1be73eb47708cdcb4501ee72a8ee43f54bddf926cb1ccd057bfda"
+    },
+    {
+      "path": "audit/lid/SpeakerTieLipRelief.brep",
+      "bytes": 3871,
+      "sha256": "b0865ef4cef628cd29b90e015f355171fd6ab6b0b27a6077cf18d2edfe868db2"
+    },
+    {
+      "path": "audit/mesh-separation-probe.json",
+      "bytes": 3377,
+      "sha256": "e759bc21189fee52f912f576f5fa5ad4606ea0eb912ad6a061633a7daa314dc1"
+    },
+    {
+      "path": "audit/pcb-guard-baseline.json",
+      "bytes": 130847,
+      "sha256": "1171efb220241711e4425e6aee6cdb6817560d79c8021e5547892f0445d0a20f"
+    },
+    {
+      "path": "audit/pcb-guard-verification.json",
+      "bytes": 1056,
+      "sha256": "e66d92eb658e31ff34b3f6f32570ec5849f13ce2ca5955a1906ebd23f18d5a97"
+    },
+    {
+      "path": "audit/pcb-relocation-verification.json",
+      "bytes": 4051,
+      "sha256": "a3701d2addf8ff9c2c6f1b4a79735d37d8ac534bc7e8c1cda487159a3862d7c6"
+    },
+    {
+      "path": "audit/provenance/native-operations-log.json",
+      "bytes": 33103,
+      "sha256": "84bbe1f549d18d6daa61bd4aee2fc1680e61c54b9632a3bbdb17717e406752b5"
+    },
+    {
+      "path": "audit/provenance/native-r7-final-tie-operations.json",
+      "bytes": 5977,
+      "sha256": "f3d140127e5aa9d00e03ee200ee72d5f8e154ed8951b8ba07baa5281a9d162cc"
+    },
+    {
+      "path": "audit/provenance/native-r7-operations.json",
+      "bytes": 139210,
+      "sha256": "b46bff0c90492706cde8efae96baf99666113e7e730b53c53a52fa58584ab759"
+    },
+    {
+      "path": "audit/provenance/original-PACKAGE-MANIFEST.json",
+      "bytes": 45146,
+      "sha256": "8109c1762825c672bd217767b761e39ca6e68db603e46c70e7e622d66d691868"
+    },
+    {
+      "path": "audit/provenance/PACKAGE-VALIDATION.json",
+      "bytes": 448,
+      "sha256": "5115210bdf11af28ec7ee255b3167bf6e2fc9e6a33708bb5fd96456dac74f4aa"
+    },
+    {
+      "path": "audit/R7FitCoupon.brep",
+      "bytes": 47443,
+      "sha256": "815eb7a69b35e4923940a07874770e0a1589f247ba80a94c85e7cd3cd4ecd8b8"
+    },
+    {
+      "path": "audit/saved-r7-validation.json",
+      "bytes": 12473,
+      "sha256": "99879309d1fc0f0172fb379ecd82d0db54e59f7039311cc11f6feffebf280f5b"
+    },
+    {
+      "path": "audit/verify_pcb_guard.py",
+      "bytes": 4078,
+      "sha256": "abce00f6fd860923a1017656f70dc000b540afb4ae3555bad633bdd6c382da85"
+    },
+    {
+      "path": "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd",
+      "bytes": 17820765,
+      "sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37"
+    },
+    {
+      "path": "cad/LoRa-Enclosure-C5-R7-Reinforced.step",
+      "bytes": 929951,
+      "sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a"
+    },
+    {
+      "path": "cnc-shop/CNC-SHOP-GEOMETRY-MANIFEST.json",
+      "bytes": 2857,
+      "sha256": "85041d436dfade2c0d610ac22feacbc12a53bb7fe802bdfe5dd33573e54a0fd2"
+    },
+    {
+      "path": "cnc-shop/CNC-SHOP-HANDOFF.txt",
+      "bytes": 5672,
+      "sha256": "0326a4e13710941d6940851a00f81da6349f50004481891cb073648c3216342e"
+    },
+    {
+      "path": "cnc-shop/geometry/LoRa-Enclosure-C5-R7-Reinforced.step",
+      "bytes": 929951,
+      "sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a"
+    },
+    {
+      "path": "craftcloud/optional-coupon/C5-R7-fit-coupon-mm.3mf",
+      "bytes": 19583,
+      "sha256": "2aee587b620159741734ae456de1d22468802eb5249f4aafbb0e52f34f2c17a6"
+    },
+    {
+      "path": "craftcloud/optional-coupon/C5-R7-fit-coupon-mm.stl",
+      "bytes": 101684,
+      "sha256": "e30355d8009032b4bbb5095dc7dfaee648b7a2e9041d6d364301483ec68afc61"
+    },
+    {
+      "path": "craftcloud/ORDER-SPECIFICATION.txt",
+      "bytes": 1615,
+      "sha256": "4fe0cf9c43a688952b3841d56a5791a84e40170618351ca50e16653f81f87514"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-battery-cover-mm.3mf",
+      "bytes": 20622,
+      "sha256": "9547dd504fc31c44fd4f8511f452e8b323296604ed8a0297d9e215e4564bda42"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-battery-cover-mm.stl",
+      "bytes": 112684,
+      "sha256": "1f340db18b4c9d62788bb696fe52f0151776bf05e55d5345b1e1b7b3426e9fef"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-enclosure-base-mm.3mf",
+      "bytes": 70917,
+      "sha256": "b27abb09960abfc3cf399b407db11c7648fc6c68251e264dabdc7b829cd5a864"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-enclosure-base-mm.stl",
+      "bytes": 379784,
+      "sha256": "c0d0f231ac0f40f4e94d82c814875dcc8bdda8195bae2ee592b51d34230a311c"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-enclosure-lid-mm.3mf",
+      "bytes": 76805,
+      "sha256": "ac5943b4f4da063ff0cb0964e1557e4e5c7ab08090e4594bcd9ad18295474b99"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-enclosure-lid-mm.stl",
+      "bytes": 412084,
+      "sha256": "53c3b04024f91faa0305e5c48873228604fd1cd10461894aa620f08cab5d129d"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-ptt-plunger-mm.3mf",
+      "bytes": 5528,
+      "sha256": "9d654e00ad3d0c11d7726c39ee36bba1c6fc50f4154f60394b063e8892959659"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-ptt-plunger-mm.stl",
+      "bytes": 26284,
+      "sha256": "73c5b2353243d139a4bb8e179f404436cf587dc7284739c1f8e53d0ee52921a4"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-ptt-stop-cup-mm.3mf",
+      "bytes": 9894,
+      "sha256": "f26a24128481825a428eae967748eda5606d56ecae57947df4ac4338b0162091"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-ptt-stop-cup-mm.stl",
+      "bytes": 50284,
+      "sha256": "cea6bcf02ade4060d64ca34adbb24499dc1275469d6d2fe10ae4ef817bb7205d"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-sma-key-mm.3mf",
+      "bytes": 6871,
+      "sha256": "e260913349fefea202a5a02f30b41c6845c3f04069b26d36be6a402ad223c624"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-sma-key-mm.stl",
+      "bytes": 34684,
+      "sha256": "e8d2ae4d9abb6c237339219e267d224f90f7b662cf032d0ab8ec27b99f86e73d"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-speaker-retainer-mm.3mf",
+      "bytes": 8758,
+      "sha256": "e1c78e9d09765c82dfdc8480cca984b25763cb31bb2e90faa8d49b139624c812"
+    },
+    {
+      "path": "craftcloud/upload/C5-R7-speaker-retainer-mm.stl",
+      "bytes": 45284,
+      "sha256": "5b895cb95348da565683f76e4f7236424f220cda7ca4726bdb68439393682ee7"
+    },
+    {
+      "path": "craftcloud/upload-manifest.json",
+      "bytes": 6852,
+      "sha256": "5ffa1afe953a67814c157082d08189814e68c445e0b31b25ec628cbe36ec56c1"
+    },
+    {
+      "path": "CURRENT-RELEASE.json",
+      "bytes": 716,
+      "sha256": "99217b3109925ab4064b85c4f90a76b91c9f39da3c309e2542f6d179c30e0124"
+    },
+    {
+      "path": "derive_print_files.py",
+      "bytes": 21225,
+      "sha256": "4392ba2ad1331ac00e113d55cf8160376cd26a433a64db0bc810427d037da5ee"
+    },
+    {
+      "path": "documentation/bom/BOM-lower.png",
+      "bytes": 38042,
+      "sha256": "1724d0ca6b332b0f75f90386478418257d5cabca4f0ca8b41b75705c58feae5f"
+    },
+    {
+      "path": "documentation/bom/BOM-middle.png",
+      "bytes": 47231,
+      "sha256": "b1a2c72c1d5ad7bb80a8b30ba492d91daa25ace1ce017f546a879025e6624394"
+    },
+    {
+      "path": "documentation/bom/BOM-notes.png",
+      "bytes": 62548,
+      "sha256": "7eac9890f065aaa0f2bf1f276efd740bab0ebd6e1a6666b5da214b4d58c1a2e1"
+    },
+    {
+      "path": "documentation/bom/BOM-SOURCE-MANIFEST.json",
+      "bytes": 899,
+      "sha256": "ce35bd3e1bae2d3319e62b3ff8ace634fd94d4c0513647ee5d2493a01039f557"
+    },
+    {
+      "path": "documentation/bom/BOM-upper.png",
+      "bytes": 48125,
+      "sha256": "6334214b4fa72abd294292a92686b1c44c302d246aefa85a5b3970a7ff9fc6ad"
+    },
+    {
+      "path": "documentation/bom/BOM-VALIDATION.json",
+      "bytes": 1017,
+      "sha256": "e36e80d9ca7834032f0bf029baa828eacc76e2c26732af1fac207b02648d9331"
+    },
+    {
+      "path": "documentation/bom/build_r7_bom.mjs",
+      "bytes": 7211,
+      "sha256": "f4886cc26a475e96ff52f79c9b6e538fff5dba3b54f8fa4f8eb568d8b0bc77b5"
+    },
+    {
+      "path": "documentation/bom/LoRa-C5-R7-Complete-BOM.csv",
+      "bytes": 8858,
+      "sha256": "e9cd8468ec944a8006cb0c1f79eb6498fa9480db2a8f646554c9b03f7dd4411d"
+    },
+    {
+      "path": "documentation/bom/LoRa-C5-R7-Complete-BOM.xlsx",
+      "bytes": 9365,
+      "sha256": "04b9493c6c3548ce2cf1c62164b695d56e16288d304dc70bb3f1a7d5c62b928e"
+    },
+    {
+      "path": "documentation/bom/R7-complete-bom.json",
+      "bytes": 15257,
+      "sha256": "e0bfd0753ba1b2fb51f81e49bb3daf9164d31ea0b9e2c044f01b7940282f9cb1"
+    },
+    {
+      "path": "documentation/build_r7_drawing.py",
+      "bytes": 13730,
+      "sha256": "6d3f1d4a69e831683715d80e4fe089684ca5cf8b4fe486ac413f14c699f0acf6"
+    },
+    {
+      "path": "documentation/DOCUMENT-VALIDATION.json",
+      "bytes": 2837,
+      "sha256": "00eee05bfa6172e498d4fbdd49134d110e4ef6126ca216d7031f9b3b6a35783a"
+    },
+    {
+      "path": "documentation/drawing_helpers.py",
+      "bytes": 3564,
+      "sha256": "04a31ed7acbf865840da6fde25005cb89e3ca1545399f18d611f129961713745"
+    },
+    {
+      "path": "documentation/ENGINEERING-DOCUMENT-INDEX.txt",
+      "bytes": 4205,
+      "sha256": "2aa5c0e75d7a0f499248e961cfabaae0a4f5de11dd4127e6f7ea20fa70c07095"
+    },
+    {
+      "path": "documentation/HANDOFF-VALIDATION.json",
+      "bytes": 7975,
+      "sha256": "932c64400a6a0611822e12bc52168a7aea7357d7f1882d305344537bf19da71a"
+    },
+    {
+      "path": "documentation/LoRa-C5-R7-Enclosure-Improvements-1.png",
+      "bytes": 239638,
+      "sha256": "61925c3be718874e1b37e4c3124429e7372940d9c70c68d80043dc06c0dec24b"
+    },
+    {
+      "path": "documentation/LoRa-C5-R7-Enclosure-Improvements-2.png",
+      "bytes": 306833,
+      "sha256": "caaedd3b1fc51b3cfd0958496c914eba005e41820e848ec074fad3420d221ea3"
+    },
+    {
+      "path": "documentation/LoRa-C5-R7-Enclosure-Improvements.pdf",
+      "bytes": 13115,
+      "sha256": "ea954606480e559d4d41e0808ae00cf97fb2307b63b164fa0c740fedc28f6b02"
+    },
+    {
+      "path": "documentation/manufacturing/build_r7_manufacturing_drawings.py",
+      "bytes": 15584,
+      "sha256": "90376a825128f68324e8f0c91bee87ea748ca698bd364251d3d932f65241eace"
+    },
+    {
+      "path": "documentation/manufacturing/C5-R7-Manufacturing-Drawings.pdf",
+      "bytes": 209562,
+      "sha256": "b1791a69c52b6cd26930e4c4c438494793cc92d92934e14ca09e2aaf22eda9e2"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-1.png",
+      "bytes": 139185,
+      "sha256": "4b2536d31c98671a9a6d328ffb1760b1330027a7874f29e9f027f1f1a279f0e5"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-2.png",
+      "bytes": 150177,
+      "sha256": "18e7753b65c8de91883107f61e57ffa10363bde4d8fa8afdc04c97c81a64df99"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-3.png",
+      "bytes": 117330,
+      "sha256": "1fad9c1db132f04984eaa4afd100e8e5e8a08f65a5257435f1bb2caae43921af"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-4.png",
+      "bytes": 130742,
+      "sha256": "a4c311a1e36d508d88c36f8300b49b2141d766515b4dc22af9eed0cfa4fd90aa"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-5.png",
+      "bytes": 132411,
+      "sha256": "7b77dd7678374b9f93c46edd283c97e4d45d7dfac861373fb2fedf4009668d82"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-6.png",
+      "bytes": 116583,
+      "sha256": "3f3fbd4b637542bdcfb90dd4b22ccfabfd80248f102cc973fe678ca73bb56666"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-7.png",
+      "bytes": 104663,
+      "sha256": "186f2d65509b3e713e9e16751b019a6d101c0496bfd0c6b37e18eba468edf63a"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-8.png",
+      "bytes": 106227,
+      "sha256": "41eacb3d0622c136b123a60e91796baed60fbe6ee6ab674652a2d0d130453ef3"
+    },
+    {
+      "path": "documentation/manufacturing/drawing-previews/R7-sheet-9.png",
+      "bytes": 156005,
+      "sha256": "ceab7af8fe5cd44041d0757470869ab59c1e86b301727df83dcc3aa4d071e918"
+    },
+    {
+      "path": "documentation/manufacturing/extract_r7_drawing_geometry.py",
+      "bytes": 4579,
+      "sha256": "b516e96ed40ba4010f98bea288d9b14e27d554ccba4473f023c2f776d4fb6773"
+    },
+    {
+      "path": "documentation/manufacturing/MANUFACTURING-DRAWING-VALIDATION.json",
+      "bytes": 2431,
+      "sha256": "d4b83b0e6119f54747a8407685b794817ef18c32d3c36ae698bd99cec9e18603"
+    },
+    {
+      "path": "documentation/manufacturing/manufacturing-geometry.json",
+      "bytes": 4283538,
+      "sha256": "bd90f738521a0804dd57c341688676f9a27cd454e37647341d9219a3f06894ae"
+    },
+    {
+      "path": "documentation/manufacturing/provenance/MANUFACTURING-DRAWING-VALIDATION.json",
+      "bytes": 1769,
+      "sha256": "ff16f7b08451a8f342b102beaebffe8e82a73722369e53ef048ef76a8177753d"
+    },
+    {
+      "path": "documentation/manufacturing/provenance/manufacturing-geometry.json",
+      "bytes": 4282737,
+      "sha256": "58f840dde7680c889dda13f5dec010bc6849add82c3bec3cbfc60f3e2d553d72"
+    },
+    {
+      "path": "documentation/prepare_handoff.py",
+      "bytes": 6684,
+      "sha256": "749217d8171832ff53b43f833637d0f81c23429b891e93149b8aee1a329a1459"
+    },
+    {
+      "path": "documentation/R7-ASSEMBLY-AND-INSPECTION.txt",
+      "bytes": 12578,
+      "sha256": "ce64941497c3e47ada86c1e6567f177bdfd106c95360656665232cdd25ce8ec4"
+    },
+    {
+      "path": "documentation/references/BATTERY-CONNECTION-REVIEW.txt",
+      "bytes": 14486,
+      "sha256": "3a4f50edcac6e813a6ccce38e1e4330ae4b0ed164297e812f36649f951efcc6c"
+    },
+    {
+      "path": "documentation/references/complete-bom-provenance.json",
+      "bytes": 10527,
+      "sha256": "7e1d099d4a0681c861a9522c4fbf14ff9ca4255f7987887ac664a6476a4f3964"
+    },
+    {
+      "path": "documentation/references/HARDWARE-ADDENDUM.txt",
+      "bytes": 1704,
+      "sha256": "1efd8a4eda610d49912a8a8ef0f912e59858167d825f08b5662f0809a1f0c3a2"
+    },
+    {
+      "path": "interactive/BUILD-VALIDATION.json",
+      "bytes": 1570,
+      "sha256": "105d1bea865f470380324e623a023de52ddfdcf4a3371cb856f5461ec629ed5c"
+    },
+    {
+      "path": "interactive/build_viewer.py",
+      "bytes": 221,
+      "sha256": "728e3d9a173caa54b6d45a20240bef711d07dcd1ca0d2f087309019f97e25f2a"
+    },
+    {
+      "path": "interactive/CONSOLIDATION-BASELINE.json",
+      "bytes": 2379,
+      "sha256": "cb7827d4593c70c5c0ffa8c62aaf8a08b15c7245a23b8936a8abb6f8704d85f1"
+    },
+    {
+      "path": "interactive/dimensions/DIMENSION-VALIDATION.json",
+      "bytes": 16657,
+      "sha256": "a883043f9912fdaac99ce9c2445addb0f85e339cec36a8a5a9aa01f60963ada0"
+    },
+    {
+      "path": "interactive/dimensions/dimensions.json",
+      "bytes": 10111,
+      "sha256": "f8076279946c23ca74989e077655c0f68f46363818a1839f701e22c0de30d5ab"
+    },
+    {
+      "path": "interactive/FINALIZATION.txt",
+      "bytes": 1144,
+      "sha256": "5f9128ffdaa1669e71b916af072b4eac96ab07258a093b7f3dbf1a2f471a1586"
+    },
+    {
+      "path": "interactive/focus/focus-mesh-data.b64",
+      "bytes": 249424,
+      "sha256": "b23758a7b2f09590877a8818e8a3bec36db65bb17aba77ec0c33e789692565c0"
+    },
+    {
+      "path": "interactive/focus/FOCUS-MESH-VALIDATION.json",
+      "bytes": 31678,
+      "sha256": "72af5b706826860a57efc1a606756d417b949f4b10ac22b651449982aca853ae"
+    },
+    {
+      "path": "interactive/focus/focus-views.json",
+      "bytes": 4600,
+      "sha256": "7a11cef886c2d629a01402b76df830b05a41a8e1be4376411df050334ff78602"
+    },
+    {
+      "path": "interactive/focus/verify_focus_pack.py",
+      "bytes": 325,
+      "sha256": "1b00520a90b164a6f10e2122b83c9b38143e0b8ef11a8f3072591a75b3111442"
+    },
+    {
+      "path": "interactive/mesh/ELECTRONICS-PRESERVATION.json",
+      "bytes": 1616,
+      "sha256": "1a2b35fcca879e7503282ad0e299a38fa64fe0a572404cdaa883bd7f8d0740c1"
+    },
+    {
+      "path": "interactive/mesh/FULL-MESH-VALIDATION.json",
+      "bytes": 92194,
+      "sha256": "d758a54a8087c262d52f45844b7a7944176a1544068dec94bb6b62ed2ace9095"
+    },
+    {
+      "path": "interactive/mesh/mesh-data.b64",
+      "bytes": 684436,
+      "sha256": "26e61947021f6c42db91c50ec9c16487e3750d768d826afe9024c0dea9257680"
+    },
+    {
+      "path": "interactive/mesh/MESH-VALIDATION.json",
+      "bytes": 100537,
+      "sha256": "8d82f1488569460f0a06d423e690aa14b718f275b2c6ab5ec0ad89e70f431802"
+    },
+    {
+      "path": "interactive/mesh/tessellator.py",
+      "bytes": 4528,
+      "sha256": "b81a92fe2d2b513be1d0a45a5df47b8ab9e6d70e9b2f6a0345c11c959ff25cc9"
+    },
+    {
+      "path": "interactive/mesh/verify_packed_mesh.py",
+      "bytes": 321,
+      "sha256": "ff9c55142dbccf877d9d0607c2c697a707e70df3380f2475fa5dca103112b774"
+    },
+    {
+      "path": "interactive/NATIVE-INPUT-VALIDATION.json",
+      "bytes": 2174,
+      "sha256": "636d4274a193657cf9a7d58ae5c0aa59b65f467e511e2f2a66025f9cc9b784fe"
+    },
+    {
+      "path": "interactive/portability-qa/assembled-320-dark.png",
+      "bytes": 46965,
+      "sha256": "8b9ce18ae13c5a92b7771d8cea1dd44f4982c50d6963cd99827095c9c7190e90"
+    },
+    {
+      "path": "interactive/portability-qa/assembled-320-light.png",
+      "bytes": 48406,
+      "sha256": "434529ca243fd7941172342cc4ef360bf19efd27db0c5c382e8d3042caab5a55"
+    },
+    {
+      "path": "interactive/portability-qa/assembled-736-light.png",
+      "bytes": 56685,
+      "sha256": "78517745a3ead23d62c4b1183f5ecaf1e1c7375846fae26801fa663667209573"
+    },
+    {
+      "path": "interactive/portability-qa/battery_top-736-light.png",
+      "bytes": 38105,
+      "sha256": "4289ce7aeabdf61a5873f90b8d9d9b832d126741d1ba0a63a010ddf19de0905f"
+    },
+    {
+      "path": "interactive/portability-qa/coax_route-320-dark.png",
+      "bytes": 89865,
+      "sha256": "ee0a575b059e2f92d63fb63eeef56136bc69011143d11f2158aa5310bce2a7a8"
+    },
+    {
+      "path": "interactive/portability-qa/coax_route-320-light.png",
+      "bytes": 80123,
+      "sha256": "dd00a4cd659bd80146e2e3ba70bb391135155078c668938b574058a499c4e802"
+    },
+    {
+      "path": "interactive/portability-qa/coax_route-736-dark.png",
+      "bytes": 137644,
+      "sha256": "fbcb06de6329e2bf8cf9291017f0a4d48a351f923fef82b2278960a1befafc9c"
+    },
+    {
+      "path": "interactive/portability-qa/coax_route-736-light.png",
+      "bytes": 120778,
+      "sha256": "cc7ae7284389350ed3ae74a3cb56ffa05b123821e359f5c989b9a559f3284d2e"
+    },
+    {
+      "path": "interactive/portability-qa/cutaway-320-dark.png",
+      "bytes": 57273,
+      "sha256": "1589986ca2df80d318b4e0935bf1473887877fac91f25441067fc502484bfd26"
+    },
+    {
+      "path": "interactive/portability-qa/cutaway-320-light.png",
+      "bytes": 58399,
+      "sha256": "1e29d40d73231398138d3121a44ae7a0b4639f93e831fe7765cd7e72cebe84bf"
+    },
+    {
+      "path": "interactive/portability-qa/cutaway-736-light.png",
+      "bytes": 81054,
+      "sha256": "d60d3dae3f000fbf2e10a9d4a99d759747c8472f585abb3bd204c25265d3af55"
+    },
+    {
+      "path": "interactive/portability-qa/exploded-320-dark.png",
+      "bytes": 46419,
+      "sha256": "d22c328aecad77705488c2e41d5bd0649f9004ed50da6cbbbd27ad618de465f2"
+    },
+    {
+      "path": "interactive/portability-qa/exploded-320-light.png",
+      "bytes": 45566,
+      "sha256": "780056f0c25f1bad1c2f6d38aed245caf060bb8cd2e27b1fe88d61084680bb46"
+    },
+    {
+      "path": "interactive/portability-qa/exploded-736-light.png",
+      "bytes": 53208,
+      "sha256": "23d83c9c8183fbdf2e3f78df29af5c6e7098018d2629b729d9018cf3664b6a21"
+    },
+    {
+      "path": "interactive/portability-qa/microphone_path-320-dark.png",
+      "bytes": 74139,
+      "sha256": "19f760f323850ab1e8532fae8bc98a1facb730d55f6457d3d0c105e311cd48b2"
+    },
+    {
+      "path": "interactive/portability-qa/microphone_path-320-light.png",
+      "bytes": 65083,
+      "sha256": "f24863fae39fb71f73c05912968adb4461dff332bdba26bead3503524758e475"
+    },
+    {
+      "path": "interactive/portability-qa/microphone_path-736-dark.png",
+      "bytes": 125423,
+      "sha256": "be99ada52d47bf68af1afb61f8ab988ec6a53838c11d5ca7127cd66dcee4ed8b"
+    },
+    {
+      "path": "interactive/portability-qa/microphone_path-736-light.png",
+      "bytes": 103774,
+      "sha256": "26c3cc4dbab09fdb01da470f1a1eebf7c2227081e3a6b92c1d239750d9b6dbef"
+    },
+    {
+      "path": "interactive/portability-qa/oled_gap-736-light.png",
+      "bytes": 40428,
+      "sha256": "1a676d920c975fb38400f437fa63869e8c1983f1ec2607885f235071132695b6"
+    },
+    {
+      "path": "interactive/portability-qa/pcb_main-736-light.png",
+      "bytes": 43752,
+      "sha256": "909eb7a167d24b57ad32c6419b23789c2c9242ea2bdff53ff5efedda7b0addc5"
+    },
+    {
+      "path": "interactive/portability-qa/R7-BROWSER-VALIDATION.json",
+      "bytes": 7950,
+      "sha256": "ebb07e614e229af9d788f4e6598bfe333d692423af6734440fc4706c0a0cb9a7"
+    },
+    {
+      "path": "interactive/portability-qa/sma_mount-320-dark.png",
+      "bytes": 67730,
+      "sha256": "9b9724e4837f08574fc8c42876693faed6c46fd8e6da038f2c0d684636b5161c"
+    },
+    {
+      "path": "interactive/portability-qa/sma_mount-320-light.png",
+      "bytes": 69366,
+      "sha256": "8f3fbcf080d8880057125554396b7b8968a59c06a810b03945d9084201843e99"
+    },
+    {
+      "path": "interactive/portability-qa/sma_mount-736-dark.png",
+      "bytes": 103232,
+      "sha256": "19add9f27e8ace7da4174a8dbe3c177e478b9794d0b1a1b2a7c573631ec8d972"
+    },
+    {
+      "path": "interactive/portability-qa/sma_mount-736-light.png",
+      "bytes": 107760,
+      "sha256": "a37cd4bad5ca8aa5416c2279000333594f4a78122383666e9fee3b240318a8a7"
+    },
+    {
+      "path": "interactive/portability-qa/speaker_mount-320-dark.png",
+      "bytes": 97044,
+      "sha256": "298804bc30ca074d3912702cc97be4739c0035c7958110cf479b51e0af706afe"
+    },
+    {
+      "path": "interactive/portability-qa/speaker_mount-320-light.png",
+      "bytes": 86005,
+      "sha256": "92044c898aa17a27a4735047d2aa1cad768a25abb0d846a2a1f7a993a567723c"
+    },
+    {
+      "path": "interactive/portability-qa/speaker_mount-736-dark.png",
+      "bytes": 185629,
+      "sha256": "8c9677f46e9e787d9585e303d98ec10ee937857b2fb337360ae116c0da82750c"
+    },
+    {
+      "path": "interactive/portability-qa/speaker_mount-736-light.png",
+      "bytes": 161244,
+      "sha256": "dfb94beb029a4c146653cfc3eead577dc977d328ac7efe1c6a7090628c08e3e8"
+    },
+    {
+      "path": "interactive/PORTABILITY-VALIDATION.json",
+      "bytes": 3343,
+      "sha256": "d10f359ae8af674ea22f426ac442010afb1e8dc41fb74880e961a22cffcc7b2f"
+    },
+    {
+      "path": "interactive/PORTABLE-REFERENCES.json",
+      "bytes": 2709,
+      "sha256": "1c897ae61844ebbdbf7895c8d937758be4688d452441523c7029c14bd0abc80b"
+    },
+    {
+      "path": "interactive/prepare_inputs.py",
+      "bytes": 3369,
+      "sha256": "d58109484d0faf3b5b8fc3c3827f586a98734f6743285a7e6c5f62d015e717f8"
+    },
+    {
+      "path": "interactive/qa/assembled-736-light.png",
+      "bytes": 56685,
+      "sha256": "78517745a3ead23d62c4b1183f5ecaf1e1c7375846fae26801fa663667209573"
+    },
+    {
+      "path": "interactive/qa/browser-tools.cjs",
+      "bytes": 3309,
+      "sha256": "1d2c5a148d87f3d951b78cb91d512bbd2b652517719370b4ec4efda1cf77bb98"
+    },
+    {
+      "path": "interactive/qa/cutaway-736-light.png",
+      "bytes": 81054,
+      "sha256": "d60d3dae3f000fbf2e10a9d4a99d759747c8472f585abb3bd204c25265d3af55"
+    },
+    {
+      "path": "interactive/qa/exploded-736-light.png",
+      "bytes": 53208,
+      "sha256": "23d83c9c8183fbdf2e3f78df29af5c6e7098018d2629b729d9018cf3664b6a21"
+    },
+    {
+      "path": "interactive/qa/export-final-views.cjs",
+      "bytes": 3173,
+      "sha256": "aa5d7fac664536ca95a04dbeb4a16a0ca393a7d318bbcf3dfa45e5f29ee84959"
+    },
+    {
+      "path": "interactive/qa/R7-BROWSER-VALIDATION.json",
+      "bytes": 8302,
+      "sha256": "da120b811279920b22a238348b77f067665e3ef6277ee5a2bab8609ac8a00fbc"
+    },
+    {
+      "path": "interactive/qa/r7-preview.html",
+      "bytes": 1086368,
+      "sha256": "abd264e629183f1381d92b5010b20e6d0258888bc85e424492094d9199c43c3d"
+    },
+    {
+      "path": "interactive/qa/r7-viewer-qa.cjs",
+      "bytes": 16548,
+      "sha256": "9e63cba022704b2430d5fa530a7ea4f7a280b59d2d0f9836a36c744ab73b912a"
+    },
+    {
+      "path": "interactive/r7-enclosure-viewer.html",
+      "bytes": 989943,
+      "sha256": "f18d7d5754b6f5e1e8f7aa43e7c128639d35b0a2b46ef785c0a830af0bb6c620"
+    },
+    {
+      "path": "interactive/r7-enclosure-viewer.template.html",
+      "bytes": 46825,
+      "sha256": "f80eb1cf8fd8faa14599f0019a2b4683d4f112071a68aeae7b9aa3e8cb0c5b37"
+    },
+    {
+      "path": "interactive/rebuild_viewer.py",
+      "bytes": 221,
+      "sha256": "269e2306f1bb5d073d559d0e0a81bb9a16a20d53ce731e0bf23d27011b6dd988"
+    },
+    {
+      "path": "interactive/reference/battery-harness.json",
+      "bytes": 1332,
+      "sha256": "2bbc7ded4940801213b55b38830982b9306203f293e1a250a3035404c86df22a"
+    },
+    {
+      "path": "interactive/reference/coax_plug.brep",
+      "bytes": 1423,
+      "sha256": "227d3587230507ff8ccbcf8db4c6a68d6afec2f3432a227d8b8f10c5dfa58ad8"
+    },
+    {
+      "path": "interactive/reference/ReferenceSpeakerBackPad.brep",
+      "bytes": 6453,
+      "sha256": "17950ccd8eddd8e93abf4c3ba5ee498611af9911ffe8b004faa6517e56d113a7"
+    },
+    {
+      "path": "interactive/reference/ReferenceSpeakerFrontGasket.brep",
+      "bytes": 6525,
+      "sha256": "e097d580852758565675aca6ce2991e5bd536d26092aefe48ee353f5f0e92a4c"
+    },
+    {
+      "path": "interactive/reference/ReferenceSpeakerLeadA.brep",
+      "bytes": 8970,
+      "sha256": "e1edccd95898f7bfec8a159ec34b6cabee04a9b944ed776644098343b85f5c45"
+    },
+    {
+      "path": "interactive/reference/ReferenceSpeakerLeadB.brep",
+      "bytes": 8914,
+      "sha256": "58d09fb74dea493bc6823a96141ab1cdfee219bdfeb7ff01e9e70466080b1c7c"
+    },
+    {
+      "path": "interactive/reference/ReferenceSpeakerScrewShafts.brep",
+      "bytes": 2231,
+      "sha256": "898e65fc6bf05fd362cfec99d069365b8cda2656b2c5f61b761adbf9b0055c16"
+    },
+    {
+      "path": "interactive/reference/sma_body.brep",
+      "bytes": 5983,
+      "sha256": "66676cb8a555774f1fad03460f0e228e76c6345f486aed17bc6f032065bf71ec"
+    },
+    {
+      "path": "interactive/reference/speaker_body.brep",
+      "bytes": 4569,
+      "sha256": "abb08a73f4ef503c803e3e97894854609f689c3d31ec3bfd475b45e1067dbe1f"
+    },
+    {
+      "path": "interactive/reference/speaker_diaphragm.brep",
+      "bytes": 4809,
+      "sha256": "9f7f8c39e5b33384bcf0a85dba4078a8855530aa95c7c6928a4276f8c72c33ce"
+    },
+    {
+      "path": "interactive/reference/speaker_rim.brep",
+      "bytes": 9668,
+      "sha256": "5deeeb81055acf02fa6f519a8470c754db3e3962d363390062cd224133f5329f"
+    },
+    {
+      "path": "interactive/reference/speaker_screw_heads.brep",
+      "bytes": 2465,
+      "sha256": "c7f4a31637e79e41620aeaad092199710f4784f70359521d1b6221587e56a182"
+    },
+    {
+      "path": "interactive/reference/speaker_screw_washers.brep",
+      "bytes": 4390,
+      "sha256": "2641a1273cd3a66c73cd1a6247ca13eb0fb003c64827b06fcc7ea6ec38b4e067"
+    },
+    {
+      "path": "interactive/SOURCE-INPUTS.json",
+      "bytes": 12836,
+      "sha256": "e8ca93799de18e1fcdddfd895b3cdcee4f04e0d9cd8278b65d20a2f96b28ff2f"
+    },
+    {
+      "path": "interactive/validate_portability.py",
+      "bytes": 1901,
+      "sha256": "d744397551338bad1ca3b0184bc7dcd64f3c13bfb7cf24f8d2332afef6ee1e25"
+    },
+    {
+      "path": "interactive/VIEWER-NOTES.txt",
+      "bytes": 2137,
+      "sha256": "7d5b54624a3d9a297965735a55c9c401ac6106b71dbfbc66daf40cec5ef413b2"
+    },
+    {
+      "path": "interactive/views/R7-assembled.png",
+      "bytes": 61971,
+      "sha256": "e9675a37ab3de8af6a9687e81423854c8503770879706c242dd7760ad180c08e"
+    },
+    {
+      "path": "interactive/views/R7-cutaway.png",
+      "bytes": 223309,
+      "sha256": "ad5ac6b9c3eac23c6d1e37bcce580ef1594bd8b5a04eb4ef7d63aa02257c92c9"
+    },
+    {
+      "path": "interactive/views/R7-exploded.png",
+      "bytes": 109588,
+      "sha256": "04a018bda3fad32aa468b71d1b74287db15f238936d03ee14db34c80421c8bd7"
+    },
+    {
+      "path": "interactive/views/VIEWS-VALIDATION.json",
+      "bytes": 2790,
+      "sha256": "cff2ccd40ccc6449ed188cce5e3e856297418eb41b2884cc475783e4ad6c13d0"
+    },
+    {
+      "path": "printing/C5-R7-all-parts-mm.3mf",
+      "bytes": 215156,
+      "sha256": "eb52f53a0c4d385cc17d057ee5f2cbfdfefebfef4e57e40096103f43e1f944b8"
+    },
+    {
+      "path": "printing/C5-R7-battery-cover-mm.3mf",
+      "bytes": 20630,
+      "sha256": "351cd2503e262d95b3edcda8ca6b7cec9819a256adba6e58d323cf8ffd9bb334"
+    },
+    {
+      "path": "printing/C5-R7-battery-cover-mm.stl",
+      "bytes": 112684,
+      "sha256": "809e5fe939840fb410945d5f84d3c95a01f9f05c112a9f9a8624feed4ca48421"
+    },
+    {
+      "path": "printing/C5-R7-enclosure-base-mm.3mf",
+      "bytes": 70608,
+      "sha256": "aea2a21cd69eff3dea371a8a83dbbd97bb5b9dc37369406b920322be6b789408"
+    },
+    {
+      "path": "printing/C5-R7-enclosure-base-mm.stl",
+      "bytes": 379784,
+      "sha256": "b3f6da72cf6f1fe328092a7a82c1ca780f0f35f485f33f1e3d29af1ffc7ddb20"
+    },
+    {
+      "path": "printing/C5-R7-enclosure-lid-mm.3mf",
+      "bytes": 76657,
+      "sha256": "da3bf25bdbe0b061e9b32425b8deda18213e25f364c43237308435cd08ee2153"
+    },
+    {
+      "path": "printing/C5-R7-enclosure-lid-mm.stl",
+      "bytes": 412084,
+      "sha256": "82bb2061789984c6f186cab1a3de622f67dd45dc9482b7532c08fb01d24997c9"
+    },
+    {
+      "path": "printing/C5-R7-fit-coupon-mm.3mf",
+      "bytes": 19067,
+      "sha256": "0bf1dbf614cd337d51a695c308d5fa2a64fac7b509049525071269f498769a01"
+    },
+    {
+      "path": "printing/C5-R7-fit-coupon-mm.stl",
+      "bytes": 101684,
+      "sha256": "897690ac140f61924865ae476fc443260d91467e3b04edcba2ab5c61257b623f"
+    },
+    {
+      "path": "printing/C5-R7-ptt-plunger-mm.3mf",
+      "bytes": 5540,
+      "sha256": "036fadaed51caf66afdb9b10d38adf1c93cfdcb68849daa5a2a059b6b0d38d4b"
+    },
+    {
+      "path": "printing/C5-R7-ptt-plunger-mm.stl",
+      "bytes": 26284,
+      "sha256": "16c74e8267720443a1e9c0f054365c23f9539cd66216ac50c5771fc2373e7b77"
+    },
+    {
+      "path": "printing/C5-R7-ptt-stop-cup-mm.3mf",
+      "bytes": 9944,
+      "sha256": "aa612f969d487a1ad25f122f27238b01603257dfac5262791b52fd3f9901fa45"
+    },
+    {
+      "path": "printing/C5-R7-ptt-stop-cup-mm.stl",
+      "bytes": 50284,
+      "sha256": "9af5c19ab37fa7c36ffccf5c8e110de7a06312cbea5dc46a4836069daff97e28"
+    },
+    {
+      "path": "printing/C5-R7-sma-key-mm.3mf",
+      "bytes": 6916,
+      "sha256": "235e1bdc43a683216077132ed390c2d826fcecbd4c2ed6f43732703950cc7b4c"
+    },
+    {
+      "path": "printing/C5-R7-sma-key-mm.stl",
+      "bytes": 34684,
+      "sha256": "ed5dc6d16cd7577c73fb5aa6dd9d1cf3e1769fd0ccffd0b2f59d7bc6aced5f62"
+    },
+    {
+      "path": "printing/C5-R7-speaker-retainer-mm.3mf",
+      "bytes": 8810,
+      "sha256": "33852e0fc983855e2ca7274d0ef76b265898fa4baf1128f96fd061b73eb5ca11"
+    },
+    {
+      "path": "printing/C5-R7-speaker-retainer-mm.stl",
+      "bytes": 45284,
+      "sha256": "cbb4f71c517c2c300687cd08222fc038f336bcdf33258b62c7892ef36115e8ee"
+    },
+    {
+      "path": "PROVENANCE.json",
+      "bytes": 6918,
+      "sha256": "48240a7adcdabba028209a2fd0ae17a6f7c731997c3a5552166a121caf06b116"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4048,
+      "sha256": "4df2614ddb80e8ec226d4e8dcfbd96a9f29982fdf3a56396877e5de2ec362e30"
+    },
+    {
+      "path": "references/components/board-only.step",
+      "bytes": 1745308,
+      "sha256": "d622e27bd7aeff9b5b07a8151cf9fd1445a693803ab4d45a653a8e9cf7318d83"
+    },
+    {
+      "path": "references/components/C5-detailed-assembly.step.zip",
+      "bytes": 12050088,
+      "sha256": "4b276524c0b657a0c4984b40157b6e5175892f6faeeaea2df9b051cf6442bf07"
+    },
+    {
+      "path": "references/components/provenance/corrected-assembly-check.json",
+      "bytes": 873,
+      "sha256": "9b0dfccc8bad813385c4cfb43a768966c65213925e77f9b6c23685a3213e19e8"
+    },
+    {
+      "path": "references/components/provenance/detailed-export-sha256.json",
+      "bytes": 467,
+      "sha256": "5f6df5f561a64604aecfc7799d6514a17d4df70c22433b06932e8e902d0fdeb0"
+    },
+    {
+      "path": "references/components/provenance/MIC-SCALE-CORRECTION.txt",
+      "bytes": 1485,
+      "sha256": "cc6280734371ff06edaa09085f5e6f52389f2bf53dae76e39361b7d1cf0c8309"
+    },
+    {
+      "path": "references/components/provenance/native-import-object-audit.json",
+      "bytes": 1072056,
+      "sha256": "032b2fe98ebbaf2e782fd5e4ea7809bef6d4d21025c66595422e8e879a2bd9a8"
+    },
+    {
+      "path": "references/components/provenance/native-microphone-check.json",
+      "bytes": 182,
+      "sha256": "c0896530f755fd7d9a431168b30d85e41ef2a1737aa51df3833ab6a670f00b51"
+    },
+    {
+      "path": "references/components/provenance/READ-ME.txt",
+      "bytes": 3345,
+      "sha256": "112595df5b542a37c0ce9b5962342d2badb552c4bb308afca782415f789d3a7c"
+    },
+    {
+      "path": "references/electronics-source/detailed-project/models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "path": "references/electronics-source/detailed-project/models/detailed-models.json",
+      "bytes": 2095,
+      "sha256": "be69dd073dee4d6a2f11ea2054624080f47ecbda269646bf4dbdf24448849bcd"
+    },
+    {
+      "path": "references/electronics-source/detailed-project/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "path": "references/electronics-source/detailed-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "path": "references/electronics-source/detailed-project/models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "path": "references/SOURCE-RELOCATION.json",
+      "bytes": 67698,
+      "sha256": "a75d34c27ead0798b2f46bcc7ead0756648c04b82dee8e7c2af3f05db6ac7a52"
+    },
+    {
+      "path": "release-plan.json",
+      "bytes": 1889,
+      "sha256": "62d50a644513fc23d9b6ef4da7e9046f3153db554e5c7cbc88802082d1516b01"
+    },
+    {
+      "path": "REPRODUCIBILITY.md",
+      "bytes": 3805,
+      "sha256": "b9102847b6ff314de708de5a7f0b8624f6fe19b614129366e33f906778baaf5c"
+    },
+    {
+      "path": "REVISION-NOTES.txt",
+      "bytes": 3940,
+      "sha256": "8291e765285a776f1760071033a217b7a3f27ec3535eb1154d2e49192293a0d5"
+    },
+    {
+      "path": "SOURCE-NOTICES.md",
+      "bytes": 6524,
+      "sha256": "05a688115fe98017567d08c8d31c350ac5bba6b822caf078485a7450c8371da1"
+    },
+    {
+      "path": "test_derive_print_files.py",
+      "bytes": 7087,
+      "sha256": "132d9378d9be2aa22f469ceb4a58265fbe0588e619bd2cfcf793aa3895bcb333"
+    },
+    {
+      "path": "tools/mesh_validation.py",
+      "bytes": 6592,
+      "sha256": "5ed505894f6abbe93705df3c001b7b2c4552a5c48a11cb7a8ccc3b3e8cfb5bb8"
+    },
+    {
+      "path": "tools/README-viewer.md",
+      "bytes": 4538,
+      "sha256": "27bbc7f71cbda77f73fd5458eaad9c3295ec792cd348a3e1763435aa8cf78a1e"
+    },
+    {
+      "path": "tools/rebuild_r7_viewer.py",
+      "bytes": 5646,
+      "sha256": "a7f351b0e8f019cddb3cabacd34478068f46d7c73e95f6f6b78f225b1816217c"
+    },
+    {
+      "path": "tools/validate_release.py",
+      "bytes": 19071,
+      "sha256": "075570049d36beea880d06b67f7f33ca914ba80c33266576b10314c571490916"
+    },
+    {
+      "path": "VALIDATION.json",
+      "bytes": 2018,
+      "sha256": "76e1ad5a2fbb2ece07b2f2e15f8a1057205d7402f1f75a6d08bebb23f7174baa"
+    }
+  ],
+  "excluded_local_sources": [
+    "pcb-fabrication/",
+    "references/pcb-fabrication-baseline/",
+    "references/electronics-source except model provenance notices",
+    "references/components/C5-detailed-assembly.step (identical compressed reference is included)"
+  ]
+}

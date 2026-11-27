@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "revision": "C5-R7-Reinforced",
+  "scope": "Current-only R7 release. Native CAD, approved STEP, master manufacturing mesh and PCB/component placement are preserved. Historical comparisons are stored evidence, not a claim of rerunning R6 without its source.",
+  "original_publication": {
+    "own_repository": "https://github.com/homarrodriguez/lora-walkie-talkie",
+    "own_commit": "a15a16ddb7bb63cb0ff1c5a7afb0c3e65348b92e",
+    "upstream_repository": "https://github.com/angel-vazquez18/ESP_LoRaLab",
+    "upstream_commit": "faa5b7e3fd93b3e348956924e6021aa06eced230",
+    "pull_request": 212,
+    "archive_manifest_sha256": "794025f40266d8aa812ec3c3adfce4bebca497011282f2cbf5a075fff0351189"
+  },
+  "approved_geometry": {
+    "native": {
+      "path": "cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd",
+      "sha256": "f6358354b27587c2f613f97f847902cf278af03550a3ec31edd77812e4768e37"
+    },
+    "step": {
+      "path": "cad/LoRa-Enclosure-C5-R7-Reinforced.step",
+      "sha256": "a46c77edfc195302f91d8df195a875fce46b50ef1f4db22203bf3d9f46069b2a"
+    },
+    "master_3mf": {
+      "path": "printing/C5-R7-all-parts-mm.3mf",
+      "sha256": "eb52f53a0c4d385cc17d057ee5f2cbfdfefebfef4e57e40096103f43e1f944b8"
+    }
+  },
+  "historical_audits": {
+    "audit/saved-r7-validation.json": {
+      "sha256": "99879309d1fc0f0172fb379ecd82d0db54e59f7039311cc11f6feffebf280f5b",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/derived-print-validation.json": {
+      "sha256": "1c6a6982a612b3f2b11555d40ae9cd0fb7ce465f4e31d414282272bad1fb214e",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/pcb-guard-baseline.json": {
+      "sha256": "1171efb220241711e4425e6aee6cdb6817560d79c8021e5547892f0445d0a20f",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/pcb-guard-verification.json": {
+      "sha256": "e66d92eb658e31ff34b3f6f32570ec5849f13ce2ca5955a1906ebd23f18d5a97",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/antenna/antenna-final-audit.json": {
+      "sha256": "2e114cd2c650fc027e17008c3d5f660ba9c9cc821a3b636c0563e047a815e8cb",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/antenna/route-r10-audit.json": {
+      "sha256": "33bb6f7d5a45021256e2185c32a8dab9b6e2e837548a22d98b2eb306a7a836c0",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    },
+    "audit/lid/lid-candidate-audit.json": {
+      "sha256": "5374980262004b9865035adaf665fabce157a9c775ba4df62bd4147195cc8cf1",
+      "scope": "Preserved published audit; absolute historical source paths are provenance identifiers."
+    }
+  },
+  "historical_prior": {
+    "revision": "R6",
+    "native_sha256": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+    "repository_path": "hardware/freecad/lora-enclosure-c5/revision-r6-speaker/cad/LoRa-Enclosure-C5-R6-Speaker.FCStd",
+    "retrievable_from_own_commit": "a15a16ddb7bb63cb0ff1c5a7afb0c3e65348b92e",
+    "local_file_required": false
+  },
+  "component_reference": {
+    "relative_path": "references/components/C5-detailed-assembly.step",
+    "zip_path": "references/components/C5-detailed-assembly.step.zip",
+    "member": "C5-detailed-assembly.step",
+    "bytes": 76201161,
+    "sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+    "parent_registration_translation_mm": [
+      0,
+      0,
+      6.4814
+    ],
+    "assigned_component_objects": 2949
+  },
+  "path_resolution": {
+    "historical_r7_prefix": "output/enclosure-c5/revision-r7-enclosure/",
+    "current_root": ".",
+    "rule": "Resolve only current R7 source suffixes inside this root; historical non-R7 inputs remain attributed to the publication commit."
+  },
+  "mesh_validator_origin": {
+    "path": "hardware/freecad/lora-enclosure-c5/fit-checked/verify_exports.py",
+    "sha256": "6910f34822b1c71588e1b3cf23eecb2ec70426e167d6fbf1608fc2fc27d82af9",
+    "transformation": "Copied unchanged read_stl/subtract/cross/dot/validate_mesh function bodies into tools/mesh_validation.py; discarded old revision constants and CLI."
+  },
+  "retired_candidate_generators": [
+    {
+      "path": "audit/antenna/build_candidate.py",
+      "sha256": "2bb0623f6bae8ef39ecaf7da0414d89b76588f4834bdd144ecdfab466977a26b"
+    },
+    {
+      "path": "audit/antenna/finalize_audit.py",
+      "sha256": "ade1b32ff6380056853b78bf16d3e694efed17ce9f78317e867e7c14be9d819c"
+    },
+    {
+      "path": "audit/antenna/route_geometry.py",
+      "sha256": "10d595d61e12d4a1d03166529ae6646e50d368be494b4dfd4df8892ee74d6a21"
+    },
+    {
+      "path": "audit/antenna/test_route_r10.py",
+      "sha256": "c242639430e059a581f0258dada67ce3a7a0e09a26ac033f3f84c2c7dc85a44a"
+    },
+    {
+      "path": "audit/antenna/update_tie_reference.py",
+      "sha256": "1f5c22d93d6baf90f55baf443e2ba3308bf524f65390264d7f6f6043d51bdffe"
+    },
+    {
+      "path": "audit/antenna/write_native_plan.py",
+      "sha256": "3c5ab193f24a67fbdd2b78ce15249aa31878d8ce986a796dba1ee984104a8b3b"
+    },
+    {
+      "path": "audit/build_fit_coupon_candidate.py",
+      "sha256": "8fd094e5a27aba8d16e8b21571db280f75e3034a13b058b7b2f1e811c372a795"
+    },
+    {
+      "path": "audit/lid/band_top_fillet_addendum.py",
+      "sha256": "70f1005e0943e7faf0ceec5de3277111028bb1f853e2dbd8db3daa403973b6f6"
+    },
+    {
+      "path": "audit/lid/build_lid_candidate.py",
+      "sha256": "2e0c857be10a14e9819767c6e318a1cb958683f6459bc55a29459d0c42bb42b3"
+    },
+    {
+      "path": "audit/lid/build_native_lid_plan.py",
+      "sha256": "bbe61b8ba1b4df66f586c657dbf1946c8935764cc298657ba41fc6cf8f5c785a"
+    },
+    {
+      "path": "audit/lid/make_corner_addendum.py",
+      "sha256": "de76a71923b36990988250951a158c708d5199df1d38164ffec6dc886ceb37b1"
+    },
+    {
+      "path": "audit/lid/probe_corner_returns.py",
+      "sha256": "e0d23255c9e2e17768c7f45989d5c127d03113cc3030df5ff8662ddd6b7b6ff5"
+    },
+    {
+      "path": "audit/lid/probe_larger_tie.py",
+      "sha256": "eb326d8d42244295207defc745664de0688dd17b62d28ea598b901150ba71b72"
+    },
+    {
+      "path": "audit/lid/probe_roofs.py",
+      "sha256": "6dc7a35c7069f5437c6e077d25a31f2a285e710369935110adcf5d9ea91b621b"
+    },
+    {
+      "path": "audit/validate_saved_r7.py",
+      "sha256": "4e2b2c7ed8a061eeca023c5402f3212fcf1e5df009079e9ef85d12b2c4d2db8c"
+    },
+    {
+      "path": "audit/verify_mesh_separation.py",
+      "sha256": "decc97eba52e86dfc62174ae1abbe6f19e0c828920f293cff0c4cf6c994f0b0a"
+    }
+  ]
+}

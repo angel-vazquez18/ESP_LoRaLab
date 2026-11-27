@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "pages": 2,
+  "pdf_sha256": "ea954606480e559d4d41e0808ae00cf97fb2307b63b164fa0c740fedc28f6b02",
+  "source_hashes": {
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\lid\\lid-candidate-audit.json": "5374980262004b9865035adaf665fabce157a9c775ba4df62bd4147195cc8cf1",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\antenna-final-audit.json": "2e114cd2c650fc027e17008c3d5f660ba9c9cc821a3b636c0563e047a815e8cb",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\route-r10-audit.json": "33bb6f7d5a45021256e2185c32a8dab9b6e2e837548a22d98b2eb306a7a836c0",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\antenna\\tie-reference-audit.json": "21221d6dca662f2dcaa956f03ac7ebfd04aac066d896da94c0a57bc342d83106",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\lid\\larger-speaker-tie-audit.json": "78d34f54b2b4d9a6ac72444c4af7aee47de214a6b8fc98332390f9f69c92f1a9",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\fit-coupon-audit.json": "9bd22d34fe5ae3519449e6e6a6921e25e61dcdc0f92dd71cd7148e1a144e49c9",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\fit-coupon-plan.json": "20dccfd405a3abe340bd42165154d8d06365044bea4b4855fa795b8306e29207",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\lid\\oled-roof-witnesses.json": "a5ece0beb3572dafa6cb8a3a3f8657c8aa9b8e99a02ff9dbe6bb7a9b56c3ef41",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r7-enclosure\\audit\\pcb-guard-baseline.json": "1171efb220241711e4425e6aee6cdb6817560d79c8021e5547892f0445d0a20f"
+  },
+  "drawing_kind": "Dimensioned changed-feature schematic and coupon/inspection sheet; native R7 CAD controls contours.",
+  "pcb_unchanged_evidence_files": 367,
+  "hardware_fit_qualified": false,
+  "visual_review_pending": false,
+  "visual_review": "Page 1 dimensions and layout are unchanged from the previously inspected version. Updated page 2 was rendered with Poppler at 110 dpi and inspected: common tie-head dimensions and lip-relief note are legible and clear of other content.",
+  "reviewed_pdf_sha256": "ea954606480e559d4d41e0808ae00cf97fb2307b63b164fa0c740fedc28f6b02",
+  "final_merged_lid_sha256": "549394369525150dbd5f283e28e4e9b01d555f988ff77e654a737a37728ad755",
+  "guard_reverified_utc": "2026-11-25T06:21:44.502915+00:00"
+}

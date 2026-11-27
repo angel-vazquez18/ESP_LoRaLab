@@ -1,0 +1,103 @@
+{
+  "ok": true,
+  "scope": "Read-only candidate geometry; in-memory mesh tessellation only. Does not replace approved master validation.",
+  "mesh_tolerance_mm": 0.02,
+  "source_hashes": {
+    "revision-r7-enclosure\\audit\\antenna\\EnclosureBase.brep": "cf796ab5c9b9e2afcebfca46c17a39b0e2e89c2d636dc9c012b010bfb7d353be",
+    "revision-r7-enclosure\\audit\\antenna\\EnclosureLid.brep": "549394369525150dbd5f283e28e4e9b01d555f988ff77e654a737a37728ad755",
+    "revision-r6-speaker\\cad\\LoRa-Enclosure-C5-R6-Speaker.FCStd": "baacc8eb79f0f1d200c74dd3d10f4605f5bcfd182ff7127c946ad74842a55e37",
+    "revision-r7-enclosure\\audit\\lid\\SpeakerRetainer.brep": "fd521658988ce70277edc9b0e6839d6a86c453d9cb7359e5f856ff81db7cb5ad",
+    "revision-r7-enclosure\\audit\\antenna\\SMAKey.brep": "29a64781fd4a42293d3192af71bc05c2c22e8c0bb1903d9ee49d9e2175894dc2",
+    "revision-r7-enclosure\\audit\\R7FitCoupon.brep": "815eb7a69b35e4923940a07874770e0a1589f247ba80a94c85e7cd3cd4ecd8b8"
+  },
+  "source_parts": {
+    "EnclosureBase": {
+      "vertices": 3796,
+      "triangles": 7608
+    },
+    "EnclosureLid": {
+      "vertices": 4062,
+      "triangles": 8240
+    },
+    "PTTPlunger": {
+      "vertices": 264,
+      "triangles": 524
+    },
+    "PTTStopCup": {
+      "vertices": 498,
+      "triangles": 1004
+    },
+    "BatteryCover": {
+      "vertices": 1112,
+      "triangles": 2252
+    },
+    "SpeakerRetainer": {
+      "vertices": 448,
+      "triangles": 904
+    },
+    "SMAKey": {
+      "vertices": 348,
+      "triangles": 692
+    },
+    "R7FitCoupon": {
+      "vertices": 1010,
+      "triangles": 2032
+    }
+  },
+  "combined_vertices": 11538,
+  "combined_triangles": 23256,
+  "index_separated_parts": 8,
+  "assignment": {
+    "0": "EnclosureBase",
+    "1": "EnclosureLid",
+    "2": "PTTPlunger",
+    "3": "PTTStopCup",
+    "4": "BatteryCover",
+    "5": "SpeakerRetainer",
+    "6": "SMAKey",
+    "7": "R7FitCoupon"
+  },
+  "matched_comparisons": {
+    "EnclosureBase": {
+      "max_bounds_difference_mm": 1.5258789005656581e-06,
+      "relative_volume_error": 0.00020513239815295832,
+      "matches": true
+    },
+    "EnclosureLid": {
+      "max_bounds_difference_mm": 1.5258789005656581e-06,
+      "relative_volume_error": 5.5836571965642626e-05,
+      "matches": true
+    },
+    "PTTPlunger": {
+      "max_bounds_difference_mm": 7.629394538355427e-07,
+      "relative_volume_error": 0.003224100916373717,
+      "matches": true
+    },
+    "PTTStopCup": {
+      "max_bounds_difference_mm": 1.5951248144574492e-06,
+      "relative_volume_error": 0.0007280119546447376,
+      "matches": true
+    },
+    "BatteryCover": {
+      "max_bounds_difference_mm": 1.5258789147765128e-06,
+      "relative_volume_error": 6.23783465156672e-06,
+      "matches": true
+    },
+    "SpeakerRetainer": {
+      "max_bounds_difference_mm": 3.8146972514141453e-07,
+      "relative_volume_error": 7.491293576978081e-05,
+      "matches": true
+    },
+    "SMAKey": {
+      "max_bounds_difference_mm": 1.5258789005656581e-06,
+      "relative_volume_error": 0.00039831023319284256,
+      "matches": true
+    },
+    "R7FitCoupon": {
+      "max_bounds_difference_mm": 3.4512664603419266e-31,
+      "relative_volume_error": 5.888477009088453e-05,
+      "matches": true
+    }
+  },
+  "manufacturing_files_written": false
+}

@@ -1,0 +1,67 @@
+R7 ENGINEERING DOCUMENTATION INDEX
+2026-11-25 | Enclosure-only adoption; PCB fabrication baseline retained
+
+CURRENT GEOMETRY
+../cad/LoRa-Enclosure-C5-R7-Reinforced.FCStd - approved parametric design.
+../cad/LoRa-Enclosure-C5-R7-Reinforced.step - approved eight-solid master,
+seven installed parts plus offset optional fit coupon. Exact hash manifests
+and validation reports bind every released drawing/mesh to these files.
+
+DRAWINGS AND DESIGN RECORD
+manufacturing/C5-R7-Manufacturing-Drawings.pdf - new R7 part orthographics,
+key nominal interfaces, assembly sections, load paths and manufacturing flow.
+LoRa-C5-R7-Enclosure-Improvements.pdf - dimensioned changed-feature details:
+SMA key, speaker bearing roof, microphone shroud, OLED reinforcement, coupon.
+R7-ASSEMBLY-AND-INSPECTION.txt - installation sequence and physical fit record.
+../REVISION-NOTES.txt - R7 decisions, preserved interfaces and limits.
+
+ASSEMBLY AND COMPONENT FIT
+../interactive/r7-enclosure-viewer.html - assembled, exploded and cutaway views
+with the assigned actual PCB/component geometry, nominal battery/speaker/SMA
+references and clickable inspection dimensions. Publication requires saved-
+native binding and browser validation. Reference hardware is not print geometry.
+This folder is the current R7 release. No earlier enclosure drawing or CAD
+revision is required to view, inspect or reproduce the current drawing set.
+The assembly sections use every component's global placement, including its
+parent assembly height. Earlier drawing JSON/report evidence is retained in
+manufacturing/provenance/ for traceability; no obsolete PDF is supplied.
+
+MANUFACTURING AND HARDWARE
+bom/LoRa-C5-R7-Complete-BOM.xlsx and .csv - 37 assembly line items with one build
+quantity control. Seven installed print quantities; optional coupon defaults
+to zero. PCB-mounted component requirements are retained. Speaker and antenna
+rows describe the selected off-board hardware; original electronics BOM stays
+unchanged under ../pcb-fabrication/bom/.
+references/BATTERY-CONNECTION-REVIEW.txt - retained electrical commissioning
+prerequisites for the unchanged Heltec battery connection and USB-only amplifier.
+references/HARDWARE-ADDENDUM.txt and complete-bom-provenance.json - retained
+source evidence. Current R7 assembly instructions/BOM control enclosure hardware.
+../craftcloud/ORDER-SPECIFICATION.txt and upload/ - printing preparation only.
+../craftcloud/optional-coupon/ - separate optional sample.
+../cnc-shop/CNC-SHOP-HANDOFF.txt - exact STEP-based shop DFM/CAM instructions,
+with no machine-specific G-code. The shop selects tooling, stock and setups.
+../pcb-fabrication/README.txt - unchanged Gerber/drill provenance and reuse.
+
+RELEASE CHECKS
+Read ../audit/saved-r7-validation.json, derived-print-validation.json,
+pcb-relocation-verification.json, HANDOFF-VALIDATION.json,
+DOCUMENT-VALIDATION.json, manufacturing/
+MANUFACTURING-DRAWING-VALIDATION.json, bom/BOM-VALIDATION.json and ../cnc-shop/
+CNC-SHOP-GEOMETRY-MANIFEST.json. A missing, false or pending report is not a
+released artifact. Physical first-article acceptance remains separate from
+CAD/file verification. No order has been placed.
+
+PORTABLE RECHECKS
+Run ../audit/verify_pcb_guard.py to compare the original 367-file baseline with
+the current relocated reference scopes. It has no capture/reset mode. The
+original baseline and original guard report remain byte-identical evidence.
+Run prepare_handoff.py to verify current documents/BOM and the approved CNC
+STEP. It also checks the 18 preserved PCB copies when that folder is supplied;
+it never regenerates PCB/CAM files or exports CAD. In default portable mode,
+the original 367-file guard is historical evidence, not a newly executed check.
+Add --verify-pcb for a fresh full367 integrity run. This requires the full
+preserved PCB baseline, detailed source STEP, unchanged project firmware and
+external hardware trees; publication/portable copies may omit these inputs.
+Manufacturing drawings can be rebuilt read-only from the current native using
+manufacturing/extract_r7_drawing_geometry.py and build_r7_manufacturing_drawings.py.
+Any regenerated PDF must be rendered/reviewed again before its report is released.
