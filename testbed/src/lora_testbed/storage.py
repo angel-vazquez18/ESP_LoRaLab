@@ -129,6 +129,28 @@ class Store:
         )
         self.db.commit()
 
+    def node_observation_cursor(self):
+        return self.db.execute("SELECT coalesce(max(id), 0) FROM node_observations").fetchone()[0]
+
+    def node_health_after(self, cursor):
+        rows = self.db.execute(
+            "SELECT id, role, received_at, document FROM node_observations WHERE id>? "
+            "AND json_extract(document,'$.name')='health' ORDER BY id LIMIT 128",
+            (cursor,),
+        )
+        return [dict(row) | {"document": json.loads(row["document"])} for row in rows]
+
+    def memory_observation_records(self, role, observation_id):
+        rows = self.db.execute(
+            "SELECT document FROM node_observations WHERE role=? "
+            "AND json_extract(document,'$.name')='memory.sample' "
+            "AND json_extract(document,'$.data.observation_id')=? ORDER BY id LIMIT 12001",
+            (role, observation_id),
+        ).fetchall()
+        if len(rows) > 12000:
+            raise ValueError("Memory evidence exceeds the bounded observation record limit")
+        return [json.loads(row[0]) for row in rows]
+
     def node_operation_records(self, role: str, operation_id: str) -> list[dict]:
         rows = self.db.execute(
             "SELECT document FROM node_observations WHERE role=? "

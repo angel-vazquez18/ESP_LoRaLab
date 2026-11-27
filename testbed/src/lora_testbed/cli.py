@@ -13,7 +13,7 @@ app = typer.Typer(no_args_is_help=True, help="Control the local LoRa laboratory.
 BASE_URL = "http://127.0.0.1:8000"
 
 
-def request(path: str, body: dict | None = None, method: str | None = None):
+def request(path: str, body: dict | None = None, method: str | None = None, timeout: float = 20):
     req = Request(
         BASE_URL + path,
         data=json.dumps(body).encode() if body is not None else None,
@@ -21,7 +21,7 @@ def request(path: str, body: dict | None = None, method: str | None = None):
         method=method,
     )
     try:
-        with urlopen(req, timeout=20) as response:
+        with urlopen(req, timeout=timeout) as response:
             result = json.load(response)
     except HTTPError as exc:
         typer.echo(exc.read().decode(), err=True)
@@ -117,6 +117,211 @@ def preflight(experiment: str, role: str | None = None, workload: str = "default
     request(
         f"/api/experiments/{experiment.upper()}/preflight", {"roles": roles, "workload": workload}
     )
+
+
+@app.command()
+def campaign_plan(path: Path, preview: bool = False):
+    """Preview or save physical campaign intent; this command does not start work."""
+    document = json.loads(path.read_text())
+    request("/api/physical-campaigns/plans" + ("/preview" if preview else ""), document)
+
+
+@app.command()
+def campaign_plans():
+    """List retained physical campaign plan summaries."""
+    request("/api/physical-campaigns/plans")
+
+
+@app.command()
+def campaign_plan_result(plan_id: str):
+    """Read the exact saved cases, seeded order, batches and readiness snapshot."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(plan_id)
+    request(f"/api/physical-campaigns/plans/{plan_id}")
+
+
+@app.command()
+def campaign_execute(plan_id: str):
+    """Execute a saved physical plan in its original order."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(plan_id)
+    request("/api/physical-campaigns/executions", {"plan_id": plan_id})
+
+
+@app.command()
+def campaign_executions():
+    """Show the active physical campaign and recent execution summaries."""
+    request("/api/physical-campaigns/executions")
+
+
+@app.command()
+def campaign_result(identifier: str):
+    """Read saved child links and outcomes for a physical campaign."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}")
+
+
+@app.command()
+def campaign_pause(identifier: str):
+    """Finish the current case, then pause while keeping bench ownership."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}/pause", {})
+
+
+@app.command()
+def campaign_resume(identifier: str):
+    """Resume the exact queued order on the original enrolled connections."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/physical-campaigns/executions/{identifier}/resume", {})
+
+
+@app.command()
+def campaign_cancel(identifier: str, reason: str = "Stopped by operator"):
+    """Stop the active child, retain partial evidence and reason-code skipped cases."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(
+        f"/api/physical-campaigns/executions/{identifier}/cancel", {"reason": reason}, timeout=90
+    )
+
+
+@app.command()
+def campaign_rerun(identifier: str, case_ids: Annotated[list[str], typer.Argument()]):
+    """Create a linked execution for selected original case IDs in saved order."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    for value in [identifier, *case_ids]:
+        TypeAdapter(UUID).validate_python(value)
+    request(f"/api/physical-campaigns/executions/{identifier}/rerun", {"case_ids": case_ids})
+
+
+@app.command()
+def campaign_export(identifier: str, output: Path):
+    """Verify and save the complete campaign bundle without overwriting a file."""
+    import hashlib
+
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+    from .physical_campaign_evidence import MAX_BYTES, verify_campaign_bundle
+
+    TypeAdapter(UUID).validate_python(identifier)
+    try:
+        with urlopen(
+            BASE_URL + f"/api/physical-campaigns/executions/{identifier}/export", timeout=90
+        ) as response:
+            data = response.read(MAX_BYTES + 1)
+            expected = response.headers.get("X-Content-SHA256")
+        if not expected or hashlib.sha256(data).hexdigest() != expected:
+            raise ValueError("Campaign download hash differs or is missing")
+        checked = verify_campaign_bundle(data)
+        with output.open("xb") as target:
+            target.write(data)
+    except (HTTPError, URLError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+    typer.echo(json.dumps({"saved": str(output), **checked}, indent=2))
+
+
+@app.command()
+def campaign_verify(path: Path):
+    """Verify a downloaded campaign archive offline, without opening node ports."""
+    from .physical_campaign_evidence import MAX_BYTES, verify_campaign_bundle
+
+    try:
+        with path.open("rb") as stream:
+            checked = verify_campaign_bundle(stream.read(MAX_BYTES + 1))
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+    typer.echo(json.dumps(checked, indent=2))
+
+
+@app.command()
+def workload_assess(path: Path):
+    """Save an assessment of an imported source/memory trace; never hardware qualification."""
+    if path.stat().st_size > 12 * 1024 * 1024:
+        raise typer.BadParameter("Trace exceeds 12 MiB")
+    request("/api/workload-assessments", json.loads(path.read_text()))
+
+
+@app.command()
+def workload_assessments():
+    """List retained observed-workload assessments."""
+    request("/api/workload-assessments")
+
+
+@app.command()
+def workload_result(identifier: str):
+    """Read a saved assessment and its exact raw evidence."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(identifier)
+    request(f"/api/workload-assessments/{identifier}")
+
+
+@app.command()
+def memory_observe(
+    role: str, duration_ms: Annotated[int, typer.Option(min=1000, max=300000)] = 30000
+):
+    """Start a finite observer alongside the selected node's workload."""
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(f"/api/nodes/{role.upper()}/memory-observation", {"duration_ms": duration_ms})
+
+
+@app.command()
+def memory_collect(role: str, observation_id: str, stop: bool = False):
+    """Save actual observer status/events, optionally stopping that exact observer first."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(observation_id)
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(
+        f"/api/nodes/{role.upper()}/memory-observation/{observation_id}/collect?stop={str(stop).lower()}",
+        {},
+    )
+
+
+@app.command()
+def source_collect(role: str, run_id: str):
+    """Read terminal source pages before the owning RF runner closes its session."""
+    from pydantic import TypeAdapter
+
+    from .control_v2 import UUID
+
+    TypeAdapter(UUID).validate_python(run_id)
+    if role.upper() not in ("A", "B"):
+        raise typer.BadParameter("Role must be A or B")
+    request(f"/api/nodes/{role.upper()}/source-observation/{run_id}/collect", {}, timeout=60)
 
 
 @app.command()
@@ -376,6 +581,18 @@ def voice_start(
 
 
 @app.command()
+def voice_review(config: Path):
+    """Prepare clip order or assess saved ratings against inspected voice evidence."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Voice review configuration must be an object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/voice/review", body)
+
+
+@app.command()
 def voice_status(identifier: str):
     """Inspect voice stages, verified files, comparison bases and observations."""
     request(f"/api/voice/runs/{identifier}")
@@ -445,6 +662,89 @@ def radio_start(
     except (OSError, ValueError) as exc:
         raise typer.BadParameter(str(exc)) from exc
     request("/api/radio/preflight" if preview else "/api/radio/runs", body)
+
+
+@app.command()
+def integration_matrix(config: Path, preview: bool = False):
+    """Preview or start a selected physical integration matrix."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Matrix configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/procedures/matrix/preview" if preview else "/api/procedures/matrix", body)
+
+
+@app.command()
+def clock_evaluate(evidence: Path):
+    """Assess saved TIME-02 pulse and frame evidence offline."""
+    from .clock_analysis import MAX_EVIDENCE_BYTES, assess_json
+
+    try:
+        with evidence.open("rb") as source:
+            report = assess_json(source.read(MAX_EVIDENCE_BYTES + 1))
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(json.dumps(report, indent=2))
+
+
+@app.command()
+def lab_start(config: Path, preview: bool = False):
+    """Run one lab fault between verified intact controls."""
+    try:
+        body = json.loads(config.read_text())
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/lab/preflight" if preview else "/api/lab/trials", body)
+
+
+@app.command()
+def lab_status(identifier: str | None = None):
+    """Inspect saved trial assertions and their linked radio records."""
+    request("/api/lab/trials" + (f"/{identifier}" if identifier else ""))
+
+
+@app.command()
+def lab_stop(identifier: str):
+    """Stop the active trial and clean up its current run."""
+    request(f"/api/lab/trials/{identifier}/stop", {})
+
+
+@app.command()
+def echo_start(
+    direction: str = "A_TO_B",
+    security: str = "none",
+    message_bytes: Annotated[int, typer.Option(min=1, max=215)] = 64,
+    timeout_ms: Annotated[int, typer.Option(min=1000, max=3600000)] = 10000,
+    config: Path | None = None,
+    preview: bool = False,
+):
+    """Run one verified physical echo using the shared radio owner."""
+    try:
+        body = (
+            json.loads(config.read_text())
+            if config
+            else {
+                "direction": direction.upper(),
+                "security": security,
+                "message_bytes": message_bytes,
+                "timeout_ms": timeout_ms,
+            }
+        )
+        if not isinstance(body, dict):
+            raise ValueError("Configuration must be a JSON object")
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    request("/api/echo/preflight" if preview else "/api/echo/runs", body)
+
+
+@app.command()
+def echo_distribution(identifiers: list[str]):
+    """Reconcile selected saved echoes in separate device/boot/settings cohorts."""
+    request("/api/echo/distribution", identifiers)
 
 
 @app.command()

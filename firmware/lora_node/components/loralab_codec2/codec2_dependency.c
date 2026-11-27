@@ -7,6 +7,7 @@
 
 #include "codec2_dependency.h"
 #include "codec2.h"
+#include "codec2_internal.h"
 
 _Static_assert(sizeof(short) == 2 && sizeof(float) == 4, "Codec sample/arithmetic format");
 
@@ -60,3 +61,5 @@ void codec2_clip_destroy(codec2_clip_state *state)
 {
     if (state) codec2_destroy(state);
 }
+
+size_t codec2_clip_state_bytes(void) { return sizeof(struct CODEC2); }

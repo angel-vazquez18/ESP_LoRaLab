@@ -103,3 +103,31 @@ commands, retained files and remaining physical acceptance.
 
 Optional [host-armed PTT capture](docs/host_armed_ptt.md) defaults off. Confirm the
 printed board revision and GPIO47-to-GND wiring before enabling a physical image.
+
+Optional [OLED status](docs/oled_status.md) shows real node phases through an
+isolated worker. It defaults off and requires a verified standard V4 R2
+OLED/power map; its USB observation does not qualify physical screen output.
+
+Data and committed encoded voice share the [reserved run lifecycle](docs/run_lifecycle.md):
+prepare reserves working memory, both roles arm, sender start has a five-second
+window, and cleanup preserves original errors and committed evidence. New RF work
+requires matching `finite_message_execution_v3` host/firmware profiles.
+
+Optional [named memory observations](docs/memory_observations.md) collect bounded
+10 Hz and stage samples with separate observed minima, requested buffer ownership
+and explicit missed/dropped/untracked limits. Physical memory acceptance is pending.
+
+The [fixed-rate encoded source](docs/fixed_rate_source.md) independently produces
+8 bytes per 20 ms, bounds all encoded queue content to 4,800 bytes and preserves
+actual pacing/drop/drain evidence. It reuses protected multi-message transport;
+host procedure controls and sustained-link qualification follow separately.
+
+The [common physical lifecycle](docs/common_physical_lifecycle.md) binds data,
+audio/files and diagnostic jobs to an exact USB connection as well as device/boot.
+It retains primary versus cleanup failures, committed captures after readback
+failure, and durable diagnostic summaries/evidence without automatic resume.
+
+[Physical campaign plans](docs/physical_campaign_plans.md) save typed settings,
+repetitions, directions and seeded order with linked batches bounded to 64 cases
+and 30 minutes. Preview/save/list/reload work through the API and CLI; campaign
+execution and its dashboard remain separate following work.

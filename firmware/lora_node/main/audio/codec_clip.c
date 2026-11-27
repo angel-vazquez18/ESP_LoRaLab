@@ -137,3 +137,10 @@ codec_clip_status codec_clip_progress(const codec_clip *clip)
 {
     return clip ? clip->status : (codec_clip_status){.error = ARTIFACT_INVALID_STATE};
 }
+
+void codec_clip_memory(const codec_clip *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "codec_clip_owner", s, sizeof(*s));
+    node_memory_add(out, "codec_state", s->state, codec2_clip_state_bytes());
+}

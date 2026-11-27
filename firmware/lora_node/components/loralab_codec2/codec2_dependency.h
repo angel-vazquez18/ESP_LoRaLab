@@ -20,3 +20,6 @@ bool codec2_encode_frame(codec2_clip_state *state, short *samples, size_t sample
 bool codec2_decode_frame(codec2_clip_state *state, const uint8_t *input, size_t length,
                           short *output, size_t sample_capacity);
 void codec2_clip_destroy(codec2_clip_state *state);
+
+// Root context only; nested DSP allocations are not included in this requested size.
+size_t codec2_clip_state_bytes(void);

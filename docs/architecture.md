@@ -9,19 +9,19 @@ both toolchains for every task. The Python project remains self-contained under
 flowchart LR
     UI[React dashboard] --> HOST[Python backend / run lifecycle]
     CLI[CLI] --> HOST
-    HOST --> ADAPTER[Node adapter interface]
+    HOST --> ADAPTER[Bound physical adapter]
     HOST --> CHECK[Physical diagnostic procedure lifecycle]
     CHECK --> SERIAL[Physical diagnostic serial sessions]
     SERIAL --> DIAG[ESP-IDF diagnostic target]
     SERIAL --> NODE[ESP-IDF main control target]
-    ADAPTER -. planned full execution adapter .-> NODE
+    ADAPTER --> SERIAL
     HOST --> EVIDENCE[SQLite / raw events / artifacts / assessments]
     CONTRACT[Shared contracts / vectors / procedures] -. governs .-> HOST
     CONTRACT -. governs .-> NODE
 ```
 
-Dotted full-execution integration is planned. Diagnostic firmware cannot execute
-full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
+Physical RF/audio/diagnostic jobs share the bound adapter and real serial
+sessions. Diagnostic firmware cannot execute full RF/audio commands. The main node target provides the Milestone 1 board/control foundation in source:
 strict serial control, identity/health, ownership, duplicate protection and a finite
 memory operation, plus bounded RAM artifact upload/commit/readback, finite local I2S capture/playback and verified host PCM/WAV workflows. Full physical qualification remains pending; DMA/count/hash smoke checks are separate from heard output and microphone response. Its capability-based build order and completion
 gates are in [node development plan](node_development_plan.md);
@@ -41,11 +41,14 @@ module implementations are not organized by experiment IDs.
 | `docs` | Requirements, status, procedures, decisions and agent task context | A replacement for source-code evidence |
 | `scripts` | Cross-project generation and verification | Duplicated host/firmware domain logic |
 
-The host is physical-only. `nodes.py` provides the implemented diagnostic session
-interface, used by the partial IF-01 check. A future full RF serial adapter must
-satisfy the execution interface in `adapters.py` with compatibility and capability
-checks before enabling runs or campaigns. No virtual devices or simulator runners
-are instantiated or retained as operator features.
+The host is physical-only. `nodes.py` owns typed serial sessions. The implemented
+`physical_adapter.py` binds requests/cleanup to device, boot and a fresh host USB
+connection ID; `radio_runs.py`, `node_audio.py`, `artifact_transfers.py` and
+`diagnostic_jobs.py` reuse it. Domain runners preserve their own preparation,
+content checks and state transitions. The retained generic v2 client interfaces
+in `adapters.py` are not an operator simulator. See
+[common physical lifecycle](common_physical_lifecycle.md) for recovery, records
+and checks. No virtual devices or simulator runners are operator features.
 
 ## Main firmware layout
 
@@ -60,8 +63,8 @@ main/
 │   ├── esp32_platform.c        ESP-IDF identity, NVS, heap, timer and crypto callbacks
 │   └── esp32_platform.h
 ├── transport/
-│   ├── usb_transport.c         USB read/tick loop and the single protocol writer
-│   └── usb_transport.h
+│   ├── serial_transport.c         USB or UART read/tick loop and the single protocol writer
+│   └── serial_transport.h
 ├── control/
 │   ├── node_control.c          Portable commands, ownership, queues and operation state
 │   └── node_control.h
@@ -104,21 +107,50 @@ Main control reports actual initialization availability without promising execut
 handlers. See [radio driver](radio_driver.md).
 
 `radio/rf_frames.c` validates fixed header/source bytes; `radio/rf_execution.c`
+owns prepare reservations, both-role arm/start deadlines, bounded cleanup and
 composes fragment planning, reconstruction, referenced ACKs and the bounded sender
 for one finite message lifecycle and verified artifact delivery.
+`radio/rf_echo.c` owns one immutable pending echo, verified reply matching,
+requester-local RTT, fresh responder sequences and bounded timeout/drain. The
+execution owner composes it with the same radio/security/artifact/cleanup paths.
+See [verified echo behavior](verified_echo_rtt.md).
+
 Both use the real radio port and existing owner/serial writer. The physical host
 `radio_runs.py` shares bench ownership with audio/files/procedures, coordinates
 receiver-first work and separates verified bytes from evidence completeness. Its
 compact live snapshots avoid repeatedly sending raw records; detailed evidence
 and linked readback traces remain accessible separately. `radio_accounting.py`
 reconciles originals, attempts, accepted fragments, deliveries and paged missing
-evidence independently of byte readback.
+evidence independently of byte readback. The same physical lifecycle now handles
+finite echoes; `echo_accounting.py` independently checks returned bytes and
+request/reply/local-time evidence, then groups distributions by both identities,
+boots and selected settings. `evidence_worker.py` joins saved-evidence work before
+store closure; campaign exports and echo aggregation reuse it.
 
 ## Important existing host modules
 
 - `app.py` and `cli.py`: entry interfaces; use the same Host and procedure paths.
 - `host.py`: bench ownership and lifecycle coordination.
-- `adapters.py`: node interface, request/reply/event handling and failures.
+- `adapters.py`: compatibility checks and retained generic client interfaces.
+- `physical_adapter.py`: shared connection-bound physical requests and cleanup.
+- `diagnostic_jobs.py`: durable local diagnostic lifecycle and restart interruption.
+- `campaign_plans.py`: immutable typed physical intent, seeded expansion/order,
+  bounded linked batches and cached capability readiness. It starts no work.
+- `physical_campaigns.py`: exclusive physical execution of that saved order,
+  durable child/case links, pause/cancel, bounded child cleanup and interruption
+  on restart. Linked selected-case reruns preserve original history and repeat
+  fresh checks. It reuses existing domain runners and never resumes hardware.
+- `physical_campaign_evidence.py`: bounded terminal child/file graph exports and
+  offline member/count/hash verification, without device access.
+- `campaign_views.py` / `frontend/src/PhysicalCampaigns.tsx`: bounded read-only
+  plan/ledger views and explicit shared lifecycle actions; no browser run owner.
+
+- `workload_assessment.py` / `workload_observations.py`: source/queue and sampled
+  stage-memory reconciliation, immutable evidence and bound readback; imported
+  traces never establish physical qualification.
+- `workload_plots.py` and `frontend/src/WorkloadObservations.tsx`: bounded actual-row
+  memory/source histories and independent full-evidence exports; clock/gap rules
+  remain in the backend and physical qualification stays separate.
 - `nodes.py`: physical serial sessions for the exact diagnostic or main-control
   schema; operation results and health share the existing observation store.
 - `control_v2.py`: separately generated main-control schema; the original
@@ -200,6 +232,12 @@ platform boundary declared as `rf_packet_port`.
 stop-and-wait states, bounded attempts and retained radio observations. It drives
 the existing real radio API; execution owns stop/lease/shutdown integration and
 message-level aggregation. ACK observations never inflate original DATA counts.
+
+`radio/rf_faults` owns laboratory selectors, frame digests and bounded
+scratch/retained storage. Execution controls admission, deadlines and cleanup.
+Its receiver can drop before insertion or suppress an ACK after acceptance.
+The sender keeps its original retry bytes. A prepared reverse block buffers
+the originals before reordering, and extra duplicates have their own TX events. See [laboratory checks](lab_frame_faults.md).
 
 The session-security contract maps key-bearing fields and provisioning
 persistence boundaries in [security_sessions.md](security_sessions.md). Firmware
@@ -290,3 +328,16 @@ Optional PTT uses the portable allocation-free `input/ptt_gate` and a separate
 existing serial ownership, operation stop/deadline and audio readback/cleanup stay
 shared. The independent fingerprinted supplement gates API/CLI capture; input is
 configured only by explicit per-board Kconfig. No button RF lifecycle is added.
+
+Optional OLED observation uses `display/node_view` for a fixed nonsecret snapshot
+and text/bitmap, `display/oled_panel` for bounded protocol writes and
+`platform/esp32_display` for an isolated one-slot worker. The control loop never
+performs or waits for display I/O. Current exact-profile worker health stays
+separate from physical pixel qualification. Board-derived pins/power are opt-in.
+
+`memory/observations` owns an opt-in finite 10 Hz observer with additional stage
+samples and distinct boot/measurement/workload minima. Each opaque module reports
+its own requested ranges through `memory/buffers`; composition classifies actual
+regions and avoids alias totals. NodeSession validates the independent supplement
+and keeps bounded recent evidence. See [named memory observations](memory_observations.md)
+for tracked/untracked scope and physical acceptance.

@@ -7,11 +7,14 @@ from typing import Annotated, Literal
 
 from pydantic import ConfigDict, Field, TypeAdapter, model_validator
 
+from . import fault_protocol_v2 as fault
 from . import rf_events_v2 as rf
+from . import source_protocol_v2 as source_protocol
 from . import v2
-from .experiments_v2 import Budget, ContractModel, KnownDataSpec, Link, Radio
+from .experiments_v2 import Budget, ContractModel, KnownDataPlan, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "known_data_execution_v1"
+EXECUTION_PROFILE = "finite_message_execution_v7"
+ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
     "session.close",
@@ -21,8 +24,12 @@ ExecutionName = Literal[
     "run.start",
     "run.stop",
     "run.summary",
+    "run.source",
+    "fault.set",
+    "fault.fire",
+    "fault.status",
 ]
-EXECUTION_COMMANDS = (
+BASE_EXECUTION_COMMANDS = (
     "session.open",
     "session.close",
     "config.set",
@@ -31,17 +38,24 @@ EXECUTION_COMMANDS = (
     "run.start",
     "run.stop",
     "run.summary",
+    "run.source",
 )
-CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary")
+LAB_FAULT_COMMANDS = ("fault.set", "fault.fire", "fault.status")
+EXECUTION_COMMANDS = BASE_EXECUTION_COMMANDS + LAB_FAULT_COMMANDS
+CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source", "fault.status")
 
 
 class Capabilities(ContractModel):
-    profile: Literal["known_data_execution_v1"]
+    profile: Literal["finite_message_execution_v7"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    commands: list[ExecutionName] = Field(min_length=1, max_length=8)
+    commands: list[ExecutionName] | Literal["base", "lab"] = Field(min_length=1, max_length=12)
 
     @model_validator(mode="after")
     def unique_commands(self):
+        if isinstance(self.commands, str):
+            self.commands = list(
+                BASE_EXECUTION_COMMANDS if self.commands == "base" else EXECUTION_COMMANDS
+            )
         if len(self.commands) != len(set(self.commands)):
             raise ValueError("Duplicate execution command")
         return self
@@ -103,9 +117,53 @@ class EncodedSourceSpec(KnownDataSpec):
         return self
 
 
+class FixedRateSourceSpec(EncodedSourceSpec):
+    catalog_id: Literal["VOICE-03"] = "VOICE-03"
+    source: Literal["fixed_rate_encoded"] = "fixed_rate_encoded"
+    message_count: Literal[20] = 20
+    message_bytes: Literal[1200] = 1200
+    sample_count: Literal[24000] = 24000
+    source_duration_ms: Literal[60000] = 60000
+    max_duration_ms: int = Field(default=90000, ge=60000, le=90000)
+
+
+class EchoSpec(KnownDataSpec):
+    catalog_id: Literal["TIME-01"] = "TIME-01"
+    source: Literal["echo"] = "echo"
+    message_count: Literal[1] = 1
+    message_bytes: int = Field(default=64, ge=1, le=215)
+
+
+class EchoPlan(KnownDataPlan):
+    spec: EchoSpec = Field(default_factory=EchoSpec)
+
+    @model_validator(mode="after")
+    def single_unacknowledged_frame(self):
+        if (
+            self.link.ack_mode != "none"
+            or self.link.max_retries
+            or self.spec.message_bytes > self.link.fragment_payload_bytes
+        ):
+            raise ValueError("Echo requires one unacknowledged fragment without retries")
+        return self
+
+
 class Prepare(ContractModel):
-    spec: KnownDataSpec | EncodedSourceSpec
+    spec: KnownDataSpec | EncodedSourceSpec | FixedRateSourceSpec | EchoSpec
     budget: Budget
+    message_id: rf.CohortMessage | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+
+    @model_validator(mode="after")
+    def protected_known_data_only(self):
+        if self.message_id is not None and (
+            self.spec.source != "known_data"
+            or self.spec.security != "aes128_gcm"
+            or self.spec.message_count != 1
+        ):
+            raise ValueError("Numbered messages require a finite protected known-data preparation")
+        return self
 
 
 class Revision(ContractModel):
@@ -136,6 +194,10 @@ ARGUMENTS = {
     "run.start": Revision,
     "run.stop": Stop,
     "run.summary": Empty,
+    "run.source": source_protocol.Query,
+    "fault.set": fault.Set,
+    "fault.fire": fault.Fire,
+    "fault.status": fault.Query,
     "artifact.list": Empty,
     "artifact.get": ArtifactGet,
 }
@@ -174,7 +236,15 @@ class Accepted(ContractModel):
 
 
 class Armed(ContractModel):
-    receiver_ready: Literal[True]
+    role: Literal["sender", "receiver"]
+    receiver_ready: bool
+    arm_deadline_us: int = Field(ge=0)
+
+    @model_validator(mode="after")
+    def ready_role(self):
+        if self.receiver_ready != (self.role == "receiver"):
+            raise ValueError("Receiver readiness disagrees with the armed role")
+        return self
 
 
 class ArtifactManifest(ContractModel):
@@ -213,6 +283,10 @@ RESULTS = {
     "run.start": Accepted,
     "run.stop": Idle,
     "run.summary": rf.SummaryData,
+    "run.source": source_protocol.Report,
+    "fault.set": fault.Configured,
+    "fault.fire": fault.Fired,
+    "fault.status": fault.Report,
     "artifact.list": ArtifactList,
     "artifact.get": ArtifactChunk,
 }
@@ -230,7 +304,7 @@ class Command(v2.Command, ContractModel):
         if model is None:
             raise ValueError("Unknown run-protocol command")
         self.args = model.model_validate(self.args).model_dump()
-        if self.name.startswith(("session.", "run.")) and self.run_id is None:
+        if self.name.startswith(("session.", "run.", "fault.")) and self.run_id is None:
             raise ValueError("Session and run commands require run_id")
         if self.name != "hello" and self.target_boot_id is None:
             raise ValueError("Command requires target_boot_id")
@@ -253,6 +327,19 @@ def schema():
     return {
         "contract_version": v2.CONTRACT_VERSION,
         "scope": "finite_message_execution",
+        "command_sets": {"base": list(BASE_EXECUTION_COMMANDS), "lab": list(EXECUTION_COMMANDS)},
+        "fixed_source_policy": source_protocol.POLICY,
+        "lifecycle": {"arm_window_us": ARM_WINDOW_US, "sender_arm_required": True},
+        "laboratory_faults": {
+            "default_enabled": False,
+            "command_entries": 8,
+            "session_entries": 32,
+            "retained_frames": 16,
+            "order_frames": 32,
+            "status_page": 4,
+            "scope": "finite_generated_data",
+            "receiver_attempt_index": "eligible_arrival_ordinal",
+        },
         "wire": ADAPTER.json_schema(),
         "capability": Capabilities.model_json_schema(),
         "command_arguments": {name: model.model_json_schema() for name, model in ARGUMENTS.items()},

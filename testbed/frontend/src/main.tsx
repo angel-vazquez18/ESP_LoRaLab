@@ -28,11 +28,18 @@ import type { HardwareNode } from "./HardwareBench";
 import type { AudioState } from "./NodeAudio";
 import type { ArtifactState } from "./NodeArtifacts";
 import KnownDataPreview from "./KnownDataPreview";
+import LabTrials, { type LabState } from "./LabTrials";
 import RadioLink from "./RadioLink";
 import type { RadioState } from "./RadioLink";
 import VoiceRuns from "./VoiceRuns";
 import type { VoiceState } from "./VoiceRuns";
 import RunComparison from "./RunComparison";
+import WorkloadObservations from "./WorkloadObservations";
+import PhysicalCampaigns from "./PhysicalCampaigns";
+import type { CampaignState } from "./PhysicalCampaigns";
+import ProcedureMatrix, { type MatrixOption } from "./ProcedureMatrix";
+import ClockEvidenceReview from "./ClockEvidenceReview";
+import "./procedure-matrix.css";
 
 type View = "bench" | "experiments" | "campaigns" | "voice" | "results";
 type Metrics = {
@@ -106,6 +113,7 @@ type Procedure = {
   scope?: string;
   finished_at: string | null;
   full_procedure_passed: boolean;
+  procedure_revision?: string | null;
 };
 type Historical = {
   id: string;
@@ -121,6 +129,7 @@ type State = {
   artifact_transfers: ArtifactState;
   audio_operations: AudioState;
   radio_runs: RadioState;
+  lab_trials?: LabState;
   voice_runs: VoiceState;
   bench_busy: boolean;
   catalog: Entry[];
@@ -128,10 +137,13 @@ type State = {
     active_run:
       (Procedure & { completed_cases: number; case_count: number }) | null;
     runs: Procedure[];
+    matrix_options?: Record<string, MatrixOption>;
   };
   v2_execution: { runs: Historical[]; campaigns: Historical[] };
   runs: Run[];
   campaigns: Historical[];
+  physical_campaigns: CampaignState;
+  campaign_view_observation_id?: string | null;
   references: Reference[];
 };
 const empty: State = {
@@ -148,6 +160,11 @@ const empty: State = {
   v2_execution: { runs: [], campaigns: [] },
   runs: [],
   campaigns: [],
+  physical_campaigns: {
+    execution_available: false,
+    active: null,
+    executions: [],
+  },
   references: [],
 };
 const navigation: { id: View; label: string; icon: LucideIcon }[] = [
@@ -359,6 +376,7 @@ function Experiments({ host }: { host: Host }) {
   const [selected, setSelected] = useState("IF-01");
   const [filter, setFilter] = useState("");
   const entry = host.state.catalog.find((e) => e.id === selected);
+  const matrix = host.state.procedures.matrix_options?.[selected];
   return (
     <>
       <Heading
@@ -397,13 +415,15 @@ function Experiments({ host }: { host: Host }) {
                 </strong>
                 <span>{e.node_requirement}</span>
                 <small>
-                  {e.id === "IF-02"
-                    ? "Single-message link check"
-                    : e.preflight.ready
-                      ? "Diagnostic check ready"
-                      : e.available
-                        ? "Connect a node"
-                        : "Implementation pending"}
+                  {host.state.procedures.matrix_options?.[e.id]
+                    ? "Procedure matrix"
+                    : e.id === "TIME-02"
+                      ? "Saved timing review"
+                      : e.preflight.ready
+                        ? "Diagnostic check ready"
+                        : e.available
+                          ? "Connect a node"
+                          : "Implementation pending"}
                 </small>
               </button>
             ))}
@@ -419,6 +439,15 @@ function Experiments({ host }: { host: Host }) {
               pending={host.pending}
             />
           )}
+          {["PKT-02", "PKT-03", "SEC-02", "SEC-03"].includes(selected) && (
+            <LabTrials
+              state={host.state.lab_trials}
+              online={host.online}
+              benchBusy={host.state.bench_busy === true}
+              request={host.request}
+              pending={host.pending}
+            />
+          )}
           {entry && (
             <section className="panel physical-check">
               <span className="eyebrow">
@@ -428,24 +457,34 @@ function Experiments({ host }: { host: Host }) {
               <p>
                 <strong>{entry.node_requirement}</strong>
               </p>
-              <p>{entry.scope}</p>
-              {entry.preflight.blockers.length > 0 && (
+              {!matrix && <p>{entry.scope}</p>}
+              {!matrix && entry.preflight.blockers.length > 0 && (
                 <ul>
                   {entry.preflight.blockers.map((b) => (
                     <li key={b}>{b}</li>
                   ))}
                 </ul>
               )}
-              {entry.id !== "IF-01" && (
-                <button className="button secondary" disabled>
-                  {entry.id === "IF-02"
-                    ? "Full procedure pending"
-                    : "Physical runner unavailable"}
-                </button>
-              )}
             </section>
           )}
+          {matrix && (
+            <ProcedureMatrix
+              key={selected}
+              catalogId={selected}
+              option={matrix}
+              references={host.state.references}
+              active={host.state.procedures.active_run}
+              saved={host.state.procedures.runs}
+              request={host.request}
+              pending={host.pending}
+              online={host.online}
+              benchBusy={host.state.bench_busy}
+            />
+          )}
           {selected === "IF-01" && <DiagnosticCheck host={host} />}
+          {selected === "TIME-02" && (
+            <ClockEvidenceReview online={host.online} />
+          )}
           {selected === "IF-02" && (
             <KnownDataPreview request={host.request} pending={host.pending} />
           )}
@@ -509,10 +548,15 @@ function Results({ host }: { host: Host }) {
         title="Results & exports"
         description="Execution outcome, assessment and physical qualification remain separate. Historical records retain their original provenance."
       />
+      <WorkloadObservations
+        nodes={host.state.hardware_nodes}
+        request={host.request}
+        pending={host.pending}
+      />
       <History
         rows={host.state.procedures.runs}
         base="/api/procedures/runs"
-        label="Diagnostic and historical procedure records"
+        label="Procedure and diagnostic records"
       />
       <History
         rows={host.state.v2_execution.runs}
@@ -535,16 +579,16 @@ function Campaigns({ host }: { host: Host }) {
       <Heading
         eyebrow="CAMPAIGNS"
         title="Physical campaigns"
-        description="Campaign execution requires a physical execution adapter and supporting firmware. Node requirements will follow the tests in each campaign."
+        description="Run saved node workloads, keep partial outcomes and inspect the shared campaign history."
       />
-      <section className="panel physical-check">
-        <h2>Execution unavailable</h2>
-        <p>
-          All 23 procedures remain in scope. Local tests can be qualified on
-          each device separately; RF cases require both devices. Saved campaigns
-          remain available below.
-        </p>
-      </section>
+      <PhysicalCampaigns
+        state={host.state.physical_campaigns}
+        nodes={host.state.hardware_nodes}
+        online={host.online}
+        benchBusy={host.state.bench_busy}
+        pending={host.pending}
+        request={host.request}
+      />
       {[
         { rows: host.state.campaigns, base: "/api/campaigns" },
         { rows: host.state.v2_execution.campaigns, base: "/api/v2/campaigns" },
@@ -732,6 +776,30 @@ function App() {
   const host = useHost();
   const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState<View>("bench");
+  const [documentId] = useState(() => crypto.randomUUID());
+  const observation = host.state.campaign_view_observation_id;
+  useEffect(() => {
+    if (!observation) return;
+    const storageKey = "loralab-campaign-view-tab";
+    const tabId = sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
+    sessionStorage.setItem(storageKey, tabId);
+    const entry = performance.getEntriesByType("navigation")[0] as
+      PerformanceNavigationTiming | undefined;
+    void fetch(
+      `/api/physical-campaigns/executions/${encodeURIComponent(observation)}/view-observation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tab_id: tabId,
+          document_id: documentId,
+          view,
+          navigation_type: entry?.type ?? "unknown",
+        }),
+        keepalive: true,
+      },
+    ).catch(() => {});
+  }, [observation, documentId, view]);
   const navigate = (next: View) => {
     location.hash = next;
     setView(next);
@@ -764,6 +832,7 @@ function App() {
           {navigation.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
+              aria-label={label}
               className={view === id ? "nav-item active" : "nav-item"}
               onClick={() => navigate(id)}
             >
@@ -817,6 +886,12 @@ function App() {
           </div>
         </header>
         <main>
+          {observation && (
+            <div className="notice" role="status">
+              From Campaigns, visit another view, return to Campaigns, and
+              reload this tab while the campaign is running.
+            </div>
+          )}
           {active && (
             <div className="notice" role="status">
               <span>

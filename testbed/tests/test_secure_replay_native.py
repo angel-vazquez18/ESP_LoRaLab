@@ -77,6 +77,47 @@ def test_replay_window_authenticates_before_committing_and_accepts_unseen_reorde
         assert lib.rf_secure_close(C.byref(owner)) == 0
 
 
+def test_old_reference_stays_rejected_after_full_contiguous_window_and_fresh_data_passes():
+    lib = session_library()
+    lib.rf_secure_receive.argtypes = [
+        C.c_void_p,
+        C.c_void_p,
+        C.c_size_t,
+        C.c_int64,
+        C.c_bool,
+        C.c_uint32,
+        INSERT,
+        C.c_void_p,
+    ]
+    owner = C.c_void_p()
+    assert lib.rf_secure_create(SESSION, 2, KEY_B, KEY_A, C.byref(owner)) == 0
+    delivered = []
+    callback = INSERT(
+        lambda _, header, body, size: delivered.append(C.string_at(body, size)) or True
+    )
+
+    def receive(raw, now):
+        return lib.rf_secure_receive(owner, raw, len(raw), now, False, 0, callback, None)
+
+    def payload(sequence):
+        return sequence.to_bytes(4, "big") + bytes(60)
+
+    retained = frame(1, body=payload(1))
+    try:
+        assert receive(retained, 1) == 0
+        for sequence in range(2, 131):
+            assert receive(frame(sequence, body=payload(sequence)), sequence) == 0
+        assert delivered == [payload(i) for i in range(1, 131)]
+
+        assert receive(retained, 131) == 3
+        assert delivered == [payload(i) for i in range(1, 131)]
+        for sequence in (131, 132):
+            assert receive(frame(sequence, body=payload(sequence)), sequence + 1) == 0
+        assert delivered == [payload(i) for i in range(1, 133)]
+    finally:
+        assert lib.rf_secure_close(C.byref(owner)) == 0
+
+
 def test_failed_insertion_does_not_consume_sequence_and_exact_retry_has_bounded_reack():
     lib = session_library()
     lib.rf_secure_receive.argtypes = [

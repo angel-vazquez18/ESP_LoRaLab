@@ -1,8 +1,912 @@
 # Consolidated implementation status
 
-Updated November 23, 2026. The host is now physical-only by user decision, replacing
+Updated November 27, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 27 — Merge-review cancellation corrections
+
+Global Stop now cancels the owning procedure before its nested lab trial, so a
+stopped trial cannot advance to another RF case. Procedure-stop endpoints release
+the bench lock before awaiting nested cleanup. Repeated Stop calls cancel the
+procedure once and shield cleanup from cancellation of an HTTP caller.
+
+Four isolated cancellation regression cases pass. The Windows review host used
+import-only placeholders for unavailable POSIX modules; these cases do not use
+file locking, resource accounting, serial ports or firmware fixtures. The full
+host/native suite and ESP-IDF target builds remain unverified on this host because
+their POSIX/native toolchain prerequisites are unavailable. Lint, dashboard build
+and formatting, generated contracts, repository invariants and pinned Codec 2
+resource checks pass. No physical qualification or flashing was performed.
+
+## November 27 — Shared-session packet matrix
+
+The PKT-02 runner now uses one protected session per case and preserves
+frame-sequence ranges and exact readback for every numbered message.
+Native matrix checks verify a drop and successful follow-up in the same
+session, deliberate duplicate and reorder observations, and session
+cleanup when cancelled between messages. Physical execution requires
+matching v7 images and remains open.
+
+## November 27 — Numbered messages in one protected session
+
+Firmware accepts an opt-in sequence of bounded known-data preparations under
+one security session. Native checks cover ten messages in each direction at
+16, 64, 160 and 199-byte fragment capacities, including a dropped fragment in
+message 3, intact recovery in message 4, and preserved replay state.
+
+## November 27 — Rolling clock evidence
+
+TIME-02 can now assess rolling 32-edge fits from one saved continuous capture.
+Each frame records the window available at its TX command. A newer ineligible
+fit excludes its dependent frames. Live pulse acquisition remains open.
+
+## November 27 — Replay window continuity
+
+SEC-03 C2 plans 132 originals per case. The isolated firmware test verifies a
+continuous receive window, one explicit too-old result and fresh delivery
+under the same session state. The physical retained-session runner remains open.
+
+## November 27 — Protected ACK rejection
+
+The sender distinguishes authenticated ACKs with a wrong DATA reference from
+bad-tag input and retains the receive timestamp. Native checks verify the
+outstanding DATA, original deadline, exact retry and matching ACK recovery.
+
+## November 27 — Reordered fragment evidence
+
+PKT-02 C4 now checks the complete planned order across confirmed sender
+attempts, matching CRC-valid arrivals, and receiver insertions.
+
+## November 27 — Duplicate fragment evidence
+
+The PKT-02 duplicate case now requires exactly two arrivals of the selected
+frame, its original insertion, and a rejection tied to the later arrival.
+
+## November 27 — Missing fragment evidence
+
+ACK-disabled drop assessment now verifies the source archive fingerprint,
+every other accepted index, the exact missing report and the receiver timeout.
+A confirmed partial delivery fails the case.
+
+## November 27 — Intact packet evidence
+
+PKT-02 C1 now independently rechecks both archived byte artifacts and the
+observed fragment lengths at four fragment capacities. Per-message records
+include separate session identities. Same-session cohorts remain open.
+
+## November 27 — Saved clock evidence review
+
+TIME-02 accepts saved pulse and frame evidence in the dashboard and
+CLI. The report keeps the exact file fingerprint, separate receiver
+phases, and reasons for excluding samples. See
+[the timing review](clock_analysis.md).
+
+## November 27 — Microphone-origin RF voice review
+
+VOICE-02 C2 reviews protected microphone-origin runs in both
+directions. It checks the saved capture, receiver bytes and playback,
+independent matched data transfers, and the operator listening record.
+See [the two-node voice matrix](voice_matrix.md).
+
+## November 27 — Local microphone, codec and recovery cases
+
+VOICE-01 reviews saved raw and codec playback against the original
+microphone bytes and an explicit listening record. The negative
+controls verify malformed input, cancellation, fresh capture and
+restored idle state. See [the one-node audio matrix](local_voice_matrix.md).
+
+## November 26 — Matched protected transfer measurements
+
+SEC-01 compares DATA frame sizes, unique-original delivery and verified
+payload goodput in matched unprotected and AES-GCM runs. The saved
+comparison counts missing pairs and timing windows. See
+[the comparison procedure](content_series.md).
+
+## November 26 — Dashboard navigation and reload
+
+IF-03 C5 records dashboard navigation and reloads during its active
+campaign and verifies continuity against the retained trial and radio
+records. See [dashboard continuity](integration_matrices.md#if-03-dashboard-navigation-and-reload).
+
+## November 26 — Full campaign restart review
+
+IF-03 C6 previews the prescribed campaign for each active/paused restart.
+Its saved review checks the plan and case order, protects the interrupted
+history, and verifies an explicit fresh transfer. See
+[IF-03 restart](integration_matrices.md#if-03-active-and-paused-campaign-restart).
+
+## November 26 — Board reset and stale boot review
+
+OPS-01 C2 joins an interrupted protected transfer, raw stale-boot and
+idle-state readbacks, and a fresh protected transfer with independent
+keys and bytes. See [board reset and stale boot](ops_matrix.md#board-reset-and-stale-boot).
+
+## November 26 — USB interruption review
+
+OPS-01 C1 retains serial I/O failure evidence for the exact owned
+connection, confirms bounded peer cleanup, and verifies the saved bytes
+from an explicit fresh transfer. See [USB loss and reconnect](ops_matrix.md#usb-loss-and-reconnect).
+
+## November 26 — Active and paused host restart review
+
+OPS-01 C3 links an interrupted campaign and an explicit selected-case
+rerun across a host restart. It checks fresh ownership and preflight,
+re-verifies archived radio data, and preserves the original checkpoint
+and cleanup outcome. See [restart review](ops_matrix.md#active-and-paused-host-restart).
+
+## November 26 — Missing receive evidence
+
+OPS-01 C5 verifies that one missing host observation leaves an explicit
+sequence gap and excludes the child from RF loss and rate accounting.
+The case also verifies the saved bytes and a fresh transfer. See
+[the telemetry-gap procedure](ops_matrix.md#missing-receive-observation).
+
+## November 26 — Recovery after control rejection and timeout
+
+OPS-01 C4 now runs invalid-configuration and withheld-reply cases in
+both directions. Each verifies a known-data transfer before and after
+the control, and confirms preserved settings and idle state. See
+[control recovery](ops_matrix.md#control-rejection-and-timeout-recovery).
+
+## November 26 — Idle and loaded bench stability
+
+OPS-01 C6 collects raw 1 Hz health events from both owned nodes,
+schedules a bounded known-data transfer each minute in the loaded
+case, and retains partial evidence on stop. See
+[the stability procedure](ops_matrix.md#idle-and-loaded-stability).
+
+## November 25 — Saved voice listening review
+
+VOICE-04 now exposes coded playback, checked WAV waveforms, listening
+ratings and downloadable review evidence in the dashboard. Stage plots
+group node-local durations by source, direction and radio/link setting.
+See [saved voice review](voice_quality.md) for the evidence workflow.
+
+## November 25 — Finite transfer rates
+
+Known-data and RF sweep records now keep unique accepted bytes and verified
+message bytes as independent numerators. Each rate requires a reconciled
+sender transfer window. Host elapsed time remains separate. See
+[transfer-rate definitions](radio_execution.md#finite-transfer-rates).
+
+## November 25 — Airtime residual review
+
+MODEL-01 saved frame and message observations now support a separate
+predicted/observed and residual view with configuration filtering and a
+hashed CSV. The report preserves the two capture bases and leaves
+instrumented agreement pending. See [airtime model review](model_series.md).
+
+## November 25 — Sustained encoded voice runner
+
+VOICE-03 now uses the common radio lifecycle to run the finite producer
+from a verified encoded reference. The saved result joins the sender's
+3,000 frame observations and queue history with the independently checked
+24,000-byte receiver archive. Native tests cover the host workflow and
+missing worker preflight. Full bench repetitions and calibrated in-window
+delivery still require physical evidence. See [VOICE-03](sustained_voice.md).
+
+## November 25 — Round-trip comparisons for RF sweeps
+
+RF sweeps can now run companion echoes with matched per-role settings.
+The saved dashboard and CSV keep requester-local RTT, verified samples
+and excluded timeouts separate from delivery and transmit measurements.
+RF-02 through RF-04 include the companion series in their default plans.
+See [RF sweep timing](rf_sweeps.md#matched-round-trip-delay).
+
+## November 25 — Controlled echo timeout
+
+TIME-01 C2 stops the prepared responder before arming and waits for the
+requester's real bounded timeout. Two intact echoes bracket the case
+and prove recovery. The timeout is retained with unavailable RTT. See
+[round-trip case instructions](timed_series.md).
+
+## November 25 — Firmware packet-size rejection
+
+PKT-01 C3 now checks the firmware's max-plus-one reply in the selected
+security profile. Saved cases retain proof of idle state and a verified
+64-byte recovery transfer. The protected case retires the original
+session before allocating fresh keys for recovery. See
+[packet boundary procedures](content_series.md).
+
+## November 25 — Memory cleanup after cancellation and failure
+
+MEM-01 C5 now stops an allocated transfer before arming and exercises a
+known missing fragment on lab firmware. Pre-session and post-cleanup
+memory samples establish whether both nodes returned to declared bounds.
+A verified 64-byte transfer checks recovery on the same pair. See
+[the recovery procedure](memory_matrix.md#c5-cancellation-and-failed-workload-recovery).
+
+## November 25 — Oversized request memory check
+
+MEM-01 C4 now sends the pair's advertised maximum plus one to the
+limiting firmware, requires `RESOURCE_LIMIT` before arming and verifies a
+fresh 64-byte transfer. Native checks passed in both directions. See
+[the refusal procedure](memory_matrix.md#c4-oversized-preparation).
+
+## November 25 — Audio stage memory
+
+MEM-01 C3 now records local capture, codec and playback memory, plus
+paired reassembly and integrated voice. Observations link each stage to
+its command or radio run and calculate sampled heap changes against the
+preceding baseline. Native checks cover reassembly without receiver
+playback, integrated playback and capture cancellation. See
+[sampled memory procedures](memory_matrix.md#c3-audio-stages).
+
+## November 25 — RF comparison and baseline review
+
+Saved RF sweeps now expose each direction and repetition, the metric
+range and median, and paired before/after baseline changes. The CSV in
+the procedure archive preserves each repetition and its case reference.
+Native tests checked missing evidence and matched controls, and the
+browser verified metric switching and baseline details. See [RF sweeps](rf_sweeps.md).
+
+## November 25 — RF delivery and unresolved observations
+
+RF-01 through RF-04 now retain independently proven delivery and
+bounded non-delivery. The testbed reports a complete-cohort delivery
+ratio, useful bits per active TX second and the available signal
+sample count. Missing evidence stays unresolved. A native fixture
+verified one dropped and two intact RF-02 settings. See [RF sweeps](rf_sweeps.md).
+
+## November 25 — Selectable UART control
+
+The firmware has a separate UART0 build at 115200 8N1. IF-01 reads the
+actual declared transport before a case and saves it in the ledger. The
+dashboard and CLI preview native USB and UART independently. See
+[transport setup](integration_matrices.md#serial-transports-for-if-01).
+Physical transport qualification remains open.
+
+## November 25 — Packet retry exhaustion
+
+PKT-03 C4 now schedules each permitted receive drop in a single trial.
+The firmware reports sender ACK timeouts and the host reconciles them
+with exact transmissions, retained drops and receiver missing ranges.
+The native workflow covers no ACK and stop-and-wait with zero, one and
+two retries. See [packet fault matrices](fault_matrices.md) for physical
+bench instructions.
+
+## November 25 — Stale-boot rejection
+
+IF-01 C5 now uses two observed boots of the same device to verify that
+the current firmware rejects commands aimed at the prior boot. Native
+checks passed all 15 default one-role reply cases across two boot
+identities. Physical resets, UART support and transport qualification
+remain open. See [integration procedures](integration_matrices.md).
+
+## November 25 — Serial health watchdog recovery
+
+IF-01 C6 now exercises all nine default one-role cases. The deliberate
+silence fixture retains suppressed event sequences and verifies stale
+health, watchdog disconnection and a fresh connection to the same boot.
+The native firmware fixture passed all three watchdog repetitions.
+See [integration procedures](integration_matrices.md).
+
+## November 25 — Serial compatibility gate
+
+IF-01 C4 now runs the production handshake against isolated wire version,
+contract version and schema digest mismatches. All nine default one-role
+cases rejected the expected mismatch and closed the fixture port before
+claim. See [integration procedures](integration_matrices.md).
+
+## November 25 — Correlated reply perturbations
+
+IF-01 C5 now verifies one dropped reply, delayed delivery, an exact
+mutating retry and conflicting command identity using the normal host
+command and receive paths. Native checks confirmed one diagnostic result
+per case. Controlled stale-boot recovery and physical qualification
+remain open. See [integration procedures](integration_matrices.md).
+
+## November 25 — Competing ownership and lease expiry
+
+IF-01 C6 rejects a competing client, observes the actual unowned idle
+health after absent keepalive and establishes a fresh claim. The native
+one-role fixture verified all six supported default cases and restored
+control after cancellation. Deliberate health silence and physical
+qualification remain open. See [integration procedures](integration_matrices.md).
+
+## November 25 — Serial configuration rejection
+
+IF-01 C2 now compares radio/link settings and configuration revision
+before and after a firmware-rejected setting. A native one-role
+run verified all 12 default C2 cases. Without a compatible radio, the
+three configuration-case repetitions remain blocked while the command-error
+checks remain available. See [integration procedures](integration_matrices.md).
+
+## November 25 — Campaign restart evidence
+
+Host restart now preserves the active or paused campaign checkpoint
+and a hash of the retained interrupted radio trace. Native child
+processes exercised active transmission and a pause after a verified
+child, with exact archive hashes and fresh connection checks. The
+supervised restart matrix and physical cleanup checks remain open.
+See [integration procedures](integration_matrices.md).
+
+## November 25 — Serial framing recovery
+
+IF-01 C3 now runs nine framing variants with three default repetitions
+per selected USB role. It records exact write lengths and hashes,
+correlated status replies, rejection counter deltas and the host
+decoder's every-byte split result. The native C fixture verified all 27
+cases and cancellation during a partial write. Physical USB and UART
+qualification remain open. See [integration procedures](integration_matrices.md).
+
+## November 25 — Saved voice timing and listening review
+
+VOICE-04 now pairs verified source and decoded audio, preserves the
+original clock domain for each available stage, and exports seeded
+clip codes and five-point ratings. A rating must match the clip's
+PCM hash. The same review is available through the CLI and API.
+Full `make check` passed 1,155 tests with no skips, plus lint, build,
+contracts and repository checks. Both standard and lab ESP-IDF builds
+passed. See [saved voice review](voice_quality.md). Attended references,
+valid calibration and the complete physical study remain open.
+
+## November 25 — Offline clock evidence
+
+TIME-02 now fits the saved paired pulses with exact rational arithmetic
+and separately projects TX-command to receive and application timing.
+It rejects malformed pulses, changed identities, expired samples and
+uncertainty beyond the declared bound. The 37 focused clock/echo tests
+and all shared non-test checks passed. Live pulse wiring, instrumented
+capture and mapping installation remain open. See
+[offline clock evidence](clock_analysis.md).
+
+## November 25 — Local reference audio matrix
+
+VOICE-01 C3 now runs a saved reference through one node's verified codec
+and playback path and preserves unrelated device artifacts. The 41
+focused audio/voice tests, lint, dashboard build and contract and
+repository checks passed. See [local reference audio](local_voice_matrix.md).
+The microphone schedule, full negative cases and physical listening
+remain open.
+
+## November 25 — Linked recovery campaign
+
+OPS-01 C7 uses the shared runner to plan 100 uniquely identified cases
+in linked batches with per-batch time and size bounds. The native
+quick check executed ten mixed local/paired cases and independently
+verified its archive and 26 child records. The 43 focused campaign/API
+checks, lint, dashboard build, and contract and repository checks passed.
+See [linked recovery campaign](ops_matrix.md).
+
+## November 25 — Reference voice transport matrix
+
+VOICE-02 now selects saved reference clips and keeps exact encoded
+readback, local stage evidence, and matched 1,200-byte and 64-byte
+known-data comparisons. Native fixtures verified the reference path,
+readiness, comparisons and failure handling across 19 focused tests.
+Lint, dashboard build, contracts and repository checks also passed.
+Attended microphone runs and listening qualification remain open.
+See [reference voice procedures](voice_matrix.md).
+
+## November 25 — Grouped packet and security lab cases
+
+PKT-02/03 and SEC-02/03 now preview and run supported laboratory cases
+through the shared ledger. Targeted faults retain the independent before,
+fault and after controls. The linked packet series records which workload
+was targeted and the exact missing-index evidence. The standard profile
+still runs intact checks. Full regression passed 1,137 tests. A separate
+native check verified the targeted third workload. Long-window replay,
+multi-attempt exhaustion and hardware qualification remain open. See
+[grouped lab cases](fault_matrices.md).
+
+## November 25 — Airtime and delivery model matrix
+
+MODEL-01 now checks the pinned reference and worksheet numerically, then
+links exact frame evidence and sender-local duration to calculated runs.
+The delivery cases retain no-ACK, ACK and observed one-retry costs
+separately. Full `make check` passed 1,134 tests, including all 90 numerical
+vectors and native RF/ACK evidence. The TX interval is a software
+measurement. Instrumented airtime tolerance and physical qualification are
+still open. See [airtime model procedures](model_series.md).
+
+## November 25 — Stage memory matrix
+
+MEM-01 now runs per-node finite idle baselines and paired data observations
+with complete readback, matched radio run/observer identities and post-run
+idle measurements. Each observer saves raw events and observed allocation
+lifetimes. Cancelling an idle check stops its own observer. Full
+`make check` passed 1,130 tests and all repository checks. See
+[sampled memory procedures](memory_matrix.md) for supported cases and
+the audio, allocation-rejection and deliberate recovery cases.
+
+## November 25 — Dashboard matrix controls
+
+The Experiments dashboard now previews and runs supported procedure
+matrices using the same service and records as the CLI. It retains
+case blockers, active progress, run-specific stop and saved case
+evidence. A changed plan hash requires previewing again. The software
+fixture browser run verified completed IF-01 evidence, navigation and
+a fully blocked group. All four exported file hashes matched. The regression suite passed 1,126 tests. Lint, build, contract and repository checks also passed.
+See [shared procedure controls](integration_matrices.md).
+
+## November 25 — Round-trip and local crypto matrices
+
+TIME-01 now runs matched exact-byte echo cohorts under both protection
+profiles, with requester-local timestamps and explicit exclusions. The
+controlled missing-reply follow-up is described above. SEC-04 now runs a single
+role or both, keeping checked timings for encryption, decryption,
+invalid-tag rejection and copy in distinct distributions.
+
+The regression suite passed 1,125 tests. Lint, the dashboard build,
+contract generation and repository checks passed after an evidence-link
+line wrap. Physical qualification remains separate. See
+[round-trip and crypto procedures](timed_series.md).
+
+## November 25 — Packet boundaries and paired protection
+
+PKT-01 and SEC-01 now share the matrix executor. Packet cases retain exact
+fragment sizes, negotiated limits and host max-plus-one rejection with a
+subsequent valid control. Protection cases compare matched unprotected and
+AES-GCM content and actual frame lengths. Separate negative cases verify
+a matching CRC-valid wrong-key arrival rejected at authentication, and
+a peer profile mismatch rejected during preflight. Both keep intact controls
+and secret-free evidence.
+
+The 17 focused content, sweep and integration checks passed on isolated
+native firmware. Full `make check` passed 1,122 tests, lint, dashboard build,
+and contract, repository and vendored-resource verification. The above-limit
+gate is a host result. Board-side limits,
+physical performance and hardware qualification remain open. See
+[packet and protection procedure notes](content_series.md).
+
+## November 25 — Grouped RF sweep execution
+
+RF-01 to RF-04 now use seeded factor order, matched direction/repetition source
+seeds, before/after baselines and finite per-setting budgets. The testbed
+verifies applied modem settings, keeps RF-04 receiver power fixed and saves
+per-case matched signal/timing observations and raw child links. The 13 focused
+RF/integration checks passed on isolated native firmware. Full `make check`
+passed 1,118 cases without skips and all shared checks. Bench qualifications,
+comparison plots and full performance assessment remain open. See
+[radio setting sweeps](rf_sweeps.md).
+
+## November 25 — Shared integration matrix runner
+
+The testbed derives stable case plans for IF-01, IF-02 and IF-03 and uses one
+procedure ledger for their serial, radio and campaign evidence. Confirmed
+serial coverage includes claim/release/reclaim and three structured errors.
+IF-02 executes the four declared payload sizes in both directions and verifies
+mismatched applied settings before arming, followed by known-data recovery.
+Campaign execution reuses the existing owner for baseline, pause/resume,
+cancellation, configuration failure, selected reruns and export verification.
+
+The executor retains blocked variants and verifies the complete linked campaign
+graph, including file transfer children. Five dedicated cases and the combined
+45 regression cases passed in the isolated C/radio fixture. Full `make check`
+passed 1,110 tests without skips and all shared checks. Full serial framing
+and reply perturbation, campaign navigation and process restart, and physical
+acceptance remain open. See [integration procedure runner](integration_matrices.md).
+
+## November 25 — Matched lab trials and evidence (#85)
+
+The testbed runs one selected fault between matched intact controls under one
+bench owner and the same bound node connections. The fault child preserves
+planned/applied targets, confirmed TX, CRC-valid RX digests, exact rejection
+or insertion evidence, node-local times and independent file verification.
+The assessment distinguishes a proven negative result from partial evidence.
+The dashboard and CLI share readiness, execution, stop and saved evidence.
+
+Ten focused tests cover live native-pair host orchestration, CRC/gap exclusions,
+firmware gating, stop and API preflight. Full `make check` passed 1,105 tests
+without skips and all shared checks. The isolated browser fixture completes
+a drop/retry trial, retains its child evidence after reload and exports eight
+hash-verified members. See [controlled lab trials](lab_trials.md). Timing views
+and complete experiment matrices remain separate work.
+
+## November 25 — Laboratory fragment and ACK controls (#77)
+
+Execution v6 adds receiver drop before insertion, ACK suppression after
+acceptance, exact duplicate transmission and prepared reverse blocks up to 32
+frames. A drop does not commit the replay window. A suppressed ACK leaves the
+accepted-frame retry path intact. Lab trace digests and receive timestamps
+support reconciliation with actual arrival, acceptance and rejection records.
+
+The 77 focused native/contract checks pass. Native cases include byte-identical
+recoveries, one delivery across duplicates/retries, protected reversal at capacity
+and the exact missing index after a controlled loss. Full `make check` passed
+1,095 tests without skips, plus lint, dashboard build, contract, repository and
+vendor checks. ESP-IDF v6.0.2 builds passed in the standard (492,123 bytes)
+and lab (492,127 bytes) configurations. See
+[laboratory checks](lab_frame_faults.md) for commands and bench checks.
+
+## November 25 — Laboratory protected-frame checks (#76)
+
+An explicit build option adds bounded session-scoped post-protection checks and
+one-shot retained-frame controls for generated known-data. The controls default
+off. They preserve the original retry bytes, report nonsecret frame digests and
+clear retained data on cancellation, ownership loss and close. Execution v5
+coordinates the new commands, events and bounded health records.
+
+Full `make check` passes 1,077 cases without skips and all shared checks. The
+59 focused cases pass. ESP-IDF v6.0.2 builds succeed with the standard
+(488,395 bytes) and isolated lab (488,399 bytes) configurations. CRC and radio
+observations in the native fixtures still require on-air qualification.
+See [laboratory checks](lab_frame_faults.md).
+
+## November 25 — Repeated DATA run artifact retirement (#210)
+
+A native six-message probe reproduced the fifth ordinary DATA run failing with
+RESOURCE_LIMIT because committed source/recovered objects filled all four slots.
+Generated known-data runs now reuse echo's initial-listing/fresh-ID and verified
+readback retirement policy. Host bytes, transfer records and exports remain;
+pre-existing files and failed-readback objects are preserved. Encoded references
+and recovered voice objects retain their existing downstream lifecycle. An
+artifact retirement failure still attempts both bound session closes and remains
+an unsuccessful cleanup, rather than blocking the other node's stop.
+
+Six dedicated cases and the combined 20 DATA/echo cases pass: six consecutive
+messages in each direction/security combination with user files preserved, exact
+readback/export hashes, recoverable readback failure and explicit retirement
+failure with both sessions closed. Full `make check` passes 1,038 cases without
+skips and all lint/frontend/contracts/repository/vendor checks; formatting passes.
+The existing Starlette/httpx deprecation remains. Host-only: no firmware/wire/profile change,
+new IDF build, physical port, reset or flash. Physical acceptance remains open.
+See [retention policy, walkthrough and review checks](physical_radio_runs.md).
+
+## November 25 — Shared physical echo runs and independent RTT reports (#83)
+
+The common physical radio lifecycle now runs finite echoes in either direction,
+with the existing bench owner, fresh bound sessions, receiver-first arm/start,
+source/request readback, stop/cleanup and durable raw evidence. The coordinated
+execution v4 revision returns bounded actual reply bytes. The host independently
+compares all three byte sources and matches request/reply identities, references,
+confirmed transmissions, receive observations and one captured acceptance instant.
+An end-to-end test exposed a second serialization-time timestamp; both published
+records now use the original acceptance instant.
+
+Timing reports retain valid n, median and nearest-rank p95, raw local intervals,
+reason-coded exclusions and separate overall host monotonic transaction time.
+Role, both devices/boots, settings and schema define separate cohorts. Missing
+replies retain completed finite timeout observations with null statistics;
+stopped/interrupted, inconsistent or incomplete evidence cannot create samples.
+Saved-file integrity is checked again before aggregation. Selection/count/byte
+and rejection projections are bounded; all original rejection rows remain in raw
+records. One tracked worker keeps hashing off control requests and joins through
+cancellation/shutdown. Campaign exports reuse that worker implementation.
+
+API/CLI share the existing owner; dedicated dashboard controls follow #89.
+Twenty-eight dedicated accounting/API/CLI/worker cases pass, including both actual
+C/PSA directions/profiles, corrupted evidence, dropped request/reply/result,
+cancel/disconnect, store-safe worker shutdown and six consecutive runs preserving
+pre-existing files. Verified fresh echo artifacts retire after readback; failed
+readback remains recoverable, and retirement failure still closes both sessions
+with an explicit unsuccessful finding. Full suite passes 1,030 cases without
+skips; final 75 echo/radio/campaign recovery cases and all lint/frontend/contracts/
+repository/vendor checks pass. The existing Starlette/httpx warning remains.
+ESP-IDF v6.0.2 build/size succeeds (480,067-byte
+image). No physical port, reset or flash; all 19 original files remain unchanged.
+See [commands, walkthrough and physical follow-up](physical_echo_timing.md).
+Full TIME-01, pulse review/capture and physical qualification remain open.
+
+## November 25 — Verified echo firmware and requester-local timing (#65)
+
+The main node now supports one owned, single-fragment known-data echo request per
+run in either direction, plain or GCM protected. Replies must match session,
+roles, request reference and exact bytes before replay commitment or RTT. The
+responder reserves its own fresh source sequence. Only confirmed request TX
+command and accepted reply timestamps on the requester enter the interval;
+peer clocks and USB arrival times remain separate. Missing replies produce a
+finite timeout with null latency; duplicate/late/invalid frames cannot add samples.
+Pending buffers retire on stop, ownership loss or deadline, without auto-resume.
+Committed artifacts retain their normal independent lifecycle.
+
+Execution advances to exact `finite_message_execution_v4`, with coordinated typed
+intent, result, optional summary and generated metadata. Other wire profiles are
+unchanged, including the diagnostic digest. Echo capability follows actual radio
+availability. No operator echo stub is added: host collection/accounting is #83,
+and the full TIME-01 procedure and physical qualification remain open.
+
+All 37 dedicated echo cases pass, covering actual C/PSA nodes in both directions,
+independent clocks, exact capacity, altered/tagged/reference/session/protection
+rejections, duplicate suppression, timeout/fresh-run recovery, unconfirmed TX and
+stop/lease/disconnect cleanup. The combined full-capability regression passes
+73 cases. Full `make check` passes 1,004 cases without skips, plus lint, frontend,
+contracts and repository/vendor checks. ESP-IDF v6.0.2 build/size succeeds for the
+existing local configuration: image 479,571 bytes. No physical port, reset or
+flash. The existing Starlette/httpx deprecation remains. See
+[policy, walkthrough and expected checks](verified_echo_rtt.md). Next #83 adds
+shared host RTT correlation; hardware pulse review #46/#49 remains separate.
+
+## November 24 — Shared physical campaign dashboard (#115)
+
+Campaigns now exposes saved settings/imports, current requirements, bounded case
+pages and the existing shared owner. Explicit start/pause/resume/stop, linked
+selected-case reruns, child/identity/cleanup inspection and verified ZIP downloads
+use the same services as the CLI. Selected plan/execution IDs survive refresh and
+navigation; browser reads never start work. Backend disconnect disables controls,
+and interrupted restart history stays interrupted with unconfirmed prior cleanup.
+Legacy histories remain readable. All 23 full procedure references remain in scope.
+
+Three dedicated public/native view cases and the full 967-case check pass without
+skips, plus all lint/frontend/contracts/repository/vendor checks. Final frontend
+build/format pass; a nullable-type-only adjustment leaves identical JS assets.
+Interactive browser fixtures verify pause/refresh/navigation without duplicate
+children, resumed saved order, stop/partial/skipped cases, parent-linked rerun,
+settings import, verified download, cold restart and mobile/light/dark layouts.
+The actual downloaded ZIP independently retained one case, one child, two files
+and seven hash-matching members. Six total unique fixture diagnostic starts stayed
+six after restart/reload. Final captured console is clear and 390-pixel layout has
+no page overflow. Original 19 files are unchanged. No physical port, reset, flash,
+firmware change or target build. Physical #132 and pulse-pin review #46 remain
+hardware-dependent; continue independently with verified echo/RTT firmware #65.
+See [workflow, observed evidence and physical instructions](campaign_dashboard.md).
+
+## November 24 — Linked campaign reruns and verified bundles (#107)
+
+Terminal campaigns can now create explicit selected-case executions without
+changing originals. Selection keeps original plan order/settings/seeds/batch
+links, uses fresh bindings/readiness and records parent/snapshot links. New
+header/case hashes guard the saved ledger. Active or paused cold restart retains
+interrupted history without reopening ports or resuming RF; rerun is a new owner.
+
+Bounded ZIP exports retain the complete selected execution, original plan and
+reachable diagnostic/procedure/audio/radio/voice/transfer records, traces and
+saved files. Independent saved length/hash/manifest checks reject corruption;
+offline verification checks member/count/order/link integrity without extraction.
+Older/interrupted files lacking finalized hashes retain explicit export-time-only
+scope. Radio finalization now fingerprints saved files, and fingerprint failure
+preserves cleanup and terminal error instead of leaving the record running.
+Shared API/CLI include rerun, verified exclusive export and offline verification.
+One tracked export worker keeps file work off the control loop, rejects concurrent
+exports and joins through cancellation/shutdown before storage closes.
+
+Twenty-seven dedicated cases pass, including real native DATA/voice traversal,
+actual active/paused process exits, original preservation, partial serial records,
+corrupt files/archives/ledgers, ownership and CLI/archive limits. The campaign/radio
+regression also covers unreadable trace finalization and preserved cleanup.
+Full check passes 964 cases without skips and all shared checks; formatting and
+CLI help pass. Existing Starlette/httpx deprecation remains. Host-only: no
+wire/firmware/IDF build or physical port/reset/flash. All 19 original files remain
+unchanged. Physical acceptance is open. See [policy, walkthrough and expected
+checks](campaign_reruns_evidence.md). Next #115 exposes these shared controls in
+the dashboard; physical #132 still needs applicable boards and peripherals.
+
+## November 24 — Memory and source history views (#88)
+
+Results now plots immutable memory/stage/buffer and source/backlog observations
+through a bounded actual-row projection, with separate boot/sample/workload
+minima, unknown true peak, absent PSRAM, visible gaps and coherent-clock guards.
+The source view separates startup, nominal [3,60)-second assessment and bounded
+drain, exposes overload as a valid negative finding and keeps receiver delivery
+and independent clocks distinct. Stage/buffer pages are bounded at 32 rows;
+full hash-checked evidence downloads retain every stored observation. Compatible
+finite memory observer controls share the backend and current connection binding.
+Saved chart histories never grow after disconnect or invent future observations.
+
+Nine focused native/ASGI cases pass, including a 3,001-sample injected-clock window
+with a one-sample peak, paging, missing tails, mixed clocks and corrupt records.
+Full check passes 937 cases without skips and all shared checks; UI formatting
+passes. Interactive browser checks used a clearly labelled isolated software
+fixture, including observer collection/disconnect, long records, full download,
+light/dark and mobile layout, with no captured console warnings/errors. Download
+hash/count checks retain 3,000 source frames and 451 audits. Existing Starlette/
+httpx deprecation remains. All 19 original files are unchanged. No physical port,
+reset, flash, firmware/wire change or new IDF build. Physical qualification and
+full MEM-01/VOICE-03 procedures remain open. See [views, checks and physical
+instructions](workload_plots.md). Next #107 adds linked selected-case reruns and
+verified campaign evidence exports; #115 adds campaign controls to the dashboard.
+
+## November 24 — Owned physical campaign execution (#87)
+
+Saved plans now execute through the existing diagnostic, partial serial, audio,
+known-data and secure-voice services, with a separate atomic execution/case ledger
+and exact saved order/batch/child links. Local work supports B alone. The campaign
+holds one bench owner across active and paused states; other runs and connection
+changes reject. Pause finishes the current case, resume retains its queue, and
+cancel/failure preserves partial children and reason-codes unstarted cases.
+Connections are enrolled by device/boot/host connection ID; same-boot reconnect
+cannot resume old work or let old cleanup close the replacement.
+
+Diagnostic reservations are linked before acceptance, and actual stopped results
+remain available. Missing acceptance can expire the lease and force disconnect;
+that produces interrupted/unconfirmed evidence, never an invented accepted ID or
+idle claim. Final outcomes stay pending until cleanup finishes. A stop during
+final cleanup waits rather than leaving a finished campaign cancelling. Startup
+interrupts unfinished records without opening ports or automatically resuming RF.
+All 23 full procedure references remain recorded as blocked while unavailable.
+
+Full check passes 928 cases without skips and all lint/frontend/contracts/
+repository/vendor checks; final 13 campaign cases, UI formatting and CLI help
+pass. The final cases independently check actual payload order 2048/512/1024 for
+the saved shuffle and nondefault reverse-direction data settings, plus local/
+voice byte readback, lifecycle faults and restart/shutdown. Existing Starlette/
+httpx deprecation remains. All 19 original files are unchanged. Host-only: no
+wire/firmware/profile change, new IDF build, physical port, reset or flash.
+See [controller walkthrough, commands and physical checks](physical_campaign_execution.md).
+
+The verified next issue is #88, memory/source-history plots. Selected-case reruns
+and exports are #107, and campaign dashboard controls are #115; earlier handoffs
+that called #88 the campaign UI had the wrong issue number. Physical campaign
+qualification and all full CDR matrices remain open.
+
+## November 24 — Observed workload assessments (#82)
+
+The host now saves typed raw source/queue and stage-memory evidence with immutable
+hashes and source/schema fingerprints. Byte balances, complete-message masks and
+actual frame traces reconcile independently. Startup, nominal [3,60)-second
+cohort and bounded drain remain distinct; sent bytes never become delivery.
+Optional receiver reference/archive verification checks every delivered slot and
+zero hole. Cross-node delivery bitrate remains unavailable without calibration.
+Missing frames/audits, pacing failures, telemetry loss and inconsistent counters
+prevent a capacity pass; a completed overloaded source can retain a valid
+infeasibility finding. Partial overflow bytes do not invent complete drops.
+
+Memory reports retain actual preparation/workload/idle segments, sampled heap/
+block minima, separate boot/window minima and observed buffer lifetimes. True
+peaks and exact frees remain unknown, absent PSRAM stays unavailable and sampled
+recovery deltas do not automatically qualify leak behavior. Shared API/CLI save
+imports as unverified, collect durable observer events and read owned terminal
+source pages before close. Bound readback retains partial failures/cancellation;
+shutdown joins collectors before database close. Observation can surround an
+existing local workload without taking its bench ownership.
+
+Full check passes 915 cases without skips, plus lint/frontend/contracts/repository/
+vendor checks. All 25 dedicated native/ASGI assessment cases pass, UI formatting
+and CLI help pass; the existing Starlette/httpx deprecation remains. Host-only:
+no wire/profile/firmware change, new IDF build, physical port or flash. All 19
+original-checkout files remain unchanged. Full procedure execution, plots and
+physical qualification remain separate; see [policy, commands, code walkthrough
+and physical checks](workload_assessments.md). Next #87 executes saved campaigns.
+
+## November 24 — Persistent physical campaign plans (#81)
+
+Typed physical plans now save selected workloads, exact settings, repetitions,
+directions, matched source seeds, stable seeded order and case/batch links before
+execution. Local cases require one selected role; RF requires two distinct device
+identities. The planner reuses current data/voice/diagnostic request models and
+retains all 23 CDR procedure references with explicit unavailable-matrix blockers.
+Large totals split into linked batches of at most 64 cases/1,800 declared seconds
+without dropping cases. Oversized atomic cases and plans above 4,096 cases fail
+before any partial save. Plans and schema/source/document fingerprints remain
+immutable; cached readiness never authorizes later connection reuse.
+
+API/CLI preview/save/list/reload work offline and preserve historical interrupted/
+blocked campaigns in their original storage. Historical campaign expansion and
+matched-seed rules were inspected; artificial packet-pacing estimates/execution
+are not imported. The verified mixed example expands nine cases and a 600-second
+planning reserve. Execution is still #87 and campaign dashboard integration #115; saving a
+plan starts no hardware work.
+
+Full check passes 889 cases without skips and all lint/frontend/contract/repository/
+vendor checks. Final 24 planner cases, including the added documented example,
+and a final 86-case planner/lifecycle/hardware-gate check pass; final lint,
+contracts/repository and UI formatting pass. Existing Starlette/httpx deprecation
+remains. Host-only: no wire hash or firmware change, no new IDF build, physical
+port or flash. See [planner policy, example and checks](physical_campaign_plans.md).
+
+## November 24 — Shared bound physical lifecycle (#75)
+
+Radio, audio, files and local diagnostics now share one adapter for requests and
+cleanup, bound to device, boot and a new host USB connection ID. Same-boot
+reconnect cannot resume old work or let old cleanup close the fresh connection.
+Cleanup attempts remain independent: a failed stop reply does not skip close or
+fresh idle/key confirmation. Primary errors and per-step cleanup errors remain
+separate; missing evidence cannot become a silent pass. Existing domain runners
+retain their actual preparation, receiver-first arm and content checks.
+
+Memory probes and crypto benchmarks now have durable host jobs, terminal results,
+bounded hashed command traces and API evidence, with the existing device operation
+ID plus a host_run_id. Active restart/shutdown is interrupted without resume;
+shutdown joins acceptance writes before closing the port/store. Cancelled callers
+retain bench ownership through cleanup. Failed audio readback preserves a
+committed capture for explicit retrieval/deletion, while private unfinished work
+retires and failed clips remain unavailable.
+
+Twenty-one dedicated public adapter/Host/ASGI cases pass, including twelve RF
+stage/following-work cases with and without a second cleanup fault. Final full
+check passes 866 cases without skips and all lint/frontend/contract/repository/
+vendor checks; a final 63-case recovery/provenance check and UI formatting pass.
+The Starlette/httpx deprecation remains. This is host-only: no wire hash or firmware
+change, no new IDF build, physical port or flash. Procedure fingerprints include
+the actual shared sources without rewriting historical evidence. Physical
+acceptance remains separate. See [common lifecycle and checks](common_physical_lifecycle.md).
+
+## November 24 — Independent encoded source and bounded RF queue (#74)
+
+A dedicated reserved task now produces eight encoded bytes per 20 ms for sixty
+seconds, independently of RF/USB work. Four payload slots include partial and
+active immutable borrows within 4,800 bytes. Whole-message overflow masks, actual
+frame times, 5 Hz snapshots, missed intervals and bounded drain/discard accounting
+remain readable until close. Terminal cleanup retires payload memory while
+retaining bounded evidence metadata; an unjoined worker retains all dependencies,
+reports SOURCE_STOP_FAILED and blocks new work until cleanup succeeds.
+
+The same owned protected session carries up to twenty real 1,200-byte messages
+with fresh sequences and retained exact retries. Receiver reassembly reuses its
+prepared reservation after per-message failures. Sender completion and independent
+receiver delivery remain distinct. A hashed 24,000-byte known-data evidence
+archive preserves explicit holes; it is never a playable incomplete codec file.
+The exact finite_message_execution_v3/08e34008… profile adds typed run.source
+readback. Current numeric limits and immutable enrollment declarations keep fully
+configured records within the existing 4 KiB bound.
+
+Seventeen dedicated source cases and the full 845-case check pass without skips,
+plus lint/frontend/contracts/repository/vendor checks and UI formatting. A final
+32-case source/memory check covers the pre-release inventory ordering. Selected
+V4.2/32 KiB IDF build passes: 0x73c50 bytes, 55% app free, 74,097 static DIRAM
+bytes. The existing Starlette/httpx deprecation remains. All 19 original user
+files still match their saved hashes. No physical port or flash was used.
+Common host lifecycle #75, sustained-source procedure/assessment #105 and physical
+qualification #136 remain distinct following work. See
+[source walkthrough, accounting and physical instructions](fixed_rate_source.md).
+
+## November 24 — Named sampled memory observations (#73)
+
+A finite optional observer now records actual 100 ms periodic and additional
+stage entry/exit snapshots, separate boot/measurement/workload minima, known
+nonoverlapping requested buffers and observed lifetimes. Actual address regions
+are classified as internal/PSRAM/unknown; addresses and payload bytes never enter
+JSON. Provider/DSP/DMA/task/JSON internals and between-sample peaks remain explicitly
+untracked. Missed periods, serialization/queue drops, allocation failures and host
+history truncation remain visible. Owner loss stops observation without resume;
+run close can leave it owned for a recovery window. Primary cleanup survives
+observation allocation failure.
+
+The independently gated stage_memory_observation_v1/4004d780… supplement adds
+memory.start/status/stop and typed events through NodeSession. Static radio board
+and IRQ references remain in enrollment, retaining current driver errors and
+exact typed gates within 4 KiB. Configured all-peripheral tests include active RF,
+a retained error and wide boot/clock fields. The procedure/plots follow #82/#88;
+the full execution run-spec memory flag remains unsupported.
+
+Twenty dedicated cases pass, including explicitly clocked 30-second idle/recovery
+windows; final full `make check` passes 828 cases without skips, lint/frontend/
+contracts/repository/vendor checks and frontend formatting. Selected V4.2/32 KiB
+IDF build passes: 0x711a0 bytes, 56% app free, 73,841 static DIRAM bytes. No flash,
+physical heap/stack/sampling-cost measurement or recovery qualification. Other
+wire hashes and all 19 original user files remain unchanged. See
+[memory reading order, limits and physical checks](memory_observations.md).
+
+## November 23 — Reserved finite run lifecycle (#69)
+
+Known data and committed encoded voice now reserve source/artifact/sender/
+reassembly/ACK work before preparation completes. Receiver arm does not allocate
+another work buffer. Both roles arm explicitly; sender start requires a fresh
+five-second local arm, and the host checks receiver-first sequencing on its own
+conservative clock. Preparation/run/reporting deadlines release resources even
+under full telemetry. Failed driver arm/start retires the session. Stop/close/
+lease/disconnect retire working buffers and keys while preserving committed files.
+Initiating timeout/error/cancellation and cleanup errors remain distinct. Forced
+ID-collision rollback now preserves an existing file it did not create.
+
+Thirty-seven dedicated native/host cases pass. Final `make check` passes 808 cases
+without skips, plus lint/frontend/contracts/repository/vendor checks and frontend
+formatting. Selected V4.2 / 32 KiB-main-stack IDF build passes: 0x6f000 bytes,
+57% app free, 73,841 static DIRAM bytes. Execution becomes the breaking
+`finite_message_execution_v2` profile, SHA 04f50ab…; other wire identities stay
+unchanged. No flash or physical qualification. All 19 original user files retain
+their hashes. Clock calibration remains unavailable, with no retained calibration
+state to claim invalidated; its later implementation must bind session cleanup.
+See [lifecycle walkthrough and physical procedure](run_lifecycle.md). Named memory
+observations and fixed-rate source remain following work under #73/#74.
+
+## November 23 — Optional actual-state OLED (#37)
+
+A fixed nonsecret node view now follows ownership/USB, finite capture/codec/play/
+diagnostics and RF phases. An optional one-slot worker owns GPIO reset/Vext,
+original text/bitmap rendering and bounded I2C writes; core serial control never
+waits for display I/O. Failed writes stop without retry and report worker failure,
+while recorded error symbols remain distinct from current state. Passive exact-
+profile host observations reject incompatible/stale readiness; ready is an I2C
+completion fact, never physical pixel qualification.
+
+Eighteen dedicated C/serial/API cases cover the display. After rebasing onto
+current main, full `make check` passes 771 cases without skips, plus lint/frontend/
+contracts/repository/vendor and frontend formatting. The integration run exposed
+a native test-port write after close; a subprocess regression reproduced the
+crash, and the port now rejects writes under its lifetime lock before entering
+destroyed C state. This changes the isolated fixture, not production USB handling.
+Both V4.2/32 KiB IDF builds pass: normal OLED disabled
+0x6ed10 (57% app free, 73,841 static DIRAM bytes), isolated audio/PTT/OLED enabled
+0x73530 (55%, 75,661 bytes). Declared worker stack/queue are additional runtime
+resources; physical high-water/serial/bus measurements remain open. Board profile
+v3 adds reference-only GPIO36/Vext and SSD1315 metadata; matching table/Mermaid/PNG
+and native bitmap were visually checked. Board SHA 1da5acc…; passive OLED SHA
+e57d4c…; existing wire identities unchanged. Normal controls stay off; no flash.
+See [OLED walkthrough and physical checks](oled_status.md). PCB prerequisite #1
+and physical screen qualification remain open.
 
 ## November 23 — Host-armed finite PTT capture (#30)
 

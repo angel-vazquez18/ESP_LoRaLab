@@ -40,35 +40,34 @@ firmware, equipment and runner features explicitly blocked.
 
 ### 1 IF-01 Serial interface validation
 
-Existing support: physical hello/ownership/status/uptime diagnostic checks on one
-selected node or A then B. Full C1-C6 qualification remains open.
+The shared [integration runner](integration_matrices.md) implements the
+main-control USB checks. One selected role can run the matrix. The
+stale-boot case uses a recorded boot transition on the same device.
 
-- [ ] Add all required framing, invalid-argument, version/schema, delayed/lost reply,
-  deduplication/conflict, stale boot, competing claim and lease-expiry cases using
-  controlled physical/proxy fixtures with recovery evidence.
-- [ ] Add independent expected-error, single-side-effect and resynchronization assertions.
-- [ ] Execute every variant/repetition independently on each required node/transport;
-  retain exact wire evidence and profile identity. Do not qualify from a smoke check.
+- [x] Implement the USB framing, invalid-argument, compatibility, reply fault,
+  exact retry, conflict, stale-boot, ownership and lease cases in the shared runner.
+- [x] Add expected-error, side-effect, resynchronization and health recovery assertions.
+- [x] Build the selectable UART endpoint and bind serial cases to the announced transport.
+- [ ] Collect complete physical C1–C6 evidence per required node and transport,
+  including the reset and reconnect sequences.
 
 ### 2 IF-02 Verified known-data exchange
 
-Existing support: typed contracts, deterministic data/hashes and budget calculator.
-No physical RF runner or main-node radio firmware is implemented.
+The shared radio runner and IF-02 matrix support finite known-data exchange
+with independent source and recovered readback and controlled peer mismatch.
 
-- [ ] Implement physical radio configuration/readback, finite transmit/receive,
-  timestamped packet/message evidence and independent complete-message hashes.
-- [ ] Implement physical adapter/lifecycle and bidirectional content verification,
-  packet/message reconciliation, PDR, goodput and configuration-mismatch rejection.
-- [ ] Execute the complete 1/64/159/160-byte matrix, negative configuration controls
-  and repetitions on two nodes with retained evidence and cleanup/recovery checks.
+- [x] Implement radio settings verification, bounded receive/transmit, timestamped
+  evidence, reconciliation and independent content verification.
+- [ ] Execute the complete 1/64/159/160-byte matrix, negative controls and physical
+  repetitions on two nodes with verified cleanup.
 
 ### 3 IF-03 Automated campaign and persistence
 
-Existing support: historical records and exports. Physical campaign execution is pending.
+The shared campaign runner preserves plan identities, child evidence and restart checkpoints.
 
-- [ ] Implement immutable case plans, applied-setting checks, finite budgets,
+- [x] Implement immutable case plans, applied-setting checks, finite budgets,
   receiver-first ordering, fresh sessions and per-case node/capability preflight.
-- [ ] Add pause/resume, cancel, failed configuration, refresh, host restart,
+- [x] Add pause/resume, cancel, failed configuration, refresh, host restart,
   selected rerun, ownership and export-integrity checks through the physical adapter.
 - [ ] Execute every procedure configuration/repetition, including active/paused
   interruption; preserve blocked, failed, interrupted and skipped evidence.
@@ -183,7 +182,14 @@ Existing support: historical records and exports. Physical campaign execution is
 
 ### 17 MEM-01 Stage and buffer memory behavior
 
-Existing support: idle internal-heap/PSRAM reporting and history.
+Existing support: finite typed 10 Hz/stage memory observations, named requested
+buffers and observed lifetimes (#73), plus durable collection and independent
+sample/stage assessment (#82). Imported and physical-readback evidence remain
+distinct; missing observations are inconclusive and true peaks unavailable.
+The shared runner includes C1–C5, sampled heap and named buffer recovery bounds,
+and memory histories. See [case instructions](memory_matrix.md) and
+[memory plots](workload_plots.md). Full repetitions and physical acceptance
+remain open.
 
 - [ ] Add named buffer allocations/lifetimes, stage entry/exit observations and
   10 Hz internal/PSRAM samples during RF, codec, artifacts and audio workloads.
@@ -194,20 +200,16 @@ Existing support: idle internal-heap/PSRAM reporting and history.
 
 ### 18 VOICE-01 Local capture codec and playback
 
-Existing support: host WAV references/browser playback, bounded artifact transfer
-with independent CRC/SHA verification, finite local node PCM capture/playback,
-verified unchanged-sample WAV retrieval, waveform/silence/clipping inspection and
-shared API/CLI/UI controls. Native/software and actual DMA/count/hash checks pass;
-physical microphone response remains unverified because both raw slots return
-zero. Heard output, printed revision, instruments and full #21 recovery remain
-open. Codec 2 and the complete VOICE-01 procedure runner are not implemented.
-See [single-node qualification](milestone_2_audio_review.md). The combined
-procedure items below stay unchecked until all their requirements are fulfilled.
+The [one-node audio matrix](local_voice_matrix.md) keeps independently
+verified captured bytes, PCM signal findings, codec artifacts, driver
+completion and listening evidence. Formal physical qualification
+continues in the [single-node review](milestone_2_audio_review.md).
 
-- [ ] Verify I2S wiring and implement bounded capture/playback, Codec 2 mode 3200
-  and chunked artifact transfer/storage with CRC-32 and complete SHA-256 checks.
-- [ ] Add 24000-sample capture, raw playback, encode/decode/playback, fixed
+- [x] Implement bounded capture/playback, Codec 2 mode 3200 and chunked
+  artifact transfer/storage with CRC-32 and complete SHA-256 checks.
+- [x] Add 24000-sample capture, raw playback, encode/decode/playback, fixed
   references and invalid/incomplete/corrupt-artifact/cancel controls.
+- [ ] Verify I2S wiring, sample-rate accuracy and the board configuration.
 - [ ] Execute three utterances/references with three repetitions on each node;
   retain physical speaker observations and source/encoded/decoded artifacts.
 
@@ -221,6 +223,13 @@ procedure items below stay unchecked until all their requirements are fulfilled.
   artifacts. Delayed clip delivery does not establish sustained voice.
 
 ### 20 VOICE-03 Sustained encoded-source feasibility
+
+Existing support: reserved fixed-rate source, bounded whole-message queue,
+protected multi-message execution and paged actual-time/audit evidence (#74).
+Host assessment/readback (#82) reconciles startup/[3,60)/drain cohorts and optional
+independent receiver archive bytes, with explicit gaps and clock limits. The full
+parent procedure runner (#105), plots and declared physical repetitions below
+remain separate. See [source assessments](workload_assessments.md).
 
 - [ ] Implement a fixed 8-byte/20 ms producer, 1200-byte messages and bounded
   4800-byte source queue with occupancy/drop/underflow telemetry.

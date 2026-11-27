@@ -11,6 +11,8 @@ from lora_testbed import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    memory_observation_v2,
+    oled_status_v2,
     ptt_contract_v2,
     rf_events_v2,
     run_protocol_v2,
@@ -31,6 +33,8 @@ def outputs(root: Path) -> dict[Path, str]:
         for key in ("gpio", "active_level", "internal_pullup")
     ):
         raise ValueError("PTT wiring differs from the selected supplement policy")
+    if board["oled"]["controller"] != "SSD1315" or (board["oled"]["width"], board["oled"]["height"]) != (128, 64):
+        raise ValueError("OLED renderer supports only the selected 128x64 SSD1315 reference")
     pins = board["amplifier"]["gpio"]
     mic = board["microphone"]["gpio"]
     radio_file = root / "hardware/boards/heltec_v4_radio_variants.json"
@@ -71,6 +75,26 @@ def outputs(root: Path) -> dict[Path, str]:
         )
     vector_header += "};\n"
     return {
+        root / "contracts/v2/memory_observation.schema.json": document(memory_observation_v2.schema()),
+        root / "firmware/lora_node/main/generated/memory_profile.h": (
+            "#pragma once\n"
+            f'#define MEMORY_OBSERVATION_PROFILE "{memory_observation_v2.PROFILE}"\n'
+            f'#define MEMORY_OBSERVATION_SHA256 "{memory_observation_v2.schema_digest()}"\n'
+            f"#define MEMORY_PERIOD_US {memory_observation_v2.PERIOD_US}LL\n"
+            f"#define MEMORY_MAX_BUFFERS {memory_observation_v2.MAX_BUFFERS}U\n"
+        ),
+        root / "contracts/v2/oled_status.schema.json": document(oled_status_v2.schema()),
+        root / "firmware/lora_node/main/generated/oled_board.h": (
+            "#pragma once\n"
+            f'#define OLED_PROFILE "{oled_status_v2.PROFILE}"\n'
+            f'#define OLED_SCHEMA_SHA256 "{oled_status_v2.schema_digest()}"\n'
+            f"#define OLED_SDA_GPIO {board['onboard']['oled_gpio']['sda']}\n"
+            f"#define OLED_SCL_GPIO {board['onboard']['oled_gpio']['scl']}\n"
+            f"#define OLED_RESET_GPIO {board['onboard']['oled_gpio']['reset']}\n"
+            f"#define OLED_POWER_GPIO {board['onboard']['power_gpio']['vext_ctrl']}\n"
+            f"#define OLED_POWER_ON_LEVEL {board['oled']['power_on_level']}\n"
+            f"#define OLED_I2C_ADDRESS {board['oled']['i2c_address']}\n"
+        ),
         root / "contracts/v2/ptt_capture.schema.json": document(ptt_contract_v2.schema()),
         root / "firmware/lora_node/main/generated/ptt_profile.h": (
             "#pragma once\n"
@@ -145,6 +169,7 @@ def outputs(root: Path) -> dict[Path, str]:
             "#pragma once\n"
             f'#define EXECUTION_PROFILE "{run_protocol_v2.EXECUTION_PROFILE}"\n'
             f'#define EXECUTION_SCHEMA_SHA256 "{run_protocol_v2.schema_digest()}"\n'
+            f'#define RUN_ARM_WINDOW_US {run_protocol_v2.ARM_WINDOW_US}LL\n'
         ),
     }
 

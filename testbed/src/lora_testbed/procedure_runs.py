@@ -9,8 +9,10 @@ import zipfile
 from copy import deepcopy
 from uuid import uuid4
 
-from . import control_v2, v2
+from . import control_v2, model_series, rf_sweeps, v2
 from .adapters import require_control_compatible
+from .integration_execution import IntegrationExecution
+from .integration_matrices import matrix_options
 from .paths import REPOSITORY_ROOT
 from .serial_validation import serial_plan
 from .storage import utc_now
@@ -22,6 +24,7 @@ class ProcedureService:
     def __init__(self, store, nodes):
         self.store, self.db, self.nodes = store, store.db, nodes
         self.task, self.current = None, None
+        self.matrices = IntegrationExecution(self)
         sources = (
             "docs/test_procedures.md",
             "docs/testbed_contract_v2.md",
@@ -29,6 +32,8 @@ class ProcedureService:
             "testbed/src/lora_testbed/nodes.py",
             "testbed/src/lora_testbed/serial_validation.py",
             "testbed/src/lora_testbed/host.py",
+            "testbed/src/lora_testbed/physical_adapter.py",
+            "testbed/src/lora_testbed/diagnostic_jobs.py",
             "testbed/src/lora_testbed/catalog.py",
             "testbed/src/lora_testbed/v2.py",
             "testbed/src/lora_testbed/control_v2.py",
@@ -104,6 +109,7 @@ class ProcedureService:
     def snapshot(self):
         return {
             "active_run": deepcopy(self.current) if self.busy else None,
+            "matrix_options": matrix_options(),
             "runs": [
                 {
                     k: r.get(k)
@@ -117,6 +123,7 @@ class ProcedureService:
                         "finished_at",
                         "scope",
                         "full_procedure_passed",
+                        "procedure_revision",
                     )
                 }
                 for r in self.runs()
@@ -185,6 +192,12 @@ class ProcedureService:
         self.task = asyncio.create_task(self.execute(run, spec))
         await asyncio.sleep(0)  # Ensure immediate cancellation reaches the finalizer.
         return deepcopy(run)
+
+    def matrix_preview(self, spec, radio, voice=None, campaigns=None, physical_campaigns=None):
+        return self.matrices.preview(spec, radio, voice, campaigns, physical_campaigns)
+
+    async def start_matrix(self, spec, host, expected_plan_sha256=None):
+        return await self.matrices.start(spec, host, expected_plan_sha256)
 
     async def execute(self, run, spec):
         try:
@@ -293,12 +306,16 @@ class ProcedureService:
             run.update(active_case=None, finished_at=utc_now(), full_procedure_passed=False)
             self.save(run)
 
-    async def stop(self, shutdown=False):
-        if self.busy:
-            self.current["reason"] = "Host shutdown" if shutdown else "Stopped by operator"
-            self.task.cancel()
-            await self.task
-        return deepcopy(self.current)
+    async def stop(self, shutdown=False, *, expected_run_id=None):
+        if expected_run_id is not None and (not self.busy or self.current["id"] != expected_run_id):
+            raise RuntimeError("This procedure is no longer active")
+        run, task = self.current, self.task
+        if task is not None and not task.done():
+            if not task.cancelling():
+                run["reason"] = "Host shutdown" if shutdown else "Stopped by operator"
+                task.cancel()
+            await asyncio.shield(task)
+        return self.get(expected_run_id) if expected_run_id else deepcopy(run)
 
     def csv(self, run):
         output = io.StringIO(newline="")
@@ -349,6 +366,10 @@ class ProcedureService:
 
             save("procedure.json", json.dumps(run, indent=2).encode())
             save("cases.csv", self.csv(run).encode())
+            if comparison := run.get("sweep_comparison"):
+                save("rf-comparison.csv", rf_sweeps.comparison_csv(comparison).encode())
+            if comparison := run.get("model_comparison"):
+                save("model-comparison.csv", model_series.comparison_csv(comparison).encode())
             save(
                 "provenance.json",
                 json.dumps(
@@ -356,6 +377,11 @@ class ProcedureService:
                         "mode": run["mode"],
                         "hardware_validated": False,
                         "transport": run["transport"],
+                        **(
+                            {"connection_transports": run["connection_transports"]}
+                            if "connection_transports" in run
+                            else {}
+                        ),
                         "timing_basis": run["timing_basis"],
                         "note": run.get("note", "Historical procedure evidence"),
                     }

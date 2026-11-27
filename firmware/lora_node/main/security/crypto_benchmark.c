@@ -114,3 +114,9 @@ bool crypto_benchmark_destroy(crypto_benchmark **b)
     if (psa_destroy_key((*b)->key) != PSA_SUCCESS) return false;
     mbedtls_platform_zeroize(*b, sizeof(**b)); free(*b); *b = NULL; return true;
 }
+
+void crypto_benchmark_memory(const crypto_benchmark *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "crypto_benchmark", s, sizeof(*s));
+}

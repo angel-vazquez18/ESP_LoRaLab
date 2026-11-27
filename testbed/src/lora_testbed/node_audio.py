@@ -9,14 +9,16 @@ from uuid import uuid4
 from . import __version__, audio_contract_v2, codec_contract_v2, ptt_contract_v2
 from .artifact_contract_v2 import Manifest
 from .audio import inspect_pcm, pcm_wav
+from .physical_adapter import PhysicalAdapter
 from .storage import utc_now
 
 OPERATION_WAIT_SECONDS = 35
 
 
 class NodeAudio:
-    def __init__(self, store, nodes, artifacts):
+    def __init__(self, store, nodes, artifacts, adapter=None):
         self.store, self.nodes, self.artifacts = store, nodes, artifacts
+        self.adapter = adapter or PhysicalAdapter(nodes)
         self.record = self.task = None
         self.shutting_down = False
         self.stop_lock = asyncio.Lock()
@@ -77,6 +79,7 @@ class NodeAudio:
         node, _ = await self.artifacts.preflight(
             role, ["artifact.list", "artifact.get", "artifact.delete"]
         )
+        binding = self.adapter.bind(role)
         if node.wire_profile != "node_control":
             raise ValueError("Matching main-node control firmware is required")
         if action in ("codec", "decode"):
@@ -94,7 +97,7 @@ class NodeAudio:
             )
         manifest = None
         if action != "capture":
-            files = (await node.request("artifact.list"))["artifacts"]
+            files = (await self.adapter.request(binding, "artifact.list"))["artifacts"]
             manifest = next((m for m in files if m["artifact_id"] == artifact_id), None)
             if (
                 manifest is None
@@ -121,9 +124,19 @@ class NodeAudio:
             "created_at": utc_now(),
             "finished_at": None,
             "identity": node.identity.model_dump(),
+            "physical_binding": binding,
             "audio_schema_sha256": audio_contract_v2.schema_digest(),
             "host_version": __version__,
             "host_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "host_sources": {
+                name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                for name in (
+                    "node_audio.py",
+                    "physical_adapter.py",
+                    "nodes.py",
+                    "artifact_transfers.py",
+                )
+            },
             "configuration": node.health.capability_availability.resource_limits.get("audio_io"),
             "operation_id": None,
             "node_result": None,
@@ -168,16 +181,21 @@ class NodeAudio:
         return record.copy()
 
     def same_boot(self, node, record):
-        if (
-            not node.connected
-            or node.identity is None
-            or node.identity.boot_id != record["identity"]["boot_id"]
-        ):
-            raise ValueError("Node disconnected or boot changed; no automatic audio resume")
+        self.adapter.current(record["physical_binding"])
 
     async def command(self, node, record, name, args=None):
         self.same_boot(node, record)
-        return await node.request(name, args, on_record=lambda value: self.wire(record, value))
+
+        def on_record(value):
+            self.wire(record, value)
+            if value["direction"] == "host_to_node" and (
+                name.startswith("audio.") or name == "ptt.arm"
+            ):
+                record.setdefault("workload_command_ids", {})[name] = value["record"]["command_id"]
+
+        return await self.adapter.request(
+            record["physical_binding"], name, args, on_record=on_record
+        )
 
     async def wait_result(self, node, record):
         async with asyncio.timeout(OPERATION_WAIT_SECONDS):
@@ -320,36 +338,65 @@ class NodeAudio:
         record["verified_codec_stage"] = True
 
     async def cleanup(self, node, record):
-        notes = []
         if record["transfer_id"] and self.artifacts.busy:
             await self.artifacts.cancel(record["transfer_id"])
-        try:
-            self.same_boot(node, record)
-            status = await self.command(node, record, "status.get")
-            if status["operation_id"]:
-                await self.command(
-                    node, record, "operation.stop", {"operation_id": status["operation_id"]}
-                )
-                notes.append("node operation stopped")
-                if (
-                    record["action"] in ("codec", "decode")
-                    and status["operation_id"] == record["operation_id"]
-                ):
-                    terminal = await self.wait_result(node, record)
-                    for action, child in record["codec_operations"].items():
-                        if child["operation_id"] == terminal["operation_id"]:
-                            record["codec_operations"][action] = terminal
-            if record["action"] == "capture":
-                files = (await self.command(node, record, "artifact.list"))["artifacts"]
-                if any(m["artifact_id"] == record["artifact_id"] for m in files):
-                    await self.command(
-                        node, record, "artifact.delete", {"artifact_id": record["artifact_id"]}
+        details = await self.adapter.cleanup(
+            record["physical_binding"],
+            operation_id=record["operation_id"],
+            local_work=True,
+            on_record=lambda value: self.cleanup_wire(record, value),
+        )
+        record["cleanup_details"] = details
+        if not details["confirmed"]:
+            record["cleanup"] = f"unconfirmed: {details['error']}"
+            return
+        if record["action"] in ("codec", "decode"):
+            terminal = next(
+                (
+                    value
+                    for value in node.operation_results
+                    if value["operation_id"] == record["operation_id"]
+                ),
+                None,
+            )
+            if terminal:
+                for action, child in record["codec_operations"].items():
+                    if child["operation_id"] == terminal["operation_id"]:
+                        record["codec_operations"][action] = terminal
+        if record["action"] == "capture" and record["status"] != "completed":
+            try:
+                files = (
+                    await self.adapter.request(
+                        record["physical_binding"],
+                        "artifact.list",
+                        on_record=lambda value: self.cleanup_wire(record, value),
                     )
-                notes.append("partial/new capture removed")
-            record["cleanup"] = "; ".join(notes) or "no active node operation"
-        except (ValueError, TimeoutError, OSError) as exc:
-            record["cleanup"] = f"unconfirmed: {exc}; disconnecting ownership"
-            await node.close()
+                )["artifacts"]
+                manifest = next(
+                    (m for m in files if m["artifact_id"] == record["artifact_id"]), None
+                )
+                if manifest and manifest["state"] == "committed":
+                    record["retained_capture"] = manifest
+                    details["steps"].append(
+                        "committed capture retained for explicit retrieval/deletion"
+                    )
+                elif manifest:
+                    await self.adapter.request(
+                        record["physical_binding"],
+                        "artifact.delete",
+                        {"artifact_id": record["artifact_id"]},
+                        on_record=lambda value: self.cleanup_wire(record, value),
+                    )
+                    details["steps"].append("unfinished capture removed")
+            except (ValueError, TimeoutError, OSError) as exc:
+                details["errors"].append({"command": "artifact cleanup", "error": str(exc)})
+        record["cleanup"] = "; ".join(details["steps"])
+
+    def cleanup_wire(self, record, value):
+        try:
+            self.wire(record, value)
+        except (OSError, ValueError) as exc:
+            record["cleanup_evidence_error"] = str(exc)
 
     async def run(self, node, record, args, manifest):
         try:
@@ -408,7 +455,10 @@ class NodeAudio:
             )
         except Exception as exc:
             record.update(
-                status="failed" if node.connected else "interrupted",
+                status="failed"
+                if node.connected
+                and node.connection_id == record["physical_binding"]["connection_id"]
+                else "interrupted",
                 error=str(exc) or type(exc).__name__,
             )
         finally:
@@ -417,11 +467,25 @@ class NodeAudio:
                     record["verified_roundtrip"] = record["verified_codec_stage"] = False
                 (self.directory / f"{record['id']}.wav").unlink(missing_ok=True)
                 record["clip"] = None
+            try:
+                await asyncio.wait_for(self.cleanup(node, record), 15)
+                if record["status"] == "completed" and record.get("cleanup_evidence_error"):
+                    record.update(
+                        status="failed",
+                        error="Cleanup evidence incomplete; saved artifacts retained",
+                    )
+                if record["status"] == "completed" and not record["cleanup_details"]["confirmed"]:
+                    record.update(status="failed", error="Audio cleanup did not confirm idle")
+            except (Exception, asyncio.CancelledError) as exc:
+                record["cleanup"] = f"unconfirmed cleanup: {exc}"
+                if record["status"] == "completed":
+                    record.update(status="failed", error="Audio cleanup did not confirm idle")
                 try:
-                    await asyncio.wait_for(self.cleanup(node, record), 15)
-                except (Exception, asyncio.CancelledError) as exc:
-                    record["cleanup"] = f"unconfirmed cleanup: {exc}"
-                    await node.close()
+                    self.adapter.current(record["physical_binding"])
+                except ValueError:
+                    pass
+                else:
+                    await node.close(release=False)
             evidence = self.directory / f"{record['id']}.ndjson"
             if evidence.exists():
                 record["evidence_sha256"] = hashlib.sha256(evidence.read_bytes()).hexdigest()

@@ -161,3 +161,36 @@
     flex-wrap: wrap;
   }
 }
+
+.voice-review {
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+  padding-top: 12px;
+}
+.voice-review-selection,
+.voice-review-clip {
+  display: grid;
+  gap: 8px;
+}
+.voice-review-selection label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.voice-review figure {
+  margin: 16px 0;
+}
+.voice-duration-plot {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  height: 14px;
+  margin: 8px 8px 0;
+}
+.voice-duration-plot span {
+  position: absolute;
+  bottom: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}

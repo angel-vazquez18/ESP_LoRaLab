@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS
         "lora_node.c"
+        "source/encoded_source.c"
+        "source/esp32_source.c"
         "radio/esp32_radio.c"
         "radio/node_radio.c"
         "radio/radio_config_json.c"
@@ -10,6 +12,9 @@ idf_component_register(
         "radio/rf_ack.c"
         "radio/rf_sender.c"
         "radio/rf_execution.c"
+        "radio/rf_echo.c"
+        "radio/rf_faults.c"
+        "radio/rf_fault_json.c"
         "security/frame_crypto.c"
         "security/session_crypto.c"
         "security/crypto_benchmark.c"
@@ -19,16 +24,20 @@ idf_component_register(
         "audio/codec_clip.c"
         "platform/esp32_platform.c"
         "platform/esp32_ptt.c"
-        "transport/usb_transport.c"
+        "platform/esp32_display.c"
+        "transport/serial_transport.c"
         "control/node_control.c"
+        "memory/observations.c"
         "input/ptt_gate.c"
+        "display/node_view.c"
+        "display/oled_panel.c"
         "artifacts/artifact_store.c"
         "protocol/strict_json.c"
         "protocol/secure_json.c"
         "protocol/chunk_bytes.c"
     INCLUDE_DIRS "." "radio/vendor/sx126x"
-    REQUIRES esp_driver_usb_serial_jtag esp_timer esp_system esp_hw_support
-             esp_driver_i2s esp_driver_spi esp_driver_gpio
+    REQUIRES esp_driver_usb_serial_jtag esp_driver_uart esp_timer esp_system esp_hw_support
+             esp_driver_i2s esp_driver_spi esp_driver_gpio esp_driver_i2c
              nvs_flash espressif__cjson mbedtls heap esp_app_format loralab_codec2
 )
 

@@ -34,6 +34,10 @@ Future reusable module placement is documented in `components/README.md`.
 Use one board profile and one shared contract. The host accepts one physical node
 for local tests and requires a pair for RF tests; no simulator is available.
 
+The main image defaults to laboratory fault controls disabled. Use a separate
+SDKCONFIG/build directory to enable `CONFIG_LORALAB_LAB_FAULTS` and validate the
+matching controls. See [laboratory checks](../docs/lab_frame_faults.md).
+
 ## Main target organization
 
 `lora_node/main/lora_node.c` only composes the running node. Its `platform/` module

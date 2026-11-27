@@ -1,6 +1,8 @@
 #pragma once
+#include "memory/buffers.h"
 #include "radio/node_radio.h"
 #include "radio/rf_frames.h"
+#include "radio/rf_faults.h"
 #include "security/session_crypto.h"
 
 typedef struct rf_sender rf_sender;
@@ -32,7 +34,12 @@ bool rf_sender_begin(rf_sender *, const void *frame, size_t frame_bytes, uint16_
 /* One retained radio observation; a blocked consumer prevents further attempts. */
 bool rf_sender_poll(rf_sender *, node_radio_event *observation);
 void rf_sender_snapshot(const rf_sender *, rf_sender_status *);
+bool rf_sender_wrong_ack_reference(const rf_sender *);
 void rf_sender_cancel(rf_sender *);
 
 // Borrow a session owner before beginning work; retained retries never invoke seal.
 bool rf_sender_security(rf_sender *, rf_secure_session *);
+bool rf_sender_faults(rf_sender *, rf_faults *);
+
+const uint8_t *rf_sender_wire_digest(const rf_sender *);
+void rf_sender_memory(const rf_sender *s, node_memory_inventory *out);

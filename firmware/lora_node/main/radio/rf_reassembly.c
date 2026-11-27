@@ -9,7 +9,7 @@ struct rf_reassembly
     uint32_t message, highest_message, bytes;
     uint16_t fragment, count, received;
     uint8_t source, destination, content, flags;
-    bool active, complete, taken;
+    bool active, complete, taken, reusable;
     int64_t deadline;
     rf_reassembly_result outcome;
     uint8_t expected[32], digest[32], present[RF_MESSAGE_FRAGMENTS / 8];
@@ -37,7 +37,8 @@ static void release(rf_reassembly *r)
 }
 static rf_reassembly_result fail(rf_reassembly *r, rf_reassembly_result result)
 {
-    release(r);
+    if (!r->reusable) release(r);
+    else if (r->data) memset(r->data, 0, r->bytes);
     r->active = r->complete = false;
     return r->outcome = result;
 }
@@ -96,6 +97,14 @@ bool rf_reassembly_begin(rf_reassembly *r, uint32_t message, uint8_t content, ui
     r->outcome = RF_REASSEMBLY_ACCEPTED;
     memset(r->present, 0, sizeof(r->present));
     memcpy(r->expected, digest, 32);
+    return true;
+}
+bool rf_reassembly_arm(rf_reassembly *r, int64_t now, int64_t deadline)
+{
+    if (!r || !r->active || r->received || now < 0 || deadline <= now ||
+        deadline - now > INT64_C(3605000000))
+        return false;
+    r->deadline = deadline;
     return true;
 }
 rf_reassembly_result rf_reassembly_poll(rf_reassembly *r, int64_t now)
@@ -189,3 +198,27 @@ rf_reassembly_result rf_reassembly_accept_authenticated(rf_reassembly *r, const 
 {
     return accept(r, header, body, bytes, true, now);
 }
+
+void rf_reassembly_memory(const rf_reassembly *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "rf_reassembly", s, sizeof(*s));
+    node_memory_add(out, "rf_reassembled", s->data, s->bytes);
+}
+
+bool rf_reassembly_next(rf_reassembly *r, uint32_t message, int64_t now, int64_t deadline)
+{
+    if (!r || !r->data || message <= r->highest_message || now < 0 || deadline <= now ||
+        deadline - now > INT64_C(3605000000)) return false;
+    memset(r->data, 0, r->bytes);
+    memset(r->present, 0, sizeof(r->present));
+    r->message = r->highest_message = message;
+    r->deadline = deadline;
+    r->received = 0;
+    r->active = true;
+    r->complete = r->taken = false;
+    r->outcome = RF_REASSEMBLY_ACCEPTED;
+    return true;
+}
+
+void rf_reassembly_stream(rf_reassembly *r) { if (r) r->reusable = true; }

@@ -25,6 +25,7 @@ type Heap = {
 type Capability = Record<string, boolean | number | object>;
 export type HardwareNode = {
   id: "A" | "B";
+  connection_id?: string | null;
   wire_profile: "diagnostic" | "node_control" | null;
   active_operation: { operation_id: string; deadline_us: number } | null;
   audio_support?: {
@@ -35,6 +36,15 @@ export type HardwareNode = {
       output_gain_numerator: number;
       output_gain_denominator: number;
       hardware_gain_db: number;
+    } | null;
+  };
+  memory_support?: { commands: string[]; blocked: Record<string, string> };
+  memory_observation?: {
+    fresh: boolean;
+    last_sample: {
+      observation_id: string;
+      sample_index: number;
+      taken_us: number;
     } | null;
   };
   artifact_support?: {

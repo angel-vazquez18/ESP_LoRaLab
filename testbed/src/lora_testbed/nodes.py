@@ -1,9 +1,10 @@
 """Independent physical node sessions; all serial I/O stays outside the event loop."""
 
 import asyncio
+import hashlib
 from collections import deque
 from contextlib import suppress
-from time import monotonic
+from time import monotonic, monotonic_ns
 from uuid import uuid4
 
 import serial
@@ -16,9 +17,13 @@ from . import (
     codec_contract_v2,
     control_v2,
     crypto_benchmark_v2,
+    memory_observation_v2,
+    oled_status_v2,
     physical_wire_v2,
     ptt_contract_v2,
     run_protocol_v2,
+    serial_framing,
+    serial_replies,
     v2,
 )
 from .adapters import (
@@ -28,6 +33,7 @@ from .adapters import (
     require_execution_compatible,
 )
 from .session_keys import require_public_metadata, setup_facts, setup_reply
+from .storage import utc_now
 
 
 def discover_ports() -> list[dict]:
@@ -70,18 +76,28 @@ class NodeSession:
         self.last_health = None
         self.connected = False
         self.connection_state = "disconnected"
+        self.connection_id = None
+        self.connection_failure = None
+        self.last_boot_binding = self.previous_boot_binding = None
         self.active_operation = None
         self.error = None
         self.samples = deque(maxlen=90)
         self.diagnostics = deque(maxlen=100)
         self.tasks = []
         self.pending = {}
+        self._reply_probe = None
+        self._health_probe = None
+        self._receive_observation_omission = None
         self.command_lock = asyncio.Lock()
+        self.control_cycle_active = False
         self.rf_run_id = None
         self.rf_runs = deque(maxlen=8)
         self.wire_profile = None
         self.active_operation = None
         self.operation_results = deque(maxlen=16)
+        self.memory_samples = deque(maxlen=512)
+        self.memory_retention_drops = 0
+        self.last_memory = None
 
     def accept_health(self, data):
         self.health = v2.Health.model_validate(data)
@@ -117,6 +133,32 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def display_observation(self):
+        value = (
+            self.health.capability_availability.resource_limits.get("oled") if self.health else None
+        )
+        if value is None:
+            return {"configured": False, "state": "not_advertised", "ready": False}
+        try:
+            observed = oled_status_v2.Status.model_validate(value)
+            if observed.schema_sha256 != oled_status_v2.schema_digest():
+                raise ValueError("OLED observation fingerprint does not match")
+            fresh = (
+                self.connected
+                and self.connection_state == "connected"
+                and self.last_health is not None
+                and health_freshness(monotonic() - self.last_health)
+                not in ("stale", "unresponsive")
+            )
+            return {
+                **observed.model_dump(),
+                "configured": True,
+                "fresh": fresh,
+                "ready": fresh and observed.state == "ready",
+            }
+        except ValueError as exc:
+            return {"configured": True, "state": "incompatible", "ready": False, "error": str(exc)}
+
     def ptt_availability(self):
         try:
             audio = self.audio_availability()
@@ -135,6 +177,45 @@ class NodeSession:
             }
         except ValueError as exc:
             return {"commands": [], "limits": None, "blocked": {"ptt.arm": str(exc)}}
+
+    def memory_availability(self):
+        try:
+            if (
+                not self.connected
+                or self.connection_state != "connected"
+                or self.wire_profile != "node_control"
+                or self.last_health is None
+                or health_freshness(monotonic() - self.last_health) in ("stale", "unresponsive")
+            ):
+                raise ValueError("Connect a node with fresh memory observation health")
+            limits = memory_observation_v2.require_capability(
+                self.identity.capabilities if self.identity else None,
+                self.health.capability_availability if self.health else None,
+            )
+            return {
+                "commands": list(memory_observation_v2.ARGUMENTS),
+                "limits": {**limits.model_dump(), **memory_observation_v2.POLICY},
+                "blocked": {},
+            }
+        except ValueError as exc:
+            return {
+                "commands": [],
+                "limits": None,
+                "blocked": {name: str(exc) for name in memory_observation_v2.ARGUMENTS},
+            }
+
+    def memory_observation(self):
+        return {
+            "fresh": bool(
+                self.memory_availability()["commands"]
+                and self.last_memory is not None
+                and monotonic() - self.last_memory <= 1
+            ),
+            "last_sample": self.memory_samples[-1] if self.memory_samples else None,
+            "retained_samples": len(self.memory_samples),
+            "retained_limit": self.memory_samples.maxlen,
+            "retention_drops": self.memory_retention_drops,
+        }
 
     def codec_availability(self):
         commands, blocked, limits = [], {}, None
@@ -175,18 +256,29 @@ class NodeSession:
                 blocked[name] = str(exc)
         return {"commands": commands, "blocked": blocked, "limits": limits}
 
+    def control_transport(self):
+        if not self.identity:
+            return None
+        declared = self.identity.capabilities.resource_limits.get("control_transport", "native_usb")
+        return declared if declared in ("native_usb", "uart") else None
+
     def snapshot(self):
         age = monotonic() - self.last_health if self.last_health is not None else None
         return {
             "id": self.role,
             "wire_profile": self.wire_profile,
+            "control_transport": self.control_transport(),
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
             "ptt_support": self.ptt_availability(),
+            "memory_support": self.memory_availability(),
+            "memory_observation": self.memory_observation(),
+            "display": self.display_observation(),
             "codec_support": self.codec_availability(),
             "active_operation": self.active_operation,
             "operation_results": list(self.operation_results),
             "connected": self.connected,
+            "connection_id": self.connection_id,
             "port": self.port,
             "connection_state": health_freshness(age)
             if self.connected and health_freshness(age) in ("stale", "unresponsive")
@@ -205,18 +297,24 @@ class NodeSession:
     async def connect(self, port):
         await self.close()
         self.port, self.error = port, None
+        self.connection_failure = None
         self.identity, self.health = None, None
         self.last_health = None
         self.event_seq = self.event_gaps = self.framing_errors = 0
         self.startup_records = 0
         self.rf_run_id = None
         self.rf_runs = deque(maxlen=8)
+        self._receive_observation_omission = None
         self.wire_profile = None
         self.active_operation = None
         self.operation_results.clear()
+        self.memory_samples.clear()
+        self.memory_retention_drops = 0
+        self.last_memory = None
         self.samples.clear()
         self.diagnostics.clear()
         self.connection_state = "connecting"
+        self.connection_id = str(uuid4())
         try:
             self.serial = await asyncio.to_thread(self.opener, port)
             self.connected = True
@@ -228,6 +326,7 @@ class NodeSession:
             self.health = v2.Health.model_validate(await self.request("status.get"))
             self.last_health = monotonic()
             self.connection_state = "connected"
+            self.record_connected_boot()
             self.note("connected", f"Identified {self.identity.device_id}")
             self.tasks.append(asyncio.create_task(self.keepalive_loop()))
         except Exception as exc:
@@ -235,6 +334,20 @@ class NodeSession:
             self.connection_state = "error"
             self.error = str(exc)
             raise ValueError(f"Node {self.role}: {exc}") from exc
+
+    def record_connected_boot(self):
+        current = {
+            "device_id": self.identity.device_id,
+            "boot_id": self.identity.boot_id,
+            "connection_id": self.connection_id,
+        }
+        prior = self.last_boot_binding
+        if prior and prior["device_id"] == current["device_id"]:
+            if prior["boot_id"] != current["boot_id"]:
+                self.previous_boot_binding = prior
+        else:
+            self.previous_boot_binding = None
+        self.last_boot_binding = current
 
     async def write_wire(self, wire):
         task = asyncio.create_task(asyncio.to_thread(self.serial.write, wire))
@@ -251,10 +364,33 @@ class NodeSession:
             raise asyncio.CancelledError
         return written
 
+    def _next_command(self, name, args=None, run_id=None):
+        self.sequence += 1
+        return v2.Command(
+            command_id=str(uuid4()),
+            client_id=self.client_id,
+            command_seq=self.sequence,
+            target_boot_id=self.identity.boot_id if self.identity else None,
+            name=name,
+            run_id=run_id,
+            args=args or {},
+        )
+
     async def request(
-        self, name, args=None, timeout=2.0, retries=2, on_record=None, run_id=None, key_set_id=None
+        self,
+        name,
+        args=None,
+        timeout=2.0,
+        retries=2,
+        on_record=None,
+        run_id=None,
+        key_set_id=None,
+        *,
+        _reply_probe=None,
     ):
         async with self.command_lock:
+            if _reply_probe is not None and name != "diag.run":
+                raise ValueError("Reply perturbation is limited to the fixed diagnostic case")
             if not self.connected or self.serial is None:
                 raise ValueError("Node is disconnected")
             execution_command = name in run_protocol_v2.EXECUTION_COMMANDS
@@ -298,8 +434,15 @@ class NodeSession:
                             raise ValueError()
                     except (ValueError, TypeError, AttributeError):
                         raise ValueError("Invalid key set identity") from None
-                if name.startswith(("run.", "session.")) and run_id is None:
+                if name.startswith(("run.", "session.", "fault.")) and run_id is None:
                     raise ValueError("INVALID_ARGUMENT: Execution requires run_id")
+            if name in memory_observation_v2.ARGUMENTS:
+                available = self.memory_availability()
+                if name not in available["commands"]:
+                    raise ValueError(available["blocked"][name])
+                if run_id is not None:
+                    raise ValueError("Memory observation commands require null run_id")
+                args = memory_observation_v2.ARGUMENTS[name].model_validate(args or {}).model_dump()
             if name in codec_contract_v2.ARGUMENTS:
                 availability = self.codec_availability()
                 if name not in availability["commands"]:
@@ -348,16 +491,7 @@ class NodeSession:
             protected_setup = (
                 name == "session.open" and (args or {}).get("security") == "aes128_gcm"
             )
-            self.sequence += 1
-            command = v2.Command(
-                command_id=str(uuid4()),
-                client_id=self.client_id,
-                command_seq=self.sequence,
-                target_boot_id=self.identity.boot_id if self.identity else None,
-                name=name,
-                run_id=run_id,
-                args=args or {},
-            )
+            command = self._next_command(name, args, run_id)
             if execution_command:
                 run_protocol_v2.Command.model_validate(command.model_dump())
             if name == "session.open":
@@ -368,6 +502,8 @@ class NodeSession:
                 self.rf_runs.append(run_id)
             future = asyncio.get_running_loop().create_future()
             self.pending[command.command_id] = (command.command_seq, future)
+            if _reply_probe:
+                self._reply_probe = (command.command_id, _reply_probe)
             try:
                 for attempt in range(retries + 1):
                     wire = v2.encode(command)
@@ -424,6 +560,12 @@ class NodeSession:
                                 self.active_operation = {
                                     **operation,
                                     "accepted_at_us": reply.uptime_us,
+                                    "physical_binding": {
+                                        "role": self.role,
+                                        "device_id": self.identity.device_id,
+                                        "boot_id": self.identity.boot_id,
+                                        "connection_id": self.connection_id,
+                                    },
                                 }
                         elif name == "operation.stop":
                             self.active_operation = None
@@ -433,6 +575,12 @@ class NodeSession:
                             ).model_dump()
                         if name == "session.close":
                             self.rf_run_id = None
+                        if name in memory_observation_v2.RESULTS:
+                            return (
+                                memory_observation_v2.RESULTS[name]
+                                .model_validate(reply.result)
+                                .model_dump()
+                            )
                         if execution_command:
                             return (
                                 run_protocol_v2.RESULTS[name]
@@ -449,6 +597,8 @@ class NodeSession:
                             "hello",
                             "status.get",
                             "run.summary",
+                            "run.source",
+                            "fault.status",
                             "artifact.list",
                             "artifact.get",
                         ):
@@ -461,6 +611,9 @@ class NodeSession:
                             future = asyncio.get_running_loop().create_future()
                             self.pending[command.command_id] = (command.command_seq, future)
             finally:
+                if _reply_probe:
+                    self._reply_probe = None
+                    _reply_probe.close()
                 self.pending.pop(command.command_id, None)
                 if not future.done():
                     future.cancel()
@@ -469,7 +622,11 @@ class NodeSession:
         decoder = v2.Decoder(adapter=physical_wire_v2.ADAPTER)
         try:
             while self.connected:
-                data = await asyncio.to_thread(self.serial.read, 1024)
+                try:
+                    data = await asyncio.to_thread(self.serial.read, 1024)
+                except OSError as exc:
+                    self.fail(str(exc), source="serial_read", io_error=True)
+                    break
                 records, errors = decoder.feed(data)
                 if self.identity:
                     self.framing_errors += len(errors)
@@ -495,15 +652,29 @@ class NodeSession:
                         record.boot_id != self.identity.boot_id
                         or record.device_id != self.identity.device_id
                     ):
-                        raise ValueError(
-                            "Device reset or identity changed; reconnect for a new session"
+                        self.fail(
+                            "Device reset or identity changed; reconnect for a new session",
+                            source="serial_decoder",
+                            observed=(record.device_id, record.boot_id),
                         )
+                        break
                     if isinstance(record, v2.Reply):
                         entry = self.pending.get(record.command_id)
                         if entry and entry[0] == record.command_seq and not entry[1].done():
+                            if self._reply_probe and self._reply_probe[0] == record.command_id:
+                                if self._reply_probe[1].intercept(record, entry[1]):
+                                    continue
                             entry[1].set_result(record)
                     elif self.identity:
-                        if record.name == "crypto.benchmark":
+                        if record.name == "memory.sample":
+                            if self.wire_profile != "node_control" or not self.health:
+                                raise ValueError(
+                                    "Memory observation outside negotiated main profile"
+                                )
+                            memory_observation_v2.require_capability(
+                                self.identity.capabilities, self.health.capability_availability
+                            )
+                        elif record.name == "crypto.benchmark":
                             if self.wire_profile != "node_control" or not self.health:
                                 raise ValueError("Benchmark event outside negotiated main profile")
                             crypto_benchmark_v2.require_capability(
@@ -512,7 +683,9 @@ class NodeSession:
                         elif record.name not in ("health", "diagnostic", "operation.result"):
                             require_execution_compatible(
                                 self.identity.model_dump(),
-                                "run.summary",
+                                "fault.status"
+                                if record.name.startswith("fault.")
+                                else "run.summary",
                                 self.health.capability_availability.model_dump()
                                 if self.health
                                 else None,
@@ -526,10 +699,22 @@ class NodeSession:
                             raise ValueError("Operation event outside negotiated diagnostic schema")
                         if record.event_seq <= self.event_seq:
                             continue
+                        if self.omit_matching_receive_observation(record):
+                            continue
                         if self.event_seq:
                             self.event_gaps += record.event_seq - self.event_seq - 1
                         self.event_seq = record.event_seq
-                        if record.name == "health":
+                        if record.name == "memory.sample":
+                            if len(self.memory_samples) == self.memory_samples.maxlen:
+                                self.memory_retention_drops += 1
+                            self.memory_samples.append(record.data.model_dump())
+                            self.last_memory = monotonic()
+                        elif record.name == "health":
+                            if self._health_probe is not None:
+                                value = record.model_dump()
+                                self._health_probe["suppressed_events"].append(value)
+                                self.on_event(self.role, value)
+                                continue
                             self.accept_health(record.data)
                             self.samples.append(
                                 {
@@ -547,12 +732,26 @@ class NodeSession:
                                 self.active_operation = None
                         self.on_event(self.role, record.model_dump())
         except Exception as exc:
-            self.fail(str(exc))
+            self.fail(str(exc), source="serial_decoder")
         finally:
             if not self.connected and self.serial:
                 await asyncio.to_thread(self.serial.close)
 
-    def fail(self, reason):
+    def fail(self, reason, *, source="connection", io_error=False, observed=None):
+        if not self.connected:
+            return
+        self.connection_failure = {
+            "connection_id": self.connection_id,
+            "source": source,
+            "kind": "serial_io" if io_error else "control_connection",
+            "reason": reason,
+            "at": utc_now(),
+            "host_monotonic_ns": monotonic_ns(),
+        }
+        if observed:
+            self.connection_failure.update(
+                kind="identity_change", observed_device_id=observed[0], observed_boot_id=observed[1]
+            )
         self.error = reason
         self.connection_state = "error"
         self.connected = False
@@ -562,18 +761,448 @@ class NodeSession:
             if not future.done():
                 future.set_exception(ValueError(reason))
 
+    async def exercise_serial_framing(self, variant, on_record):
+        if variant not in serial_framing.VARIANTS:
+            raise ValueError("Unknown serial framing case")
+        async with self.command_lock:
+            if not self.connected or not self.identity or self.wire_profile != "node_control":
+                raise ValueError("Framing cases require a compatible connected node")
+            commands = [
+                self._next_command("status.get")
+                for _ in range(serial_framing.STATUS_COUNTS.get(variant, 1))
+            ]
+            batches = serial_framing.batches(variant, [v2.encode(cmd) for cmd in commands])
+            start = 0
+            replies = []
+            for chunks, count in batches:
+                selected = commands[start : start + count]
+                for reply in await self._fixed_serial_exchange(chunks, selected, on_record):
+                    if not reply.ok:
+                        raise ValueError(f"{reply.error.code}: {reply.error.message}")
+                    replies.append(reply)
+                start += count
+        result = replies[-1].result
+        if variant == "split_every_boundary":
+            checked = await asyncio.to_thread(serial_framing.exercise_decoder, replies[-1])
+            on_record({"direction": "host_fixture", "framing_boundaries": checked})
+        else:
+            checked = None
+        return result, checked
+
+    def set_receive_observation_omission(self, run_id, on_omit):
+        if self.rf_run_id != run_id or not run_id or self._receive_observation_omission:
+            raise ValueError("Receive observation omission requires the exact owned radio run")
+        self._receive_observation_omission = (run_id, on_omit)
+
+    def clear_receive_observation_omission(self, run_id):
+        if self._receive_observation_omission and self._receive_observation_omission[0] == run_id:
+            self._receive_observation_omission = None
+
+    def omit_matching_receive_observation(self, record):
+        omission = self._receive_observation_omission
+        if (
+            omission is None
+            or record.run_id != omission[0]
+            or self.rf_run_id != omission[0]
+            or record.name != "rx.frame"
+            or record.data.frame_type != "data"
+            or not record.data.crc_ok
+        ):
+            return False
+        self._receive_observation_omission = None
+        omission[1](record.model_dump())
+        return True
+
+    def configuration_probe_blocker(self):
+        if not self.connected or not self.identity or not self.health:
+            return "Configuration rejection needs a connected radio node"
+        try:
+            require_execution_compatible(
+                self.identity.model_dump(),
+                "config.set",
+                self.health.capability_availability.model_dump(),
+            )
+        except ValueError as exc:
+            return str(exc)
+        return None
+
+    async def exercise_configuration_rejection(self, on_record):
+        async with self.command_lock:
+            if blocker := self.configuration_probe_blocker():
+                raise ValueError(blocker)
+            args = run_protocol_v2.Configuration(
+                radio=run_protocol_v2.Radio(), link=run_protocol_v2.Link()
+            ).model_dump()
+            # The procedure sends only this fixed, out-of-band frequency.
+            args["radio"]["frequency_hz"] = 0
+            command = self._next_command("config.set", args)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+        return reply
+
+    async def exercise_prepare_limit(self, args, run_id, message_bytes, on_record):
+        async with self.command_lock:
+            if not self.connected or not self.identity or not self.health:
+                raise ValueError("Resource refusal needs a compatible connected node")
+            if not run_id or self.rf_run_id != run_id or self.health.state != "idle":
+                raise ValueError("Resource refusal requires the probe's own idle session")
+            availability = self.health.capability_availability
+            require_execution_compatible(
+                self.identity.model_dump(), "run.prepare", availability.model_dump()
+            )
+            limits = availability.resource_limits.get("execution_limits", {})
+            limit = limits.get("max_message_bytes")
+            if type(limit) is not int or not 1 <= limit <= 65536 or message_bytes != limit + 1:
+                raise ValueError("The probe must be exactly one byte above the current node limit")
+            payload = run_protocol_v2.Prepare.model_validate(args).model_dump()
+            if payload["spec"]["source"] != "known_data":
+                raise ValueError("Resource refusal uses only prepared known data")
+            if self.health.security_ready != (payload["spec"]["security"] == "aes128_gcm"):
+                raise ValueError("Resource refusal requires the selected owned security profile")
+            payload["spec"]["message_bytes"] = message_bytes
+            command = self._next_command("run.prepare", payload, run_id)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            return reply
+
+    async def _fixed_serial_exchange(self, chunks, commands, on_record):
+        futures = [asyncio.get_running_loop().create_future() for _ in commands]
+        for cmd, future in zip(commands, futures, strict=True):
+            self.pending[cmd.command_id] = (cmd.command_seq, future)
+        replies = []
+        try:
+            on_record(
+                {
+                    "direction": "host_fixture",
+                    "serial_writes": [
+                        {"bytes": len(chunk), "sha256": hashlib.sha256(chunk).hexdigest()}
+                        for chunk in chunks
+                    ],
+                }
+            )
+            for cmd in commands:
+                on_record({"direction": "host_to_node", "record": cmd.model_dump()})
+            try:
+                for chunk in chunks:
+                    if await self.write_wire(chunk) != len(chunk):
+                        raise ValueError("Incomplete serial procedure write")
+                    if not chunk.endswith(b"\n"):
+                        await asyncio.sleep(0.03)
+            except (Exception, asyncio.CancelledError):
+                # Interrupted multi-write input may leave the receiver inside a record.
+                await self.close(release=False)
+                raise
+            async with asyncio.timeout(2):
+                for command, future in zip(commands, futures, strict=True):
+                    reply = await asyncio.shield(future)
+                    data = reply.model_dump()
+                    require_public_metadata(data)
+                    on_record({"direction": "node_to_host", "record": data})
+                    if reply.ok and command.name == "status.get":
+                        self.accept_health(reply.result)
+                    replies.append(reply)
+        finally:
+            for cmd, future in zip(commands, futures, strict=True):
+                self.pending.pop(cmd.command_id, None)
+                if future.done() and not future.cancelled():
+                    future.exception()
+                else:
+                    future.cancel()
+        return replies
+
+    async def exercise_audio_rejection(self, variant, artifact_id, on_record):
+        args = artifact_contract_v2.ArtifactReference(artifact_id=artifact_id).model_dump()
+        async with self.command_lock:
+            if not self.connected or not self.identity or not self.health:
+                raise ValueError("Audio refusal needs an owned control connection")
+            if variant == "oversized_capture":
+                name = "audio.capture"
+                limits = audio_contract_v2.require_capability(
+                    self.identity.capabilities, self.health.capability_availability, name
+                )
+                args["sample_count"] = limits.max_samples + 1
+            elif variant == "bad_chunk_crc":
+                name = "artifact.put"
+                require_artifact_compatible(
+                    self.identity.model_dump(),
+                    name,
+                    self.health.capability_availability.model_dump(),
+                )
+                args.update(offset=0, data_b64="AA==", crc32="00000000")
+            else:
+                raise ValueError("Unknown local audio refusal case")
+            command = self._next_command(name, args)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            return reply
+
+    async def exercise_reply_recovery(self, variant, on_record):
+        if variant not in serial_replies.VARIANTS:
+            raise ValueError("Unknown reply perturbation case")
+        probe = serial_replies.ReplyProbe(variant, on_record)
+        before = {result["operation_id"] for result in self.operation_results}
+        accepted = None
+        timed_out = False
+        try:
+            accepted = await self.request(
+                "diag.run",
+                {"kind": "memory_probe", "iterations": 1, "payload_bytes": 512},
+                timeout=serial_replies.REPLY_TIMEOUT_S,
+                retries=probe.retries,
+                on_record=probe.record_exchange,
+                _reply_probe=probe,
+            )
+        except ValueError as exc:
+            if probe.retries or not str(exc).startswith("No v2 reply to diag.run;"):
+                raise
+            timed_out = True
+        if not probe.first or not probe.first.ok:
+            raise ValueError("The fixture did not observe an accepted diagnostic reply")
+        operation = control_v2.AcceptedOperation.model_validate(probe.first.result)
+        async with asyncio.timeout(2):
+            while not any(
+                r["operation_id"] == operation.operation_id for r in self.operation_results
+            ):
+                await asyncio.sleep(0.01)
+        results = [r for r in self.operation_results if r["operation_id"] not in before]
+        single_result = (
+            len(results) == 1
+            and results[0]["operation_id"] == operation.operation_id
+            and results[0]["status"] == "completed"
+            and results[0]["result"]["iterations_completed"] == 1
+        )
+        same_wire = (
+            len(probe.write_sha256) == probe.retries + 1 and len(set(probe.write_sha256)) == 1
+        )
+        expected_reply = timed_out if probe.retries == 0 else accepted == probe.first.result
+        passed = (
+            single_result
+            and same_wire
+            and expected_reply
+            and (variant != "delayed_reply" or probe.delivered_delayed)
+        )
+        return {
+            "direction": "host_assessment",
+            "reply_recovery": variant,
+            "timed_out": timed_out,
+            "delayed_reply_delivered": probe.delivered_delayed,
+            "write_sha256": probe.write_sha256,
+            "operation_id": operation.operation_id,
+            "operation_results": results,
+            "outcome": "pass" if passed else "fail",
+        }
+
+    async def exercise_stale_boot(self, on_record):
+        async with self.command_lock:
+            prior = self.previous_boot_binding
+            current = self.last_boot_binding
+            if not prior or not current or not self.identity or not self.connected:
+                raise ValueError("Observe the same node on two boots before the stale-boot probe")
+            if (
+                self.identity.device_id != prior["device_id"]
+                or self.identity.boot_id == prior["boot_id"]
+                or current["connection_id"] != self.connection_id
+            ):
+                raise ValueError("The prior boot does not match the selected device transition")
+            existing_operations = {r["operation_id"] for r in self.operation_results}
+            command = self._next_command(
+                "diag.run", {"kind": "memory_probe", "iterations": 1, "payload_bytes": 512}
+            ).model_copy(update={"target_boot_id": prior["boot_id"]})
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+        # Give the event reader time to record any unexpected one-iteration result.
+        await asyncio.sleep(0.10)
+        new_operations = [
+            r["operation_id"]
+            for r in self.operation_results
+            if r["operation_id"] not in existing_operations
+        ]
+        passed = (
+            not reply.ok
+            and reply.error.code == "STALE_BOOT"
+            and reply.error.field == "target_boot_id"
+            and not new_operations
+        )
+        return {
+            "direction": "host_assessment",
+            "previous_boot": prior,
+            "current_boot": current,
+            "observed_error": reply.error.code if reply.error else None,
+            "unexpected_operation_ids": new_operations,
+            "outcome": "pass" if passed else "fail",
+        }
+
+    async def exercise_reply_conflict(self, on_record):
+        async with self.command_lock:
+            command = self._next_command("control.keepalive")
+            [prior] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            if not prior.ok:
+                raise ValueError(f"Original keepalive failed: {prior.error.code}")
+            changed = command.model_copy(update={"args": {"unrecognized_parameter": True}})
+            [reply] = await self._fixed_serial_exchange([v2.encode(changed)], [changed], on_record)
+        if reply.ok or reply.error.code != "COMMAND_CONFLICT":
+            raise ValueError(
+                "Reused command identity with changed bytes did not return COMMAND_CONFLICT"
+            )
+
+    async def exercise_competing_claim(self, on_record):
+        async with self.command_lock:
+            command = self._next_command("control.claim", {"node_role": self.role}).model_copy(
+                update={"client_id": str(uuid4()), "command_seq": 1}
+            )
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            if reply.ok:
+                await self.close(release=False)
+                raise ValueError("The competing client unexpectedly acquired ownership")
+            if reply.error.code != "BUSY":
+                raise ValueError(f"Unexpected competing claim reply: {reply.error.code}")
+
+    async def exercise_health_silence(self, on_record):
+        await self.request("status.get", on_record=on_record, timeout=0.75, retries=0)
+        if self._health_probe is not None or self.last_health is None:
+            raise ValueError("A fresh connection is required for the health-silence probe")
+        self._health_probe = probe = {"suppressed_events": [], "unresponsive_at_age_s": None}
+        started = self.last_health
+        stale_age = None
+        try:
+            async with asyncio.timeout(7):
+                while self.connected:
+                    age = monotonic() - started
+                    if stale_age is None and self.snapshot()["connection_state"] == "stale":
+                        stale_age = age
+                    await asyncio.sleep(0.025)
+            disconnected_age = monotonic() - started
+            expected_error = "Node health telemetry timed out; reconnect to recover"
+            unresponsive_age = probe["unresponsive_at_age_s"]
+            passed = (
+                probe["suppressed_events"]
+                and stale_age is not None
+                and 3 < stale_age <= 3.5
+                and unresponsive_age is not None
+                and 5 < unresponsive_age <= disconnected_age <= 6.5
+                and self.error == expected_error
+            )
+            return {
+                "direction": "host_assessment",
+                "health_silence": True,
+                **probe,
+                "stale_at_age_s": stale_age,
+                "disconnected_at_age_s": disconnected_age,
+                "connection_error": self.error,
+                "outcome": "pass" if passed else "fail",
+            }
+        finally:
+            self._health_probe = None
+            if self.connected:
+                try:
+                    await self.request("status.get", timeout=0.75, retries=0)
+                except (OSError, ValueError, TimeoutError):
+                    await self.close(release=False)
+
+    async def exercise_lease_recovery(self, on_record):
+        if self.control_cycle_active or not self.identity or not self.connected:
+            raise ValueError("A connected node with exclusive control is required")
+        identity = (self.connection_id, self.identity.device_id, self.identity.boot_id)
+        options = {"on_record": on_record, "timeout": 0.75, "retries": 0}
+        self.control_cycle_active = True
+        try:
+            lease = await self.request("control.keepalive", **options)
+            expiry = run_protocol_v2.Lease.model_validate(lease).lease_expires_us
+            async with asyncio.timeout(7):
+                while self.connected:
+                    observed = self.health
+                    if observed.uptime_us >= expiry and observed.node_role is None:
+                        break
+                    await asyncio.sleep(0.025)
+                else:
+                    raise ValueError("Connection closed before lease expiry was observed")
+            if observed.state != "idle" or observed.run_id or observed.operation_id:
+                raise ValueError("Lease expiry did not leave the node idle")
+            on_record(
+                {
+                    "direction": "host_assessment",
+                    "lease_expires_us": expiry,
+                    "expired_health": observed.model_dump(),
+                    "observed_after_us": observed.uptime_us - expiry,
+                }
+            )
+            try:
+                await self.request("status.get", **options)
+            except ValueError as exc:
+                if not str(exc).startswith("NOT_OWNER:"):
+                    raise
+            else:
+                raise ValueError("The expired claim remained usable")
+            await self.request("control.claim", {"node_role": self.role}, **options)
+        except (Exception, asyncio.CancelledError):
+            await self._recover_control_after_probe(identity)
+            raise
+        finally:
+            self.control_cycle_active = False
+
+    async def _recover_control_after_probe(self, identity):
+        if (
+            self.connected
+            and self.identity
+            and (self.connection_id, self.identity.device_id, self.identity.boot_id) == identity
+        ):
+            try:
+                await self.request(
+                    "control.claim", {"node_role": self.role}, timeout=0.5, retries=0
+                )
+            except (OSError, ValueError, TimeoutError):
+                await self.close(release=False)
+
+    async def exercise_control_cycle(self, on_record):
+        if self.control_cycle_active or not self.identity or not self.connected:
+            raise ValueError("A connected node with exclusive control is required")
+        identity = (self.connection_id, self.identity.device_id, self.identity.boot_id)
+        options = {"on_record": on_record, "timeout": 0.75, "retries": 0}
+        self.control_cycle_active = True
+        try:
+            hello = v2.Hello.model_validate(await self.request("hello", **options))
+            require_control_compatible(hello.model_dump())
+            if (hello.device_id, hello.boot_id) != identity[1:]:
+                raise ValueError("Node identity changed during the control cycle")
+            before = await self.request("status.get", **options)
+            if before["node_role"] != self.role or before["state"] != "idle":
+                raise ValueError("Control cycle requires an owned idle node")
+            await self.request("control.keepalive", **options)
+            await self.request("control.release", **options)
+            try:
+                await self.request("status.get", **options)
+            except ValueError as exc:
+                if not str(exc).startswith("NOT_OWNER:"):
+                    raise
+            else:
+                raise ValueError("Status unexpectedly remained available to the released client")
+            await self.request("control.claim", {"node_role": self.role}, **options)
+            after = await self.request("status.get", **options)
+            if (
+                not self.identity
+                or (self.connection_id, self.identity.device_id, self.identity.boot_id) != identity
+                or after["node_role"] != self.role
+                or after["state"] != "idle"
+                or after["uptime_us"] <= before["uptime_us"]
+                or after["telemetry_drops"] != before["telemetry_drops"]
+            ):
+                raise ValueError("Control cycle did not restore the same healthy idle node")
+        except (Exception, asyncio.CancelledError):
+            await self._recover_control_after_probe(identity)
+            raise
+        finally:
+            self.control_cycle_active = False
+
     async def keepalive_loop(self):
         try:
             while self.connected:
                 await asyncio.sleep(1)
-                if (
-                    self.last_health is not None
-                    and health_freshness(monotonic() - self.last_health) == "unresponsive"
-                ):
+                if self.control_cycle_active:
+                    continue
+                age = monotonic() - self.last_health if self.last_health is not None else None
+                if health_freshness(age) == "unresponsive":
+                    if self._health_probe is not None:
+                        self._health_probe["unresponsive_at_age_s"] = age
                     raise ValueError("Node health telemetry timed out; reconnect to recover")
                 await self.request("control.keepalive")
         except (OSError, ValueError) as exc:
-            self.fail(str(exc))
+            self.fail(str(exc), source="keepalive")
 
     async def close(self, release=True):
         if release and self.connected and self.identity:

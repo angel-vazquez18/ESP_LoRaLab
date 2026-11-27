@@ -1,3 +1,14 @@
+menu "LoRaLab control transport"
+config LORALAB_CONTROL_UART0
+    bool "Use UART0 GPIO43/TX and GPIO44/RX for node control"
+    depends on !ESP_CONSOLE_UART_DEFAULT && !ESP_CONSOLE_UART_CUSTOM
+    default n
+    help
+        Select UART0 at 115200 8N1 for the same NDJSON control protocol.
+        Use a 3.3 V logic USB-to-UART adapter and a common ground.
+        Native USB Serial/JTAG remains the default control transport.
+endmenu
+
 menu "LoRaLab physical audio configuration"
 config LORALAB_AUDIO_PLAYBACK
     bool "Amplifier/speaker connected to the documented board pins"
@@ -42,4 +53,24 @@ config LORALAB_PTT
         Configures only GPIO47 as input with pull-up. The host must arm one
         fixed-length capture, then a fresh debounced release/press starts it.
         No button action or transmission resumes after stop or ownership loss.
+endmenu
+
+menu "LoRaLab optional OLED status"
+config LORALAB_OLED
+    bool "Standard V4 R2 OLED pins and Vext power control verified"
+    depends on LORALAB_RADIO_HELTEC_V42 || LORALAB_RADIO_HELTEC_V43
+    default n
+    help
+        SSD1315 128x64 at address 0x3c. Uses SDA17/SCL18, reset21 and
+        GPIO36 low to enable Vext. Verify the actual standard PCB first;
+        V4-R8 is unsupported. Updates use an isolated bounded I2C worker.
+endmenu
+
+menu "LoRaLab laboratory fault hooks"
+config LORALAB_LAB_FAULTS
+    bool "Enable controlled laboratory protected-frame faults"
+    default n
+    help
+        Allow explicit run-owned post-protection mutation and retained replay.
+        Normal images leave these hooks unavailable. No hook activates by default.
 endmenu

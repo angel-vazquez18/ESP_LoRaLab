@@ -26,10 +26,13 @@ def prepare_voice(
     overrides=None,
     reject=False,
     omit=(),
+    budget_overrides=None,
+    radio=None,
 ):
     run = str(uuid4())
     link = Link(guard_us=0, ack_mode="stop_wait" if ack else "none", max_retries=2 if ack else 0)
     plan = KnownDataPlan(
+        radio=radio or {},
         link=link,
         spec=KnownDataSpec(
             message_count=1,
@@ -51,6 +54,7 @@ def prepare_voice(
     budget = preview(plan)["timing"]["budget"]
     budget["processing_budget_us"] += 5000000
     budget["reassembly_timeout_us"] += 5000000
+    budget.update(budget_overrides or {})
     revisions, reservations = {}, {}
     for role, node in nodes.items():
         assert node.request("control.claim", {"node_role": role})["ok"]
@@ -67,7 +71,7 @@ def prepare_voice(
             },
             run_id=run,
         )["ok"]
-        applied = node.request("config.set", {"radio": {}, "link": link.model_dump()})
+        applied = node.request("config.set", {"radio": radio or {}, "link": link.model_dump()})
         assert applied["ok"]
         revisions[role] = applied["result"]["config_revision"]
         selected = (
@@ -110,6 +114,7 @@ def test_committed_clip_delivers_eight_authenticated_fragments_then_decodes_and_
         encoded = readback(nodes["A"], identifier, 1200)
         run, revision, _ = prepare_voice(nodes, source)
         assert nodes["B"].request("run.arm", {"config_revision": revision["B"]}, run_id=run)["ok"]
+        assert nodes["A"].request("run.arm", {"config_revision": revision["A"]}, run_id=run)["ok"]
         assert nodes["A"].request("run.start", {"config_revision": revision["A"]}, run_id=run)["ok"]
         plaintext = bytearray()
         records = []
@@ -185,6 +190,7 @@ def test_incomplete_or_unverified_voice_never_publishes_decodable_bytes(native_l
             {"source_artifact_id": pending["artifact_id"], "artifact_id": str(uuid4())},
         )["ok"]
         assert receiver.request("run.arm", {"config_revision": revisions["B"]}, run_id=run)["ok"]
+        assert nodes["A"].request("run.arm", {"config_revision": revisions["A"]}, run_id=run)["ok"]
         assert nodes["A"].request("run.start", {"config_revision": revisions["A"]}, run_id=run)[
             "ok"
         ]
@@ -291,6 +297,9 @@ def test_encoded_voice_retries_lost_ack_and_delivers_once_in_both_directions(
             "run.arm", {"config_revision": revisions[target_role]}, run_id=run
         )["ok"]
         assert nodes[source_role].request(
+            "run.arm", {"config_revision": revisions[source_role]}, run_id=run
+        )["ok"]
+        assert nodes[source_role].request(
             "run.start", {"config_revision": revisions[source_role]}, run_id=run
         )["ok"]
         records, frames = drive_pair(nodes, lib, drop_ack=True)
@@ -339,6 +348,7 @@ def test_voice_stage_cancel_releases_resources_and_following_work_succeeds(nativ
         identifier, source = encoded_source(nodes["A"])
         run, revisions, _ = prepare_voice(nodes, source)
         assert nodes["B"].request("run.arm", {"config_revision": revisions["B"]}, run_id=run)["ok"]
+        assert nodes["A"].request("run.arm", {"config_revision": revisions["A"]}, run_id=run)["ok"]
         assert nodes["A"].request("run.start", {"config_revision": revisions["A"]}, run_id=run)[
             "ok"
         ]
@@ -357,6 +367,9 @@ def test_voice_stage_cancel_releases_resources_and_following_work_succeeds(nativ
             assert audio.starts == 0
             run, revisions, _ = prepare_voice(nodes, source)
             assert nodes["B"].request("run.arm", {"config_revision": revisions["B"]}, run_id=run)[
+                "ok"
+            ]
+            assert nodes["A"].request("run.arm", {"config_revision": revisions["A"]}, run_id=run)[
                 "ok"
             ]
             assert nodes["A"].request("run.start", {"config_revision": revisions["A"]}, run_id=run)[

@@ -198,8 +198,16 @@ static void poll(void *context, node_audio_progress *progress)
         .raw_right_or = atomic_load(&input.raw_right_or)};
     progress->failed = progress->underflows != 0;
 }
+static void memory_buffers(void *context, node_memory_inventory *out)
+{
+    (void)context;
+    size_t capacity = output.target > FRAMES * DESCRIPTORS ? output.target : FRAMES * DESCRIPTORS;
+    node_memory_add(out, "audio_playback_stereo", output.stereo, capacity * 4);
+    // I2S provider's private DMA rings/handles remain outside the known requested set.
+}
 node_audio_port esp32_audio_port(void)
 {
     return (node_audio_port){.playback = CONFIG_LORALAB_AUDIO_PLAYBACK,
-        .capture = CONFIG_LORALAB_AUDIO_CAPTURE, .start = start, .poll = poll, .stop = stop};
+        .capture = CONFIG_LORALAB_AUDIO_CAPTURE, .start = start, .poll = poll, .stop = stop,
+        .memory_buffers = memory_buffers};
 }

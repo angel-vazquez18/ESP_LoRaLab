@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -30,3 +31,5 @@ void crypto_benchmark_ack(crypto_benchmark *benchmark);
 crypto_benchmark_status crypto_benchmark_progress(const crypto_benchmark *benchmark);
 size_t crypto_benchmark_bytes(void);
 bool crypto_benchmark_destroy(crypto_benchmark **benchmark);
+
+void crypto_benchmark_memory(const crypto_benchmark *s, node_memory_inventory *out);

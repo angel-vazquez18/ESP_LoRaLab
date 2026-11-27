@@ -30,6 +30,12 @@ type Accounting =
       valid_ack_observations: number;
       unique_original_delivery_ratio: number;
       receiver_duplicates: number;
+      accepted_fragment_bps?: number | null;
+      goodput_bps?: number | null;
+      sender_transfer_window?: {
+        duration_us: number | null;
+        unavailable_reason: string | null;
+      };
     }
   | { evidence_complete: false; reason: string };
 type MissingEvidence =
@@ -74,6 +80,7 @@ export type RadioRun = {
   } | null;
   verification: Verification | null;
   accounting?: Accounting | null;
+  host_transaction?: { elapsed_ns: number | null } | null;
   missing_evidence?: MissingEvidence | null;
   error: string | null;
   cleanup: { confirmed: boolean; nodes?: Record<string, string> } | null;
@@ -547,50 +554,75 @@ export default function RadioLink({
                     <code>{record.verification.sample_hex}</code>
                   </>
                 )}
-                {record.accounting?.evidence_complete && (
-                  <div
-                    className="radio-accounting"
-                    aria-label="Reconciled radio accounting"
-                  >
-                    {[
-                      [
-                        "Confirmed DATA originals",
-                        record.accounting.data_originals,
-                      ],
-                      ["DATA attempts", record.accounting.data_attempts],
-                      ["Retries", record.accounting.data_retries],
-                      [
-                        "Unique accepted fragments",
-                        record.accounting.accepted_fragments,
-                      ],
-                      [
-                        "Delivered messages",
-                        record.accounting.delivered_messages,
-                      ],
-                      [
-                        "Receiver duplicates",
-                        record.accounting.receiver_duplicates,
-                      ],
-                      [
-                        "ACK transmissions",
-                        record.accounting.ack_transmissions,
-                      ],
-                      [
-                        "Matched ACK observations",
-                        record.accounting.valid_ack_observations,
-                      ],
-                      [
-                        "Original delivery ratio",
-                        `${(100 * record.accounting.unique_original_delivery_ratio).toFixed(1)}%`,
-                      ],
-                    ].map(([label, value]) => (
-                      <div key={label}>
-                        <span>{label}</span>
-                        <strong>{value}</strong>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {record.accounting?.evidence_complete &&
+                  typeof record.accounting.data_originals === "number" && (
+                    <div
+                      className="radio-accounting"
+                      aria-label="Reconciled radio accounting"
+                    >
+                      {[
+                        [
+                          "Confirmed DATA originals",
+                          record.accounting.data_originals,
+                        ],
+                        ["DATA attempts", record.accounting.data_attempts],
+                        ["Retries", record.accounting.data_retries],
+                        [
+                          "Unique accepted fragments",
+                          record.accounting.accepted_fragments,
+                        ],
+                        [
+                          "Delivered messages",
+                          record.accounting.delivered_messages,
+                        ],
+                        [
+                          "Receiver duplicates",
+                          record.accounting.receiver_duplicates,
+                        ],
+                        [
+                          "ACK transmissions",
+                          record.accounting.ack_transmissions,
+                        ],
+                        [
+                          "Matched ACK observations",
+                          record.accounting.valid_ack_observations,
+                        ],
+                        [
+                          "Original delivery ratio",
+                          `${(100 * record.accounting.unique_original_delivery_ratio).toFixed(1)}%`,
+                        ],
+                        ...(record.accounting.sender_transfer_window
+                          ? [
+                              [
+                                "Accepted fragment rate",
+                                record.accounting.accepted_fragment_bps == null
+                                  ? "Unavailable"
+                                  : `${Math.round(record.accounting.accepted_fragment_bps).toLocaleString()} bit/s`,
+                              ],
+                              [
+                                "Application goodput",
+                                record.accounting.goodput_bps == null
+                                  ? "Unavailable"
+                                  : `${Math.round(record.accounting.goodput_bps).toLocaleString()} bit/s`,
+                              ],
+                            ]
+                          : []),
+                        ...(record.host_transaction?.elapsed_ns != null
+                          ? [
+                              [
+                                "Whole host transaction",
+                                `${(record.host_transaction.elapsed_ns / 1_000_000).toFixed(1)} ms`,
+                              ],
+                            ]
+                          : []),
+                      ].map(([label, value]) => (
+                        <div key={label}>
+                          <span>{label}</span>
+                          <strong>{value}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 {record.accounting?.evidence_complete === false && (
                   <p>
                     Frame accounting is incomplete. {record.accounting.reason}

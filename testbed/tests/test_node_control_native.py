@@ -20,7 +20,7 @@ from native_codec2 import COMPONENT as CODEC_COMPONENT
 from native_codec2 import build_codec2
 from native_crypto import load_frame_cipher
 
-from lora_testbed import control_v2, crypto_benchmark_v2, rf_events_v2
+from lora_testbed import control_v2, crypto_benchmark_v2, memory_observation_v2, rf_events_v2
 from lora_testbed.app import create_app
 from lora_testbed.nodes import NodeSession
 from lora_testbed.paths import REPOSITORY_ROOT as REPO_ROOT
@@ -32,6 +32,7 @@ class Heap(C.Structure):
     ] + [("present", C.c_bool)]
 
 
+REGION = C.CFUNCTYPE(C.c_uint, C.c_void_p, C.c_void_p)
 PTT = C.CFUNCTYPE(C.c_bool, C.c_void_p)
 NOW = C.CFUNCTYPE(C.c_int64, C.c_void_p)
 HASH = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_size_t, C.c_void_p)
@@ -58,6 +59,7 @@ class AudioProgress(C.Structure):
 AUDIO_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_uint32, C.c_bool)
 AUDIO_POLL = C.CFUNCTYPE(None, C.c_void_p, C.POINTER(AudioProgress))
 AUDIO_STOP = C.CFUNCTYPE(None, C.c_void_p)
+AUDIO_MEMORY = C.CFUNCTYPE(None, C.c_void_p, C.c_void_p)
 
 
 class AudioPort(C.Structure):
@@ -67,7 +69,41 @@ class AudioPort(C.Structure):
         ("start", AUDIO_START),
         ("poll", AUDIO_POLL),
         ("stop", AUDIO_STOP),
+        ("memory_buffers", AUDIO_MEMORY),
     ]
+
+
+class NodeView(C.Structure):
+    _fields_ = [
+        ("state", C.c_int),
+        ("role", C.c_char),
+        ("claimed", C.c_bool),
+        ("linked", C.c_bool),
+        ("completed", C.c_uint32),
+        ("total", C.c_uint32),
+        ("tx_attempts", C.c_uint32),
+        ("delivered", C.c_uint32),
+        ("uptime_us", C.c_uint64),
+        ("error_code", C.c_char * 40),
+    ]
+
+
+DISPLAY_POST = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.POINTER(NodeView))
+DISPLAY_STATUS = C.CFUNCTYPE(C.c_uint, C.c_void_p)
+
+
+class DisplayPort(C.Structure):
+    _fields_ = [("post", DISPLAY_POST), ("status", DISPLAY_STATUS)]
+
+
+SOURCE_RESERVE = C.CFUNCTYPE(C.c_void_p, C.c_void_p, C.c_void_p)
+SOURCE_START = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p, C.c_int64)
+SOURCE_STOP = C.CFUNCTYPE(C.c_bool, C.c_void_p, C.c_void_p)
+
+
+class SourceWorkerPort(C.Structure):
+    _fields_ = [("context", C.c_void_p), ("reserve", SOURCE_RESERVE),
+                ("start", SOURCE_START), ("stop", SOURCE_STOP)]
 
 
 class Platform(C.Structure):
@@ -102,6 +138,10 @@ class Platform(C.Structure):
             ("dynamic_frequency", C.c_bool),
             ("codec2_mode", C.c_uint),
             ("ptt_pressed", PTT),
+            ("display", DisplayPort),
+            ("memory_region", REGION),
+            ("source_worker", SourceWorkerPort),
+            ("lab_faults", C.c_bool),
         ]
     )
 
@@ -141,7 +181,11 @@ def native_library(tmp_path_factory):
             str(main / "protocol/secure_json.c"),
             str(main / "protocol/chunk_bytes.c"),
             str(main / "control/node_control.c"),
+            str(main / "memory/observations.c"),
+            str(main / "source/encoded_source.c"),
             str(main / "input/ptt_gate.c"),
+            str(main / "display/node_view.c"),
+            str(main / "display/oled_panel.c"),
             str(main / "audio/pcm_samples.c"),
             str(main / "audio/codec_clip.c"),
             str(main / "radio/node_radio.c"),
@@ -152,6 +196,9 @@ def native_library(tmp_path_factory):
             str(main / "radio/rf_ack.c"),
             str(main / "radio/rf_sender.c"),
             str(main / "radio/rf_execution.c"),
+            str(main / "radio/rf_echo.c"),
+            str(main / "radio/rf_faults.c"),
+            str(main / "radio/rf_fault_json.c"),
             str(main / "radio/vendor/sx126x/sx126x.c"),
             str(REPO_ROOT / "testbed/tests/native/radio_control_fixture.c"),
             "-I",
@@ -184,6 +231,8 @@ def native_library(tmp_path_factory):
     lib.native_radio_sent.argtypes = [C.c_void_p, C.c_void_p]
     lib.native_radio_sent.restype = C.c_uint
     lib.native_radio_tx_done.argtypes = [C.c_void_p]
+    lib.node_view_state_name.argtypes = [C.c_int]
+    lib.node_view_state_name.restype = C.c_char_p
     lib.node_control_create.argtypes = [C.POINTER(Platform)]
     lib.node_control_create.restype = C.c_void_p
     lib.node_control_destroy.argtypes = [C.c_void_p]
@@ -206,6 +255,10 @@ class NativeNode:
         device="esp-001122334455",
         codec2_mode=3200,
         ptt=None,
+        display=None,
+        display_status=None,
+        source_worker=None,
+        lab_faults=False,
     ):
         self.lib, self.time, self.realtime = lib, 1_000_000, realtime
         self.radio = radio
@@ -240,6 +293,13 @@ class NativeNode:
         self.platform.codec2_mode = codec2_mode
         self.ptt_callback = PTT(ptt) if ptt else PTT()
         self.platform.ptt_pressed = self.ptt_callback
+        self.display_callback = DISPLAY_POST(display) if display else DISPLAY_POST()
+        self.display_status = DISPLAY_STATUS(display_status) if display_status else DISPLAY_STATUS()
+        self.platform.display = DisplayPort(self.display_callback, self.display_status)
+        self.region_callback = REGION(lambda _, pointer: 1 if pointer in self.allocations else 0)
+        self.platform.memory_region = self.region_callback
+        self.platform.source_worker = source_worker or SourceWorkerPort()
+        self.platform.lab_faults = lab_faults
         self.node = lib.node_control_create(C.byref(self.platform))
         assert self.node
 
@@ -300,7 +360,9 @@ class NativeNode:
             wire = output.raw[:length]
             assert wire.endswith(b"\n") and len(wire) <= 4096
             record = json.loads(wire)
-            if record.get("name") == "crypto.benchmark":
+            if record.get("name") == "memory.sample":
+                memory_observation_v2.Event.model_validate(record)
+            elif record.get("name") == "crypto.benchmark":
                 crypto_benchmark_v2.Event.model_validate(record)
             elif record.get("name") not in (None, "health", "diagnostic", "operation.result"):
                 rf_events_v2.ADAPTER.validate_python(record)
@@ -573,6 +635,10 @@ class NativeSerial:
         boot=1,
         audio=None,
         ptt=None,
+        display=None,
+        display_status=None,
+        source_worker=None,
+        lab_faults=False,
     ):
         self.core = NativeNode(
             lib,
@@ -583,6 +649,10 @@ class NativeSerial:
             codec2_mode=codec2_mode,
             audio=audio,
             ptt=ptt,
+            display=display,
+            display_status=display_status,
+            source_worker=source_worker,
+            lab_faults=lab_faults,
         )
         self.lock = threading.RLock()
         self.queue = queue.Queue()
@@ -595,6 +665,8 @@ class NativeSerial:
 
     def write(self, wire):
         with self.lock:
+            if self.closed:
+                raise OSError("Native serial fixture is closed")
             self.core.feed(wire)
             self._pump()
         return len(wire)

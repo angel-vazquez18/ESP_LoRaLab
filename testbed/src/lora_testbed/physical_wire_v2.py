@@ -2,6 +2,11 @@
 
 from pydantic import TypeAdapter
 
-from . import control_v2, crypto_benchmark_v2, rf_events_v2
+from . import control_v2, crypto_benchmark_v2, memory_observation_v2, rf_events_v2
 
-ADAPTER = TypeAdapter(control_v2.WireRecord | rf_events_v2.RFEvent | crypto_benchmark_v2.Event)
+ADAPTER = TypeAdapter(
+    control_v2.WireRecord
+    | rf_events_v2.RFEvent
+    | crypto_benchmark_v2.Event
+    | memory_observation_v2.Event
+)

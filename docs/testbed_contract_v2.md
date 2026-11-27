@@ -165,7 +165,7 @@ are errors. Read commands are marked R; all others are mutating commands.
 | `session.close` | `{}` | Idle only; zeroize keys, replay state and retained injection frames |
 | `config.set` | `radio, link` | Atomic validation/application; return applied values and `config_revision` (incrementing u32) |
 | `run.prepare` | `spec,budget` | Reserve buffers, validate capabilities, stage source; accepted operation, then prepared event with applied budget and expected lengths/digests if known |
-| `run.arm` | `config_revision` | Receiver ready for this run/session, returns `receiver_ready`; refuse stale revision |
+| `run.arm` | `config_revision` | Prepared role arms locally; returns `role`, `receiver_ready`, `arm_deadline_us`; refuse stale revision/rearm |
 | `run.start` | `config_revision` | Sender operation accepted; both nodes must already be prepared and receiver armed |
 | `run.stop` | `reason` | Idempotent stop request; `reason` is `operator`, `host_shutdown` or `peer_failure` |
 | `run.summary` R | `{}` | Last run summary; available until the next prepare or reset |
@@ -182,6 +182,7 @@ are errors. Read commands are marked R; all others are mutating commands.
 | `operation.stop` | `operation_id` | Idempotent cancel for artifact/audio/diagnostic operations |
 | `diag.run` | `kind,iterations,payload_bytes` | `serial_echo`, `crypto_benchmark`, or `memory_probe`; iterations 1–10000, bytes within negotiated limits |
 | `fault.set` | `injections,replace` | Up to eight entries per command and 32 per session; replace=true clears previous entries, false appends; idle/prepared only |
+| `fault.status` R | `offset,limit` | Lab-only run evidence, up to four entries per page, with session identity and fire-window status |
 | `fault.fire` | `injection_id` | Execute an armed retained-frame replay after the host observes legitimate RX; active run only, within the prepared fault/drain budget |
 | `clock.arm` | `calibration_id,count,interval_us` | Arm sync capture; count 32 for a burst or 0 for continuous, interval 100000 |
 | `clock.emit` | `calibration_id,count,interval_us` | Node A's wired pulse source; both capture inputs must be armed |
@@ -204,7 +205,8 @@ prove that a peer has acknowledged a USB command.
 
 Device activity states: `idle`, `preparing`, `prepared`, `armed`, `running`,
 `draining`, `stopping`, `faulted`. Asynchronous preparation emits readiness;
-start is allowed only after it completes. Configuration and role changes are
+sender start is allowed only after preparation and its fresh local arm.
+Configuration and role changes are
 forbidden after arming. Connection state, compatibility and activity are separate.
 On node reset, peer loss or host lease loss, the host records `interrupted`,
 requests peer stop and requires a new session. After final summary, activity is
@@ -325,8 +327,14 @@ benchmarking. Fault budget includes planned injected airtime and host barriers.
 Host computes the expanded worst case; nodes validate its inputs and limits
 before preparation and return the applied budget. A disagreement rejects prepare.
 All work fits `max_duration_ms` from sender start acceptance to final summary.
-Host issues start within five seconds after receiver arm; the receiver's bounded
-arm/run deadline is its arm time plus five seconds plus `max_duration_ms`.
+The `finite_message_execution_v2` profile requires both receiver and sender arm.
+Only the sender accepts start, strictly before its own five-second arm deadline.
+The host includes receiver arm request/reply time in its five-second sequencing
+check and checks before sender arm/start and after the start reply. Independent
+node clocks do not prove remote readiness. The receiver's bounded arm/run deadline
+is its arm time plus five seconds plus `max_duration_ms`; reassembly includes the
+same allowance. See [reserved lifecycle](run_lifecycle.md) for reservation rollback,
+prepare expiry, retained evidence and separate initiating/cleanup errors.
 For `node_microphone`, prepare reserves memory; capture begins on run start so
 capture/encode time remains part of the voice transaction.
 
@@ -473,6 +481,11 @@ is started. Record original failure and cleanup failure separately.
 
 ## 9. Controlled faults and CDR assertions
 
+Execution v6 implements these actions for finite generated known-data on
+the optional laboratory build. Receiver selectors count eligible local
+arrivals or ACK opportunities. Scheduling requires ACK disabled. See
+[laboratory checks](lab_frame_faults.md) for bounds, evidence and cleanup.
+
 Each `fault.set` entry has `injection_id` (UUID), `stage`, `action`, `message_id`,
 `fragment_index`, `attempt_index` (1-based), `byte_offset`, `xor_mask` and
 `block_size`; unused selectors are null. Match exact selectors once and report
@@ -497,8 +510,8 @@ Each `fault.set` entry has `injection_id` (UUID), `stage`, `action`, `message_id
   twice or in reversed blocks of at most 32 within one message. Account for
   injected attempts separately; require unique reassembly and bounded timeout.
 
-Retain up to 16 injection frames for `replay`/mutation; use the message buffer to
-prepare a bounded reorder block. Fault hooks exist only in a declared laboratory
+Reserve up to 16 retained frames for replay and duplication. A separate
+prepared buffer holds at most 32 originals for a reverse block. Fault hooks exist only in a declared laboratory
 test build and never silently activate in normal runs. Fault location is part
 of saved evidence. Do not infer authentication correctness from a CRC failure.
 
@@ -543,10 +556,38 @@ post-startup interval after three seconds, plus all startup/drain durations.
 This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
+The finite source was introduced in `finite_message_execution_v3`, followed by
+verified echoes in v4. The v6 profile extended the v5 laboratory controls with
+fragment and ACK cases. The v7 profile adds optional numbered known-data
+preparation. Use the exact generated execution profile on both nodes and host.
+The source retains bounded `run.source` readback. It starts at nominal elapsed zero,
+retains actual wake times, uses a 0–30 second declared source drain, and keeps
+sender transmission distinct from receiver delivery. See
+[fixed-rate source](fixed_rate_source.md) for queue masks, interval boundaries,
+archive holes, wire limits and cleanup. Host procedure/assessment follows #105;
+software evidence does not qualify physical sustained throughput.
+
 `VOICE-04` uses the same three fixed reference clips across configurations and a
 five-point listening rubric: 1 unintelligible, 2 occasional words, 3 meaning with
 effort, 4 mostly clear, 5 clear. Save listener identifier, clip order and notes.
 No universal pass score is invented; correctness and feasibility are separate.
+
+### Numbered protected known-data messages
+
+Include `message_id` in `run.prepare` to opt into an ordered series of up to 256
+individual known-data messages. Each preparation declares `message_count: 1`,
+keeps the same direction, seed, message length and applied radio/link revision,
+and reuses the original `run_id` and protected `session_id`. Start at 1 and
+increase by one. The message ID is part of the known-data recipe and each data
+frame, and is returned in the prepared and summary evidence. Keys, frame sequence
+allocation and receiver replay state persist across the finite message boundaries.
+
+Before preparing the next message, read back and retire the previous prepared
+artifact through its own ID. A bounded receive timeout still permits the next
+message after its missing ranges are reported. Stop, lease loss, reset and
+session close retire the protected session. An internal preparation failure
+ends a numbered session. In lab builds replace the previous target with the
+next message's declared target, or explicitly clear it before an intact message.
 
 ### Artifact transfer and resources
 
@@ -580,6 +621,14 @@ replay checks and message/audio stage start/end timestamps at their named stages
 These are software observation points with measurable capture latency. Do not
 label `tx_command_us` an exact on-air start. MODEL-01 records radio ramp/command
 overhead separately when comparing command-to-done time with predicted airtime.
+
+The finite firmware echo capability and matching execution v4 result are described
+in [verified echo/RTT](verified_echo_rtt.md). One request is pending per run;
+missing replies have null latency, and late/duplicate/unrelated frames do not
+create additional successful samples. The current coordinated v4 digest adds
+bounded actual `reply_hex` bytes and one shared captured acceptance instant in
+`echo.result` and `rx.accepted`. The [physical host path](physical_echo_timing.md)
+independently reconciles these records and keeps host transaction time separate.
 
 RTT is sender-local ECHO_REPLY acceptance minus request `tx_command_us`, including
 both airtimes and peer turnaround. Report success count, timeouts, median and
@@ -746,3 +795,22 @@ reconstruction apply. No encoded file becomes a consumer input until complete
 verified publication. The exact execution supplement changes; see
 [protected voice content](protected_voice_content.md) for schema migration,
 processing allowance, source/receiver ownership and acceptance instructions.
+
+## Optional OLED worker observation (`oled_status_v1`)
+
+Current `capability_availability.resource_limits.oled` is an optional passive
+observation with exact supplement fingerprint, starting/ready/failure state and
+`physical_qualified:false`. Ready means completed I2C frame acknowledgment, not
+verified pixels. No display mutation command is added. Missing, incompatible or
+stale observations do not become ready. Static enrollment and existing wire
+profiles remain unchanged. See `oled_status.md` and `contracts/v2/oled_status.schema.json`.
+
+## Finite memory observation supplement
+
+`stage_memory_observation_v1` independently gates `memory.start`, `memory.status`
+and `memory.stop` plus typed `memory.sample` events. It reuses the control owner
+with bounded observation time; periodic 100 ms samples and additional stage
+samples preserve actual clocks, requested ownership, independent observed minima
+and missed/drop limitations. Read [memory observations](memory_observations.md)
+for exact fields, compatibility, untracked allocations and pending target checks.
+It does not imply support for the full execution run-spec memory flag.

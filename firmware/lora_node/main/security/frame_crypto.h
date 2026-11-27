@@ -1,4 +1,5 @@
 #pragma once
+#include "memory/buffers.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -32,3 +33,5 @@ rf_crypto_status rf_crypto_seal(rf_crypto *, const uint8_t header[RF_CRYPTO_HEAD
 // Output is unchanged on failure; *written is zero. No plaintext before verified tag.
 rf_crypto_status rf_crypto_open(rf_crypto *, const uint8_t *frame, size_t frame_bytes,
                                 uint8_t *body, size_t capacity, size_t *written);
+
+void rf_crypto_memory(const rf_crypto *, const char *name, node_memory_inventory *);

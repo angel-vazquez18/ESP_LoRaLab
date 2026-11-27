@@ -17,10 +17,11 @@ from lora_testbed.radio_runs import RadioRunRequest
 
 
 class Pair:
-    def __init__(self, host, lib, drop=None, event_loss=None):
+    def __init__(self, host, lib, drop=None, event_loss=None, lab=False):
         self.host, self.lib, self.drop = host, lib, drop
         self.event_loss = event_loss
         self.serials = {}
+        self.lab = lab
         self.frames = []
         self.dropped = False
         lib.native_radio_generation.argtypes = [C.c_void_p]
@@ -32,7 +33,11 @@ class Pair:
 
     async def connect(self):
         for role, device in [("A", "esp-001122334455"), ("B", "esp-66778899aabb")]:
-            options = {"radio": self.lib.native_radio_create(), "device": device}
+            options = {
+                "radio": self.lib.native_radio_create(),
+                "device": device,
+                "lab_faults": self.lab,
+            }
             peer = (
                 FaultSerial(self.lib, drop_event=self.event_loss[1], **options)
                 if self.event_loss and self.event_loss[0] == role
@@ -77,7 +82,7 @@ class Pair:
                         or self.lib.native_radio_generation(radio) != generation
                     ):
                         continue
-                    kind = "data" if wire[3] == 1 else "ack"
+                    kind = {1: "data", 2: "ack", 3: "echo_request", 4: "echo_reply"}[wire[3]]
                     lost = not self.dropped and self.drop == kind
                     if lost:
                         self.dropped = True
@@ -136,6 +141,15 @@ def test_full_host_multi_fragment_readback_and_originals(
             assert result["accounting"]["data_originals"] == count
             assert result["accounting"]["data_attempts"] == count
             assert result["accounting"]["unique_original_delivery_ratio"] == 1
+            account = result["accounting"]
+            window = account["sender_transfer_window"]
+            assert window["duration_us"] == tx["last_tx_done_us"] - tx["first_tx_command_us"]
+            assert (
+                account["accepted_fragment_bytes"] == account["verified_delivered_bytes"] == length
+            )
+            assert account["accepted_fragment_bps"] == account["goodput_bps"]
+            assert account["goodput_bps"] == 8_000_000 * length / window["duration_us"]
+            assert result["host_transaction"]["elapsed_ns"] > 0
             assert not result["hardware_qualified"]
         finally:
             if bridge:

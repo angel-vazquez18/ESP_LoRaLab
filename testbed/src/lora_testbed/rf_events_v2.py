@@ -6,11 +6,13 @@ from typing import Annotated, Literal
 
 from pydantic import AfterValidator, Field, TypeAdapter, model_validator
 
+from . import fault_protocol_v2 as fault
 from .experiments_v2 import SHA256, Budget
 from .experiments_v2 import ContractModel as StrictModel
 from .v2 import CONTRACT_VERSION, Counter, Identifier, NodeError
 
 Sequence = Annotated[int, Field(ge=1, le=2**32 - 1)]
+CohortMessage = Annotated[int, Field(ge=1, le=256)]
 
 
 def nonzero_session(value: str) -> str:
@@ -39,6 +41,7 @@ class StateData(StrictModel):
 
 
 class PreparedData(StrictModel):
+    message_id: CohortMessage | None = Field(default=None, exclude_if=lambda value: value is None)
     config_revision: Annotated[int, Field(ge=0, le=2**32 - 1)]
     budget: Budget
     source_length_bytes: Annotated[int, Field(ge=1, le=65536)] | None
@@ -59,6 +62,7 @@ class AttemptData(FrameIdentity):
     tx_command_us: Counter | None
     tx_done_us: Counter | None
     status: Literal["completed", "failed"]
+    wire_sha256: SHA256 | None = None
 
     @model_validator(mode="after")
     def timestamps(self):
@@ -85,6 +89,7 @@ class ReceivedData(StrictModel):
     rssi_dbm: Annotated[float, Field(allow_inf_nan=False)]
     snr_db: Annotated[float, Field(allow_inf_nan=False)]
     crc_ok: bool
+    wire_sha256: SHA256 | None = None
 
 
 class AcceptedData(FrameIdentity):
@@ -175,6 +180,7 @@ class RejectedData(StrictModel):
     stage: Literal["framing", "session", "authentication", "replay", "reassembly"]
     reason: Identifier
     related_injection_id: RunID | None
+    rx_done_us: Counter | None = None
 
 
 class Rejected(Envelope):
@@ -205,7 +211,51 @@ class Missing(Envelope):
     data: MissingData
 
 
+class EchoData(StrictModel):
+    session_id: SessionID
+    request_frame_seq: Sequence | None
+    reply_frame_seq: Sequence | None
+    payload_bytes: int = Field(ge=1, le=215)
+    payload_sha256: SHA256
+    reply_hex: str | None = Field(default=None, pattern=r"^(?:[0-9a-f]{2}){1,215}$")
+    tx_command_us: Counter | None
+    reply_accepted_us: Counter | None
+    rtt_us: Counter | None
+    valid: bool
+    reason: Identifier
+
+    @model_validator(mode="after")
+    def requester_local_interval(self):
+        if self.valid:
+            if (
+                self.reason != "matched"
+                or self.request_frame_seq is None
+                or self.reply_frame_seq is None
+                or self.tx_command_us is None
+                or self.reply_accepted_us is None
+                or self.reply_accepted_us < self.tx_command_us
+                or self.rtt_us != self.reply_accepted_us - self.tx_command_us
+            ):
+                raise ValueError(
+                    "Valid RTT requires a matched request/reply and one ordered local interval"
+                )
+        elif (
+            self.rtt_us is not None
+            or self.reply_accepted_us is not None
+            or self.reply_hex is not None
+        ):
+            raise ValueError("Unavailable RTT remains null with a reason")
+        return self
+
+
+class EchoResult(Envelope):
+    name: Literal["echo.result"]
+    data: EchoData
+
+
 class SummaryData(StrictModel):
+    message_id: CohortMessage | None = Field(default=None, exclude_if=lambda value: value is None)
+    echo: EchoData | None = None
     role: Literal["sender", "receiver"]
     session_id: SessionID
     config_revision: Annotated[int, Field(ge=0, le=2**32 - 1)]
@@ -228,6 +278,9 @@ class SummaryData(StrictModel):
     stop_reason: Literal[
         "completed", "operator", "host_shutdown", "peer_failure", "timeout", "error"
     ]
+    cleanup_errors: list[
+        Literal["RADIO_STOP_FAILED", "KEY_RETIRE_FAILED", "SOURCE_STOP_FAILED"]
+    ] = Field(default_factory=list, max_length=3)
     telemetry_drops: Counter
     validity_reasons: list[str] = Field(max_length=16)
 
@@ -275,6 +328,16 @@ class AckResult(Envelope):
     data: AckData
 
 
+class FaultApplied(Envelope):
+    name: Literal["fault.applied"]
+    data: fault.Applied
+
+
+class FaultTransmission(Envelope):
+    name: Literal["fault.tx"]
+    data: fault.Transmission
+
+
 RFEvent = Annotated[
     RunState
     | RunPrepared
@@ -282,6 +345,9 @@ RFEvent = Annotated[
     | Received
     | Accepted
     | AckResult
+    | EchoResult
+    | FaultApplied
+    | FaultTransmission
     | Rejected
     | Missing
     | MessageResult

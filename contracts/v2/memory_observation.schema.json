@@ -1,0 +1,774 @@
+{
+  "scope": "finite_sampled_memory_observation",
+  "profile": "stage_memory_observation_v1",
+  "policy": {
+    "period_us": 100000,
+    "max_duration_ms": 300000,
+    "max_named_buffers": 16,
+    "stage_samples_additional": true,
+    "minimum_scope": "observed_snapshots_not_peak",
+    "lifetime_scope": "first_and_last_observed_not_exact_allocation_time",
+    "requested_bytes_exclude_allocator_overhead": true,
+    "provider_library_driver_allocations_untracked": true,
+    "heap_scopes_nonoverlap": [
+      "internal_8bit",
+      "psram_8bit"
+    ],
+    "snapshot_atomic": false,
+    "raw_addresses_exported": false
+  },
+  "arguments": {
+    "memory.start": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_ms": {
+          "maximum": 300000,
+          "minimum": 1000,
+          "title": "Duration Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "duration_ms"
+      ],
+      "title": "Start",
+      "type": "object"
+    },
+    "memory.stop": {
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Observation Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observation_id"
+      ],
+      "title": "Stop",
+      "type": "object"
+    },
+    "memory.status": {
+      "additionalProperties": false,
+      "properties": {},
+      "title": "Empty",
+      "type": "object"
+    }
+  },
+  "results": {
+    "memory.start": {
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "deadline_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Deadline Us",
+          "type": "integer"
+        },
+        "period_us": {
+          "const": 100000,
+          "title": "Period Us",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "observation_id",
+        "deadline_us",
+        "period_us"
+      ],
+      "title": "Started",
+      "type": "object"
+    },
+    "memory.stop": {
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "active": {
+          "const": false,
+          "title": "Active",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "observation_id",
+        "active"
+      ],
+      "title": "Stopped",
+      "type": "object"
+    },
+    "memory.status": {
+      "$defs": {
+        "Minima": {
+          "additionalProperties": false,
+          "properties": {
+            "internal_free_bytes": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "title": "Internal Free Bytes",
+              "type": "integer"
+            },
+            "psram_free_bytes": {
+              "anyOf": [
+                {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Psram Free Bytes"
+            }
+          },
+          "required": [
+            "internal_free_bytes",
+            "psram_free_bytes"
+          ],
+          "title": "Minima",
+          "type": "object"
+        },
+        "WorkloadMinimum": {
+          "additionalProperties": false,
+          "properties": {
+            "workload_id": {
+              "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+              "title": "Workload Id",
+              "type": "string"
+            },
+            "samples_taken": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "title": "Samples Taken",
+              "type": "integer"
+            },
+            "minimum": {
+              "$ref": "#/$defs/Minima"
+            }
+          },
+          "required": [
+            "workload_id",
+            "samples_taken",
+            "minimum"
+          ],
+          "title": "WorkloadMinimum",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "observation_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observation Id"
+        },
+        "started_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Started Us"
+        },
+        "deadline_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Deadline Us"
+        },
+        "stopped_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stopped Us"
+        },
+        "stop_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "stop",
+                "deadline",
+                "lease_expired",
+                "disconnect",
+                "released",
+                "shutdown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stop Reason"
+        },
+        "deadline_overrun_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Deadline Overrun Us",
+          "type": "integer"
+        },
+        "samples_taken": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Samples Taken",
+          "type": "integer"
+        },
+        "samples_dropped": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Samples Dropped",
+          "type": "integer"
+        },
+        "missed_periods": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Missed Periods",
+          "type": "integer"
+        },
+        "measurement_minimum": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Minima"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workload_minimum": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WorkloadMinimum"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "active",
+        "observation_id",
+        "started_us",
+        "deadline_us",
+        "stopped_us",
+        "stop_reason",
+        "deadline_overrun_us",
+        "samples_taken",
+        "samples_dropped",
+        "missed_periods",
+        "measurement_minimum",
+        "workload_minimum"
+      ],
+      "title": "Status",
+      "type": "object"
+    }
+  },
+  "event": {
+    "$defs": {
+      "Heap": {
+        "additionalProperties": false,
+        "properties": {
+          "free_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Free Bytes",
+            "type": "integer"
+          },
+          "minimum_free_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Minimum Free Bytes",
+            "type": "integer"
+          },
+          "largest_free_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Largest Free Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "free_bytes",
+          "minimum_free_bytes",
+          "largest_free_bytes"
+        ],
+        "title": "Heap",
+        "type": "object"
+      },
+      "KnownBuffer": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "pattern": "^[a-z_0-9]{1,23}$",
+            "title": "Name",
+            "type": "string"
+          },
+          "region": {
+            "enum": [
+              "internal",
+              "psram",
+              "unknown"
+            ],
+            "title": "Region",
+            "type": "string"
+          },
+          "requested_bytes": {
+            "exclusiveMinimum": 0,
+            "title": "Requested Bytes",
+            "type": "integer"
+          },
+          "first_observed_us": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "First Observed Us",
+            "type": "integer"
+          },
+          "generation": {
+            "minimum": 1,
+            "title": "Generation",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "region",
+          "requested_bytes",
+          "first_observed_us",
+          "generation"
+        ],
+        "title": "KnownBuffer",
+        "type": "object"
+      },
+      "KnownSizes": {
+        "additionalProperties": false,
+        "properties": {
+          "internal": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Internal",
+            "type": "integer"
+          },
+          "psram": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Psram",
+            "type": "integer"
+          },
+          "unknown": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Unknown",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "internal",
+          "psram",
+          "unknown"
+        ],
+        "title": "KnownSizes",
+        "type": "object"
+      },
+      "Memory": {
+        "additionalProperties": false,
+        "properties": {
+          "internal": {
+            "$ref": "#/$defs/Heap"
+          },
+          "psram": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Heap"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buffers": {
+            "additionalProperties": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "title": "Buffers",
+            "type": "object"
+          },
+          "allocation_failures": {
+            "default": 0,
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Allocation Failures",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "internal",
+          "psram"
+        ],
+        "title": "Memory",
+        "type": "object"
+      },
+      "Minima": {
+        "additionalProperties": false,
+        "properties": {
+          "internal_free_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Internal Free Bytes",
+            "type": "integer"
+          },
+          "psram_free_bytes": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Psram Free Bytes"
+          }
+        },
+        "required": [
+          "internal_free_bytes",
+          "psram_free_bytes"
+        ],
+        "title": "Minima",
+        "type": "object"
+      },
+      "Sample": {
+        "additionalProperties": false,
+        "properties": {
+          "observation_id": {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "sample_index": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Sample Index",
+            "type": "integer"
+          },
+          "taken_us": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Taken Us",
+            "type": "integer"
+          },
+          "finished_us": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Finished Us",
+            "type": "integer"
+          },
+          "reason": {
+            "enum": [
+              "start",
+              "periodic",
+              "stop",
+              "deadline",
+              "lease_expired",
+              "disconnect",
+              "shutdown",
+              "released",
+              "stage_entry",
+              "stage_exit"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "stage": {
+            "pattern": "^[a-z_]{1,24}$",
+            "title": "Stage",
+            "type": "string"
+          },
+          "workload_id": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Id"
+          },
+          "memory": {
+            "$ref": "#/$defs/Memory"
+          },
+          "known_buffers": {
+            "items": {
+              "$ref": "#/$defs/KnownBuffer"
+            },
+            "maxItems": 16,
+            "title": "Known Buffers",
+            "type": "array"
+          },
+          "known_requested_bytes": {
+            "$ref": "#/$defs/KnownSizes"
+          },
+          "aliases_omitted": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Aliases Omitted",
+            "type": "integer"
+          },
+          "inventory_truncated": {
+            "title": "Inventory Truncated",
+            "type": "boolean"
+          },
+          "overlap_detected": {
+            "title": "Overlap Detected",
+            "type": "boolean"
+          },
+          "untracked_allocations": {
+            "const": true,
+            "title": "Untracked Allocations",
+            "type": "boolean"
+          },
+          "measurement_minimum": {
+            "$ref": "#/$defs/Minima"
+          },
+          "workload_minimum": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/WorkloadMinimum"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "samples_dropped": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Samples Dropped",
+            "type": "integer"
+          },
+          "missed_periods": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Missed Periods",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "observation_id",
+          "sample_index",
+          "taken_us",
+          "finished_us",
+          "reason",
+          "stage",
+          "workload_id",
+          "memory",
+          "known_buffers",
+          "known_requested_bytes",
+          "aliases_omitted",
+          "inventory_truncated",
+          "overlap_detected",
+          "untracked_allocations",
+          "measurement_minimum",
+          "workload_minimum",
+          "samples_dropped",
+          "missed_periods"
+        ],
+        "title": "Sample",
+        "type": "object"
+      },
+      "WorkloadMinimum": {
+        "additionalProperties": false,
+        "properties": {
+          "workload_id": {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "title": "Workload Id",
+            "type": "string"
+          },
+          "samples_taken": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Samples Taken",
+            "type": "integer"
+          },
+          "minimum": {
+            "$ref": "#/$defs/Minima"
+          }
+        },
+        "required": [
+          "workload_id",
+          "samples_taken",
+          "minimum"
+        ],
+        "title": "WorkloadMinimum",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "v": {
+        "const": 2,
+        "title": "V",
+        "type": "integer"
+      },
+      "kind": {
+        "const": "event",
+        "title": "Kind",
+        "type": "string"
+      },
+      "device_id": {
+        "maxLength": 96,
+        "minLength": 1,
+        "title": "Device Id",
+        "type": "string"
+      },
+      "boot_id": {
+        "maxLength": 96,
+        "minLength": 1,
+        "title": "Boot Id",
+        "type": "string"
+      },
+      "node_role": {
+        "anyOf": [
+          {
+            "enum": [
+              "A",
+              "B"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Node Role"
+      },
+      "event_seq": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Event Seq",
+        "type": "integer"
+      },
+      "uptime_us": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "title": "Uptime Us",
+        "type": "integer"
+      },
+      "run_id": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Run Id"
+      },
+      "name": {
+        "const": "memory.sample",
+        "title": "Name",
+        "type": "string"
+      },
+      "data": {
+        "$ref": "#/$defs/Sample"
+      }
+    },
+    "required": [
+      "v",
+      "kind",
+      "device_id",
+      "boot_id",
+      "node_role",
+      "event_seq",
+      "uptime_us",
+      "run_id",
+      "name",
+      "data"
+    ],
+    "title": "Event",
+    "type": "object"
+  },
+  "capability": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      },
+      "profile": {
+        "const": "stage_memory_observation_v1",
+        "title": "Profile",
+        "type": "string"
+      }
+    },
+    "required": [
+      "schema_sha256",
+      "profile"
+    ],
+    "title": "Declaration",
+    "type": "object"
+  },
+  "availability": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Schema Sha256",
+        "type": "string"
+      }
+    },
+    "required": [
+      "schema_sha256"
+    ],
+    "title": "CurrentDeclaration",
+    "type": "object"
+  }
+}

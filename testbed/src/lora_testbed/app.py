@@ -2,6 +2,7 @@
 
 import asyncio
 import csv
+import hashlib
 import io
 import json
 import os
@@ -18,29 +19,58 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field, model_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import audio_contract_v2, control_v2, crypto_benchmark_v2, rf_events_v2, run_protocol_v2, v2
+from . import (
+    audio_contract_v2,
+    campaign_browser,
+    clock_analysis,
+    control_v2,
+    crypto_benchmark_v2,
+    memory_observation_v2,
+    rf_events_v2,
+    run_protocol_v2,
+    v2,
+)
 from .artifact_transfers import decode_upload
 from .audio import MAX_UPLOAD_BYTES, inspect_wav, save_wav
+from .campaign_plans import CampaignSpec
+from .campaign_views import execution_view, plan_view
 from .catalog import catalog
 from .comparison import campaign_summary, compare
 from .experiments_v2 import KnownDataPlan
 from .experiments_v2 import preview as preview_known_data
 from .host import Host
+from .integration_matrices import MatrixRequest
 from .models import StrictModel
 from .nodes import discover_ports
 from .paths import TESTBED_ROOT
-from .radio_runs import RadioRunRequest
+from .radio_runs import EchoRadioRunRequest, LabRadioRunRequest, RadioRunRequest
 from .reports import campaign_csv, evidence_bundle
 from .reports_v2 import campaign_summary as v2_campaign_summary
 from .reports_v2 import compare_runs, event_rows, evidence_zip, run_csv
 from .serial_validation import SerialValidationRequest, serial_plan
 from .session_keys import require_public_metadata
+from .voice_quality import Review as VoiceReview
+from .voice_quality import review as review_voice_evidence
 from .voice_runs import VoiceRunRequest
+from .workload_assessment import AssessmentRequest
+from .workload_plots import projection
 
 
 class PreflightRequest(StrictModel):
     roles: list[Literal["A", "B"]] | None = Field(default=None, min_length=1, max_length=2)
     workload: Literal["default", "local", "rf"] = "default"
+
+
+class CampaignExecutionRequest(StrictModel):
+    plan_id: control_v2.UUID
+
+
+class CampaignRerunRequest(StrictModel):
+    case_ids: list[control_v2.UUID] = Field(min_length=1, max_length=4096)
+
+
+class CampaignCancelRequest(StrictModel):
+    reason: str = Field(default="Stopped by operator", min_length=1, max_length=240)
 
 
 class PhysicalRunRequest(PreflightRequest):
@@ -174,6 +204,10 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     async def voice_start(body: VoiceRunRequest):
         return await app.state.host.start_voice(body)
 
+    @app.post("/api/voice/review")
+    async def voice_review(body: VoiceReview):
+        return review_voice_evidence(body, app.state.host.voice.inspect)
+
     @app.get("/api/voice/runs")
     async def voice_runs():
         return app.state.host.voice.snapshot()
@@ -208,6 +242,38 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.post("/api/voice/runs/{identifier}/listening")
     async def voice_listening(identifier: str, body: ListeningRequest):
         return app.state.host.voice.listening(identifier, body.heard, body.notes)
+
+    @app.post("/api/echo/preflight")
+    async def echo_preflight(body: EchoRadioRunRequest):
+        return app.state.host.radio_preflight(body)
+
+    @app.post("/api/echo/runs", status_code=202)
+    async def echo_start(body: EchoRadioRunRequest):
+        return await app.state.host.start_radio(body)
+
+    @app.post("/api/echo/distribution")
+    async def echo_distribution(body: list[control_v2.UUID]):
+        return await app.state.host.radio.collect_echo_distribution(body)
+
+    @app.post("/api/lab/preflight")
+    async def lab_preflight(body: LabRadioRunRequest):
+        return app.state.host.radio_preflight(body)
+
+    @app.post("/api/lab/trials", status_code=202)
+    async def lab_start(body: LabRadioRunRequest):
+        return await app.state.host.start_lab_trial(body)
+
+    @app.get("/api/lab/trials")
+    async def lab_trials():
+        return app.state.host.lab_trials.snapshot()
+
+    @app.get("/api/lab/trials/{identifier}")
+    async def lab_trial(identifier: control_v2.UUID):
+        return app.state.host.lab_trials.get(identifier)
+
+    @app.post("/api/lab/trials/{identifier}/stop")
+    async def lab_stop(identifier: control_v2.UUID):
+        return await app.state.host.lab_trials.stop(identifier)
 
     @app.post("/api/radio/preflight")
     async def radio_preflight(body: RadioRunRequest):
@@ -257,6 +323,138 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         role: Literal["A", "B"], operation_id: control_v2.UUID, include_records: bool = False
     ):
         return app.state.host.crypto_benchmark_evidence(role, operation_id, include_records)
+
+    @app.post("/api/workload-assessments", status_code=201)
+    async def workload_assessment(body: AssessmentRequest):
+        return app.state.host.observations.save(body)
+
+    @app.get("/api/workload-assessments")
+    async def workload_assessments(limit: int = Query(20, ge=1, le=100)):
+        return app.state.host.observations.list(limit)
+
+    @app.get("/api/workload-assessments/{identifier}")
+    async def workload_assessment_get(identifier: control_v2.UUID):
+        return app.state.host.observations.get(identifier)
+
+    @app.get("/api/workload-assessments/{identifier}/plots")
+    async def workload_plots(
+        identifier: control_v2.UUID,
+        max_points: int = Query(480, ge=32, le=960),
+        buffer_offset: int = Query(0, ge=0, le=192000),
+        stage_offset: int = Query(0, ge=0, le=12000),
+    ):
+        return projection(
+            app.state.host.observations.get(identifier), max_points, buffer_offset, stage_offset
+        )
+
+    @app.get("/api/workload-assessments/{identifier}/export")
+    async def workload_export(identifier: control_v2.UUID):
+        record = app.state.host.observations.get(identifier)
+        content = (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
+        return Response(
+            content,
+            media_type="application/json",
+            headers={
+                "Content-Disposition": f'attachment; filename="workload-{identifier}.json"',
+                "X-Content-SHA256": hashlib.sha256(content).hexdigest(),
+            },
+        )
+
+    @app.post("/api/nodes/{role}/memory-observation")
+    async def memory_observation_start(role: Literal["A", "B"], body: memory_observation_v2.Start):
+        return await app.state.host.observations.start_memory(role, body.duration_ms)
+
+    @app.post("/api/nodes/{role}/memory-observation/{observation_id}/collect", status_code=201)
+    async def memory_observation_collect(
+        role: Literal["A", "B"], observation_id: control_v2.UUID, stop: bool = False
+    ):
+        return await app.state.host.observations.collect_memory(role, observation_id, stop)
+
+    @app.post("/api/nodes/{role}/source-observation/{run_id}/collect", status_code=201)
+    async def source_observation_collect(role: Literal["A", "B"], run_id: control_v2.UUID):
+        return await app.state.host.observations.collect_source(role, run_id)
+
+    @app.post("/api/physical-campaigns/executions", status_code=202)
+    async def physical_campaign_execute(body: CampaignExecutionRequest):
+        return await app.state.host.start_campaign(body.plan_id)
+
+    @app.get("/api/physical-campaigns/executions")
+    async def physical_campaign_executions():
+        return app.state.host.physical_campaigns.snapshot()
+
+    @app.get("/api/physical-campaigns/executions/{identifier}/export")
+    async def physical_campaign_export(identifier: control_v2.UUID):
+        content = await app.state.host.campaign_exports.export(identifier)
+        return Response(
+            content,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f'attachment; filename="campaign-{identifier}.zip"',
+                "X-Content-SHA256": hashlib.sha256(content).hexdigest(),
+            },
+        )
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/rerun", status_code=202)
+    async def physical_campaign_rerun(identifier: control_v2.UUID, body: CampaignRerunRequest):
+        return await app.state.host.rerun_campaign(identifier, body.case_ids)
+
+    @app.get("/api/physical-campaigns/executions/{identifier}/view")
+    async def physical_campaign_execution_view(
+        identifier: control_v2.UUID, offset: int = Query(0, ge=0, le=4096)
+    ):
+        return execution_view(app.state.host, identifier, offset)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/view-observation")
+    async def observe_campaign_view(
+        identifier: control_v2.UUID, body: campaign_browser.Observation
+    ):
+        return campaign_browser.record(app.state.host, identifier, body)
+
+    @app.get("/api/physical-campaigns/executions/{identifier}")
+    async def physical_campaign_execution(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.get(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/pause", status_code=202)
+    async def physical_campaign_pause(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.pause(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/resume", status_code=202)
+    async def physical_campaign_resume(identifier: control_v2.UUID):
+        return app.state.host.physical_campaigns.resume(identifier)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/cancel")
+    async def physical_campaign_cancel(identifier: control_v2.UUID, body: CampaignCancelRequest):
+        return await app.state.host.physical_campaigns.cancel(identifier, body.reason)
+
+    @app.post("/api/physical-campaigns/plans/preview")
+    async def physical_campaign_preview(body: CampaignSpec):
+        return app.state.host.campaign_plans.preview(body)
+
+    @app.post("/api/physical-campaigns/plans", status_code=201)
+    async def physical_campaign_save(body: CampaignSpec):
+        return app.state.host.campaign_plans.create(body)
+
+    @app.get("/api/physical-campaigns/plans")
+    async def physical_campaign_plans(limit: int = Query(20, ge=1, le=100)):
+        return app.state.host.campaign_plans.list(limit)
+
+    @app.get("/api/physical-campaigns/plans/{plan_id}/view")
+    async def physical_campaign_plan_view(
+        plan_id: control_v2.UUID, offset: int = Query(0, ge=0, le=4096)
+    ):
+        return plan_view(app.state.host, plan_id, offset)
+
+    @app.get("/api/physical-campaigns/plans/{plan_id}")
+    async def physical_campaign_plan(plan_id: control_v2.UUID):
+        return app.state.host.campaign_plans.get(plan_id)
+
+    @app.get("/api/diagnostic-runs/{run_id}")
+    async def diagnostic_run(run_id: control_v2.UUID):
+        return app.state.host.diagnostics.get(run_id)
+
+    @app.get("/api/diagnostic-runs/{run_id}/evidence")
+    async def diagnostic_run_evidence(run_id: control_v2.UUID, include_records: bool = False):
+        return app.state.host.diagnostics.evidence(run_id, include_records)
 
     @app.post("/api/nodes/{role}/operation/stop")
     async def stop_operation(role: Literal["A", "B"], body: StopOperationRequest):
@@ -410,6 +608,36 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     async def procedures():
         return app.state.host.procedures.snapshot()
 
+    @app.post("/api/procedures/matrix/preview")
+    async def procedure_matrix_preview(body: MatrixRequest):
+        host = app.state.host
+        return host.procedures.matrix_preview(
+            body, host.radio, host.voice, host.campaign_plans, host.physical_campaigns
+        )
+
+    @app.post("/api/procedures/clock/evaluate")
+    async def evaluate_clock_evidence(request: Request):
+        evidence = bytearray()
+        async for chunk in request.stream():
+            if len(evidence) + len(chunk) > clock_analysis.MAX_EVIDENCE_BYTES:
+                raise HTTPException(status_code=413, detail="Clock evidence exceeds 1 MiB")
+            evidence.extend(chunk)
+        try:
+            return clock_analysis.assess_json(bytes(evidence))
+        except ValueError:
+            raise HTTPException(
+                status_code=422, detail="The JSON file does not match the TIME-02 evidence format"
+            ) from None
+
+    @app.post("/api/procedures/matrix", status_code=202)
+    async def procedure_matrix_start(
+        body: MatrixRequest,
+        expected_plan_sha256: str | None = Query(None, pattern=r"^[a-f0-9]{64}$"),
+    ):
+        return await app.state.host.start_procedure_matrix(
+            body, expected_plan_sha256=expected_plan_sha256
+        )
+
     @app.post("/api/procedures/serial/preview")
     async def preview_serial(body: SerialValidationRequest):
         return serial_plan(body)
@@ -419,9 +647,8 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         return await app.state.host.start_serial(body)
 
     @app.post("/api/procedures/stop")
-    async def stop_procedure():
-        async with app.state.host.lock:
-            return await app.state.host.procedures.stop()
+    async def stop_procedure(expected_run_id: control_v2.UUID | None = None):
+        return await app.state.host.procedures.stop(expected_run_id=expected_run_id)
 
     @app.post("/api/experiments/{catalog_id}/preflight")
     async def experiment_preflight(catalog_id: str, body: PreflightRequest):
@@ -485,8 +712,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
 
     @app.post("/api/v2/stop")
     async def stop_v2():
-        async with app.state.host.lock:
-            return await app.state.host.procedures.stop()
+        return await app.state.host.procedures.stop()
 
     def require_v2_run(identity):
         record = app.state.host.records.run(identity)

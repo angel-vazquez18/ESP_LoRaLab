@@ -302,9 +302,13 @@ def test_incomplete_runs_preserve_reason_and_cleanup(tmp_path, native_library, m
                         if submitted:
                             break
                         await asyncio.sleep(0.005)
-                for serial in serials.values():
-                    with serial.lock:
-                        serial.core.tick(advance=4_001_000)
+                for _ in range(9):
+                    for serial in serials.values():
+                        with serial.lock:
+                            serial.core.tick(advance=1_000_100)
+                    # Advance the run deadline, not the independent owner lease.
+                    for node in host.physical.values():
+                        await node.request("control.keepalive")
                 await finish_run(host)
             record = host.radio.get(run["id"])
             assert record["status"] == (

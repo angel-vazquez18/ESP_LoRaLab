@@ -4,7 +4,10 @@
 #include <stdint.h>
 
 #include "audio/audio_port.h"
+#include "display/node_view.h"
 #include "radio/node_radio.h"
+#include "memory/observations.h"
+#include "source/worker.h"
 
 #define NODE_RECORD_BYTES 4096
 #define NODE_REPLY_SLOTS 4
@@ -12,11 +15,6 @@
 #define NODE_CACHE_SLOTS 16
 #define NODE_PROBE_BYTES 65536
 #define NODE_OPERATION_US 30000000LL
-
-typedef struct {
-    uint64_t free_bytes, minimum_free_bytes, largest_free_bytes;
-    bool present;
-} node_heap;
 
 typedef struct {
     void *context;
@@ -34,6 +32,10 @@ typedef struct {
     bool hardware_aes, dynamic_frequency;
     unsigned codec2_mode;
     bool (*ptt_pressed)(void *); // NULL leaves the physical input disabled.
+    node_display_port display;
+    node_memory_region (*memory_region)(void *, const void *);
+    encoded_worker_port source_worker;
+    bool lab_faults; // Explicit laboratory image; default off.
 } node_platform;
 
 typedef struct node_control node_control;

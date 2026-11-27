@@ -1,7 +1,7 @@
 # One-message physical radio bring-up
 
 The shared backend now configures two owned, compatible physical nodes, prepares
-both, waits for receiver-ready, starts the sender and verifies actual source and
+both, waits for receiver-ready, arms and starts the sender and verifies actual source and
 recovered bytes. This workflow checks one unencrypted known-data message with
 bounded fragmentation and optional stop-and-wait retries. Full IF-02, GCM and
 voice-over-radio qualification remain separate. The node's advertised limits and exact execution/artifact
@@ -62,9 +62,11 @@ Each run preserves device/boot identities, firmware and host source fingerprints
 session ID, requested/applied settings, calculated budget, raw command/reply/event
 records, node summaries, readback manifests and independently compared files.
 Events retain node-local clocks; host timing only establishes command order.
-Receiver-ready must precede sender start, whose reply must arrive within one
-second. Applied settings, session/revision attribution and expected source hashes
-must agree before successful completion is reported.
+Receiver-ready must precede sender arm/start; the conservative host interval
+from receiver arm request through sender start reply must stay below five seconds.
+The sender also enforces its own five-second local arm. See
+[run lifecycle](run_lifecycle.md). Applied settings, session/revision attribution
+and expected source hashes must agree before successful completion is reported.
 
 `verification.bytes_equal` proves that actual retrieved source/recovered bytes
 match the independent source recipe. Evidence completeness is checked separately:
@@ -78,10 +80,26 @@ linked artifact-transfer records/traces and a SHA-256 manifest. It is bounded to
 128 MiB; RF trace retention is bounded to 64 MiB/65,568 event observations.
 Reaching a bound makes the affected evidence incomplete rather than fabricating
 a result. Live snapshots contain compact summaries, while the detail
-endpoint retains the complete record. Committed node files are not silently
-evicted: export first, then delete only the generated files you no longer need,
-using the node file inspector or `artifact-delete ROLE ARTIFACT_UUID`. Four slots
-per node remain the artifact-profile ceiling.
+endpoint retains the complete record. Four slots per node remain the artifact
+ceiling. Generated known-data runs now retire their fresh source/recovered node
+objects after independently verified host readback, preserving the local files,
+transfer records and hashed exports. An initial artifact listing protects files
+that existed before the run. Echoes use the same policy. Uploaded encoded
+references and encoded receiver objects retain their separate voice lifecycle;
+the voice service still needs the receiver object for decode/playback.
+
+A failed readback keeps committed node objects available for explicit recovery.
+Use the node inspector or `artifact-delete ROLE ARTIFACT_UUID` only after deciding
+that retained evidence is no longer needed. A retirement failure records the
+artifact and error, still attempts both original session stop/close paths, and
+prevents a successful cleanup finding. A prepared ID that existed before this
+run is preserved and rejected as an inconsistent fresh-object declaration.
+
+The previous manual-retirement behavior allowed four ordinary DATA runs to fill
+all slots; a fifth run failed with `RESOURCE_LIMIT`. Issue #210 extends the
+already verified echo policy to generated DATA. Six consecutive native exchanges
+now pass in each direction and plain/protected profile while pre-existing user
+files remain. Host readbacks/exports stay available after node retirement.
 
 Stop and failure cleanup attempt bounded stop/close on both associated sessions
 and confirm idle. An attempted session-open is tracked before writing, so a lost
@@ -101,6 +119,26 @@ Read `radio_runs.py` for ownership/lifecycle/evidence, `Host.start_radio` for th
 shared bench fence, then the small HTTP/CLI callers. `NodeSession` requires exact
 capabilities, typed RF envelopes and known-run attribution; its read-only summary
 retries use fresh command IDs/sequences.
+
+## Run-artifact cleanup review (#210)
+
+Read `RadioRuns.run` for the initial listing and completed independent readback,
+`register_retirement` for the fresh-ID guard, and `cleanup` for explicit deletion
+results followed by both bound stop/close attempts. Encoded source requests stay
+on their existing downstream voice cleanup path. No firmware, pin or wire change.
+
+```sh
+uv run --project testbed pytest testbed/tests/test_radio_artifact_retirement.py -q
+make check
+```
+
+Expect six dedicated cases: six successive messages in all four direction/security
+combinations, retained artifacts on failed readback, and an unsuccessful
+retirement that still closes both sessions. Saved bytes and export hashes remain
+valid after successful node cleanup. The isolated SPI/serial scheduling does not
+qualify physical RF. On qualified boards, repeat six small messages without
+resetting, retain an unrelated node file throughout, then inspect saved exports
+and actual slot use. Complete IF-02/campaign hardware acceptance separately.
 
 ## Software checks and later physical acceptance
 

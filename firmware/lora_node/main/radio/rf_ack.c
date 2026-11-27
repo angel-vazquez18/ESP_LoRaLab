@@ -127,6 +127,10 @@ size_t rf_ack_take(rf_ack_receiver *r, int64_t now, uint8_t out[56])
         r->sequence++;
     return 40;
 }
+void rf_ack_suppress(rf_ack_receiver *r)
+{
+    if (r) r->queued = false;
+}
 void rf_ack_cancel(rf_ack_receiver *r)
 {
     if (!r)
@@ -151,4 +155,10 @@ bool rf_ack_header_matches(const uint8_t p[40], const uint8_t d[40])
         be(p + 38, 2))
         return false;
     return true;
+}
+
+void rf_ack_memory(const rf_ack_receiver *s, node_memory_inventory *out)
+{
+    if (!s) return;
+    node_memory_add(out, "rf_ack", s, sizeof(*s));
 }

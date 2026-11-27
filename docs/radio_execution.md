@@ -4,7 +4,7 @@ The main-control envelope remains NDJSON v2. RF work reuses the selected executi
 vocabulary in `run_protocol_v2.py`; there is no second `radio.*` command family.
 A control-schema match alone does not enable RF. The host requires both identity
 and current health to advertise `resource_limits.execution`, profile
-`known_data_execution_v1`, the exact generated execution digest and the requested
+`finite_message_execution_v3`, the exact generated execution digest and the requested
 command. New work also requires `capabilities.radio = true`. Cleanup commands
 (`run.stop`, `session.close`, `run.summary`) remain callable after radio failure.
 Only implemented handlers belong in the declaration; the generated C header
@@ -22,13 +22,18 @@ identifies the vocabulary, not an implementation promise.
    denominator 5 means 4/5; it is not the driver's numeric enum. Applied power is
    a configured setting, not a calibrated antenna-power measurement.
 3. `run.prepare` supplies the bounded source specification and calculated budget.
+   A size above the advertised message limit returns `RESOURCE_LIMIT`
+   before workload allocation or arming.
    Acceptance is not completion: wait for the correlated preparation result and
    `run.prepared` evidence before arming.
-4. Arm the receiver with the applied revision and wait for `receiver_ready = true`
-   before starting the sender with its applied revision. A stale revision fails.
+4. Arm the receiver and wait for `receiver_ready = true`, then arm the sender
+   (`receiver_ready = false`) and start it within the five-second bounds. Both
+   require their applied revisions. A stale revision, unarmed or expired start
+   fails. See [resource and lifetime rules](run_lifecycle.md).
    Known data supports bounded fragmentation and optional stop-and-wait with up
    to two retries. Require the relevant capabilities and numeric limits on both
-   peers. Security and encoded content remain unavailable.
+   peers. Protected known data and committed encoded content additionally require
+   their matching security/codec capabilities.
 5. Collect frame/message events and a final `run.summary` from each node. Stop on
    cancellation, deadline, peer loss or ownership loss, then close the session.
    Reset/reconnect never resumes a previous run. An uncertain stop invalidates the
@@ -49,11 +54,10 @@ must be independently checked by the host.
 `contracts/v2/radio_examples.json` contains public literal examples for settings,
 session, prepare, receiver-ready, start, stop, summary and TX phase timestamps,
 plus rejected configurations. They are interface fixtures, not measurements.
-`make contracts-check` checks generated schema/header drift. The legacy execution
-schema's `virtual_known_data_execution` scope string is retained as an opaque
-historical identifier; it does not authorize simulated operator runs. The added
-capability declaration changes only the execution digest, not diagnostic/control,
-artifact or audio compatibility. No installed firmware previously advertised it.
+`make contracts-check` checks generated schema/header drift. New RF work uses the
+exact `finite_message_execution_v3` profile; older execution identities remain
+incompatible. Historical records are preserved. This changes the execution digest,
+not diagnostic/control, artifact or audio compatibility.
 
 ## Checks and remaining hardware work
 
@@ -81,8 +85,9 @@ capacity is 16–215 bytes (default 160). Both identity and current health must
 advertise the capabilities needed by the actual request. The host also checks
 smaller limits from an older peer before opening/arming a session.
 
-Multiple/protected/encoded messages reject rather than being truncated or silently
-substituted. Configuration and preparation validate applied airtime, ACK timeout,
+Multiple messages reject rather than being truncated or silently substituted.
+Protected known data and committed encoded voice use this same lifecycle with
+separate source/session capability checks; see [protected voice](protected_voice_content.md). Configuration and preparation validate applied airtime, ACK timeout,
 receiver drain, processing and reassembly deadlines before allocation or RF.
 No full IF-02 qualification or operator simulation is introduced.
 
@@ -92,8 +97,8 @@ one-message known-data spec/budget, including its full fragment count. Preparati
 block source and reserves a RAM artifact: committed source on TX, an expected-hash
 reservation on RX. The preparation result labels that artifact state explicitly.
 `run.prepared` and its correlated operation result precede arming/starting.
-Stale revisions reject. The receiver arms before the sender starts; only the
-sender starts an asynchronous TX operation. The node never invents peer readiness.
+Stale revisions reject. The receiver arms first, then the sender arms locally;
+only the sender starts an asynchronous TX operation. The node never invents peer readiness.
 
 The portable fragment module encodes each field at explicit big-endian offsets;
 there are no packed-struct wire assumptions. Receive order is PHY CRC/header,
@@ -165,3 +170,14 @@ protected ACK without second delivery. Timing budgets include tag bytes and
 56-byte ACKs. Node GCM capability reflects selected radio availability; ordinary
 host provisioning is implemented in [protected host sessions](protected_host_sessions.md). See [review, checks and physical
 limits](protected_replay.md). No physical RF/security qualification is established.
+
+
+## Finite transfer rates
+
+Verified DATA runs record the first sender TX command through final DATA
+TX completion. Accepted-fragment rate uses unique accepted useful
+fragment bytes. Application goodput uses independently verified complete
+message bytes. Each shares the reconciled sender interval and its
+declared drain setting. A zero or unmatched interval leaves the rates
+unavailable with a reason. The host transaction uses its own monotonic
+clock and includes configuration, readback and cleanup.

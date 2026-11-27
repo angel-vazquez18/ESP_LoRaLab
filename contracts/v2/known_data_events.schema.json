@@ -259,6 +259,206 @@
       "title": "AckResult",
       "type": "object"
     },
+    "Applied": {
+      "additionalProperties": false,
+      "properties": {
+        "injection_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Injection Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "tx_after_protect",
+            "tx_retained",
+            "rx_before_reassembly",
+            "tx_before_radio",
+            "tx_schedule"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "xor_byte",
+            "replay",
+            "drop",
+            "drop_ack",
+            "duplicate",
+            "reverse_block"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "attempt_index": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Attempt Index",
+          "type": "integer"
+        },
+        "byte_offset": {
+          "anyOf": [
+            {
+              "maximum": 254,
+              "minimum": 40,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Byte Offset"
+        },
+        "xor_mask": {
+          "anyOf": [
+            {
+              "maximum": 255,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Xor Mask"
+        },
+        "block_size": {
+          "anyOf": [
+            {
+              "maximum": 32,
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Block Size"
+        },
+        "state": {
+          "enum": [
+            "applied",
+            "fired"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "target_frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Frame Seq"
+        },
+        "frame_bytes": {
+          "anyOf": [
+            {
+              "maximum": 255,
+              "minimum": 41,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frame Bytes"
+        },
+        "before_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Before Sha256"
+        },
+        "after_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "After Sha256"
+        },
+        "applied_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Applied Us"
+        },
+        "target_arrived_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Target Arrived Us"
+        },
+        "session_id": {
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "injection_id",
+        "stage",
+        "action",
+        "message_id",
+        "fragment_index",
+        "attempt_index",
+        "byte_offset",
+        "xor_mask",
+        "block_size",
+        "state",
+        "target_frame_seq",
+        "frame_bytes",
+        "before_sha256",
+        "after_sha256",
+        "applied_us",
+        "target_arrived_us",
+        "session_id"
+      ],
+      "title": "Applied",
+      "type": "object"
+    },
     "Attempt": {
       "additionalProperties": false,
       "properties": {
@@ -417,6 +617,19 @@
           ],
           "title": "Status",
           "type": "string"
+        },
+        "wire_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wire Sha256"
         }
       },
       "required": [
@@ -470,8 +683,9 @@
           "type": "integer"
         },
         "fault_budget_us": {
-          "const": 0,
           "default": 0,
+          "maximum": 3600000000,
+          "minimum": 0,
           "title": "Fault Budget Us",
           "type": "integer"
         },
@@ -489,6 +703,354 @@
         "processing_budget_us"
       ],
       "title": "Budget",
+      "type": "object"
+    },
+    "EchoData": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "not": {
+            "const": "0000000000000000"
+          },
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "request_frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Request Frame Seq"
+        },
+        "reply_frame_seq": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reply Frame Seq"
+        },
+        "payload_bytes": {
+          "maximum": 215,
+          "minimum": 1,
+          "title": "Payload Bytes",
+          "type": "integer"
+        },
+        "payload_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Payload Sha256",
+          "type": "string"
+        },
+        "reply_hex": {
+          "anyOf": [
+            {
+              "pattern": "^(?:[0-9a-f]{2}){1,215}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reply Hex"
+        },
+        "tx_command_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Command Us"
+        },
+        "reply_accepted_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reply Accepted Us"
+        },
+        "rtt_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rtt Us"
+        },
+        "valid": {
+          "title": "Valid",
+          "type": "boolean"
+        },
+        "reason": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "request_frame_seq",
+        "reply_frame_seq",
+        "payload_bytes",
+        "payload_sha256",
+        "tx_command_us",
+        "reply_accepted_us",
+        "rtt_us",
+        "valid",
+        "reason"
+      ],
+      "title": "EchoData",
+      "type": "object"
+    },
+    "EchoResult": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "echo.result",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/EchoData"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "EchoResult",
+      "type": "object"
+    },
+    "FaultApplied": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "fault.applied",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/Applied"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "FaultApplied",
+      "type": "object"
+    },
+    "FaultTransmission": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 2,
+          "default": 2,
+          "title": "V",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "event",
+          "default": "event",
+          "title": "Kind",
+          "type": "string"
+        },
+        "device_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Device Id",
+          "type": "string"
+        },
+        "boot_id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "node_role": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Node Role",
+          "type": "string"
+        },
+        "event_seq": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "uptime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uptime Us",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "name": {
+          "const": "fault.tx",
+          "title": "Name",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/Transmission"
+        }
+      },
+      "required": [
+        "device_id",
+        "boot_id",
+        "node_role",
+        "event_seq",
+        "uptime_us",
+        "run_id",
+        "name",
+        "data"
+      ],
+      "title": "FaultTransmission",
       "type": "object"
     },
     "MessageData": {
@@ -940,6 +1502,20 @@
     "PreparedData": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "config_revision": {
           "maximum": 4294967295,
           "minimum": 0,
@@ -1170,6 +1746,19 @@
         "crc_ok": {
           "title": "Crc Ok",
           "type": "boolean"
+        },
+        "wire_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wire Sha256"
         }
       },
       "required": [
@@ -1362,6 +1951,20 @@
             }
           ],
           "title": "Related Injection Id"
+        },
+        "rx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rx Done Us"
         }
       },
       "required": [
@@ -1645,6 +2248,31 @@
     "SummaryData": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
+        "echo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EchoData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "role": {
           "enum": [
             "sender",
@@ -1803,6 +2431,19 @@
           "title": "Stop Reason",
           "type": "string"
         },
+        "cleanup_errors": {
+          "items": {
+            "enum": [
+              "RADIO_STOP_FAILED",
+              "KEY_RETIRE_FAILED",
+              "SOURCE_STOP_FAILED"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "title": "Cleanup Errors",
+          "type": "array"
+        },
         "telemetry_drops": {
           "maximum": 9007199254740991,
           "minimum": 0,
@@ -1844,11 +2485,106 @@
       ],
       "title": "SummaryData",
       "type": "object"
+    },
+    "Transmission": {
+      "additionalProperties": false,
+      "properties": {
+        "injection_id": {
+          "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+          "title": "Injection Id",
+          "type": "string"
+        },
+        "session_id": {
+          "pattern": "^[0-9a-f]{16}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "frame_seq": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Frame Seq",
+          "type": "integer"
+        },
+        "message_id": {
+          "maximum": 4294967295,
+          "minimum": 1,
+          "title": "Message Id",
+          "type": "integer"
+        },
+        "fragment_index": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Fragment Index",
+          "type": "integer"
+        },
+        "frame_bytes": {
+          "maximum": 255,
+          "minimum": 41,
+          "title": "Frame Bytes",
+          "type": "integer"
+        },
+        "tx_command_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Command Us"
+        },
+        "tx_done_us": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tx Done Us"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "wire_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Wire Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "injection_id",
+        "session_id",
+        "frame_seq",
+        "message_id",
+        "fragment_index",
+        "frame_bytes",
+        "tx_command_us",
+        "tx_done_us",
+        "status",
+        "wire_sha256"
+      ],
+      "title": "Transmission",
+      "type": "object"
     }
   },
   "discriminator": {
     "mapping": {
       "ack.result": "#/$defs/AckResult",
+      "echo.result": "#/$defs/EchoResult",
+      "fault.applied": "#/$defs/FaultApplied",
+      "fault.tx": "#/$defs/FaultTransmission",
       "message.missing": "#/$defs/Missing",
       "message.result": "#/$defs/MessageResult",
       "operation.result": "#/$defs/OperationResult",
@@ -1880,6 +2616,15 @@
     },
     {
       "$ref": "#/$defs/AckResult"
+    },
+    {
+      "$ref": "#/$defs/EchoResult"
+    },
+    {
+      "$ref": "#/$defs/FaultApplied"
+    },
+    {
+      "$ref": "#/$defs/FaultTransmission"
     },
     {
       "$ref": "#/$defs/Rejected"
