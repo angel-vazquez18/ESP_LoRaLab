@@ -624,9 +624,11 @@ export default function HardwareBench({
                   }
                 >
                   <option value="">Select a device…</option>
-                  {node.connected && node.port && !ports.some((p) => p.device === node.port) && (
-                    <option value={node.port}>{node.port}</option>
-                  )}
+                  {node.connected &&
+                    node.port &&
+                    !ports.some((p) => p.device === node.port) && (
+                      <option value={node.port}>{node.port}</option>
+                    )}
                   {ports.map((p) => (
                     <option key={p.device} value={p.device}>
                       {p.device} · {p.description}
