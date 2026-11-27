@@ -24,6 +24,8 @@ evidence. A missing fault observation yields an inconclusive result.
   An ACK-disabled drop must also have an explicit receive timeout, exact archived
   source digest, matching confirmed arrivals, and observed insertion for every
   index other than the selected missing fragment.
+  The duplicate case ties one accepted insertion to the original arrival and
+  one explicit replay or duplicate rejection to the second matching arrival.
 - PKT-03 uses 321 useful bytes and 160-byte fragments. It compares
   no ACK and stop-and-wait with zero, one or two retries. It observes
   first-attempt loss and suppresses an ACK for policies that can retry.

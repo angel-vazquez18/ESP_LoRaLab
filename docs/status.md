@@ -4,6 +4,11 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Duplicate fragment evidence
+
+The PKT-02 duplicate case now requires exactly two arrivals of the selected
+frame, its original insertion, and a rejection tied to the later arrival.
+
 ## November 27 — Missing fragment evidence
 
 ACK-disabled drop assessment now verifies the source archive fingerprint,
