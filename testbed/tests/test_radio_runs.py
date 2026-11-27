@@ -28,6 +28,36 @@ def test_unconnected_nodes_block_without_starting_a_job(tmp_path):
     asyncio.run(scenario())
 
 
+def test_connected_audio_only_node_explains_why_radio_cannot_start(tmp_path, native_library):
+    async def scenario():
+        host = Host(tmp_path)
+        try:
+            for role, device, radio in (
+                ("A", "esp-001122334455", None),
+                ("B", "esp-66778899aabb", native_library.native_radio_create()),
+            ):
+                peer = NativeSerial(native_library, radio=radio, device=device)
+                host.physical[role].opener = lambda _, selected=peer: selected
+                await host.physical[role].connect("fixture-" + role)
+            a = host.physical["A"].snapshot()
+            b = host.physical["B"].snapshot()
+            assert a["connected"] and b["connected"]
+            assert not a["identity"]["capabilities"]["radio"]
+            assert a["radio_support"]["reason"] == "firmware_has_no_radio"
+            assert a["radio_support"]["driver_error"] == "radio_driver_missing"
+            assert b["radio_support"]["ready"]
+            blocked = host.radio.preflight(RadioRunRequest())
+            assert not blocked["ready"]
+            [message] = blocked["blockers"]
+            assert "Node A" in message and "radio-enabled firmware" in message
+            assert "Node B" not in message
+            assert host.radio.snapshot()["runs"] == []
+        finally:
+            await host.close()
+
+    asyncio.run(scenario())
+
+
 @pytest.mark.parametrize("direction", ["A_TO_B", "B_TO_A"])
 def test_real_core_pair_runs_receiver_first_with_exact_readback(
     tmp_path, native_library, direction

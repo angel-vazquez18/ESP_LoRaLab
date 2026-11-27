@@ -566,16 +566,14 @@ class RadioRuns:
             if node.identity.device_id in ids:
                 blockers.append("Connect two distinct physical device identities")
             ids.add(node.identity.device_id)
-            for name in run_protocol_v2.BASE_EXECUTION_COMMANDS:
-                try:
-                    require_execution_compatible(
-                        node.identity.model_dump(),
-                        name,
-                        node.health.capability_availability.model_dump(),
-                    )
-                except ValueError as exc:
-                    blockers.append(f"Node {role}: {exc}")
-                    break
+            try:
+                identity = node.identity.model_dump()
+                available = node.health.capability_availability.model_dump()
+                for name in run_protocol_v2.BASE_EXECUTION_COMMANDS:
+                    require_execution_compatible(identity, name, available)
+            except ValueError as exc:
+                blockers.append(f"Node {role}: {exc}")
+                continue
             use_lab = isinstance(request, LabRadioRunRequest) or (
                 numbered is not None and numbered.lab
             )

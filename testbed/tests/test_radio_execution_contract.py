@@ -59,6 +59,27 @@ def test_radio_loss_blocks_new_work_but_allows_cleanup_and_summary():
         require_execution_compatible(node, "run.start", None)
 
 
+@pytest.mark.parametrize(
+    "error,expected",
+    [
+        ("radio_board_unselected", "confirmed board revision"),
+        ("radio_spi_bus_setup_failed", "SPI bus"),
+        ("radio_busy_timeout", "BUSY pin"),
+    ],
+)
+def test_execution_preflight_keeps_the_live_startup_reason(error, expected):
+    from copy import deepcopy
+
+    node = advertised()
+    health = deepcopy(node["capabilities"])
+    health["radio"] = False
+    health["radio_limits"] = {"initialization_error": error}
+    with pytest.raises(NodeFailure, match=expected) as rejected:
+        require_execution_compatible(node, "config.set", health)
+    assert rejected.value.reason == error
+    assert require_execution_compatible(node, "run.stop", health)
+
+
 def test_unknown_commands_and_invalid_declarations_are_rejected():
     node = advertised()
     with pytest.raises(NodeFailure, match="UNSUPPORTED_COMMAND"):
