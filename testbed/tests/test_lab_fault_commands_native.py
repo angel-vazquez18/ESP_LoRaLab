@@ -43,7 +43,17 @@ class LabPair(EchoPair):
     def __init__(self, lib):
         super().__init__(lib, True, node_options={"lab_faults": True})
 
-    def prepare(self, entry, *, start=True, direction="A_TO_B", link=None, byte_count=32):
+    def prepare(
+        self,
+        entry,
+        *,
+        start=True,
+        direction="A_TO_B",
+        link=None,
+        byte_count=32,
+        numbered=False,
+        timeout_ms=10000,
+    ):
         self.source, self.target = ("A", "B") if direction == "A_TO_B" else ("B", "A")
         self.plan = KnownDataPlan(
             link=link or Link(fragment_payload_bytes=64),
@@ -51,12 +61,12 @@ class LabPair(EchoPair):
                 message_count=1,
                 message_bytes=byte_count,
                 security="aes128_gcm" if self.protected else "none",
-                max_duration_ms=10000,
+                max_duration_ms=timeout_ms,
                 direction=direction,
             ),
         )
         budget = preview(self.plan)["timing"]["budget"]
-        if entry["action"] in ("replay", "duplicate"):
+        if entry and entry["action"] in ("replay", "duplicate"):
             budget["fault_budget_us"] = 2000000
             budget["reassembly_timeout_us"] += 2000000
         for role, node, peer in (
@@ -82,17 +92,17 @@ class LabPair(EchoPair):
             )
             assert configured["ok"]
             self.revisions[role] = configured["result"]["config_revision"]
-        role = self.target if entry["action"] in ("drop", "drop_ack") else self.source
-        configured = self.node(role).request(
-            "fault.set", dict(injections=[entry], replace=True), run_id=self.run
-        )
-        assert configured["ok"], configured
-        for role in "AB":
-            prepared = self.node(role).request(
-                "run.prepare",
-                dict(spec=self.plan.spec.model_dump(), budget=budget),
-                run_id=self.run,
+        if entry:
+            role = self.target if entry["action"] in ("drop", "drop_ack") else self.source
+            configured = self.node(role).request(
+                "fault.set", dict(injections=[entry], replace=True), run_id=self.run
             )
+            assert configured["ok"], configured
+        for role in "AB":
+            args = dict(spec=self.plan.spec.model_dump(), budget=budget)
+            if numbered:
+                args["message_id"] = 1
+            prepared = self.node(role).request("run.prepare", args, run_id=self.run)
             assert prepared["ok"], prepared
             self.tick(role)
         if start:
