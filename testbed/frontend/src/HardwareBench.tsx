@@ -34,6 +34,7 @@ export type HardwareNode = {
     message: string | null;
     board_variant: string | null;
     driver_error: string | null;
+    startup_step?: string | null;
     execution_profile: string | null;
   };
   audio_support?: {
@@ -458,6 +459,12 @@ function Details({
               <p>
                 <strong>Driver status</strong>
                 {node.radio_support.driver_error}
+              </p>
+            )}
+            {node.radio_support.startup_step && (
+              <p>
+                <strong>Startup stopped at</strong>
+                {node.radio_support.startup_step.replaceAll("_", " ")}
               </p>
             )}
           </div>

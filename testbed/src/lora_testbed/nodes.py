@@ -275,6 +275,7 @@ class NodeSession:
             "message": None,
             "board_variant": limits.get("selected_board_variant"),
             "driver_error": latest.get("initialization_error"),
+            "startup_step": latest.get("initialization_step"),
             "execution_profile": profile.get("profile") if isinstance(profile, dict) else None,
         }
         if not self.connected or self.identity is None:
