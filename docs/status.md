@@ -4,6 +4,12 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Intact packet evidence
+
+PKT-02 C1 now independently rechecks both archived byte artifacts and the
+observed fragment lengths at four fragment capacities. Per-message records
+include separate session identities. Same-session cohorts remain open.
+
 ## November 27 — Saved clock evidence review
 
 TIME-02 accepts saved pulse and frame evidence in the dashboard and

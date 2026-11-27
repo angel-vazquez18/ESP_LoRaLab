@@ -18,6 +18,9 @@ evidence. A missing fault observation yields an inconclusive result.
   third workload at the default ten-message count. Each workload
   uses a separate finite session. The deliberately incomplete case
   retains exact missing-index evidence and intact controls.
+  The intact case reopens both retained byte artifacts and independently checks
+  expected source contents, receive indexes, and final-fragment lengths. The
+  ledger records each message's seed, digest and session identity.
 - PKT-03 uses 321 useful bytes and 160-byte fragments. It compares
   no ACK and stop-and-wait with zero, one or two retries. It observes
   first-attempt loss and suppresses an ACK for policies that can retry.
