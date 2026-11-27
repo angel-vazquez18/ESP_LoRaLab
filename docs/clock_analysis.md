@@ -1,11 +1,14 @@
 # Offline paired-pulse evidence
 
 The TIME-02 offline check accepts saved observations from named A and B
-device, boot and capture identities. It requires 32 consecutive paired
+device, boot and capture identities. It requires 32 to 64 consecutive paired
 pulse indexes at 100 ms intervals within the declared capture tolerance.
 It fits A time as scale times B time plus offset and exports the exact
-rational coefficients. An absent, repeated, skipped or reordered edge
-invalidates the capture. A boot or capture change invalidates dependent
+rational coefficients. After the first 32 paired edges, each new edge updates
+the fit using the latest 32. A frame uses the latest update available at its
+sender-local TX command. Reports retain that window's ending pulse index.
+An invalid newer fit leaves its dependent observations unavailable.
+An absent, repeated, skipped or reordered edge invalidates the capture. A boot or capture change invalidates dependent
 frame observations.
 
 For a frame, the assessor retains separate command-to-RX-done and

@@ -4,6 +4,12 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Rolling clock evidence
+
+TIME-02 can now assess rolling 32-edge fits from one saved continuous capture.
+Each frame records the window available at its TX command. A newer ineligible
+fit excludes its dependent frames. Live pulse acquisition remains open.
+
 ## November 27 — Replay window continuity
 
 SEC-03 C2 plans 132 originals per case. The isolated firmware test verifies a
