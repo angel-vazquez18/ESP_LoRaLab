@@ -1,14 +1,17 @@
 """Check one-way analysis bounds without assuming a live calibrated bench."""
 
+import hashlib
 import json
 from copy import deepcopy
 from uuid import uuid4
 
 import pytest
+from fastapi.testclient import TestClient
 from typer.testing import CliRunner
 
+from lora_testbed.app import create_app
 from lora_testbed.cli import app
-from lora_testbed.clock_analysis import ClockEvidence, assess
+from lora_testbed.clock_analysis import MAX_EVIDENCE_BYTES, ClockEvidence, assess
 
 
 def reference_case():
@@ -140,3 +143,42 @@ def test_cli_emits_offline_model_with_reproducible_input_hash(tmp_path):
     output = json.loads(result.output)
     assert output["eligible"] and not output["hardware_validated"]
     assert len(output["input_sha256"]) == 64
+
+
+def test_clock_import_api_and_cli_keep_exact_source_hash_and_results(tmp_path):
+    evidence = reference_case()
+    invalid = deepcopy(evidence["observations"][0])
+    invalid["frame_id"] = "reset"
+    invalid["receiver_clock"]["boot_id"] = "boot-B-later"
+    evidence["observations"].append(invalid)
+    source = ("\n" + json.dumps(evidence, indent=2) + "\n").encode()
+    path = tmp_path / "pulses.json"
+    path.write_bytes(source)
+    cli = CliRunner().invoke(app, ["clock-evaluate", str(path)])
+    assert cli.exit_code == 0, cli.output
+    with TestClient(create_app(tmp_path / "store")) as client:
+        response = client.post(
+            "/api/procedures/clock/evaluate",
+            content=source,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response.status_code == 200
+        report = response.json()
+        assert report == json.loads(cli.output)
+        assert report["input_sha256"] == hashlib.sha256(source).hexdigest()
+        assert [row["reason"] for row in report["observations"]] == [
+            None,
+            None,
+            "device_boot_or_capture_changed",
+        ]
+        assert report["observations"][-1]["tx_command_to_rx_done_us"] is None
+        assert not report["hardware_validated"] and not client.app.state.host.busy
+
+
+def test_clock_import_rejects_bad_duplicate_and_oversized_inputs(tmp_path):
+    with TestClient(create_app(tmp_path)) as client:
+        url = "/api/procedures/clock/evaluate"
+        assert client.post(url, content=b"invalid JSON").status_code == 422
+        assert client.post(url, content=b'{"a":1,"a":2}').status_code == 422
+        assert client.post(url, content=b" " * (MAX_EVIDENCE_BYTES + 1)).status_code == 413
+        assert not client.app.state.host.busy
