@@ -16,11 +16,16 @@ int main(int argc, char **argv) {
     if (!strcmp(argv[1], "io_failure")) f.fail = true;
     if (!strcmp(argv[1], "gpio_failure")) f.gpio_fail = true;
     if (!strcmp(argv[1], "unknown_board")) variant = RADIO_BOARD_UNKNOWN;
+    if (!strcmp(argv[1], "standby_status_one")) f.standby_status_one = true;
     bool success = node_radio_init(&radio, &bus, variant);
     if (f.busy || f.absent || f.fail || f.gpio_fail || f.reject || variant == RADIO_BOARD_UNKNOWN) {
         assert(!success && !radio.available);
         assert(!f.pins[RADIO_FEM_ENABLE] && !f.pins[RADIO_FEM_POWER]);
         assert(f.time <= 250000);
+        if (f.reject) {
+            assert(!strcmp(radio.initialization_step, "standby"));
+            assert(radio.status_observed && radio.last_chip_mode == 2 && radio.last_command_status == 4);
+        }
     } else {
         assert(success && radio.available);
         assert(f.opcodes[0] == 0x80); // Start in standby, never TX/RX.
@@ -28,7 +33,7 @@ int main(int argc, char **argv) {
         assert(memchr(f.opcodes, 0x9d, f.transfers)); // DIO2 RF switch.
         assert(memchr(f.opcodes, 0x8a, f.transfers)); // LoRa packet type.
         assert(!memchr(f.opcodes, 0x83, f.transfers));
-        if (!strcmp(argv[1], "settings")) {
+        if (!strcmp(argv[1], "settings") || f.standby_status_one) {
             node_radio_settings config = {915000000, 125000, 7, 5, 2, 8};
             assert(node_radio_configure(&radio, &config));
             assert(radio.configured && !radio.ldro_enabled);

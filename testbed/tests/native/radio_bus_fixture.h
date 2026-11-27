@@ -4,7 +4,7 @@
 #include <string.h>
 typedef struct {
     int64_t time;
-    bool pins[6], busy, absent, fail, gpio_fail, reject;
+    bool pins[6], busy, absent, fail, gpio_fail, reject, standby_status_one;
     unsigned transfers, tx_generation;
     uint16_t irq;
     uint8_t fail_opcode;
@@ -33,6 +33,9 @@ static bool transfer(void *p, const uint8_t *tx, uint8_t *rx, size_t count) {
     if (tx[0] == 0x0e) { f->tx_length=count-2; memcpy(f->tx_bytes,tx+2,count-2); }
     if (tx[0] == 0x12) { rx[2]=f->irq>>8; rx[3]=f->irq; }
     if (tx[0] == 0x02) f->irq &= ~((tx[1]<<8)|tx[2]);
-    if (tx[0] == 0xc0) rx[count - 1] = f->absent ? 0xff : ((f->mode<<4) | (f->reject ? 8 : 4));
+    if (tx[0] == 0xc0) {
+        uint8_t command_status = f->reject ? 4 : f->standby_status_one && f->mode == 2 ? 1 : 2;
+        rx[count - 1] = f->absent ? 0xff : (f->mode << 4) | (command_status << 1);
+    }
     return !f->fail && tx[0]!=f->fail_opcode;
 }

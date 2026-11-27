@@ -27,6 +27,7 @@ from . import (
     v2,
 )
 from .adapters import (
+    NodeFailure,
     health_freshness,
     require_artifact_compatible,
     require_control_compatible,
@@ -262,6 +263,37 @@ class NodeSession:
         declared = self.identity.capabilities.resource_limits.get("control_transport", "native_usb")
         return declared if declared in ("native_usb", "uart") else None
 
+    def radio_support(self, age):
+        enrolled = self.identity.capabilities if self.identity else None
+        current = self.health.capability_availability if self.health else None
+        limits = enrolled.radio_limits if enrolled else {}
+        latest = current.radio_limits if current else limits
+        profile = enrolled.resource_limits.get("execution") if enrolled else None
+        result = {
+            "ready": False,
+            "reason": None,
+            "message": None,
+            "board_variant": limits.get("selected_board_variant"),
+            "driver_error": latest.get("initialization_error"),
+            "startup_step": latest.get("initialization_step"),
+            "execution_profile": profile.get("profile") if isinstance(profile, dict) else None,
+        }
+        if not self.connected or self.identity is None:
+            return {**result, "reason": "disconnected", "message": "Connect the node over USB"}
+        if health_freshness(age) != "fresh" or current is None:
+            return {
+                **result,
+                "reason": "health_unavailable",
+                "message": "Waiting for fresh node health",
+            }
+        try:
+            require_execution_compatible(
+                self.identity.model_dump(), "config.set", current.model_dump()
+            )
+        except NodeFailure as exc:
+            return {**result, "reason": exc.reason or exc.code.lower(), "message": exc.message}
+        return {**result, "ready": True, "message": "Ready for radio configuration"}
+
     def snapshot(self):
         age = monotonic() - self.last_health if self.last_health is not None else None
         return {
@@ -270,6 +302,7 @@ class NodeSession:
             "control_transport": self.control_transport(),
             "artifact_support": self.artifact_availability(),
             "audio_support": self.audio_availability(),
+            "radio_support": self.radio_support(age),
             "ptt_support": self.ptt_availability(),
             "memory_support": self.memory_availability(),
             "memory_observation": self.memory_observation(),

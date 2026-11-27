@@ -45,6 +45,9 @@ typedef struct {
     node_radio_variant variant;
     bool available;
     const char *error;
+    const char *initialization_step;
+    bool status_observed;
+    uint8_t last_chip_mode, last_command_status;
     bool configured, ldro_enabled;
     node_radio_settings applied;
     unsigned operation;

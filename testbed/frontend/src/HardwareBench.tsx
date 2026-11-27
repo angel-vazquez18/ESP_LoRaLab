@@ -28,6 +28,15 @@ export type HardwareNode = {
   connection_id?: string | null;
   wire_profile: "diagnostic" | "node_control" | null;
   active_operation: { operation_id: string; deadline_us: number } | null;
+  radio_support?: {
+    ready: boolean;
+    reason: string | null;
+    message: string | null;
+    board_variant: string | null;
+    driver_error: string | null;
+    startup_step?: string | null;
+    execution_profile: string | null;
+  };
   audio_support?: {
     commands: string[];
     blocked: Record<string, string>;
@@ -432,6 +441,35 @@ function Details({
         pending={pending}
         hostError={hostError}
       />
+      {node.radio_support?.execution_profile && (
+        <>
+          <h3>Radio firmware</h3>
+          <div className="hw-diagnostics">
+            <p>
+              <strong>Execution profile</strong>
+              {node.radio_support.execution_profile}
+            </p>
+            {node.radio_support.board_variant && (
+              <p>
+                <strong>Configured board profile</strong>
+                {node.radio_support.board_variant}
+              </p>
+            )}
+            {node.radio_support.driver_error && (
+              <p>
+                <strong>Driver status</strong>
+                {node.radio_support.driver_error}
+              </p>
+            )}
+            {node.radio_support.startup_step && (
+              <p>
+                <strong>Startup stopped at</strong>
+                {node.radio_support.startup_step.replaceAll("_", " ")}
+              </p>
+            )}
+          </div>
+        </>
+      )}
       <h3>Session diagnostics</h3>
       <div className="hw-diagnostics">
         {node.diagnostics.length ? (
@@ -486,6 +524,9 @@ export default function HardwareBench({
     void refreshPorts();
   }, []);
   const connected = nodes.filter((n) => n.connected);
+  const readyRadios = connected.filter(
+    (node) => node.radio_support?.ready,
+  ).length;
   const live = nodes.find((n) => n.id === chartRole);
   const focused = nodes.find((n) => n.id === detail);
   return (
@@ -536,9 +577,9 @@ export default function HardwareBench({
         <div className="hw-link-note">
           <Radio size={17} />
           <span>
-            RF link awaits
+            RF readiness
             <br />
-            two radio-enabled nodes
+            {readyRadios} of 2 radios ready
           </span>
         </div>
       </div>
@@ -576,13 +617,16 @@ export default function HardwareBench({
                 <span>USB serial port</span>
                 <select
                   aria-label={`Node ${node.id} serial port`}
-                  value={selected[node.id] ?? ""}
+                  value={(node.connected ? node.port : selected[node.id]) ?? ""}
                   disabled={node.connected || pending}
                   onChange={(e) =>
                     setSelected((s) => ({ ...s, [node.id]: e.target.value }))
                   }
                 >
                   <option value="">Select a device…</option>
+                  {node.connected && node.port && !ports.some((p) => p.device === node.port) && (
+                    <option value={node.port}>{node.port}</option>
+                  )}
                   {ports.map((p) => (
                     <option key={p.device} value={p.device}>
                       {p.device} · {p.description}
@@ -617,6 +661,22 @@ export default function HardwareBench({
                   <span className="mono">{node.identity.device_id}</span>
                   <span>Firmware {node.identity.firmware_version}</span>
                 </div>
+                {node.connected && node.radio_support && (
+                  <div
+                    className="hw-radio-state"
+                    role="status"
+                    aria-label={`Node ${node.id} radio`}
+                  >
+                    <strong>
+                      {node.radio_support.ready
+                        ? "Radio ready"
+                        : node.radio_support.reason === "health_unavailable"
+                          ? "Checking radio"
+                          : "Radio unavailable"}
+                    </strong>
+                    <span>{node.radio_support.message}</span>
+                  </div>
+                )}
                 <div className="hw-stats">
                   <div>
                     <span>Uptime</span>
@@ -708,7 +768,11 @@ export default function HardwareBench({
             <Radio size={15} />
             <span>
               Known-data radio link
-              <strong>Needs two nodes with RF firmware</strong>
+              <strong>
+                {readyRadios === 2
+                  ? "Both radios ready for configuration"
+                  : `${readyRadios} of 2 radios ready`}
+              </strong>
             </span>
           </div>
           <div>
