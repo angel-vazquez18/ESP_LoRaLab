@@ -4,6 +4,12 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Protected ACK rejection
+
+The sender distinguishes authenticated ACKs with a wrong DATA reference from
+bad-tag input and retains the receive timestamp. Native checks verify the
+outstanding DATA, original deadline, exact retry and matching ACK recovery.
+
 ## November 27 — Reordered fragment evidence
 
 PKT-02 C4 now checks the complete planned order across confirmed sender

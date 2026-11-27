@@ -37,6 +37,11 @@ evidence. A missing fault observation yields an inconclusive result.
   verifies the exact reused frame digest, distinct CRC-valid receiver
   arrivals, no partial delivery, the missing fragment suffix when the
   sender stops, and a fresh intact recovery control.
+  Native firmware checks inject isolated bad-tag and authenticated wrong-reference
+  ACK fixtures. The sender emits a reason tied to the receive timestamp, retains
+  its outstanding DATA, retries within the budget, and accepts the matching ACK.
+  The physical matrix still offers ACK suppression and needs a separately
+  verified on-bench wrong-reference fixture.
 
 Select a matrix in **Experiments**. For a quick SEC-02 run select C1
 or C2 and one direction. Preview requires an owned compatible pair
