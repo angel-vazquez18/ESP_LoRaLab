@@ -102,11 +102,11 @@ bool node_radio_init(node_radio *r, const node_radio_bus *bus, node_radio_varian
     if (!r || !bus || !bus->now_us || !bus->delay_us || !bus->set || !bus->get || !bus->transfer)
         return false;
     *r = (node_radio){.bus = *bus, .variant = variant, .error = NULL};
-    disable(r);
     if (variant != RADIO_HELTEC_V42_GC1109 && variant != RADIO_HELTEC_V43_KCT8103L) {
         r->error = "radio_board_unselected";
         return false;
     }
+    disable(r);
     #define INITIALIZE(call) ((call) == SX126X_STATUS_OK && status_ok(r))
     bool ok = bus->set(bus->context, RADIO_FEM_POWER, true) &&
         sx126x_reset(r) == SX126X_STATUS_OK &&

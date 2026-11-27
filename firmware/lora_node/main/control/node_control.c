@@ -339,14 +339,14 @@ static cJSON *capabilities(node_control *n, bool enrollment)
     boolean(n, o, "memory_stats", true);
     cJSON *radio = object(n);
     if (n->port.radio) {
-        const char *variant = n->port.radio->variant == RADIO_HELTEC_V42_GC1109 ? "heltec_v4_2_gc1109" :
-            n->port.radio->variant == RADIO_HELTEC_V43_KCT8103L ? "heltec_v4_3_kct8103l" : "unselected";
         if (enrollment) {
-            string(n, radio, "selected_board_variant", variant);
+            string(n, radio, "selected_board_variant", node_radio_variant_name(n->port.radio->variant));
             string(n, radio, "board_reference_sha256", RADIO_BOARD_REFERENCE_SHA256);
             boolean(n, radio, "physical_qualified", false);
         }
         string(n, radio, "initialization_error", n->port.radio->error);
+    } else {
+        string(n, radio, "initialization_error", "radio_driver_missing");
     }
     add(n, o, "radio_limits", radio);
     if (enrollment) {
@@ -1025,7 +1025,11 @@ static void process(node_control *n, size_t length)
                 else message="Radio command rejected for this session, state or limit";
             }
         } else if (eq(name, "config.set")) {
-            if (!n->port.radio || !n->port.radio->available) { code="MISSING_CAPABILITY"; message="Radio is unavailable"; }
+            if (!n->port.radio || !n->port.radio->available) {
+                code="MISSING_CAPABILITY";
+                message = !n->port.radio ? "radio_driver_missing" :
+                    n->port.radio->error ? n->port.radio->error : "radio_unavailable";
+            }
             else if (n->op.active || rf_execution_busy(&n->rf)) { code="BUSY"; message="Configuration requires idle"; }
             else if (n->config_revision == UINT32_MAX) { code="RESOURCE_LIMIT"; message="Configuration revision exhausted"; }
             else if (!radio_config_parse(args,&radio_settings,&link_settings)) { code="INVALID_ARGUMENT"; message="Unsupported radio or link configuration"; field="args"; }
