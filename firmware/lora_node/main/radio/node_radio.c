@@ -63,9 +63,14 @@ sx126x_hal_status_t sx126x_hal_wakeup(const void *context)
 static bool status_ok(node_radio *r)
 {
     sx126x_chip_status_t status;
-    return sx126x_get_status(r, &status) == SX126X_STATUS_OK &&
-        status.chip_mode == SX126X_CHIP_MODE_STBY_RC &&
-        (status.cmd_status == SX126X_CMD_STATUS_DATA_AVAILABLE ||
+    if (sx126x_get_status(r, &status) != SX126X_STATUS_OK) return false;
+    r->status_observed = true;
+    r->last_chip_mode = status.chip_mode;
+    r->last_command_status = status.cmd_status;
+    // SX1262 on the V4.3 bench reports RFU (1) after valid standby writes.
+    return status.chip_mode == SX126X_CHIP_MODE_STBY_RC &&
+        (status.cmd_status == SX126X_CMD_STATUS_RFU ||
+         status.cmd_status == SX126X_CMD_STATUS_DATA_AVAILABLE ||
          status.cmd_status == SX126X_CMD_STATUS_CMD_TX_DONE);
 }
 static void disable(node_radio *r)
@@ -107,25 +112,30 @@ bool node_radio_init(node_radio *r, const node_radio_bus *bus, node_radio_varian
         return false;
     }
     disable(r);
-    #define INITIALIZE(call) ((call) == SX126X_STATUS_OK && status_ok(r))
+    #define INITIALIZE(step, call) \
+        (r->initialization_step = (step), r->status_observed = false, \
+         (call) == SX126X_STATUS_OK && status_ok(r))
+    r->initialization_step = "power_and_reset";
     bool ok = bus->set(bus->context, RADIO_FEM_POWER, true) &&
         sx126x_reset(r) == SX126X_STATUS_OK &&
-        INITIALIZE(sx126x_set_standby(r, SX126X_STANDBY_CFG_RC)) &&
-        INITIALIZE(sx126x_set_dio3_as_tcxo_ctrl(r, SX126X_TCXO_CTRL_1_8V, 320)) &&
-        INITIALIZE(sx126x_clear_device_errors(r)) &&
-        INITIALIZE(sx126x_cal(r, SX126X_CAL_ALL)) &&
-        INITIALIZE(sx126x_set_reg_mode(r, SX126X_REG_MODE_DCDC)) &&
-        INITIALIZE(sx126x_set_dio2_as_rf_sw_ctrl(r, true)) &&
-        INITIALIZE(sx126x_set_pkt_type(r, SX126X_PKT_TYPE_LORA)) &&
-        INITIALIZE(sx126x_set_buffer_base_address(r, 0, 0)) &&
-        INITIALIZE(sx126x_set_dio_irq_params(r, 0, 0, 0, 0)) &&
-        INITIALIZE(sx126x_clear_irq_status(r, SX126X_IRQ_ALL));
+        INITIALIZE("standby", sx126x_set_standby(r, SX126X_STANDBY_CFG_RC)) &&
+        INITIALIZE("tcxo", sx126x_set_dio3_as_tcxo_ctrl(r, SX126X_TCXO_CTRL_1_8V, 320)) &&
+        INITIALIZE("clear_errors", sx126x_clear_device_errors(r)) &&
+        INITIALIZE("calibrate", sx126x_cal(r, SX126X_CAL_ALL)) &&
+        INITIALIZE("regulator", sx126x_set_reg_mode(r, SX126X_REG_MODE_DCDC)) &&
+        INITIALIZE("rf_switch", sx126x_set_dio2_as_rf_sw_ctrl(r, true)) &&
+        INITIALIZE("packet_type", sx126x_set_pkt_type(r, SX126X_PKT_TYPE_LORA)) &&
+        INITIALIZE("buffer_base", sx126x_set_buffer_base_address(r, 0, 0)) &&
+        INITIALIZE("irq_setup", sx126x_set_dio_irq_params(r, 0, 0, 0, 0)) &&
+        INITIALIZE("clear_irq", sx126x_clear_irq_status(r, SX126X_IRQ_ALL));
     #undef INITIALIZE
     if (!ok) {
         if (!r->error) r->error = "radio_initialization_failed";
         // Attempt standby, then physically disable the front end even on a stuck bus.
         if (!bus->get(bus->context, RADIO_BUSY)) sx126x_set_standby(r, SX126X_STANDBY_CFG_RC);
         disable(r);
+    } else {
+        r->initialization_step = NULL;
     }
     r->available = ok;
     return ok;

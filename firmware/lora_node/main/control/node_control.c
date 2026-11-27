@@ -345,6 +345,13 @@ static cJSON *capabilities(node_control *n, bool enrollment)
             boolean(n, radio, "physical_qualified", false);
         }
         string(n, radio, "initialization_error", n->port.radio->error);
+        if (n->port.radio->initialization_step) {
+            string(n, radio, "initialization_step", n->port.radio->initialization_step);
+            if (n->port.radio->status_observed) {
+                number(n, radio, "last_chip_mode", n->port.radio->last_chip_mode);
+                number(n, radio, "last_command_status", n->port.radio->last_command_status);
+            }
+        }
     } else {
         string(n, radio, "initialization_error", "radio_driver_missing");
     }
