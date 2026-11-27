@@ -21,6 +21,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from . import (
     audio_contract_v2,
+    campaign_browser,
     control_v2,
     crypto_benchmark_v2,
     memory_observation_v2,
@@ -401,6 +402,12 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         identifier: control_v2.UUID, offset: int = Query(0, ge=0, le=4096)
     ):
         return execution_view(app.state.host, identifier, offset)
+
+    @app.post("/api/physical-campaigns/executions/{identifier}/view-observation")
+    async def observe_campaign_view(
+        identifier: control_v2.UUID, body: campaign_browser.Observation
+    ):
+        return campaign_browser.record(app.state.host, identifier, body)
 
     @app.get("/api/physical-campaigns/executions/{identifier}")
     async def physical_campaign_execution(identifier: control_v2.UUID):

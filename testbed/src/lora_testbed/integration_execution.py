@@ -7,6 +7,7 @@ from functools import partial
 from uuid import uuid4
 
 from . import (
+    campaign_browser,
     content_series,
     crypto_benchmark_v2,
     fault_accounting,
@@ -237,7 +238,7 @@ class IntegrationExecution:
                     blockers.append("Reply perturbation requires the bounded memory probe")
                 if case["variant"] == "stale_boot" and not node.previous_boot_binding:
                     blockers.append("Connect the same device before and after a reset")
-            elif case["group"] in ("C1", "C2", "C3", "C4", "C7", "C8"):
+            elif case["group"] in ("C1", "C2", "C3", "C4", "C5", "C7", "C8"):
                 blockers = radio.preflight(
                     link_request(
                         spec, {"direction": "A_TO_B", "message_bytes": 64, "repetition": 1}, 0
@@ -341,6 +342,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/serial_framing.py",
                     "testbed/src/lora_testbed/serial_replies.py",
                     "testbed/src/lora_testbed/campaign_plans.py",
+                    "testbed/src/lora_testbed/campaign_browser.py",
                     "testbed/src/lora_testbed/physical_campaigns.py",
                 )
             },
@@ -1917,7 +1919,23 @@ class IntegrationExecution:
                     and pause_record["case_counts"].get("pending") == expected_count - 1
                     and result["pause_count"] == result["resume_count"] == 1
                 )
+        measurements = {"verified_messages": verified, "planned_messages": expected_count}
         clean = bool(result["cleanup"]["confirmed"])
+        if group == "C5":
+            browser = campaign_browser.assess(
+                result, campaign_browser.observations(self.ledger, run["id"], case["id"])
+            )
+            measurements["browser_continuity"] = browser
+            accepted = (
+                accepted
+                and browser["verified_in_same_tab"]
+                and result["pause_count"] == result["resume_count"] == 0
+            )
+            self.ledger.append(run["id"], case["id"], {"browser_continuity": browser})
+            if not browser["verified_in_same_tab"]:
+                case["reason"] = "Record both navigation and refresh in one tab during the campaign"
+            elif not accepted:
+                case["reason"] = result["reason"] or "Campaign results did not verify continuity"
         if accepted and linked and clean:
             if group == "C7":
                 accepted = await self.matrix_campaign_rerun(run, case, host, result, observed)
@@ -1943,7 +1961,7 @@ class IntegrationExecution:
             status="completed",
             assessment="pass" if passed else "inconclusive",
             cleanup_verified=clean,
-            measurements={"verified_messages": verified, "planned_messages": expected_count},
+            measurements=measurements,
             assertions=[{"code": case["variant"], "outcome": "pass" if passed else "inconclusive"}],
         )
         if not clean:

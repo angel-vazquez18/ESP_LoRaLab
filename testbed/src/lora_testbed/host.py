@@ -3,7 +3,7 @@
 import asyncio
 from pathlib import Path
 
-from . import __version__, crypto_benchmark_v2
+from . import __version__, campaign_browser, crypto_benchmark_v2
 from .artifact_transfers import ArtifactTransfers
 from .campaign_plans import CampaignPlans
 from .catalog import catalog, required_nodes
@@ -70,6 +70,7 @@ class Host:
 
     def snapshot(self) -> dict:
         nodes = [node.snapshot() for node in self.physical.values()]
+        reception = campaign_browser.active_case(self)
         return {
             "version": __version__,
             "mode": "hardware",
@@ -97,6 +98,7 @@ class Host:
             "diagnostic_runs": self.diagnostics.snapshot(),
             "voice_runs": self.voice.snapshot(),
             "physical_campaigns": self.physical_campaigns.snapshot(),
+            "campaign_view_observation_id": reception[0]["id"] if reception else None,
         }
 
     def preflight(self, code: str, roles=None, workload="default") -> dict:
