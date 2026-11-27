@@ -242,6 +242,16 @@
   border-top: 1px solid var(--hw-line);
   color: var(--hw-muted);
 }
+.hw-radio-state {
+  display: grid;
+  gap: 4px;
+  padding: 0 22px 10px;
+  font-size: 11px;
+  color: var(--hw-muted);
+}
+.hw-radio-state strong {
+  color: var(--hw-text);
+}
 .hw-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

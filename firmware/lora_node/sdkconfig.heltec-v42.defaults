@@ -1,0 +1,2 @@
+# Apply only to a confirmed Heltec V4.2 board with the GC1109 front end.
+CONFIG_LORALAB_RADIO_HELTEC_V42=y

@@ -1,0 +1,2 @@
+# MAX98357A on the documented playback pins. Leave microphone capture disabled.
+CONFIG_LORALAB_AUDIO_PLAYBACK=y

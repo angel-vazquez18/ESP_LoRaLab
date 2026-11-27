@@ -17,8 +17,10 @@ class NodeAdapter(Protocol):
 
 
 class NodeFailure(ValueError):
-    def __init__(self, code: str, message: str):
+    def __init__(self, code: str, message: str, *, reason: str | None = None):
         self.code = code
+        self.message = message
+        self.reason = reason
         super().__init__(f"{code}: {message}")
 
 
@@ -68,6 +70,19 @@ def require_artifact_compatible(identity, command, capability_availability=None)
     return limits
 
 
+RADIO_DRIVER_MESSAGES = {
+    "radio_board_unselected": "Rebuild with the radio profile for the confirmed board revision",
+    "radio_driver_missing": "Install radio-enabled firmware for the confirmed board revision",
+    "radio_gpio_setup_failed": "The selected radio GPIO setup failed",
+    "radio_spi_bus_setup_failed": "The ESP32 could not initialize the radio SPI bus",
+    "radio_spi_device_setup_failed": "The ESP32 could not register the SX1262 SPI device",
+    "radio_busy_timeout": "The SX1262 BUSY pin failed to clear",
+    "radio_initialization_failed": "The SX1262 failed its startup checks",
+    "radio_configuration_failed": "The SX1262 failed radio configuration or readback",
+    "radio_stop_failed": "The SX1262 failed to return to standby",
+}
+
+
 def require_execution_compatible(identity, command, capability_availability):
     """Fail closed until a node advertises the selected RF execution command."""
     if command not in run_protocol_v2.EXECUTION_COMMANDS:
@@ -79,15 +94,26 @@ def require_execution_compatible(identity, command, capability_availability):
     for capabilities in (identity["capabilities"], capability_availability):
         raw = capabilities.get("resource_limits", {}).get("execution")
         if raw is None:
-            raise NodeFailure("MISSING_CAPABILITY", "Node does not advertise radio execution")
+            raise NodeFailure(
+                "MISSING_CAPABILITY",
+                "This build has no radio execution profile. "
+                "Install radio-enabled firmware for the confirmed board revision",
+                reason="firmware_has_no_radio",
+            )
         try:
             limits = run_protocol_v2.Capabilities.model_validate(raw)
         except ValueError as exc:
             raise NodeFailure(
-                "UNSUPPORTED_VERSION", "Invalid execution capability profile"
+                "UNSUPPORTED_VERSION",
+                f"Radio firmware must advertise {run_protocol_v2.EXECUTION_PROFILE}",
+                reason="execution_profile_mismatch",
             ) from exc
         if limits.schema_sha256 != run_protocol_v2.schema_digest():
-            raise NodeFailure("UNSUPPORTED_VERSION", "Execution schema mismatch")
+            raise NodeFailure(
+                "UNSUPPORTED_VERSION",
+                "Radio firmware and testbed execution schemas differ. Use matching builds",
+                reason="execution_profile_mismatch",
+            )
         if command not in limits.commands:
             raise NodeFailure("MISSING_CAPABILITY", "Execution command is not implemented")
         if (
@@ -97,7 +123,13 @@ def require_execution_compatible(identity, command, capability_availability):
         ):
             raise NodeFailure("MISSING_CAPABILITY", "Laboratory fault build is required")
         if command not in run_protocol_v2.CLEANUP_COMMANDS and not capabilities.get("radio"):
-            raise NodeFailure("MISSING_CAPABILITY", "Radio is unavailable")
+            error = (capabilities.get("radio_limits") or {}).get("initialization_error")
+            detail = RADIO_DRIVER_MESSAGES.get(error) if isinstance(error, str) else None
+            raise NodeFailure(
+                "MISSING_CAPABILITY",
+                detail or "The SX1262 reports unavailable",
+                reason=error if detail else "radio_unavailable",
+            )
     return limits
 
 

@@ -47,6 +47,7 @@ def radio_fixture(tmp_path_factory):
     "scenario",
     [
         "initialize",
+        "standby_status_one",
         "settings",
         "rx",
         "rx_irq_timeout",

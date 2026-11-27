@@ -1,0 +1,2 @@
+# The original GPIO5 microphone wiring conflicts with this radio variant.
+CONFIG_LORALAB_RADIO_HELTEC_V43=y

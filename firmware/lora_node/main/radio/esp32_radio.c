@@ -70,7 +70,7 @@ node_radio *esp32_radio_init(void)
     uint64_t outputs = (1ULL << RADIO_GPIO_RESET) | (1ULL << RADIO_GPIO_FEM_POWER) | (1ULL << RADIO_GPIO_FEM_ENABLE) | (1ULL << hardware.mode_pin);
     gpio_config_t output = {.pin_bit_mask = outputs, .mode = GPIO_MODE_OUTPUT};
     gpio_config_t input = {.pin_bit_mask = (1ULL << RADIO_GPIO_BUSY) | (1ULL << RADIO_GPIO_DIO1), .mode = GPIO_MODE_INPUT};
-    radio.error = "radio_bus_setup_failed";
+    radio.error = "radio_gpio_setup_failed";
     if (gpio_config(&output) != ESP_OK || gpio_config(&input) != ESP_OK) return &radio;
     gpio_set_level(RADIO_GPIO_FEM_POWER, 0);
     gpio_set_level(RADIO_GPIO_FEM_ENABLE, 0);
@@ -78,9 +78,11 @@ node_radio *esp32_radio_init(void)
     gpio_set_level(RADIO_GPIO_RESET, 0);
     spi_bus_config_t bus = {.mosi_io_num = RADIO_GPIO_MOSI, .miso_io_num = RADIO_GPIO_MISO, .sclk_io_num = RADIO_GPIO_SCK,
         .quadwp_io_num = -1, .quadhd_io_num = -1, .max_transfer_sz = 260};
+    radio.error = "radio_spi_bus_setup_failed";
     if (spi_bus_initialize(SPI2_HOST, &bus, SPI_DMA_DISABLED) != ESP_OK) return &radio;
     spi_device_interface_config_t device = {.clock_speed_hz = 4000000, .mode = 0,
         .spics_io_num = RADIO_GPIO_NSS, .queue_size = 1};
+    radio.error = "radio_spi_device_setup_failed";
     if (spi_bus_add_device(SPI2_HOST, &device, &hardware.spi) != ESP_OK) {
         spi_bus_free(SPI2_HOST);
         return &radio;
