@@ -1,8 +1,15 @@
 # Consolidated implementation status
 
-Updated November 26, 2026. The host is now physical-only by user decision, replacing
+Updated November 27, 2026. The host is now physical-only by user decision, replacing
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
+
+## November 27 — Local microphone, codec and recovery cases
+
+VOICE-01 reviews saved raw and codec playback against the original
+microphone bytes and an explicit listening record. The negative
+controls verify malformed input, cancellation, fresh capture and
+restored idle state. See [the one-node audio matrix](local_voice_matrix.md).
 
 ## November 26 — Matched protected transfer measurements
 

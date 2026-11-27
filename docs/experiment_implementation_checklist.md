@@ -200,20 +200,16 @@ remain open.
 
 ### 18 VOICE-01 Local capture codec and playback
 
-Existing support: host WAV references/browser playback, bounded artifact transfer
-with independent CRC/SHA verification, finite local node PCM capture/playback,
-verified unchanged-sample WAV retrieval, waveform/silence/clipping inspection and
-shared API/CLI/UI controls. Native/software and actual DMA/count/hash checks pass;
-physical microphone response remains unverified because both raw slots return
-zero. Heard output, printed revision, instruments and full #21 recovery remain
-open. Codec 2 and the complete VOICE-01 procedure runner are not implemented.
-See [single-node qualification](milestone_2_audio_review.md). The combined
-procedure items below stay unchecked until all their requirements are fulfilled.
+The [one-node audio matrix](local_voice_matrix.md) keeps independently
+verified captured bytes, PCM signal findings, codec artifacts, driver
+completion and listening evidence. Formal physical qualification
+continues in the [single-node review](milestone_2_audio_review.md).
 
-- [ ] Verify I2S wiring and implement bounded capture/playback, Codec 2 mode 3200
-  and chunked artifact transfer/storage with CRC-32 and complete SHA-256 checks.
-- [ ] Add 24000-sample capture, raw playback, encode/decode/playback, fixed
+- [x] Implement bounded capture/playback, Codec 2 mode 3200 and chunked
+  artifact transfer/storage with CRC-32 and complete SHA-256 checks.
+- [x] Add 24000-sample capture, raw playback, encode/decode/playback, fixed
   references and invalid/incomplete/corrupt-artifact/cancel controls.
+- [ ] Verify I2S wiring, sample-rate accuracy and the board configuration.
 - [ ] Execute three utterances/references with three repetitions on each node;
   retain physical speaker observations and source/encoded/decoded artifacts.
 
