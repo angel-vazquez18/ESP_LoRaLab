@@ -4,6 +4,12 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Missing fragment evidence
+
+ACK-disabled drop assessment now verifies the source archive fingerprint,
+every other accepted index, the exact missing report and the receiver timeout.
+A confirmed partial delivery fails the case.
+
 ## November 27 — Intact packet evidence
 
 PKT-02 C1 now independently rechecks both archived byte artifacts and the
