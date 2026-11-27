@@ -101,12 +101,15 @@ def matrix_options():
     }
 
 
-class RestartEvidenceReference(ContractModel):
+class CampaignRestartEvidenceReference(ContractModel):
     variant: Literal["restart_active", "restart_paused"]
-    direction: Literal["A_TO_B", "B_TO_A"]
     repetition: int = Field(ge=1, le=3)
     interrupted: UUID
     recovery: UUID
+
+
+class RestartEvidenceReference(CampaignRestartEvidenceReference):
+    direction: Literal["A_TO_B", "B_TO_A"]
 
 
 class USBEvidenceReference(ContractModel):
@@ -169,6 +172,9 @@ class MatrixRequest(ContractModel):
     ops_reset_evidence: list[ResetEvidenceReference] | None = Field(
         default=None, min_length=1, max_length=12
     )
+    campaign_restart_evidence: list[CampaignRestartEvidenceReference] | None = Field(
+        default=None, min_length=1, max_length=6
+    )
     messages_per_case: int = Field(default=100, ge=1, le=100)
     seed: int = Field(default=743, ge=0, le=2**32 - 1)
     rf_security: Literal["none", "aes128_gcm"] = "none"
@@ -209,22 +215,28 @@ class MatrixRequest(ContractModel):
             raise ValueError("Matched echo count belongs to RF sweep procedures")
         if self.catalog_id != "OPS-01" and self.ops_observation_s != ops_matrix.STABILITY_SECONDS:
             raise ValueError("The stability observation window belongs to OPS-01")
-        for group, entries, field in (
-            ("C1", self.ops_usb_evidence, "target_role"),
-            ("C2", self.ops_reset_evidence, "target_role"),
-            ("C3", self.ops_restart_evidence, "variant"),
+        for catalog, group, entries, field in (
+            ("OPS-01", "C1", self.ops_usb_evidence, "target_role"),
+            ("OPS-01", "C2", self.ops_reset_evidence, "target_role"),
+            ("OPS-01", "C3", self.ops_restart_evidence, "variant"),
+            ("IF-03", "C6", self.campaign_restart_evidence, "variant"),
         ):
             if not entries:
                 continue
-            if self.catalog_id != "OPS-01" or self.groups is not None and group not in self.groups:
-                raise ValueError(f"The submitted evidence belongs to OPS-01 {group}")
-            keys = {(getattr(row, field), row.direction, row.repetition) for row in entries}
+            if self.catalog_id != catalog or self.groups is not None and group not in self.groups:
+                raise ValueError(f"The submitted evidence belongs to {catalog} {group}")
+            keys = {
+                (getattr(row, field), getattr(row, "direction", None), row.repetition)
+                for row in entries
+            }
             records = {value for row in entries for value in (row.interrupted, row.recovery)}
             if len(keys) != len(entries) or len(records) != 2 * len(entries):
                 raise ValueError("Use distinct cases and evidence records")
             if any(
-                row.repetition > self.repetitions or row.direction not in self.directions
-                for row in entries
+                repetition > self.repetitions
+                or direction is not None
+                and direction not in self.directions
+                for _, direction, repetition in keys
             ):
                 raise ValueError("Each attached observation must belong to a selected case")
         if self.catalog_id != "MEM-01" and self.memory_window_ms != 30000:
@@ -292,15 +304,18 @@ def campaign_cases(request, groups):
     for group in groups:
         for variant in CAMPAIGN_GROUPS[group]:
             for repetition in range(1, 2 if group == "C1" else request.repetitions + 1):
-                yield _case(
+                case = _case(
                     group,
                     variant,
                     repetition,
-                    "campaign_matrix",
+                    "campaign_restart_review" if group == "C6" else "campaign_matrix",
                     role="A ↔ B",
                     messages_per_case=request.messages_per_case,
                     campaign_cases=6,
                 )
+                if group == "C6":
+                    case["campaign_request"] = campaign_intent(request, case).model_dump()
+                yield case
 
 
 def compile_matrix(request, *, message_limit=65536):

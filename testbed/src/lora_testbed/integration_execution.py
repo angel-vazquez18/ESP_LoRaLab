@@ -3,6 +3,7 @@
 import asyncio
 import hashlib
 from copy import deepcopy
+from functools import partial
 from uuid import uuid4
 
 from . import (
@@ -107,7 +108,7 @@ class IntegrationExecution:
             elif case["driver"] == "ops_telemetry_gap":
                 request = ops_matrix.known_data_request(case, spec.seed)
                 blockers = radio.preflight(request)["blockers"]
-            elif case["driver"] == "ops_restart_recovery":
+            elif case["driver"] in ("ops_restart_recovery", "campaign_restart_review"):
                 blockers = ops_matrix.restart_blockers(
                     physical_campaigns, ops_matrix.restart_reference(spec, case)
                 )
@@ -273,6 +274,7 @@ class IntegrationExecution:
             "model_reference",
             "local_voice_reference",
             "ops_restart_recovery",
+            "campaign_restart_review",
             "ops_usb_recovery",
             "ops_reset_recovery",
         }
@@ -981,15 +983,17 @@ class IntegrationExecution:
         )
 
     async def matrix_ops_connection_evidence(self, run, case, spec, host):
-        restart = case["driver"] == "ops_restart_recovery"
+        restart = case["driver"] in ("ops_restart_recovery", "campaign_restart_review")
         if restart:
             reference = ops_matrix.restart_reference(spec, case)
-            assessor, service = ops_matrix.restart_assessment, host
+            assessor = partial(
+                ops_matrix.restart_assessment, expected_campaign=case.get("campaign_request")
+            )
         else:
             reference = ops_reconnect.reference(spec, case)
-            assessor, service = ops_reconnect.assess, host
+            assessor = ops_reconnect.assess
         try:
-            measurements = await host.campaign_exports.run(assessor, service, reference)
+            measurements = await host.campaign_exports.run(assessor, host, reference)
         except (OSError, RuntimeError, ValueError) as exc:
             reason = str(exc) or type(exc).__name__
             self.ledger.append(
@@ -2053,6 +2057,7 @@ class IntegrationExecution:
                     await self.matrix_ops_telemetry_gap(run, case, spec, host)
                 elif case["driver"] in (
                     "ops_restart_recovery",
+                    "campaign_restart_review",
                     "ops_usb_recovery",
                     "ops_reset_recovery",
                 ):

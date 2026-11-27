@@ -86,12 +86,15 @@ def known_data_request(case, seed, ordinal=0):
 
 
 def restart_reference(spec, case):
+    selected = (
+        spec.campaign_restart_evidence if spec.catalog_id == "IF-03" else spec.ops_restart_evidence
+    )
     return next(
         (
             reference
-            for reference in spec.ops_restart_evidence or ()
-            if (reference.variant, reference.direction, reference.repetition)
-            == (case["variant"], case["direction"], case["repetition"])
+            for reference in selected or ()
+            if (reference.variant, getattr(reference, "direction", None), reference.repetition)
+            == (case["variant"], case.get("direction"), case["repetition"])
         ),
         None,
     )
@@ -113,7 +116,7 @@ def restart_blockers(campaigns, reference):
     return []
 
 
-def restart_assessment(host, reference):
+def restart_assessment(host, reference, expected_campaign=None):
     campaigns, radio = host.physical_campaigns, host.radio
     original, recovery = (campaigns.get(i) for i in (reference.interrupted, reference.recovery))
     checkpoint = original.get("restart_checkpoint") or {}
@@ -163,7 +166,8 @@ def restart_assessment(host, reference):
         if link.get("service") != "radio" or not row.get("preflight", {}).get("ready"):
             raise ValueError("A fresh paired preflight and linked radio child are required")
         child = radio.get(link["id"])
-        if child["plan"]["spec"]["direction"] != reference.direction:
+        expected_direction = getattr(reference, "direction", None) or row["direction"]
+        if child["plan"]["spec"]["direction"] != expected_direction:
             raise ValueError("The radio direction does not match the selected case")
         archived_radio(radio, child)
         children.append(child)
@@ -187,6 +191,15 @@ def restart_assessment(host, reference):
     ):
         raise ValueError("The original work and a verified fresh radio session are required")
     verify_saved_known_data(radio, new)
+    campaign_details = {}
+    if expected_campaign:
+        plan = host.campaign_plans.get(original["plan_id"])
+        campaign_details = verify_campaign_restart_plan(plan, expected_campaign, original, paused)
+        intended = next(
+            row["case"]["request"] for row in plan["cases"] if row["id"] == original_case_id
+        )
+        if new["plan"] != RadioRunRequest.model_validate(intended).plan().model_dump():
+            raise ValueError("The observed transfer differs from the saved campaign trial settings")
     return {
         "original": {
             key: original.get(key)
@@ -217,6 +230,37 @@ def restart_assessment(host, reference):
         "recovery_radio_id": new["id"],
         "recovery_wire_sha256": new["wire_sha256"],
         "verification": new["verification"],
+        **campaign_details,
+    }
+
+
+def verify_campaign_restart_plan(plan, expected, original, paused):
+    ordered_ids = [row["id"] for row in plan["cases"]]
+    cases = original["cases"]
+    if (
+        plan["spec"] != expected
+        or plan["plan_sha256"] != original["plan_sha256"]
+        or original["parent_execution_id"] is not None
+        or original["selected_case_ids"] != ordered_ids
+        or [row["case_id"] for row in cases] != ordered_ids
+    ):
+        raise ValueError("The interrupted execution must use the complete prescribed campaign")
+    states = [row["status"] for row in cases]
+    completed = states.count("completed")
+    if paused:
+        ordered = 0 < completed < len(states)
+        suffix = ["skipped"] * (len(states) - completed)
+    else:
+        active_case = original["restart_checkpoint"]["active_case_id"]
+        interrupted = [row["status"] for row in cases if row["case_id"] == active_case]
+        ordered = interrupted in (["interrupted"], ["cancelled"])
+        suffix = interrupted + ["skipped"] * (len(states) - completed - 1)
+    if not ordered or states != ["completed"] * completed + suffix:
+        raise ValueError("Completed, interrupted and skipped trials do not match the saved order")
+    return {
+        "campaign_trials": len(cases),
+        "campaign_case_counts": original["case_counts"],
+        "campaign_repetitions": expected["repetitions"],
     }
 
 
