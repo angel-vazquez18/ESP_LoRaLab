@@ -12,6 +12,7 @@ from . import (
     crypto_benchmark_v2,
     fault_accounting,
     fault_matrices,
+    local_audio_validation,
     local_voice,
     memory_matrix,
     memory_observation_v2,
@@ -122,8 +123,13 @@ class IntegrationExecution:
                 if case["radio_load_period_s"]:
                     request = ops_matrix.known_data_request(case, spec.seed)
                     blockers.extend(radio.preflight(request)["blockers"])
-            elif case["driver"] in ("local_voice_reference", "local_voice_operator"):
+            elif case["driver"] in (
+                "local_voice_reference",
+                "local_voice_capture_review",
+            ):
                 blockers = local_voice.blockers(voice, case)
+            elif case["driver"] == "local_audio_negative":
+                blockers = local_audio_validation.blockers(voice, case["role"])
             elif case["driver"] in ("voice_reference", "voice_operator"):
                 blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "sustained_voice":
@@ -274,6 +280,8 @@ class IntegrationExecution:
             "memory_audio_local",
             "model_reference",
             "local_voice_reference",
+            "local_voice_capture_review",
+            "local_audio_negative",
             "ops_restart_recovery",
             "campaign_restart_review",
             "ops_usb_recovery",
@@ -282,7 +290,11 @@ class IntegrationExecution:
         local_only = all(case["driver"] in local_drivers for case in ready_cases)
         numerical_only = all(case["driver"] == "model_reference" for case in ready_cases)
         required = (
-            {case["role"] for case in ready_cases if case["role"] in ("A", "B")}
+            {
+                case["role"]
+                for case in ready_cases
+                if case["role"] in ("A", "B") and case["driver"] != "local_voice_capture_review"
+            }
             if local_only
             else set(spec.roles)
         )
@@ -326,6 +338,7 @@ class IntegrationExecution:
                     "testbed/src/lora_testbed/lab_trials.py",
                     "testbed/src/lora_testbed/voice_matrix.py",
                     "testbed/src/lora_testbed/local_voice.py",
+                    "testbed/src/lora_testbed/local_audio_validation.py",
                     "testbed/src/lora_testbed/node_audio.py",
                     "testbed/src/lora_testbed/voice_runs.py",
                     "testbed/src/lora_testbed/ops_matrix.py",
@@ -1263,15 +1276,46 @@ class IntegrationExecution:
                 case["cleanup_verified"] = document["local_audio_cleanup_confirmed"]
             self.ledger.append(run["id"], case["id"], document)
 
-        report = await local_voice.execute(host, case, run["physical_bindings"][case["role"]], emit)
-        self.ledger.append(run["id"], case["id"], {"local_reference_report": report})
+        binding = run["physical_bindings"][case["role"]]
+        if case["driver"] == "local_audio_negative":
+            report = await local_audio_validation.case(host, binding, emit)
+            evidence_kind = "local_negative_report"
+            assertion = "confirmed_audio_rejections_and_cancel_recovery"
+        else:
+            report = await local_voice.execute(host, case, binding, emit)
+            evidence_kind = "local_reference_report"
+            assertion = "verified_reference_codec_and_playback_command"
+        self.ledger.append(run["id"], case["id"], {evidence_kind: report})
         case.update(
             status="completed",
             assessment="pass",
             cleanup_verified=True,
             measurements=report,
+            assertions=[{"code": assertion, "outcome": "pass"}],
+        )
+
+    async def matrix_local_capture_review(self, run, case, host):
+        try:
+            report = await host.campaign_exports.run(local_voice.review_capture, host.audio, case)
+        except (OSError, RuntimeError, ValueError) as exc:
+            reason = str(exc) or type(exc).__name__
+            self.ledger.append(run["id"], case["id"], {"capture_evidence_error": reason})
+            case.update(status="completed", assessment="inconclusive", reason=reason)
+            return
+        self.ledger.append(run["id"], case["id"], {"local_capture_review": report})
+        case.update(
+            status="completed",
+            assessment=report["outcome"],
+            reason=report["reason"],
+            audio_jobs=report["jobs"],
+            cleanup_verified=True,
+            measurements=report,
             assertions=[
-                {"code": "verified_reference_codec_and_playback_command", "outcome": "pass"}
+                {"code": "verified_capture_artifact_and_playback_completion", "outcome": "pass"},
+                {
+                    "code": "operator_listening_and_microphone_response",
+                    "outcome": report["outcome"],
+                },
             ],
         )
 
@@ -2068,8 +2112,10 @@ class IntegrationExecution:
                     await self.matrix_fault_case(run, case, spec, host)
                 elif case["driver"] in ("voice_reference", "sustained_voice"):
                     await self.matrix_voice_case(run, case, host)
-                elif case["driver"] == "local_voice_reference":
+                elif case["driver"] in ("local_voice_reference", "local_audio_negative"):
                     await self.matrix_local_voice_case(run, case, host)
+                elif case["driver"] == "local_voice_capture_review":
+                    await self.matrix_local_capture_review(run, case, host)
                 elif case["driver"] == "ops_campaign":
                     await self.matrix_ops_case(run, case, spec, host)
                 elif case["driver"] == "ops_stability":

@@ -1,4 +1,4 @@
-"""Use verified reference PCM to exercise one node's audio stages."""
+"""Exercise reference PCM and review retained attended one-node audio runs."""
 
 import asyncio
 import hashlib
@@ -19,6 +19,10 @@ GROUPS = {
 
 
 def cases(request, groups):
+    saved = {
+        (item.group, item.role, item.utterance, item.repetition): item
+        for item in request.local_voice_evidence or ()
+    }
     for group in groups:
         references = request.voice_reference_ids if group == "C3" else None
         clips = references or [None] * 3
@@ -29,10 +33,20 @@ def cases(request, groups):
                 "group": group,
                 "variant": f"{GROUPS['VOICE-01'][group]}_{ordinal}",
                 "repetition": repetition,
-                "driver": "local_voice_reference" if group == "C3" else "local_voice_operator",
+                "driver": {
+                    "C1": "local_voice_capture_review",
+                    "C2": "local_voice_capture_review",
+                    "C3": "local_voice_reference",
+                    "C4": "local_audio_negative",
+                }[group],
                 "role": role,
                 "reference_id": reference,
                 "sample_count": EXPECTED_SAMPLES,
+                **(
+                    {"capture_evidence": entry.model_dump()}
+                    if (entry := saved.get((group, role, ordinal, repetition)))
+                    else {}
+                ),
             }
 
 
@@ -41,10 +55,20 @@ def request_for(case):
 
 
 def blockers(voice, case):
-    if case["driver"] == "local_voice_operator":
-        if case["group"] == "C4":
-            return ["The complete invalid-artifact and cancellation series is unavailable"]
-        return ["The microphone cases need an attended utterance schedule"]
+    if case["driver"] == "local_voice_capture_review":
+        reference = case.get("capture_evidence")
+        if not reference:
+            return ["Attach the saved microphone capture and local playback operations"]
+        if voice is None:
+            return ["Saved local audio evidence is unavailable"]
+        try:
+            for stage in ("capture", "codec", "playback"):
+                if identifier := reference.get(stage):
+                    if voice.audio.get(identifier)["status"] != "completed":
+                        return [f"The saved {stage} operation is incomplete"]
+        except ValueError as exc:
+            return [str(exc)]
+        return []
     if not case["reference_id"]:
         return ["Select a saved three-second reference"]
     if voice is None:
@@ -66,6 +90,86 @@ def blockers(voice, case):
     except ValueError as exc:
         reasons.append(str(exc))
     return reasons
+
+
+def review_capture(audio, case):
+    reference = case["capture_evidence"]
+    capture, playback = (audio.get(reference[stage]) for stage in ("capture", "playback"))
+    codec = audio.get(reference["codec"]) if reference["codec"] else None
+    jobs = [capture, codec, playback] if codec else [capture, playback]
+    if (
+        [job["action"] for job in jobs]
+        != (["capture", "codec", "play"] if codec else ["capture", "play"])
+        or any(
+            job["role"] != case["role"]
+            or job["status"] != "completed"
+            or job["physical_binding"] != capture["physical_binding"]
+            or job["sample_count"] != EXPECTED_SAMPLES
+            or not (job.get("cleanup_details") or {}).get("confirmed")
+            for job in jobs
+        )
+        or any(a["finished_at"] > b["created_at"] for a, b in zip(jobs, jobs[1:], strict=False))
+    ):
+        raise ValueError("The stages must be ordered completed audio operations on the same node")
+    clip = capture.get("clip") or {}
+    captured_manifest = (capture["node_result"]["result"] or {}).get("artifact") or {}
+    if (
+        clip.get("raw_bytes") != EXPECTED_SAMPLES * 2
+        or clip.get("pcm_sha256") != captured_manifest.get("sha256")
+        or clip.get("sample_rate_hz") != 8000
+    ):
+        raise ValueError("The original microphone clip did not verify")
+    audio.wav(capture["id"])
+    expected_playback = captured_manifest
+    manifests = None
+    if codec:
+        manifests = {stage: entry["manifest"] for stage, entry in codec["codec_artifacts"].items()}
+        if (
+            not codec["verified_roundtrip"]
+            or manifests.get("source") != captured_manifest
+            or (manifests.get("encoded") or {}).get("length_bytes") != EXPECTED_ENCODED_BYTES
+            or (manifests.get("decoded") or {}).get("length_bytes") != EXPECTED_SAMPLES * 2
+            or any(
+                (codec["codec_operations"][action].get("result") or {}).get("frames_completed")
+                != 150
+                for action in ("encode", "decode")
+            )
+        ):
+            raise ValueError(
+                "The codec result does not match the captured PCM or 150 expected frames"
+            )
+        for stage in ("source", "encoded", "decoded"):
+            audio.codec_content(codec["id"], stage)
+        expected_playback = manifests["decoded"]
+    if playback["source_manifest"] != expected_playback:
+        raise ValueError("The playback source does not match the selected saved PCM")
+    heard = playback["listening"]["heard"]
+    if clip["near_silence"]:
+        outcome, reason = "inconclusive", "The microphone recording is near silence"
+    elif heard == "heard":
+        outcome, reason = "pass", None
+    elif heard == "not_heard":
+        outcome, reason = "fail", "The operator heard no playback"
+    else:
+        outcome, reason = "inconclusive", "Record the operator listening result for playback"
+    return {
+        "outcome": outcome,
+        "reason": reason,
+        "jobs": {job["action"]: job["id"] for job in jobs},
+        "physical_binding": capture["physical_binding"],
+        "capture_configuration": capture["configuration"],
+        "clip": {key: value for key, value in clip.items() if key != "waveform"},
+        "capture_wav": f"/api/audio/operations/{capture['id']}/wav",
+        "decoded_wav": f"/api/audio/operations/{codec['id']}/artifacts/decoded?as_wav=true"
+        if codec
+        else None,
+        "encoded_artifact": f"/api/audio/operations/{codec['id']}/artifacts/encoded"
+        if codec
+        else None,
+        "codec_manifests": manifests,
+        "codec_configuration": codec["codec_configuration"] if codec else None,
+        "listening": playback["listening"],
+    }
 
 
 async def execute(host, case, binding, emit):

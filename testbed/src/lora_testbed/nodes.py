@@ -908,6 +908,31 @@ class NodeSession:
                     future.cancel()
         return replies
 
+    async def exercise_audio_rejection(self, variant, artifact_id, on_record):
+        args = artifact_contract_v2.ArtifactReference(artifact_id=artifact_id).model_dump()
+        async with self.command_lock:
+            if not self.connected or not self.identity or not self.health:
+                raise ValueError("Audio refusal needs an owned control connection")
+            if variant == "oversized_capture":
+                name = "audio.capture"
+                limits = audio_contract_v2.require_capability(
+                    self.identity.capabilities, self.health.capability_availability, name
+                )
+                args["sample_count"] = limits.max_samples + 1
+            elif variant == "bad_chunk_crc":
+                name = "artifact.put"
+                require_artifact_compatible(
+                    self.identity.model_dump(),
+                    name,
+                    self.health.capability_availability.model_dump(),
+                )
+                args.update(offset=0, data_b64="AA==", crc32="00000000")
+            else:
+                raise ValueError("Unknown local audio refusal case")
+            command = self._next_command(name, args)
+            [reply] = await self._fixed_serial_exchange([v2.encode(command)], [command], on_record)
+            return reply
+
     async def exercise_reply_recovery(self, variant, on_record):
         if variant not in serial_replies.VARIANTS:
             raise ValueError("Unknown reply perturbation case")

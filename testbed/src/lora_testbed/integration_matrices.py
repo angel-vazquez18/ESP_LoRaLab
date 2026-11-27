@@ -124,6 +124,16 @@ class ResetEvidenceReference(USBEvidenceReference):
     stale_boot_procedure: UUID
 
 
+class LocalVoiceEvidenceReference(ContractModel):
+    group: Literal["C1", "C2"]
+    role: Literal["A", "B"]
+    utterance: int = Field(ge=1, le=3)
+    repetition: int = Field(ge=1, le=3)
+    capture: UUID
+    playback: UUID
+    codec: UUID | None = None
+
+
 class MatrixRequest(ContractModel):
     catalog_id: Literal[
         "IF-01",
@@ -181,6 +191,9 @@ class MatrixRequest(ContractModel):
     rf_echoes_per_case: int | None = Field(default=None, ge=0, le=100)
     subset_sizes: list[int] | None = Field(default=None, min_length=1, max_length=11)
     voice_reference_ids: list[UUID] | None = Field(default=None, min_length=1, max_length=3)
+    local_voice_evidence: list[LocalVoiceEvidenceReference] | None = Field(
+        default=None, min_length=1, max_length=36
+    )
 
     @model_validator(mode="after")
     def selections(self):
@@ -211,6 +224,35 @@ class MatrixRequest(ContractModel):
             raise ValueError("Voice references belong to a voice procedure")
         if self.catalog_id == "VOICE-03" and len(self.voice_reference_ids or ()) > 1:
             raise ValueError("Use the same single reference for all fixed-rate profiles")
+        if self.local_voice_evidence:
+            if self.catalog_id != "VOICE-01":
+                raise ValueError("Local microphone evidence belongs to VOICE-01")
+            keys, captures, outputs = set(), set(), set()
+            for row in self.local_voice_evidence:
+                if (
+                    row.role not in self.roles
+                    or row.repetition > self.repetitions
+                    or self.groups is not None
+                    and row.group not in self.groups
+                    or (row.codec is not None) != (row.group == "C2")
+                ):
+                    raise ValueError(
+                        "Match each microphone recording to the selected case and stages"
+                    )
+                keys.add((row.group, row.role, row.utterance, row.repetition))
+                captures.add((row.group, row.capture))
+                outputs.add(row.playback)
+                if row.codec:
+                    outputs.add(row.codec)
+            expected = len(self.local_voice_evidence)
+            if (
+                len(keys) != expected
+                or len(captures) != expected
+                or len(outputs)
+                != expected + sum(row.codec is not None for row in self.local_voice_evidence)
+                or outputs.intersection(row.capture for row in self.local_voice_evidence)
+            ):
+                raise ValueError("Use distinct local audio cases and stage records")
         if self.rf_echoes_per_case is not None and self.catalog_id not in rf_sweeps.GROUPS:
             raise ValueError("Matched echo count belongs to RF sweep procedures")
         if self.catalog_id != "OPS-01" and self.ops_observation_s != ops_matrix.STABILITY_SECONDS:
