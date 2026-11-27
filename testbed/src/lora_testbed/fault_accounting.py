@@ -201,7 +201,7 @@ def assess_incomplete_drop(run, expected, target, require):
         and len({frame["frame_seq"] for frame in actual.values()}) == count
         and all(
             frame["session_id"] == run["session_id"]
-            and frame["message_id"] == 1
+            and frame["message_id"] == run.get("message_id", 1)
             and frame["frame_type"] == "data"
             and frame["attempt_index"] == 1
             and frame["status"] == "completed"

@@ -55,6 +55,8 @@ def cases(request, groups):
             "session_scope": (
                 "one retained session spanning 129 subsequent originals and fresh recovery"
                 if old_window
+                else "one protected session for all numbered messages"
+                if packet
                 else "one finite session per message with separate intact controls"
             ),
         }
@@ -62,7 +64,7 @@ def cases(request, groups):
 
 def intact_packet_evidence(run, request, read_content):
     """Recheck both archived artifacts and every fragment of an intact workload."""
-    expected = known_data(request.source_seed, 1, request.message_bytes)
+    expected = known_data(request.source_seed, run.get("message_id", 1), request.message_bytes)
     digest = sha256(expected).hexdigest()
     capacity = request.link.fragment_payload_bytes
     count = (len(expected) + capacity - 1) // capacity
@@ -140,14 +142,15 @@ def retry_cases(request, groups):
             }
 
 
-def selected_request(spec, case, ordinal):
+def selected_request(spec, case, ordinal, *, numbered=False):
     capacity = case["fragment_payload_bytes"]
     size = case["message_bytes"]
     options = {
         "direction": case["direction"],
         "message_bytes": size,
         "security": case["security"],
-        "source_seed": (spec.seed + 10 * (case["repetition"] - 1) + ordinal) % 2**32,
+        "source_seed": (spec.seed + 10 * (case["repetition"] - 1) + (0 if numbered else ordinal))
+        % 2**32,
         "link": Link(
             fragment_payload_bytes=capacity,
             ack_mode=case.get("ack_mode", "none"),

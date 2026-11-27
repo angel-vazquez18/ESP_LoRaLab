@@ -7,6 +7,7 @@ import io
 import json
 import secrets
 import zipfile
+from dataclasses import dataclass
 from pathlib import Path
 from time import monotonic, monotonic_ns
 from typing import Literal
@@ -321,6 +322,28 @@ class PreparedArtifact(StrictModel):
     length_bytes: int = Field(ge=1, le=65536)
 
 
+def require_numbered_idle(record, role, status):
+    if (
+        status["state"] != "idle"
+        or status["run_id"] is not None
+        or not status["security_ready"]
+        or status["config_revision"] != record["applied_settings"][role]["config_revision"]
+    ):
+        raise ValueError(f"Node {role} did not retain the idle numbered session")
+
+
+@dataclass
+class NumberedSession:
+    wire_run_id: str
+    session_id: str
+    bindings: dict
+    count: int
+    lab: bool
+    next_message: int = 1
+    applied_settings: dict | None = None
+    key_set_id: str | None = None
+
+
 class RadioRuns:
     def __init__(self, store, nodes, artifacts, adapter=None, observations=None):
         self.store, self.nodes, self.artifacts = store, nodes, artifacts
@@ -493,7 +516,7 @@ class RadioRuns:
 
     def observe(self, role, event):
         r = self.current
-        if not r or event.get("run_id") != r["id"]:
+        if not r or event.get("run_id") != r.get("wire_run_id", r["id"]):
             return
         expected = r["identities"][role]
         if (event.get("device_id"), event.get("boot_id")) != (
@@ -510,7 +533,7 @@ class RadioRuns:
         except (ValueError, OSError) as exc:
             r["evidence_error"] = str(exc)
 
-    def preflight(self, request):
+    def preflight(self, request, *, numbered=None):
         blockers = []
         if (
             isinstance(request, PeerProfileMismatchCheck)
@@ -529,13 +552,17 @@ class RadioRuns:
             if node.snapshot()["connection_state"] != "connected" or node.health is None:
                 blockers.append(f"Node {role} needs fresh health")
                 continue
-            if (
-                node.health.state != "idle"
-                or node.health.node_role != role
-                or node.health.run_id is not None
-                or node.rf_run_id
+            previous = numbered is not None and numbered.next_message > 1
+            if node.health.node_role != role or (
+                node.rf_run_id != numbered.wire_run_id
+                if previous
+                else node.health.state != "idle" or node.health.run_id is not None or node.rf_run_id
             ):
-                blockers.append(f"Node {role} must be owned, idle and outside another RF session")
+                blockers.append(
+                    f"Node {role} no longer owns the numbered session"
+                    if previous
+                    else f"Node {role} must be owned, idle and outside another RF session"
+                )
             if node.identity.device_id in ids:
                 blockers.append("Connect two distinct physical device identities")
             ids.add(node.identity.device_id)
@@ -549,13 +576,16 @@ class RadioRuns:
                 except ValueError as exc:
                     blockers.append(f"Node {role}: {exc}")
                     break
-            if isinstance(request, (LabRadioRunRequest, KeyMismatchRunRequest)):
+            use_lab = isinstance(request, LabRadioRunRequest) or (
+                numbered is not None and numbered.lab
+            )
+            if use_lab or isinstance(request, KeyMismatchRunRequest):
                 if not (
                     node.identity.capabilities.fault_injection
                     and node.health.capability_availability.fault_injection
                 ):
                     blockers.append(f"Node {role} needs explicit lab firmware")
-                elif isinstance(request, LabRadioRunRequest):
+                elif use_lab:
                     for name in run_protocol_v2.LAB_FAULT_COMMANDS:
                         try:
                             require_execution_compatible(
@@ -631,14 +661,43 @@ class RadioRuns:
             "hardware_qualified": False,
         }
 
-    async def start(self, request):
+    def numbered_session(self, count, *, lab):
+        if not 1 <= count <= 256:
+            raise ValueError("Numbered session must declare 1 through 256 messages")
+        bindings = {role: self.adapter.bind(role) for role in self.nodes}
+        return NumberedSession(
+            str(uuid4()), f"{secrets.randbits(64) or 1:016x}", bindings, count, lab
+        )
+
+    async def close_numbered(self, numbered, record):
+        details, evidence = {}, []
+        for role, binding in numbered.bindings.items():
+            details[role] = await self.adapter.cleanup(
+                binding,
+                run_id=numbered.wire_run_id,
+                on_record=lambda value, selected=role: evidence.append({"role": selected, **value}),
+            )
+        for row in evidence:
+            record(row)
+        return details
+
+    async def start(self, request, *, numbered=None):
         if self.busy:
             raise RuntimeError("Another radio run owns the bench")
-        ready = self.preflight(request)
+        if numbered:
+            if not 1 <= numbered.next_message <= numbered.count or (
+                request.security != "aes128_gcm" or request.plan().spec.source != "known_data"
+            ):
+                raise ValueError(
+                    "A numbered session requires the next protected known-data message"
+                )
+            for binding in numbered.bindings.values():
+                self.adapter.current(binding)
+        ready = self.preflight(request, numbered=numbered) if numbered else self.preflight(request)
         if not ready["ready"]:
             raise ValueError("; ".join(ready["blockers"]))
         identifier = str(uuid4())
-        session = f"{secrets.randbits(64) or 1:016x}"
+        session = numbered.session_id if numbered else f"{secrets.randbits(64) or 1:016x}"
         source, receiver = ("A", "B") if request.direction == "A_TO_B" else ("B", "A")
         record = {
             "id": identifier,
@@ -717,12 +776,22 @@ class RadioRuns:
                 for r, n in self.nodes.items()
             },
         }
+        if numbered:
+            record.update(
+                wire_run_id=numbered.wire_run_id,
+                message_id=numbered.next_message,
+                numbered_count=numbered.count,
+                physical_bindings=numbered.bindings,
+                scope="one verified member of a protected numbered session",
+            )
         if isinstance(request, KeyMismatchRunRequest):
             record["security"]["controlled_receiver_key_mismatch"] = True
         if isinstance(request, (TransmitterPowerRunRequest, TransmitterPowerEchoRunRequest)):
             record["receiver_power_dbm"] = request.receiver_power_dbm
         if isinstance(request, LabRadioRunRequest):
             injection = request.injection.model_dump()
+            if numbered:
+                injection["message_id"] = numbered.next_message
             record["lab"] = {
                 "injection": injection,
                 "role": receiver
@@ -739,7 +808,10 @@ class RadioRuns:
         self.current = record
         self.started = self.stop_requested = self.cleaning_up = False
         self.save(record)
-        self.task = asyncio.create_task(self.run(record, request))
+        pending = (
+            self.run(record, request, numbered=numbered) if numbered else self.run(record, request)
+        )
+        self.task = asyncio.create_task(pending)
         return record.copy()
 
     def same_boot(self, r, role, *, cleanup=False):
@@ -755,7 +827,9 @@ class RadioRuns:
             r["physical_bindings"][role],
             name,
             args,
-            run_id=r["id"] if name.startswith(("session.", "run.", "fault.")) else None,
+            run_id=r.get("wire_run_id", r["id"])
+            if name.startswith(("session.", "run.", "fault."))
+            else None,
             on_record=lambda value: self.trace_command(r, role, value, cleanup),
             key_set_id=key_set_id,
             **kwargs,
@@ -790,7 +864,9 @@ class RadioRuns:
                         spec["expected_sha256"]
                         if spec["source"] in ("encoded_source", "fixed_rate_encoded")
                         else hashlib.sha256(
-                            known_data(spec["source_seed"], 1, spec["message_bytes"])
+                            known_data(
+                                spec["source_seed"], r.get("message_id", 1), spec["message_bytes"]
+                            )
                         ).hexdigest()
                     )
                     if (
@@ -819,6 +895,7 @@ class RadioRuns:
                         or observed["data"]["config_revision"]
                         != r["applied_settings"][role]["config_revision"]
                         or observed["data"]["source_sha256"] != expected
+                        or observed["data"].get("message_id") != r.get("message_id")
                         or (r.get("lab") and observed["data"]["budget"] != r["lab"]["budget"])
                     ):
                         raise ValueError(
@@ -866,7 +943,7 @@ class RadioRuns:
         (self.directory / f"{r['id']}.{kind}.bin").write_bytes(data)
         return data
 
-    async def cleanup(self, r):
+    async def cleanup(self, r, numbered=None):
         retired = {}
         for role, identifier in r.get(
             "retire_echo_artifacts", r.get("retire_data_artifacts", {})
@@ -878,16 +955,39 @@ class RadioRuns:
                 retired[role] = {"artifact_id": identifier, "confirmed": True}
             except (TimeoutError, ValueError, OSError) as exc:
                 retired[role] = {"artifact_id": identifier, "confirmed": False, "error": str(exc)}
+        retain = (
+            numbered is not None
+            and r["status"] == "completed"
+            and r["message_id"] < numbered.count
+            and all(item["confirmed"] for item in retired.values())
+        )
+        idle_errors = {}
+        if retain:
+            for role in self.nodes:
+                try:
+                    status = await self.command(r, role, "status.get", cleanup=True)
+                    require_numbered_idle(r, role, status)
+                except (OSError, ValueError, TimeoutError) as exc:
+                    idle_errors[role] = str(exc)
+            if not idle_errors:
+                return {
+                    "confirmed": True,
+                    "session_retained": True,
+                    "retired_data_artifacts": retired,
+                    "nodes": {role: "idle with numbered session retained" for role in self.nodes},
+                }
         details = {}
         for role in self.nodes:
             details[role] = await self.adapter.cleanup(
                 r["physical_bindings"][role],
-                run_id=r["id"],
+                run_id=r.get("wire_run_id", r["id"]),
                 on_record=lambda value, selected=role: self.trace_command(r, selected, value, True),
             )
         return {
             "confirmed": all(detail["confirmed"] for detail in details.values())
-            and all(item["confirmed"] for item in retired.values()),
+            and all(item["confirmed"] for item in retired.values())
+            and not idle_errors,
+            **({"retained_session_errors": idle_errors} if idle_errors else {}),
             **(
                 {
                     "retired_echo_artifacts"
@@ -1077,7 +1177,97 @@ class RadioRuns:
         if not verified:
             raise ValueError("Fixed-source receiver archive bytes did not verify")
 
-    async def run(self, r, request):
+    async def open_radio_session(self, r, request, plan, key_mismatch):
+        for role in "AB":
+            selected = plan.radio
+            if role == r["receiver"]:
+                if isinstance(request, PeerMismatchCheck):
+                    selected = request.peer_radio
+                elif isinstance(
+                    request, (TransmitterPowerRunRequest, TransmitterPowerEchoRunRequest)
+                ):
+                    selected = plan.radio.model_copy(
+                        update={"tx_power_dbm": request.receiver_power_dbm}
+                    )
+            r["applied_settings"][role] = await self.command(
+                r,
+                role,
+                "config.set",
+                {"radio": selected.model_dump(), "link": plan.link.model_dump()},
+            )
+            applied = r["applied_settings"][role]
+            expected = {
+                **selected.model_dump(),
+                "ldro_enabled": ldro_enabled(selected),
+            }
+            if applied["radio"] != expected or applied["link"] != plan.link.model_dump():
+                raise ValueError(f"Node {role} applied settings differ from the request")
+        if isinstance(request, PeerMismatchCheck):
+            r["configuration_check"] = "peer_mismatch"
+            raise ValueError("Peer settings mismatch before provisioning and arming")
+        r["stage"] = "provisioning"
+        key_set = EphemeralKeySet() if request.security == "aes128_gcm" else None
+        alternate = None
+        if key_set:
+            r["security"].update(key_set_id=key_set.key_set_id, keys_retired_on_host=False)
+        try:
+            if key_mismatch:
+                alternate = EphemeralKeySet()
+                r["security"]["receiver_alternate_key_set_id"] = alternate.key_set_id
+            for role, peer in [("A", "B"), ("B", "A")]:
+                identity = r["identities"][peer]
+                args = (
+                    key_set.arguments(
+                        role, r["session_id"], identity["device_id"], identity["boot_id"]
+                    )
+                    if key_set
+                    else {
+                        "session_id": r["session_id"],
+                        "peer_device_id": identity["device_id"],
+                        "peer_boot_id": identity["boot_id"],
+                        "security": "none",
+                        "tx_key_hex": None,
+                        "rx_key_hex": None,
+                    }
+                )
+                try:
+                    if alternate and role == r["receiver"]:
+                        replacement = alternate.arguments(
+                            role,
+                            r["session_id"],
+                            identity["device_id"],
+                            identity["boot_id"],
+                        )
+                        args["rx_key_hex"] = replacement["rx_key_hex"]
+                        replacement.clear()
+                    await self.command(
+                        r,
+                        role,
+                        "session.open",
+                        args,
+                        key_set_id=key_set.key_set_id if key_set else None,
+                    )
+                finally:
+                    args.clear()  # Drop hex-string references as soon as the request ends.
+                status = await self.command(r, role, "status.get")
+                if (
+                    status["security_ready"] != bool(key_set)
+                    or status["node_role"] != role
+                    or status["state"] != "idle"
+                    or status["run_id"] not in (None, r["id"])
+                ):
+                    raise ValueError(
+                        f"Node {role} did not confirm the selected owned security state"
+                    )
+                r["security"]["provisioned"][role] = True
+        finally:
+            if alternate:
+                alternate.close()
+            if key_set:
+                key_set.close()
+            r["security"]["keys_retired_on_host"] = True
+
+    async def run(self, r, request, *, numbered=None):
         try:
             self.started = True
             if self.stop_requested:
@@ -1101,98 +1291,29 @@ class RadioRuns:
                         r["initial_artifact_ids"][role] = [
                             item["artifact_id"] for item in listing["artifacts"]
                         ]
-                for role in "AB":
-                    selected = plan.radio
-                    if role == r["receiver"]:
-                        if isinstance(request, PeerMismatchCheck):
-                            selected = request.peer_radio
-                        elif isinstance(
-                            request, (TransmitterPowerRunRequest, TransmitterPowerEchoRunRequest)
-                        ):
-                            selected = plan.radio.model_copy(
-                                update={"tx_power_dbm": request.receiver_power_dbm}
-                            )
-                    r["applied_settings"][role] = await self.command(
-                        r,
-                        role,
-                        "config.set",
-                        {"radio": selected.model_dump(), "link": plan.link.model_dump()},
+                if numbered and r["message_id"] > 1:
+                    r["applied_settings"] = numbered.applied_settings
+                    r["security"].update(
+                        key_set_id=numbered.key_set_id, provisioned={"A": True, "B": True}
                     )
-                    applied = r["applied_settings"][role]
-                    expected = {
-                        **selected.model_dump(),
-                        "ldro_enabled": ldro_enabled(selected),
-                    }
-                    if applied["radio"] != expected or applied["link"] != plan.link.model_dump():
-                        raise ValueError(f"Node {role} applied settings differ from the request")
-                if isinstance(request, PeerMismatchCheck):
-                    r["configuration_check"] = "peer_mismatch"
-                    raise ValueError("Peer settings mismatch before provisioning and arming")
-                r["stage"] = "provisioning"
-                key_set = EphemeralKeySet() if request.security == "aes128_gcm" else None
-                alternate = None
-                if key_set:
-                    r["security"].update(key_set_id=key_set.key_set_id, keys_retired_on_host=False)
-                try:
-                    if key_mismatch:
-                        alternate = EphemeralKeySet()
-                        r["security"]["receiver_alternate_key_set_id"] = alternate.key_set_id
-                    for role, peer in [("A", "B"), ("B", "A")]:
-                        identity = r["identities"][peer]
-                        args = (
-                            key_set.arguments(
-                                role, r["session_id"], identity["device_id"], identity["boot_id"]
-                            )
-                            if key_set
-                            else {
-                                "session_id": r["session_id"],
-                                "peer_device_id": identity["device_id"],
-                                "peer_boot_id": identity["boot_id"],
-                                "security": "none",
-                                "tx_key_hex": None,
-                                "rx_key_hex": None,
-                            }
-                        )
-                        try:
-                            if alternate and role == r["receiver"]:
-                                replacement = alternate.arguments(
-                                    role,
-                                    r["session_id"],
-                                    identity["device_id"],
-                                    identity["boot_id"],
-                                )
-                                args["rx_key_hex"] = replacement["rx_key_hex"]
-                                replacement.clear()
-                            await self.command(
-                                r,
-                                role,
-                                "session.open",
-                                args,
-                                key_set_id=key_set.key_set_id if key_set else None,
-                            )
-                        finally:
-                            args.clear()  # Drop hex-string references as soon as the request ends.
-                        status = await self.command(r, role, "status.get")
-                        if (
-                            status["security_ready"] != bool(key_set)
-                            or status["node_role"] != role
-                            or status["state"] != "idle"
-                            or status["run_id"] not in (None, r["id"])
-                        ):
-                            raise ValueError(
-                                f"Node {role} did not confirm the selected owned security state"
-                            )
-                        r["security"]["provisioned"][role] = True
-                finally:
-                    if alternate:
-                        alternate.close()
-                    if key_set:
-                        key_set.close()
-                    r["security"]["keys_retired_on_host"] = True
+                    for role in "AB":
+                        require_numbered_idle(r, role, await self.command(r, role, "status.get"))
+                else:
+                    await self.open_radio_session(r, request, plan, key_mismatch)
+                    if numbered:
+                        numbered.applied_settings = r["applied_settings"]
+                        numbered.key_set_id = r["security"]["key_set_id"]
                 if isinstance(request, PrepareLimitCheck):
                     r["stage"] = "resource_refusal"
                     await self.verify_prepare_refusal(r, request, plan.spec, budget)
                     return
+                if numbered and numbered.lab:
+                    for role in "AB":
+                        cleared = await self.command(
+                            r, role, "fault.set", {"injections": [], "replace": True}
+                        )
+                        if cleared["count"]:
+                            raise ValueError("Node did not clear the previous message fault")
                 if lab:
                     targets = lab.get("exhaustion_targets", [lab["injection"]])
                     configured = await self.command(
@@ -1203,9 +1324,10 @@ class RadioRuns:
                 r["stage"] = "preparing"
                 self.save(r)
                 for role in (r["receiver"], r["sender"]):
-                    accepted = await self.command(
-                        r, role, "run.prepare", {"spec": plan.spec.model_dump(), "budget": budget}
+                    preparation = run_protocol_v2.Prepare(
+                        spec=plan.spec, budget=budget, message_id=r.get("message_id")
                     )
+                    accepted = await self.command(r, role, "run.prepare", preparation.model_dump())
                     r["prepared"][role] = await self.prepared(r, role, accepted)
                 if isinstance(request, ReceiveEvidenceGapCheck):
                     receiver = r["receiver"]
@@ -1319,6 +1441,8 @@ class RadioRuns:
                     )
                     if missing_reply:
                         allowed_stops = ("timeout",) if role == r["sender"] else ("operator",)
+                    if summary.get("message_id") != r.get("message_id"):
+                        raise ValueError(f"Node {role} summary belongs to another message")
                     if r["summaries"][role]["stop_reason"] not in allowed_stops:
                         raise ValueError(
                             f"Node {role} stopped with {r['summaries'][role]['stop_reason']}"
@@ -1336,7 +1460,9 @@ class RadioRuns:
                 sweep_loss = isinstance(request, SweepRadioRunRequest) and not delivered
                 negative_delivery = (lab or key_mismatch or sweep_loss) and not delivered
                 if negative_delivery:
-                    expected = known_data(request.source_seed, 1, request.message_bytes)
+                    expected = known_data(
+                        request.source_seed, r.get("message_id", 1), request.message_bytes
+                    )
                     source = await self.retrieve(r, r["sender"], "source")
                     if source != expected:
                         raise ValueError("Source readback differs from the independent recipe")
@@ -1350,7 +1476,9 @@ class RadioRuns:
                     expected = (
                         source
                         if encoded
-                        else known_data(request.source_seed, 1, request.message_bytes)
+                        else known_data(
+                            request.source_seed, r.get("message_id", 1), request.message_bytes
+                        )
                     )
                     if encoded and (
                         len(source) != request.message_bytes
@@ -1440,7 +1568,7 @@ class RadioRuns:
                 for transfer in r["transfers"].values():
                     if self.artifacts.busy:
                         await self.artifacts.cancel(transfer)
-                r["cleanup"] = await self.cleanup(r)
+                r["cleanup"] = await (self.cleanup(r, numbered) if numbered else self.cleanup(r))
                 if r.get("connection_failures"):
                     r["cleanup_completed_monotonic_ns"] = monotonic_ns()
                 if r["status"] == "completed" and r["evidence_error"]:
@@ -1532,6 +1660,8 @@ class RadioRuns:
                         "full security qualification separate",
                     }
                 self.save(r)
+                if numbered and r["status"] == "completed" and r["cleanup"].get("session_retained"):
+                    numbered.next_message += 1
             finally:
                 self.current = None
 

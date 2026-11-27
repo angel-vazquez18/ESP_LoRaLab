@@ -550,10 +550,14 @@ class IntegrationExecution:
             if candidate.serial is not None or candidate.tasks:
                 await candidate.close(release=False)
 
-    async def matrix_radio_child(self, run, case, request, radio, adapter, purpose):
+    async def matrix_radio_child(
+        self, run, case, request, radio, adapter, purpose, *, numbered=None
+    ):
         for binding in run["physical_bindings"].values():
             adapter.current(binding)
-        child = await radio.start(request)
+        child = await (
+            radio.start(request, numbered=numbered) if numbered else radio.start(request)
+        )
         identifier = child["id"]
         task = radio.task
         try:
@@ -573,6 +577,7 @@ class IntegrationExecution:
                     "purpose": purpose,
                     "child_run_id": identifier,
                     "session_id": result["session_id"],
+                    **({"message_id": result["message_id"]} if numbered else {}),
                     "status": result["status"],
                     "applied_settings": result["applied_settings"],
                     "configuration_check": result.get("configuration_check"),
@@ -1467,10 +1472,112 @@ class IntegrationExecution:
             raise ValueError("Nested lab trial cleanup is unconfirmed")
         return record
 
+    async def matrix_numbered_packet_case(self, run, case, spec, host):
+        radio, adapter = host.radio, host.adapter
+        numbered = radio.numbered_session(case["message_count"], lab=case["group"] != "C1")
+        outcomes, members, intact = [], [], []
+
+        def record(value):
+            self.ledger.append(run["id"], case["id"], value)
+
+        try:
+            for ordinal in range(case["message_count"]):
+                request = fault_matrices.selected_request(spec, case, ordinal, numbered=True)
+                fault = isinstance(request, LabRadioRunRequest)
+                child = await self.matrix_radio_child(
+                    run,
+                    case,
+                    request,
+                    radio,
+                    adapter,
+                    "targeted_fault" if fault else "intact",
+                    numbered=numbered,
+                )
+                originals = sorted(
+                    event["data"]["frame_seq"]
+                    for event in child["events"]
+                    if event["role"] == child["sender"]
+                    and event["name"] == "tx.attempt"
+                    and event["data"]["frame_type"] == "data"
+                    and event["data"]["status"] == "completed"
+                    and event["data"]["attempt_index"] == 1
+                )
+                member = {
+                    "first_frame_seq": originals[0] if originals else None,
+                    "last_frame_seq": originals[-1] if originals else None,
+                    "originals_contiguous": bool(originals)
+                    and len(set(originals)) == len(originals) == originals[-1] - originals[0] + 1,
+                    "run_id": child["id"],
+                    "message_id": child["message_id"],
+                    "session_id": child["session_id"],
+                    "key_set_id": child["security"]["key_set_id"],
+                }
+                if fault:
+                    expected = known_data(
+                        request.source_seed, child["message_id"], request.message_bytes
+                    )
+                    finding = fault_accounting.assess(child, expected)
+                    record({"packet_fault": finding, **member})
+                else:
+                    finding = fault_matrices.intact_packet_evidence(child, request, radio.content)
+                    intact.append(finding)
+                    record({"intact_packet": finding})
+                members.append({**member, "assessment": finding["outcome"]})
+                outcomes.append(finding["outcome"])
+                if child["status"] != "completed":
+                    break
+        finally:
+            cleanup = await radio.close_numbered(numbered, record)
+            record({"numbered_session_cleanup": cleanup, "session_id": numbered.session_id})
+
+        clean = all(detail["confirmed"] for detail in cleanup.values())
+        bound = (
+            [member["message_id"] for member in members]
+            == list(range(1, case["message_count"] + 1))
+            and {member["session_id"] for member in members} == {numbered.session_id}
+            and {member["key_set_id"] for member in members} == {numbered.key_set_id}
+            and numbered.key_set_id is not None
+            and members[0]["first_frame_seq"] == 1
+            and all(member["originals_contiguous"] for member in members)
+            and all(
+                left["last_frame_seq"] + 1 == right["first_frame_seq"]
+                for left, right in zip(members, members[1:], strict=False)
+            )
+        )
+        recovery = case["group"] != "C2" or any(
+            member["message_id"] > case["target_ordinal"] and member["assessment"] == "pass"
+            for member in members
+        )
+        verdict = (
+            "fail"
+            if "fail" in outcomes
+            else "pass"
+            if clean and bound and recovery and set(outcomes) == {"pass"}
+            else "inconclusive"
+        )
+        case.update(
+            status="completed",
+            assessment=verdict,
+            cleanup_verified=clean,
+            measurements={
+                "message_outcomes": outcomes,
+                "target_ordinal": case["target_ordinal"],
+                "session_id": numbered.session_id,
+                "members": members,
+                "intact_packets": intact,
+            },
+            assertions=[
+                {"code": "same_session_complete_series", "outcome": verdict},
+                {"code": "intact_follow_up", "outcome": "pass" if recovery else "inconclusive"},
+            ],
+        )
+
     async def matrix_fault_case(self, run, case, spec, host):
+        if run["catalog_id"] == "PKT-02":
+            await self.matrix_numbered_packet_case(run, case, spec, host)
+            return
         radio, adapter = host.radio, host.adapter
         outcomes = []
-        intact_evidence = []
         for ordinal in range(case["message_count"]):
             request = fault_matrices.selected_request(spec, case, ordinal)
             if isinstance(request, LabRadioRunRequest):
@@ -1478,13 +1585,7 @@ class IntegrationExecution:
                 outcomes.append(trial["outcome"])
             else:
                 child = await self.matrix_radio_child(run, case, request, radio, adapter, "intact")
-                if run["catalog_id"] == "PKT-02" and case["group"] == "C1":
-                    evidence = fault_matrices.intact_packet_evidence(child, request, radio.content)
-                    intact_evidence.append(evidence)
-                    self.ledger.append(run["id"], case["id"], {"intact_packet": evidence})
-                    outcomes.append(evidence["outcome"])
-                else:
-                    outcomes.append("pass" if self.verified_link_child(child) else "inconclusive")
+                outcomes.append("pass" if self.verified_link_child(child) else "inconclusive")
         verdict = (
             "fail"
             if "fail" in outcomes
@@ -1499,7 +1600,6 @@ class IntegrationExecution:
             measurements={
                 "message_outcomes": outcomes,
                 "target_ordinal": case["target_ordinal"],
-                **({"intact_packets": intact_evidence} if intact_evidence else {}),
             },
             assertions=[{"code": "complete_matched_series", "outcome": verdict}],
         )

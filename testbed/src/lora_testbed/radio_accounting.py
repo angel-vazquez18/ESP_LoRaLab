@@ -48,6 +48,7 @@ def transfer_rates(record, transmissions, accepted_bytes, delivered_bytes):
 
 def reconcile(record, expected):
     sender, receiver = record["sender"], record["receiver"]
+    message_id = record.get("message_id", 1)
     link = record["plan"]["link"]
     protected = record["plan"]["spec"].get("security", "none") == "aes128_gcm"
     tag_bytes = 16 if protected else 0
@@ -66,7 +67,7 @@ def reconcile(record, expected):
         return row["frame_seq"], row["message_id"], row["fragment_index"]
 
     def bound(row):
-        if row.get("session_id") != record["session_id"] or row.get("message_id") != 1:
+        if row.get("session_id") != record["session_id"] or row.get("message_id") != message_id:
             invalid("unmatched session/message")
         i = row["fragment_index"]
         if not 0 <= i < count:
@@ -119,7 +120,7 @@ def reconcile(record, expected):
         and row["frame_type"] == "data"
         and row["session_id"] == record["session_id"]
         and row["source_role"] == sender
-        and row["message_id"] == 1
+        and row["message_id"] == message_id
     }
     if not set(unique.values()) <= observed:
         invalid("missing DATA receive observations")
@@ -127,7 +128,7 @@ def reconcile(record, expected):
     if (
         len(messages) != 1
         or messages[0]["status"] != "delivered"
-        or messages[0]["message_id"] != 1
+        or messages[0]["message_id"] != message_id
         or messages[0]["sha256"] != hashlib.sha256(expected).hexdigest()
         or messages[0]["message_bytes"] != len(expected)
         or messages[0]["fragment_count"] != count
@@ -273,6 +274,7 @@ def reconcile_sweep_loss(record, source):
 def failed_ranges(record):
     """Describe only retained failed-message ranges; absence never fills in RF loss."""
     receiver = record["receiver"]
+    message_id = record.get("message_id", 1)
     results = [
         event["data"]
         for event in record["events"]
@@ -298,7 +300,7 @@ def failed_ranges(record):
     capacity = record["plan"]["link"]["fragment_payload_bytes"]
     count = (size + capacity - 1) // capacity
     if (
-        result["message_id"] != 1
+        result["message_id"] != message_id
         or result["fragment_count"] != count
         or result["message_bytes"] != size
     ):
@@ -317,7 +319,7 @@ def failed_ranges(record):
         return incomplete("Missing-range parts are absent or duplicated")
     indexes = []
     for part in parts:
-        if part["message_id"] != 1 or part["part_count"] != result["missing_parts"]:
+        if part["message_id"] != message_id or part["part_count"] != result["missing_parts"]:
             return incomplete("Missing-range part metadata conflicts")
         for start, end in part["ranges"]:
             if start < 0 or end >= count or start > end or (indexes and start <= indexes[-1]):
