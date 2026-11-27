@@ -130,7 +130,7 @@ class IntegrationExecution:
                 blockers = local_voice.blockers(voice, case)
             elif case["driver"] == "local_audio_negative":
                 blockers = local_audio_validation.blockers(voice, case["role"])
-            elif case["driver"] in ("voice_reference", "voice_operator"):
+            elif case["driver"] in ("voice_reference", "voice_microphone_review"):
                 blockers = voice_matrix.blockers(voice, case)
             elif case["driver"] == "sustained_voice":
                 blockers = sustained_voice.blockers(voice, case)
@@ -281,6 +281,7 @@ class IntegrationExecution:
             "model_reference",
             "local_voice_reference",
             "local_voice_capture_review",
+            "voice_microphone_review",
             "local_audio_negative",
             "ops_restart_recovery",
             "campaign_restart_review",
@@ -1398,6 +1399,35 @@ class IntegrationExecution:
             ],
         )
 
+    async def matrix_voice_microphone_review(self, run, case, host):
+        case["voice_run_id"] = case["saved_voice_id"]
+        try:
+            report = await host.campaign_exports.run(
+                voice_matrix.review_microphone, host.voice, case
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            reason = str(exc) or type(exc).__name__
+            self.ledger.append(
+                run["id"],
+                case["id"],
+                {"voice_run_id": case["voice_run_id"], "evidence_error": reason},
+            )
+            case.update(status="completed", assessment="inconclusive", reason=reason)
+            return
+        self.ledger.append(run["id"], case["id"], {"voice_microphone_review": report})
+        case.update(
+            status="completed",
+            assessment=report["outcome"],
+            reason=report["reason"],
+            run_ids=report["radio_run_ids"],
+            cleanup_verified=True,
+            measurements=report,
+            assertions=[
+                {"code": "verified_microphone_delivery_and_matched_known_data", "outcome": "pass"},
+                {"code": "receiver_listening", "outcome": report["outcome"]},
+            ],
+        )
+
     async def matrix_fault_child(self, run, case, request, host):
         for binding in run["physical_bindings"].values():
             host.adapter.current(binding)
@@ -2112,6 +2142,8 @@ class IntegrationExecution:
                     await self.matrix_fault_case(run, case, spec, host)
                 elif case["driver"] in ("voice_reference", "sustained_voice"):
                     await self.matrix_voice_case(run, case, host)
+                elif case["driver"] == "voice_microphone_review":
+                    await self.matrix_voice_microphone_review(run, case, host)
                 elif case["driver"] in ("local_voice_reference", "local_audio_negative"):
                     await self.matrix_local_voice_case(run, case, host)
                 elif case["driver"] == "local_voice_capture_review":

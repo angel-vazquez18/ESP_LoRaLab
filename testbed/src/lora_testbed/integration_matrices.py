@@ -134,6 +134,13 @@ class LocalVoiceEvidenceReference(ContractModel):
     codec: UUID | None = None
 
 
+class VoiceMicrophoneEvidenceReference(ContractModel):
+    direction: Literal["A_TO_B", "B_TO_A"]
+    utterance: int = Field(ge=1, le=3)
+    repetition: int = Field(ge=1, le=3)
+    voice_run_id: UUID
+
+
 class MatrixRequest(ContractModel):
     catalog_id: Literal[
         "IF-01",
@@ -194,6 +201,9 @@ class MatrixRequest(ContractModel):
     local_voice_evidence: list[LocalVoiceEvidenceReference] | None = Field(
         default=None, min_length=1, max_length=36
     )
+    voice_microphone_evidence: list[VoiceMicrophoneEvidenceReference] | None = Field(
+        default=None, min_length=1, max_length=18
+    )
 
     @model_validator(mode="after")
     def selections(self):
@@ -224,6 +234,20 @@ class MatrixRequest(ContractModel):
             raise ValueError("Voice references belong to a voice procedure")
         if self.catalog_id == "VOICE-03" and len(self.voice_reference_ids or ()) > 1:
             raise ValueError("Use the same single reference for all fixed-rate profiles")
+        if self.voice_microphone_evidence:
+            entries = self.voice_microphone_evidence
+            keys = {(row.direction, row.utterance, row.repetition) for row in entries}
+            if self.catalog_id != "VOICE-02" or self.groups is not None and "C2" not in self.groups:
+                raise ValueError("Remote microphone evidence belongs to VOICE-02 C2")
+            if len(keys) != len(entries) or len({row.voice_run_id for row in entries}) != len(
+                entries
+            ):
+                raise ValueError("Use distinct voice cases and saved voice runs")
+            if any(
+                row.direction not in self.directions or row.repetition > self.repetitions
+                for row in entries
+            ):
+                raise ValueError("Each microphone observation must belong to a selected case")
         if self.local_voice_evidence:
             if self.catalog_id != "VOICE-01":
                 raise ValueError("Local microphone evidence belongs to VOICE-01")

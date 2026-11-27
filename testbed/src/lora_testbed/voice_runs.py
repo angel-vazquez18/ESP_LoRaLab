@@ -688,6 +688,7 @@ class VoiceRuns:
                 key: run.get(key)
                 for key in (
                     "id",
+                    "session_id",
                     "status",
                     "stage",
                     "plan",
