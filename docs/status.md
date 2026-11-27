@@ -4,6 +4,13 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Numbered messages in one protected session
+
+Firmware accepts an opt-in sequence of bounded known-data preparations under
+one security session. Native checks cover ten messages in each direction at
+16, 64, 160 and 199-byte fragment capacities, including a dropped fragment in
+message 3, intact recovery in message 4, and preserved replay state.
+
 ## November 27 — Rolling clock evidence
 
 TIME-02 can now assess rolling 32-edge fits from one saved continuous capture.

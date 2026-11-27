@@ -4,7 +4,7 @@ Issues #76 and #77 add fault controls for finite, generated known-data runs.
 Protected-frame mutation and replay require AES-GCM. Fragment and ACK controls
 work with the corresponding protected or unprotected run. The controls are available only when `CONFIG_LORALAB_LAB_FAULTS=y` and
 radio execution is available. The option defaults off. Use the matching
-`finite_message_execution_v6` schema for both nodes and the host. The diagnostic
+`finite_message_execution_v7` schema for both nodes and the host. The diagnostic
 and main-control schema fingerprints remain independent.
 
 `hello` lists the supported commands. Laboratory `health` records use the

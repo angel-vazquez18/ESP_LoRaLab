@@ -557,9 +557,9 @@ This measures sustained encoded-source feasibility; store-and-forward speaker
 playback is a separate observed mode, not a claim of continuous audio streaming.
 
 The finite source was introduced in `finite_message_execution_v3`, followed by
-verified echoes in v4. The selected `finite_message_execution_v6` retains both
-and adds the fragment and ACK extensions to the laboratory controls introduced
-in v5. Use its exact generated schema.
+verified echoes in v4. The v6 profile extended the v5 laboratory controls with
+fragment and ACK cases. The v7 profile adds optional numbered known-data
+preparation. Use the exact generated execution profile on both nodes and host.
 The source retains bounded `run.source` readback. It starts at nominal elapsed zero,
 retains actual wake times, uses a 0–30 second declared source drain, and keeps
 sender transmission distinct from receiver delivery. See
@@ -571,6 +571,23 @@ software evidence does not qualify physical sustained throughput.
 five-point listening rubric: 1 unintelligible, 2 occasional words, 3 meaning with
 effort, 4 mostly clear, 5 clear. Save listener identifier, clip order and notes.
 No universal pass score is invented; correctness and feasibility are separate.
+
+### Numbered protected known-data messages
+
+Include `message_id` in `run.prepare` to opt into an ordered series of up to 256
+individual known-data messages. Each preparation declares `message_count: 1`,
+keeps the same direction, seed, message length and applied radio/link revision,
+and reuses the original `run_id` and protected `session_id`. Start at 1 and
+increase by one. The message ID is part of the known-data recipe and each data
+frame, and is returned in the prepared and summary evidence. Keys, frame sequence
+allocation and receiver replay state persist across the finite message boundaries.
+
+Before preparing the next message, read back and retire the previous prepared
+artifact through its own ID. A bounded receive timeout still permits the next
+message after its missing ranges are reported. Stop, lease loss, reset and
+session close retire the protected session. An internal preparation failure
+ends a numbered session. In lab builds replace the previous target with the
+next message's declared target, or explicitly clear it before an intact message.
 
 ### Artifact transfer and resources
 
