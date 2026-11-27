@@ -263,10 +263,35 @@ def test_ops_receive_gap_preserves_verified_bytes_and_excludes_rf_loss(tmp_path,
 @pytest.mark.parametrize(
     ("variant", "direction"), [("restart_active", "A_TO_B"), ("restart_paused", "B_TO_A")]
 )
-def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
-    tmp_path, native_library, variant, direction
+@pytest.mark.parametrize("catalog", ["OPS-01", "IF-03"])
+def test_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
+    tmp_path, native_library, variant, direction, catalog
 ):
     async def scenario():
+        campaign = catalog == "IF-03"
+        group, input_key = (
+            ("C6", "campaign_restart_evidence") if campaign else ("C3", "ops_restart_evidence")
+        )
+        arguments = {
+            "catalog_id": catalog,
+            "groups": [group],
+            "repetitions": 1,
+            "messages_per_case": 1,
+        }
+        expected_spec = (
+            next(
+                case["campaign_request"]
+                for case in compile_matrix(MatrixRequest.model_validate(arguments))["cases"]
+                if case["variant"] == variant
+            )
+            if campaign
+            else {
+                "name": "Restart test",
+                "repetitions": 2,
+                "directions": [direction],
+                "templates": [{"label": "known data", "case": {"kind": "known_data"}}],
+            }
+        )
         before = Host(tmp_path)
         pair = Pair(before, native_library)
         await pair.connect()
@@ -274,21 +299,7 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
         try:
             if variant == "restart_paused":
                 bridge = asyncio.create_task(pair.bridge())
-            plan = before.campaign_plans.create(
-                CampaignSpec.model_validate(
-                    {
-                        "name": "Restart test",
-                        "repetitions": 2,
-                        "directions": [direction],
-                        "templates": [
-                            {
-                                "label": "known data",
-                                "case": {"kind": "known_data"},
-                            }
-                        ],
-                    }
-                )
-            )
+            plan = before.campaign_plans.create(CampaignSpec.model_validate(expected_spec))
             started = await before.start_campaign(plan["id"])
             identifier = started["id"]
             async with asyncio.timeout(5):
@@ -325,7 +336,7 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
             finally:
                 bridge.cancel()
                 await asyncio.gather(bridge, return_exceptions=True)
-            assert [role for role, _ in new_pair.frames] == [direction[0]]
+            assert [role for role, _ in new_pair.frames] == [original["cases"][0]["direction"][0]]
             assert campaigns.get(fresh["id"])["status"] == "completed"
             for node in host.physical.values():
                 await node.close()
@@ -333,13 +344,14 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
                 transport=ASGITransport(app=app), base_url="http://127.0.0.1"
             ) as ui:
                 endpoint = "/api/procedures/matrix"
-                arguments = {"catalog_id": "OPS-01", "groups": ["C3"], "repetitions": 1}
                 plan = (await ui.post(f"{endpoint}/preview", json=arguments)).json()
-                assert plan["ready_case_count"] == 0 and plan["case_count"] == 4
-                arguments["ops_restart_evidence"] = [
+                assert plan["ready_case_count"] == 0 and plan["case_count"] == (
+                    2 if campaign else 4
+                )
+                arguments[input_key] = [
                     {
                         "variant": variant,
-                        "direction": direction,
+                        **({} if campaign else {"direction": direction}),
                         "repetition": 1,
                         "interrupted": identifier,
                         "recovery": str(uuid4()),
@@ -350,7 +362,7 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
                 assert ["Unknown physical campaign execution"] in [
                     row["blockers"] for row in missing["cases"]
                 ]
-                arguments["ops_restart_evidence"][0]["recovery"] = fresh["id"]
+                arguments[input_key][0]["recovery"] = fresh["id"]
                 plan = (await ui.post(f"{endpoint}/preview", json=arguments)).json()
                 assert plan["ready_case_count"] == 1
                 accepted = await ui.post(
@@ -367,6 +379,17 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
                 assert case["measurements"]["verification"]["bytes_equal"]
                 assert not saved["hardware_validated"] and not saved["full_procedure_passed"]
                 assert not host.busy and not saved["physical_bindings"]
+                if campaign:
+                    assert case["measurements"]["campaign_trials"] == 6
+                    assert case["measurements"]["campaign_case_counts"]["skipped"] == 5
+                    wrong = await ui.post(endpoint, json={**arguments, "messages_per_case": 2})
+                    assert wrong.status_code == 202
+                    async with asyncio.timeout(5):
+                        await host.procedures.task
+                    wrong_plan = host.procedures.get(wrong.json()["id"])
+                    [invalid] = [row for row in wrong_plan["cases"] if row["status"] != "blocked"]
+                    assert invalid["assessment"] == "inconclusive"
+                    assert "prescribed campaign" in invalid["reason"]
                 damaged = host.radio.content(case["run_ids"][-1], "recovered")
                 damaged.write_bytes(b"unexpected")
                 accepted = await ui.post(endpoint, json=arguments)
@@ -378,3 +401,13 @@ def test_ops_restart_checks_saved_checkpoint_and_explicit_fresh_campaign(
                 assert case["assessment"] == "inconclusive" and "integrity" in case["reason"]
 
     asyncio.run(scenario())
+
+
+def test_if03_restart_plans_both_variants_three_times_with_full_workload():
+    plan = compile_matrix(MatrixRequest(catalog_id="IF-03", groups=["C6"]))
+    assert len(plan["cases"]) == 6
+    for case in plan["cases"]:
+        spec = CampaignSpec.model_validate(case["campaign_request"])
+        assert spec.repetitions == 100
+        assert len(spec.templates) == 3
+        assert spec.directions == ["A_TO_B", "B_TO_A"]
