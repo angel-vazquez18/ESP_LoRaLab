@@ -355,6 +355,18 @@ def assess(run, expected):
                 evidence=_refs(applied[0]),
                 outcome="fail",
             )
+    if action == "duplicate":
+        first_arrival = received[0]["data"]["rx_done_us"] if received else None
+        next_arrival = received[1]["data"]["rx_done_us"] if len(received) > 1 else None
+        require(
+            "exactly_one_rejected_duplicate_after_insertion",
+            len(received) == 2
+            and len(accepted) == 1
+            and len(rejected) == 1
+            and first_arrival <= accepted[0]["data"]["accepted_us"] < next_arrival
+            and rejected[0]["data"]["rx_done_us"] == next_arrival,
+            evidence=_refs(*received, *accepted, *rejected),
+        )
     if action in ("drop", "drop_ack"):
         matching = [e for e in received if e["data"]["rx_done_us"] == row["target_arrived_us"]]
         require(

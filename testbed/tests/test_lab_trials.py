@@ -65,6 +65,21 @@ def test_trial_matches_confirmed_fault_and_fresh_intact_controls(
             assert len({r["session_id"] for r in children.values()}) == 3
             assert all(child["cleanup"]["confirmed"] for child in children.values())
             assert not host.busy
+            if action == "duplicate":
+                duplicated = deepcopy(children["fault"])
+                matching = next(
+                    row
+                    for row in duplicated["events"]
+                    if row["name"] == "rx.frame" and row["data"]["fragment_index"] == 1
+                )
+                duplicated["events"].append(matching)
+                outcome = fault_accounting.assess(duplicated, known_data(743, 1, 81))
+                assert outcome["outcome"] == "inconclusive"
+                assert any(
+                    row["code"] == "exactly_one_rejected_duplicate_after_insertion"
+                    and row["outcome"] == "inconclusive"
+                    for row in outcome["checks"]
+                )
             if action == "xor_byte":
                 assert children["fault"]["available_content"] == ["source", "wire"]
                 rejected = deepcopy(children["fault"])
