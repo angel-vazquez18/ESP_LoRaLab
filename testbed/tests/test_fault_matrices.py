@@ -156,27 +156,33 @@ def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
                 catalog_id="PKT-02",
                 groups=["C2"],
                 directions=["A_TO_B"],
-                messages_per_case=3,
+                messages_per_case=4,
                 repetitions=1,
             )
             started = await host.start_procedure_matrix(spec)
-            async with asyncio.timeout(35):
+            async with asyncio.timeout(60):
                 await host.procedures.task
             saved = host.procedures.get(started["id"])
             [case] = saved["cases"]
             assert saved["assessment"] == "pass", saved
-            assert case["measurements"] == {
-                "message_outcomes": ["pass", "pass", "pass"],
-                "target_ordinal": 3,
-            }
-            assert len(case["run_ids"]) == 2
-            assert all(host.radio.get(i)["verification"]["bytes_equal"] for i in case["run_ids"])
-            [trial_id] = case["trial_ids"]
-            fault = host.radio.get(host.lab_trials.get(trial_id)["children"]["fault"])
+            measurements = case["measurements"]
+            assert measurements["message_outcomes"] == ["pass"] * 4
+            assert measurements["target_ordinal"] == 3
+            records = [host.radio.get(i) for i in case["run_ids"]]
+            assert [r["message_id"] for r in records] == [1, 2, 3, 4]
+            assert len({r["wire_run_id"] for r in records}) == 1
+            assert len({r["security"]["key_set_id"] for r in records}) == 1
+            assert {r["session_id"] for r in records} == {measurements["session_id"]}
+            assert len({r["id"] for r in records}) == 4
+            assert all(records[i]["verification"]["bytes_equal"] for i in (0, 1, 3))
+            assert all(r["cleanup"]["session_retained"] for r in records[:-1])
+            assert records[-1]["cleanup"]["confirmed"] and not host.busy
+            assert all(not node.rf_run_id for node in host.physical.values())
+            fault = records[2]
             assert fault["missing_evidence"]["missing_indexes"] == [4]
             assert fault["summaries"]["B"]["delivered_messages"] == 0
-            assert fault["plan"]["spec"]["source_seed"] == spec.seed + 2
-            expected = known_data(spec.seed + 2, 1, 1200)
+            assert fault["plan"]["spec"]["source_seed"] == spec.seed
+            expected = known_data(spec.seed, 3, 1200)
             changed = deepcopy(fault)
             accepted = [event for event in changed["events"] if event["name"] == "rx.accepted"]
             changed["events"].remove(accepted[-1])
@@ -200,6 +206,107 @@ def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
             await host.close()
 
     monkeypatch.setattr(fault_matrices, "PACKET_FRAGMENT_SIZES", (160,))
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize(
+    "group,expected_check",
+    [
+        ("C3", "exactly_one_rejected_duplicate_after_insertion"),
+        ("C4", "complete_reversed_block"),
+    ],
+)
+def test_same_session_packet_control_preserves_its_own_arrival_evidence(
+    tmp_path, native_library, monkeypatch, group, expected_check
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library, lab=True)
+        bridge = None
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="PKT-02",
+                groups=[group],
+                directions=["B_TO_A"],
+                messages_per_case=4,
+                repetitions=1,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(60):
+                await host.procedures.task
+            saved = host.procedures.get(started["id"])
+            [case] = saved["cases"]
+            assert case["assessment"] == "pass", case
+            members = case["measurements"]["members"]
+            assert [m["first_frame_seq"] for m in members] == [1, 8, 15, 22]
+            assert [m["last_frame_seq"] for m in members] == [7, 14, 21, 28]
+            actual = host.procedures.evidence(saved["id"], case_id=case["id"])
+            injected = next(row["document"] for row in actual if "packet_fault" in row["document"])
+            assert injected["message_id"] == 3
+            assert any(
+                row["code"] == expected_check and row["outcome"] == "pass"
+                for row in injected["packet_fault"]["checks"]
+            )
+            assert all(not node.rf_run_id for node in host.physical.values())
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    monkeypatch.setattr(fault_matrices, "PACKET_FRAGMENT_SIZES", (199,))
+    asyncio.run(scenario())
+
+
+def test_cancellation_between_members_closes_retained_session(
+    tmp_path, native_library, monkeypatch
+):
+    async def scenario():
+        host = Host(tmp_path)
+        pair = Pair(host, native_library)
+        bridge = None
+        reached_next = asyncio.Event()
+        original_start = host.radio.start
+
+        async def hold_before_next(request, *, numbered=None):
+            if numbered and numbered.next_message == 2:
+                reached_next.set()
+                await asyncio.Event().wait()
+            return await original_start(request, numbered=numbered)
+
+        monkeypatch.setattr(host.radio, "start", hold_before_next)
+        try:
+            await pair.connect()
+            bridge = asyncio.create_task(pair.bridge())
+            spec = MatrixRequest(
+                catalog_id="PKT-02",
+                groups=["C1"],
+                directions=["A_TO_B"],
+                messages_per_case=2,
+                repetitions=1,
+            )
+            started = await host.start_procedure_matrix(spec)
+            async with asyncio.timeout(30):
+                await reached_next.wait()
+            assert all(node.rf_run_id for node in host.physical.values())
+            stopped = await host.procedures.stop(expected_run_id=started["id"])
+            assert stopped["status"] == "cancelled"
+            [case] = stopped["cases"]
+            assert len(case["run_ids"]) == 1
+            assert all(not node.rf_run_id for node in host.physical.values())
+            for role in "AB":
+                status = await host.physical[role].request("status.get")
+                assert status["state"] == "idle" and not status["security_ready"]
+            assert not host.busy
+        finally:
+            if bridge:
+                bridge.cancel()
+                await asyncio.gather(bridge, return_exceptions=True)
+            await host.close()
+
+    monkeypatch.setattr(fault_matrices, "PACKET_FRAGMENT_SIZES", (199,))
     asyncio.run(scenario())
 
 
