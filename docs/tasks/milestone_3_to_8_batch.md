@@ -783,7 +783,7 @@ unconfirmed; V4.3 R2 GPIO5 conflicts with the previous audio plan.
 | --- | --- | --- |
 | IF-01–03 | Experiments matrix and `integration-matrix`, including campaign restart and navigation | Full physical repetitions and evidence |
 | RF-01–04 | Seeded sweeps, applied settings, delivery evidence and matched requester RTT | Full repetitions and bench review of baseline changes |
-| SEC-01–04 | Matched GCM, mutation, replay and local benchmark matrices | Old-window replay, rate and overhead comparisons and full repeated batches |
+| SEC-01–04 | Matched GCM rate and overhead review, mutation, replay and local benchmark matrices | Old-window replay and full physical repeated batches |
 | PKT-01–03 | Boundary/workload matrices, firmware limit refusal and exact packet fault trials | Same-session packet cohorts and invalid ACK |
 | TIME-01–02 | Matched echo, controlled timeout and offline `clock-evaluate` | Live pulse calibration, loaded measurements and calibrated delay |
 | MEM-01 | Idle, known data, audio stages, firmware limit refusal and controlled memory recovery | Full repetitions and physical acceptance |
@@ -967,3 +967,7 @@ Missing cases, altered setup and damaged raw evidence stay visible.
 IF-03 C5 captures navigation and reload on the same dashboard tab
 while the original campaign continues. The assessment needs both
 actions, verified transfer results and idle cleanup.
+
+SEC-01 now reports matched sender timing and verified goodput beside the
+actual DATA frame overhead. Unmatched source evidence and missing
+sender windows keep the timing comparison inconclusive.

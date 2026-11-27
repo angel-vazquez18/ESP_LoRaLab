@@ -14,10 +14,24 @@ It requires an actual `RESOURCE_LIMIT` reply before arming, unchanged
 configuration and artifact inventory, then a fresh verified 64-byte transfer.
 Protected cases retire the prior session and provision fresh keys for recovery.
 
-SEC-01 pairs unprotected and AES-GCM runs at 16, 64, 160 and 321 bytes with
-the same settings, direction and source seed. The retained TX records expose
-actual frame lengths. In protected mode, each DATA fragment has a 16-byte tag.
-Local crypto processing overhead is a separate benchmark.
+SEC-01 pairs unprotected and AES-GCM runs at 16, 64, 160 and 321 bytes
+by direction, size, repetition and message ordinal. A pair requires
+the same applied settings, node bindings and source recipe, a verified
+matching payload digest, fresh sessions and complete frame evidence.
+The retained TX records verify 16 extra bytes per protected DATA
+fragment. Frame byte totals cover the DATA frame reported by the
+driver. The local crypto benchmark measures processing separately.
+
+Open **Inspect cases** on a saved SEC-01 run to see the protected and
+unprotected comparison. Complete cohorts show unique-original delivery,
+actual DATA frame bytes, total sender transfer duration and verified
+payload goodput. Timing sums the observed windows from the first DATA
+TX command through the last DATA TX completion for each message, using
+that sender's clock. The backend retains zero and missing windows as
+untimed observations. Frame overhead remains visible if every pair
+matches and some timing is missing. Unmatched or missing pairs leave
+their cohort inconclusive. The procedure ZIP includes the summary in
+`procedure.json` and the detailed source observations in `evidence.jsonl`.
 
 The wrong-key control requires both nodes to advertise the matching lab build.
 It generates a fresh receiver key only in RAM and checks for a confirmed

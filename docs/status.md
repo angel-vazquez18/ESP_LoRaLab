@@ -4,6 +4,13 @@ Updated November 26, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 26 — Matched protected transfer measurements
+
+SEC-01 compares DATA frame sizes, unique-original delivery and verified
+payload goodput in matched unprotected and AES-GCM runs. The saved
+comparison counts missing pairs and timing windows. See
+[the comparison procedure](content_series.md).
+
 ## November 26 — Dashboard navigation and reload
 
 IF-03 C5 records dashboard navigation and reloads during its active
