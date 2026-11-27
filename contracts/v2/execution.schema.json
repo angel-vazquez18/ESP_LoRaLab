@@ -1732,6 +1732,20 @@
       "PreparedData": {
         "additionalProperties": false,
         "properties": {
+          "message_id": {
+            "anyOf": [
+              {
+                "maximum": 256,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Message Id"
+          },
           "config_revision": {
             "maximum": 4294967295,
             "minimum": 0,
@@ -2549,6 +2563,20 @@
       "SummaryData": {
         "additionalProperties": false,
         "properties": {
+          "message_id": {
+            "anyOf": [
+              {
+                "maximum": 256,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Message Id"
+          },
           "echo": {
             "anyOf": [
               {
@@ -2949,7 +2977,7 @@
     "additionalProperties": false,
     "properties": {
       "profile": {
-        "const": "finite_message_execution_v6",
+        "const": "finite_message_execution_v7",
         "title": "Profile",
         "type": "string"
       },
@@ -3754,6 +3782,20 @@
         },
         "budget": {
           "$ref": "#/$defs/Budget"
+        },
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
         }
       },
       "required": [
@@ -5110,6 +5152,20 @@
       },
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "echo": {
           "anyOf": [
             {

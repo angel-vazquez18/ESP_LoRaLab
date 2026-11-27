@@ -274,6 +274,8 @@ static cJSON *summary(rf_execution *r)
     string(r, o, "role", r->sender ? "sender" : "receiver");
     string(r, o, "session_id", r->plan.session_text);
     number(r, o, "config_revision", r->plan.revision);
+    if (r->plan.numbered)
+        number(r, o, "message_id", r->plan.message_id);
     number(r, o, "intended_messages", r->plan.fixed_source ? 20 : 1);
     number(r, o, "started_messages", r->plan.fixed_source ? r->sender ? source_taken(r) : r->received_messages : r->started);
     number(r, o, "finished_messages", r->plan.fixed_source ? r->sender ? r->source_finished_messages : r->delivered : r->finished && r->started);
@@ -388,14 +390,30 @@ static bool fire_window(const rf_execution *r)
     return r->port.lab_faults && r->sender && r->phase == RF_DRAINING && r->plan.fault_us &&
         !r->injected_tx && r->port.now_us(r->port.context) < r->drain_deadline;
 }
+#define RF_NUMBERED_MESSAGE_MAX 256U
+
+static bool numbered_run_can_continue(const rf_execution *r)
+{
+    return r->plan.numbered && r->finished && r->phase == RF_IDLE &&
+        (eq(r->stop_reason, "completed") || eq(r->stop_reason, "timeout")) &&
+        !r->radio_cleanup_failed && !r->source_cleanup_failed && rf_secure_ready(r->security);
+}
 static const char *fault_command(rf_execution *r, const cJSON *args, rf_plan *p, cJSON **result)
 {
     if (!r->port.lab_faults || !r->faults) return "MISSING_CAPABILITY";
     if (p->action == RF_FAULT_SET) {
         rf_fault_spec specs[RF_FAULT_BATCH]; size_t count; bool replace;
         if (!rf_fault_json_parse(args, specs, &count, &replace)) return "INVALID_ARGUMENT";
-        if ((r->phase != RF_IDLE && r->phase != RF_PREPARED) || (r->used && r->phase == RF_IDLE && count))
+        if (r->phase != RF_IDLE && r->phase != RF_PREPARED)
             return "INVALID_STATE";
+        if (r->used && r->phase == RF_IDLE && count) {
+            if (!numbered_run_can_continue(r) || !replace)
+                return "INVALID_STATE";
+            for (size_t i = 0; i < count; i++)
+                if (specs[i].message != r->plan.message_id + 1 ||
+                    specs[i].message > RF_NUMBERED_MESSAGE_MAX)
+                    return "INVALID_ARGUMENT";
+        }
         unsigned total = (replace ? 0 : rf_faults_count(r->faults)) + count;
         if (total > RF_FAULT_ENTRIES) return "RESOURCE_LIMIT";
         if (count && r->phase == RF_PREPARED &&
@@ -541,6 +559,8 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if (!id)
             return "INVALID_ARGUMENT";
         p->session = id;
+        p->message_id = 1;
+        p->numbered = false;
         snprintf(p->session_text, 17, "%s", session);
         snprintf(p->run, 37, "%s", run);
         snprintf(p->owner, 37, "%s", owner);
@@ -554,7 +574,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
             return "KEY_NOT_READY";
         if (r->plan.protected_mode && link->fragment_payload_bytes > 199)
             return "INVALID_ARGUMENT";
-        const char *const outer[] = {"spec", "budget"};
+        const char *const outer[] = {"spec", "budget", "message_id"};
         const char *const specs[] = {"catalog_id",
                                      "direction",
                                      "source",
@@ -581,9 +601,20 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if (p->fixed_source && p->role == (eq(text(s, "direction"), "B_TO_A") ? 2 : 1) &&
             (!r->port.source_worker.reserve || !r->port.source_worker.start || !r->port.source_worker.stop))
             return "MISSING_CAPABILITY";
-        if (r->used || r->phase != RF_IDLE || !r->radio->configured || !revision)
+        if (r->phase != RF_IDLE || !r->radio->configured || !revision)
             return "INVALID_STATE";
-        if (!allowed(args, outer, 2) || !allowed(s, specs, 14) || !allowed(b, budgets, 8) ||
+        p->numbered = cJSON_GetObjectItemCaseSensitive(args, "message_id") != NULL;
+        if (!integer(args, "message_id", 1, RF_NUMBERED_MESSAGE_MAX, 1, &p->message_id) ||
+            (p->numbered && (!p->protected_mode || p->encoded || p->echo)))
+            return "INVALID_ARGUMENT";
+        if (r->used) {
+            if (!numbered_run_can_continue(r) || !p->numbered ||
+                revision != r->plan.revision || p->message_id != r->plan.message_id + 1 ||
+                (r->artifact_reserved && artifact_store_find(r->artifacts, r->artifact_id)))
+                return "INVALID_STATE";
+        } else if (p->message_id != 1)
+            return "INVALID_STATE";
+        if (!allowed(args, outer, 3) || !allowed(s, specs, 14) || !allowed(b, budgets, 8) ||
             !literal(s, "catalog_id", p->echo ? "TIME-01" : p->fixed_source ? "VOICE-03" : p->encoded ? "VOICE-02" : "IF-02") ||
             !literal(s, "source", p->echo ? "echo" : p->fixed_source ? "fixed_rate_encoded" : p->encoded ? "encoded_source" : "known_data") ||
             !literal(s, "security", p->protected_mode ? "aes128_gcm" : "none") ||
@@ -608,6 +639,9 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if (!eq(direction, "A_TO_B") && !eq(direction, "B_TO_A"))
             return "INVALID_ARGUMENT";
         p->source = eq(direction, "A_TO_B") ? 1 : 2;
+        if (r->used && (p->source != r->plan.source || p->bytes != r->plan.bytes ||
+                        p->seed != r->plan.seed))
+            return "INVALID_ARGUMENT";
         if (p->encoded) {
             const char *id = text(s, "source_artifact_id"), *sha = text(s, "expected_sha256");
             if (!p->protected_mode || !source_text(id, 36) || !source_text(sha, 64) ||
@@ -682,7 +716,7 @@ const char *rf_execution_check(rf_execution *r, const char *name, const cJSON *a
         if ((faults || p->fault_us) && (p->encoded || p->echo || p->fixed_source)) return "INVALID_ARGUMENT";
         if (r->faults && !p->encoded && !p->echo) {
             rf_message_plan packet;
-            if (!rf_message_plan_init(&packet, p->session, 1, 1, p->source, p->source == 1 ? 2 : 1,
+            if (!rf_message_plan_init(&packet, p->session, 1, p->message_id, p->source, p->source == 1 ? 2 : 1,
                 0, p->protected_mode, link->ack_requested, p->bytes, link->fragment_payload_bytes) ||
                 !rf_faults_validate(r->faults, &packet, attempts)) return "INVALID_ARGUMENT";
             uint64_t minimum_fault = 0;
@@ -823,6 +857,8 @@ static bool prepare_failed(rf_execution *r)
     r->artifact_reserved = false;
     r->used = false;
     r->phase = RF_IDLE;
+    if (r->plan.numbered)
+        rf_execution_abort(r, "peer_failure", true);
     return false;
 }
 static bool publish_bytes(rf_execution *r, const void *bytes)
@@ -1007,11 +1043,11 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
         r->stop_reason = NULL;
         r->drops_start = r->port.drops(r->port.context);
         uint8_t digest[32];
-        if (!rf_message_plan_init(&r->fragments, p->session, 1, 1, p->source,
+        if (!rf_message_plan_init(&r->fragments, p->session, 1, p->message_id, p->source,
                                   p->source == 1 ? 2 : 1, p->encoded ? 1 : 0, p->protected_mode,
                                   p->link.ack_requested, p->bytes,
                                   p->link.fragment_payload_bytes) ||
-            (!p->encoded && !rf_known_data(r->port.hash, r->port.context, p->seed, 1, r->generated, p->bytes)) ||
+            (!p->encoded && !rf_known_data(r->port.hash, r->port.context, p->seed, p->message_id, r->generated, p->bytes)) ||
             ((!p->encoded || r->sender) && !r->port.hash(r->port.context, r->payload, p->bytes, digest)))
         {
             return prepare_failed(r);
@@ -1076,7 +1112,7 @@ bool rf_execution_apply(rf_execution *r, const rf_plan *p)
             r->receiver = rf_reassembly_create(port, p->session, p->source, p->role,
                                                p->link.fragment_payload_bytes);
             int64_t prepared_at = r->port.now_us(r->port.context);
-            if (!r->receiver || !rf_reassembly_begin(r->receiver, 1, p->encoded ? 1 : 0,
+            if (!r->receiver || !rf_reassembly_begin(r->receiver, p->message_id, p->encoded ? 1 : 0,
                 (p->protected_mode ? 1 : 0) | (p->link.ack_requested ? 2 : 0),
                 p->bytes, r->expected_hash, prepared_at,
                 prepared_at + (int64_t)p->duration_ms * 1000))
@@ -1226,7 +1262,7 @@ static void report_failure(rf_execution *r)
         uint16_t missing[64];
         size_t n = rf_reassembly_missing(r->receiver, r->missing_cursor, missing, 64);
         cJSON *o = object(r), *ranges = cJSON_CreateArray();
-        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
+        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : r->plan.message_id);
         number(r, o, "part_index", r->missing_part);
         number(r, o, "part_count", r->missing_parts);
         for (size_t i = 0; i < n; i++)
@@ -1252,7 +1288,7 @@ static void report_failure(rf_execution *r)
         if (!r->port.room(r->port.context, 1))
             return;
         cJSON *o = object(r);
-        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
+        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : r->plan.message_id);
         string(r, o, "status", "failed");
         number(r, o, "message_bytes", r->plan.bytes);
         string(r, o, "sha256", NULL);
@@ -1492,7 +1528,7 @@ static void received_ack(rf_execution *r, const node_radio_event *event)
     if (decoded)
     {
         number(r, o, "frame_seq", word(event->bytes + 16));
-        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
+        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : r->plan.message_id);
         number(r, o, "fragment_index", r->wire_fragment);
     }
     else
@@ -1536,7 +1572,7 @@ static bool insert_protected(void *context, const uint8_t header[40], const uint
         call->accepted = RF_WRONG_SESSION;
     else if (h->source != r->plan.source || h->destination != r->plan.role)
         call->accepted = RF_WRONG_ROLE;
-    else if ((r->plan.fixed_source ? (h->message_id < 1 || h->message_id > 20 || h->message_id < r->received_message) : h->message_id != 1) || h->message_bytes != r->plan.bytes || h->content != (r->plan.encoded ? 1 : 0) ||
+    else if ((r->plan.fixed_source ? (h->message_id < 1 || h->message_id > 20 || h->message_id < r->received_message) : h->message_id != r->plan.message_id) || h->message_bytes != r->plan.bytes || h->content != (r->plan.encoded ? 1 : 0) ||
              h->fragment_count != r->fragments.fragment_count ||
              h->flags != (unsigned)(1 | (r->plan.link.ack_requested ? 2 : 0)) ||
              bytes != h->body_bytes)
@@ -1785,6 +1821,8 @@ void rf_execution_tick(rf_execution *r)
         add(r, prepared, "budget", budget(r, &r->plan));
         number(r, prepared, "source_length_bytes", r->plan.bytes);
         string(r, prepared, "source_sha256", r->sha_hex);
+        if (r->plan.numbered)
+            number(r, prepared, "message_id", r->plan.message_id);
         send(r, "run.prepared", prepared);
         cJSON *result = object(r);
         string(r, result, "artifact_id", r->artifact_id);
@@ -2070,7 +2108,7 @@ void rf_execution_tick(rf_execution *r)
         string(r, o, "session_id", r->plan.session_text);
         string(r, o, "source_role", r->plan.source == 1 ? "A" : "B");
         number(r, o, "frame_seq", h.frame_sequence);
-        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
+        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : r->plan.message_id);
         number(r, o, "fragment_index", h.fragment_index);
         number(r, o, "payload_bytes", h.body_bytes);
         number(r, o, "accepted_us", r->port.now_us(r->port.context));
@@ -2090,7 +2128,7 @@ void rf_execution_tick(rf_execution *r)
         r->delivered++;
         hex(digest, r->sha_hex);
         cJSON *o = object(r);
-        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : 1);
+        number(r, o, "message_id", r->plan.fixed_source ? (r->sender ? r->active_message : r->received_message) : r->plan.message_id);
         string(r, o, "status", "delivered");
         number(r, o, "message_bytes", r->plan.bytes);
         string(r, o, "sha256", r->sha_hex);

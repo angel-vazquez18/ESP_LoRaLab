@@ -54,10 +54,10 @@ typedef struct
     rf_action action;
     char run[37], owner[37], operation[37], peer_device[17], peer_boot[32], session_text[17];
     uint64_t session;
-    uint32_t revision, seed, bytes, duration_ms;
+    uint32_t revision, seed, bytes, duration_ms, message_id;
     uint32_t ack_timeout, reassembly, drain, processing, fault_us;
     node_link_settings link;
-    bool protected_mode, encoded, fixed_source, echo;
+    bool protected_mode, encoded, fixed_source, echo, numbered;
     char source_artifact_id[37], expected_sha256[65];
     uint32_t sample_count;
     const cJSON *provision_keys, *fault_arguments;

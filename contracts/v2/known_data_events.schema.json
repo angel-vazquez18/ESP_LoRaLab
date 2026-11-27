@@ -1502,6 +1502,20 @@
     "PreparedData": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "config_revision": {
           "maximum": 4294967295,
           "minimum": 0,
@@ -2234,6 +2248,20 @@
     "SummaryData": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maximum": 256,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "echo": {
           "anyOf": [
             {

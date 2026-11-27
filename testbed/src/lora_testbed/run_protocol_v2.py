@@ -13,7 +13,7 @@ from . import source_protocol_v2 as source_protocol
 from . import v2
 from .experiments_v2 import Budget, ContractModel, KnownDataPlan, KnownDataSpec, Link, Radio
 
-EXECUTION_PROFILE = "finite_message_execution_v6"
+EXECUTION_PROFILE = "finite_message_execution_v7"
 ARM_WINDOW_US = 5_000_000
 ExecutionName = Literal[
     "session.open",
@@ -46,7 +46,7 @@ CLEANUP_COMMANDS = ("session.close", "run.stop", "run.summary", "run.source", "f
 
 
 class Capabilities(ContractModel):
-    profile: Literal["finite_message_execution_v6"]
+    profile: Literal["finite_message_execution_v7"]
     schema_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     commands: list[ExecutionName] | Literal["base", "lab"] = Field(min_length=1, max_length=12)
 
@@ -151,6 +151,19 @@ class EchoPlan(KnownDataPlan):
 class Prepare(ContractModel):
     spec: KnownDataSpec | EncodedSourceSpec | FixedRateSourceSpec | EchoSpec
     budget: Budget
+    message_id: rf.CohortMessage | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+
+    @model_validator(mode="after")
+    def protected_known_data_only(self):
+        if self.message_id is not None and (
+            self.spec.source != "known_data"
+            or self.spec.security != "aes128_gcm"
+            or self.spec.message_count != 1
+        ):
+            raise ValueError("Numbered messages require a finite protected known-data preparation")
+        return self
 
 
 class Revision(ContractModel):

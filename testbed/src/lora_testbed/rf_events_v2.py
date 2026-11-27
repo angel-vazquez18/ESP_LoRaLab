@@ -12,6 +12,7 @@ from .experiments_v2 import ContractModel as StrictModel
 from .v2 import CONTRACT_VERSION, Counter, Identifier, NodeError
 
 Sequence = Annotated[int, Field(ge=1, le=2**32 - 1)]
+CohortMessage = Annotated[int, Field(ge=1, le=256)]
 
 
 def nonzero_session(value: str) -> str:
@@ -40,6 +41,7 @@ class StateData(StrictModel):
 
 
 class PreparedData(StrictModel):
+    message_id: CohortMessage | None = Field(default=None, exclude_if=lambda value: value is None)
     config_revision: Annotated[int, Field(ge=0, le=2**32 - 1)]
     budget: Budget
     source_length_bytes: Annotated[int, Field(ge=1, le=65536)] | None
@@ -252,6 +254,7 @@ class EchoResult(Envelope):
 
 
 class SummaryData(StrictModel):
+    message_id: CohortMessage | None = Field(default=None, exclude_if=lambda value: value is None)
     echo: EchoData | None = None
     role: Literal["sender", "receiver"]
     session_id: SessionID
