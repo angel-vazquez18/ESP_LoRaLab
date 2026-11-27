@@ -80,6 +80,24 @@ def test_trial_matches_confirmed_fault_and_fresh_intact_controls(
                     and row["outcome"] == "inconclusive"
                     for row in outcome["checks"]
                 )
+            if action == "reverse_block":
+                changed = deepcopy(children["fault"])
+                receive_indexes = [
+                    i
+                    for i, row in enumerate(changed["events"])
+                    if row["role"] == changed["receiver"] and row["name"] == "rx.frame"
+                ]
+                first, second = receive_indexes[:2]
+                changed["events"][first], changed["events"][second] = (
+                    changed["events"][second],
+                    changed["events"][first],
+                )
+                outcome = fault_accounting.assess(changed, known_data(743, 1, 81))
+                assert outcome["outcome"] == "inconclusive"
+                assert any(
+                    row["code"] == "complete_reversed_block" and row["outcome"] == "inconclusive"
+                    for row in outcome["checks"]
+                )
             if action == "xor_byte":
                 assert children["fault"]["available_content"] == ["source", "wire"]
                 rejected = deepcopy(children["fault"])

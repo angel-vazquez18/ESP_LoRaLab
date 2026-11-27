@@ -417,22 +417,39 @@ def assess(run, expected):
             )
     if action == "reverse_block":
         start, size = row["fragment_index"], row["block_size"]
-        block = set(range(start, start + size))
-        wires = [
+        capacity = run["plan"]["link"]["fragment_payload_bytes"]
+        count = (len(expected) + capacity - 1) // capacity
+        expected_order = [
+            *range(start),
+            *range(start + size - 1, start - 1, -1),
+            *range(start + size, count),
+        ]
+        wires = _data(run, sender, "tx.attempt")
+        arrival = [
             e
-            for e in _data(run, sender, "tx.attempt")
-            if e["data"]["fragment_index"] in block and e["data"]["status"] == "completed"
+            for e in _data(run, receiver, "rx.frame")
+            if e["data"]["frame_type"] == "data"
+            and e["data"]["crc_ok"]
+            and e["data"]["source_role"] == sender
         ]
-        acceptance = [
-            e for e in _data(run, receiver, "rx.accepted") if e["data"]["fragment_index"] in block
-        ]
+        acceptance = _data(run, receiver, "rx.accepted")
+        transmit_ids = [_identity(e["data"]) for e in wires]
         require(
             "complete_reversed_block",
-            [e["data"]["fragment_index"] for e in wires]
-            == list(range(start + size - 1, start - 1, -1))
-            and [_identity(e["data"]) for e in wires] == [_identity(e["data"]) for e in acceptance]
-            and all(e["data"]["attempt_index"] == 1 for e in wires),
-            evidence=_refs(*wires, *acceptance),
+            [e["data"]["fragment_index"] for e in wires] == expected_order
+            and transmit_ids == [_identity(e["data"]) for e in arrival]
+            and transmit_ids == [_identity(e["data"]) for e in acceptance]
+            and all(
+                e["data"]["attempt_index"] == 1 and e["data"]["status"] == "completed"
+                for e in wires
+            )
+            and all(
+                tx["data"].get("wire_sha256") is not None
+                and tx["data"]["wire_sha256"] == rx["data"].get("wire_sha256")
+                and rx["data"]["rx_done_us"] <= accepted_row["data"]["accepted_us"]
+                for tx, rx, accepted_row in zip(wires, arrival, acceptance, strict=True)
+            ),
+            evidence=_refs(*wires, *arrival, *acceptance),
         )
     receive_summary = run["summaries"][receiver]
     send_summary = run["summaries"][sender]
