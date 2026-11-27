@@ -84,12 +84,87 @@ type MatrixPlan = {
   cases: MatrixCase[];
 };
 
+type ProtectionMetrics = {
+  wire_bytes: number;
+  unique_original_delivery_ratio: number;
+  sender_transfer_duration_us: number | null;
+  goodput_bps: number | null;
+};
+
+type ProtectionComparison = {
+  group: string;
+  direction: string;
+  message_bytes: number;
+  repetition: number;
+  expected_pairs: number;
+  matched_pairs: number;
+  timed_pairs: number;
+  overhead_bytes?: number;
+  unprotected?: ProtectionMetrics;
+  protected?: ProtectionMetrics;
+};
+
+function ProtectionComparisonTable({ rows }: { rows: ProtectionComparison[] }) {
+  const metrics = (value?: ProtectionMetrics) =>
+    value
+      ? [
+          `${value.wire_bytes.toLocaleString()} B in DATA frames`,
+          `${(100 * value.unique_original_delivery_ratio).toFixed(0)}% delivery`,
+          value.sender_transfer_duration_us == null
+            ? "Sender timing unavailable"
+            : `${(value.sender_transfer_duration_us / 1000).toFixed(1)} ms sender time`,
+          value.goodput_bps == null
+            ? null
+            : `${(value.goodput_bps / 1000).toFixed(1)} kbit/s`,
+        ]
+          .filter(Boolean)
+          .join(" · ")
+      : "Insufficient matching evidence";
+
+  return (
+    <section aria-label="Matched protection comparison">
+      <h4>Protected and unprotected transfer comparison</h4>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Series</th>
+            <th scope="col">Matched / timed</th>
+            <th scope="col">Unprotected</th>
+            <th scope="col">AES-GCM</th>
+            <th scope="col">Added bytes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              key={`${row.group}-${row.direction}-${row.message_bytes}-${row.repetition}`}
+            >
+              <th scope="row">
+                {row.direction.replace("_TO_", " → ")} · {row.message_bytes} B ·
+                repeat {row.repetition}
+              </th>
+              <td>
+                {row.matched_pairs}/{row.expected_pairs} · {row.timed_pairs}/
+                {row.expected_pairs}
+              </td>
+              <td>{metrics(row.unprotected)}</td>
+              <td>{metrics(row.protected)}</td>
+              <td>{row.overhead_bytes ?? "Unavailable"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
 type MatrixRun = MatrixPlan &
   MatrixRunSummary & {
     hardware_validated: boolean;
     reason: string | null;
     sweep_comparison?: SweepComparison;
     model_comparison?: ModelComparisonData;
+    security_comparison?: ProtectionComparison[];
   };
 
 type Props = {
@@ -741,6 +816,9 @@ export default function ProcedureMatrix({
               key={`model-${inspected.id}`}
               data={inspected.model_comparison}
             />
+          )}
+          {!!inspected.security_comparison?.length && (
+            <ProtectionComparisonTable rows={inspected.security_comparison} />
           )}
           <Cases
             key={inspected.id}
