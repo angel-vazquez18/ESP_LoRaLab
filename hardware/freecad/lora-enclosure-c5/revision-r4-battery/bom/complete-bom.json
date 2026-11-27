@@ -1,0 +1,282 @@
+[
+  {
+    "Reference": "CASE_BASE",
+    "Item": "Enclosure base",
+    "Specification": "78.80 x 104.00 x 35.00 mm; unfilled MJF PA12",
+    "Qty per unit": 1,
+    "Unit": "part",
+    "Qty for build": 1,
+    "Assembly note": "C5-R4-enclosure-base-mm.stl. Eight M3 inserts total: four top, four rear.",
+    "Source": "R4 native CAD and validated Craftcloud upload manifest"
+  },
+  {
+    "Reference": "CASE_LID",
+    "Item": "Enclosure lid",
+    "Specification": "78.80 x 98.80 x 16.60 mm; unfilled MJF PA12",
+    "Qty per unit": 1,
+    "Unit": "part",
+    "Qty for build": 1,
+    "Assembly note": "C5-R4-enclosure-lid-mm.stl. R3 fit retained. Nominal OLED gap 0.50 mm.",
+    "Source": "R4 native CAD and validated Craftcloud upload manifest"
+  },
+  {
+    "Reference": "PTT_PLUNGER",
+    "Item": "PTT plunger",
+    "Specification": "11.99 x 12.00 x 10.20 mm; unfilled MJF PA12",
+    "Qty per unit": 1,
+    "Unit": "part",
+    "Qty for build": 1,
+    "Assembly note": "C5-R4-ptt-plunger-mm.stl. Shaft dia 8.0 mm. Verify free sliding.",
+    "Source": "R4 native CAD and validated Craftcloud upload manifest"
+  },
+  {
+    "Reference": "PTT_CUP",
+    "Item": "PTT stop cup",
+    "Specification": "24.00 x 16.59 x 3.85 mm; unfilled MJF PA12",
+    "Qty per unit": 1,
+    "Unit": "part",
+    "Qty for build": 1,
+    "Assembly note": "C5-R4-ptt-stop-cup-mm.stl. Provisional stop travel 0.25 mm. Verify actual switch.",
+    "Source": "R4 native CAD and validated Craftcloud upload manifest"
+  },
+  {
+    "Reference": "BAT_COVER",
+    "Item": "Battery back cover",
+    "Specification": "78.80 x 104.00 x 5.40 mm; unfilled MJF PA12",
+    "Qty per unit": 1,
+    "Unit": "part",
+    "Qty for build": 1,
+    "Assembly note": "C5-R4-battery-cover-mm.stl. Rounded guides and two strap paths. Cover floor 2.4 mm, local channels 1 mm deep.",
+    "Source": "R4 native CAD and validated Craftcloud upload manifest"
+  },
+  {
+    "Reference": "CASE_SCREW",
+    "Item": "Closure screw",
+    "Specification": "M3 × 22; DIN 912 / ISO 4762; A2 stainless",
+    "Qty per unit": 4,
+    "Unit": "piece",
+    "Qty for build": 4,
+    "Assembly note": "Socket cap; head diameter 5.5 mm × 3 mm high. 2.5 mm hex drive.",
+    "Source": "https://www.accu.co.uk/metric-cap-head-screws/2803-SSC-M3-22-A2"
+  },
+  {
+    "Reference": "BAT_SCREW",
+    "Item": "Rear cover screw",
+    "Specification": "M3 x 6 button head; ISO 7380 compatible",
+    "Qty per unit": 4,
+    "Unit": "piece",
+    "Qty for build": 4,
+    "Assembly note": "3.6 mm nominal engagement. 0.9 mm tip clearance. Do not substitute M3 x 8 into the blind holes.",
+    "Source": "R4 HARDWARE-ADDENDUM.txt and native clearance audit"
+  },
+  {
+    "Reference": "CASE_INSERT",
+    "Item": "Heat-set insert",
+    "Specification": "ruthex RX-M3x5x4; brass; M3 × 0.5",
+    "Qty per unit": 8,
+    "Unit": "piece",
+    "Qty for build": 8,
+    "Assembly note": "Four top + four rear. OD 5 x length 4 mm. Pilot dia 4.4; top depth 5.0, rear depth 4.5 mm. Do not count twice.",
+    "Source": "https://www.igo3d.com/mediafiles/Sonstiges/Ruthex/ruthex_Datenblatt_RX-Serie.pdf"
+  },
+  {
+    "Reference": "CUP_SCREW",
+    "Item": "PTT cup screw",
+    "Specification": "M2 × 10 pan head; DIN 7985 / ISO 7045",
+    "Qty per unit": 2,
+    "Unit": "piece",
+    "Qty for build": 2,
+    "Assembly note": "Install from outside lid; matched head envelope diameter 4 mm, height ≤1.72 mm.",
+    "Source": "https://www.accu.co.uk/pozi-pan-head-screws/9373-SPP-M2-10-A4"
+  },
+  {
+    "Reference": "CUP_NUT",
+    "Item": "PTT cup nut",
+    "Specification": "M2 full nut; DIN 934; 4 mm AF × 1.6 mm",
+    "Qty per unit": 2,
+    "Unit": "piece",
+    "Qty for build": 2,
+    "Assembly note": "Fit below the cup lugs. Tighten gently; keep plunger free.",
+    "Source": "https://www.harrisonsilverdale.com/products/details/standard-thread-full-nuts.html"
+  },
+  {
+    "Reference": "WIRE_TIE",
+    "Item": "Speaker cable tie",
+    "Specification": "Nylon; width 2.5 mm; thickness <1.2 mm",
+    "Qty per unit": 1,
+    "Unit": "piece",
+    "Qty for build": 1,
+    "Assembly note": "Select length for wire bundle. Deburr 3 × 1.2 mm slots; do not crush insulation.",
+    "Source": "C5 enclosure original design notes; strain-relief slots retained"
+  },
+  {
+    "Reference": "BAT1",
+    "Item": "Meshnology 103665 LiPo",
+    "Specification": "3.7 V nominal, 3000 mAh; 68 x 36 x 10 mm reserved",
+    "Qty per unit": 1,
+    "Unit": "pack",
+    "Qty for build": 1,
+    "Assembly note": "Photo body 68 x 35 x 10 mm; verify actual maximum. Heltec BAT only. Verify keyed plug/polarity and permissible charge current.",
+    "Source": "https://meshnology.com/collections/frontpage/products/3-7v-3000mah-rechargeable-battery-for-arduino-esp32; user product dimension image"
+  },
+  {
+    "Reference": "BAT_STRAP",
+    "Item": "Soft nonconductive strap",
+    "Specification": "10 mm wide; about 160 mm starting length",
+    "Qty per unit": 2,
+    "Unit": "piece",
+    "Qty for build": 2,
+    "Assembly note": "Trim to actual path and overlap. Retain without squeezing pouch; check strap thickness in available clearance.",
+    "Source": "R4 HARDWARE-ADDENDUM.txt and native clearance audit"
+  },
+  {
+    "Reference": "BAT_PAD",
+    "Item": "Insulating support pad",
+    "Specification": "About 36 x 68 mm; up to 1 mm thick",
+    "Qty per unit": 1,
+    "Unit": "piece",
+    "Qty for build": 1,
+    "Assembly note": "Select cell-compatible, nonconductive soft material. No sharp edges or rigid compression of the pouch.",
+    "Source": "R4 HARDWARE-ADDENDUM.txt and native clearance audit"
+  },
+  {
+    "Reference": "BAT_EXT",
+    "Item": "Conditional battery lead extension",
+    "Specification": "Matched two-pin housing; verified end-to-end polarity",
+    "Qty per unit": 0,
+    "Unit": "piece",
+    "Qty for build": 0,
+    "Assembly note": "Optional, excluded from default quantity. Set per-unit qty to 1 only if the 66 mm supplied lead lacks service slack. Verify USB coexistence.",
+    "Source": "R4 BATTERY-CONNECTION-REVIEW.txt; actual connector must be checked"
+  },
+  {
+    "Reference": "PCB",
+    "Item": "C5 carrier PCB",
+    "Specification": "70 × 90 mm; 4 layers; 1.6 mm thick",
+    "Qty per unit": 1,
+    "Unit": "board",
+    "Qty for build": 1,
+    "Assembly note": "Gerbers and Excellon drills included. Physical fit remains to be checked.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "U1",
+    "Item": "Heltec WiFi LoRa 32 V4.3",
+    "Specification": "ESP32-S3R2 (R2 header layout)",
+    "Qty per unit": 1,
+    "Unit": "module",
+    "Qty for build": 1,
+    "Assembly note": "Reuse module. Verify the installed headers and height.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "U2",
+    "Item": "Round INMP441 breakout",
+    "Specification": "14 mm diameter; 2.54 × 7.62 mm reference pin grid",
+    "Qty per unit": 1,
+    "Unit": "module",
+    "Qty for build": 1,
+    "Assembly note": "Acoustic face up. Verify pin grid and keep port clear.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "U3",
+    "Item": "Purple MAX98357A breakout",
+    "Specification": "17.7 × 19 mm; 1 × 7 pins at 2.54 mm pitch",
+    "Qty per unit": 1,
+    "Unit": "module",
+    "Qty for build": 1,
+    "Assembly note": "USB supply retained. Battery-only use requires verified speaker-disabled firmware with AMP_SD LOW.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "R8",
+    "Item": "EEEEE carbon axial resistor",
+    "Specification": "1 kΩ; 1/2 W; 5%; through-hole",
+    "Qty per unit": 1,
+    "Unit": "piece",
+    "Qty for build": 1,
+    "Assembly note": "Form to 15.24 mm pitch. Verify body and lead fit.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "SW1",
+    "Item": "PTT tactile pushbutton",
+    "Specification": "6 × 6 × 8 mm; normally open; 4 leads",
+    "Qty per unit": 1,
+    "Unit": "piece",
+    "Qty for build": 1,
+    "Assembly note": "Verify permanent contact pairs and actual travel.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "LS1",
+    "Item": "External speaker",
+    "Specification": "8 Ω nominal; actual power rating to verify",
+    "Qty per unit": 1,
+    "Unit": "piece",
+    "Qty for build": 1,
+    "Assembly note": "Reuse speaker. Verify its power rating.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "HDR_U1",
+    "Item": "Heltec soldered pin strips",
+    "Specification": "1 × 18 pins; 2.54 mm pitch",
+    "Qty per unit": 2,
+    "Unit": "strip",
+    "Qty for build": 2,
+    "Assembly note": "Select pin length for the specified module spacing.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "HDR_U2",
+    "Item": "Microphone soldered pin strips",
+    "Specification": "1 × 3 pins; 2.54 mm pitch",
+    "Qty per unit": 2,
+    "Unit": "strip",
+    "Qty for build": 2,
+    "Assembly note": "Reference grid. Verify actual module contact fit.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "JAMP1",
+    "Item": "Amplifier soldered pin strip",
+    "Specification": "1 × 7 pins; 2.54 mm pitch",
+    "Qty per unit": 1,
+    "Unit": "strip",
+    "Qty for build": 1,
+    "Assembly note": "Verify pin dimensions and current rating.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "LS1–U3",
+    "Item": "Insulated speaker wires",
+    "Specification": "Two conductors; length and gauge to select",
+    "Qty per unit": 1,
+    "Unit": "pair",
+    "Qty for build": 1,
+    "Assembly note": "Insulated paired wires. Neither speaker output is GND.",
+    "Source": "C5 electronics assembly BOM"
+  },
+  {
+    "Reference": "RF_ASSEMBLY",
+    "Item": "External antenna and coax",
+    "Specification": "Matched to Heltec RF connector and operating band",
+    "Qty per unit": 1,
+    "Unit": "set",
+    "Qty for build": 1,
+    "Assembly note": "Existing external assembly retained. Exact antenna, connector and coax length are not supplied; select against owned hardware.",
+    "Source": "C5 enclosure assembly notes: external antenna and coax passage"
+  },
+  {
+    "Reference": "USB_LEAD",
+    "Item": "USB cable and power source",
+    "Specification": "Compatible Heltec USB-C lead and rated supply",
+    "Qty per unit": 1,
+    "Unit": "set",
+    "Qty for build": 1,
+    "Assembly note": "External service item, not stored in case. Amplifier requires USB. Confirm low-profile overmould fits alongside battery plug.",
+    "Source": "C5 USB-powered architecture; R4 connector-fit review"
+  }
+]

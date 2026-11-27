@@ -1,0 +1,414 @@
+{
+  "source": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\LoRa-Enclosure-C5-Fit-Checked.FCStd",
+  "source_sha256": "607e9fc1f3f4c6f7ae3e38be2b10f9618fc5e61c39a2b547fa80a71ce2e970aa",
+  "scope": "Read-only audit; source document not saved or modified.",
+  "units": "mm",
+  "source_model_step": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step",
+  "source_model_step_sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+  "source_model_mount_translation_mm": [
+    0,
+    0,
+    6.4814
+  ],
+  "pcb_top_datum_z_mm": 8,
+  "lid_underside_z_mm": 24,
+  "lid_outside_z_mm": 27.6,
+  "lid_thickness_mm": 3.6,
+  "display": {
+    "center_xy_mm": [
+      23,
+      58.05
+    ],
+    "aperture_mm": [
+      16.4,
+      27
+    ],
+    "reference_window_mm": [
+      11.4,
+      22
+    ],
+    "outer_frame_mm": [
+      18.6,
+      33
+    ],
+    "parts": [
+      {
+        "index": 2811,
+        "name": "C5_detailed_assembly2811",
+        "label": "C5_detailed_assembly2811",
+        "bounds_mm": [
+          13.699999999572398,
+          41.54999999999999,
+          17.53871925881221,
+          32.3000000004276,
+          74.54999999936116,
+          20.058719260720004
+        ],
+        "faces": 384,
+        "lid_distance_mm": 3.94128073928
+      },
+      {
+        "index": 2812,
+        "name": "C5_detailed_assembly2812",
+        "label": "C5_detailed_assembly2812",
+        "bounds_mm": [
+          17.300000000476984,
+          47.05000000074,
+          19.678719261259754,
+          28.699999999520003,
+          69.05000000116,
+          19.9987192588
+        ],
+        "faces": 12,
+        "lid_distance_mm": 4.718076680608108
+      },
+      {
+        "index": 2813,
+        "name": "C5_detailed_assembly2813",
+        "label": "C5_detailed_assembly2813",
+        "bounds_mm": [
+          15.950000000455349,
+          45.45000000034,
+          17.53871925881975,
+          30.04999999954,
+          70.64999999902,
+          18.2387192609
+        ],
+        "faces": 12,
+        "lid_distance_mm": 5.831153895699947
+      },
+      {
+        "index": 2814,
+        "name": "C5_detailed_assembly2814",
+        "label": "C5_detailed_assembly2814",
+        "bounds_mm": [
+          14.19999876082,
+          70.74999896082,
+          14.558719259979991,
+          17.799998759180756,
+          74.34999895918,
+          17.538719258820002
+        ],
+        "faces": 188,
+        "lid_distance_mm": 6.461280741179998
+      },
+      {
+        "index": 2815,
+        "name": "C5_detailed_assembly2815",
+        "label": "C5_detailed_assembly2815",
+        "bounds_mm": [
+          14.19999876082,
+          41.75000108081999,
+          14.558719259979991,
+          17.799998759180756,
+          45.35000107918,
+          17.538719258820002
+        ],
+        "faces": 188,
+        "lid_distance_mm": 6.461280741179998
+      },
+      {
+        "index": 2816,
+        "name": "C5_detailed_assembly2816",
+        "label": "C5_detailed_assembly2816",
+        "bounds_mm": [
+          28.20000124082,
+          70.74999896082,
+          14.558719259979991,
+          31.800001239180755,
+          74.34999895918,
+          17.538719258820002
+        ],
+        "faces": 188,
+        "lid_distance_mm": 6.461280741179998
+      },
+      {
+        "index": 2817,
+        "name": "C5_detailed_assembly2817",
+        "label": "C5_detailed_assembly2817",
+        "bounds_mm": [
+          28.20000124082,
+          41.75000108081999,
+          14.558719259979991,
+          31.800001239180755,
+          45.35000107918,
+          17.538719258820002
+        ],
+        "faces": 188,
+        "lid_distance_mm": 6.461280741179998
+      },
+      {
+        "index": 2818,
+        "name": "C5_detailed_assembly2818",
+        "label": "C5_detailed_assembly2818",
+        "bounds_mm": [
+          14.519998760899998,
+          71.0699989609,
+          20.05871926071997,
+          17.479998759100443,
+          74.02999895910001,
+          20.27871926014
+        ],
+        "faces": 188,
+        "lid_distance_mm": 3.721280739859999
+      },
+      {
+        "index": 2819,
+        "name": "C5_detailed_assembly2819",
+        "label": "C5_detailed_assembly2819",
+        "bounds_mm": [
+          14.519998760899998,
+          42.07000108089999,
+          20.05871926071997,
+          17.479998759100443,
+          45.030001079099996,
+          20.27871926014
+        ],
+        "faces": 188,
+        "lid_distance_mm": 3.721280739859999
+      },
+      {
+        "index": 2820,
+        "name": "C5_detailed_assembly2820",
+        "label": "C5_detailed_assembly2820",
+        "bounds_mm": [
+          28.520001240899997,
+          71.0699989609,
+          20.05871926071997,
+          31.480001239100442,
+          74.02999895910001,
+          20.27871926014
+        ],
+        "faces": 188,
+        "lid_distance_mm": 3.721280739859999
+      },
+      {
+        "index": 2821,
+        "name": "C5_detailed_assembly2821",
+        "label": "C5_detailed_assembly2821",
+        "bounds_mm": [
+          28.520001240899997,
+          42.07000108089999,
+          20.05871926071997,
+          31.480001239100442,
+          45.030001079099996,
+          20.27871926014
+        ],
+        "faces": 188,
+        "lid_distance_mm": 3.721280739859999
+      },
+      {
+        "index": 2822,
+        "name": "C5_detailed_assembly2822",
+        "label": "C5_detailed_assembly2822",
+        "bounds_mm": [
+          15.09999875914,
+          72.37499895947978,
+          20.27421925898,
+          16.89999876086,
+          72.72499896052021,
+          20.29921925978
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.700780740220001
+      },
+      {
+        "index": 2823,
+        "name": "C5_detailed_assembly2823",
+        "label": "C5_detailed_assembly2823",
+        "bounds_mm": [
+          15.82499875947979,
+          71.64999895913999,
+          20.27621926006,
+          16.17499876052,
+          73.44999896086,
+          20.30121926086
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.698780739140002
+      },
+      {
+        "index": 2824,
+        "name": "C5_detailed_assembly2824",
+        "label": "C5_detailed_assembly2824",
+        "bounds_mm": [
+          15.09999875914,
+          43.37500107947978,
+          20.27421925898,
+          16.89999876086,
+          43.725001080520215,
+          20.29921925978
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.700780740220001
+      },
+      {
+        "index": 2825,
+        "name": "C5_detailed_assembly2825",
+        "label": "C5_detailed_assembly2825",
+        "bounds_mm": [
+          15.824998759479788,
+          42.65000107914,
+          20.27621926006,
+          16.17499876052,
+          44.45000108086,
+          20.30121926086
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.698780739140002
+      },
+      {
+        "index": 2826,
+        "name": "C5_detailed_assembly2826",
+        "label": "C5_detailed_assembly2826",
+        "bounds_mm": [
+          29.10000123914,
+          72.37499895947978,
+          20.27421925898,
+          30.90000124086,
+          72.72499896052021,
+          20.29921925978
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.700780740220001
+      },
+      {
+        "index": 2827,
+        "name": "C5_detailed_assembly2827",
+        "label": "C5_detailed_assembly2827",
+        "bounds_mm": [
+          29.82500123947979,
+          71.64999895913999,
+          20.27621926006,
+          30.17500124052,
+          73.44999896086,
+          20.30121926086
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.698780739140002
+      },
+      {
+        "index": 2828,
+        "name": "C5_detailed_assembly2828",
+        "label": "C5_detailed_assembly2828",
+        "bounds_mm": [
+          29.10000123914,
+          43.37500107947978,
+          20.27421925898,
+          30.90000124086,
+          43.725001080520215,
+          20.29921925978
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.700780740220001
+      },
+      {
+        "index": 2829,
+        "name": "C5_detailed_assembly2829",
+        "label": "C5_detailed_assembly2829",
+        "bounds_mm": [
+          29.82500123947979,
+          42.65000107914,
+          20.27621926006,
+          30.17500124052,
+          44.45000108086,
+          20.30121926086
+        ],
+        "faces": 12,
+        "lid_distance_mm": 3.698780739140002
+      },
+      {
+        "index": 2830,
+        "name": "C5_detailed_assembly2830",
+        "label": "C5_detailed_assembly2830",
+        "bounds_mm": [
+          32.290000000099965,
+          50.050000000219995,
+          17.73871926013944,
+          32.3599999998,
+          68.04999999964,
+          19.4387192612
+        ],
+        "faces": 12,
+        "lid_distance_mm": 4.561280738800001
+      }
+    ],
+    "provenance": "OLED/bracket visual supplement, manufacturer envelope and STEP axes. Glass thickness, frame profile, screw detail, and installed 5 mm gap are approximations; assigned model is not measured owned hardware."
+  },
+  "microphone": {
+    "center_xy_mm": [
+      54.5,
+      30.5
+    ],
+    "bounds_mm": [
+      47.5,
+      23.606345999999654,
+      4.9999999999999805,
+      61.500000000000014,
+      37.39365400000035,
+      12.3
+    ],
+    "acoustic_face_z_mm": 12,
+    "highest_modeled_feature_z_mm": 12.3,
+    "existing_lid_hole_diameter_mm": 3,
+    "existing_center_air_path_blocked_by_lid": false,
+    "existing_center_hit_length_mm": 0.0,
+    "candidate_peripheral_holes": [
+      {
+        "center_mm": [
+          58.1,
+          30.5
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.238229473870871
+      },
+      {
+        "center_mm": [
+          56.3,
+          33.617691453623976
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.238229473870875
+      },
+      {
+        "center_mm": [
+          52.7,
+          33.617691453623976
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.238229473870875
+      },
+      {
+        "center_mm": [
+          50.9,
+          30.5
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.238229473870871
+      },
+      {
+        "center_mm": [
+          52.699999999999996,
+          27.38230854637602
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.238229473870871
+      },
+      {
+        "center_mm": [
+          56.3,
+          27.38230854637602
+        ],
+        "diameter_mm": 1.6,
+        "cut_volume_mm3": 7.23822947387087
+      }
+    ],
+    "candidate_pattern": "Retain central diameter 3 hole; add six diameter 1.6 holes on diameter 7.2 bolt circle.",
+    "candidate_smallest_ligament_mm": 1.3,
+    "provenance": "User image supports diameter 14; center port diameter 0.9 and exact location/heights are visual assumptions; project explicitly mounts breakout acoustic/solder face UP. INMP441 IC bottom port does not define breakout facing."
+  },
+  "source_notes": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\source-project\\models\\INMP441_ROUND_DETAILED_VISUAL.notes.json",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\heltec-v4-carrier\\tools\\heltec_model_oled_addon.py"
+  ]
+}

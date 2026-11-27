@@ -1,0 +1,32 @@
+[
+  {
+    "file": "LoRa-Enclosure-C5-Fit-Checked.FCStd",
+    "bytes": 16996033,
+    "sha256": "607E9FC1F3F4C6F7AE3E38BE2B10F9618FC5E61C39A2B547FA80A71CE2E970AA"
+  },
+  {
+    "file": "LoRa-Enclosure-C5-Fit-Checked.step",
+    "bytes": 166713,
+    "sha256": "018D641E4015EAED1F0DA48A1D54ADC821D368784CE6EAD3ADE6EEFBA1D1D4FD"
+  },
+  {
+    "file": "enclosure-base.stl",
+    "bytes": 158884,
+    "sha256": "91BA5384642463EF8A184F52E509A4D9C9CFE9712756663932B38A83E31D47FE"
+  },
+  {
+    "file": "enclosure-lid.stl",
+    "bytes": 132284,
+    "sha256": "13F0612419D00B45619DE3F4D268F3E1DB4777BDA421817EF2EC7462F025C1CA"
+  },
+  {
+    "file": "ptt-plunger.stl",
+    "bytes": 26284,
+    "sha256": "D6A6125DF286DE58B0DFEDA32143F05FF2E1854DB23D0582F1D6137314A3D0C2"
+  },
+  {
+    "file": "ptt-stop-cup.stl",
+    "bytes": 50284,
+    "sha256": "33AE865040833225BEB0352951B7B58C7619DD13BB0A64208641BFD7EF84F169"
+  }
+]

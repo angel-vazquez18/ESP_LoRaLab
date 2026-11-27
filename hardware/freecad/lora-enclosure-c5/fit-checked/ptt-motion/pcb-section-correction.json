@@ -1,0 +1,161 @@
+{
+  "ok": true,
+  "source_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\cutaway-view\\LoRa-Enclosure-C5-Assembled-Cutaway.FCStd",
+  "source_sha256": "a242a1c629cfd86b54b88113d231ee400dff4b3beaf2d126d107bf21aff12cdd",
+  "source_unchanged": true,
+  "part": "PTTDetailPCB",
+  "source_solids": [
+    {
+      "solid_index": 0,
+      "bbox_mm": [
+        55.750001,
+        17.750001,
+        7.9068,
+        57.249999,
+        19.249999,
+        7.955
+      ],
+      "volume_mm3": 0.08517620368345628,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 1,
+      "bbox_mm": [
+        58.250001,
+        18.750001,
+        7.9068,
+        59.749999,
+        20.249999,
+        7.955
+      ],
+      "volume_mm3": 0.08517620368345628,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 2,
+      "bbox_mm": [
+        46.75,
+        10.25,
+        7.9068,
+        48.75,
+        12.25,
+        7.955
+      ],
+      "volume_mm3": 0.1510635488979783,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 3,
+      "bbox_mm": [
+        46.75,
+        10.25,
+        6.4332,
+        48.75,
+        12.25,
+        6.4814
+      ],
+      "volume_mm3": 0.15106354889797738,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 4,
+      "bbox_mm": [
+        47.2,
+        10.7,
+        6.4332,
+        48.3,
+        11.8,
+        7.955
+      ],
+      "volume_mm3": 0.12848603444376072,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 5,
+      "bbox_mm": [
+        53.25,
+        10.25,
+        7.9068,
+        55.25,
+        12.25,
+        7.955
+      ],
+      "volume_mm3": 0.1510635488979783,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 6,
+      "bbox_mm": [
+        53.25,
+        10.25,
+        6.4332,
+        55.25,
+        12.25,
+        6.4814
+      ],
+      "volume_mm3": 0.15106354889797738,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 7,
+      "bbox_mm": [
+        53.7,
+        10.7,
+        6.4332,
+        54.8,
+        11.8,
+        7.955
+      ],
+      "volume_mm3": 0.12848603444376072,
+      "section_wires": 0,
+      "section_area_mm2": 0
+    },
+    {
+      "solid_index": 8,
+      "bbox_mm": [
+        56.250001,
+        9.0,
+        7.9068,
+        57.749999,
+        9.749999,
+        7.955
+      ],
+      "volume_mm3": 0.042588101841728176,
+      "section_wires": 1,
+      "section_area_mm2": 0.07229990360000094
+    },
+    {
+      "solid_index": 9,
+      "bbox_mm": [
+        38.0,
+        9.0,
+        6.4814,
+        64.0,
+        22.0,
+        7.9068000000000005
+      ],
+      "volume_mm3": 479.0759941681016,
+      "section_wires": 1,
+      "section_area_mm2": 37.060399999999944
+    }
+  ],
+  "combined_section_area_mm2": 37.13269990311794,
+  "combined_section_bbox_mm": [
+    38.0,
+    9.0001,
+    6.481400000000001,
+    64.0,
+    9.0001,
+    7.955
+  ],
+  "closed_loops": 1,
+  "points": 10,
+  "other_parts_and_endpoints_unchanged": true
+}

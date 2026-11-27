@@ -1,0 +1,774 @@
+{
+  "checks": [
+    {
+      "name": "initial",
+      "data": {
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0"
+      },
+      "saved": null,
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Play cycle"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "mouse drag while playing",
+      "before": {
+        "data": {
+          "strokeMm": "0.006033",
+          "gapMm": "0.243967",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "0.291457",
+          "pitch": "0.262025",
+          "zoom": "1.000000",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": 16.7,
+              "tilt_deg": 15.01,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0,
+            "closeup": false,
+            "camera": {
+              "yaw": 0.2914567944778671,
+              "pitch": 0.2620253194059065,
+              "zoom": 1
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 1
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "after": {
+        "data": {
+          "strokeMm": "0.040383",
+          "gapMm": "0.209617",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.553343",
+          "pitch": "-0.054775",
+          "zoom": "1.000000",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.04,
+            "flange_gap_mm": 0.21,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": -31.7,
+              "tilt_deg": -3.14,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0.1615324634074074,
+            "closeup": false,
+            "camera": {
+              "yaw": -0.5533432543502599,
+              "pitch": -0.054774729422218504,
+              "zoom": 1
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 2
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "wheel and state echo while playing",
+      "before": {
+        "data": {
+          "strokeMm": "0.040383",
+          "gapMm": "0.209617",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.553343",
+          "pitch": "-0.054775",
+          "zoom": "1.000000",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.04,
+            "flange_gap_mm": 0.21,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": -31.7,
+              "tilt_deg": -3.14,
+              "zoom": 1
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0.1615324634074074,
+            "closeup": false,
+            "camera": {
+              "yaw": -0.5533432543502599,
+              "pitch": -0.054774729422218504,
+              "zoom": 1
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 2
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "after": {
+        "data": {
+          "strokeMm": "0.102553",
+          "gapMm": "0.147447",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.553343",
+          "pitch": "-0.054775",
+          "zoom": "1.144537",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.086,
+            "flange_gap_mm": 0.164,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": -31.7,
+              "tilt_deg": -3.14,
+              "zoom": 1.145
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0.34263938194137067,
+            "closeup": false,
+            "camera": {
+              "yaw": -0.5533432543502599,
+              "pitch": -0.054774729422218504,
+              "zoom": 1.1445367843513146
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 3
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "contact after camera manipulation",
+      "data": {
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.553343",
+        "pitch": "-0.054775",
+        "zoom": "1.144537",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.086,
+          "flange_gap_mm": 0.164,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": -31.7,
+            "tilt_deg": -3.14,
+            "zoom": 1.145
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0.34263938194137067,
+          "closeup": false,
+          "camera": {
+            "yaw": -0.5533432543502599,
+            "pitch": -0.054774729422218504,
+            "zoom": 1.1445367843513146
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 3
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Pause"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "cycle returned to released",
+      "data": {
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.553343",
+        "pitch": "-0.054775",
+        "zoom": "1.144537",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0,
+          "flange_gap_mm": 0.25,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": -31.7,
+            "tilt_deg": -3.14,
+            "zoom": 1.145
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0,
+          "closeup": false,
+          "camera": {
+            "yaw": -0.5533432543502599,
+            "pitch": -0.054774729422218504,
+            "zoom": 1.1445367843513146
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 4
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Play cycle"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "camera state restoration and view toggle",
+      "data": {
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.553343",
+        "pitch": "-0.054775",
+        "zoom": "1.144537",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0,
+          "flange_gap_mm": 0.25,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": 16.7,
+            "tilt_deg": 15.01,
+            "zoom": 1
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0,
+          "closeup": false,
+          "camera": {
+            "yaw": 0.2914567944778671,
+            "pitch": 0.2620253194059065,
+            "zoom": 1
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 6
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Play cycle"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "keyboard control inventory",
+      "controls": [
+        {
+          "id": "ptt-camera-yaw",
+          "labels": [
+            "Rotation -32°\n        \n      "
+          ],
+          "min": "-180",
+          "max": "180",
+          "value": "-32"
+        },
+        {
+          "id": "ptt-camera-pitch",
+          "labels": [
+            "Tilt -3°\n        \n      "
+          ],
+          "min": "-85",
+          "max": "85",
+          "value": "-3"
+        },
+        {
+          "id": "ptt-camera-zoom",
+          "labels": [
+            "Zoom 1.14×\n        \n      "
+          ],
+          "min": "0.25",
+          "max": "8",
+          "value": "1.14"
+        }
+      ]
+    },
+    {
+      "name": "keyboard orbit and zoom",
+      "data": {
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "-0.541052",
+        "pitch": "-0.054775",
+        "zoom": "1.150000",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0,
+          "flange_gap_mm": 0.25,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": -31,
+            "tilt_deg": -3.14,
+            "zoom": 1.15
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0,
+          "closeup": false,
+          "camera": {
+            "yaw": -0.5410520681182422,
+            "pitch": -0.054774729422218504,
+            "zoom": 1.15
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 8
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Play cycle"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "two-pointer touch pinch while playing",
+      "before": {
+        "data": {
+          "strokeMm": "0.006005",
+          "gapMm": "0.243995",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.541052",
+          "pitch": "-0.054775",
+          "zoom": "1.150000",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": -31,
+              "tilt_deg": -3.14,
+              "zoom": 1.15
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0,
+            "closeup": false,
+            "camera": {
+              "yaw": -0.5410520681182422,
+              "pitch": -0.054774729422218504,
+              "zoom": 1.15
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 9
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "after": {
+        "data": {
+          "strokeMm": "0.017512",
+          "gapMm": "0.232488",
+          "view": "mechanism",
+          "playing": "true",
+          "yaw": "-0.541052",
+          "pitch": "-0.054775",
+          "zoom": "2.135714",
+          "activePointers": "0"
+        },
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.018,
+            "flange_gap_mm": 0.232,
+            "view": "complete mechanism",
+            "reference_travel_mm": 0.25,
+            "camera": {
+              "rotation_deg": -31,
+              "tilt_deg": -3.14,
+              "zoom": 2.136
+            }
+          },
+          "privateContent": {
+            "version": 2,
+            "t": 0.0700480361700958,
+            "closeup": false,
+            "camera": {
+              "yaw": -0.5410520681182422,
+              "pitch": -0.054774729422218504,
+              "zoom": 2.135714285714286
+            },
+            "origin": "ptt-i5nwmjgvo5r",
+            "revision": 10
+          }
+        },
+        "buttons": [
+          {
+            "action": "play",
+            "label": "Pause"
+          },
+          {
+            "action": "released",
+            "label": "Released"
+          },
+          {
+            "action": "pressed",
+            "label": "Fully pressed"
+          },
+          {
+            "action": "closeup",
+            "label": "Contact close-up"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      }
+    },
+    {
+      "name": "pointer cancel cleanup and next gesture",
+      "data": {
+        "strokeMm": "0.077478",
+        "gapMm": "0.172522",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.901052",
+        "pitch": "0.025225",
+        "zoom": "2.135714",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.077,
+          "flange_gap_mm": 0.173,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": -51.63,
+            "tilt_deg": 1.45,
+            "zoom": 2.136
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0.30991210689427423,
+          "closeup": false,
+          "camera": {
+            "yaw": -0.9010520681182417,
+            "pitch": 0.025225270577781497,
+            "zoom": 2.135714285714286
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 12
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Pause"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "final narrow dark layout",
+      "data": {
+        "strokeMm": "0.077478",
+        "gapMm": "0.172522",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "-0.901052",
+        "pitch": "0.025225",
+        "zoom": "2.135714",
+        "activePointers": "0"
+      },
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.077,
+          "flange_gap_mm": 0.173,
+          "view": "complete mechanism",
+          "reference_travel_mm": 0.25,
+          "camera": {
+            "rotation_deg": -51.63,
+            "tilt_deg": 1.45,
+            "zoom": 2.136
+          }
+        },
+        "privateContent": {
+          "version": 2,
+          "t": 0.30991210689427423,
+          "closeup": false,
+          "camera": {
+            "yaw": -0.9010520681182417,
+            "pitch": 0.025225270577781497,
+            "zoom": 2.135714285714286
+          },
+          "origin": "ptt-i5nwmjgvo5r",
+          "revision": 12
+        }
+      },
+      "buttons": [
+        {
+          "action": "play",
+          "label": "Pause"
+        },
+        {
+          "action": "released",
+          "label": "Released"
+        },
+        {
+          "action": "pressed",
+          "label": "Fully pressed"
+        },
+        {
+          "action": "closeup",
+          "label": "Contact close-up"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\camera-preview\\main-rotated-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\camera-preview\\touch-zoom-320-dark.png"
+  ]
+}

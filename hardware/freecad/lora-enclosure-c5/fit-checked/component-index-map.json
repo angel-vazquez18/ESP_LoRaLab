@@ -1,0 +1,462 @@
+{
+  "source_step": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\detailed-import\\C5-detailed-assembly.step",
+  "source_sha256": "65143fecb376c40ac75cf7b3b2ffdf477c9ff656706a80c1fda63717d1041a19",
+  "object_count": 2949,
+  "units": "mm",
+  "native_importer": "Part.insert",
+  "source_datum_z_mm": 1.5186,
+  "target_pcb_top_z_mm": 8.0,
+  "assembly_translation_mm": [
+    0,
+    0,
+    6.4814
+  ],
+  "name_format": "index 0: C5_detailed_assembly; otherwise C5_detailed_assembly + index formatted as at least 3 decimal digits",
+  "validation": {
+    "semantic_importer": "Import.insert",
+    "semantic_feature_count": 2949,
+    "non_microphone_shapes_matched_by_bbox_faces_solids_and_area": 2302,
+    "unmatched_non_microphone_shapes": 0,
+    "microphone_range_basis": "corrected-assembly-check.json; preserved 647-shape ordering and count after baked 1/2.54 scale correction"
+  },
+  "limitations": [
+    "The reference native audit predates microphone rescaling; corrected microphone bounds come from the current semantic import.",
+    "These labels classify geometry; they do not independently certify physical component dimensions or watertight solids.",
+    "Heltec contains 888 solids at indices 1-888 and 666 additional surface pieces at indices 2145-2810. Only indices 2811-2830 belong to the OLED supplement."
+  ],
+  "ranges": [
+    {
+      "first_index": 0,
+      "last_index": 0,
+      "component": "sw1",
+      "label": "SW1 tactile pushbutton",
+      "semantic_root": "SW_PUSH_6mm_H8mm"
+    },
+    {
+      "first_index": 1,
+      "last_index": 888,
+      "component": "heltec",
+      "label": "U1 Heltec manufacturer model",
+      "semantic_root": "heltec_v4_3_1_reference"
+    },
+    {
+      "first_index": 889,
+      "last_index": 1066,
+      "component": "carrier_pads",
+      "label": "Carrier PCB pads and plating",
+      "semantic_root": "heltec_v4_audio_carrier_pad"
+    },
+    {
+      "first_index": 1067,
+      "last_index": 1067,
+      "component": "carrier_substrate",
+      "label": "Carrier PCB substrate",
+      "semantic_root": "Part__Feature2948"
+    },
+    {
+      "first_index": 1068,
+      "last_index": 1714,
+      "component": "microphone",
+      "label": "U2 INMP441 microphone, corrected 14 mm model",
+      "semantic_root": "INMP441_ROUND_DETAILED_VISUAL001"
+    },
+    {
+      "first_index": 1715,
+      "last_index": 2137,
+      "component": "amplifier",
+      "label": "MAX98357A amplifier module",
+      "semantic_root": "MAX98357A_PURPLE_DETAILED_VISUAL001"
+    },
+    {
+      "first_index": 2138,
+      "last_index": 2144,
+      "component": "r8",
+      "label": "R8 axial resistor",
+      "semantic_root": "R_Axial_Carbon_1k_0p5W_P15p001"
+    },
+    {
+      "first_index": 2145,
+      "last_index": 2810,
+      "component": "heltec",
+      "label": "U1 Heltec manufacturer model",
+      "semantic_root": "heltec_v4_3_1_reference"
+    },
+    {
+      "first_index": 2811,
+      "last_index": 2830,
+      "component": "oled",
+      "label": "OLED and bracket supplement",
+      "semantic_root": "Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP001"
+    },
+    {
+      "first_index": 2831,
+      "last_index": 2930,
+      "component": "top_silkscreen",
+      "label": "Carrier top silkscreen",
+      "semantic_root": "heltec_v4_audio_carrier_silkscreen"
+    },
+    {
+      "first_index": 2931,
+      "last_index": 2946,
+      "component": "bottom_silkscreen",
+      "label": "Carrier bottom silkscreen",
+      "semantic_root": "heltec_v4_audio_carrier_silkscreen001"
+    },
+    {
+      "first_index": 2947,
+      "last_index": 2947,
+      "component": "top_soldermask",
+      "label": "Carrier top soldermask",
+      "semantic_root": "Part__Feature2946"
+    },
+    {
+      "first_index": 2948,
+      "last_index": 2948,
+      "component": "bottom_soldermask",
+      "label": "Carrier bottom soldermask",
+      "semantic_root": "Part__Feature2947"
+    }
+  ],
+  "components": [
+    {
+      "component": "sw1",
+      "label": "SW1 tactile pushbutton",
+      "index_ranges_inclusive": [
+        [
+          0,
+          0
+        ]
+      ],
+      "object_count": 1,
+      "bbox_source_mm": [
+        47.312768888758,
+        6.0,
+        -1.9814,
+        54.487231111242,
+        12.0,
+        9.5186
+      ],
+      "bbox_assembled_mm": [
+        47.312768888758,
+        6.0,
+        4.5,
+        54.487231111242,
+        12.0,
+        16.0
+      ],
+      "semantic_root": "SW_PUSH_6mm_H8mm"
+    },
+    {
+      "component": "heltec",
+      "label": "U1 Heltec manufacturer model",
+      "index_ranges_inclusive": [
+        [
+          1,
+          888
+        ],
+        [
+          2145,
+          2810
+        ]
+      ],
+      "object_count": 1554,
+      "bbox_source_mm": [
+        10.299999197605551,
+        37.599137055066564,
+        -1.9813993239816694,
+        35.70000004701898,
+        90.40034241696306,
+        11.279656481956
+      ],
+      "bbox_assembled_mm": [
+        10.299999197605551,
+        37.599137055066564,
+        4.50000067601833,
+        35.70000004701898,
+        90.40034241696306,
+        17.761056481956
+      ],
+      "semantic_root": "heltec_v4_3_1_reference"
+    },
+    {
+      "component": "carrier_pads",
+      "label": "Carrier PCB pads and plating",
+      "index_ranges_inclusive": [
+        [
+          889,
+          1066
+        ]
+      ],
+      "object_count": 178,
+      "bbox_source_mm": [
+        10.67,
+        5.750001,
+        -0.04820000000000002,
+        63.239999000000005,
+        86.9,
+        1.4736
+      ],
+      "bbox_assembled_mm": [
+        10.67,
+        5.750001,
+        6.433199999999999,
+        63.239999000000005,
+        86.9,
+        7.955
+      ],
+      "semantic_root": "heltec_v4_audio_carrier_pad"
+    },
+    {
+      "component": "carrier_substrate",
+      "label": "Carrier PCB substrate",
+      "index_ranges_inclusive": [
+        [
+          1067,
+          1067
+        ]
+      ],
+      "object_count": 1,
+      "bbox_source_mm": [
+        0.0,
+        0.0,
+        0.0,
+        70.0,
+        90.0,
+        1.4254
+      ],
+      "bbox_assembled_mm": [
+        0.0,
+        0.0,
+        6.4814,
+        70.0,
+        90.0,
+        7.9068
+      ],
+      "semantic_root": "Part__Feature2948"
+    },
+    {
+      "component": "microphone",
+      "label": "U2 INMP441 microphone, corrected 14 mm model",
+      "index_ranges_inclusive": [
+        [
+          1068,
+          1714
+        ]
+      ],
+      "object_count": 647,
+      "bbox_source_mm": [
+        47.5,
+        23.606345999999654,
+        -1.4814000000000198,
+        61.500000000000014,
+        37.39365400000035,
+        5.8186
+      ],
+      "bbox_assembled_mm": [
+        47.5,
+        23.606345999999654,
+        4.9999999999999805,
+        61.500000000000014,
+        37.39365400000035,
+        12.3
+      ],
+      "semantic_root": "INMP441_ROUND_DETAILED_VISUAL001"
+    },
+    {
+      "component": "amplifier",
+      "label": "MAX98357A amplifier module",
+      "index_ranges_inclusive": [
+        [
+          1715,
+          2137
+        ]
+      ],
+      "object_count": 423,
+      "bbox_source_mm": [
+        45.62999996,
+        56.49999994999987,
+        -1.4814000960000184,
+        63.37000004,
+        75.50000005000021,
+        12.718599952000002
+      ],
+      "bbox_assembled_mm": [
+        45.62999996,
+        56.49999994999987,
+        4.999999903999981,
+        63.37000004,
+        75.50000005000021,
+        19.199999952000002
+      ],
+      "semantic_root": "MAX98357A_PURPLE_DETAILED_VISUAL001"
+    },
+    {
+      "component": "r8",
+      "label": "R8 axial resistor",
+      "index_ranges_inclusive": [
+        [
+          2138,
+          2144
+        ]
+      ],
+      "object_count": 7,
+      "bbox_source_mm": [
+        46.70000059999995,
+        43.2000010599998,
+        -1.281399480000002,
+        62.53999940000004,
+        46.799998940000165,
+        5.4685997200002054
+      ],
+      "bbox_assembled_mm": [
+        46.70000059999995,
+        43.2000010599998,
+        5.200000519999998,
+        62.53999940000004,
+        46.799998940000165,
+        11.949999720000205
+      ],
+      "semantic_root": "R_Axial_Carbon_1k_0p5W_P15p001"
+    },
+    {
+      "component": "oled",
+      "label": "OLED and bracket supplement",
+      "index_ranges_inclusive": [
+        [
+          2811,
+          2830
+        ]
+      ],
+      "object_count": 20,
+      "bbox_source_mm": [
+        13.699999999572398,
+        41.54999999999999,
+        8.07731925997999,
+        32.3599999998,
+        74.54999999936116,
+        13.81981926086
+      ],
+      "bbox_assembled_mm": [
+        13.699999999572398,
+        41.54999999999999,
+        14.558719259979991,
+        32.3599999998,
+        74.54999999936116,
+        20.301219260859998
+      ],
+      "semantic_root": "Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP001"
+    },
+    {
+      "component": "top_silkscreen",
+      "label": "Carrier top silkscreen",
+      "index_ranges_inclusive": [
+        [
+          2831,
+          2930
+        ]
+      ],
+      "object_count": 100,
+      "bbox_source_mm": [
+        3.163095,
+        4.4701808657703594,
+        1.5086,
+        67.584523,
+        89.120181,
+        1.5086
+      ],
+      "bbox_assembled_mm": [
+        3.163095,
+        4.4701808657703594,
+        7.99,
+        67.584523,
+        89.120181,
+        7.99
+      ],
+      "semantic_root": "heltec_v4_audio_carrier_silkscreen"
+    },
+    {
+      "component": "bottom_silkscreen",
+      "label": "Carrier bottom silkscreen",
+      "index_ranges_inclusive": [
+        [
+          2931,
+          2946
+        ]
+      ],
+      "object_count": 16,
+      "bbox_source_mm": [
+        14.844012472705,
+        16.646314276864,
+        -0.0832,
+        26.24166582583376,
+        19.47277159683835,
+        -0.0832
+      ],
+      "bbox_assembled_mm": [
+        14.844012472705,
+        16.646314276864,
+        6.3982,
+        26.24166582583376,
+        19.47277159683835,
+        6.3982
+      ],
+      "semantic_root": "heltec_v4_audio_carrier_silkscreen001"
+    },
+    {
+      "component": "top_soldermask",
+      "label": "Carrier top soldermask",
+      "index_ranges_inclusive": [
+        [
+          2947,
+          2947
+        ]
+      ],
+      "object_count": 1,
+      "bbox_source_mm": [
+        0.0,
+        0.0,
+        1.4836,
+        70.0,
+        90.0,
+        1.4836
+      ],
+      "bbox_assembled_mm": [
+        0.0,
+        0.0,
+        7.965,
+        70.0,
+        90.0,
+        7.965
+      ],
+      "semantic_root": "Part__Feature2946"
+    },
+    {
+      "component": "bottom_soldermask",
+      "label": "Carrier bottom soldermask",
+      "index_ranges_inclusive": [
+        [
+          2948,
+          2948
+        ]
+      ],
+      "object_count": 1,
+      "bbox_source_mm": [
+        0.0,
+        0.0,
+        -0.0582,
+        70.0,
+        90.0,
+        -0.0582
+      ],
+      "bbox_assembled_mm": [
+        0.0,
+        0.0,
+        6.4232,
+        70.0,
+        90.0,
+        6.4232
+      ],
+      "semantic_root": "Part__Feature2947"
+    }
+  ]
+}

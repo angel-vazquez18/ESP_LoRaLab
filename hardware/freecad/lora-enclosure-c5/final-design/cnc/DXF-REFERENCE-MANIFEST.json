@@ -1,0 +1,60 @@
+{
+  "source_cad": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\cad\\LoRa-Enclosure-C5-R1.FCStd",
+  "source_sha256": "d49a5fefe43be4ee6bb0f2487b88604709aff937187822a041833feb73cbcad9",
+  "scope": "Top reference projections. Not machinable G-code; no stock, offsets, speeds, tooling, feeds, fixtures or depth commands.",
+  "geometry_method": "FreeCAD TechDraw projectEx exact hidden-line projection; B-rep curves discretized to 0.025 mm deflection for PDF paths.",
+  "records": [
+    {
+      "part": "EnclosureBase",
+      "file": "output\\enclosure-c5\\final-design\\cnc\\EnclosureBase-top-reference.dxf",
+      "polyline_entities": 102,
+      "units": "mm",
+      "top_projection_bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        74.39999999999999,
+        94.39999999999999
+      ],
+      "sha256": "5671bc57618e65c132f991e14ed07541ef098f8e37b0118eb31aafc7c4f7d8f2"
+    },
+    {
+      "part": "EnclosureLid",
+      "file": "output\\enclosure-c5\\final-design\\cnc\\EnclosureLid-top-reference.dxf",
+      "polyline_entities": 136,
+      "units": "mm",
+      "top_projection_bounds_mm": [
+        -4.400000000000001,
+        -4.400000000000001,
+        74.39999999999999,
+        94.39999999999999
+      ],
+      "sha256": "24400ac8f973f8aa53876535b1e84e68c7d0f10e777a7c2b7b37d5f923ec1c4e"
+    },
+    {
+      "part": "PTTPlunger",
+      "file": "output\\enclosure-c5\\final-design\\cnc\\PTTPlunger-top-reference.dxf",
+      "polyline_entities": 6,
+      "units": "mm",
+      "top_projection_bounds_mm": [
+        45.0,
+        3.0,
+        57.0,
+        15.0
+      ],
+      "sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae"
+    },
+    {
+      "part": "PTTStopCup",
+      "file": "output\\enclosure-c5\\final-design\\cnc\\PTTStopCup-top-reference.dxf",
+      "polyline_entities": 18,
+      "units": "mm",
+      "top_projection_bounds_mm": [
+        39.0,
+        0.6999999999999993,
+        63.0,
+        17.3
+      ],
+      "sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "pdf": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\C5-R4-Battery-Integration.pdf",
+  "pages": 2,
+  "source_geometry_sha256": "400b55776a1dc3f726e0fe25cad228b1c0c6f8b43025c81b72536c226acafc3b",
+  "pdf_sha256": "d86f3ee524dfabccdd8bfac53504de2bed4d9265834ed5aa1ca66eb15eb42dd3",
+  "page_size_points": [
+    0,
+    0,
+    1190.551,
+    841.8898
+  ],
+  "text_checks": true,
+  "visual_review": "passed: both A3 PDF sheets and all three geometry-derived renders inspected; no clipping or overlap found",
+  "ok": true,
+  "reviewed_utc": "2026-11-25T02:21:31.998324+00:00",
+  "checks": {
+    "pdf_matches_validated_build": true,
+    "section_matches_validated_build": true,
+    "native_cad_unchanged": true,
+    "source_pcb_unchanged": true,
+    "six_actual_component_models_unchanged": true,
+    "reference_source_matches": true,
+    "battery-assembled_render_matches": true,
+    "battery-cutaway_render_matches": true,
+    "battery-exploded_render_matches": true
+  },
+  "native_file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\cad\\LoRa-Enclosure-C5-R4-Battery.FCStd",
+  "native_sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+  "source_board_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "actual_component_models": [
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\SW_PUSH_6mm_H8mm.step",
+      "sha256": "f8d32485dd6f21fb68fb20e6ff7c47e0d68fa6d8eec62cf726a41d2d9ad43969",
+      "current_hash_matches": true
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\INMP441_ROUND_DETAILED_VISUAL.wrl",
+      "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8",
+      "current_hash_matches": true
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\MAX98357A_PURPLE_DETAILED_VISUAL.wrl",
+      "sha256": "a221a03f0858b28defde118762c12c702e1a0da3b26a3ffc4ee86f0291a65bf5",
+      "current_hash_matches": true
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+      "sha256": "762dd1aecdfc3126016a42ff1d64d58a6c29bbeffeb0a0687e5b7d27eac81fa0",
+      "current_hash_matches": true
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\reference\\heltec-v4_3_1-reference.step",
+      "sha256": "3ea368115d7812ef97bd1f46f0acb7fd51675dee55567367c9c2f26bd70535df",
+      "current_hash_matches": true
+    },
+    {
+      "path": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\final-design\\pcb-fabrication\\source\\models\\Heltec_V4_R2_OLED_BRACKET_VISUAL_5mm_GAP.wrl",
+      "sha256": "c1f55c9c2fb43875bdbed00967e5fcdfa4edc4d3384dd0af7f36729462979122",
+      "current_hash_matches": true
+    }
+  ],
+  "rendered_pdf_pages": [
+    {
+      "page": 1,
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\C5-R4-Battery-Sheet-1.png",
+      "sha256": "de694c6a9370fe92146090793bb9f4be11422aa677fb84ec8f5b78eb46d19cad",
+      "pixels": [
+        2481,
+        1754
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "page": 2,
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\C5-R4-Battery-Sheet-2.png",
+      "sha256": "70879f4736bc4ae5f28be676db05ba63e850d7ccaebc1c8d5bf113b817a84262",
+      "pixels": [
+        2481,
+        1754
+      ],
+      "visually_reviewed": true
+    }
+  ],
+  "views": [
+    {
+      "view": "battery-assembled",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\battery-assembled.png",
+      "sha256": "835c7f3d5233c74178f17b5e9c9bd344889506c91253cd0f9b28cc9029648fc6",
+      "pixels": [
+        1992,
+        1568
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "view": "battery-cutaway",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\battery-cutaway.png",
+      "sha256": "32917cf66ee7ea7ab5a71abfab016c9dd5b6211a2f597f8ed2d809834a995bd4",
+      "pixels": [
+        1992,
+        1568
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "view": "battery-exploded",
+      "file": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\revision-r4-battery\\documentation\\battery-exploded.png",
+      "sha256": "daa5c0b8e28e0f172d21bb09b154f6ba3f5ba1c57de3335b6c09d20c89f3b6d8",
+      "pixels": [
+        1768,
+        2384
+      ],
+      "visually_reviewed": true
+    }
+  ],
+  "scope_notes": [
+    "PCB and its six original assigned component models retained; battery envelope, pad, plug and wiring are identified packaging references.",
+    "Section uses exact native housing geometry and the unchanged detailed electronics assembly; X=27.2 mm.",
+    "Battery-only amplifier firmware, pack charge rating, polarity and simultaneous USB plug fit remain unqualified; these limits are included in the PDF.",
+    "Presentation KiCad boards and WRL meshes are visualization artifacts, not fabrication outputs."
+  ]
+}

@@ -1,0 +1,53 @@
+Detailed C5 exploded enclosure visualization
+
+exploded-actual-kicad.png is rendered directly in KiCad from the current C5
+board and its assigned models, using the original colors and geometry.
+It includes the actual carrier outline, holes, pads, soldermask and silkscreen,
+Heltec manufacturer STEP, project OLED/bracket supplement, MAX98357A breakout,
+INMP441 module, fitted SW1 tactile switch and R8 axial resistor.
+
+The enclosure surfaces come from the verified base/lid/plunger STL exports.
+Only their presentation positions were changed. Their triangles were copied
+into VRML without remodelling. The electronics retain their assigned positions
+on the PCB. Exploded gaps are illustrative and do not represent assembly gaps.
+
+This is the project's detailed CAD, not a scan of the user's hardware.
+The OLED, audio modules and resistor include authored reference geometry;
+their uncertainty is described in the source project's models/3D_MODEL_NOTES.txt.
+
+FreeCAD interchange
+C5-detailed-assembly.step contains the KiCad-exported board and all six assigned
+model attachments. The four VRML-only attachments were translated to colored
+AP214 presentation surfaces using their source vertices, polygons and materials.
+The physical model scales were retained. KiCad's STEP substitution did not apply
+the microphone's 1/2.54 footprint scale, so that factor was baked into its STEP
+geometry. The corrected full assembly independently measures 14 mm diameter.
+The conversion audit is source-project/vrml-step-conversion-audit.json.
+These converted meshes are open visualization surfaces, not manufacturing solids.
+The microphone's source triangulation includes zero-area and tiny orientation
+artifacts; see the audit. Use the original KiCad-rendered PNG for faithful colors.
+The FreeCAD bridge's STEP import flattens object names and display materials.
+
+The exported board's finished Z envelope is -0.0832..1.5086 mm, and the actual
+component mounting datum is Z1.5186. The FreeCAD assembly uses +6.4814 mm to
+place that component datum at nominal PCB top Z8 (plus 55 mm for explosion).
+The nominal enclosure spreadsheet still assumes a 1.6 mm carrier. No new
+physical fit, RF, acoustic, or switch-travel validation is implied by this view.
+
+LoRa-Enclosure-C5-Detailed-Exploded.FCStd is the separate FreeCAD presentation
+document, one folder above this file. Its enclosure remains parametric; the
+imported electronics are reference geometry grouped under KiCadAssembly.
+Lid/plunger explosion offsets are 145/175 mm. The earlier simplified envelopes
+and the uncorrected microphone interchange surfaces are hidden. The visible
+MicrophoneActualScale shape was checked at 14 mm diameter and is valid in FreeCAD.
+Use the original assembly model and verified STL files for manufacturing;
+the detailed exploded document is arranged for visual inspection.
+
+Reproduction
+build_exploded_view.py creates source-project/exploded-view.kicad_pcb, a
+presentation-only copy. Do not use that copy as a fabrication board.
+exploded-view-manifest.json records enclosure mesh hashes and display offsets.
+KiCad render settings: 1600x2200, top, rotation(-54.7356,0,-45), zoom0.32,
+opaque background, high quality, board stackup colors; camera/top/side lighting
+0.45/0.5/0.4. The original C5 PCB hash remains
+9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553.

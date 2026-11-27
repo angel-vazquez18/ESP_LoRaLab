@@ -1,0 +1,102 @@
+{
+  "browser": "157.0.4341.60",
+  "mode": "local-html",
+  "results": [
+    {
+      "width": 736,
+      "colorScheme": "light",
+      "screenshot": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\3d-preview\\preview-736-light.png",
+      "bytes": 24199,
+      "metrics": {
+        "title": "Ptt Cutaway Animation",
+        "innerWidth": 736,
+        "scrollWidth": 736,
+        "scrollHeight": 1000,
+        "dark": false,
+        "horizontalOverflow": false
+      },
+      "frameMetrics": {
+        "innerWidth": 704,
+        "scrollWidth": 704,
+        "scrollHeight": 636,
+        "dark": false,
+        "horizontalOverflow": false,
+        "svgCount": 0,
+        "bodyText": "Moving plunger\nFixed stop cup\nLid, hardware, switch & PCB\nPlay cycle\nReleased\nFully pressed\nContact close-up\nDepression 0.000 mm\nGap 0.250 mm\nActual CAD meshes · Unexaggerated travel · Simulated switch motion · Provisional 0.25 mm stop\nReleased. The flange is 0.25 millimetres above the stop shelf."
+      },
+      "errors": []
+    },
+    {
+      "width": 736,
+      "colorScheme": "dark",
+      "screenshot": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\3d-preview\\preview-736-dark.png",
+      "bytes": 23285,
+      "metrics": {
+        "title": "Ptt Cutaway Animation",
+        "innerWidth": 736,
+        "scrollWidth": 736,
+        "scrollHeight": 1000,
+        "dark": true,
+        "horizontalOverflow": false
+      },
+      "frameMetrics": {
+        "innerWidth": 704,
+        "scrollWidth": 704,
+        "scrollHeight": 636,
+        "dark": true,
+        "horizontalOverflow": false,
+        "svgCount": 0,
+        "bodyText": "Moving plunger\nFixed stop cup\nLid, hardware, switch & PCB\nPlay cycle\nReleased\nFully pressed\nContact close-up\nDepression 0.000 mm\nGap 0.250 mm\nActual CAD meshes · Unexaggerated travel · Simulated switch motion · Provisional 0.25 mm stop\nReleased. The flange is 0.25 millimetres above the stop shelf."
+      },
+      "errors": []
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "screenshot": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\3d-preview\\preview-320-light.png",
+      "bytes": 20376,
+      "metrics": {
+        "title": "Ptt Cutaway Animation",
+        "innerWidth": 320,
+        "scrollWidth": 320,
+        "scrollHeight": 1000,
+        "dark": false,
+        "horizontalOverflow": false
+      },
+      "frameMetrics": {
+        "innerWidth": 288,
+        "scrollWidth": 288,
+        "scrollHeight": 602,
+        "dark": false,
+        "horizontalOverflow": false,
+        "svgCount": 0,
+        "bodyText": "Moving plunger\nFixed stop cup\nLid, hardware, switch & PCB\nPlay cycle\nReleased\nFully pressed\nContact close-up\nDepression 0.000 mm\nGap 0.250 mm\nActual CAD meshes · Unexaggerated travel · Simulated switch motion · Provisional 0.25 mm stop\nReleased. The flange is 0.25 millimetres above the stop shelf."
+      },
+      "errors": []
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "screenshot": "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\3d-preview\\preview-320-dark.png",
+      "bytes": 19897,
+      "metrics": {
+        "title": "Ptt Cutaway Animation",
+        "innerWidth": 320,
+        "scrollWidth": 320,
+        "scrollHeight": 1000,
+        "dark": true,
+        "horizontalOverflow": false
+      },
+      "frameMetrics": {
+        "innerWidth": 288,
+        "scrollWidth": 288,
+        "scrollHeight": 602,
+        "dark": true,
+        "horizontalOverflow": false,
+        "svgCount": 0,
+        "bodyText": "Moving plunger\nFixed stop cup\nLid, hardware, switch & PCB\nPlay cycle\nReleased\nFully pressed\nContact close-up\nDepression 0.000 mm\nGap 0.250 mm\nActual CAD meshes · Unexaggerated travel · Simulated switch motion · Provisional 0.25 mm stop\nReleased. The flange is 0.25 millimetres above the stop shelf."
+      },
+      "errors": []
+    }
+  ]
+}

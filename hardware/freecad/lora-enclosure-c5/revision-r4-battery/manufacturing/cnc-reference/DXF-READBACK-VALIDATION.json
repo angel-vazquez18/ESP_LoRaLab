@@ -1,0 +1,66 @@
+{
+  "method": "Read back through independent FreeCAD importDXF reader in an unsaved headless document; compare entity count and XY bounding dimensions.",
+  "ok": true,
+  "records": [
+    {
+      "file": "EnclosureBase-top-reference.dxf",
+      "imported_shapes": 194,
+      "bounds_mm": [
+        -4.4,
+        -4.4,
+        74.4,
+        99.6
+      ],
+      "max_bound_deviation_mm": 1.4210854715202004e-14,
+      "ok": true
+    },
+    {
+      "file": "BatteryCover-top-reference.dxf",
+      "imported_shapes": 216,
+      "bounds_mm": [
+        -4.4,
+        -4.4,
+        74.4,
+        99.6
+      ],
+      "max_bound_deviation_mm": 1.4210854715202004e-14,
+      "ok": true
+    },
+    {
+      "file": "EnclosureLid-top-reference.dxf",
+      "imported_shapes": 192,
+      "bounds_mm": [
+        -4.4,
+        -4.4,
+        74.4,
+        94.4
+      ],
+      "max_bound_deviation_mm": 1.0000000116860974e-07,
+      "ok": true
+    },
+    {
+      "file": "PTTPlunger-top-reference.dxf",
+      "imported_shapes": 6,
+      "bounds_mm": [
+        45.024154,
+        3.006042,
+        57.0,
+        14.993958
+      ],
+      "max_bound_deviation_mm": 0.024154000000002895,
+      "ok": true
+    },
+    {
+      "file": "PTTStopCup-top-reference.dxf",
+      "imported_shapes": 18,
+      "bounds_mm": [
+        39.0,
+        0.7,
+        63.0,
+        17.3
+      ],
+      "max_bound_deviation_mm": 6.661338147750939e-16,
+      "ok": true
+    }
+  ]
+}

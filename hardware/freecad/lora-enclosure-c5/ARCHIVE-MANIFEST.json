@@ -1,0 +1,2543 @@
+{
+  "scope": "FreeCAD C5 enclosure R1-R4 development; current R4 battery prototype",
+  "date": "2026-11-24",
+  "current_revision": "R4",
+  "source_workspace_prefix": "output/enclosure-c5",
+  "excluded": "PCB/Gerber/drill files, mixed bundles, product artwork, runtime/cache/backup files.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 259,
+      "sha256": "92d331f69392286ae9bfb7dfcb8bf4236b8fe9716e355e674576f6d4e64008aa",
+      "source": "Published R1 archive",
+      "source_sha256": "92d331f69392286ae9bfb7dfcb8bf4236b8fe9716e355e674576f6d4e64008aa"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 133,
+      "sha256": "6008f80d18e9aec301c4fe1b9066ed347c6786e038c18bf80433c93e32dc9f9b",
+      "source": "Published R1 archive",
+      "source_sha256": "6008f80d18e9aec301c4fe1b9066ed347c6786e038c18bf80433c93e32dc9f9b"
+    },
+    {
+      "path": "assembly-preview.png",
+      "bytes": 18009,
+      "sha256": "172ab924444c3e3b8c55a6919b47d024f4497400f269f95f6777b4e6ea54e088",
+      "source": "Published R1 archive",
+      "source_sha256": "172ab924444c3e3b8c55a6919b47d024f4497400f269f95f6777b4e6ea54e088"
+    },
+    {
+      "path": "BUILD-RECORD.txt",
+      "bytes": 1372,
+      "sha256": "1f1fe3ca60fc8b7df2aa90df228d0db9a5303c3829152df21f08d09ff16234ad",
+      "source": "Published R1 archive",
+      "source_sha256": "1f1fe3ca60fc8b7df2aa90df228d0db9a5303c3829152df21f08d09ff16234ad"
+    },
+    {
+      "path": "cad-validation.json",
+      "bytes": 3573,
+      "sha256": "271b9186344409b08089a0b438c054e42c6ad264055fdd8334b0bc930b1612fc",
+      "source": "Published R1 archive",
+      "source_sha256": "271b9186344409b08089a0b438c054e42c6ad264055fdd8334b0bc930b1612fc"
+    },
+    {
+      "path": "CURRENT-RELEASE.json",
+      "bytes": 783,
+      "sha256": "81642c28f1c3c7c593386ae3ead40ba3f9ac9e85a1a5600485d3d8c489914fe1",
+      "source": "R4 repository adoption documentation/helper"
+    },
+    {
+      "path": "DESIGN-NOTES.txt",
+      "bytes": 12182,
+      "sha256": "9e70719955ef151beb83a4c433f94ff5145b33941d155774520e9c2bea455954",
+      "source": "Published R1 archive",
+      "source_sha256": "9e70719955ef151beb83a4c433f94ff5145b33941d155774520e9c2bea455954"
+    },
+    {
+      "path": "detailed-import/build_exploded_view.py",
+      "bytes": 3170,
+      "sha256": "1a46bdddd4b45d762eb2cfab395820c14767bf57f0858393ada215cd341587a0",
+      "source": "Published R1 archive",
+      "source_sha256": "1a46bdddd4b45d762eb2cfab395820c14767bf57f0858393ada215cd341587a0"
+    },
+    {
+      "path": "detailed-import/C5-detailed-assembly.step.zip",
+      "bytes": 12050088,
+      "sha256": "4b276524c0b657a0c4984b40157b6e5175892f6faeeaea2df9b051cf6442bf07",
+      "source": "Published R1 archive",
+      "source_sha256": "4b276524c0b657a0c4984b40157b6e5175892f6faeeaea2df9b051cf6442bf07"
+    },
+    {
+      "path": "detailed-import/check_corrected_assembly.py",
+      "bytes": 1615,
+      "sha256": "19e05f47f178180137db26b33cbfdc51296c0e3fcc711e9141a7190226295552",
+      "source": "Published R1 archive",
+      "source_sha256": "19e05f47f178180137db26b33cbfdc51296c0e3fcc711e9141a7190226295552"
+    },
+    {
+      "path": "detailed-import/convert_project_vrml.py",
+      "bytes": 9068,
+      "sha256": "2e939835ae78f5f62ca9fbf503f89263cf06f9e686839fd62bb1c469a3c95b40",
+      "source": "Published R1 archive",
+      "source_sha256": "2e939835ae78f5f62ca9fbf503f89263cf06f9e686839fd62bb1c469a3c95b40"
+    },
+    {
+      "path": "detailed-import/corrected-assembly-check.json",
+      "bytes": 873,
+      "sha256": "9b0dfccc8bad813385c4cfb43a768966c65213925e77f9b6c23685a3213e19e8",
+      "source": "Published R1 archive",
+      "source_sha256": "9b0dfccc8bad813385c4cfb43a768966c65213925e77f9b6c23685a3213e19e8"
+    },
+    {
+      "path": "detailed-import/detailed-export-sha256.json",
+      "bytes": 467,
+      "sha256": "5f6df5f561a64604aecfc7799d6514a17d4df70c22433b06932e8e902d0fdeb0",
+      "source": "Published R1 archive",
+      "source_sha256": "5f6df5f561a64604aecfc7799d6514a17d4df70c22433b06932e8e902d0fdeb0"
+    },
+    {
+      "path": "detailed-import/exploded-actual-draft.png",
+      "bytes": 461408,
+      "sha256": "8e8feccaf3da55b3e40dccc7bcc7cc8eddb1dfe4c636cdcc541f2431af50af00",
+      "source": "Published R1 archive",
+      "source_sha256": "8e8feccaf3da55b3e40dccc7bcc7cc8eddb1dfe4c636cdcc541f2431af50af00"
+    },
+    {
+      "path": "detailed-import/exploded-actual-kicad.png",
+      "bytes": 801851,
+      "sha256": "8ce3838b54a29609d0e0f043e5c8ecfb97354d5f5631b1dd2cd3207d93eb66f9",
+      "source": "Published R1 archive",
+      "source_sha256": "8ce3838b54a29609d0e0f043e5c8ecfb97354d5f5631b1dd2cd3207d93eb66f9"
+    },
+    {
+      "path": "detailed-import/exploded-view-manifest.json",
+      "bytes": 2896,
+      "sha256": "bb2464ccafbff631534ae025c8cbc42ec858818aa474c7a480a0ee54b0ede0ff",
+      "source": "Published R1 archive",
+      "source_sha256": "bb2464ccafbff631534ae025c8cbc42ec858818aa474c7a480a0ee54b0ede0ff"
+    },
+    {
+      "path": "detailed-import/final-view-sha256.json",
+      "bytes": 466,
+      "sha256": "93c42dfcc41186a09d2b75e0ada9d235b2e63451ac4c0f6803faa33f154e904a",
+      "source": "Published R1 archive",
+      "source_sha256": "93c42dfcc41186a09d2b75e0ada9d235b2e63451ac4c0f6803faa33f154e904a"
+    },
+    {
+      "path": "detailed-import/inspect_native_step_groups.py",
+      "bytes": 862,
+      "sha256": "084a4fafecf16ea034a26092e5c03dd3bdd8b7cf08c967fd069ea63dedb2afe8",
+      "source": "Published R1 archive",
+      "source_sha256": "084a4fafecf16ea034a26092e5c03dd3bdd8b7cf08c967fd069ea63dedb2afe8"
+    },
+    {
+      "path": "detailed-import/MIC-SCALE-CORRECTION.txt",
+      "bytes": 1485,
+      "sha256": "cc6280734371ff06edaa09085f5e6f52389f2bf53dae76e39361b7d1cf0c8309",
+      "source": "Published R1 archive",
+      "source_sha256": "cc6280734371ff06edaa09085f5e6f52389f2bf53dae76e39361b7d1cf0c8309"
+    },
+    {
+      "path": "detailed-import/microphone-import-names.json",
+      "bytes": 20060,
+      "sha256": "3662f39f7801244e29643d772a2cf56595bda1c1df74ff9b1e8817909640333f",
+      "source": "Published R1 archive",
+      "source_sha256": "3662f39f7801244e29643d772a2cf56595bda1c1df74ff9b1e8817909640333f"
+    },
+    {
+      "path": "detailed-import/native-import-object-audit.json",
+      "bytes": 1072056,
+      "sha256": "032b2fe98ebbaf2e782fd5e4ea7809bef6d4d21025c66595422e8e879a2bd9a8",
+      "source": "Published R1 archive",
+      "source_sha256": "032b2fe98ebbaf2e782fd5e4ea7809bef6d4d21025c66595422e8e879a2bd9a8"
+    },
+    {
+      "path": "detailed-import/native-microphone-check.json",
+      "bytes": 182,
+      "sha256": "c0896530f755fd7d9a431168b30d85e41ef2a1737aa51df3833ab6a670f00b51",
+      "source": "Published R1 archive",
+      "source_sha256": "c0896530f755fd7d9a431168b30d85e41ef2a1737aa51df3833ab6a670f00b51"
+    },
+    {
+      "path": "detailed-import/READ-ME.txt",
+      "bytes": 3345,
+      "sha256": "112595df5b542a37c0ce9b5962342d2badb552c4bb308afca782415f789d3a7c",
+      "source": "Published R1 archive",
+      "source_sha256": "112595df5b542a37c0ce9b5962342d2badb552c4bb308afca782415f789d3a7c"
+    },
+    {
+      "path": "detailed-import/saved-document-check.json",
+      "bytes": 312,
+      "sha256": "e938eaa894f3400a12fa61930b6408dd35f1326ea3d5a2fc41997c734b38cd2f",
+      "source": "Published R1 archive",
+      "source_sha256": "e938eaa894f3400a12fa61930b6408dd35f1326ea3d5a2fc41997c734b38cd2f"
+    },
+    {
+      "path": "detailed-import/source-project/models/3D_MODEL_NOTES.txt",
+      "bytes": 3627,
+      "sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63",
+      "source": "Published R1 archive",
+      "source_sha256": "9d631b9d51de64528aff8f518f1ba0ed38d5237ee944361c019e1135ed744d63"
+    },
+    {
+      "path": "detailed-import/source-project/models/INMP441_ROUND_DETAILED_VISUAL.notes.json",
+      "bytes": 3459,
+      "sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0",
+      "source": "Published R1 archive",
+      "source_sha256": "ede4b63a4d802b40a4fef4a233e7d753ebd189d4f52432cf4d3698b1e83690d0"
+    },
+    {
+      "path": "detailed-import/source-project/models/MAX98357A_PURPLE_DETAILED_VISUAL.notes.json",
+      "bytes": 2113,
+      "sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e",
+      "source": "Published R1 archive",
+      "source_sha256": "9c497ed562fe29f26a123e2c3396f30a5e2c1de83d47e190485b77d5c810651e"
+    },
+    {
+      "path": "detailed-import/source-project/models/reference/README.txt",
+      "bytes": 210,
+      "sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217",
+      "source": "Published R1 archive",
+      "source_sha256": "57ed55070d0855f0e0d8963ae90acbff03d5d604fb28005814fa157c83e3d217"
+    },
+    {
+      "path": "detailed-import/validate_project_vrml_steps.py",
+      "bytes": 1472,
+      "sha256": "b3ba13568ab2afca9c4df9c59f306feedfa51ec7d4edf3915ebb0a580fcb4c62",
+      "source": "Published R1 archive",
+      "source_sha256": "b3ba13568ab2afca9c4df9c59f306feedfa51ec7d4edf3915ebb0a580fcb4c62"
+    },
+    {
+      "path": "enclosure-base.stl",
+      "bytes": 101084,
+      "sha256": "e99e71243efb3e573ec12f25963b8f7295979d7e9c06435cde58dd951bd6072f",
+      "source": "Published R1 archive",
+      "source_sha256": "e99e71243efb3e573ec12f25963b8f7295979d7e9c06435cde58dd951bd6072f"
+    },
+    {
+      "path": "enclosure-lid.stl",
+      "bytes": 93284,
+      "sha256": "9dba490e15390f6985a67362df2c70f4bbce17429b196c68c785fd7b9a4114dc",
+      "source": "Published R1 archive",
+      "source_sha256": "9dba490e15390f6985a67362df2c70f4bbce17429b196c68c785fd7b9a4114dc"
+    },
+    {
+      "path": "exploded-internals.png",
+      "bytes": 32154,
+      "sha256": "81bf4ed2395e27fd57b3f73dabeae8365e1d7194ee085b7d67390289829a63da",
+      "source": "Published R1 archive",
+      "source_sha256": "81bf4ed2395e27fd57b3f73dabeae8365e1d7194ee085b7d67390289829a63da"
+    },
+    {
+      "path": "exploded-preview.png",
+      "bytes": 28014,
+      "sha256": "c2ea510c400f58521b74285edd1c532f5bdd6748587ad5ec19fbad749e39065f",
+      "source": "Published R1 archive",
+      "source_sha256": "c2ea510c400f58521b74285edd1c532f5bdd6748587ad5ec19fbad749e39065f"
+    },
+    {
+      "path": "export-sha256.json",
+      "bytes": 1045,
+      "sha256": "c6c5ad542051532fdd3ba828743850952584b0c7d3fdd6add4633f38eb100fe6",
+      "source": "Published R1 archive",
+      "source_sha256": "c6c5ad542051532fdd3ba828743850952584b0c7d3fdd6add4633f38eb100fe6"
+    },
+    {
+      "path": "final-design/audit/audit_display_microphone.py",
+      "bytes": 3256,
+      "sha256": "32b60e575704261ab2558d0d62ce7a83ba8b0739f5d6ca2be70c82506dcaa003",
+      "source": "Published R1 archive",
+      "source_sha256": "32b60e575704261ab2558d0d62ce7a83ba8b0739f5d6ca2be70c82506dcaa003"
+    },
+    {
+      "path": "final-design/audit/audit_headroom13_candidate.py",
+      "bytes": 5802,
+      "sha256": "ab15483ef92daee9797d6a67aeade44878eba96a9366c1df26216b2529ffd34a",
+      "source": "Published R1 archive",
+      "source_sha256": "ab15483ef92daee9797d6a67aeade44878eba96a9366c1df26216b2529ffd34a"
+    },
+    {
+      "path": "final-design/audit/classify_soldermask_presentation_overlaps.py",
+      "bytes": 2859,
+      "sha256": "731cee753e647b13bc8e25fdaea69811e6fc0d58d1ce064971b159e45701c1be",
+      "source": "Published R1 archive",
+      "source_sha256": "731cee753e647b13bc8e25fdaea69811e6fc0d58d1ce064971b159e45701c1be"
+    },
+    {
+      "path": "final-design/audit/DISPLAY-MICROPHONE-ENGINEERING-REVIEW.txt",
+      "bytes": 7910,
+      "sha256": "c9c1d3cc290722fa13a4eef123016f4b613ecc236a7e66cbefd7a39f21351bfa",
+      "source": "Published R1 archive",
+      "source_sha256": "c9c1d3cc290722fa13a4eef123016f4b613ecc236a7e66cbefd7a39f21351bfa"
+    },
+    {
+      "path": "final-design/audit/display-microphone-fit-run.txt",
+      "bytes": 11724,
+      "sha256": "39995b33e6056e404ca9444493f61985fb20e9d397ae4c18f5b31a640c74c9ac",
+      "source": "Published R1 archive",
+      "source_sha256": "39995b33e6056e404ca9444493f61985fb20e9d397ae4c18f5b31a640c74c9ac"
+    },
+    {
+      "path": "final-design/audit/display-microphone-fit.json",
+      "bytes": 11722,
+      "sha256": "27c23608cbbaa040ca8a484beb6c01a54b17ebe9b0d35e870cabc5f911345635",
+      "source": "Published R1 archive",
+      "source_sha256": "27c23608cbbaa040ca8a484beb6c01a54b17ebe9b0d35e870cabc5f911345635"
+    },
+    {
+      "path": "final-design/audit/final-actual-clearance.json",
+      "bytes": 74940,
+      "sha256": "03b521011ef584cc071c191da322e7790be704d7c2588581996872c024ad71f4",
+      "source": "Published R1 archive",
+      "source_sha256": "03b521011ef584cc071c191da322e7790be704d7c2588581996872c024ad71f4"
+    },
+    {
+      "path": "final-design/audit/final-export-validation.json",
+      "bytes": 21673,
+      "sha256": "e764f36665cd23cc75c301b2138b2bc01811f1a850987460710db074071b0624",
+      "source": "Published R1 archive",
+      "source_sha256": "e764f36665cd23cc75c301b2138b2bc01811f1a850987460710db074071b0624"
+    },
+    {
+      "path": "final-design/audit/headroom13-predictive-clearance.json",
+      "bytes": 29179,
+      "sha256": "d4124952ab65d511dd00434f715f09e2d9fa05cd76126641110b871dcdadee78",
+      "source": "Published R1 archive",
+      "source_sha256": "d4124952ab65d511dd00434f715f09e2d9fa05cd76126641110b871dcdadee78"
+    },
+    {
+      "path": "final-design/audit/verify_final_exports.py",
+      "bytes": 8045,
+      "sha256": "60fdc3abe3f4eaa9916b5b66a3b8df43f99e959032279f848b268ab4eb71aa78",
+      "source": "Published R1 archive",
+      "source_sha256": "60fdc3abe3f4eaa9916b5b66a3b8df43f99e959032279f848b268ab4eb71aa78"
+    },
+    {
+      "path": "final-design/audit/verify_individual_cnc_steps.py",
+      "bytes": 1350,
+      "sha256": "2654418f2074951a401fd7eda5d480d99cc4412b5481b52598992d41fd5a14da",
+      "source": "Published R1 archive",
+      "source_sha256": "2654418f2074951a401fd7eda5d480d99cc4412b5481b52598992d41fd5a14da"
+    },
+    {
+      "path": "final-design/bom/bom-formula-scan.json",
+      "bytes": 60,
+      "sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146",
+      "source": "Published R1 archive",
+      "source_sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146"
+    },
+    {
+      "path": "final-design/bom/bom-validation.json",
+      "bytes": 312,
+      "sha256": "6254f9ef0cb498b330b1157bdd938ebb9e9a0aee63f9058e1184964bde2fd813",
+      "source": "Published R1 archive",
+      "source_sha256": "6254f9ef0cb498b330b1157bdd938ebb9e9a0aee63f9058e1184964bde2fd813"
+    },
+    {
+      "path": "final-design/bom/complete-bom.json",
+      "bytes": 6959,
+      "sha256": "3df7b032e51b89413a03874583ab73ebb094b55869179f141bc00d9ed3d3039a",
+      "source": "Published R1 archive",
+      "source_sha256": "3df7b032e51b89413a03874583ab73ebb094b55869179f141bc00d9ed3d3039a"
+    },
+    {
+      "path": "final-design/bom/LoRa-C5-R1-Complete-BOM.csv",
+      "bytes": 4079,
+      "sha256": "70b77759e216d51e5eb2fab3ef6d520c7cf84ab2e2d912d256bc74fcbb0b182e",
+      "source": "Published R1 archive",
+      "source_sha256": "70b77759e216d51e5eb2fab3ef6d520c7cf84ab2e2d912d256bc74fcbb0b182e"
+    },
+    {
+      "path": "final-design/bom/LoRa-C5-R1-Complete-BOM.xlsx",
+      "bytes": 8812,
+      "sha256": "238a83e6a28d3af56fed99d6bac292b9ed10c6f5c2d7d68a72ff0f87f268256e",
+      "source": "Published R1 archive",
+      "source_sha256": "238a83e6a28d3af56fed99d6bac292b9ed10c6f5c2d7d68a72ff0f87f268256e"
+    },
+    {
+      "path": "final-design/cad/LoRa-Enclosure-C5-R1.FCStd",
+      "bytes": 17010562,
+      "sha256": "d49a5fefe43be4ee6bb0f2487b88604709aff937187822a041833feb73cbcad9",
+      "source": "Published R1 archive",
+      "source_sha256": "d49a5fefe43be4ee6bb0f2487b88604709aff937187822a041833feb73cbcad9"
+    },
+    {
+      "path": "final-design/cad/LoRa-Enclosure-C5-R1.step",
+      "bytes": 176125,
+      "sha256": "2b153a44979ede7a96ff85efcde0019c8b6a9ed0b9a6a5a8781fa7d1e150c945",
+      "source": "Published R1 archive",
+      "source_sha256": "2b153a44979ede7a96ff85efcde0019c8b6a9ed0b9a6a5a8781fa7d1e150c945"
+    },
+    {
+      "path": "final-design/cnc/C5-R1-enclosure-base.step",
+      "bytes": 69147,
+      "sha256": "7549b539c2c896410eae8d4c3ba89665eb5e8ce00bb4d7a48ef52493e7aec201",
+      "source": "Published R1 archive",
+      "source_sha256": "7549b539c2c896410eae8d4c3ba89665eb5e8ce00bb4d7a48ef52493e7aec201"
+    },
+    {
+      "path": "final-design/cnc/C5-R1-enclosure-lid.step",
+      "bytes": 86847,
+      "sha256": "7ec6807924a03443353a72db7eadb06d0c2254e260d3f828916c58c0250522e9",
+      "source": "Published R1 archive",
+      "source_sha256": "7ec6807924a03443353a72db7eadb06d0c2254e260d3f828916c58c0250522e9"
+    },
+    {
+      "path": "final-design/cnc/C5-R1-ptt-plunger.step",
+      "bytes": 6770,
+      "sha256": "02bc35b621c7167f2f1c793e5e0c0105bf96950718da2e363a1bd4dde362b196",
+      "source": "Published R1 archive",
+      "source_sha256": "02bc35b621c7167f2f1c793e5e0c0105bf96950718da2e363a1bd4dde362b196"
+    },
+    {
+      "path": "final-design/cnc/C5-R1-ptt-stop-cup.step",
+      "bytes": 14572,
+      "sha256": "1a0b2516697f7312f24e61da046d9b7f87bc15726aac9a4d1770b6bf817079d2",
+      "source": "Published R1 archive",
+      "source_sha256": "1a0b2516697f7312f24e61da046d9b7f87bc15726aac9a4d1770b6bf817079d2"
+    },
+    {
+      "path": "final-design/cnc/DXF-READBACK-VALIDATION.json",
+      "bytes": 1242,
+      "sha256": "26b97f0249b6413426c36f005201db8858779fbb2cdce3cf55151adaa4d7cdf6",
+      "source": "Published R1 archive",
+      "source_sha256": "26b97f0249b6413426c36f005201db8858779fbb2cdce3cf55151adaa4d7cdf6"
+    },
+    {
+      "path": "final-design/cnc/DXF-REFERENCE-MANIFEST.json",
+      "bytes": 2178,
+      "sha256": "dbb3eb32e92f2c39b22fbda9928542c7d7e8659dc176943a7b29e6f254b384d0",
+      "source": "Published R1 archive",
+      "source_sha256": "dbb3eb32e92f2c39b22fbda9928542c7d7e8659dc176943a7b29e6f254b384d0"
+    },
+    {
+      "path": "final-design/cnc/EnclosureBase-top-reference.dxf",
+      "bytes": 38603,
+      "sha256": "5671bc57618e65c132f991e14ed07541ef098f8e37b0118eb31aafc7c4f7d8f2",
+      "source": "Published R1 archive",
+      "source_sha256": "5671bc57618e65c132f991e14ed07541ef098f8e37b0118eb31aafc7c4f7d8f2"
+    },
+    {
+      "path": "final-design/cnc/EnclosureLid-top-reference.dxf",
+      "bytes": 48706,
+      "sha256": "24400ac8f973f8aa53876535b1e84e68c7d0f10e777a7c2b7b37d5f923ec1c4e",
+      "source": "Published R1 archive",
+      "source_sha256": "24400ac8f973f8aa53876535b1e84e68c7d0f10e777a7c2b7b37d5f923ec1c4e"
+    },
+    {
+      "path": "final-design/cnc/PTTPlunger-top-reference.dxf",
+      "bytes": 6583,
+      "sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae",
+      "source": "Published R1 archive",
+      "source_sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae"
+    },
+    {
+      "path": "final-design/cnc/PTTStopCup-top-reference.dxf",
+      "bytes": 12159,
+      "sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475",
+      "source": "Published R1 archive",
+      "source_sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475"
+    },
+    {
+      "path": "final-design/cnc/READ-ME.txt",
+      "bytes": 685,
+      "sha256": "081699d6e713f48f5764a5895b79d189bff28159f365df0d3c993a67b7665ba0",
+      "source": "Published R1 archive",
+      "source_sha256": "081699d6e713f48f5764a5895b79d189bff28159f365df0d3c993a67b7665ba0"
+    },
+    {
+      "path": "final-design/craftcloud/bind_final_prints.py",
+      "bytes": 2732,
+      "sha256": "a8c5681825308707237719458e3102947bb7c77df901dbe93b47b444db364311",
+      "source": "Published R1 archive",
+      "source_sha256": "a8c5681825308707237719458e3102947bb7c77df901dbe93b47b444db364311"
+    },
+    {
+      "path": "final-design/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt",
+      "bytes": 7892,
+      "sha256": "a05507de1d1f80c111f1cd90b1e5772a856eb4bbd7d71849acc8654e34fb9a4e",
+      "source": "Published R1 archive",
+      "source_sha256": "a05507de1d1f80c111f1cd90b1e5772a856eb4bbd7d71849acc8654e34fb9a4e"
+    },
+    {
+      "path": "final-design/craftcloud/order-manifest.json",
+      "bytes": 4308,
+      "sha256": "a6f8e1d3f1c292f8a84aaa491d617c06ca024a19ffe8179361e767121d6e0240",
+      "source": "Published R1 archive",
+      "source_sha256": "a6f8e1d3f1c292f8a84aaa491d617c06ca024a19ffe8179361e767121d6e0240"
+    },
+    {
+      "path": "final-design/craftcloud/package-order-manifest.json",
+      "bytes": 4272,
+      "sha256": "71c0f6d7c28a93d845d97980eb2ac79f74670f385a735eb5896e51a021554459",
+      "source": "Published R1 archive",
+      "source_sha256": "71c0f6d7c28a93d845d97980eb2ac79f74670f385a735eb5896e51a021554459"
+    },
+    {
+      "path": "final-design/craftcloud/production-notes.txt",
+      "bytes": 1775,
+      "sha256": "02d07842d41f5a74bfd77ab328b1cacf77fd5923ef43caa2faf1a959aa80de88",
+      "source": "Published R1 archive",
+      "source_sha256": "02d07842d41f5a74bfd77ab328b1cacf77fd5923ef43caa2faf1a959aa80de88"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-enclosure-base-mm.3mf",
+      "bytes": 37431,
+      "sha256": "1dfa4bc02b912351f5352d2f42bb346180ece971ca181302fd8f4f85ad4bb3c2",
+      "source": "Published R1 archive",
+      "source_sha256": "1dfa4bc02b912351f5352d2f42bb346180ece971ca181302fd8f4f85ad4bb3c2"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-enclosure-base-mm.stl",
+      "bytes": 182084,
+      "sha256": "f1968e216942993e6f97ff66b21d2d97cbeb8eb6f935162cd1cacd944d130635",
+      "source": "Published R1 archive",
+      "source_sha256": "f1968e216942993e6f97ff66b21d2d97cbeb8eb6f935162cd1cacd944d130635"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-enclosure-lid-mm.3mf",
+      "bytes": 37299,
+      "sha256": "593a865b21f21b27a8c40d1baea97b0f2a6e39da81ed2c2d57294cbd955f80de",
+      "source": "Published R1 archive",
+      "source_sha256": "593a865b21f21b27a8c40d1baea97b0f2a6e39da81ed2c2d57294cbd955f80de"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-enclosure-lid-mm.stl",
+      "bytes": 181684,
+      "sha256": "9f127c82d33d244d278dad135412b3b1dec5a66c91461c409c0d7e5837282466",
+      "source": "Published R1 archive",
+      "source_sha256": "9f127c82d33d244d278dad135412b3b1dec5a66c91461c409c0d7e5837282466"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-ptt-plunger-mm.3mf",
+      "bytes": 7028,
+      "sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f",
+      "source": "Published R1 archive",
+      "source_sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-ptt-plunger-mm.stl",
+      "bytes": 30284,
+      "sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41",
+      "source": "Published R1 archive",
+      "source_sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-ptt-stop-cup-mm.3mf",
+      "bytes": 12126,
+      "sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0",
+      "source": "Published R1 archive",
+      "source_sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0"
+    },
+    {
+      "path": "final-design/craftcloud/upload/C5-R1-ptt-stop-cup-mm.stl",
+      "bytes": 56484,
+      "sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f",
+      "source": "Published R1 archive",
+      "source_sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f"
+    },
+    {
+      "path": "final-design/craftcloud/upload-manifest.json",
+      "bytes": 5114,
+      "sha256": "a6066d90ee7d424fd55e98b8107145b9af4d4229209abab703d30e55e3984226",
+      "source": "Published R1 archive",
+      "source_sha256": "a6066d90ee7d424fd55e98b8107145b9af4d4229209abab703d30e55e3984226"
+    },
+    {
+      "path": "final-design/DESIGN-REVISION.txt",
+      "bytes": 4493,
+      "sha256": "26a2636496661889378c7e0d5609b05f867a07693801f1c84fa468142241e421",
+      "source": "Published R1 archive",
+      "source_sha256": "26a2636496661889378c7e0d5609b05f867a07693801f1c84fa468142241e421"
+    },
+    {
+      "path": "final-design/documentation/build_engineering_documents.py",
+      "bytes": 32568,
+      "sha256": "ee8bf40c999b71b793c2cdf9460f1be013f63fbcb03b810a760b30104d476657",
+      "source": "Published R1 archive",
+      "source_sha256": "ee8bf40c999b71b793c2cdf9460f1be013f63fbcb03b810a760b30104d476657"
+    },
+    {
+      "path": "final-design/documentation/document-metadata.json",
+      "bytes": 4370,
+      "sha256": "b206c61bdfdc6959d0d90fb792dd0198509cb82c9d543faf00ff4a4eb8c0a84f",
+      "source": "Published R1 archive",
+      "source_sha256": "b206c61bdfdc6959d0d90fb792dd0198509cb82c9d543faf00ff4a4eb8c0a84f"
+    },
+    {
+      "path": "final-design/documentation/DOCUMENT-VALIDATION.json",
+      "bytes": 2272,
+      "sha256": "c322ccb4480c25fc70bb1964145ba5a9e5b4ff9e5f83682174656cf014d80fdc",
+      "source": "Published R1 archive",
+      "source_sha256": "c322ccb4480c25fc70bb1964145ba5a9e5b4ff9e5f83682174656cf014d80fdc"
+    },
+    {
+      "path": "final-design/documentation/drawing-geometry.json",
+      "bytes": 1336410,
+      "sha256": "fadd6b878586beb4868646e0e8e4337e42cc3b00c355e2b686a986db85078863",
+      "source": "Published R1 archive",
+      "source_sha256": "fadd6b878586beb4868646e0e8e4337e42cc3b00c355e2b686a986db85078863"
+    },
+    {
+      "path": "final-design/documentation/Enclosure-Engineering-Dossier.pdf",
+      "bytes": 3053111,
+      "sha256": "666ebeb12325476fca8b1eaa293db2abd07722390ae7463f82a456780fdfc9b3",
+      "source": "Published R1 archive",
+      "source_sha256": "666ebeb12325476fca8b1eaa293db2abd07722390ae7463f82a456780fdfc9b3"
+    },
+    {
+      "path": "final-design/documentation/Enclosure-Technical-Drawings.pdf",
+      "bytes": 55697,
+      "sha256": "9de866f244eed88a7b6fbcc87b3f8b01ccf4de5b8e349e2fc15a8067ff3a60fe",
+      "source": "Published R1 archive",
+      "source_sha256": "9de866f244eed88a7b6fbcc87b3f8b01ccf4de5b8e349e2fc15a8067ff3a60fe"
+    },
+    {
+      "path": "final-design/documentation/export_reference_dxf.py",
+      "bytes": 3868,
+      "sha256": "e516d11035671eceee23652f3b9d1dc5b5ad33bb692aeb6e0028ec8af69d6b00",
+      "source": "Published R1 archive",
+      "source_sha256": "e516d11035671eceee23652f3b9d1dc5b5ad33bb692aeb6e0028ec8af69d6b00"
+    },
+    {
+      "path": "final-design/documentation/extract_drawing_geometry.py",
+      "bytes": 6535,
+      "sha256": "235206b77404948029d04edde7b24485e392231391f6dda7502b40f55967af2a",
+      "source": "Published R1 archive",
+      "source_sha256": "235206b77404948029d04edde7b24485e392231391f6dda7502b40f55967af2a"
+    },
+    {
+      "path": "final-design/documentation/validate_reference_dxf.py",
+      "bytes": 1275,
+      "sha256": "852fd57941cfa1420902f5a8f509ee9a1023e5e7831ca7516b6c727c1aab9883",
+      "source": "Published R1 archive",
+      "source_sha256": "852fd57941cfa1420902f5a8f509ee9a1023e5e7831ca7516b6c727c1aab9883"
+    },
+    {
+      "path": "final-design/documentation/verify_document_package.py",
+      "bytes": 2133,
+      "sha256": "61112579feb8268f5668b2f53e7139d0729909d20ff8a5edc34ebde8f4b05225",
+      "source": "Published R1 archive",
+      "source_sha256": "61112579feb8268f5668b2f53e7139d0729909d20ff8a5edc34ebde8f4b05225"
+    },
+    {
+      "path": "final-design/prepare_order_files.py",
+      "bytes": 5493,
+      "sha256": "61a024bf1340201754e0540d68fc3167e6cbcc885cef601e89f958f1a36c75a6",
+      "source": "Published R1 archive",
+      "source_sha256": "61a024bf1340201754e0540d68fc3167e6cbcc885cef601e89f958f1a36c75a6"
+    },
+    {
+      "path": "final-design/printing/enclosure-base.stl",
+      "bytes": 182084,
+      "sha256": "80ec68aba7c5a5e3b39387c33558248b92e63bd03a1ae0aa5eb8e1818c21cfd9",
+      "source": "Published R1 archive",
+      "source_sha256": "80ec68aba7c5a5e3b39387c33558248b92e63bd03a1ae0aa5eb8e1818c21cfd9"
+    },
+    {
+      "path": "final-design/printing/enclosure-lid.stl",
+      "bytes": 181684,
+      "sha256": "6e971c1f09717404f0c1c594ed57dde162fd08f1e33802f9eb5f11298dce241c",
+      "source": "Published R1 archive",
+      "source_sha256": "6e971c1f09717404f0c1c594ed57dde162fd08f1e33802f9eb5f11298dce241c"
+    },
+    {
+      "path": "final-design/printing/ptt-plunger.stl",
+      "bytes": 30284,
+      "sha256": "7ec78932fe45c13f351e8086e0d637c3c218f46431078ca2384442b95609fa86",
+      "source": "Published R1 archive",
+      "source_sha256": "7ec78932fe45c13f351e8086e0d637c3c218f46431078ca2384442b95609fa86"
+    },
+    {
+      "path": "final-design/printing/ptt-stop-cup.stl",
+      "bytes": 56484,
+      "sha256": "7ca20c816ad1d272a70bdb7187ec16fd80c83f2caa69822bc22bcd1b557e8117",
+      "source": "Published R1 archive",
+      "source_sha256": "7ca20c816ad1d272a70bdb7187ec16fd80c83f2caa69822bc22bcd1b557e8117"
+    },
+    {
+      "path": "final-design/views/assembled-cutaway.png",
+      "bytes": 720036,
+      "sha256": "721d6a4c44f769bc626affa83dc32ac3a22dfe8fc7964183977a8525a9bc5f18",
+      "source": "Published R1 archive",
+      "source_sha256": "721d6a4c44f769bc626affa83dc32ac3a22dfe8fc7964183977a8525a9bc5f18"
+    },
+    {
+      "path": "final-design/views/assembled-isometric.png",
+      "bytes": 236964,
+      "sha256": "e55af9ae4cc0de060204c9bdb780d66f950f34cd50ea819b33f27e1376919aae",
+      "source": "Published R1 archive",
+      "source_sha256": "e55af9ae4cc0de060204c9bdb780d66f950f34cd50ea819b33f27e1376919aae"
+    },
+    {
+      "path": "final-design/views/build_final_views.py",
+      "bytes": 7235,
+      "sha256": "5b0e67f0116fd1f6d89f1d24762cbddf368f0217fb59676c6e9aa6f5bf93cc4d",
+      "source": "Published R1 archive",
+      "source_sha256": "5b0e67f0116fd1f6d89f1d24762cbddf368f0217fb59676c6e9aa6f5bf93cc4d"
+    },
+    {
+      "path": "final-design/views/C5-R1-assembly-views.png",
+      "bytes": 1171373,
+      "sha256": "cae343e0a766cc93d7bdc81d91eae3363cd473fa47876076351556a331e0fba2",
+      "source": "Published R1 archive",
+      "source_sha256": "cae343e0a766cc93d7bdc81d91eae3363cd473fa47876076351556a331e0fba2"
+    },
+    {
+      "path": "final-design/views/exploded-assembly.png",
+      "bytes": 545027,
+      "sha256": "10998b948d455d03d5722e5a570eeb32e9aafd2690c53cfaf1c76535ecde0078",
+      "source": "Published R1 archive",
+      "source_sha256": "10998b948d455d03d5722e5a570eeb32e9aafd2690c53cfaf1c76535ecde0078"
+    },
+    {
+      "path": "final-design/views/finalize_views.py",
+      "bytes": 2795,
+      "sha256": "50a40fc3406573b2ce18f6a69649125a81e310b2c3636d896a302d7a8f23fb5a",
+      "source": "Published R1 archive",
+      "source_sha256": "50a40fc3406573b2ce18f6a69649125a81e310b2c3636d896a302d7a8f23fb5a"
+    },
+    {
+      "path": "final-design/views/top-open-assembly.png",
+      "bytes": 1285236,
+      "sha256": "27ee7de94faa69d942c792c91e3637307130e12154fe8bdba481a66ab65e8673",
+      "source": "Published R1 archive",
+      "source_sha256": "27ee7de94faa69d942c792c91e3637307130e12154fe8bdba481a66ab65e8673"
+    },
+    {
+      "path": "final-design/views/view-manifest.json",
+      "bytes": 43711,
+      "sha256": "da8e67b2059349506903160d4a1b8d9f8b3b0feb78d04c4010cd80746ce5fed9",
+      "source": "Published R1 archive",
+      "source_sha256": "da8e67b2059349506903160d4a1b8d9f8b3b0feb78d04c4010cd80746ce5fed9"
+    },
+    {
+      "path": "final-design/views/VIEW-NOTES.txt",
+      "bytes": 2634,
+      "sha256": "f6bc3538723a3758c9e150767d1ae3be9edc7c609c570bf12d42b151f38fa18e",
+      "source": "Published R1 archive",
+      "source_sha256": "f6bc3538723a3758c9e150767d1ae3be9edc7c609c570bf12d42b151f38fa18e"
+    },
+    {
+      "path": "fit-checked/assembled-case.png",
+      "bytes": 18578,
+      "sha256": "1503cc83ea3b4e41fbfb3ca9d5783619b1e16c56ab398368bbe7dbc7739f29e0",
+      "source": "Published R1 archive",
+      "source_sha256": "1503cc83ea3b4e41fbfb3ca9d5783619b1e16c56ab398368bbe7dbc7739f29e0"
+    },
+    {
+      "path": "fit-checked/baseline-actual-clearance.json",
+      "bytes": 61859,
+      "sha256": "ef360acc480035b6f8172082c6c2b475161caa9ae7613f863845c95e2ea7a4f6",
+      "source": "Published R1 archive",
+      "source_sha256": "ef360acc480035b6f8172082c6c2b475161caa9ae7613f863845c95e2ea7a4f6"
+    },
+    {
+      "path": "fit-checked/component-index-map.json",
+      "bytes": 11493,
+      "sha256": "6cd68cb3e2e262f7558e31fb28b90247ed088ef064a1888796b43d4e19ac266d",
+      "source": "Published R1 archive",
+      "source_sha256": "6cd68cb3e2e262f7558e31fb28b90247ed088ef064a1888796b43d4e19ac266d"
+    },
+    {
+      "path": "fit-checked/cutaway-view/actual-detail-geometry-check.json",
+      "bytes": 8516,
+      "sha256": "a240c8d9fab8b2427e6cca57f68e312efaefc4c58ba063e55fcb4dacced0b960",
+      "source": "Published R1 archive",
+      "source_sha256": "a240c8d9fab8b2427e6cca57f68e312efaefc4c58ba063e55fcb4dacced0b960"
+    },
+    {
+      "path": "fit-checked/cutaway-view/assembled-cutaway-actual-kicad.png",
+      "bytes": 622954,
+      "sha256": "a9ec653a6d8491b7fdaa686635d499bba87d69381cc7805304e5f94a1b7ccfb9",
+      "source": "Published R1 archive",
+      "source_sha256": "a9ec653a6d8491b7fdaa686635d499bba87d69381cc7805304e5f94a1b7ccfb9"
+    },
+    {
+      "path": "fit-checked/cutaway-view/assembled-cutaway-preview.png",
+      "bytes": 412453,
+      "sha256": "758639fd78bc7eba4d7207a39155732e1906d58b61ca8caf75b0a76e8bedbeeb",
+      "source": "Published R1 archive",
+      "source_sha256": "758639fd78bc7eba4d7207a39155732e1906d58b61ca8caf75b0a76e8bedbeeb"
+    },
+    {
+      "path": "fit-checked/cutaway-view/assembled-cutaway-top-angled.png",
+      "bytes": 688143,
+      "sha256": "232c25783838dd72f0bd415ac75c65d1a86c1be179725d1c6d5132506a24a149",
+      "source": "Published R1 archive",
+      "source_sha256": "232c25783838dd72f0bd415ac75c65d1a86c1be179725d1c6d5132506a24a149"
+    },
+    {
+      "path": "fit-checked/cutaway-view/build_assembled_cutaway.py",
+      "bytes": 6730,
+      "sha256": "d626e43d6947d908daf7d37349ea12e51a4300a85120167ab9ff8cecabf2bb84",
+      "source": "Published R1 archive",
+      "source_sha256": "d626e43d6947d908daf7d37349ea12e51a4300a85120167ab9ff8cecabf2bb84"
+    },
+    {
+      "path": "fit-checked/cutaway-view/check_actual_detail_geometry.py",
+      "bytes": 3830,
+      "sha256": "b84ca5aebb5df8dbe8e301339f90b25fef3cb2005c0dd06a1e00de5147da0904",
+      "source": "Published R1 archive",
+      "source_sha256": "b84ca5aebb5df8dbe8e301339f90b25fef3cb2005c0dd06a1e00de5147da0904"
+    },
+    {
+      "path": "fit-checked/cutaway-view/cutaway-manifest.json",
+      "bytes": 12653,
+      "sha256": "3ba857e48b392c0fa74b31ad61ef36b1e346ca57b260e09e82d1cb708df7a39a",
+      "source": "Published R1 archive",
+      "source_sha256": "3ba857e48b392c0fa74b31ad61ef36b1e346ca57b260e09e82d1cb708df7a39a"
+    },
+    {
+      "path": "fit-checked/cutaway-view/finalize_cutaway_provenance.py",
+      "bytes": 1528,
+      "sha256": "de1047dd8c84e0f33bee3b7e77f9d0deb37db0cb9ca27cb8b64f0cba44b1bfbe",
+      "source": "Published R1 archive",
+      "source_sha256": "de1047dd8c84e0f33bee3b7e77f9d0deb37db0cb9ca27cb8b64f0cba44b1bfbe"
+    },
+    {
+      "path": "fit-checked/cutaway-view/LoRa-Enclosure-C5-Assembled-Cutaway.FCStd",
+      "bytes": 17247373,
+      "sha256": "a242a1c629cfd86b54b88113d231ee400dff4b3beaf2d126d107bf21aff12cdd",
+      "source": "Published R1 archive",
+      "source_sha256": "a242a1c629cfd86b54b88113d231ee400dff4b3beaf2d126d107bf21aff12cdd"
+    },
+    {
+      "path": "fit-checked/cutaway-view/native-cutaway-check.json",
+      "bytes": 14986,
+      "sha256": "4a2112b24f0971520f0253fe7b083f9e52efaa896efe267f063de238a49697c0",
+      "source": "Published R1 archive",
+      "source_sha256": "4a2112b24f0971520f0253fe7b083f9e52efaa896efe267f063de238a49697c0"
+    },
+    {
+      "path": "fit-checked/cutaway-view/NATIVE-VIEW-NOTES.txt",
+      "bytes": 2024,
+      "sha256": "e3ed393ef198538078eafd4e2bff9f6e51c7267c7fb3dd9104aac0546ef967df",
+      "source": "Published R1 archive",
+      "source_sha256": "e3ed393ef198538078eafd4e2bff9f6e51c7267c7fb3dd9104aac0546ef967df"
+    },
+    {
+      "path": "fit-checked/cutaway-view/ptt-assembled-section.png",
+      "bytes": 10170,
+      "sha256": "8b9b60ba984db95a90f129112499fe3641a7e60ce2a9da83a9c33ab26ead0ba4",
+      "source": "Published R1 archive",
+      "source_sha256": "8b9b60ba984db95a90f129112499fe3641a7e60ce2a9da83a9c33ab26ead0ba4"
+    },
+    {
+      "path": "fit-checked/cutaway-view/record_alternate_render.py",
+      "bytes": 988,
+      "sha256": "02cdb798d402e6a7339c136597f0facfc6af069ae4d45ff156a91dded423c6c1",
+      "source": "Published R1 archive",
+      "source_sha256": "02cdb798d402e6a7339c136597f0facfc6af069ae4d45ff156a91dded423c6c1"
+    },
+    {
+      "path": "fit-checked/cutaway-view/saved-cutaway-check.json",
+      "bytes": 647,
+      "sha256": "540118843ac4c467f30a44d9a893656340817af2fc4d431ec9e6881f59f340ee",
+      "source": "Published R1 archive",
+      "source_sha256": "540118843ac4c467f30a44d9a893656340817af2fc4d431ec9e6881f59f340ee"
+    },
+    {
+      "path": "fit-checked/cutaway-view/VIEW-NOTES.txt",
+      "bytes": 1973,
+      "sha256": "ae4f10a47d6904e419683d6a3e618eb624f25fabacab3103ad06057967de10fd",
+      "source": "Published R1 archive",
+      "source_sha256": "ae4f10a47d6904e419683d6a3e618eb624f25fabacab3103ad06057967de10fd"
+    },
+    {
+      "path": "fit-checked/enclosure-base.stl",
+      "bytes": 158884,
+      "sha256": "91ba5384642463ef8a184f52e509a4d9c9cfe9712756663932b38a83e31d47fe",
+      "source": "Published R1 archive",
+      "source_sha256": "91ba5384642463ef8a184f52e509a4d9c9cfe9712756663932b38a83e31d47fe"
+    },
+    {
+      "path": "fit-checked/enclosure-lid.stl",
+      "bytes": 132284,
+      "sha256": "13f0612419d00b45619de3f4d268f3e1db4777bda421817ef2ec7462f025c1ca",
+      "source": "Published R1 archive",
+      "source_sha256": "13f0612419d00b45619de3f4d268f3e1db4777bda421817ef2ec7462f025c1ca"
+    },
+    {
+      "path": "fit-checked/exploded-view/build_updated_exploded.py",
+      "bytes": 5774,
+      "sha256": "af718f436e4d4c7e5b4340b5e0eea58e453b3cf79437de36bd7cd3ccd5c00225",
+      "source": "Published R1 archive",
+      "source_sha256": "af718f436e4d4c7e5b4340b5e0eea58e453b3cf79437de36bd7cd3ccd5c00225"
+    },
+    {
+      "path": "fit-checked/exploded-view/exploded-preview.png",
+      "bytes": 394773,
+      "sha256": "a613cd72f6525fc37c86027baa4b6376de8a04b95f30cc55355ad061482fd93a",
+      "source": "Published R1 archive",
+      "source_sha256": "a613cd72f6525fc37c86027baa4b6376de8a04b95f30cc55355ad061482fd93a"
+    },
+    {
+      "path": "fit-checked/exploded-view/exploded-updated-actual-kicad.png",
+      "bytes": 581078,
+      "sha256": "2c75585ed72b9e0205dcc3c43899628221d6c01c06aacb02a1b2f910cb399943",
+      "source": "Published R1 archive",
+      "source_sha256": "2c75585ed72b9e0205dcc3c43899628221d6c01c06aacb02a1b2f910cb399943"
+    },
+    {
+      "path": "fit-checked/exploded-view/exploded-view-manifest.json",
+      "bytes": 11174,
+      "sha256": "4ed7bfe9723f8ce0e26e552f5a743c50d9657fc0115f485c83338ef1acb0bcdd",
+      "source": "Published R1 archive",
+      "source_sha256": "4ed7bfe9723f8ce0e26e552f5a743c50d9657fc0115f485c83338ef1acb0bcdd"
+    },
+    {
+      "path": "fit-checked/exploded-view/finalize_render_provenance.py",
+      "bytes": 2108,
+      "sha256": "251c3bb739c18946fd68920eabea076f4bdf404fadd5919ff0e1c3043e62c9d1",
+      "source": "Published R1 archive",
+      "source_sha256": "251c3bb739c18946fd68920eabea076f4bdf404fadd5919ff0e1c3043e62c9d1"
+    },
+    {
+      "path": "fit-checked/exploded-view/LoRa-Enclosure-C5-Exploded-With-Hardware.FCStd",
+      "bytes": 17060025,
+      "sha256": "22bc9cae4396941893404b1909942a87ec62bddab42dbb5003d76e0733217e9c",
+      "source": "Published R1 archive",
+      "source_sha256": "22bc9cae4396941893404b1909942a87ec62bddab42dbb5003d76e0733217e9c"
+    },
+    {
+      "path": "fit-checked/exploded-view/NATIVE-VIEW-NOTES.txt",
+      "bytes": 1326,
+      "sha256": "d12dadebaa3890695f87cce45c82a3f972c977994f540a2cf5538c5467ef3657",
+      "source": "Published R1 archive",
+      "source_sha256": "d12dadebaa3890695f87cce45c82a3f972c977994f540a2cf5538c5467ef3657"
+    },
+    {
+      "path": "fit-checked/exploded-view/ptt-exploded-detail.png",
+      "bytes": 27620,
+      "sha256": "0b197ab575a184d40a732db356605b44029f3332cef72b99f06cb0e2ef662727",
+      "source": "Published R1 archive",
+      "source_sha256": "0b197ab575a184d40a732db356605b44029f3332cef72b99f06cb0e2ef662727"
+    },
+    {
+      "path": "fit-checked/exploded-view/saved-view-check.json",
+      "bytes": 570,
+      "sha256": "a303dc1d18b0bfbaf57d6499112053ce2015f6d22e6b78100062ca1fde09172f",
+      "source": "Published R1 archive",
+      "source_sha256": "a303dc1d18b0bfbaf57d6499112053ce2015f6d22e6b78100062ca1fde09172f"
+    },
+    {
+      "path": "fit-checked/exploded-view/VIEW-NOTES.txt",
+      "bytes": 1575,
+      "sha256": "f832f60a79af2baec14bd7c00827356b7f36bcd8d40fa73bb6db952e638ab4d5",
+      "source": "Published R1 archive",
+      "source_sha256": "f832f60a79af2baec14bd7c00827356b7f36bcd8d40fa73bb6db952e638ab4d5"
+    },
+    {
+      "path": "fit-checked/export-sha256.json",
+      "bytes": 932,
+      "sha256": "4487724769bbb6b78f6d9b0e94577c98b9981c1220521f178110a9302fba23f9",
+      "source": "Published R1 archive",
+      "source_sha256": "4487724769bbb6b78f6d9b0e94577c98b9981c1220521f178110a9302fba23f9"
+    },
+    {
+      "path": "fit-checked/final-cad-export-validation.json",
+      "bytes": 13127,
+      "sha256": "dcec84a1c4871e67850fe92cfaef2eeea5b83e19522c0628a44f297b33ce3aeb",
+      "source": "Published R1 archive",
+      "source_sha256": "dcec84a1c4871e67850fe92cfaef2eeea5b83e19522c0628a44f297b33ce3aeb"
+    },
+    {
+      "path": "fit-checked/FIT-REVIEW.txt",
+      "bytes": 6259,
+      "sha256": "282eab9e3f480c095fc01054643ad65b1533d266a0cc60be8cecf793782743db",
+      "source": "Published R1 archive",
+      "source_sha256": "282eab9e3f480c095fc01054643ad65b1533d266a0cc60be8cecf793782743db"
+    },
+    {
+      "path": "fit-checked/LoRa-Enclosure-C5-Fit-Checked.FCStd",
+      "bytes": 16996033,
+      "sha256": "607e9fc1f3f4c6f7ae3e38be2b10f9618fc5e61c39a2b547fa80a71ce2e970aa",
+      "source": "Published R1 archive",
+      "source_sha256": "607e9fc1f3f4c6f7ae3e38be2b10f9618fc5e61c39a2b547fa80a71ce2e970aa"
+    },
+    {
+      "path": "fit-checked/LoRa-Enclosure-C5-Fit-Checked.step",
+      "bytes": 166713,
+      "sha256": "018d641e4015eaed1f0da48a1d54adc821d368784ce6ead3ade6eefba1d1d4fd",
+      "source": "Published R1 archive",
+      "source_sha256": "018d641e4015eaed1f0da48a1d54adc821d368784ce6ead3ade6eefba1d1d4fd"
+    },
+    {
+      "path": "fit-checked/mesh-validation.json",
+      "bytes": 5718,
+      "sha256": "7c6080dea46552891ffbd6652ae4ab761f11810c568afe1d987dc54e931904be",
+      "source": "Published R1 archive",
+      "source_sha256": "7c6080dea46552891ffbd6652ae4ab761f11810c568afe1d987dc54e931904be"
+    },
+    {
+      "path": "fit-checked/native-shape-validation.json",
+      "bytes": 2650,
+      "sha256": "89fe4c7eec62bda08c9f453c7d2d9c88b3b7d8f1fc1162b67fb513cadd0439e1",
+      "source": "Published R1 archive",
+      "source_sha256": "89fe4c7eec62bda08c9f453c7d2d9c88b3b7d8f1fc1162b67fb513cadd0439e1"
+    },
+    {
+      "path": "fit-checked/native-stop-operations.json",
+      "bytes": 8407,
+      "sha256": "5ef631ef0d89a47caea97bd0a4e6e1d3de53125b0974a0e0e700c91a0fafaaf3",
+      "source": "Published R1 archive",
+      "source_sha256": "5ef631ef0d89a47caea97bd0a4e6e1d3de53125b0974a0e0e700c91a0fafaaf3"
+    },
+    {
+      "path": "fit-checked/ORIGINAL-DESIGN-NOTES.txt",
+      "bytes": 12319,
+      "sha256": "69324d951b3e298fd567012705f221c2d31f5b678c0e5d94064107e66cdb8dc0",
+      "source": "Published R1 archive",
+      "source_sha256": "69324d951b3e298fd567012705f221c2d31f5b678c0e5d94064107e66cdb8dc0"
+    },
+    {
+      "path": "fit-checked/parameters.csv",
+      "bytes": 3313,
+      "sha256": "3e1d44307dd36e3ec389062488bfe5387980bb5f37385b51460725ddfe88620c",
+      "source": "Published R1 archive",
+      "source_sha256": "3e1d44307dd36e3ec389062488bfe5387980bb5f37385b51460725ddfe88620c"
+    },
+    {
+      "path": "fit-checked/provisional-ptt-stop-cup-audit.json",
+      "bytes": 103951,
+      "sha256": "42f146137284abe25839a2e21874f9b185302578d2113022e5b0a59678279751",
+      "source": "Published R1 archive",
+      "source_sha256": "42f146137284abe25839a2e21874f9b185302578d2113022e5b0a59678279751"
+    },
+    {
+      "path": "fit-checked/ptt-motion/3d-preview/browser-preview-report.json",
+      "bytes": 4127,
+      "sha256": "0f487d9bac63a649d1ac79630435a61795d161ef9c07b31546630aebe1a6319f",
+      "source": "Published R1 archive",
+      "source_sha256": "0f487d9bac63a649d1ac79630435a61795d161ef9c07b31546630aebe1a6319f"
+    },
+    {
+      "path": "fit-checked/ptt-motion/animation-preview/report.json",
+      "bytes": 7852,
+      "sha256": "afa88ab319d819aa5b87270abd4f1d9cdb6249e17d32af3400572ef3a9f2d1b7",
+      "source": "Published R1 archive",
+      "source_sha256": "afa88ab319d819aa5b87270abd4f1d9cdb6249e17d32af3400572ef3a9f2d1b7"
+    },
+    {
+      "path": "fit-checked/ptt-motion/animation-preview.cjs",
+      "bytes": 4666,
+      "sha256": "bdf45f0c257e39145d99a7b8d3edf624be7bb812b7b7df2dae55476fe69dff45",
+      "source": "Published R1 archive",
+      "source_sha256": "bdf45f0c257e39145d99a7b8d3edf624be7bb812b7b7df2dae55476fe69dff45"
+    },
+    {
+      "path": "fit-checked/ptt-motion/browser-3d-preview.cjs",
+      "bytes": 3705,
+      "sha256": "736c787f65201b87a57977c26851d52f97537caf16a519a38b27673c6dce6f99",
+      "source": "Published R1 archive",
+      "source_sha256": "736c787f65201b87a57977c26851d52f97537caf16a519a38b27673c6dce6f99"
+    },
+    {
+      "path": "fit-checked/ptt-motion/browser-preview-report.json",
+      "bytes": 4451,
+      "sha256": "2cc5929e05fcb04a500b8b69da6ca4865ca3282c8e653174ae96b7de5fec8d13",
+      "source": "Published R1 archive",
+      "source_sha256": "2cc5929e05fcb04a500b8b69da6ca4865ca3282c8e653174ae96b7de5fec8d13"
+    },
+    {
+      "path": "fit-checked/ptt-motion/browser-preview.cjs",
+      "bytes": 3702,
+      "sha256": "03b2e63cb8a162413d087b6a879aad19b8f29ff485ae8edfab6b7ceb53518baa",
+      "source": "Published R1 archive",
+      "source_sha256": "03b2e63cb8a162413d087b6a879aad19b8f29ff485ae8edfab6b7ceb53518baa"
+    },
+    {
+      "path": "fit-checked/ptt-motion/build_animation_fragment.cjs",
+      "bytes": 1002,
+      "sha256": "a50797acf00d01c02bcc8767104521761c7f362110e1d9ee2b86db68db67bdfa",
+      "source": "Published R1 archive",
+      "source_sha256": "a50797acf00d01c02bcc8767104521761c7f362110e1d9ee2b86db68db67bdfa"
+    },
+    {
+      "path": "fit-checked/ptt-motion/camera-lock-preview/report.json",
+      "bytes": 69130,
+      "sha256": "f0a1f66e1c9fcd6c9371a5ab2295bfa066da0192d6643c28f0b05e6cb14554fe",
+      "source": "Published R1 archive",
+      "source_sha256": "f0a1f66e1c9fcd6c9371a5ab2295bfa066da0192d6643c28f0b05e6cb14554fe"
+    },
+    {
+      "path": "fit-checked/ptt-motion/camera-lock-preview.cjs",
+      "bytes": 10479,
+      "sha256": "4b1a7951ad4c892b5bef3b72f834721b8b6d0d7c64969be98f5b0ba10d1ed5b5",
+      "source": "Published R1 archive",
+      "source_sha256": "4b1a7951ad4c892b5bef3b72f834721b8b6d0d7c64969be98f5b0ba10d1ed5b5"
+    },
+    {
+      "path": "fit-checked/ptt-motion/camera-preview/report.json",
+      "bytes": 19154,
+      "sha256": "024a64f53133b7ccbe3b834a26adf96a698d0b4ba096732acdab15cc904f5b75",
+      "source": "Published R1 archive",
+      "source_sha256": "024a64f53133b7ccbe3b834a26adf96a698d0b4ba096732acdab15cc904f5b75"
+    },
+    {
+      "path": "fit-checked/ptt-motion/camera-preview.cjs",
+      "bytes": 9285,
+      "sha256": "055255e13584f302c1471f1ccb61a51a0e17c8135da85e0f7eec83a66c5661f2",
+      "source": "Published R1 archive",
+      "source_sha256": "055255e13584f302c1471f1ccb61a51a0e17c8135da85e0f7eec83a66c5661f2"
+    },
+    {
+      "path": "fit-checked/ptt-motion/dimension-initial/browser-preview-report.json",
+      "bytes": 4715,
+      "sha256": "c44e21e13c1f981cb1499b9faf6d55e28761c3ddfe1c6b5e1dcbb0ad1eabae78",
+      "source": "Published R1 archive",
+      "source_sha256": "c44e21e13c1f981cb1499b9faf6d55e28761c3ddfe1c6b5e1dcbb0ad1eabae78"
+    },
+    {
+      "path": "fit-checked/ptt-motion/dimension-preview/report.json",
+      "bytes": 50462,
+      "sha256": "48ad970d4db9b1d113fa7425397dc566f86ed2707b501a02fe56f3af866dff8d",
+      "source": "Published R1 archive",
+      "source_sha256": "48ad970d4db9b1d113fa7425397dc566f86ed2707b501a02fe56f3af866dff8d"
+    },
+    {
+      "path": "fit-checked/ptt-motion/dimension-preview.cjs",
+      "bytes": 9350,
+      "sha256": "fee50fcd1f482ae429093746cf779ec3788f147c4cfc22b7fd8604e58a927e84",
+      "source": "Published R1 archive",
+      "source_sha256": "fee50fcd1f482ae429093746cf779ec3788f147c4cfc22b7fd8604e58a927e84"
+    },
+    {
+      "path": "fit-checked/ptt-motion/export_ptt_cutaway_meshes.py",
+      "bytes": 10367,
+      "sha256": "a664641f48f7309cf5db26c389d9399c59ab505efb8c7e03c4e8b5adabe05f95",
+      "source": "Published R1 archive",
+      "source_sha256": "a664641f48f7309cf5db26c389d9399c59ab505efb8c7e03c4e8b5adabe05f95"
+    },
+    {
+      "path": "fit-checked/ptt-motion/extract_ptt_contact_patch.py",
+      "bytes": 4342,
+      "sha256": "9eee2fd3cd1047fc429e923932eb9db2e3cfdd0eb514965aefc3315df89c30e1",
+      "source": "Published R1 archive",
+      "source_sha256": "9eee2fd3cd1047fc429e923932eb9db2e3cfdd0eb514965aefc3315df89c30e1"
+    },
+    {
+      "path": "fit-checked/ptt-motion/extract_ptt_sections.py",
+      "bytes": 9229,
+      "sha256": "64a49e5ebd028e3a5af4a866f37fa4c1e2cbb85ba9a6a5125719ba9bc96d1a31",
+      "source": "Published R1 archive",
+      "source_sha256": "64a49e5ebd028e3a5af4a866f37fa4c1e2cbb85ba9a6a5125719ba9bc96d1a31"
+    },
+    {
+      "path": "fit-checked/ptt-motion/fix_pcb_section.py",
+      "bytes": 3008,
+      "sha256": "725e142b15c4a7706014f33f9595d442bc3ae701e7d1c0227fc63bb131b3c80b",
+      "source": "Published R1 archive",
+      "source_sha256": "725e142b15c4a7706014f33f9595d442bc3ae701e7d1c0227fc63bb131b3c80b"
+    },
+    {
+      "path": "fit-checked/ptt-motion/force-preview/report.json",
+      "bytes": 157960,
+      "sha256": "7d28f39b09268b0fdc81a0fa2eadc94857cda15ebd0c9ea1cf16ddaeac573c6b",
+      "source": "Published R1 archive",
+      "source_sha256": "7d28f39b09268b0fdc81a0fa2eadc94857cda15ebd0c9ea1cf16ddaeac573c6b"
+    },
+    {
+      "path": "fit-checked/ptt-motion/force-preview.cjs",
+      "bytes": 9675,
+      "sha256": "e7a9ad62a314ecfb469119faf6f868c74cb39e00df1ffd95087d9dd163480baf",
+      "source": "Published R1 archive",
+      "source_sha256": "e7a9ad62a314ecfb469119faf6f868c74cb39e00df1ffd95087d9dd163480baf"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-boundary-preview.cjs",
+      "bytes": 3553,
+      "sha256": "05ecf08dc0596bb9ec37dc18d3d1faa121212ef5eaf22c4b7d293aead68d77e3",
+      "source": "Published R1 archive",
+      "source_sha256": "05ecf08dc0596bb9ec37dc18d3d1faa121212ef5eaf22c4b7d293aead68d77e3"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-camera-preview/report.json",
+      "bytes": 106901,
+      "sha256": "0278a03804a4ea4f41bbd8cbb216ac7764689b7a1e272bbb12264c799c0ff104",
+      "source": "Published R1 archive",
+      "source_sha256": "0278a03804a4ea4f41bbd8cbb216ac7764689b7a1e272bbb12264c799c0ff104"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-camera-preview.cjs",
+      "bytes": 14888,
+      "sha256": "4b6aabca169f9fe2cf61614f198e70938ee93a1170e7d02344de5f7f8402d80a",
+      "source": "Published R1 archive",
+      "source_sha256": "4b6aabca169f9fe2cf61614f198e70938ee93a1170e7d02344de5f7f8402d80a"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-preview/boundary-report.json",
+      "bytes": 3153,
+      "sha256": "d45743cc9d7e6c6811df9dacb5e7f643814d8d84179bb8984098522168fb76f4",
+      "source": "Published R1 archive",
+      "source_sha256": "d45743cc9d7e6c6811df9dacb5e7f643814d8d84179bb8984098522168fb76f4"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-preview/report.json",
+      "bytes": 42084,
+      "sha256": "39e93e0ae8354abffa3fe743f099388baa729a62805f823ccb21b11d23ee6aad",
+      "source": "Published R1 archive",
+      "source_sha256": "39e93e0ae8354abffa3fe743f099388baa729a62805f823ccb21b11d23ee6aad"
+    },
+    {
+      "path": "fit-checked/ptt-motion/guided-preview.cjs",
+      "bytes": 11542,
+      "sha256": "a565b29cd49cbc0a67b0c316b456051ae86abbab0b676dbaed2a4a09ea7c5642",
+      "source": "Published R1 archive",
+      "source_sha256": "a565b29cd49cbc0a67b0c316b456051ae86abbab0b676dbaed2a4a09ea7c5642"
+    },
+    {
+      "path": "fit-checked/ptt-motion/highlight-preview/report.json",
+      "bytes": 74015,
+      "sha256": "a1b277246c466e53e12ebffdd6a5c6ac10a1080c388d6c1a7c55e4dd65e73d9c",
+      "source": "Published R1 archive",
+      "source_sha256": "a1b277246c466e53e12ebffdd6a5c6ac10a1080c388d6c1a7c55e4dd65e73d9c"
+    },
+    {
+      "path": "fit-checked/ptt-motion/highlight-preview.cjs",
+      "bytes": 14961,
+      "sha256": "4cd9734e1fb80095ecd3eb8001c114605b95729b527ef8cddb180207be2f64bd",
+      "source": "Published R1 archive",
+      "source_sha256": "4cd9734e1fb80095ecd3eb8001c114605b95729b527ef8cddb180207be2f64bd"
+    },
+    {
+      "path": "fit-checked/ptt-motion/keyboard-preview/report.json",
+      "bytes": 46705,
+      "sha256": "1791aabf3818140d13b7814ac3714eed8fdb036ffdc9807ad9490d9c0257ac27",
+      "source": "Published R1 archive",
+      "source_sha256": "1791aabf3818140d13b7814ac3714eed8fdb036ffdc9807ad9490d9c0257ac27"
+    },
+    {
+      "path": "fit-checked/ptt-motion/keyboard-preview.cjs",
+      "bytes": 10427,
+      "sha256": "777715a206d1e9b4eb8d13f823cfc88c02d9def705cfdfeab243f40e30137cb2",
+      "source": "Published R1 archive",
+      "source_sha256": "777715a206d1e9b4eb8d13f823cfc88c02d9def705cfdfeab243f40e30137cb2"
+    },
+    {
+      "path": "fit-checked/ptt-motion/keyboard-toggles-preview/report.json",
+      "bytes": 23825,
+      "sha256": "e04bdd802fb1dd9f3a2429d28cfbc9834ce3a75d44f74341bdd792ab8f215f62",
+      "source": "Published R1 archive",
+      "source_sha256": "e04bdd802fb1dd9f3a2429d28cfbc9834ce3a75d44f74341bdd792ab8f215f62"
+    },
+    {
+      "path": "fit-checked/ptt-motion/keyboard-toggles-preview.cjs",
+      "bytes": 11119,
+      "sha256": "072a2c0f42224d544fedb168bbce905bdecf7bc76347c64f7e3060eb38b3c2be",
+      "source": "Published R1 archive",
+      "source_sha256": "072a2c0f42224d544fedb168bbce905bdecf7bc76347c64f7e3060eb38b3c2be"
+    },
+    {
+      "path": "fit-checked/ptt-motion/labels-preview/report.json",
+      "bytes": 44171,
+      "sha256": "7abdbc64b41382caba17ec5a94c8b2cccb2032f456d7e55c6767c53558b9f714",
+      "source": "Published R1 archive",
+      "source_sha256": "7abdbc64b41382caba17ec5a94c8b2cccb2032f456d7e55c6767c53558b9f714"
+    },
+    {
+      "path": "fit-checked/ptt-motion/labels-preview.cjs",
+      "bytes": 11266,
+      "sha256": "71694c6d343bd528d57fc9431c6b3adefc24f73719800157205f78a3dea541e8",
+      "source": "Published R1 archive",
+      "source_sha256": "71694c6d343bd528d57fc9431c6b3adefc24f73719800157205f78a3dea541e8"
+    },
+    {
+      "path": "fit-checked/ptt-motion/loop-preview/report.json",
+      "bytes": 22008,
+      "sha256": "018b679a9755e6a9260e6800eb3909b99bf3f45e4c0b240dd6b8366d5d96462a",
+      "source": "Published R1 archive",
+      "source_sha256": "018b679a9755e6a9260e6800eb3909b99bf3f45e4c0b240dd6b8366d5d96462a"
+    },
+    {
+      "path": "fit-checked/ptt-motion/loop-preview.cjs",
+      "bytes": 9367,
+      "sha256": "a9cd68fdf5e15afe54fe3533aa4c4c649d87270ee454654997b3a5b173327c1c",
+      "source": "Published R1 archive",
+      "source_sha256": "a9cd68fdf5e15afe54fe3533aa4c4c649d87270ee454654997b3a5b173327c1c"
+    },
+    {
+      "path": "fit-checked/ptt-motion/manual-steps-preview/report.json",
+      "bytes": 62346,
+      "sha256": "bc3b78a7962b7226bee87cfaf94552441c7c1bdb07bb97019878cf06207f144c",
+      "source": "Published R1 archive",
+      "source_sha256": "bc3b78a7962b7226bee87cfaf94552441c7c1bdb07bb97019878cf06207f144c"
+    },
+    {
+      "path": "fit-checked/ptt-motion/manual-steps-preview.cjs",
+      "bytes": 11339,
+      "sha256": "eb3532d0083544de1e098bf87a999243c83b41621b72ba3a16c862a19b50d931",
+      "source": "Published R1 archive",
+      "source_sha256": "eb3532d0083544de1e098bf87a999243c83b41621b72ba3a16c862a19b50d931"
+    },
+    {
+      "path": "fit-checked/ptt-motion/pcb-section-correction.json",
+      "bytes": 3335,
+      "sha256": "9ada570e19390d06f7a75b627c6c801ee9209c09042372611d68c4b155422ac4",
+      "source": "Published R1 archive",
+      "source_sha256": "9ada570e19390d06f7a75b627c6c801ee9209c09042372611d68c4b155422ac4"
+    },
+    {
+      "path": "fit-checked/ptt-motion/probe_switch_stem.py",
+      "bytes": 1312,
+      "sha256": "c51306fff32edcdd123d8174b73c1bbd61560826b45e162015ae1c0ea6647d68",
+      "source": "Published R1 archive",
+      "source_sha256": "c51306fff32edcdd123d8174b73c1bbd61560826b45e162015ae1c0ea6647d68"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-contact-patch.json",
+      "bytes": 8536,
+      "sha256": "842aee741b0c6189312076ec7f89a71cb3c5961d424ba8c8f65a6902097b74a2",
+      "source": "Published R1 archive",
+      "source_sha256": "842aee741b0c6189312076ec7f89a71cb3c5961d424ba8c8f65a6902097b74a2"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-cutaway-animation.html",
+      "bytes": 344243,
+      "sha256": "9248544f0f93e7653ac09d2bee47f4b74aa21d362472926c9bdadd0df878c019",
+      "source": "Published R1 archive",
+      "source_sha256": "9248544f0f93e7653ac09d2bee47f4b74aa21d362472926c9bdadd0df878c019"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-cutaway-animation.template.html",
+      "bytes": 59391,
+      "sha256": "077bffd825c2cee98dc251379fe164311d88f6ce54bded38756e8660e24e4ead",
+      "source": "Published R1 archive",
+      "source_sha256": "077bffd825c2cee98dc251379fe164311d88f6ce54bded38756e8660e24e4ead"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-cutaway-mesh-provenance.json",
+      "bytes": 12668,
+      "sha256": "5df744b0a93191a1263aa5cf23b1b6502742db8f2da6d7286021f5b05ee76c0c",
+      "source": "Published R1 archive",
+      "source_sha256": "5df744b0a93191a1263aa5cf23b1b6502742db8f2da6d7286021f5b05ee76c0c"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-cutaway-meshes.json",
+      "bytes": 298003,
+      "sha256": "ab8ad845b2a6167e06fcdbf2a7f9ec79335ffdb5dbda959a4e0b0bd376b364ae",
+      "source": "Published R1 archive",
+      "source_sha256": "ab8ad845b2a6167e06fcdbf2a7f9ec79335ffdb5dbda959a4e0b0bd376b364ae"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-load-path.json",
+      "bytes": 7590,
+      "sha256": "885513c85c6284095c22e22cba6247706b94d6e27df0d2f53d2141b624f5d101",
+      "source": "Published R1 archive",
+      "source_sha256": "885513c85c6284095c22e22cba6247706b94d6e27df0d2f53d2141b624f5d101"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-motion-contact-checks.json",
+      "bytes": 5661,
+      "sha256": "27f3bcc8e8f05aef942821df608e45fc1968fca7da67d83038ae09a939b822bf",
+      "source": "Published R1 archive",
+      "source_sha256": "27f3bcc8e8f05aef942821df608e45fc1968fca7da67d83038ae09a939b822bf"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-section-geometry.json",
+      "bytes": 35247,
+      "sha256": "993c54a80bbc7401c0b9189ae1503f93b6809a03763714afc39bd6c293aea99b",
+      "source": "Published R1 archive",
+      "source_sha256": "993c54a80bbc7401c0b9189ae1503f93b6809a03763714afc39bd6c293aea99b"
+    },
+    {
+      "path": "fit-checked/ptt-motion/ptt-travel.html",
+      "bytes": 44631,
+      "sha256": "ce2a133bec62a3bc305647e6db50db552c24aee2b580368891c1119da1108cdc",
+      "source": "Published R1 archive",
+      "source_sha256": "ce2a133bec62a3bc305647e6db50db552c24aee2b580368891c1119da1108cdc"
+    },
+    {
+      "path": "fit-checked/ptt-motion/switch-stem-probe.json",
+      "bytes": 7583,
+      "sha256": "0ae168f578908ea959f59ce8917ca02266573e3285c1771d796870649762ad35",
+      "source": "Published R1 archive",
+      "source_sha256": "0ae168f578908ea959f59ce8917ca02266573e3285c1771d796870649762ad35"
+    },
+    {
+      "path": "fit-checked/ptt-motion/transparency-preview/report.json",
+      "bytes": 22536,
+      "sha256": "175478a35e1b35d3f077dc9a81ed80c0dccea9eb004248b0c1d7b757ce4099a3",
+      "source": "Published R1 archive",
+      "source_sha256": "175478a35e1b35d3f077dc9a81ed80c0dccea9eb004248b0c1d7b757ce4099a3"
+    },
+    {
+      "path": "fit-checked/ptt-motion/transparency-preview.cjs",
+      "bytes": 10267,
+      "sha256": "4a6b708195ae66f9cf39abd167699a254cfa05c27cca24c7de0df0c75e4afd76",
+      "source": "Published R1 archive",
+      "source_sha256": "4a6b708195ae66f9cf39abd167699a254cfa05c27cca24c7de0df0c75e4afd76"
+    },
+    {
+      "path": "fit-checked/ptt-motion/verify_ptt_load_path.py",
+      "bytes": 5269,
+      "sha256": "d8a55b914c441e91d47fc2e40d50a81b50aef6d6e30ad84d7daac549b8835500",
+      "source": "Published R1 archive",
+      "source_sha256": "d8a55b914c441e91d47fc2e40d50a81b50aef6d6e30ad84d7daac549b8835500"
+    },
+    {
+      "path": "fit-checked/ptt-plunger.stl",
+      "bytes": 26284,
+      "sha256": "d6a6125df286de58b0dfeda32143f05ff2e1854db23d0582f1d6137314a3d0c2",
+      "source": "Published R1 archive",
+      "source_sha256": "d6a6125df286de58b0dfeda32143f05ff2e1854db23d0582f1d6137314a3d0c2"
+    },
+    {
+      "path": "fit-checked/ptt-stop-cup.stl",
+      "bytes": 50284,
+      "sha256": "33ae865040833225beb0352951b7b58c7619dd13bb0a64208641bfd7ef84f169",
+      "source": "Published R1 archive",
+      "source_sha256": "33ae865040833225beb0352951b7b58c7619dd13bb0a64208641bfd7ef84f169"
+    },
+    {
+      "path": "fit-checked/ptt-stop-detail.png",
+      "bytes": 17881,
+      "sha256": "5e79389bcd751f07f767b22173034f1e63f60e1e0c56a0e4d9e379f7dd02c86a",
+      "source": "Published R1 archive",
+      "source_sha256": "5e79389bcd751f07f767b22173034f1e63f60e1e0c56a0e4d9e379f7dd02c86a"
+    },
+    {
+      "path": "fit-checked/saved-document-xml-audit.json",
+      "bytes": 6945,
+      "sha256": "b7dee6da1f37a49511408e8f595ea08f22ee118dd8dcb1385e771cb9bdec9c36",
+      "source": "Published R1 archive",
+      "source_sha256": "b7dee6da1f37a49511408e8f595ea08f22ee118dd8dcb1385e771cb9bdec9c36"
+    },
+    {
+      "path": "fit-checked/verify_exports.py",
+      "bytes": 11564,
+      "sha256": "6910f34822b1c71588e1b3cf23eecb2ec70426e167d6fbf1608fc2fc27d82af9",
+      "source": "Published R1 archive",
+      "source_sha256": "6910f34822b1c71588e1b3cf23eecb2ec70426e167d6fbf1608fc2fc27d82af9"
+    },
+    {
+      "path": "fit-review/assembled-actual-fit.png",
+      "bytes": 47899,
+      "sha256": "ced72ac84d3e50f24cfb701ade4e01329b0253ba91343f23b7badbf90820e291",
+      "source": "Published R1 archive",
+      "source_sha256": "ced72ac84d3e50f24cfb701ade4e01329b0253ba91343f23b7badbf90820e291"
+    },
+    {
+      "path": "fit-review/audit_actual_clearance.py",
+      "bytes": 7570,
+      "sha256": "535d4251aafeccb994bb0f19e3c03bfd872c058041055227c7f76411d85b48e4",
+      "source": "Published R1 archive",
+      "source_sha256": "535d4251aafeccb994bb0f19e3c03bfd872c058041055227c7f76411d85b48e4"
+    },
+    {
+      "path": "fit-review/audit_ptt_stop_cup.py",
+      "bytes": 9066,
+      "sha256": "8ab2fe9a4345bfc6889e0706809252526e8baa0b2b39a86a518909882e776af8",
+      "source": "Published R1 archive",
+      "source_sha256": "8ab2fe9a4345bfc6889e0706809252526e8baa0b2b39a86a518909882e776af8"
+    },
+    {
+      "path": "fit-review/baseline-actual-clearance.json",
+      "bytes": 61859,
+      "sha256": "ef360acc480035b6f8172082c6c2b475161caa9ae7613f863845c95e2ea7a4f6",
+      "source": "Published R1 archive",
+      "source_sha256": "ef360acc480035b6f8172082c6c2b475161caa9ae7613f863845c95e2ea7a4f6"
+    },
+    {
+      "path": "fit-review/baseline-audit-summary.txt",
+      "bytes": 3596,
+      "sha256": "3156696c680b26ed4ab9b18730a655e83baec4bb88d2f02ea2a40a8e9903b0f3",
+      "source": "Published R1 archive",
+      "source_sha256": "3156696c680b26ed4ab9b18730a655e83baec4bb88d2f02ea2a40a8e9903b0f3"
+    },
+    {
+      "path": "fit-review/build_component_index_map.py",
+      "bytes": 5812,
+      "sha256": "c8227925ff5dc30f2ffefc39a86a3495ddc8daf76183dfde32d2536a5f0fdb33",
+      "source": "Published R1 archive",
+      "source_sha256": "c8227925ff5dc30f2ffefc39a86a3495ddc8daf76183dfde32d2536a5f0fdb33"
+    },
+    {
+      "path": "fit-review/component-index-map.json",
+      "bytes": 11493,
+      "sha256": "6cd68cb3e2e262f7558e31fb28b90247ed088ef064a1888796b43d4e19ac266d",
+      "source": "Published R1 archive",
+      "source_sha256": "6cd68cb3e2e262f7558e31fb28b90247ed088ef064a1888796b43d4e19ac266d"
+    },
+    {
+      "path": "fit-review/component-index-map.txt",
+      "bytes": 1064,
+      "sha256": "f795915ee6ac0a76e84133b17e29d5ac935ace90ba20ac869da531c16b6f2282",
+      "source": "Published R1 archive",
+      "source_sha256": "f795915ee6ac0a76e84133b17e29d5ac935ace90ba20ac869da531c16b6f2282"
+    },
+    {
+      "path": "fit-review/probe_component_labels.py",
+      "bytes": 1146,
+      "sha256": "c75ac1f0a7da46ad4fd0b96def02aa915484780547f9ed98a267e19168deea05",
+      "source": "Published R1 archive",
+      "source_sha256": "c75ac1f0a7da46ad4fd0b96def02aa915484780547f9ed98a267e19168deea05"
+    },
+    {
+      "path": "fit-review/provisional-ptt-stop-cup-audit.json",
+      "bytes": 103951,
+      "sha256": "42f146137284abe25839a2e21874f9b185302578d2113022e5b0a59678279751",
+      "source": "Published R1 archive",
+      "source_sha256": "42f146137284abe25839a2e21874f9b185302578d2113022e5b0a59678279751"
+    },
+    {
+      "path": "fit-review/provisional-ptt-stop-cup-summary.txt",
+      "bytes": 2386,
+      "sha256": "5cd080667c5bfa3fdc057eb491d8214bdcae92db5c319ec29a4d5b865edf0ec9",
+      "source": "Published R1 archive",
+      "source_sha256": "5cd080667c5bfa3fdc057eb491d8214bdcae92db5c319ec29a4d5b865edf0ec9"
+    },
+    {
+      "path": "fit-review/semantic-import-probe.json",
+      "bytes": 2259568,
+      "sha256": "b6b2e8ef966223218e0e0d6945db777b72b4ff5bd42470235ebab5d9fb851f8c",
+      "source": "Published R1 archive",
+      "source_sha256": "b6b2e8ef966223218e0e0d6945db777b72b4ff5bd42470235ebab5d9fb851f8c"
+    },
+    {
+      "path": "fit-review/validate_final_cad_exports.py",
+      "bytes": 5580,
+      "sha256": "1bbde01cb92a6e1bc01fb7ef45e52955331a3a653f66806a957965d272b8cb9a",
+      "source": "Published R1 archive",
+      "source_sha256": "1bbde01cb92a6e1bc01fb7ef45e52955331a3a653f66806a957965d272b8cb9a"
+    },
+    {
+      "path": "LoRa-Enclosure-C5-Detailed-Exploded.FCStd",
+      "bytes": 16981272,
+      "sha256": "5eefe899d297a7bdc71a436e906ece0cda9ade6cea882d0bb71cd8088ed7b23d",
+      "source": "Published R1 archive",
+      "source_sha256": "5eefe899d297a7bdc71a436e906ece0cda9ade6cea882d0bb71cd8088ed7b23d"
+    },
+    {
+      "path": "LoRa-Enclosure-C5.FCStd",
+      "bytes": 149492,
+      "sha256": "9344d19bd6fe47d3db466b61135b3f5d41527295afbba18a09447b51aa3e410e",
+      "source": "Published R1 archive",
+      "source_sha256": "9344d19bd6fe47d3db466b61135b3f5d41527295afbba18a09447b51aa3e410e"
+    },
+    {
+      "path": "LoRa-Enclosure-C5.step",
+      "bytes": 149794,
+      "sha256": "1445abfc4eb1393f3a7787bb365e203aa9e03a65ba5f36001d6445fa5941a170",
+      "source": "Published R1 archive",
+      "source_sha256": "1445abfc4eb1393f3a7787bb365e203aa9e03a65ba5f36001d6445fa5941a170"
+    },
+    {
+      "path": "mesh-validation.json",
+      "bytes": 5032,
+      "sha256": "8899032e7dbbce7d9fe9221f5a91f2cc29f3eacfaf09e22cbd78668e91f64e44",
+      "source": "Published R1 archive",
+      "source_sha256": "8899032e7dbbce7d9fe9221f5a91f2cc29f3eacfaf09e22cbd78668e91f64e44"
+    },
+    {
+      "path": "native-build-operations.json",
+      "bytes": 33512,
+      "sha256": "d53af5a70d37bcda5d8a3d7c2561f6b5cc7d47d3ce49362ddc7325f9ff6984c0",
+      "source": "Published R1 archive",
+      "source_sha256": "d53af5a70d37bcda5d8a3d7c2561f6b5cc7d47d3ce49362ddc7325f9ff6984c0"
+    },
+    {
+      "path": "parameters.csv",
+      "bytes": 2647,
+      "sha256": "fcb7e1b6533a8622a6f6a5ecc827bcd4809d6d48e7b2b1eaf1c427ab0dda5d0f",
+      "source": "Published R1 archive",
+      "source_sha256": "fcb7e1b6533a8622a6f6a5ecc827bcd4809d6d48e7b2b1eaf1c427ab0dda5d0f"
+    },
+    {
+      "path": "ptt-plunger.stl",
+      "bytes": 17884,
+      "sha256": "8ad9f2dcd63765bf55aac463be6f8a4939c83dba17c4388ba6116c17dc05ae2e",
+      "source": "Published R1 archive",
+      "source_sha256": "8ad9f2dcd63765bf55aac463be6f8a4939c83dba17c4388ba6116c17dc05ae2e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 7303,
+      "sha256": "50f98e0488b5e8a66c06527eed6fae491122f2aa1a6219a3211725f1ddfe415b",
+      "source": "R4 repository adoption documentation/helper"
+    },
+    {
+      "path": "revision-r2-oled/audit/r2-export-validation.json",
+      "bytes": 11398,
+      "sha256": "b60ed43db6a4a63589773c1919630a73a047b94d58128acf12e8419a667e5b60",
+      "source_relative_path": "revision-r2-oled/audit/r2-export-validation.json",
+      "source_sha256": "b60ed43db6a4a63589773c1919630a73a047b94d58128acf12e8419a667e5b60"
+    },
+    {
+      "path": "revision-r2-oled/audit/r2-oled-fit-validation.json",
+      "bytes": 7301,
+      "sha256": "d0ac79dd4572123af79c65922314dd08bf4450b9663353addccd0d8fd9283876",
+      "source_relative_path": "revision-r2-oled/audit/r2-oled-fit-validation.json",
+      "source_sha256": "d0ac79dd4572123af79c65922314dd08bf4450b9663353addccd0d8fd9283876"
+    },
+    {
+      "path": "revision-r2-oled/audit/validate_r2_exports.py",
+      "bytes": 13715,
+      "sha256": "ab41a4729f62f9009e42ddbf0e4a41ec44c29a458a3b3b45fa2d39ef4349d3f4",
+      "source_relative_path": "revision-r2-oled/audit/validate_r2_exports.py",
+      "source_sha256": "ab41a4729f62f9009e42ddbf0e4a41ec44c29a458a3b3b45fa2d39ef4349d3f4"
+    },
+    {
+      "path": "revision-r2-oled/audit/verify_r2_oled.py",
+      "bytes": 10786,
+      "sha256": "532dda6d13e4592ba39173dc1a35594e15c4afb408d26c4e40eda6151470fa9c",
+      "source_relative_path": "revision-r2-oled/audit/verify_r2_oled.py",
+      "source_sha256": "532dda6d13e4592ba39173dc1a35594e15c4afb408d26c4e40eda6151470fa9c"
+    },
+    {
+      "path": "revision-r2-oled/cad/LoRa-Enclosure-C5-R2-OLED.FCStd",
+      "bytes": 17021565,
+      "sha256": "8dd61a928fba2c1f3e977ca8e6db656d05c8e85391b5cf9f871fe7bb7de11ffd",
+      "source_relative_path": "revision-r2-oled/cad/LoRa-Enclosure-C5-R2-OLED.FCStd",
+      "source_sha256": "8dd61a928fba2c1f3e977ca8e6db656d05c8e85391b5cf9f871fe7bb7de11ffd"
+    },
+    {
+      "path": "revision-r2-oled/cad/LoRa-Enclosure-C5-R2-OLED.step",
+      "bytes": 182982,
+      "sha256": "cc1fb062c34582a2aafc75aee98761a0424c0cac03229fa58e99f6c426762abb",
+      "source_relative_path": "revision-r2-oled/cad/LoRa-Enclosure-C5-R2-OLED.step",
+      "source_sha256": "cc1fb062c34582a2aafc75aee98761a0424c0cac03229fa58e99f6c426762abb"
+    },
+    {
+      "path": "revision-r2-oled/documentation/build_oled_section_drawing.py",
+      "bytes": 11059,
+      "sha256": "8c54473b1e6130a9bc327bb37a29faf66f488d7a07de0cbf17e6017aa88aafd2",
+      "source_relative_path": "revision-r2-oled/documentation/build_oled_section_drawing.py",
+      "source_sha256": "8c54473b1e6130a9bc327bb37a29faf66f488d7a07de0cbf17e6017aa88aafd2"
+    },
+    {
+      "path": "revision-r2-oled/documentation/C5-R2-OLED-Dimensioned-Section.pdf",
+      "bytes": 8820,
+      "sha256": "ad964c32729019c91d1626f55b0fed4f8a026de617a44556bf701c11b92f29fc",
+      "source_relative_path": "revision-r2-oled/documentation/C5-R2-OLED-Dimensioned-Section.pdf",
+      "source_sha256": "ad964c32729019c91d1626f55b0fed4f8a026de617a44556bf701c11b92f29fc"
+    },
+    {
+      "path": "revision-r2-oled/documentation/C5-R2-OLED-Dimensioned-Section.png",
+      "bytes": 294715,
+      "sha256": "4ae8aa67f3a1428fe8f8a18bac9ab05c6c1b872a4574ce076882b38127937ac9",
+      "source_relative_path": "revision-r2-oled/documentation/C5-R2-OLED-Dimensioned-Section.png",
+      "source_sha256": "4ae8aa67f3a1428fe8f8a18bac9ab05c6c1b872a4574ce076882b38127937ac9"
+    },
+    {
+      "path": "revision-r2-oled/documentation/drawing-validation.json",
+      "bytes": 1337,
+      "sha256": "9dc05e5d716760bcdfa8c7df2b7bed41d1ecac6d4ebcfcf97a582909db556012",
+      "source_relative_path": "revision-r2-oled/documentation/drawing-validation.json",
+      "source_sha256": "9dc05e5d716760bcdfa8c7df2b7bed41d1ecac6d4ebcfcf97a582909db556012"
+    },
+    {
+      "path": "revision-r2-oled/documentation/oled-section-geometry.json",
+      "bytes": 82705,
+      "sha256": "b53789775fe27678d245a19d0fc9189acb54b3ac9ac652110a743f678c6e1102",
+      "source_relative_path": "revision-r2-oled/documentation/oled-section-geometry.json",
+      "source_sha256": "b53789775fe27678d245a19d0fc9189acb54b3ac9ac652110a743f678c6e1102"
+    },
+    {
+      "path": "revision-r2-oled/native-revision-operations.json",
+      "bytes": 6978,
+      "sha256": "a7ebcebdf1d2b3d72cc860aa5bdb3719aef0e0d174af8bfcc8b1138509846568",
+      "source_relative_path": "revision-r2-oled/native-revision-operations.json",
+      "source_sha256": "a7ebcebdf1d2b3d72cc860aa5bdb3719aef0e0d174af8bfcc8b1138509846568"
+    },
+    {
+      "path": "revision-r2-oled/printing/C5-R2-enclosure-lid-mm.3mf",
+      "bytes": 32540,
+      "sha256": "d31dd03cd904b936b89bc3bdeacbd08b5e5434c979c7db098d3e47838bfd393c",
+      "source_relative_path": "revision-r2-oled/printing/C5-R2-enclosure-lid-mm.3mf",
+      "source_sha256": "d31dd03cd904b936b89bc3bdeacbd08b5e5434c979c7db098d3e47838bfd393c"
+    },
+    {
+      "path": "revision-r2-oled/printing/C5-R2-enclosure-lid-mm.stl",
+      "bytes": 169984,
+      "sha256": "65b76d03664aa942bf98e7a5dc25c0ff3aa3a7d9d25950b8c8e69de71f653540",
+      "source_relative_path": "revision-r2-oled/printing/C5-R2-enclosure-lid-mm.stl",
+      "source_sha256": "65b76d03664aa942bf98e7a5dc25c0ff3aa3a7d9d25950b8c8e69de71f653540"
+    },
+    {
+      "path": "revision-r2-oled/REVISION-NOTES.txt",
+      "bytes": 3546,
+      "sha256": "92cee530c9975ed9a04a3d8228676b12e5112646d39bd7fea23a425befea315b",
+      "source_relative_path": "revision-r2-oled/REVISION-NOTES.txt",
+      "source_sha256": "92cee530c9975ed9a04a3d8228676b12e5112646d39bd7fea23a425befea315b"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/evaluate_half_mm_candidates.py",
+      "bytes": 4520,
+      "sha256": "af0505e7afc0b4414f393ef3ba9ab53e78e14b328ba774d24d8af5438bdb4984",
+      "source_relative_path": "revision-r3-oled-gap/audit/evaluate_half_mm_candidates.py",
+      "source_sha256": "af0505e7afc0b4414f393ef3ba9ab53e78e14b328ba774d24d8af5438bdb4984"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/half-mm-candidate-report.json",
+      "bytes": 40171,
+      "sha256": "debb2431b8fbbc0e146c473861e2dab1913429e17246f7dc7937ad7af79ab709",
+      "source_relative_path": "revision-r3-oled-gap/audit/half-mm-candidate-report.json",
+      "source_sha256": "debb2431b8fbbc0e146c473861e2dab1913429e17246f7dc7937ad7af79ab709"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/r3-export-validation.json",
+      "bytes": 14085,
+      "sha256": "76dfe730824ddc57f926dc0a9c09dd719d261c9290fe17f25a7dda56b4802329",
+      "source_relative_path": "revision-r3-oled-gap/audit/r3-export-validation.json",
+      "source_sha256": "76dfe730824ddc57f926dc0a9c09dd719d261c9290fe17f25a7dda56b4802329"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/r3-oled-fit-validation.json",
+      "bytes": 18287,
+      "sha256": "7bd771ccaf9ee4106cd792eaed0ecff3da91daea9809fffea3ab0e7ad17ad1ce",
+      "source_relative_path": "revision-r3-oled-gap/audit/r3-oled-fit-validation.json",
+      "source_sha256": "7bd771ccaf9ee4106cd792eaed0ecff3da91daea9809fffea3ab0e7ad17ad1ce"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/validate_r3_exports.py",
+      "bytes": 15149,
+      "sha256": "e669e2c47d813e7f98335934833fd28ce99b5163220afa54b4e918878a359ff4",
+      "source_relative_path": "revision-r3-oled-gap/audit/validate_r3_exports.py",
+      "source_sha256": "e669e2c47d813e7f98335934833fd28ce99b5163220afa54b4e918878a359ff4"
+    },
+    {
+      "path": "revision-r3-oled-gap/audit/verify_r3_oled.py",
+      "bytes": 12788,
+      "sha256": "e524483ddc7436b7f27b713e5a35f9572a8c1a67657eafea0d72f31ac7f73885",
+      "source_relative_path": "revision-r3-oled-gap/audit/verify_r3_oled.py",
+      "source_sha256": "e524483ddc7436b7f27b713e5a35f9572a8c1a67657eafea0d72f31ac7f73885"
+    },
+    {
+      "path": "revision-r3-oled-gap/cad/LoRa-Enclosure-C5-R3-OLED.FCStd",
+      "bytes": 17038416,
+      "sha256": "57f535488ac286e72e6a9f33ff3ffc29532e826844323bb8ec2bd9fdbbfd4480",
+      "source_relative_path": "revision-r3-oled-gap/cad/LoRa-Enclosure-C5-R3-OLED.FCStd",
+      "source_sha256": "57f535488ac286e72e6a9f33ff3ffc29532e826844323bb8ec2bd9fdbbfd4480"
+    },
+    {
+      "path": "revision-r3-oled-gap/cad/LoRa-Enclosure-C5-R3-OLED.step",
+      "bytes": 212194,
+      "sha256": "556914995a9515760e1851aed7e270c7114225fdd206d966817cca50bd9a604f",
+      "source_relative_path": "revision-r3-oled-gap/cad/LoRa-Enclosure-C5-R3-OLED.step",
+      "source_sha256": "556914995a9515760e1851aed7e270c7114225fdd206d966817cca50bd9a604f"
+    },
+    {
+      "path": "revision-r3-oled-gap/documentation/build_oled_section_drawing.py",
+      "bytes": 12095,
+      "sha256": "b0afc3dfb342fae2a45b4adb47fe75b214e98a62fc818f65941f4b8c7972f9bc",
+      "source_relative_path": "revision-r3-oled-gap/documentation/build_oled_section_drawing.py",
+      "source_sha256": "b0afc3dfb342fae2a45b4adb47fe75b214e98a62fc818f65941f4b8c7972f9bc"
+    },
+    {
+      "path": "revision-r3-oled-gap/documentation/C5-R3-OLED-Dimensioned-Section.pdf",
+      "bytes": 9013,
+      "sha256": "071a31a7b19438e3c683bf1cbca36e64ee8885c4bccd9bcf2234fb0523794f91",
+      "source_relative_path": "revision-r3-oled-gap/documentation/C5-R3-OLED-Dimensioned-Section.pdf",
+      "source_sha256": "071a31a7b19438e3c683bf1cbca36e64ee8885c4bccd9bcf2234fb0523794f91"
+    },
+    {
+      "path": "revision-r3-oled-gap/documentation/C5-R3-OLED-Dimensioned-Section.png",
+      "bytes": 317740,
+      "sha256": "6530b4f05b3ae9faaa4bbedebde577350e6785fb01bf6c30bd7bada26fd69226",
+      "source_relative_path": "revision-r3-oled-gap/documentation/C5-R3-OLED-Dimensioned-Section.png",
+      "source_sha256": "6530b4f05b3ae9faaa4bbedebde577350e6785fb01bf6c30bd7bada26fd69226"
+    },
+    {
+      "path": "revision-r3-oled-gap/documentation/drawing-validation.json",
+      "bytes": 1359,
+      "sha256": "6acb6f4ad511a26fe661934f1022f699a2dd2ad3bea76ff192955aa3abbf16e0",
+      "source_relative_path": "revision-r3-oled-gap/documentation/drawing-validation.json",
+      "source_sha256": "6acb6f4ad511a26fe661934f1022f699a2dd2ad3bea76ff192955aa3abbf16e0"
+    },
+    {
+      "path": "revision-r3-oled-gap/documentation/oled-section-geometry.json",
+      "bytes": 83818,
+      "sha256": "981470e11b2920823c76508577167835e1980a7601f9292d8ad75d4c84f45124",
+      "source_relative_path": "revision-r3-oled-gap/documentation/oled-section-geometry.json",
+      "source_sha256": "981470e11b2920823c76508577167835e1980a7601f9292d8ad75d4c84f45124"
+    },
+    {
+      "path": "revision-r3-oled-gap/native-revision-operations.json",
+      "bytes": 8712,
+      "sha256": "de2c7b7b43b9e6bd7908fb74b916d409bb0446ea39d111f48483c711d89a0580",
+      "source_relative_path": "revision-r3-oled-gap/native-revision-operations.json",
+      "source_sha256": "de2c7b7b43b9e6bd7908fb74b916d409bb0446ea39d111f48483c711d89a0580"
+    },
+    {
+      "path": "revision-r3-oled-gap/printing/C5-R3-enclosure-lid-mm.3mf",
+      "bytes": 34494,
+      "sha256": "1028dd05dabc349c754702fbab12b0f4064cb1c4ad901e79c4dcb2aa883ab0dd",
+      "source_relative_path": "revision-r3-oled-gap/printing/C5-R3-enclosure-lid-mm.3mf",
+      "source_sha256": "1028dd05dabc349c754702fbab12b0f4064cb1c4ad901e79c4dcb2aa883ab0dd"
+    },
+    {
+      "path": "revision-r3-oled-gap/printing/C5-R3-enclosure-lid-mm.stl",
+      "bytes": 184184,
+      "sha256": "95961c437f633d28aff0e61ac3d833f855df812a50b0f4cb49010ec40f6b749b",
+      "source_relative_path": "revision-r3-oled-gap/printing/C5-R3-enclosure-lid-mm.stl",
+      "source_sha256": "95961c437f633d28aff0e61ac3d833f855df812a50b0f4cb49010ec40f6b749b"
+    },
+    {
+      "path": "revision-r3-oled-gap/REVISION-NOTES.txt",
+      "bytes": 3415,
+      "sha256": "14f528e17a5d177ba7f48f763828ea4085e460bd574609493f774c3789e34be0",
+      "source_relative_path": "revision-r3-oled-gap/REVISION-NOTES.txt",
+      "source_sha256": "14f528e17a5d177ba7f48f763828ea4085e460bd574609493f774c3789e34be0"
+    },
+    {
+      "path": "revision-r4-battery/audit/evaluate_rear_bay.py",
+      "bytes": 4058,
+      "sha256": "3c083c15c1a5cb68a2540dc6a1ed8dd3973c30cdead6309a75236514d6d680e8",
+      "source_relative_path": "revision-r4-battery/audit/evaluate_rear_bay.py",
+      "source_sha256": "3c083c15c1a5cb68a2540dc6a1ed8dd3973c30cdead6309a75236514d6d680e8"
+    },
+    {
+      "path": "revision-r4-battery/audit/evaluate_rear_harness.py",
+      "bytes": 4481,
+      "sha256": "432f9e0a4d1c1f4f3d8b725cb83adfafb58a5b268decd142a7c6922c36561e8a",
+      "source_relative_path": "revision-r4-battery/audit/evaluate_rear_harness.py",
+      "source_sha256": "432f9e0a4d1c1f4f3d8b725cb83adfafb58a5b268decd142a7c6922c36561e8a"
+    },
+    {
+      "path": "revision-r4-battery/audit/generate_r4_operations.py",
+      "bytes": 7894,
+      "sha256": "cecba4d859380974f1a03132b4f58878953fe201902e6ab7a415397b7ad1667f",
+      "source_relative_path": "revision-r4-battery/audit/generate_r4_operations.py",
+      "source_sha256": "cecba4d859380974f1a03132b4f58878953fe201902e6ab7a415397b7ad1667f"
+    },
+    {
+      "path": "revision-r4-battery/audit/inspect_battery_mechanics.py",
+      "bytes": 1360,
+      "sha256": "90ab6fcfa785fae8817b2363810de1a27aae1c02f4c536e29e989fe4b638c30b",
+      "source_relative_path": "revision-r4-battery/audit/inspect_battery_mechanics.py",
+      "source_sha256": "90ab6fcfa785fae8817b2363810de1a27aae1c02f4c536e29e989fe4b638c30b"
+    },
+    {
+      "path": "revision-r4-battery/audit/jp2-connector-geometry.json",
+      "bytes": 543796,
+      "sha256": "fa67fbe0fcca83bada6bd7826bf019b6bbdbde65481bd223c9d36360c7ab7f89",
+      "source_relative_path": "revision-r4-battery/audit/jp2-connector-geometry.json",
+      "source_sha256": "fa67fbe0fcca83bada6bd7826bf019b6bbdbde65481bd223c9d36360c7ab7f89"
+    },
+    {
+      "path": "revision-r4-battery/audit/jp2-orientation.png",
+      "bytes": 30960,
+      "sha256": "692fcb0f7e477fc7415b8e58c25fa8066723a0386b50177ccec0439941163106",
+      "source_relative_path": "revision-r4-battery/audit/jp2-orientation.png",
+      "source_sha256": "692fcb0f7e477fc7415b8e58c25fa8066723a0386b50177ccec0439941163106"
+    },
+    {
+      "path": "revision-r4-battery/audit/native-plan-validation.json",
+      "bytes": 854,
+      "sha256": "f7c0ec2a06a16a76802ad569db46bd398379a245fdaf8d6adad0e36b8a796bd1",
+      "source_relative_path": "revision-r4-battery/audit/native-plan-validation.json",
+      "source_sha256": "f7c0ec2a06a16a76802ad569db46bd398379a245fdaf8d6adad0e36b8a796bd1"
+    },
+    {
+      "path": "revision-r4-battery/audit/r4-battery-fit-validation.json",
+      "bytes": 10432,
+      "sha256": "981cb798a8ecacbd996ef240f642a60dcd0d309664f198204bce17ca2e12febf",
+      "source_relative_path": "revision-r4-battery/audit/r4-battery-fit-validation.json",
+      "source_sha256": "981cb798a8ecacbd996ef240f642a60dcd0d309664f198204bce17ca2e12febf"
+    },
+    {
+      "path": "revision-r4-battery/audit/r4-export-validation.json",
+      "bytes": 38581,
+      "sha256": "1f3e323acae6e82cf71a5af3685a7a1fdff700cdf48e0bcd3beaa03734f74944",
+      "source_relative_path": "revision-r4-battery/audit/r4-export-validation.json",
+      "source_sha256": "1f3e323acae6e82cf71a5af3685a7a1fdff700cdf48e0bcd3beaa03734f74944"
+    },
+    {
+      "path": "revision-r4-battery/audit/rear-bay-predictive-report.json",
+      "bytes": 2544,
+      "sha256": "e4694d3041707afeedcdf558dcbe0e8f793bd9a0d28669a373f2d3e83dc45a26",
+      "source_relative_path": "revision-r4-battery/audit/rear-bay-predictive-report.json",
+      "source_sha256": "e4694d3041707afeedcdf558dcbe0e8f793bd9a0d28669a373f2d3e83dc45a26"
+    },
+    {
+      "path": "revision-r4-battery/audit/rear-harness-predictive-report.json",
+      "bytes": 7846,
+      "sha256": "9b99eb569d468f6ff6e0101872e162c7a84c66136072ebe0f58d1ff1421cd6c7",
+      "source_relative_path": "revision-r4-battery/audit/rear-harness-predictive-report.json",
+      "source_sha256": "9b99eb569d468f6ff6e0101872e162c7a84c66136072ebe0f58d1ff1421cd6c7"
+    },
+    {
+      "path": "revision-r4-battery/audit/render_jp2.py",
+      "bytes": 1469,
+      "sha256": "305bbd4104bd896bca6c3e3699e04669bf316e50489768c2fbe2f239f359042e",
+      "source_relative_path": "revision-r4-battery/audit/render_jp2.py",
+      "source_sha256": "305bbd4104bd896bca6c3e3699e04669bf316e50489768c2fbe2f239f359042e"
+    },
+    {
+      "path": "revision-r4-battery/audit/validate_r4_exports.py",
+      "bytes": 18027,
+      "sha256": "456f9a50f40502fbd77ce257ed360c57889c425b7d8af7de0914a8d42eaaf3bf",
+      "source_relative_path": "revision-r4-battery/audit/validate_r4_exports.py",
+      "source_sha256": "54fecad2034c9f2b27bf71f731535368cb611b404c7f57d1b4fcce5b7aec731c",
+      "transformation": "Removed duplicate trailing blank lines only; original source hash retained."
+    },
+    {
+      "path": "revision-r4-battery/audit/verify_native_operation_plan.py",
+      "bytes": 2853,
+      "sha256": "57d5a1ccb0609ff4c9d696b812caa2588cdd32a68dfdc937269a2a45f47f1126",
+      "source_relative_path": "revision-r4-battery/audit/verify_native_operation_plan.py",
+      "source_sha256": "57d5a1ccb0609ff4c9d696b812caa2588cdd32a68dfdc937269a2a45f47f1126"
+    },
+    {
+      "path": "revision-r4-battery/audit/verify_r4_battery.py",
+      "bytes": 10759,
+      "sha256": "119c88bbbb12ddcaa2973688d7bb08d4ef4846c88232f90dabef55afa5d73656",
+      "source_relative_path": "revision-r4-battery/audit/verify_r4_battery.py",
+      "source_sha256": "119c88bbbb12ddcaa2973688d7bb08d4ef4846c88232f90dabef55afa5d73656"
+    },
+    {
+      "path": "revision-r4-battery/audit/verify_upload_set.py",
+      "bytes": 2573,
+      "sha256": "107f034107b35bf29538cde9d0d45ef98d01b429340aaaebca1c139c6a1a8ee8",
+      "source_relative_path": "revision-r4-battery/audit/verify_upload_set.py",
+      "source_sha256": "107f034107b35bf29538cde9d0d45ef98d01b429340aaaebca1c139c6a1a8ee8"
+    },
+    {
+      "path": "revision-r4-battery/bom/bom-formula-scan.json",
+      "bytes": 60,
+      "sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146",
+      "source_relative_path": "revision-r4-battery/bom/bom-formula-scan.json",
+      "source_sha256": "acc0111e19cf44d2753fc9ecd164bf1b27fbd65597463a25cf48bd1c65e90146"
+    },
+    {
+      "path": "revision-r4-battery/bom/BOM-VALIDATION.json",
+      "bytes": 1017,
+      "sha256": "fde0c8296afcb2151d62bee26c21cbae3a1be7eea90b646b26b54c1721c569dd",
+      "source_relative_path": "revision-r4-battery/bom/BOM-VALIDATION.json",
+      "source_sha256": "fde0c8296afcb2151d62bee26c21cbae3a1be7eea90b646b26b54c1721c569dd"
+    },
+    {
+      "path": "revision-r4-battery/bom/build_complete_bom.mjs",
+      "bytes": 10597,
+      "sha256": "03ba141b96906d5b8cb0bcc1b1576a1e517a51ed3d73e76b7c01622e22918e22",
+      "source_relative_path": "revision-r4-battery/bom/build_complete_bom.mjs",
+      "source_sha256": "03ba141b96906d5b8cb0bcc1b1576a1e517a51ed3d73e76b7c01622e22918e22"
+    },
+    {
+      "path": "revision-r4-battery/bom/complete-bom-lower.png",
+      "bytes": 63583,
+      "sha256": "34db09f51c3ffdbdefbb35d09b43597bf3912509878381916c526e2d8649abb8",
+      "source_relative_path": "revision-r4-battery/bom/complete-bom-lower.png",
+      "source_sha256": "34db09f51c3ffdbdefbb35d09b43597bf3912509878381916c526e2d8649abb8"
+    },
+    {
+      "path": "revision-r4-battery/bom/complete-bom-middle.png",
+      "bytes": 71030,
+      "sha256": "b57ca78bbbc768ab33cdaa5b03e76679893aed906da65a46780737141d1561ff",
+      "source_relative_path": "revision-r4-battery/bom/complete-bom-middle.png",
+      "source_sha256": "b57ca78bbbc768ab33cdaa5b03e76679893aed906da65a46780737141d1561ff"
+    },
+    {
+      "path": "revision-r4-battery/bom/complete-bom-upper.png",
+      "bytes": 64880,
+      "sha256": "f3d04a4ff31f3fe198036ad6c9de72c33a2bf370b0b833f18ca1421304d7df32",
+      "source_relative_path": "revision-r4-battery/bom/complete-bom-upper.png",
+      "source_sha256": "f3d04a4ff31f3fe198036ad6c9de72c33a2bf370b0b833f18ca1421304d7df32"
+    },
+    {
+      "path": "revision-r4-battery/bom/complete-bom.json",
+      "bytes": 10527,
+      "sha256": "7e1d099d4a0681c861a9522c4fbf14ff9ca4255f7987887ac664a6476a4f3964",
+      "source_relative_path": "revision-r4-battery/bom/complete-bom.json",
+      "source_sha256": "7e1d099d4a0681c861a9522c4fbf14ff9ca4255f7987887ac664a6476a4f3964"
+    },
+    {
+      "path": "revision-r4-battery/bom/LoRa-C5-R4-Complete-BOM.csv",
+      "bytes": 6454,
+      "sha256": "34df070b8a5d6e9a423431f40e9ad6955bfaa7e5c2392cc7ee1ea7bdf4164f0b",
+      "source_relative_path": "revision-r4-battery/bom/LoRa-C5-R4-Complete-BOM.csv",
+      "source_sha256": "34df070b8a5d6e9a423431f40e9ad6955bfaa7e5c2392cc7ee1ea7bdf4164f0b"
+    },
+    {
+      "path": "revision-r4-battery/bom/LoRa-C5-R4-Complete-BOM.xlsx",
+      "bytes": 10548,
+      "sha256": "4b2d598f0f911cf4090999183deb2a1748f375de9c4bd93b8e6fcd4bf4c0a99d",
+      "source_relative_path": "revision-r4-battery/bom/LoRa-C5-R4-Complete-BOM.xlsx",
+      "source_sha256": "4b2d598f0f911cf4090999183deb2a1748f375de9c4bd93b8e6fcd4bf4c0a99d"
+    },
+    {
+      "path": "revision-r4-battery/bom/README.txt",
+      "bytes": 2923,
+      "sha256": "9146a4a4155bf9498fac3aedb93c916fd377f34200bf1b985f5efcbbc7590eb0",
+      "source_relative_path": "revision-r4-battery/bom/README.txt",
+      "source_sha256": "9146a4a4155bf9498fac3aedb93c916fd377f34200bf1b985f5efcbbc7590eb0"
+    },
+    {
+      "path": "revision-r4-battery/bom/verify_bom.py",
+      "bytes": 3057,
+      "sha256": "28932905e7d48e1faaf8aedcc672e8876327f2bf8eb7e0153329b9a58c964116",
+      "source_relative_path": "revision-r4-battery/bom/verify_bom.py",
+      "source_sha256": "28932905e7d48e1faaf8aedcc672e8876327f2bf8eb7e0153329b9a58c964116"
+    },
+    {
+      "path": "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.FCStd",
+      "bytes": 17226198,
+      "sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa",
+      "source_relative_path": "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.FCStd",
+      "source_sha256": "2ce40bd7f99df5cf6a079d0178c988ab2c42ab040630e65c8de78022cdb164aa"
+    },
+    {
+      "path": "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.step",
+      "bytes": 426530,
+      "sha256": "791ad568dc476fe3edd92c13573fe9ee2d72f4c5d5dfe776dbe9ab74b8103e26",
+      "source_relative_path": "revision-r4-battery/cad/LoRa-Enclosure-C5-R4-Battery.step",
+      "source_sha256": "791ad568dc476fe3edd92c13573fe9ee2d72f4c5d5dfe776dbe9ab74b8103e26"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt",
+      "bytes": 1567,
+      "sha256": "f94677904e0baf44b53abde182ae1f1d44eae07898a626e5414e0b17b8534863",
+      "source_relative_path": "revision-r4-battery/craftcloud/CRAFTCLOUD-ORDER-SPECIFICATION.txt",
+      "source_sha256": "f94677904e0baf44b53abde182ae1f1d44eae07898a626e5414e0b17b8534863"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-battery-cover-mm.3mf",
+      "bytes": 22117,
+      "sha256": "d87cd2f9f3d908a9d6b4e616ae2495edc220a49b6f78b73e3aec67d05fa19ef6",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-battery-cover-mm.3mf",
+      "source_sha256": "d87cd2f9f3d908a9d6b4e616ae2495edc220a49b6f78b73e3aec67d05fa19ef6"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-battery-cover-mm.stl",
+      "bytes": 112684,
+      "sha256": "9f2f5b523e7cdadda1badbc5efa0e355ac8ad36209da3089e9fa4ec7ecc4a44f",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-battery-cover-mm.stl",
+      "source_sha256": "9f2f5b523e7cdadda1badbc5efa0e355ac8ad36209da3089e9fa4ec7ecc4a44f"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-base-mm.3mf",
+      "bytes": 46370,
+      "sha256": "e863d5873a957b7c3aa2edcab6fd3d52c10f5db2add6329a50a8211fe4577ed2",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-base-mm.3mf",
+      "source_sha256": "e863d5873a957b7c3aa2edcab6fd3d52c10f5db2add6329a50a8211fe4577ed2"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-base-mm.stl",
+      "bytes": 234484,
+      "sha256": "51a18105c33e778232b7657232d976fe836ba0e5c0643724a15e8b7480b2dcbc",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-base-mm.stl",
+      "source_sha256": "51a18105c33e778232b7657232d976fe836ba0e5c0643724a15e8b7480b2dcbc"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-lid-mm.3mf",
+      "bytes": 36616,
+      "sha256": "dc6fd1ef7d799bfb1936211749be3fd93bd4326a2328bcb58ff3626f6f65b225",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-lid-mm.3mf",
+      "source_sha256": "dc6fd1ef7d799bfb1936211749be3fd93bd4326a2328bcb58ff3626f6f65b225"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-lid-mm.stl",
+      "bytes": 184184,
+      "sha256": "66fc20d0945f25a0521569206bcee2cc7ba1e00cea13d3a0f7ba991fe165ab93",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-enclosure-lid-mm.stl",
+      "source_sha256": "66fc20d0945f25a0521569206bcee2cc7ba1e00cea13d3a0f7ba991fe165ab93"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-plunger-mm.3mf",
+      "bytes": 7021,
+      "sha256": "9decc40881549b1c5f79941f9e4d5662b83969828d7259bdd1cf44ca1573b91a",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-plunger-mm.3mf",
+      "source_sha256": "9decc40881549b1c5f79941f9e4d5662b83969828d7259bdd1cf44ca1573b91a"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-plunger-mm.stl",
+      "bytes": 30284,
+      "sha256": "fe404d106ab7d2011fcc7be4ed0f89d3aa27288180b7e3e3a92078ca88c2545b",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-plunger-mm.stl",
+      "source_sha256": "fe404d106ab7d2011fcc7be4ed0f89d3aa27288180b7e3e3a92078ca88c2545b"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-stop-cup-mm.3mf",
+      "bytes": 12117,
+      "sha256": "3be5904301201215794c14a8569c4114eca1f0c5c005a990ea091b606ae9e94d",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-stop-cup-mm.3mf",
+      "source_sha256": "3be5904301201215794c14a8569c4114eca1f0c5c005a990ea091b606ae9e94d"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-stop-cup-mm.stl",
+      "bytes": 56484,
+      "sha256": "3b8872827393db9b6a0a9a73804755b2812924519b814557ea4ddbd5fd955a6b",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload/C5-R4-ptt-stop-cup-mm.stl",
+      "source_sha256": "3b8872827393db9b6a0a9a73804755b2812924519b814557ea4ddbd5fd955a6b"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/upload-manifest.json",
+      "bytes": 6697,
+      "sha256": "fa3b9fb8996aad1baaef719c44b3046231bd2b25c3a003225149ec1c8b669ea6",
+      "source_relative_path": "revision-r4-battery/craftcloud/upload-manifest.json",
+      "source_sha256": "fa3b9fb8996aad1baaef719c44b3046231bd2b25c3a003225149ec1c8b669ea6"
+    },
+    {
+      "path": "revision-r4-battery/craftcloud/UPLOAD-VALIDATION.json",
+      "bytes": 7703,
+      "sha256": "f8a3b14d51d03627fca981336b74de03e0d5add29286a6f3f4ddb97b05d8afa4",
+      "source_relative_path": "revision-r4-battery/craftcloud/UPLOAD-VALIDATION.json",
+      "source_sha256": "f8a3b14d51d03627fca981336b74de03e0d5add29286a6f3f4ddb97b05d8afa4"
+    },
+    {
+      "path": "revision-r4-battery/documentation/battery-assembled.png",
+      "bytes": 261726,
+      "sha256": "835c7f3d5233c74178f17b5e9c9bd344889506c91253cd0f9b28cc9029648fc6",
+      "source_relative_path": "revision-r4-battery/documentation/battery-assembled.png",
+      "source_sha256": "835c7f3d5233c74178f17b5e9c9bd344889506c91253cd0f9b28cc9029648fc6"
+    },
+    {
+      "path": "revision-r4-battery/documentation/battery-cutaway.png",
+      "bytes": 792134,
+      "sha256": "32917cf66ee7ea7ab5a71abfab016c9dd5b6211a2f597f8ed2d809834a995bd4",
+      "source_relative_path": "revision-r4-battery/documentation/battery-cutaway.png",
+      "source_sha256": "32917cf66ee7ea7ab5a71abfab016c9dd5b6211a2f597f8ed2d809834a995bd4"
+    },
+    {
+      "path": "revision-r4-battery/documentation/battery-exploded.png",
+      "bytes": 937995,
+      "sha256": "daa5c0b8e28e0f172d21bb09b154f6ba3f5ba1c57de3335b6c09d20c89f3b6d8",
+      "source_relative_path": "revision-r4-battery/documentation/battery-exploded.png",
+      "source_sha256": "daa5c0b8e28e0f172d21bb09b154f6ba3f5ba1c57de3335b6c09d20c89f3b6d8"
+    },
+    {
+      "path": "revision-r4-battery/documentation/battery-section-geometry.json",
+      "bytes": 44739,
+      "sha256": "400b55776a1dc3f726e0fe25cad228b1c0c6f8b43025c81b72536c226acafc3b",
+      "source_relative_path": "revision-r4-battery/documentation/battery-section-geometry.json",
+      "source_sha256": "400b55776a1dc3f726e0fe25cad228b1c0c6f8b43025c81b72536c226acafc3b"
+    },
+    {
+      "path": "revision-r4-battery/documentation/build_battery_document.py",
+      "bytes": 7868,
+      "sha256": "65bc385f3deb9e71785f836a6910cff839cbee475c2e7536ade0883f4520458f",
+      "source_relative_path": "revision-r4-battery/documentation/build_battery_document.py",
+      "source_sha256": "65bc385f3deb9e71785f836a6910cff839cbee475c2e7536ade0883f4520458f"
+    },
+    {
+      "path": "revision-r4-battery/documentation/build_battery_views.py",
+      "bytes": 8542,
+      "sha256": "80e88de91a3d30ee58e7982e15527793a079721d0844421a9b603a02313791b8",
+      "source_relative_path": "revision-r4-battery/documentation/build_battery_views.py",
+      "source_sha256": "80e88de91a3d30ee58e7982e15527793a079721d0844421a9b603a02313791b8"
+    },
+    {
+      "path": "revision-r4-battery/documentation/C5-R4-Battery-Integration.pdf",
+      "bytes": 869043,
+      "sha256": "d86f3ee524dfabccdd8bfac53504de2bed4d9265834ed5aa1ca66eb15eb42dd3",
+      "source_relative_path": "revision-r4-battery/documentation/C5-R4-Battery-Integration.pdf",
+      "source_sha256": "d86f3ee524dfabccdd8bfac53504de2bed4d9265834ed5aa1ca66eb15eb42dd3"
+    },
+    {
+      "path": "revision-r4-battery/documentation/C5-R4-Battery-Sheet-1.png",
+      "bytes": 623539,
+      "sha256": "de694c6a9370fe92146090793bb9f4be11422aa677fb84ec8f5b78eb46d19cad",
+      "source_relative_path": "revision-r4-battery/documentation/C5-R4-Battery-Sheet-1.png",
+      "source_sha256": "de694c6a9370fe92146090793bb9f4be11422aa677fb84ec8f5b78eb46d19cad"
+    },
+    {
+      "path": "revision-r4-battery/documentation/C5-R4-Battery-Sheet-2.png",
+      "bytes": 269767,
+      "sha256": "70879f4736bc4ae5f28be676db05ba63e850d7ccaebc1c8d5bf113b817a84262",
+      "source_relative_path": "revision-r4-battery/documentation/C5-R4-Battery-Sheet-2.png",
+      "source_sha256": "70879f4736bc4ae5f28be676db05ba63e850d7ccaebc1c8d5bf113b817a84262"
+    },
+    {
+      "path": "revision-r4-battery/documentation/cache_electronics_sections.py",
+      "bytes": 1810,
+      "sha256": "2928d0211bd872244d699fa3c058c836949dae9345dcce6d8e9339ff55d25e3c",
+      "source_relative_path": "revision-r4-battery/documentation/cache_electronics_sections.py",
+      "source_sha256": "2928d0211bd872244d699fa3c058c836949dae9345dcce6d8e9339ff55d25e3c"
+    },
+    {
+      "path": "revision-r4-battery/documentation/DOCUMENT-VALIDATION.json",
+      "bytes": 5833,
+      "sha256": "0218700efa3c841602fc9c246379faabe5d54f19aaed9bedd0d6931dde4ab92b",
+      "source_relative_path": "revision-r4-battery/documentation/DOCUMENT-VALIDATION.json",
+      "source_sha256": "0218700efa3c841602fc9c246379faabe5d54f19aaed9bedd0d6931dde4ab92b"
+    },
+    {
+      "path": "revision-r4-battery/documentation/electronics-section-cache.json",
+      "bytes": 32183,
+      "sha256": "37a0b0e58f5a700115b1256263701e481b9841c17a6ac6575ecc3efceaa3bc27",
+      "source_relative_path": "revision-r4-battery/documentation/electronics-section-cache.json",
+      "source_sha256": "37a0b0e58f5a700115b1256263701e481b9841c17a6ac6575ecc3efceaa3bc27"
+    },
+    {
+      "path": "revision-r4-battery/documentation/render_battery_views.py",
+      "bytes": 1712,
+      "sha256": "b09b2a4b97f652138381d616e9a622210e8ba94515768ae1b960b6f724ec7e8d",
+      "source_relative_path": "revision-r4-battery/documentation/render_battery_views.py",
+      "source_sha256": "b09b2a4b97f652138381d616e9a622210e8ba94515768ae1b960b6f724ec7e8d"
+    },
+    {
+      "path": "revision-r4-battery/documentation/view-config.json",
+      "bytes": 5014,
+      "sha256": "3c89731ca4efd4b84657fd1a77c31260a3fbb98364c1fdaf0e82848d1cb12b9d",
+      "source_relative_path": "revision-r4-battery/documentation/view-config.json",
+      "source_sha256": "3c89731ca4efd4b84657fd1a77c31260a3fbb98364c1fdaf0e82848d1cb12b9d"
+    },
+    {
+      "path": "revision-r4-battery/documentation/view-manifest.json",
+      "bytes": 27639,
+      "sha256": "dea3eaf2c8050a737624c9553905b8d6cb090605e2cbaf53e4f8b7a2c8198689",
+      "source_relative_path": "revision-r4-battery/documentation/view-manifest.json",
+      "source_sha256": "dea3eaf2c8050a737624c9553905b8d6cb090605e2cbaf53e4f8b7a2c8198689"
+    },
+    {
+      "path": "revision-r4-battery/documentation/VIEW-NOTES.txt",
+      "bytes": 2929,
+      "sha256": "d18d79e3e60643d1b098480b158d0826ca1af92ba791e9f4912a4ebe057a01e8",
+      "source_relative_path": "revision-r4-battery/documentation/VIEW-NOTES.txt",
+      "source_sha256": "d18d79e3e60643d1b098480b158d0826ca1af92ba791e9f4912a4ebe057a01e8"
+    },
+    {
+      "path": "revision-r4-battery/HARDWARE-ADDENDUM.txt",
+      "bytes": 1704,
+      "sha256": "1efd8a4eda610d49912a8a8ef0f912e59858167d825f08b5662f0809a1f0c3a2",
+      "source_relative_path": "revision-r4-battery/HARDWARE-ADDENDUM.txt",
+      "source_sha256": "1efd8a4eda610d49912a8a8ef0f912e59858167d825f08b5662f0809a1f0c3a2"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/build_manufacturing_drawings.py",
+      "bytes": 15127,
+      "sha256": "22fc76728fe20b4e841d4b1c16fd2660695da15e42a07626dea815ee41427da9",
+      "source_relative_path": "revision-r4-battery/manufacturing/build_manufacturing_drawings.py",
+      "source_sha256": "22fc76728fe20b4e841d4b1c16fd2660695da15e42a07626dea815ee41427da9"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/C5-R4-Manufacturing-Drawings.pdf",
+      "bytes": 1030331,
+      "sha256": "184c9fe4cbd4ec228b9bbeba80f1e85dcb04a85ceb4122eb3d14681a8c01232e",
+      "source_relative_path": "revision-r4-battery/manufacturing/C5-R4-Manufacturing-Drawings.pdf",
+      "source_sha256": "184c9fe4cbd4ec228b9bbeba80f1e85dcb04a85ceb4122eb3d14681a8c01232e"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/BatteryCover-top-reference.dxf",
+      "bytes": 47130,
+      "sha256": "6e80a478a5edfaeeafea475c47b9dd95dfd2e85d2e72e47ff4dbc89db6e6c5f9",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/BatteryCover-top-reference.dxf",
+      "source_sha256": "6e80a478a5edfaeeafea475c47b9dd95dfd2e85d2e72e47ff4dbc89db6e6c5f9"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/DXF-READBACK-VALIDATION.json",
+      "bytes": 1503,
+      "sha256": "ed9ae60f1f30157e0b3c7d7e3c462180fd597eedbb2524577a61fe017eab871f",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/DXF-READBACK-VALIDATION.json",
+      "source_sha256": "ed9ae60f1f30157e0b3c7d7e3c462180fd597eedbb2524577a61fe017eab871f"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/DXF-REFERENCE-MANIFEST.json",
+      "bytes": 3034,
+      "sha256": "2c33df6072382994f955b7ff36aa5b72cf268e7eacfcad0f89175bcd005a691d",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/DXF-REFERENCE-MANIFEST.json",
+      "source_sha256": "2c33df6072382994f955b7ff36aa5b72cf268e7eacfcad0f89175bcd005a691d"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/EnclosureBase-top-reference.dxf",
+      "bytes": 64050,
+      "sha256": "4933b9a551786ee0f58fd71aa8ef755434140584dbe93728dff02ab33f5dd5d0",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/EnclosureBase-top-reference.dxf",
+      "source_sha256": "4933b9a551786ee0f58fd71aa8ef755434140584dbe93728dff02ab33f5dd5d0"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/EnclosureLid-top-reference.dxf",
+      "bytes": 58622,
+      "sha256": "661cb62bfd69d1971e0a14065158efb010fad50a5685a8bec73f34429e036002",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/EnclosureLid-top-reference.dxf",
+      "source_sha256": "661cb62bfd69d1971e0a14065158efb010fad50a5685a8bec73f34429e036002"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/PTTPlunger-top-reference.dxf",
+      "bytes": 6583,
+      "sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/PTTPlunger-top-reference.dxf",
+      "source_sha256": "0882d0c62dc8f1d4d35ec7907ca37b27dac1ebe56c0d6f8fa64dc8c7e2b2d6ae"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/PTTStopCup-top-reference.dxf",
+      "bytes": 12159,
+      "sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/PTTStopCup-top-reference.dxf",
+      "source_sha256": "30b31aeec602ddd99ecabfe29ab5082c3e2152ac35de62f5b0bd86c37b421475"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-reference/READ-ME.txt",
+      "bytes": 685,
+      "sha256": "c7ac91e6576108ba21894b7d14256d8d95b6bb30a5a5aec041706d03e9851893",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-reference/READ-ME.txt",
+      "source_sha256": "c7ac91e6576108ba21894b7d14256d8d95b6bb30a5a5aec041706d03e9851893"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/CNC-SHOP-HANDOFF.txt",
+      "bytes": 4751,
+      "sha256": "cfa12087ca695ef66e8018d9bb5c80fdd18b31935667dd017628214714f8a70b",
+      "source_relative_path": "revision-r4-battery/manufacturing/CNC-SHOP-HANDOFF.txt",
+      "source_sha256": "cfa12087ca695ef66e8018d9bb5c80fdd18b31935667dd017628214714f8a70b"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-battery-cover.step",
+      "bytes": 149360,
+      "sha256": "9c0a2aa850acd9057782bf58206a28dfba4795103790099654e479d3b6bcd8a8",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-battery-cover.step",
+      "source_sha256": "9c0a2aa850acd9057782bf58206a28dfba4795103790099654e479d3b6bcd8a8"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-enclosure-base.step",
+      "bytes": 131649,
+      "sha256": "027aaf641d91e747788821067e2a7f2f93c9aab490e89b584115479b6a3b49cb",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-enclosure-base.step",
+      "source_sha256": "027aaf641d91e747788821067e2a7f2f93c9aab490e89b584115479b6a3b49cb"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-enclosure-lid.step",
+      "bytes": 122452,
+      "sha256": "5f257f69f67acc7119cca6129f5658f971e913c451e4e6e520884ac02a1dd74a",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-enclosure-lid.step",
+      "source_sha256": "5f257f69f67acc7119cca6129f5658f971e913c451e4e6e520884ac02a1dd74a"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-ptt-plunger.step",
+      "bytes": 6770,
+      "sha256": "fe036c7c8904e69f413b3289a0e6aecd107bffb32d2a80b57cc12debfd4c8ca8",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-ptt-plunger.step",
+      "source_sha256": "fe036c7c8904e69f413b3289a0e6aecd107bffb32d2a80b57cc12debfd4c8ca8"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-ptt-stop-cup.step",
+      "bytes": 14572,
+      "sha256": "8a36843d41e6e391288a409d2a7bdba11c56b72abd166af22c73bfbb7b6299e8",
+      "source_relative_path": "revision-r4-battery/manufacturing/cnc-step/C5-R4-ptt-stop-cup.step",
+      "source_sha256": "8a36843d41e6e391288a409d2a7bdba11c56b72abd166af22c73bfbb7b6299e8"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-1.png",
+      "bytes": 133857,
+      "sha256": "b36728cf9f7c73f82538f0937b407a2361828110ffe26404e0a6bbb1c19c074f",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-1.png",
+      "source_sha256": "b36728cf9f7c73f82538f0937b407a2361828110ffe26404e0a6bbb1c19c074f"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-2.png",
+      "bytes": 124734,
+      "sha256": "38966217fd2d90acdd9b6ce952cd9301b439c89fe6792bdd56f1c43d918b3864",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-2.png",
+      "source_sha256": "38966217fd2d90acdd9b6ce952cd9301b439c89fe6792bdd56f1c43d918b3864"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-3.png",
+      "bytes": 149054,
+      "sha256": "213423d40d23b35396ab2d1896f4bf81422ef58790f05dbe629d876727625e9d",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-3.png",
+      "source_sha256": "213423d40d23b35396ab2d1896f4bf81422ef58790f05dbe629d876727625e9d"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-4.png",
+      "bytes": 130667,
+      "sha256": "7ce51dbb0202f01ff7351c8608c40b5c1bedac2e073dcfc021b7fcc428252dc7",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-4.png",
+      "source_sha256": "7ce51dbb0202f01ff7351c8608c40b5c1bedac2e073dcfc021b7fcc428252dc7"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-5.png",
+      "bytes": 315432,
+      "sha256": "7c02360f2e26f0553bcf208f6076288bfa6a99a8d397652dfd2b0e375d3defea",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-5.png",
+      "source_sha256": "7c02360f2e26f0553bcf208f6076288bfa6a99a8d397652dfd2b0e375d3defea"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-6.png",
+      "bytes": 178894,
+      "sha256": "88c126f9b20e0f37706fd5c5917fb8fcfd8858e04d8899d9dcf04fc07ef475c3",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/C5-R4-Manufacturing-Sheet-6.png",
+      "source_sha256": "88c126f9b20e0f37706fd5c5917fb8fcfd8858e04d8899d9dcf04fc07ef475c3"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/drawing-previews/title-qa.png",
+      "bytes": 53383,
+      "sha256": "62a2e792be3ade6d3a6a5fbdfd297b414d84caeb2a85327c6bf88970a9bbe6bb",
+      "source_relative_path": "revision-r4-battery/manufacturing/drawing-previews/title-qa.png",
+      "source_sha256": "62a2e792be3ade6d3a6a5fbdfd297b414d84caeb2a85327c6bf88970a9bbe6bb"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/export_reference_dxf.py",
+      "bytes": 3875,
+      "sha256": "5dd9f93a642bb6cf9042d2bb94f6390a21ec106935ef64c979762ce5e923e99b",
+      "source_relative_path": "revision-r4-battery/manufacturing/export_reference_dxf.py",
+      "source_sha256": "730840a71ea9ee5708c89b6a837fb76b91fa63b81ec67c4f0e991173a97377aa",
+      "transformation": "Removed duplicate trailing blank lines only; original source hash retained."
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/extract_manufacturing_geometry.py",
+      "bytes": 3007,
+      "sha256": "c4429f2fb4dd239f7e9111d9a79a4928f85b09a6005ae95cd1411a9a7a4ea1a2",
+      "source_relative_path": "revision-r4-battery/manufacturing/extract_manufacturing_geometry.py",
+      "source_sha256": "c4429f2fb4dd239f7e9111d9a79a4928f85b09a6005ae95cd1411a9a7a4ea1a2"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/finalize_manufacturing.py",
+      "bytes": 3199,
+      "sha256": "03ec480cab706b101768514efb1078641175af9d6e97006df49db4e2ed9e6ad3",
+      "source_relative_path": "revision-r4-battery/manufacturing/finalize_manufacturing.py",
+      "source_sha256": "03ec480cab706b101768514efb1078641175af9d6e97006df49db4e2ed9e6ad3"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/manufacturing-geometry.json",
+      "bytes": 1903571,
+      "sha256": "f04919cabcbcf40956230af62b725c20bf147893db77a42180e05bfbcbf8b450",
+      "source_relative_path": "revision-r4-battery/manufacturing/manufacturing-geometry.json",
+      "source_sha256": "f04919cabcbcf40956230af62b725c20bf147893db77a42180e05bfbcbf8b450"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/MANUFACTURING-VALIDATION.json",
+      "bytes": 4851,
+      "sha256": "d2ca0298be7554200f054a0118c541077dcd931a0d54e71aa801bd5e92918dfa",
+      "source_relative_path": "revision-r4-battery/manufacturing/MANUFACTURING-VALIDATION.json",
+      "source_sha256": "d2ca0298be7554200f054a0118c541077dcd931a0d54e71aa801bd5e92918dfa"
+    },
+    {
+      "path": "revision-r4-battery/manufacturing/validate_reference_dxf.py",
+      "bytes": 1282,
+      "sha256": "0eaa4e95973ba23425490e311c31b461be6fc3f3c31efea30e8a1cf7e9f9a705",
+      "source_relative_path": "revision-r4-battery/manufacturing/validate_reference_dxf.py",
+      "source_sha256": "ef5c1ab2c789cf2caedb09810905b6a354a561ffc4a9ecabb2501681d4b3d308",
+      "transformation": "Removed duplicate trailing blank lines only; original source hash retained."
+    },
+    {
+      "path": "revision-r4-battery/native-battery-operations-plan.json",
+      "bytes": 45756,
+      "sha256": "a20428062ebd239407d9ec9da579dee3d34fc0ef9ab340b1a89fe97caffe6177",
+      "source_relative_path": "revision-r4-battery/native-battery-operations-plan.json",
+      "source_sha256": "a20428062ebd239407d9ec9da579dee3d34fc0ef9ab340b1a89fe97caffe6177"
+    },
+    {
+      "path": "revision-r4-battery/native-revision-operations.json",
+      "bytes": 62364,
+      "sha256": "ca776c5f9b141e9a2196a409affb2f230525449efc68b78cd9da6d573f3df845",
+      "source_relative_path": "revision-r4-battery/native-revision-operations.json",
+      "source_sha256": "ca776c5f9b141e9a2196a409affb2f230525449efc68b78cd9da6d573f3df845"
+    },
+    {
+      "path": "revision-r4-battery/prepare_order_files.py",
+      "bytes": 5935,
+      "sha256": "437088e9a0018e6c6318120e3b73ea2be500350609e757713f8d7afba35cbf74",
+      "source_relative_path": "revision-r4-battery/prepare_order_files.py",
+      "source_sha256": "85b14e12b0553a72ebc40f36c0f5e1c7192338df2e55d9fd9b86e84088cfd446",
+      "transformation": "Removed duplicate trailing blank lines only; original source hash retained."
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-battery-cover-mm.3mf",
+      "bytes": 21171,
+      "sha256": "8c96f9932ae488ed10c59520c80aca36ac681a30d5c8b7d0ac512a59c3ca6ad2",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-battery-cover-mm.3mf",
+      "source_sha256": "8c96f9932ae488ed10c59520c80aca36ac681a30d5c8b7d0ac512a59c3ca6ad2"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-battery-cover-mm.stl",
+      "bytes": 112684,
+      "sha256": "28d39d0d965a64b5c19117da40807b9790cfc139ef8df78c88096868a57d8885",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-battery-cover-mm.stl",
+      "source_sha256": "28d39d0d965a64b5c19117da40807b9790cfc139ef8df78c88096868a57d8885"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-enclosure-base-mm.3mf",
+      "bytes": 43941,
+      "sha256": "a5b0a98ed5d8fa2fee0ace060cc32771ea9923b4036fd7221f3913ecc4fdb20f",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-enclosure-base-mm.3mf",
+      "source_sha256": "a5b0a98ed5d8fa2fee0ace060cc32771ea9923b4036fd7221f3913ecc4fdb20f"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-enclosure-base-mm.stl",
+      "bytes": 234484,
+      "sha256": "b12e396d8a9c1763ef35dab291d8ee788416484069be4e3b11db4711d4fc4333",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-enclosure-base-mm.stl",
+      "source_sha256": "b12e396d8a9c1763ef35dab291d8ee788416484069be4e3b11db4711d4fc4333"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-enclosure-lid-mm.3mf",
+      "bytes": 34494,
+      "sha256": "1028dd05dabc349c754702fbab12b0f4064cb1c4ad901e79c4dcb2aa883ab0dd",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-enclosure-lid-mm.3mf",
+      "source_sha256": "1028dd05dabc349c754702fbab12b0f4064cb1c4ad901e79c4dcb2aa883ab0dd"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-enclosure-lid-mm.stl",
+      "bytes": 184184,
+      "sha256": "95961c437f633d28aff0e61ac3d833f855df812a50b0f4cb49010ec40f6b749b",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-enclosure-lid-mm.stl",
+      "source_sha256": "95961c437f633d28aff0e61ac3d833f855df812a50b0f4cb49010ec40f6b749b"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-ptt-plunger-mm.3mf",
+      "bytes": 7028,
+      "sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-ptt-plunger-mm.3mf",
+      "source_sha256": "56ed24965666cbf473808fcd9ffdde1787a242816f19b06327305bca9f6e021f"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-ptt-plunger-mm.stl",
+      "bytes": 30284,
+      "sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-ptt-plunger-mm.stl",
+      "source_sha256": "866b6b4073ee0a766379917b393ce36e791bad11d88814ca2575c7fb1c194e41"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-ptt-stop-cup-mm.3mf",
+      "bytes": 12126,
+      "sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-ptt-stop-cup-mm.3mf",
+      "source_sha256": "f893a89a64acc3a72350110470bae8dc4ea23210cbba67aa6c8aa10f8a20bcc0"
+    },
+    {
+      "path": "revision-r4-battery/printing/C5-R4-ptt-stop-cup-mm.stl",
+      "bytes": 56484,
+      "sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f",
+      "source_relative_path": "revision-r4-battery/printing/C5-R4-ptt-stop-cup-mm.stl",
+      "source_sha256": "8e77650f4e9b9065c4b3416a113d14d9dd74f05585a1409aec803158615ab33f"
+    },
+    {
+      "path": "revision-r4-battery/research/BATTERY-CONNECTION-REVIEW.txt",
+      "bytes": 14486,
+      "sha256": "3a4f50edcac6e813a6ccce38e1e4330ae4b0ed164297e812f36649f951efcc6c",
+      "source_relative_path": "revision-r4-battery/research/BATTERY-CONNECTION-REVIEW.txt",
+      "source_sha256": "3a4f50edcac6e813a6ccce38e1e4330ae4b0ed164297e812f36649f951efcc6c"
+    },
+    {
+      "path": "revision-r4-battery/REVISION-NOTES.txt",
+      "bytes": 4970,
+      "sha256": "9f6fab4c5089646d53548d5c110243991f5b2ed71624899895b5b6721fe18330",
+      "source_relative_path": "revision-r4-battery/REVISION-NOTES.txt",
+      "source_sha256": "9f6fab4c5089646d53548d5c110243991f5b2ed71624899895b5b6721fe18330"
+    },
+    {
+      "path": "SOURCE-NOTICES.md",
+      "bytes": 4745,
+      "sha256": "4c067dea57c67fd44073d0683fbf16545c328fff871cb96f5c192c8dad08f64c",
+      "source": "R4 repository adoption documentation/helper"
+    },
+    {
+      "path": "tools/extract_reference_assembly.py",
+      "bytes": 4990,
+      "sha256": "b6bdd7c5f9cff76d0dcef48d4ef62b5306b36900c6c086ba3ba75e6724fa1359",
+      "source": "Published R1 archive",
+      "source_sha256": "b6bdd7c5f9cff76d0dcef48d4ef62b5306b36900c6c086ba3ba75e6724fa1359"
+    },
+    {
+      "path": "tools/validate_archive.py",
+      "bytes": 10438,
+      "sha256": "5379fea7defc3f59e5c53289328722ffba7e7298c90d400af8aac55a4648c078",
+      "source": "R4 repository adoption documentation/helper"
+    },
+    {
+      "path": "VERIFICATION.txt",
+      "bytes": 1798,
+      "sha256": "d4b985561475ae7a021c61e7962edb0bb62d3eb787fa589e37a6225f0c5b2874",
+      "source": "Published R1 archive",
+      "source_sha256": "d4b985561475ae7a021c61e7962edb0bb62d3eb787fa589e37a6225f0c5b2874"
+    },
+    {
+      "path": "verify_exports.py",
+      "bytes": 11082,
+      "sha256": "86e2f486e7c64264b9b61ca8fa20e7bdb09dd9adb92df2141744189de2ee934f",
+      "source": "Published R1 archive",
+      "source_sha256": "86e2f486e7c64264b9b61ca8fa20e7bdb09dd9adb92df2141744189de2ee934f"
+    }
+  ]
+}

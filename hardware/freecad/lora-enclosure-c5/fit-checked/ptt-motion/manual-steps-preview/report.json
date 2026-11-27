@@ -1,0 +1,2121 @@
+{
+  "checks": [
+    {
+      "name": "next visits all five parts and wraps, preserving paused pose and camera",
+      "sequence": [
+        "stop_cup",
+        "nuts",
+        "screws",
+        "lid",
+        "flange"
+      ]
+    },
+    {
+      "name": "previous visits all five parts and wraps, preserving paused pose and camera",
+      "sequence": [
+        "lid",
+        "screws",
+        "nuts",
+        "stop_cup",
+        "flange"
+      ]
+    },
+    {
+      "name": "native Previous and Next support Enter and Space"
+    },
+    {
+      "name": "running navigation enters manual guided steps without stopping or resetting motion",
+      "before": {
+        "data": {
+          "guidedMode": "false",
+          "guideStep": "0",
+          "guideElapsedMs": "0.000",
+          "guideAutoAdvance": "false",
+          "cameraLocked": "true",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "nuts",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.4]",
+          "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+          "dimensionUpperScreen": "[239.5527861302253,219.2157431136817]",
+          "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.000000",
+          "gapMm": "0.250000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,11,23]",
+          "cameraFitRadius": "15",
+          "cameraHalfHeight": "15",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "",
+          "yaw": "0.300000",
+          "pitch": "0.270000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "2",
+          "cycleTime": "0.000000",
+          "phase": "press",
+          "transparentShell": "true"
+        },
+        "matrix": [
+          0.04326149821281433,
+          -0.005254969000816345,
+          -0.0019051088020205498,
+          0,
+          0.013382349163293839,
+          0.016987884417176247,
+          0.006158699281513691,
+          0,
+          0,
+          0.06425140053033829,
+          -0.0017841567751020193,
+          0,
+          -2.3535420894622803,
+          -1.396645426750183,
+          -0.1335628628730774,
+          1
+        ],
+        "guideChecked": false,
+        "lockChecked": true,
+        "detail": "Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+        "status": "Manual steps · camera locked",
+        "buttons": [
+          {
+            "id": "previous",
+            "tag": "BUTTON",
+            "text": "Previous",
+            "disabled": false,
+            "box": {
+              "x": 0,
+              "y": 487.59375,
+              "width": 78.203125,
+              "height": 36
+            }
+          },
+          {
+            "id": "next",
+            "tag": "BUTTON",
+            "text": "Next",
+            "disabled": false,
+            "box": {
+              "x": 88.203125,
+              "y": 487.59375,
+              "width": 54.96875,
+              "height": 36
+            }
+          }
+        ],
+        "overflow": false,
+        "innerWidth": 704,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 2,
+            "looping": true,
+            "transparent_lid_and_stop_cup": true,
+            "selected_load_part": "nuts",
+            "guided_load_path": false,
+            "guide_auto_advance": false,
+            "guide_step": null,
+            "camera": {
+              "rotation_deg": 17.19,
+              "tilt_deg": 15.47,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  11,
+                  23
+                ],
+                "radius": 15
+              },
+              "focus_part": null,
+              "manual_for_step": false,
+              "locked": true
+            }
+          },
+          "privateContent": {
+            "version": 9,
+            "t": 0,
+            "closeup": false,
+            "speed": 2,
+            "cycleTime": 0,
+            "transparentShell": true,
+            "selectedPart": "nuts",
+            "guided": false,
+            "guideAutoAdvance": false,
+            "guideElapsed": 0,
+            "guideSawContact": true,
+            "focusFrame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focusTween": null,
+            "focusPart": null,
+            "manualCamera": false,
+            "cameraLocked": true,
+            "camera": {
+              "yaw": 0.3000000000000007,
+              "pitch": 0.27,
+              "zoom": 1
+            },
+            "origin": "ptt-neureixle3",
+            "revision": 13
+          }
+        }
+      },
+      "after": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "4",
+          "guideElapsedMs": "0.000",
+          "guideAutoAdvance": "false",
+          "cameraLocked": "true",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "screws",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.386778832450403]",
+          "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+          "dimensionUpperScreen": "[239.5527861302253,219.39328412680862]",
+          "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.013221",
+          "gapMm": "0.236779",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,11,23]",
+          "cameraFitRadius": "15",
+          "cameraHalfHeight": "15",
+          "cameraTransition": "false",
+          "manualCamera": "true",
+          "cameraFocusPart": "",
+          "yaw": "0.300000",
+          "pitch": "0.270000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "2",
+          "cycleTime": "188.200000",
+          "phase": "press",
+          "transparentShell": "true"
+        },
+        "matrix": [
+          0.04326149821281433,
+          -0.005254969000816345,
+          -0.0019051088020205498,
+          0,
+          0.013382349163293839,
+          0.016987884417176247,
+          0.006158699281513691,
+          0,
+          0,
+          0.06425140053033829,
+          -0.0017841567751020193,
+          0,
+          -2.3535420894622803,
+          -1.396645426750183,
+          -0.1335628628730774,
+          1
+        ],
+        "guideChecked": false,
+        "lockChecked": true,
+        "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+        "status": "Manual steps · camera locked",
+        "buttons": [
+          {
+            "id": "previous",
+            "tag": "BUTTON",
+            "text": "Previous",
+            "disabled": false,
+            "box": {
+              "x": 0,
+              "y": 487.59375,
+              "width": 78.203125,
+              "height": 36
+            }
+          },
+          {
+            "id": "next",
+            "tag": "BUTTON",
+            "text": "Next",
+            "disabled": false,
+            "box": {
+              "x": 88.203125,
+              "y": 487.59375,
+              "width": 54.96875,
+              "height": 36
+            }
+          }
+        ],
+        "overflow": false,
+        "innerWidth": 704,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.013,
+            "flange_gap_mm": 0.237,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 2,
+            "looping": true,
+            "transparent_lid_and_stop_cup": true,
+            "selected_load_part": "screws",
+            "guided_load_path": true,
+            "guide_auto_advance": false,
+            "guide_step": 4,
+            "camera": {
+              "rotation_deg": 17.19,
+              "tilt_deg": 15.47,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  11,
+                  23
+                ],
+                "radius": 15
+              },
+              "focus_part": null,
+              "manual_for_step": true,
+              "locked": true
+            }
+          },
+          "privateContent": {
+            "version": 9,
+            "t": 0.05288467019837989,
+            "closeup": false,
+            "speed": 2,
+            "cycleTime": 188.2000002861023,
+            "transparentShell": true,
+            "selectedPart": "screws",
+            "guided": true,
+            "guideAutoAdvance": false,
+            "guideElapsed": 0,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focusTween": null,
+            "focusPart": null,
+            "manualCamera": true,
+            "cameraLocked": true,
+            "camera": {
+              "yaw": 0.3000000000000007,
+              "pitch": 0.27,
+              "zoom": 1
+            },
+            "origin": "ptt-neureixle3",
+            "revision": 14
+          }
+        }
+      }
+    },
+    {
+      "name": "manual step stays selected across more than six seconds and multiple real loops",
+      "elapsedMs": 7128,
+      "wraps": 3,
+      "state": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "4",
+          "guideElapsedMs": "0.000",
+          "guideAutoAdvance": "false",
+          "cameraLocked": "true",
+          "forceVisible": "true",
+          "forceCount": "10",
+          "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+          "forceVisibleCount": "10",
+          "selectedPart": "screws",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+          "dimensionUpperScreen": "[239.5527861302253,222.57287879139187]",
+          "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,11,23]",
+          "cameraFitRadius": "15",
+          "cameraHalfHeight": "15",
+          "cameraTransition": "false",
+          "manualCamera": "true",
+          "cameraFocusPart": "",
+          "yaw": "0.300000",
+          "pitch": "0.270000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "2",
+          "cycleTime": "1513.800000",
+          "phase": "contact",
+          "transparentShell": "true"
+        },
+        "matrix": [
+          0.04326149821281433,
+          -0.005254969000816345,
+          -0.0019051088020205498,
+          0,
+          0.013382349163293839,
+          0.016987884417176247,
+          0.006158699281513691,
+          0,
+          0,
+          0.06425140053033829,
+          -0.0017841567751020193,
+          0,
+          -2.3535420894622803,
+          -1.396645426750183,
+          -0.1335628628730774,
+          1
+        ],
+        "guideChecked": false,
+        "lockChecked": true,
+        "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+        "status": "Manual steps · camera locked",
+        "buttons": [
+          {
+            "id": "previous",
+            "tag": "BUTTON",
+            "text": "Previous",
+            "disabled": false,
+            "box": {
+              "x": 0,
+              "y": 487.59375,
+              "width": 78.203125,
+              "height": 36
+            }
+          },
+          {
+            "id": "next",
+            "tag": "BUTTON",
+            "text": "Next",
+            "disabled": false,
+            "box": {
+              "x": 88.203125,
+              "y": 487.59375,
+              "width": 54.96875,
+              "height": 36
+            }
+          }
+        ],
+        "overflow": false,
+        "innerWidth": 704,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0.013,
+            "flange_gap_mm": 0.237,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 2,
+            "looping": true,
+            "transparent_lid_and_stop_cup": true,
+            "selected_load_part": "screws",
+            "guided_load_path": true,
+            "guide_auto_advance": false,
+            "guide_step": 4,
+            "camera": {
+              "rotation_deg": 17.19,
+              "tilt_deg": 15.47,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  11,
+                  23
+                ],
+                "radius": 15
+              },
+              "focus_part": null,
+              "manual_for_step": true,
+              "locked": true
+            }
+          },
+          "privateContent": {
+            "version": 9,
+            "t": 0.05288467019837989,
+            "closeup": false,
+            "speed": 2,
+            "cycleTime": 188.2000002861023,
+            "transparentShell": true,
+            "selectedPart": "screws",
+            "guided": true,
+            "guideAutoAdvance": false,
+            "guideElapsed": 0,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focusTween": null,
+            "focusPart": null,
+            "manualCamera": true,
+            "cameraLocked": true,
+            "camera": {
+              "yaw": 0.3000000000000007,
+              "pitch": 0.27,
+              "zoom": 1
+            },
+            "origin": "ptt-neureixle3",
+            "revision": 14
+          }
+        }
+      }
+    },
+    {
+      "name": "next at a pending loop boundary changes exactly one step",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "4",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "screws",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.399357760701402]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,219.22436745153345]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.000642",
+        "gapMm": "0.249358",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "39.900000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "status": "Manual steps · camera locked",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.001,
+          "flange_gap_mm": 0.249,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "screws",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 4,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.0025689571943844874,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 39.89999985694885,
+          "transparentShell": true,
+          "selectedPart": "screws",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 16
+        }
+      }
+    },
+    {
+      "name": "previous at a pending loop boundary changes exactly one step",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "5",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "lid",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.39934816518582]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,219.2244963053243]",
+        "highlightedMeshes": "[\"lid\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.000652",
+        "gapMm": "0.249348",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "1",
+        "cycleTime": "40.200000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 5 of 5 · Lid — At the stop, the screw heads bear downward on the lid. The lid provides an upward reaction and carries the load toward its enclosure attachments.",
+      "status": "Manual steps · camera locked",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.001,
+          "flange_gap_mm": 0.249,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 1,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "lid",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 5,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.0026073392567158766,
+          "closeup": false,
+          "speed": 1,
+          "cycleTime": 40.19999980926514,
+          "transparentShell": true,
+          "selectedPart": "lid",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 19
+        }
+      }
+    },
+    {
+      "name": "Auto advance resumes from current part and progresses normally",
+      "elapsedMs": 6463,
+      "before": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "3",
+          "guideElapsedMs": "0.000",
+          "guideAutoAdvance": "true",
+          "cameraLocked": "true",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "nuts",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.4]",
+          "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+          "dimensionUpperScreen": "[239.5527861302253,219.2157431136817]",
+          "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.000000",
+          "gapMm": "0.250000",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,11,23]",
+          "cameraFitRadius": "15",
+          "cameraHalfHeight": "15",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "",
+          "yaw": "0.300000",
+          "pitch": "0.270000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "2",
+          "cycleTime": "0.000000",
+          "phase": "press",
+          "transparentShell": "true"
+        },
+        "matrix": [
+          0.04326149821281433,
+          -0.005254969000816345,
+          -0.0019051088020205498,
+          0,
+          0.013382349163293839,
+          0.016987884417176247,
+          0.006158699281513691,
+          0,
+          0,
+          0.06425140053033829,
+          -0.0017841567751020193,
+          0,
+          -2.3535420894622803,
+          -1.396645426750183,
+          -0.1335628628730774,
+          1
+        ],
+        "guideChecked": true,
+        "lockChecked": true,
+        "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+        "status": "Repeating · camera locked",
+        "buttons": [
+          {
+            "id": "previous",
+            "tag": "BUTTON",
+            "text": "Previous",
+            "disabled": false,
+            "box": {
+              "x": 0,
+              "y": 487.59375,
+              "width": 78.203125,
+              "height": 36
+            }
+          },
+          {
+            "id": "next",
+            "tag": "BUTTON",
+            "text": "Next",
+            "disabled": false,
+            "box": {
+              "x": 88.203125,
+              "y": 487.59375,
+              "width": 54.96875,
+              "height": 36
+            }
+          }
+        ],
+        "overflow": false,
+        "innerWidth": 704,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 2,
+            "looping": true,
+            "transparent_lid_and_stop_cup": true,
+            "selected_load_part": "nuts",
+            "guided_load_path": true,
+            "guide_auto_advance": true,
+            "guide_step": 3,
+            "camera": {
+              "rotation_deg": 17.19,
+              "tilt_deg": 15.47,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  11,
+                  23
+                ],
+                "radius": 15
+              },
+              "focus_part": null,
+              "manual_for_step": false,
+              "locked": true
+            }
+          },
+          "privateContent": {
+            "version": 9,
+            "t": 0,
+            "closeup": false,
+            "speed": 2,
+            "cycleTime": 0,
+            "transparentShell": true,
+            "selectedPart": "nuts",
+            "guided": true,
+            "guideAutoAdvance": true,
+            "guideElapsed": 0,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focusTween": null,
+            "focusPart": null,
+            "manualCamera": false,
+            "cameraLocked": true,
+            "camera": {
+              "yaw": 0.3000000000000007,
+              "pitch": 0.27,
+              "zoom": 1
+            },
+            "origin": "ptt-neureixle3",
+            "revision": 21
+          }
+        }
+      },
+      "after": {
+        "data": {
+          "guidedMode": "true",
+          "guideStep": "4",
+          "guideElapsedMs": "0.000",
+          "guideAutoAdvance": "true",
+          "cameraLocked": "true",
+          "forceVisible": "false",
+          "forceCount": "0",
+          "highlightedForceIds": "[]",
+          "forceVisibleCount": "0",
+          "selectedPart": "screws",
+          "contactHighlighted": "false",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.3999152734826]",
+          "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+          "dimensionUpperScreen": "[239.5527861302253,219.21688086733937]",
+          "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+          "highlightedFlangeLocalBounds": "null",
+          "strokeMm": "0.000085",
+          "gapMm": "0.249915",
+          "view": "part",
+          "playing": "true",
+          "cameraTarget": "[51,11,23]",
+          "cameraFitRadius": "15",
+          "cameraHalfHeight": "15",
+          "cameraTransition": "false",
+          "manualCamera": "false",
+          "cameraFocusPart": "",
+          "yaw": "0.300000",
+          "pitch": "0.270000",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "2",
+          "cycleTime": "14.400000",
+          "phase": "press",
+          "transparentShell": "true"
+        },
+        "matrix": [
+          0.04326149821281433,
+          -0.005254969000816345,
+          -0.0019051088020205498,
+          0,
+          0.013382349163293839,
+          0.016987884417176247,
+          0.006158699281513691,
+          0,
+          0,
+          0.06425140053033829,
+          -0.0017841567751020193,
+          0,
+          -2.3535420894622803,
+          -1.396645426750183,
+          -0.1335628628730774,
+          1
+        ],
+        "guideChecked": true,
+        "lockChecked": true,
+        "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+        "status": "Repeating · camera locked",
+        "buttons": [
+          {
+            "id": "previous",
+            "tag": "BUTTON",
+            "text": "Previous",
+            "disabled": false,
+            "box": {
+              "x": 0,
+              "y": 487.59375,
+              "width": 78.203125,
+              "height": 36
+            }
+          },
+          {
+            "id": "next",
+            "tag": "BUTTON",
+            "text": "Next",
+            "disabled": false,
+            "box": {
+              "x": 88.203125,
+              "y": 487.59375,
+              "width": 54.96875,
+              "height": 36
+            }
+          }
+        ],
+        "overflow": false,
+        "innerWidth": 704,
+        "webglError": 0,
+        "saved": {
+          "modelContent": {
+            "depression_mm": 0,
+            "flange_gap_mm": 0.25,
+            "view": "part inspection",
+            "reference_travel_mm": 0.25,
+            "playback_speed": 2,
+            "looping": true,
+            "transparent_lid_and_stop_cup": true,
+            "selected_load_part": "screws",
+            "guided_load_path": true,
+            "guide_auto_advance": true,
+            "guide_step": 4,
+            "camera": {
+              "rotation_deg": 17.19,
+              "tilt_deg": 15.47,
+              "zoom": 1,
+              "focus_frame": {
+                "target": [
+                  51,
+                  11,
+                  23
+                ],
+                "radius": 15
+              },
+              "focus_part": null,
+              "manual_for_step": false,
+              "locked": true
+            }
+          },
+          "privateContent": {
+            "version": 9,
+            "t": 0.0003389060696011426,
+            "closeup": false,
+            "speed": 2,
+            "cycleTime": 14.39999990463184,
+            "transparentShell": true,
+            "selectedPart": "screws",
+            "guided": true,
+            "guideAutoAdvance": true,
+            "guideElapsed": 0,
+            "guideSawContact": false,
+            "focusFrame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focusTween": null,
+            "focusPart": null,
+            "manualCamera": false,
+            "cameraLocked": true,
+            "camera": {
+              "yaw": 0.3000000000000007,
+              "pitch": 0.27,
+              "zoom": 1
+            },
+            "origin": "ptt-neureixle3",
+            "revision": 22
+          }
+        }
+      }
+    },
+    {
+      "name": "turning Auto advance off holds current part while animation runs",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "4",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "screws",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.380922379866757]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,219.47192775046213]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.019078",
+        "gapMm": "0.230922",
+        "view": "part",
+        "playing": "true",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "228.600000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "status": "Manual steps · camera locked",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.019,
+          "flange_gap_mm": 0.231,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "screws",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 4,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.0763104805329733,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 228.59999990463257,
+          "transparentShell": true,
+          "selectedPart": "screws",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 23
+        }
+      }
+    },
+    {
+      "name": "manual step choice persists in version 9",
+      "modelContent": {
+        "depression_mm": 0.056,
+        "flange_gap_mm": 0.194,
+        "view": "part inspection",
+        "reference_travel_mm": 0.25,
+        "playback_speed": 2,
+        "looping": true,
+        "transparent_lid_and_stop_cup": true,
+        "selected_load_part": "nuts",
+        "guided_load_path": true,
+        "guide_auto_advance": false,
+        "guide_step": 3,
+        "camera": {
+          "rotation_deg": 17.19,
+          "tilt_deg": 15.47,
+          "zoom": 1,
+          "focus_frame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focus_part": null,
+          "manual_for_step": true,
+          "locked": true
+        }
+      },
+      "privateContent": {
+        "version": 9,
+        "t": 0.22483083722790073,
+        "closeup": false,
+        "speed": 2,
+        "cycleTime": 414.3999996185303,
+        "transparentShell": true,
+        "selectedPart": "nuts",
+        "guided": true,
+        "guideAutoAdvance": false,
+        "guideElapsed": 0,
+        "guideSawContact": false,
+        "focusFrame": {
+          "target": [
+            51,
+            11,
+            23
+          ],
+          "radius": 15
+        },
+        "focusTween": null,
+        "focusPart": null,
+        "manualCamera": true,
+        "cameraLocked": true,
+        "camera": {
+          "yaw": 0.3000000000000007,
+          "pitch": 0.27,
+          "zoom": 1
+        },
+        "origin": "ptt-neureixle3",
+        "revision": 25
+      }
+    },
+    {
+      "name": "version 9 restores manual step without autoplay",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "nuts",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.343792290693024]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,219.9705307387889]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.056208",
+        "gapMm": "0.193792",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "414.400000",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "status": "Manual steps · camera locked · motion paused",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.056,
+          "flange_gap_mm": 0.194,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.22483083722790073,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 414.3999996185303,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 25
+        }
+      }
+    },
+    {
+      "name": "model-only state restores manual stepping and camera lock",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "3",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "false",
+        "forceCount": "0",
+        "highlightedForceIds": "[]",
+        "forceVisibleCount": "0",
+        "selectedPart": "nuts",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.343999999999998]",
+        "dimensionLowerScreen": "[239.5525620431872,222.57248413604688]",
+        "dimensionUpperScreen": "[239.5525620431872,219.96734866269122]",
+        "highlightedMeshes": "[\"left_nut\",\"right_nut\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.056000",
+        "gapMm": "0.194000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "true",
+        "cameraFocusPart": "",
+        "yaw": "0.300022",
+        "pitch": "0.270002",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "413.520749",
+        "phase": "press",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.043261200189590454,
+        -0.005255390424281359,
+        -0.0019052437273785472,
+        0,
+        0.013383304700255394,
+        0.016987917944788933,
+        0.00615865271538496,
+        0,
+        0,
+        0.0642513558268547,
+        -0.001784172491170466,
+        0,
+        -2.3535375595092773,
+        -1.3966232538223267,
+        -0.1335551142692566,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 3 of 5 · Nuts — At the stop, the cup presses down on the nuts. Their threads pull downward on the screws, transferring the load into the fasteners.",
+      "status": "Manual steps · camera locked · motion paused",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.056,
+          "flange_gap_mm": 0.194,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.22483083722790073,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 414.3999996185303,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 25
+        }
+      }
+    },
+    {
+      "name": "legacy version 8 keeps automatic guidance preference",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "5",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "true",
+        "cameraLocked": "true",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_head_on_lid\",\"left_lid_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "lid",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,222.57287879139187]",
+        "highlightedMeshes": "[\"lid\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": true,
+      "lockChecked": true,
+      "detail": "Step 5 of 5 · Lid — At the stop, the screw heads bear downward on the lid. The lid provides an upward reaction and carries the load toward its enclosure attachments.",
+      "status": "Paused · camera locked",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.056,
+          "flange_gap_mm": 0.194,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.22483083722790073,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 414.3999996185303,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 25
+        }
+      }
+    },
+    {
+      "name": "manual steps layout 736 light",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "4",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "screws",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[239.5527861302253,222.57287879139187]",
+        "dimensionUpperScreen": "[239.5527861302253,222.57287879139187]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.04326149821281433,
+        -0.005254969000816345,
+        -0.0019051088020205498,
+        0,
+        0.013382349163293839,
+        0.016987884417176247,
+        0.006158699281513691,
+        0,
+        0,
+        0.06425140053033829,
+        -0.0017841567751020193,
+        0,
+        -2.3535420894622803,
+        -1.396645426750183,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "status": "Manual steps · camera locked · motion paused",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 487.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 487.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 704,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.056,
+          "flange_gap_mm": 0.194,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.22483083722790073,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 414.3999996185303,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 25
+        }
+      }
+    },
+    {
+      "name": "manual steps layout 320 dark",
+      "data": {
+        "guidedMode": "true",
+        "guideStep": "4",
+        "guideElapsedMs": "0.000",
+        "guideAutoAdvance": "false",
+        "cameraLocked": "true",
+        "forceVisible": "true",
+        "forceCount": "10",
+        "highlightedForceIds": "[\"left_nut_on_screw\",\"left_head_on_lid\",\"left_lid_on_screw\",\"right_nut_on_screw\",\"right_head_on_lid\",\"right_lid_on_screw\"]",
+        "forceVisibleCount": "10",
+        "selectedPart": "screws",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[97.05549904704094,159.3516647606157]",
+        "dimensionUpperScreen": "[97.05549904704094,159.3516647606157]",
+        "highlightedMeshes": "[\"left_screw\",\"right_screw\"]",
+        "highlightedFlangeLocalBounds": "null",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "part",
+        "playing": "false",
+        "cameraTarget": "[51,11,23]",
+        "cameraFitRadius": "15",
+        "cameraHalfHeight": "15.625",
+        "cameraTransition": "false",
+        "manualCamera": "false",
+        "cameraFocusPart": "",
+        "yaw": "0.300000",
+        "pitch": "0.270000",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "true"
+      },
+      "matrix": [
+        0.06368910521268845,
+        -0.005044769961386919,
+        -0.0019051088020205498,
+        0,
+        0.01970134861767292,
+        0.016308369114995003,
+        0.006158699281513691,
+        0,
+        0,
+        0.061681341379880905,
+        -0.0017841567751020193,
+        0,
+        -3.4648590087890625,
+        -1.3407796621322632,
+        -0.1335628628730774,
+        1
+      ],
+      "guideChecked": false,
+      "lockChecked": true,
+      "detail": "Step 4 of 5 · Screws — At the stop, the nuts pull down while the lid pushes up under the screw heads, so the screws carry tension.",
+      "status": "Manual steps · camera locked · motion paused",
+      "buttons": [
+        {
+          "id": "previous",
+          "tag": "BUTTON",
+          "text": "Previous",
+          "disabled": false,
+          "box": {
+            "x": 0,
+            "y": 509.59375,
+            "width": 78.203125,
+            "height": 36
+          }
+        },
+        {
+          "id": "next",
+          "tag": "BUTTON",
+          "text": "Next",
+          "disabled": false,
+          "box": {
+            "x": 88.203125,
+            "y": 509.59375,
+            "width": 54.96875,
+            "height": 36
+          }
+        }
+      ],
+      "overflow": false,
+      "innerWidth": 288,
+      "webglError": 0,
+      "saved": {
+        "modelContent": {
+          "depression_mm": 0.056,
+          "flange_gap_mm": 0.194,
+          "view": "part inspection",
+          "reference_travel_mm": 0.25,
+          "playback_speed": 2,
+          "looping": true,
+          "transparent_lid_and_stop_cup": true,
+          "selected_load_part": "nuts",
+          "guided_load_path": true,
+          "guide_auto_advance": false,
+          "guide_step": 3,
+          "camera": {
+            "rotation_deg": 17.19,
+            "tilt_deg": 15.47,
+            "zoom": 1,
+            "focus_frame": {
+              "target": [
+                51,
+                11,
+                23
+              ],
+              "radius": 15
+            },
+            "focus_part": null,
+            "manual_for_step": true,
+            "locked": true
+          }
+        },
+        "privateContent": {
+          "version": 9,
+          "t": 0.22483083722790073,
+          "closeup": false,
+          "speed": 2,
+          "cycleTime": 414.3999996185303,
+          "transparentShell": true,
+          "selectedPart": "nuts",
+          "guided": true,
+          "guideAutoAdvance": false,
+          "guideElapsed": 0,
+          "guideSawContact": false,
+          "focusFrame": {
+            "target": [
+              51,
+              11,
+              23
+            ],
+            "radius": 15
+          },
+          "focusTween": null,
+          "focusPart": null,
+          "manualCamera": true,
+          "cameraLocked": true,
+          "camera": {
+            "yaw": 0.3000000000000007,
+            "pitch": 0.27,
+            "zoom": 1
+          },
+          "origin": "ptt-neureixle3",
+          "revision": 25
+        }
+      }
+    },
+    {
+      "name": "no JavaScript or WebGL errors"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\manual-steps-preview\\manual-steps-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\manual-steps-preview\\manual-steps-320-dark.png"
+  ]
+}
