@@ -158,6 +158,77 @@ def assess_exhaustion(run, targets, require):
     )
 
 
+def assess_incomplete_drop(run, expected, target, require):
+    """Compare the missing report against actual TX and unique receiver insertion."""
+    sender, receiver = run["sender"], run["receiver"]
+    receive = run["summaries"][receiver]
+    sending = run["summaries"][sender]
+    capacity = run["plan"]["link"]["fragment_payload_bytes"]
+    count = (len(expected) + capacity - 1) // capacity
+    sent = _data(run, sender, "tx.attempt")
+    inserted = _data(run, receiver, "rx.accepted")
+    actual = {row["data"]["fragment_index"]: row["data"] for row in sent}
+    wanted = set(range(count)) - {target}
+    required = {row["data"]["fragment_index"]: row["data"] for row in inserted}
+    observed = {
+        (_identity(row["data"]), row["data"].get("wire_sha256"))
+        for row in _data(run, receiver, "rx.frame")
+        if row["data"]["crc_ok"]
+        and row["data"]["frame_type"] == "data"
+        and row["data"]["source_role"] == sender
+    }
+    messages = _data(run, receiver, "message.result")
+    require(
+        "no_partial_message_result",
+        not any(event["data"]["status"] == "delivered" for event in messages),
+        evidence=_refs(*messages),
+        outcome="fail",
+    )
+    require(
+        "bounded_incomplete_message",
+        receive["stop_reason"] == "timeout"
+        and receive["failed_messages"] == 1
+        and len(messages) == 1
+        and messages[0]["data"]["status"] == "failed"
+        and messages[0]["data"]["complete_us"] is None
+        and messages[0]["data"]["sha256"] is None,
+        evidence=_refs(*messages),
+    )
+    require(
+        "all_other_fragments_inserted_once",
+        len(sent) == sending["original_packets"] == sending["tx_attempts"] == count
+        and set(actual) == set(range(count))
+        and len({frame["frame_seq"] for frame in actual.values()}) == count
+        and all(
+            frame["session_id"] == run["session_id"]
+            and frame["message_id"] == 1
+            and frame["frame_type"] == "data"
+            and frame["attempt_index"] == 1
+            and frame["status"] == "completed"
+            and frame["frame_bytes"]
+            == 40
+            + min(capacity, len(expected) - index * capacity)
+            + (16 if run["plan"]["spec"]["security"] == "aes128_gcm" else 0)
+            and (_identity(frame), frame.get("wire_sha256")) in observed
+            for index, frame in actual.items()
+        )
+        and set(required) == wanted
+        and len(inserted) == receive["accepted_fragments"] == len(wanted)
+        and all(
+            _identity(frame) == _identity(actual[index])
+            and frame["source_role"] == sender
+            and frame["payload_bytes"] == min(capacity, len(expected) - index * capacity)
+            for index, frame in required.items()
+        ),
+        evidence=_refs(*sent, *inserted),
+    )
+    require(
+        "intact_archived_source",
+        (run.get("saved_files") or {}).get("source")
+        == {"length_bytes": len(expected), "sha256": hashlib.sha256(expected).hexdigest()},
+    )
+
+
 def assess(run, expected):
     checks = []
 
@@ -370,6 +441,8 @@ def assess(run, expected):
             and ranges["missing_indexes"] == [row["fragment_index"]]
             and send_summary["original_packets"] == ranges["fragment_count"],
         )
+        if action == "drop" and run["plan"]["link"]["ack_mode"] == "none":
+            assess_incomplete_drop(run, expected, row["fragment_index"], require)
     else:
         verification = run.get("verification") or {}
         require("single_application_delivery", delivered <= 1, outcome="fail")

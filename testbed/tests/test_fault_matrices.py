@@ -2,12 +2,14 @@
 
 import asyncio
 from collections import Counter
+from copy import deepcopy
 
 import pytest
 from test_multi_fragment_radio import Pair
 from test_node_control_native import native_library as native_library
 
-from lora_testbed import fault_matrices
+from lora_testbed import fault_accounting, fault_matrices
+from lora_testbed.experiments_v2 import known_data
 from lora_testbed.host import Host
 from lora_testbed.integration_matrices import MatrixRequest, compile_matrix
 
@@ -168,6 +170,23 @@ def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
             assert fault["missing_evidence"]["missing_indexes"] == [4]
             assert fault["summaries"]["B"]["delivered_messages"] == 0
             assert fault["plan"]["spec"]["source_seed"] == spec.seed + 2
+            expected = known_data(spec.seed + 2, 1, 1200)
+            changed = deepcopy(fault)
+            accepted = [event for event in changed["events"] if event["name"] == "rx.accepted"]
+            changed["events"].remove(accepted[-1])
+            findings = fault_accounting.assess(changed, expected)
+            assert findings["outcome"] == "inconclusive"
+            assert any(
+                check["code"] == "all_other_fragments_inserted_once"
+                and check["outcome"] == "inconclusive"
+                for check in findings["checks"]
+            )
+            changed = deepcopy(fault)
+            next(event for event in changed["events"] if event["name"] == "message.result")["data"][
+                "status"
+            ] = "delivered"
+            assert fault_accounting.assess(changed, expected)["outcome"] == "fail"
+
         finally:
             if bridge:
                 bridge.cancel()
@@ -181,11 +200,6 @@ def test_packet_fault_targets_third_workload_and_preserves_other_deliveries(
 def test_retry_exhaustion_accounts_for_every_attempt_timeout_and_missing_fragment(
     tmp_path, native_library
 ):
-    from copy import deepcopy
-
-    from lora_testbed import fault_accounting
-    from lora_testbed.experiments_v2 import known_data
-
     async def scenario():
         host = Host(tmp_path)
         pair = Pair(host, native_library, lab=True)
