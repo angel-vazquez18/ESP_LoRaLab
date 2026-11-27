@@ -1,9 +1,10 @@
 # Grouped packet and security lab cases
 
-These matrices use the existing lab trial service and preserve the
-before, fault and after runs for each targeted case. The parent list
-keeps direction, repetition, expected target and the original child
-evidence. A missing fault observation yields an inconclusive result.
+SEC-02, SEC-03 and PKT-03 use the lab trial service and retain the before,
+fault and after runs. PKT-02 uses one protected session per complete case
+and keeps each message's child evidence. The parent list preserves direction,
+repetition and the expected target. A missing fault observation yields an
+inconclusive result.
 
 - SEC-02 selects a protected 64-byte message and flips one bit either
   in ciphertext at offset 40 or in the tag at offset 104. Each case
@@ -17,10 +18,13 @@ evidence. A missing fault observation yields an inconclusive result.
   before a second insertion, and accepts the final fresh messages. Physical C2
   still needs firmware and host support for a retained multi-message run.
 - PKT-02 uses 1200 useful bytes and 16/64/160/199-byte fragment settings.
-  Each series places the loss, duplicate or reversed block in the
-  third workload at the default ten-message count. Each workload
-  uses a separate finite session. The deliberately incomplete case
-  retains exact missing-index evidence and intact controls.
+  Each group sends ten numbered messages under one protected session.
+  C2, C3 and C4 select message 3 for the missing, duplicate or reordered
+  fragment. Other messages act as intact controls. The missing case
+  retains exact missing-index evidence and requires an intact follow-up
+  within the session. Each member keeps its readback, frame sequence range,
+  and original event evidence. Both nodes retire the session after the
+  last message or after cancellation.
   The intact case reopens both retained byte artifacts and independently checks
   expected source contents, receive indexes, and final-fragment lengths. The
   ledger records each message's seed, digest and session identity.
@@ -45,6 +49,16 @@ evidence. A missing fault observation yields an inconclusive result.
   its outstanding DATA, retries within the budget, and accepts the matching ACK.
   The physical matrix still offers ACK suppression and needs a separately
   verified on-bench wrong-reference fixture.
+
+For PKT-02, use matching execution v7 firmware on both nodes. C1 works
+with standard firmware. C2 through C4 require the lab build. Select the
+case group and direction in **Experiments**, or preview the same job with
+`lora-testbed integration-matrix CONFIG.json --preview`. With four messages
+and C2 selected, expect exact delivery for 1, 2 and 4 and an explicit timeout
+for 3. Its child evidence should report one shared session, a continuous
+original frame sequence, and separate source and receiver verification.
+Use the default ten messages, both directions, and three repetitions for
+the complete matrix.
 
 Select a matrix in **Experiments**. For a quick SEC-02 run select C1
 or C2 and one direction. Preview requires an owned compatible pair

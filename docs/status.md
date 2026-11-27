@@ -4,6 +4,15 @@ Updated November 27, 2026. The host is now physical-only by user decision, repla
 the earlier simulation-first direction. All 23 CDR procedures, including voice,
 remain required. See the [checklist](experiment_implementation_checklist.md).
 
+## November 27 — Shared-session packet matrix
+
+The PKT-02 runner now uses one protected session per case and preserves
+frame-sequence ranges and exact readback for every numbered message.
+Native matrix checks verify a drop and successful follow-up in the same
+session, deliberate duplicate and reorder observations, and session
+cleanup when cancelled between messages. Physical execution requires
+matching v7 images and remains open.
+
 ## November 27 — Numbered messages in one protected session
 
 Firmware accepts an opt-in sequence of bounded known-data preparations under
