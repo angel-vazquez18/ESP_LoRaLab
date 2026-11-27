@@ -1,0 +1,1 @@
+Official Heltec V4.3.1 reference STEP. Source URL and SHA-256 are in ../../sources/source_manifest.json. Not registered or validated against the owned V4.3 assembly; not assigned as an accepted mounted model.

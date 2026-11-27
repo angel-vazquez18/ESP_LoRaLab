@@ -1,0 +1,629 @@
+{
+  "mounted_pcb_translation": [
+    0,
+    0,
+    6.4814
+  ],
+  "explosion_offsets_mm": 0,
+  "parts": [
+    {
+      "name": "CutawayBase",
+      "result": {
+        "name": "CutawayBase",
+        "label": "CutawayBase — presentation section",
+        "type_id": "Part::Cut",
+        "children": [
+          "EnclosureBase",
+          "CutawayShellTools"
+        ],
+        "parents": [],
+        "visibility": false,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 25550.66805374392,
+          "area": 23834.860679593887,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 62,
+          "edge_count": 94,
+          "face_count": 40
+        }
+      }
+    },
+    {
+      "name": "CutawayLid",
+      "result": {
+        "name": "CutawayLid",
+        "label": "CutawayLid — presentation section",
+        "type_id": "Part::Cut",
+        "children": [
+          "EnclosureLid",
+          "CutawayShellTools"
+        ],
+        "parents": [],
+        "visibility": false,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 9596.760819812938,
+          "area": 8300.833783570659,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 92,
+          "edge_count": 138,
+          "face_count": 50
+        }
+      }
+    },
+    {
+      "name": "CutawayPTTCup",
+      "result": {
+        "name": "CutawayPTTCup",
+        "label": "CutawayPTTCup — presentation section",
+        "type_id": "Part::Cut",
+        "children": [
+          "PTTStopCup",
+          "CutawayFrontTool"
+        ],
+        "parents": [],
+        "visibility": true,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 325.4504281171917,
+          "area": 471.71968507506097,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 24,
+          "edge_count": 36,
+          "face_count": 14
+        }
+      }
+    },
+    {
+      "name": "CutawayPTTPlunger",
+      "result": {
+        "name": "CutawayPTTPlunger",
+        "label": "CutawayPTTPlunger — presentation section",
+        "type_id": "Part::Cut",
+        "children": [
+          "PTTPlunger",
+          "CutawayFrontTool"
+        ],
+        "parents": [],
+        "visibility": true,
+        "shape_info": {
+          "shape_type": "Compound",
+          "volume": 248.81413816431163,
+          "area": 331.1008640414398,
+          "is_valid": true,
+          "is_closed": true,
+          "vertex_count": 12,
+          "edge_count": 18,
+          "face_count": 8
+        }
+      }
+    }
+  ],
+  "main_operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Box",
+        "name": "CutawayFrontTool",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayFrontTool",
+        "values": {
+          "Length": 90,
+          "Width": 19,
+          "Height": 38.8,
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(-10;-10;1.2);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Box",
+        "name": "CutawayRightTool",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayRightTool",
+        "values": {
+          "Length": 10,
+          "Width": 92,
+          "Height": 38.8,
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(70;-10;1.2);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Box",
+        "name": "CutawayRoofBox",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayRoofBox",
+        "values": {
+          "Length": 58,
+          "Width": 92,
+          "Height": 16,
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(6;-10;24);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Box",
+        "name": "CutawayPTTLidKeep",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayPTTLidKeep",
+        "values": {
+          "Length": 26,
+          "Width": 9,
+          "Height": 4.1,
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(38;9;23.9);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayRoofTool",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayRoofTool",
+        "values": {
+          "Base": "CutawayRoofBox",
+          "Tool": "CutawayPTTLidKeep",
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::MultiFuse",
+        "name": "CutawayShellTools",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayShellTools",
+        "values": {
+          "Shapes": [
+            "CutawayFrontTool",
+            "CutawayRightTool",
+            "CutawayRoofTool"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayBase",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayBase",
+        "values": {
+          "Base": "EnclosureBase",
+          "Tool": "CutawayShellTools",
+          "Refine": true,
+          "Label": "CutawayBase — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayLid",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayLid",
+        "values": {
+          "Base": "EnclosureLid",
+          "Tool": "CutawayShellTools",
+          "Refine": true,
+          "Label": "CutawayLid — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayPTTCup",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayPTTCup",
+        "values": {
+          "Base": "PTTStopCup",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayPTTCup — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayPTTPlunger",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayPTTPlunger",
+        "values": {
+          "Base": "PTTPlunger",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayPTTPlunger — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayScrewLeft",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayScrewLeft",
+        "values": {
+          "Base": "PTTFastenerLeftScrew",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayScrewLeft — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayScrewRight",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayScrewRight",
+        "values": {
+          "Base": "PTTFastenerRightScrew",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayScrewRight — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayNutLeft",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayNutLeft",
+        "values": {
+          "Base": "PTTFastenerLeftNut",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayNutLeft — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "CutawayNutRight",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "CutawayNutRight",
+        "values": {
+          "Base": "PTTFastenerRightNut",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Label": "CutawayNutRight — presentation section",
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    }
+  ],
+  "detail_operations": [
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Box",
+        "name": "PTTDetailWindow",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTDetailWindow",
+        "values": {
+          "Length": 26,
+          "Width": 13,
+          "Height": 32,
+          "Visibility": false
+        },
+        "expressions": {
+          "Placement": "placement(vector(38;9;0);rotation(0;0;0))"
+        },
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::MultiCommon",
+        "name": "PTTDetailPCB",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTDetailPCB",
+        "values": {
+          "Shapes": [
+            "PTTDetailCarrierSource",
+            "PTTDetailWindow"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "PTTDetailSwitch",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTDetailSwitch",
+        "values": {
+          "Base": "PTTDetailSwitchSource",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::MultiCommon",
+        "name": "PTTDetailFloor",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTDetailFloor",
+        "values": {
+          "Shapes": [
+            "EnclosureBase",
+            "PTTDetailWindow"
+          ],
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    },
+    {
+      "tool": "create_object",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "type_id": "Part::Cut",
+        "name": "PTTDetailLid",
+        "properties": {
+          "Visibility": false
+        }
+      }
+    },
+    {
+      "tool": "cam_set_properties",
+      "args": {
+        "doc_name": "LoRaEnclosure",
+        "object_name": "PTTDetailLid",
+        "values": {
+          "Base": "PTTLidSection",
+          "Tool": "CutawayFrontTool",
+          "Refine": true,
+          "Visibility": false
+        },
+        "expressions": {},
+        "recompute": false
+      }
+    }
+  ]
+}

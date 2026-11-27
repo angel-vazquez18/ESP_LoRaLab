@@ -1,0 +1,121 @@
+{
+  "model": "INMP441_ROUND_DETAILED_VISUAL.wrl",
+  "status": "DETAILED PHOTO-DERIVED VISUAL APPROXIMATION; OWNED-PART FIT UNVERIFIED",
+  "coordinate_units": "mm; KiCad VRML attachment scale1/2.54 required",
+  "origin": "module body center; +Xright,+Yup; PCB bottomz3mm,topz4mm; acoustic/solder faceUP",
+  "scale": [
+    0.39370078740157477,
+    0.39370078740157477,
+    0.39370078740157477
+  ],
+  "offset_mm": [
+    0,
+    0,
+    0
+  ],
+  "rotation_deg": [
+    0,
+    0,
+    0
+  ],
+  "source_images": [
+    "sources/user-inmp441-dimension-image.png",
+    "sources/user-inmp441-reference-circuit.png"
+  ],
+  "reference_footprint": "https://github.com/barafael/inmp441-breakout-kicad/blob/816ee4424e4765e0214c96a88f26b3a16a51b17a/inmp441.pretty/inmp441.kicad_mod",
+  "IC_package_reference": {
+    "url": "https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf",
+    "page": 19,
+    "nominal_body_mm": [
+      4.72,
+      3.76,
+      1.0
+    ],
+    "qualification": "Package size informs underside silhouette only; module placement and port-to-body registration are visual assumptions."
+  },
+  "reference_dimensions_mm": {
+    "outer_diameter": 14,
+    "header_column_pitch": 2.54,
+    "header_row_gap": 7.62
+  },
+  "visual_assumptions": {
+    "PCB_thickness": 1,
+    "PCB_bottom_standoff": 3,
+    "center_acoustic_hole_diameter": 0.9,
+    "outer_edge_notch_radius": 1.13,
+    "notch_center_y": [
+      7.05,
+      -7.05
+    ],
+    "module_header_hole_diameter": 1.1,
+    "pad_outer_diameter": 1.74,
+    "header_pin_square_width": 0.64,
+    "header_plastic_height": 2.5,
+    "metal_can_nominal_size": [
+      3.76,
+      4.72,
+      0.98
+    ],
+    "passive_positions": "Illustrative; no claim of exact population, connectivity or identity",
+    "gold_arcs_silk_colors": "Photo-matched appearance; dimensions and net identity not manufacturing data"
+  },
+  "geometry_checks": {
+    "mesh_count": 271,
+    "vertex_count": 16292,
+    "faces": 15911,
+    "bbox_mm": [
+      [
+        -7.0,
+        7.0
+      ],
+      [
+        -6.893654271085457,
+        6.893654271085456
+      ],
+      [
+        -3,
+        4.3
+      ]
+    ],
+    "header_centers_mm": [
+      [
+        -2.54,
+        3.81
+      ],
+      [
+        0,
+        3.81
+      ],
+      [
+        2.54,
+        3.81
+      ],
+      [
+        -2.54,
+        -3.81
+      ],
+      [
+        0,
+        -3.81
+      ],
+      [
+        2.54,
+        -3.81
+      ]
+    ],
+    "PCB_surface_triangles": 1344,
+    "has_true_center_and_header_holes": true
+  },
+  "limitations": [
+    "Visual PCB gold is decorative module geometry; it changes no carrier electrical copper.",
+    "Mic can and passive placement are visual estimates; actual acoustic-port alignment must be measured.",
+    "No physical-fit, antenna, enclosure, electrical or fabrication approval is created by this model."
+  ],
+  "native_render_validation": {
+    "application": "KiCad10.0.8 kicad-cli pcb render,highquality",
+    "isolated_board": "audit/mic-model-preview/microphone_visual_only.kicad_pcb",
+    "preview": "audit/mic-model-preview/mic-oblique.png",
+    "result": "Loaded and visually inspected; top labels, notches, arcs, pads and model scale match intended reference orientation. Main carrier PCB was not edited."
+  },
+  "sha256": "6269a8fe1ea33ae7eff31e892ab3d92d53e0c5e5c31b84a6a03f51683c1898d8"
+}

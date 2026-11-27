@@ -1,0 +1,4926 @@
+{
+  "checks": [
+    {
+      "name": "reviewed qualitative load directions",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "anchor": [
+            46.5,
+            9,
+            22.15
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "left_cup_on_nut",
+          "anchor": [
+            40.4,
+            9,
+            20.15
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "left_nut_on_screw",
+          "anchor": [
+            42,
+            9,
+            19.35
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "left_head_on_lid",
+          "anchor": [
+            40.4,
+            9,
+            27.6
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "left_lid_on_screw",
+          "anchor": [
+            40.4,
+            9,
+            27.6
+          ],
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "right_flange_on_cup",
+          "anchor": [
+            55.5,
+            9,
+            22.15
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "right_cup_on_nut",
+          "anchor": [
+            61.6,
+            9,
+            20.15
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "right_nut_on_screw",
+          "anchor": [
+            60,
+            9,
+            19.35
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "right_head_on_lid",
+          "anchor": [
+            61.6,
+            9,
+            27.6
+          ],
+          "direction": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "right_lid_on_screw",
+          "anchor": [
+            61.6,
+            9,
+            27.6
+          ],
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "sourceUnchanged": true
+    },
+    {
+      "name": "stop state at 0 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.4]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,159.9496959736571]",
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "0.000000",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.250 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 142.57583618164062,
+            "y": 123.12948608398438,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "stop state at 0.125 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.275]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,161.1294874576852]",
+        "strokeMm": "0.125000",
+        "gapMm": "0.125000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "674.999999",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.125 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 142.57583618164062,
+            "y": 123.71937561035156,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "stop state at 0.249 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.151]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,162.29984060984106]",
+        "strokeMm": "0.249000",
+        "gapMm": "0.001000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1300.085968",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid"
+          },
+          "path": null,
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw"
+          },
+          "path": null,
+          "visibility": "hidden"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": null,
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.001 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 142.57583618164062,
+            "y": 124.3045654296875,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "stop state at 0.25 mm",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "10",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,162.3092789417133]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[295.8414648473263,162.3092789417133]",
+            "screenEnd": "[295.8414648473263,182.1297758733854]",
+            "inView": "true"
+          },
+          "path": "M295.841,162.309 L295.841,182.130 M292.841,176.130 L295.841,182.130 L298.841,176.130",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[238.74695510864254,176.7490606792271]",
+            "screenEnd": "[238.74695510864254,196.5695576108992]",
+            "inView": "true"
+          },
+          "path": "M238.747,176.749 L238.747,196.570 M235.747,190.570 L238.747,196.570 L241.747,190.570",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[253.72256422042847,185.463498506695]",
+            "screenEnd": "[253.72256422042847,205.28399543836713]",
+            "inView": "true"
+          },
+          "path": "M253.723,185.463 L253.723,205.284 M250.723,199.284 L253.723,205.284 L256.723,199.284",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,126.25398516282438]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,126.254 M235.747,120.254 L238.747,126.254 L241.747,120.254",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,86.61299129948016]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,86.613 M241.747,92.613 L238.747,86.613 L235.747,92.613",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[380.0792661011219,168.8554982962087]",
+            "screenEnd": "[380.0792661011219,188.6759952278808]",
+            "inView": "true"
+          },
+          "path": "M380.079,168.855 L380.079,188.676 M377.079,182.676 L380.079,188.676 L383.079,182.676",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[437.17377583980567,192.1690440475941]",
+            "screenEnd": "[437.17377583980567,211.9895409792662]",
+            "inView": "true"
+          },
+          "path": "M437.174,192.169 L437.174,211.990 M434.174,205.990 L437.174,211.990 L440.174,205.990",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[422.1981667280197,198.55593721568582]",
+            "screenEnd": "[422.1981667280197,218.37643414735794]",
+            "inView": "true"
+          },
+          "path": "M422.198,198.556 L422.198,218.376 M419.198,212.376 L422.198,218.376 L425.198,212.376",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,141.67396853119135]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,141.674 M434.174,135.674 L437.174,141.674 L440.174,135.674",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,102.03297466784713]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,102.033 M440.174,108.033 L437.174,102.033 L434.174,108.033",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M295.841,162.309 L238.747,176.749 L253.723,185.463 L253.723,107.597 L238.747,106.433",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M380.079,168.855 L437.174,192.169 L422.198,198.556 L422.198,120.690 L437.174,121.853",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": true,
+          "rect": {
+            "x": 565.78125,
+            "y": 108.85346984863281,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": true,
+          "rect": {
+            "x": 572.1875,
+            "y": 138.83619689941406,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": true,
+          "rect": {
+            "x": 598.90625,
+            "y": 162.83619689941406,
+            "width": 95.09375,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": true,
+          "rect": {
+            "x": 612.734375,
+            "y": 186.83619689941406,
+            "width": 81.46875,
+            "height": 20.999984741210938
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 109.49771118164062,
+            "y": 124.30928039550781,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "stop state at 0.249 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.151]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,162.29984060984106]",
+        "strokeMm": "0.249000",
+        "gapMm": "0.001000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1300.085968",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[295.8414648473263,162.3092789417133]",
+            "screenEnd": "[295.8414648473263,182.1297758733854]",
+            "inView": "true"
+          },
+          "path": "M295.841,162.309 L295.841,182.130 M292.841,176.130 L295.841,182.130 L298.841,176.130",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[238.74695510864254,176.7490606792271]",
+            "screenEnd": "[238.74695510864254,196.5695576108992]",
+            "inView": "true"
+          },
+          "path": "M238.747,176.749 L238.747,196.570 M235.747,190.570 L238.747,196.570 L241.747,190.570",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[253.72256422042847,185.463498506695]",
+            "screenEnd": "[253.72256422042847,205.28399543836713]",
+            "inView": "true"
+          },
+          "path": "M253.723,185.463 L253.723,205.284 M250.723,199.284 L253.723,205.284 L256.723,199.284",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,126.25398516282438]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,126.254 M235.747,120.254 L238.747,126.254 L241.747,120.254",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,86.61299129948016]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,86.613 M241.747,92.613 L238.747,86.613 L235.747,92.613",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[380.0792661011219,168.8554982962087]",
+            "screenEnd": "[380.0792661011219,188.6759952278808]",
+            "inView": "true"
+          },
+          "path": "M380.079,168.855 L380.079,188.676 M377.079,182.676 L380.079,188.676 L383.079,182.676",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[437.17377583980567,192.1690440475941]",
+            "screenEnd": "[437.17377583980567,211.9895409792662]",
+            "inView": "true"
+          },
+          "path": "M437.174,192.169 L437.174,211.990 M434.174,205.990 L437.174,211.990 L440.174,205.990",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[422.1981667280197,198.55593721568582]",
+            "screenEnd": "[422.1981667280197,218.37643414735794]",
+            "inView": "true"
+          },
+          "path": "M422.198,198.556 L422.198,218.376 M419.198,212.376 L422.198,218.376 L425.198,212.376",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,141.67396853119135]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,141.674 M434.174,135.674 L437.174,141.674 L440.174,135.674",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,102.03297466784713]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,102.033 M440.174,108.033 L437.174,102.033 L434.174,108.033",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M295.841,162.309 L238.747,176.749 L253.723,185.463 L253.723,107.597 L238.747,106.433",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M380.079,168.855 L437.174,192.169 L422.198,198.556 L422.198,120.690 L437.174,121.853",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.001 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 142.57583618164062,
+            "y": 124.3045654296875,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "stop state at 0 mm",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.4]",
+        "dimensionLowerScreen": "[295.8414648473263,162.3092789417133]",
+        "dimensionUpperScreen": "[295.8414648473263,159.9496959736571]",
+        "strokeMm": "0.000000",
+        "gapMm": "0.250000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "0.000000",
+        "phase": "press",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026590215042233467,
+        -0.003306171391159296,
+        -0.0018564544152468443,
+        0,
+        0.007977064698934555,
+        0.011020570993423462,
+        0.0061881812289357185,
+        0,
+        0,
+        0.04290150851011276,
+        -0.0017326908418908715,
+        0,
+        -1.4677798748016357,
+        -0.6334860324859619,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[295.8414648473263,162.3092789417133]",
+            "screenEnd": "[295.8414648473263,182.1297758733854]",
+            "inView": "true"
+          },
+          "path": "M295.841,162.309 L295.841,182.130 M292.841,176.130 L295.841,182.130 L298.841,176.130",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[238.74695510864254,176.7490606792271]",
+            "screenEnd": "[238.74695510864254,196.5695576108992]",
+            "inView": "true"
+          },
+          "path": "M238.747,176.749 L238.747,196.570 M235.747,190.570 L238.747,196.570 L241.747,190.570",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[253.72256422042847,185.463498506695]",
+            "screenEnd": "[253.72256422042847,205.28399543836713]",
+            "inView": "true"
+          },
+          "path": "M253.723,185.463 L253.723,205.284 M250.723,199.284 L253.723,205.284 L256.723,199.284",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,126.25398516282438]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,126.254 M235.747,120.254 L238.747,126.254 L241.747,120.254",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[238.74695510864254,106.43348823115227]",
+            "screenEnd": "[238.74695510864254,86.61299129948016]",
+            "inView": "true"
+          },
+          "path": "M238.747,106.433 L238.747,86.613 M241.747,92.613 L238.747,86.613 L235.747,92.613",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[380.0792661011219,168.8554982962087]",
+            "screenEnd": "[380.0792661011219,188.6759952278808]",
+            "inView": "true"
+          },
+          "path": "M380.079,168.855 L380.079,188.676 M377.079,182.676 L380.079,188.676 L383.079,182.676",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[437.17377583980567,192.1690440475941]",
+            "screenEnd": "[437.17377583980567,211.9895409792662]",
+            "inView": "true"
+          },
+          "path": "M437.174,192.169 L437.174,211.990 M434.174,205.990 L437.174,211.990 L440.174,205.990",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[422.1981667280197,198.55593721568582]",
+            "screenEnd": "[422.1981667280197,218.37643414735794]",
+            "inView": "true"
+          },
+          "path": "M422.198,198.556 L422.198,218.376 M419.198,212.376 L422.198,218.376 L425.198,212.376",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,141.67396853119135]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,141.674 M434.174,135.674 L437.174,141.674 L440.174,135.674",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[437.17377583980567,121.85347159951924]",
+            "screenEnd": "[437.17377583980567,102.03297466784713]",
+            "inView": "true"
+          },
+          "path": "M437.174,121.853 L437.174,102.033 M440.174,108.033 L437.174,102.033 L434.174,108.033",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M295.841,162.309 L238.747,176.749 L253.723,185.463 L253.723,107.597 L238.747,106.433",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M380.079,168.855 L437.174,192.169 L422.198,198.556 L422.198,120.690 L437.174,121.853",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": true,
+          "rect": {
+            "x": 0,
+            "y": -56.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.250 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 142.57583618164062,
+            "y": 123.12948608398438,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "force projection front",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "forceVisibleCount": "10",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[295.6628805696964,162.22137438086793]",
+          "dimensionUpperScreen": "[295.6628805696964,162.22137438086793]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.296706",
+          "pitch": "0.261799",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 704,
+          "height": 440
+        },
+        "matrix": [
+          0.026547975838184357,
+          -0.0033611406106501818,
+          -0.001889025908894837,
+          0,
+          0.008116531185805798,
+          0.010993795469403267,
+          0.006178725510835648,
+          0,
+          0,
+          0.04290410876274109,
+          -0.0017312309937551618,
+          0,
+          -1.4675782918930054,
+          -0.6303470134735107,
+          -0.16803359985351562,
+          1
+        ],
+        "forceDisplay": "inline",
+        "forceVisibility": "visible",
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "data": {
+              "forceId": "left_flange_on_cup",
+              "worldStart": "[46.5,9,22.15]",
+              "worldEnd": "[46.5,9,20.049999999999997]",
+              "screenStart": "[295.6628805696964,162.22137438086793]",
+              "screenEnd": "[295.6628805696964,182.04307262925434]",
+              "inView": "true"
+            },
+            "path": "M295.663,162.221 L295.663,182.043 M292.663,176.043 L295.663,182.043 L298.663,176.043",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "data": {
+              "forceId": "left_cup_on_nut",
+              "worldStart": "[40.4,9,20.15]",
+              "worldEnd": "[40.4,9,18.049999999999997]",
+              "screenStart": "[238.65906684994695,176.58853153698146]",
+              "screenEnd": "[238.65906684994695,196.41022978536787]",
+              "inView": "true"
+            },
+            "path": "M238.659,176.589 L238.659,196.410 M235.659,190.410 L238.659,196.410 L241.659,190.410",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "data": {
+              "forceId": "left_nut_on_screw",
+              "worldStart": "[42,9,19.35]",
+              "worldEnd": "[42,9,17.25]",
+              "screenStart": "[253.6108868420124,185.32277617417276]",
+              "screenEnd": "[253.6108868420124,205.14447442255914]",
+              "inView": "true"
+            },
+            "path": "M253.611,185.323 L253.611,205.144 M250.611,199.144 L253.611,205.144 L256.611,199.144",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_head_on_lid",
+            "data": {
+              "forceId": "left_head_on_lid",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,25.5]",
+              "screenStart": "[238.65906684994695,106.2686972748488]",
+              "screenEnd": "[238.65906684994695,126.09039552323522]",
+              "inView": "true"
+            },
+            "path": "M238.659,106.269 L238.659,126.090 M235.659,120.090 L238.659,126.090 L241.659,120.090",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "data": {
+              "forceId": "left_lid_on_screw",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,29.700000000000003]",
+              "screenStart": "[238.65906684994695,106.2686972748488]",
+              "screenEnd": "[238.65906684994695,86.44699902646245]",
+              "inView": "true"
+            },
+            "path": "M238.659,106.269 L238.659,86.447 M241.659,92.447 L238.659,86.447 L235.659,92.447",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "data": {
+              "forceId": "right_flange_on_cup",
+              "worldStart": "[55.5,9,22.15]",
+              "worldEnd": "[55.5,9,20.049999999999997]",
+              "screenStart": "[379.76686802506447,168.8764327899553]",
+              "screenEnd": "[379.76686802506447,188.6981310383417]",
+              "inView": "true"
+            },
+            "path": "M379.767,168.876 L379.767,188.698 M376.767,182.698 L379.767,188.698 L382.767,182.698",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "data": {
+              "forceId": "right_cup_on_nut",
+              "worldStart": "[61.6,9,20.15]",
+              "worldEnd": "[61.6,9,18.049999999999997]",
+              "screenStart": "[436.77068174481394,192.2648913450539]",
+              "screenEnd": "[436.77068174481394,212.08658959344032]",
+              "inView": "true"
+            },
+            "path": "M436.771,192.265 L436.771,212.087 M433.771,206.087 L436.771,212.087 L439.771,206.087",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "data": {
+              "forceId": "right_nut_on_screw",
+              "worldStart": "[60,9,19.35]",
+              "worldEnd": "[60,9,17.25]",
+              "screenStart": "[421.8188617527485,198.63289299234748]",
+              "screenEnd": "[421.8188617527485,218.45459124073386]",
+              "inView": "true"
+            },
+            "path": "M421.819,198.633 L421.819,218.455 M418.819,212.455 L421.819,218.455 L424.819,212.455",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_head_on_lid",
+            "data": {
+              "forceId": "right_head_on_lid",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,25.5]",
+              "screenStart": "[436.77068174481394,121.94505708292122]",
+              "screenEnd": "[436.77068174481394,141.76675533130765]",
+              "inView": "true"
+            },
+            "path": "M436.771,121.945 L436.771,141.767 M433.771,135.767 L436.771,141.767 L439.771,135.767",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "data": {
+              "forceId": "right_lid_on_screw",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,29.700000000000003]",
+              "screenStart": "[436.77068174481394,121.94505708292122]",
+              "screenEnd": "[436.77068174481394,102.12335883453486]",
+              "inView": "true"
+            },
+            "path": "M436.771,121.945 L436.771,102.123 M439.771,108.123 L436.771,102.123 L433.771,108.123",
+            "visibility": "visible"
+          }
+        ],
+        "routes": [
+          {
+            "id": "left",
+            "path": "M295.663,162.221 L238.659,176.589 L253.611,185.323 L253.611,107.452 L238.659,106.269",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          },
+          {
+            "id": "right",
+            "path": "M379.767,168.876 L436.771,192.265 L421.819,198.633 L421.819,120.762 L436.771,121.945",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          }
+        ],
+        "texts": [
+          {
+            "text": "Lid load / reaction",
+            "data": {
+              "forceLabel": "Lid load / reaction"
+            },
+            "visible": true,
+            "rect": {
+              "x": 565.78125,
+              "y": 108.945068359375,
+              "width": 128.21875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Screws in tension",
+            "data": {
+              "forceLabel": "Screws in tension"
+            },
+            "visible": true,
+            "rect": {
+              "x": 572.1875,
+              "y": 138.9103240966797,
+              "width": 121.8125,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Flange → cup",
+            "data": {
+              "forceLabel": "Flange → cup"
+            },
+            "visible": true,
+            "rect": {
+              "x": 598.90625,
+              "y": 162.9103240966797,
+              "width": 95.09375,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Cup → nuts",
+            "data": {
+              "forceLabel": "Cup → nuts"
+            },
+            "visible": true,
+            "rect": {
+              "x": 612.734375,
+              "y": 186.9103240966797,
+              "width": 81.46875,
+              "height": 21.000015258789062
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "0.000 mm · contact",
+            "data": {
+              "dimensionLabel": ""
+            },
+            "visible": true,
+            "rect": {
+              "x": 109.31912994384766,
+              "y": 124.22137451171875,
+              "width": 134.921875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "projection": {
+        "expected": true,
+        "maxProjectionErrorPx": 1.4210854715202004e-14,
+        "visibleCount": 10
+      }
+    },
+    {
+      "name": "force projection rear",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "forceVisibleCount": "10",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[387.7952533662319,115.36930480599408]",
+          "dimensionUpperScreen": "[387.7952533662319,115.36930480599408]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "2.879793",
+          "pitch": "0.436332",
+          "zoom": "1.200000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 704,
+          "height": 440
+        },
+        "matrix": [
+          -0.03217807784676552,
+          -0.00583016499876976,
+          -0.0015690281288698316,
+          0,
+          0.008622090332210064,
+          -0.02175847254693508,
+          -0.005855693016201258,
+          0,
+          0,
+          0.04830722510814667,
+          -0.0028268781024962664,
+          0,
+          1.5203728675842285,
+          -0.12748204171657562,
+          0.0006725788116455078,
+          1
+        ],
+        "forceDisplay": "inline",
+        "forceVisibility": "visible",
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "data": {
+              "forceId": "left_flange_on_cup",
+              "worldStart": "[46.5,9,22.15]",
+              "worldEnd": "[46.5,9,20.049999999999997]",
+              "screenStart": "[387.7952533662319,115.36930480599408]",
+              "screenEnd": "[387.7952533662319,137.68724280595782]",
+              "inView": "true"
+            },
+            "path": "M387.795,115.369 L387.795,137.687 M384.795,131.687 L387.795,137.687 L390.795,131.687",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "data": {
+              "forceId": "left_cup_on_nut",
+              "worldStart": "[40.4,9,20.15]",
+              "worldEnd": "[40.4,9,18.049999999999997]",
+              "screenStart": "[456.8880221188068,128.80040242522955]",
+              "screenEnd": "[456.8880221188068,151.11834042519334]",
+              "inView": "true"
+            },
+            "path": "M456.888,128.800 L456.888,151.118 M453.888,145.118 L456.888,151.118 L459.888,145.118",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "data": {
+              "forceId": "left_nut_on_screw",
+              "worldStart": "[42,9,19.35]",
+              "worldEnd": "[42,9,17.25]",
+              "screenStart": "[438.7653286755085,139.3546921238303]",
+              "screenEnd": "[438.7653286755085,161.67263012379408]",
+              "inView": "true"
+            },
+            "path": "M438.765,139.355 L438.765,161.673 M435.765,155.673 L438.765,161.673 L441.765,155.673",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_head_on_lid",
+            "data": {
+              "forceId": "left_head_on_lid",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,25.5]",
+              "screenStart": "[456.8880221188068,49.62486047297711]",
+              "screenEnd": "[456.8880221188068,71.94279847294091]",
+              "inView": "true"
+            },
+            "path": "M456.888,49.625 L456.888,71.943 M453.888,65.943 L456.888,71.943 L459.888,65.943",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "data": {
+              "forceId": "left_lid_on_screw",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,29.700000000000003]",
+              "screenStart": "[456.8880221188068,49.62486047297711]",
+              "screenEnd": "[456.8880221188068,27.306922473013362]",
+              "inView": "true"
+            },
+            "path": "M456.888,49.625 L456.888,27.307 M459.888,33.307 L456.888,27.307 L453.888,33.307",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "data": {
+              "forceId": "right_flange_on_cup",
+              "worldStart": "[55.5,9,22.15]",
+              "worldEnd": "[55.5,9,20.049999999999997]",
+              "screenStart": "[285.85510274767876,126.9130315035582]",
+              "screenEnd": "[285.85510274767876,149.23096950352195]",
+              "inView": "true"
+            },
+            "path": "M285.855,126.913 L285.855,149.231 M282.855,143.231 L285.855,149.231 L288.855,143.231",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "data": {
+              "forceId": "right_cup_on_nut",
+              "worldStart": "[61.6,9,20.15]",
+              "worldEnd": "[61.6,9,18.049999999999997]",
+              "screenStart": "[216.76233399510386,155.99229197949174]",
+              "screenEnd": "[216.76233399510386,178.3102299794555]",
+              "inView": "true"
+            },
+            "path": "M216.762,155.992 L216.762,178.310 M213.762,172.310 L216.762,178.310 L219.762,172.310",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "data": {
+              "forceId": "right_nut_on_screw",
+              "worldStart": "[60,9,19.35]",
+              "worldEnd": "[60,9,17.25]",
+              "screenStart": "[234.88502743840218,162.44214551895854]",
+              "screenEnd": "[234.88502743840218,184.76008351892233]",
+              "inView": "true"
+            },
+            "path": "M234.885,162.442 L234.885,184.760 M231.885,178.760 L234.885,184.760 L237.885,178.760",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_head_on_lid",
+            "data": {
+              "forceId": "right_head_on_lid",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,25.5]",
+              "screenStart": "[216.76233399510386,76.8167500272393]",
+              "screenEnd": "[216.76233399510386,99.1346880272031]",
+              "inView": "true"
+            },
+            "path": "M216.762,76.817 L216.762,99.135 M213.762,93.135 L216.762,99.135 L219.762,93.135",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "data": {
+              "forceId": "right_lid_on_screw",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,29.700000000000003]",
+              "screenStart": "[216.76233399510386,76.8167500272393]",
+              "screenEnd": "[216.76233399510386,54.49881202727554]",
+              "inView": "true"
+            },
+            "path": "M216.762,76.817 L216.762,54.499 M219.762,60.499 L216.762,54.499 L213.762,60.499",
+            "visibility": "visible"
+          }
+        ],
+        "routes": [
+          {
+            "id": "left",
+            "path": "M387.795,115.369 L456.888,128.800 L438.765,139.355 L438.765,51.677 L456.888,49.625",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          },
+          {
+            "id": "right",
+            "path": "M285.855,126.913 L216.762,155.992 L234.885,162.442 L234.885,74.765 L216.762,76.817",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          }
+        ],
+        "texts": [
+          {
+            "text": "Lid load / reaction",
+            "data": {
+              "forceLabel": "Lid load / reaction"
+            },
+            "visible": true,
+            "rect": {
+              "x": 565.78125,
+              "y": 63.816749572753906,
+              "width": 128.21875,
+              "height": 20.99999237060547
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Screws in tension",
+            "data": {
+              "forceLabel": "Screws in tension"
+            },
+            "visible": true,
+            "rect": {
+              "x": 572.1875,
+              "y": 96.8355712890625,
+              "width": 121.8125,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Flange → cup",
+            "data": {
+              "forceLabel": "Flange → cup"
+            },
+            "visible": true,
+            "rect": {
+              "x": 598.90625,
+              "y": 120.8355712890625,
+              "width": 95.09375,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Cup → nuts",
+            "data": {
+              "forceLabel": "Cup → nuts"
+            },
+            "visible": true,
+            "rect": {
+              "x": 612.734375,
+              "y": 144.8355712890625,
+              "width": 81.46875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "0.000 mm · contact",
+            "data": {
+              "dimensionLabel": ""
+            },
+            "visible": true,
+            "rect": {
+              "x": 439.7952575683594,
+              "y": 77.36930847167969,
+              "width": 134.92190551757812,
+              "height": 21
+            },
+            "fontSize": "16px"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "projection": {
+        "expected": true,
+        "maxProjectionErrorPx": 2.842170943040401e-14,
+        "visibleCount": 10
+      }
+    },
+    {
+      "name": "force projection underside",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "forceVisibleCount": "10",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[289.488156914711,163.83466248773038]",
+          "dimensionUpperScreen": "[289.488156914711,163.83466248773038]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.523599",
+          "pitch": "-0.959931",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 704,
+          "height": 440
+        },
+        "matrix": [
+          0.024041730910539627,
+          0.018192384392023087,
+          -0.0019183158874511719,
+          0,
+          0.013880500569939613,
+          -0.0315101332962513,
+          0.0033226204104721546,
+          0,
+          0,
+          0.025476889684796333,
+          0.005479278042912483,
+          0,
+          -1.4204554557800293,
+          -0.871370792388916,
+          -0.23543304204940796,
+          1
+        ],
+        "forceDisplay": "inline",
+        "forceVisibility": "visible",
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "data": {
+              "forceId": "left_flange_on_cup",
+              "worldStart": "[46.5,9,22.15]",
+              "worldEnd": "[46.5,9,20.049999999999997]",
+              "screenStart": "[289.488156914711,163.83466248773038]",
+              "screenEnd": "[289.488156914711,175.60498552210632]",
+              "inView": "true"
+            },
+            "path": "M289.488,163.835 L289.488,175.605 M287.016,170.661 L289.488,175.605 L291.960,170.661",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "data": {
+              "forceId": "left_cup_on_nut",
+              "worldStart": "[40.4,9,20.15]",
+              "worldEnd": "[40.4,9,18.049999999999997]",
+              "screenStart": "[237.8657523036003,199.45867380313575]",
+              "screenEnd": "[237.8657523036003,211.2289968375117]",
+              "inView": "true"
+            },
+            "path": "M237.866,199.459 L237.866,211.229 M235.394,206.285 L237.866,211.229 L240.338,206.285",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "data": {
+              "forceId": "left_nut_on_screw",
+              "worldStart": "[42,9,19.35]",
+              "worldEnd": "[42,9,17.25]",
+              "screenStart": "[251.40605515241623,197.53888708166778]",
+              "screenEnd": "[251.40605515241623,209.3092101160437]",
+              "inView": "true"
+            },
+            "path": "M251.406,197.539 L251.406,209.309 M248.934,204.366 L251.406,209.309 L253.878,204.366",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_head_on_lid",
+            "data": {
+              "forceId": "left_head_on_lid",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,25.5]",
+              "screenStart": "[237.8657523036003,157.70205160975453]",
+              "screenEnd": "[237.8657523036003,169.4723746441305]",
+              "inView": "true"
+            },
+            "path": "M237.866,157.702 L237.866,169.472 M235.394,164.529 L237.866,169.472 L240.338,164.529",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "data": {
+              "forceId": "left_lid_on_screw",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,29.700000000000003]",
+              "screenStart": "[237.8657523036003,157.70205160975453]",
+              "screenEnd": "[237.8657523036003,145.93172857537866]",
+              "inView": "true"
+            },
+            "path": "M237.866,157.702 L237.866,145.932 M240.338,150.875 L237.866,145.932 L235.394,150.875",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "data": {
+              "forceId": "right_flange_on_cup",
+              "worldStart": "[55.5,9,22.15]",
+              "worldEnd": "[55.5,9,20.049999999999997]",
+              "screenStart": "[365.65236043930054,127.81374139152469]",
+              "screenEnd": "[365.65236043930054,139.5840644259006]",
+              "inView": "true"
+            },
+            "path": "M365.652,127.814 L365.652,139.584 M363.181,134.641 L365.652,139.584 L368.124,134.641",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "data": {
+              "forceId": "right_cup_on_nut",
+              "worldStart": "[61.6,9,20.15]",
+              "worldEnd": "[61.6,9,18.049999999999997]",
+              "screenStart": "[417.27476505041125,114.60939299874006]",
+              "screenEnd": "[417.27476505041125,126.37971603311598]",
+              "inView": "true"
+            },
+            "path": "M417.275,114.609 L417.275,126.380 M414.803,121.436 L417.275,126.380 L419.747,121.436",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "data": {
+              "forceId": "right_nut_on_screw",
+              "worldStart": "[60,9,19.35]",
+              "worldEnd": "[60,9,17.25]",
+              "screenStart": "[403.7344622015953,125.49704488925634]",
+              "screenEnd": "[403.7344622015953,137.26736792363226]",
+              "inView": "true"
+            },
+            "path": "M403.734,125.497 L403.734,137.267 M401.263,132.324 L403.734,137.267 L406.206,132.324",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_head_on_lid",
+            "data": {
+              "forceId": "right_head_on_lid",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,25.5]",
+              "screenStart": "[417.27476505041125,72.85277080535886]",
+              "screenEnd": "[417.27476505041125,84.62309383973478]",
+              "inView": "true"
+            },
+            "path": "M417.275,72.853 L417.275,84.623 M414.803,79.680 L417.275,84.623 L419.747,79.680",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "data": {
+              "forceId": "right_lid_on_screw",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,29.700000000000003]",
+              "screenStart": "[417.27476505041125,72.85277080535886]",
+              "screenEnd": "[417.27476505041125,61.08244777098294]",
+              "inView": "true"
+            },
+            "path": "M417.275,72.853 L417.275,61.082 M419.747,66.026 L417.275,61.082 L414.803,66.026",
+            "visibility": "visible"
+          }
+        ],
+        "routes": [
+          {
+            "id": "left",
+            "path": "M289.488,163.835 L237.866,199.459 L251.406,197.539 L251.406,151.298 L237.866,157.702",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          },
+          {
+            "id": "right",
+            "path": "M365.652,127.814 L417.275,114.609 L403.734,125.497 L403.734,79.256 L417.275,72.853",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          }
+        ],
+        "texts": [
+          {
+            "text": "Lid load / reaction",
+            "data": {
+              "forceLabel": "Lid load / reaction"
+            },
+            "visible": true,
+            "rect": {
+              "x": 565.78125,
+              "y": 59.85276794433594,
+              "width": 128.21875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Screws in tension",
+            "data": {
+              "forceLabel": "Screws in tension"
+            },
+            "visible": true,
+            "rect": {
+              "x": 572.1875,
+              "y": 84.75271606445312,
+              "width": 121.8125,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Flange → cup",
+            "data": {
+              "forceLabel": "Flange → cup"
+            },
+            "visible": true,
+            "rect": {
+              "x": 598.90625,
+              "y": 132.75271606445312,
+              "width": 95.09375,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Cup → nuts",
+            "data": {
+              "forceLabel": "Cup → nuts"
+            },
+            "visible": true,
+            "rect": {
+              "x": 612.734375,
+              "y": 108.75271606445312,
+              "width": 81.46875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "0.000 mm · contact",
+            "data": {
+              "dimensionLabel": ""
+            },
+            "visible": true,
+            "rect": {
+              "x": 103.1444091796875,
+              "y": 125.83465576171875,
+              "width": 134.921875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "projection": {
+        "expected": true,
+        "maxProjectionErrorPx": 2.842170943040401e-14,
+        "visibleCount": 10
+      }
+    },
+    {
+      "name": "force projection top-edge",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "forceVisibleCount": "10",
+          "contactHighlighted": "true",
+          "dimensionVisible": "true",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[308.0265728831291,262.66912394575775]",
+          "dimensionUpperScreen": "[308.0265728831291,262.66912394575775]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.000000",
+          "pitch": "1.483530",
+          "zoom": "1.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 704,
+          "height": 440
+        },
+        "matrix": [
+          0.027761001139879227,
+          0,
+          0,
+          0,
+          0,
+          0.04424858093261719,
+          0.0005829815636388958,
+          0,
+          0,
+          0.003871249035000801,
+          -0.0066635096445679665,
+          0,
+          -1.4158110618591309,
+          -0.6779359579086304,
+          -0.11155611276626587,
+          1
+        ],
+        "forceDisplay": "inline",
+        "forceVisibility": "visible",
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "data": {
+              "forceId": "left_flange_on_cup",
+              "worldStart": "[46.5,9,22.15]",
+              "worldEnd": "[46.5,9,20.049999999999997]",
+              "screenStart": "[308.0265728831291,262.66912394575775]",
+              "screenEnd": "[308.0265728831291,264.4576409999281]",
+              "inView": "true"
+            },
+            "path": "M308.027,262.669 L308.027,264.458 M307.651,263.706 L308.027,264.458 L308.402,263.706",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "data": {
+              "forceId": "left_cup_on_nut",
+              "worldStart": "[40.4,9,20.15]",
+              "worldEnd": "[40.4,9,18.049999999999997]",
+              "screenStart": "[248.41815123558047,264.3724735211581]",
+              "screenEnd": "[248.41815123558047,266.16099057532847]",
+              "inView": "true"
+            },
+            "path": "M248.418,264.372 L248.418,266.161 M248.043,265.410 L248.418,266.161 L248.794,265.410",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "data": {
+              "forceId": "left_nut_on_screw",
+              "worldStart": "[42,9,19.35]",
+              "worldEnd": "[42,9,17.25]",
+              "screenStart": "[264.0531470775604,265.05381335131824]",
+              "screenEnd": "[264.0531470775604,266.8423304054886]",
+              "inView": "true"
+            },
+            "path": "M264.053,265.054 L264.053,266.842 M263.678,266.091 L264.053,266.842 L264.429,266.091",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_head_on_lid",
+            "data": {
+              "forceId": "left_head_on_lid",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,25.5]",
+              "screenStart": "[248.41815123558047,258.0274963527918]",
+              "screenEnd": "[248.41815123558047,259.81601340696216]",
+              "inView": "true"
+            },
+            "path": "M248.418,258.027 L248.418,259.816 M248.043,259.065 L248.418,259.816 L248.794,259.065",
+            "visibility": "visible"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "data": {
+              "forceId": "left_lid_on_screw",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,29.700000000000003]",
+              "screenStart": "[248.41815123558047,258.0274963527918]",
+              "screenEnd": "[248.41815123558047,256.2389792986214]",
+              "inView": "true"
+            },
+            "path": "M248.418,258.027 L248.418,256.239 M248.794,256.990 L248.418,256.239 L248.043,256.990",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "data": {
+              "forceId": "right_flange_on_cup",
+              "worldStart": "[55.5,9,22.15]",
+              "worldEnd": "[55.5,9,20.049999999999997]",
+              "screenStart": "[395.9734244942665,262.66912394575775]",
+              "screenEnd": "[395.9734244942665,264.4576409999281]",
+              "inView": "true"
+            },
+            "path": "M395.973,262.669 L395.973,264.458 M395.598,263.706 L395.973,264.458 L396.349,263.706",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "data": {
+              "forceId": "right_cup_on_nut",
+              "worldStart": "[61.6,9,20.15]",
+              "worldEnd": "[61.6,9,18.049999999999997]",
+              "screenStart": "[455.58184614181516,264.3724735211581]",
+              "screenEnd": "[455.58184614181516,266.16099057532847]",
+              "inView": "true"
+            },
+            "path": "M455.582,264.372 L455.582,266.161 M455.206,265.410 L455.582,266.161 L455.957,265.410",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "data": {
+              "forceId": "right_nut_on_screw",
+              "worldStart": "[60,9,19.35]",
+              "worldEnd": "[60,9,17.25]",
+              "screenStart": "[439.9468502998352,265.05381335131824]",
+              "screenEnd": "[439.9468502998352,266.8423304054886]",
+              "inView": "true"
+            },
+            "path": "M439.947,265.054 L439.947,266.842 M439.571,266.091 L439.947,266.842 L440.322,266.091",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_head_on_lid",
+            "data": {
+              "forceId": "right_head_on_lid",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,25.5]",
+              "screenStart": "[455.58184614181516,258.0274963527918]",
+              "screenEnd": "[455.58184614181516,259.81601340696216]",
+              "inView": "true"
+            },
+            "path": "M455.582,258.027 L455.582,259.816 M455.206,259.065 L455.582,259.816 L455.957,259.065",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "data": {
+              "forceId": "right_lid_on_screw",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,29.700000000000003]",
+              "screenStart": "[455.58184614181516,258.0274963527918]",
+              "screenEnd": "[455.58184614181516,256.2389792986214]",
+              "inView": "true"
+            },
+            "path": "M455.582,258.027 L455.582,256.239 M455.957,256.990 L455.582,256.239 L455.206,256.990",
+            "visibility": "visible"
+          }
+        ],
+        "routes": [
+          {
+            "id": "left",
+            "path": "M308.027,262.669 L248.418,264.372 L264.053,265.054 L264.053,258.027 L248.418,258.027",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          },
+          {
+            "id": "right",
+            "path": "M395.973,262.669 L455.582,264.372 L439.947,265.054 L439.947,258.027 L455.582,258.027",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          }
+        ],
+        "texts": [
+          {
+            "text": "Lid load / reaction",
+            "data": {
+              "forceLabel": "Lid load / reaction"
+            },
+            "visible": true,
+            "rect": {
+              "x": 565.78125,
+              "y": 245.02749633789062,
+              "width": 128.21875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Screws in tension",
+            "data": {
+              "forceLabel": "Screws in tension"
+            },
+            "visible": true,
+            "rect": {
+              "x": 572.1875,
+              "y": 269.0274963378906,
+              "width": 121.8125,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Flange → cup",
+            "data": {
+              "forceLabel": "Flange → cup"
+            },
+            "visible": true,
+            "rect": {
+              "x": 598.90625,
+              "y": 293.0274963378906,
+              "width": 95.09375,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Cup → nuts",
+            "data": {
+              "forceLabel": "Cup → nuts"
+            },
+            "visible": true,
+            "rect": {
+              "x": 612.734375,
+              "y": 317.0274963378906,
+              "width": 81.46875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "0.000 mm · contact",
+            "data": {
+              "dimensionLabel": ""
+            },
+            "visible": true,
+            "rect": {
+              "x": 121.68282318115234,
+              "y": 224.66912841796875,
+              "width": 134.921875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "projection": {
+        "expected": true,
+        "maxProjectionErrorPx": 0,
+        "visibleCount": 10
+      }
+    },
+    {
+      "name": "force projection extreme-zoom",
+      "state": {
+        "data": {
+          "forceVisible": "true",
+          "forceCount": "10",
+          "forceVisibleCount": "3",
+          "contactHighlighted": "true",
+          "dimensionVisible": "false",
+          "dimensionLowerWorld": "[46.5,9,22.15]",
+          "dimensionUpperWorld": "[46.5,9,22.15]",
+          "dimensionLowerScreen": "[-173.1414556503296,-267.8160036057233]",
+          "dimensionUpperScreen": "[-173.1414556503296,-267.8160036057233]",
+          "strokeMm": "0.250000",
+          "gapMm": "0.000000",
+          "view": "mechanism",
+          "playing": "false",
+          "yaw": "0.785398",
+          "pitch": "0.436332",
+          "zoom": "8.000000",
+          "activePointers": "0",
+          "speed": "0.25",
+          "cycleTime": "1350.000000",
+          "phase": "contact",
+          "transparentShell": "false"
+        },
+        "canvas": {
+          "width": 704,
+          "height": 440
+        },
+        "matrix": [
+          0.15703994035720825,
+          -0.10618870705366135,
+          -0.004286664538085461,
+          0,
+          0.15703994035720825,
+          0.10618870705366135,
+          0.004286664538085461,
+          0,
+          0,
+          0.322048157453537,
+          -0.0028268781024962664,
+          0,
+          -10.207595825195312,
+          -0.9339447021484375,
+          -0.002720952033996582,
+          1
+        ],
+        "forceDisplay": "inline",
+        "forceVisibility": "visible",
+        "arrows": [
+          {
+            "id": "left_flange_on_cup",
+            "data": {
+              "forceId": "left_flange_on_cup",
+              "worldStart": "[46.5,9,22.15]",
+              "worldEnd": "[46.5,9,20.049999999999997]",
+              "screenStart": "[-173.1414556503296,-267.8160036057233]",
+              "screenEnd": "[-173.1414556503296,-119.02975486218914]",
+              "inView": "false"
+            },
+            "path": "M-173.141,-267.816 L-173.141,-119.030 M-176.141,-125.030 L-173.141,-119.030 L-170.141,-125.030",
+            "visibility": "hidden"
+          },
+          {
+            "id": "left_cup_on_nut",
+            "data": {
+              "forceId": "left_cup_on_nut",
+              "worldStart": "[40.4,9,20.15]",
+              "worldEnd": "[40.4,9,18.049999999999997]",
+              "screenStart": "[-510.33761558532706,-268.62005919218063]",
+              "screenEnd": "[-510.33761558532706,-119.83381044864646]",
+              "inView": "false"
+            },
+            "path": "M-510.338,-268.620 L-510.338,-119.834 M-513.338,-125.834 L-510.338,-119.834 L-507.338,-125.834",
+            "visibility": "hidden"
+          },
+          {
+            "id": "left_nut_on_screw",
+            "data": {
+              "forceId": "left_nut_on_screw",
+              "worldStart": "[42,9,19.35]",
+              "worldEnd": "[42,9,17.25]",
+              "screenStart": "[-421.89272117614746,-174.56115859746942]",
+              "screenEnd": "[-421.89272117614746,-25.77490985393524]",
+              "inView": "false"
+            },
+            "path": "M-421.893,-174.561 L-421.893,-25.775 M-424.893,-31.775 L-421.893,-25.775 L-418.893,-31.775",
+            "visibility": "hidden"
+          },
+          {
+            "id": "left_head_on_lid",
+            "data": {
+              "forceId": "left_head_on_lid",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,25.5]",
+              "screenStart": "[-510.33761558532706,-796.4569892585279]",
+              "screenEnd": "[-510.33761558532706,-647.6707405149938]",
+              "inView": "false"
+            },
+            "path": "M-510.338,-796.457 L-510.338,-647.671 M-513.338,-653.671 L-510.338,-647.671 L-507.338,-653.671",
+            "visibility": "hidden"
+          },
+          {
+            "id": "left_lid_on_screw",
+            "data": {
+              "forceId": "left_lid_on_screw",
+              "worldStart": "[40.4,9,27.6]",
+              "worldEnd": "[40.4,9,29.700000000000003]",
+              "screenStart": "[-510.33761558532706,-796.4569892585279]",
+              "screenEnd": "[-510.33761558532706,-945.2432380020621]",
+              "inView": "false"
+            },
+            "path": "M-510.338,-796.457 L-510.338,-945.243 M-507.338,-939.243 L-510.338,-945.243 L-513.338,-939.243",
+            "visibility": "hidden"
+          },
+          {
+            "id": "right_flange_on_cup",
+            "data": {
+              "forceId": "right_flange_on_cup",
+              "worldStart": "[55.5,9,22.15]",
+              "worldEnd": "[55.5,9,20.049999999999997]",
+              "screenStart": "[324.36107540130615,-57.56236363947384]",
+              "screenEnd": "[324.36107540130615,91.22388510406033]",
+              "inView": "true"
+            },
+            "path": "M324.361,-57.562 L324.361,91.224 M321.361,85.224 L324.361,91.224 L327.361,85.224",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_cup_on_nut",
+            "data": {
+              "forceId": "right_cup_on_nut",
+              "worldStart": "[61.6,9,20.15]",
+              "worldEnd": "[61.6,9,18.049999999999997]",
+              "screenStart": "[661.557235336304,226.64407050609606]",
+              "screenEnd": "[661.557235336304,375.4303192496302]",
+              "inView": "true"
+            },
+            "path": "M661.557,226.644 L661.557,375.430 M658.557,369.430 L661.557,375.430 L664.557,369.430",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_nut_on_screw",
+            "data": {
+              "forceId": "right_nut_on_screw",
+              "worldStart": "[60,9,19.35]",
+              "worldEnd": "[60,9,17.25]",
+              "screenStart": "[573.112340927124,245.94612133502952]",
+              "screenEnd": "[573.112340927124,394.7323700785637]",
+              "inView": "true"
+            },
+            "path": "M573.112,245.946 L573.112,394.732 M570.112,388.732 L573.112,394.732 L576.112,388.732",
+            "visibility": "visible"
+          },
+          {
+            "id": "right_head_on_lid",
+            "data": {
+              "forceId": "right_head_on_lid",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,25.5]",
+              "screenStart": "[661.557235336304,-301.19285956025124]",
+              "screenEnd": "[661.557235336304,-152.40661081671706]",
+              "inView": "false"
+            },
+            "path": "M661.557,-301.193 L661.557,-152.407 M658.557,-158.407 L661.557,-152.407 L664.557,-158.407",
+            "visibility": "hidden"
+          },
+          {
+            "id": "right_lid_on_screw",
+            "data": {
+              "forceId": "right_lid_on_screw",
+              "worldStart": "[61.6,9,27.6]",
+              "worldEnd": "[61.6,9,29.700000000000003]",
+              "screenStart": "[661.557235336304,-301.19285956025124]",
+              "screenEnd": "[661.557235336304,-449.9791083037854]",
+              "inView": "false"
+            },
+            "path": "M661.557,-301.193 L661.557,-449.979 M664.557,-443.979 L661.557,-449.979 L658.557,-443.979",
+            "visibility": "hidden"
+          }
+        ],
+        "routes": [
+          {
+            "id": "left",
+            "path": "M-173.141,-267.816 L-510.338,-268.620 L-421.893,-174.561 L-421.893,-759.079 L-510.338,-796.457",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          },
+          {
+            "id": "right",
+            "path": "M324.361,-57.562 L661.557,226.644 L573.112,245.946 L573.112,-338.571 L661.557,-301.193",
+            "dash": "4px, 3px",
+            "markerStart": null,
+            "markerEnd": null
+          }
+        ],
+        "texts": [
+          {
+            "text": "Lid load / reaction",
+            "data": {
+              "forceLabel": "Lid load / reaction"
+            },
+            "visible": false,
+            "rect": {
+              "x": 565.78125,
+              "y": 141.85089111328125,
+              "width": 128.21875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Screws in tension",
+            "data": {
+              "forceLabel": "Screws in tension"
+            },
+            "visible": false,
+            "rect": {
+              "x": 572.1875,
+              "y": 166.4044647216797,
+              "width": 121.8125,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Flange → cup",
+            "data": {
+              "forceLabel": "Flange → cup"
+            },
+            "visible": false,
+            "rect": {
+              "x": 598.90625,
+              "y": 190.4044647216797,
+              "width": 95.09375,
+              "height": 21.000015258789062
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "Cup → nuts",
+            "data": {
+              "forceLabel": "Cup → nuts"
+            },
+            "visible": true,
+            "rect": {
+              "x": 612.734375,
+              "y": 213.64407348632812,
+              "width": 81.46875,
+              "height": 21
+            },
+            "fontSize": "16px"
+          },
+          {
+            "text": "0.000 mm · contact · off-screen",
+            "data": {
+              "dimensionLabel": ""
+            },
+            "visible": true,
+            "rect": {
+              "x": 10,
+              "y": 5,
+              "width": 217.90625,
+              "height": 21
+            },
+            "fontSize": "16px"
+          }
+        ],
+        "overflow": false,
+        "webglError": 0
+      },
+      "projection": {
+        "expected": true,
+        "maxProjectionErrorPx": 5.684341886080802e-14,
+        "visibleCount": 3
+      }
+    },
+    {
+      "name": "contact layout 736 light",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "10",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[295.6628805696964,162.22137438086793]",
+        "dimensionUpperScreen": "[295.6628805696964,162.22137438086793]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.026547975838184357,
+        -0.0033611406106501818,
+        -0.001889025908894837,
+        0,
+        0.008116531185805798,
+        0.010993795469403267,
+        0.006178725510835648,
+        0,
+        0,
+        0.04290410876274109,
+        -0.0017312309937551618,
+        0,
+        -1.4675782918930054,
+        -0.6303470134735107,
+        -0.16803359985351562,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[295.6628805696964,162.22137438086793]",
+            "screenEnd": "[295.6628805696964,182.04307262925434]",
+            "inView": "true"
+          },
+          "path": "M295.663,162.221 L295.663,182.043 M292.663,176.043 L295.663,182.043 L298.663,176.043",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[238.65906684994695,176.58853153698146]",
+            "screenEnd": "[238.65906684994695,196.41022978536787]",
+            "inView": "true"
+          },
+          "path": "M238.659,176.589 L238.659,196.410 M235.659,190.410 L238.659,196.410 L241.659,190.410",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[253.6108868420124,185.32277617417276]",
+            "screenEnd": "[253.6108868420124,205.14447442255914]",
+            "inView": "true"
+          },
+          "path": "M253.611,185.323 L253.611,205.144 M250.611,199.144 L253.611,205.144 L256.611,199.144",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[238.65906684994695,106.2686972748488]",
+            "screenEnd": "[238.65906684994695,126.09039552323522]",
+            "inView": "true"
+          },
+          "path": "M238.659,106.269 L238.659,126.090 M235.659,120.090 L238.659,126.090 L241.659,120.090",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[238.65906684994695,106.2686972748488]",
+            "screenEnd": "[238.65906684994695,86.44699902646245]",
+            "inView": "true"
+          },
+          "path": "M238.659,106.269 L238.659,86.447 M241.659,92.447 L238.659,86.447 L235.659,92.447",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[379.76686802506447,168.8764327899553]",
+            "screenEnd": "[379.76686802506447,188.6981310383417]",
+            "inView": "true"
+          },
+          "path": "M379.767,168.876 L379.767,188.698 M376.767,182.698 L379.767,188.698 L382.767,182.698",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[436.77068174481394,192.2648913450539]",
+            "screenEnd": "[436.77068174481394,212.08658959344032]",
+            "inView": "true"
+          },
+          "path": "M436.771,192.265 L436.771,212.087 M433.771,206.087 L436.771,212.087 L439.771,206.087",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[421.8188617527485,198.63289299234748]",
+            "screenEnd": "[421.8188617527485,218.45459124073386]",
+            "inView": "true"
+          },
+          "path": "M421.819,198.633 L421.819,218.455 M418.819,212.455 L421.819,218.455 L424.819,212.455",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[436.77068174481394,121.94505708292122]",
+            "screenEnd": "[436.77068174481394,141.76675533130765]",
+            "inView": "true"
+          },
+          "path": "M436.771,121.945 L436.771,141.767 M433.771,135.767 L436.771,141.767 L439.771,135.767",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[436.77068174481394,121.94505708292122]",
+            "screenEnd": "[436.77068174481394,102.12335883453486]",
+            "inView": "true"
+          },
+          "path": "M436.771,121.945 L436.771,102.123 M439.771,108.123 L436.771,102.123 L433.771,108.123",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M295.663,162.221 L238.659,176.589 L253.611,185.323 L253.611,107.452 L238.659,106.269",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M379.767,168.876 L436.771,192.265 L421.819,198.633 L421.819,120.762 L436.771,121.945",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": true,
+          "rect": {
+            "x": 565.78125,
+            "y": 108.945068359375,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": true,
+          "rect": {
+            "x": 572.1875,
+            "y": 138.9103240966797,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": true,
+          "rect": {
+            "x": 598.90625,
+            "y": 162.9103240966797,
+            "width": 95.09375,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": true,
+          "rect": {
+            "x": 612.734375,
+            "y": 186.9103240966797,
+            "width": 81.46875,
+            "height": 21.000015258789062
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 109.31912994384766,
+            "y": 124.22137451171875,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "close-up labels 736 light",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "2",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[352.00000524520874,231.3834286108615]",
+        "dimensionUpperScreen": "[352.00000524520874,231.3834286108615]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "contact",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 704,
+        "height": 440
+      },
+      "matrix": [
+        0.21380050480365753,
+        -0.026583503931760788,
+        -0.0018564544152468443,
+        0,
+        0.06414014846086502,
+        0.08861168473958969,
+        0.0061881812289357185,
+        0,
+        0,
+        0.34495264291763306,
+        -0.0017326908418908715,
+        0,
+        -10.5189847946167,
+        -7.2538161277771,
+        -0.1347428560256958,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[352.00000524520874,231.3834286108615]",
+            "screenEnd": "[352.00000524520874,390.75154963880794]",
+            "inView": "true"
+          },
+          "path": "M352.000,231.383 L352.000,390.752 M349.000,384.752 L352.000,390.752 L355.000,384.752",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[-107.07243866920459,347.48752921819704]",
+            "screenEnd": "[-107.07243866920459,506.8556502461435]",
+            "inView": "false"
+          },
+          "path": "M-107.072,347.488 L-107.072,506.856 M-110.072,500.856 L-107.072,506.856 L-104.072,500.856",
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[13.34000563621521,417.5565877556799]",
+            "screenEnd": "[13.34000563621521,576.9247087836266]",
+            "inView": "true"
+          },
+          "path": "M13.340,417.557 L13.340,576.925 M10.340,570.925 L13.340,576.925 L16.340,570.925",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[-107.07243866920459,-217.8898525238037]",
+            "screenEnd": "[-107.07243866920459,-58.52173149585724]",
+            "inView": "false"
+          },
+          "path": "M-107.072,-217.890 L-107.072,-58.522 M-110.072,-64.522 L-107.072,-58.522 L-104.072,-64.522",
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[-107.07243866920459,-217.8898525238037]",
+            "screenEnd": "[-107.07243866920459,-377.2579735517506]",
+            "inView": "false"
+          },
+          "path": "M-107.072,-217.890 L-107.072,-377.258 M-104.072,-371.258 L-107.072,-377.258 L-110.072,-371.258",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[1029.3200044631958,284.01876639574783]",
+            "screenEnd": "[1029.3200044631958,443.3868874236943]",
+            "inView": "false"
+          },
+          "path": "M1029.320,284.019 L1029.320,443.387 M1026.320,437.387 L1029.320,443.387 L1032.320,437.387",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[1488.392448377609,471.47299155592935]",
+            "screenEnd": "[1488.392448377609,630.8411125838759]",
+            "inView": "false"
+          },
+          "path": "M1488.392,471.473 L1488.392,630.841 M1485.392,624.841 L1488.392,630.841 L1491.392,624.841",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[1367.9800040721893,522.8272633254526]",
+            "screenEnd": "[1367.9800040721893,682.1953843533993]",
+            "inView": "false"
+          },
+          "path": "M1367.980,522.827 L1367.980,682.195 M1364.980,676.195 L1367.980,682.195 L1370.980,676.195",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[1488.392448377609,-93.9043901860714]",
+            "screenEnd": "[1488.392448377609,65.46373084187508]",
+            "inView": "false"
+          },
+          "path": "M1488.392,-93.904 L1488.392,65.464 M1485.392,59.464 L1488.392,65.464 L1491.392,59.464",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[1488.392448377609,-93.9043901860714]",
+            "screenEnd": "[1488.392448377609,-253.27251121401827]",
+            "inView": "false"
+          },
+          "path": "M1488.392,-93.904 L1488.392,-253.273 M1491.392,-247.273 L1488.392,-253.273 L1485.392,-247.273",
+          "visibility": "hidden"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M352.000,231.383 L-107.072,347.488 L13.340,417.557 L13.340,-208.532 L-107.072,-217.890",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M1029.320,284.019 L1488.392,471.473 L1367.980,522.827 L1367.980,-103.262 L1488.392,-93.904",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 565.78125,
+            "y": 108.945068359375,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 572.1875,
+            "y": 138.9103240966797,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 598.90625,
+            "y": 162.9103240966797,
+            "width": 95.09375,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 612.734375,
+            "y": 186.9103240966797,
+            "width": 81.46875,
+            "height": 21.000015258789062
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 404,
+            "y": 193.3834228515625,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "contact layout 320 dark",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "10",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[107.12480592727661,112.18126035179012]",
+        "dimensionUpperScreen": "[107.12480592727661,112.18126035179012]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "false",
+        "yaw": "0.296706",
+        "pitch": "0.261799",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.04247676208615303,
+        -0.0032266948837786913,
+        -0.001889025908894837,
+        0,
+        0.012986449524760246,
+        0.010554042644798756,
+        0.006178725510835648,
+        0,
+        0,
+        0.041187942028045654,
+        -0.0017312309937551618,
+        0,
+        -2.3481252193450928,
+        -0.605133056640625,
+        -0.16803359985351562,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[107.12480592727661,112.18126035179012]",
+            "screenEnd": "[107.12480592727661,125.15546209062452]",
+            "inView": "true"
+          },
+          "path": "M107.125,112.181 L107.125,125.155 M104.400,119.706 L107.125,125.155 L109.849,119.706",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[69.81321811079977,121.58521714154631]",
+            "screenEnd": "[69.81321811079977,134.55941888038072]",
+            "inView": "true"
+          },
+          "path": "M69.813,121.585 L69.813,134.559 M67.089,129.110 L69.813,134.559 L72.538,129.110",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[79.59986409544945,127.30217695701867]",
+            "screenEnd": "[79.59986409544945,140.27637869585305]",
+            "inView": "true"
+          },
+          "path": "M79.600,127.302 L79.600,140.276 M76.875,134.827 L79.600,140.276 L82.324,134.827",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[69.81321811079977,75.55769192520529]",
+            "screenEnd": "[69.81321811079977,88.53189366403969]",
+            "inView": "true"
+          },
+          "path": "M69.813,75.558 L69.813,88.532 M67.089,83.083 L69.813,88.532 L72.538,83.083",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[69.81321811079977,75.55769192520529]",
+            "screenEnd": "[69.81321811079977,62.583490186370916]",
+            "inView": "true"
+          },
+          "path": "M69.813,75.558 L69.813,62.583 M72.538,68.033 L69.813,62.583 L67.089,68.033",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[162.17468959093094,116.53729844489135]",
+            "screenEnd": "[162.17468959093094,129.51150018372576]",
+            "inView": "true"
+          },
+          "path": "M162.175,116.537 L162.175,129.512 M159.450,124.062 L162.175,129.512 L164.899,124.062",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[199.48627740740775,131.84610687196255]",
+            "screenEnd": "[199.48627740740775,144.82030861079696]",
+            "inView": "true"
+          },
+          "path": "M199.486,131.846 L199.486,144.820 M196.762,139.371 L199.486,144.820 L202.211,139.371",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[189.6996314227581,136.01425314322114]",
+            "screenEnd": "[189.6996314227581,148.98845488205552]",
+            "inView": "true"
+          },
+          "path": "M189.700,136.014 L189.700,148.988 M186.975,143.539 L189.700,148.988 L192.424,143.539",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[199.48627740740775,85.8185816556215]",
+            "screenEnd": "[199.48627740740775,98.79278339445591]",
+            "inView": "true"
+          },
+          "path": "M199.486,85.819 L199.486,98.793 M196.762,93.344 L199.486,98.793 L202.211,93.344",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[199.48627740740775,85.8185816556215]",
+            "screenEnd": "[199.48627740740775,72.84437991678713]",
+            "inView": "true"
+          },
+          "path": "M199.486,85.819 L199.486,72.844 M202.211,78.294 L199.486,72.844 L196.762,78.294",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M107.125,112.181 L69.813,121.585 L79.600,127.302 L79.600,76.332 L69.813,75.558",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M162.175,116.537 L199.486,131.846 L189.700,136.014 L189.700,85.044 L199.486,85.819",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 565.8958129882812,
+            "y": 108.945068359375,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 572.2742919921875,
+            "y": 138.9103240966797,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 598.9722290039062,
+            "y": 162.9103240966797,
+            "width": 95.09375,
+            "height": 21.000015258789062
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 612.798583984375,
+            "y": 186.91033935546875,
+            "width": 81.46875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 10,
+            "y": 74.18125915527344,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "close-up labels 320 dark",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "1",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[143.99982404708862,157.76142859831467]",
+        "dimensionUpperScreen": "[143.99982404708862,157.76142859831467]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "contact",
+        "playing": "false",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "0.25",
+        "cycleTime": "1350.000000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.3563341796398163,
+        -0.026583503931760788,
+        -0.0018564544152468443,
+        0,
+        0.10690025985240936,
+        0.08861168473958969,
+        0.0061881812289357185,
+        0,
+        0,
+        0.34495264291763306,
+        -0.0017326908418908715,
+        0,
+        -17.53164291381836,
+        -7.2538161277771,
+        -0.1347428560256958,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[143.99982404708862,157.76142859831467]",
+            "screenEnd": "[143.99982404708862,266.42151111736905]",
+            "inView": "true"
+          },
+          "path": "M144.000,157.761 L144.000,266.422 M141.000,260.422 L144.000,266.422 L147.000,260.422",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[-169.0041193485261,236.92331537604346]",
+            "screenEnd": "[-169.0041193485261,345.58339789509785]",
+            "inView": "false"
+          },
+          "path": "M-169.004,236.923 L-169.004,345.583 M-172.004,339.583 L-169.004,345.583 L-166.004,339.583",
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[-86.90472435951233,284.69767346978176]",
+            "screenEnd": "[-86.90472435951233,393.3577559888363]",
+            "inView": "false"
+          },
+          "path": "M-86.905,284.698 L-86.905,393.358 M-89.905,387.358 L-86.905,393.358 L-83.905,387.358",
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[-169.0041193485261,-148.56126308441162]",
+            "screenEnd": "[-169.0041193485261,-39.90118056535721]",
+            "inView": "false"
+          },
+          "path": "M-169.004,-148.561 L-169.004,-39.901 M-172.004,-45.901 L-169.004,-39.901 L-166.004,-45.901",
+          "visibility": "hidden"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[-169.0041193485261,-148.56126308441162]",
+            "screenEnd": "[-169.0041193485261,-257.2213456034663]",
+            "inView": "false"
+          },
+          "path": "M-169.004,-148.561 L-169.004,-257.221 M-166.004,-251.221 L-169.004,-257.221 L-172.004,-251.221",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[605.8089208602905,193.64915890619173]",
+            "screenEnd": "[605.8089208602905,302.3092414252461]",
+            "inView": "false"
+          },
+          "path": "M605.809,193.649 L605.809,302.309 M602.809,296.309 L605.809,302.309 L608.809,296.309",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[918.8128642559052,321.45885787904274]",
+            "screenEnd": "[918.8128642559052,430.11894039809715]",
+            "inView": "false"
+          },
+          "path": "M918.813,321.459 L918.813,430.119 M915.813,424.119 L918.813,430.119 L921.813,424.119",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[836.7134692668915,356.4731340855359]",
+            "screenEnd": "[836.7134692668915,465.1332166045904]",
+            "inView": "false"
+          },
+          "path": "M836.713,356.473 L836.713,465.133 M833.713,459.133 L836.713,465.133 L839.713,459.133",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[918.8128642559052,-64.02572058141232]",
+            "screenEnd": "[918.8128642559052,44.6343619376421]",
+            "inView": "false"
+          },
+          "path": "M918.813,-64.026 L918.813,44.634 M915.813,38.634 L918.813,44.634 L921.813,38.634",
+          "visibility": "hidden"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[918.8128642559052,-64.02572058141232]",
+            "screenEnd": "[918.8128642559052,-172.68580310046698]",
+            "inView": "false"
+          },
+          "path": "M918.813,-64.026 L918.813,-172.686 M921.813,-166.686 L918.813,-172.686 L915.813,-166.686",
+          "visibility": "hidden"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M144.000,157.761 L-169.004,236.923 L-86.905,284.698 L-86.905,-142.181 L-169.004,-148.561",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M605.809,193.649 L918.813,321.459 L836.713,356.473 L836.713,-70.406 L918.813,-64.026",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 565.8958129882812,
+            "y": 108.945068359375,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 572.2742919921875,
+            "y": 138.9103240966797,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 598.9722290039062,
+            "y": 162.9103240966797,
+            "width": 95.09375,
+            "height": 21.000015258789062
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 612.798583984375,
+            "y": 186.91033935546875,
+            "width": 81.46875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 10,
+            "y": 119.76142883300781,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "force arrows during loop contact dwell",
+      "data": {
+        "forceVisible": "true",
+        "forceCount": "10",
+        "forceVisibleCount": "10",
+        "contactHighlighted": "true",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.15]",
+        "dimensionLowerScreen": "[107.2417012900114,112.23879960249178]",
+        "dimensionUpperScreen": "[107.2417012900114,112.23879960249178]",
+        "strokeMm": "0.250000",
+        "gapMm": "0.000000",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "1352.800000",
+        "phase": "contact",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.042544346302747726,
+        -0.003173924284055829,
+        -0.0018564544152468443,
+        0,
+        0.012763303704559803,
+        0.010579748079180717,
+        0.0061881812289357185,
+        0,
+        0,
+        0.041185446083545685,
+        -0.0017326908418908715,
+        0,
+        -2.348447799682617,
+        -0.6081465482711792,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "inline",
+      "forceVisibility": "visible",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[107.2417012900114,112.23879960249178]",
+            "screenEnd": "[107.2417012900114,125.2122151188087]",
+            "inView": "true"
+          },
+          "path": "M107.242,112.239 L107.242,125.212 M104.517,119.763 L107.242,125.212 L109.966,119.763",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[69.8707474976778,121.6902927076444]",
+            "screenEnd": "[69.8707474976778,134.66370822396132]",
+            "inView": "true"
+          },
+          "path": "M69.871,121.690 L69.871,134.664 M67.146,129.215 L69.871,134.664 L72.595,129.215",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[79.67296488583088,127.39428806584328]",
+            "screenEnd": "[79.67296488583088,140.36770358216017]",
+            "inView": "true"
+          },
+          "path": "M79.673,127.394 L79.673,140.368 M76.949,134.919 L79.673,140.368 L82.397,134.919",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,88.63897222559898]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,88.639 M67.146,83.190 L69.871,88.639 L72.595,83.190",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,62.69214119296519]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,62.692 M72.595,68.141 L69.871,62.692 L67.146,68.141",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[162.37917409837246,116.52359738596715]",
+            "screenEnd": "[162.37917409837246,129.49701290228407]",
+            "inView": "true"
+          },
+          "path": "M162.379,116.524 L162.379,129.497 M159.655,124.048 L162.379,129.497 L165.104,124.048",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[199.75012789070607,131.78337193094194]",
+            "screenEnd": "[199.75012789070607,144.75678744725886]",
+            "inView": "true"
+          },
+          "path": "M199.750,131.783 L199.750,144.757 M197.026,139.308 L199.750,144.757 L202.475,139.308",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[189.947910502553,135.96388363279402]",
+            "screenEnd": "[189.947910502553,148.9372991491109]",
+            "inView": "true"
+          },
+          "path": "M189.948,135.964 L189.948,148.937 M187.223,143.488 L189.948,148.937 L192.672,143.488",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,98.73205144889653]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,98.732 M197.026,93.283 L199.750,98.732 L202.475,93.283",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,72.78522041626275]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,72.785 M202.475,78.234 L199.750,72.785 L197.026,78.234",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M107.242,112.239 L69.871,121.690 L79.673,127.394 L79.673,76.427 L69.871,75.666",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M162.379,116.524 L199.750,131.783 L189.948,135.964 L189.948,84.997 L199.750,85.759",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 565.8958129882812,
+            "y": 108.945068359375,
+            "width": 128.21875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 572.2742919921875,
+            "y": 138.9103240966797,
+            "width": 121.8125,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 598.9722290039062,
+            "y": 162.9103240966797,
+            "width": 95.09375,
+            "height": 21.000015258789062
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 612.798583984375,
+            "y": 186.91033935546875,
+            "width": 81.46875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.000 mm · contact",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 10,
+            "y": 74.23880004882812,
+            "width": 134.921875,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "force arrows removed on loop release",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.16189256675926]",
+        "dimensionLowerScreen": "[107.2417012900114,112.23879960249178]",
+        "dimensionUpperScreen": "[107.2417012900114,112.16532950243301]",
+        "strokeMm": "0.238107",
+        "gapMm": "0.011893",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "0.291457",
+        "pitch": "0.262025",
+        "zoom": "1.000000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "2478.000000",
+        "phase": "release",
+        "transparentShell": "false"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        0.042544346302747726,
+        -0.003173924284055829,
+        -0.0018564544152468443,
+        0,
+        0.012763303704559803,
+        0.010579748079180717,
+        0.0061881812289357185,
+        0,
+        0,
+        0.041185446083545685,
+        -0.0017326908418908715,
+        0,
+        -2.348447799682617,
+        -0.6081465482711792,
+        -0.169805109500885,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[107.2417012900114,112.23879960249178]",
+            "screenEnd": "[107.2417012900114,125.2122151188087]",
+            "inView": "true"
+          },
+          "path": "M107.242,112.239 L107.242,125.212 M104.517,119.763 L107.242,125.212 L109.966,119.763",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[69.8707474976778,121.6902927076444]",
+            "screenEnd": "[69.8707474976778,134.66370822396132]",
+            "inView": "true"
+          },
+          "path": "M69.871,121.690 L69.871,134.664 M67.146,129.215 L69.871,134.664 L72.595,129.215",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[79.67296488583088,127.39428806584328]",
+            "screenEnd": "[79.67296488583088,140.36770358216017]",
+            "inView": "true"
+          },
+          "path": "M79.673,127.394 L79.673,140.368 M76.949,134.919 L79.673,140.368 L82.397,134.919",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,88.63897222559898]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,88.639 M67.146,83.190 L69.871,88.639 L72.595,83.190",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,62.69214119296519]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,62.692 M72.595,68.141 L69.871,62.692 L67.146,68.141",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[162.37917409837246,116.52359738596715]",
+            "screenEnd": "[162.37917409837246,129.49701290228407]",
+            "inView": "true"
+          },
+          "path": "M162.379,116.524 L162.379,129.497 M159.655,124.048 L162.379,129.497 L165.104,124.048",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[199.75012789070607,131.78337193094194]",
+            "screenEnd": "[199.75012789070607,144.75678744725886]",
+            "inView": "true"
+          },
+          "path": "M199.750,131.783 L199.750,144.757 M197.026,139.308 L199.750,144.757 L202.475,139.308",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[189.947910502553,135.96388363279402]",
+            "screenEnd": "[189.947910502553,148.9372991491109]",
+            "inView": "true"
+          },
+          "path": "M189.948,135.964 L189.948,148.937 M187.223,143.488 L189.948,148.937 L192.672,143.488",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,98.73205144889653]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,98.732 M197.026,93.283 L199.750,98.732 L202.475,93.283",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,72.78522041626275]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,72.785 M202.475,78.234 L199.750,72.785 L197.026,78.234",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M107.242,112.239 L69.871,121.690 L79.673,127.394 L79.673,76.427 L69.871,75.666",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M162.379,116.524 L199.750,131.783 L189.948,135.964 L189.948,84.997 L199.750,85.759",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.012 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 10,
+            "y": 74.20205688476562,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    },
+    {
+      "name": "camera transparency and loop remain active",
+      "data": {
+        "forceVisible": "false",
+        "forceCount": "0",
+        "forceVisibleCount": "0",
+        "contactHighlighted": "false",
+        "dimensionVisible": "true",
+        "dimensionLowerWorld": "[46.5,9,22.15]",
+        "dimensionUpperWorld": "[46.5,9,22.19494304725789]",
+        "dimensionLowerScreen": "[128.03427489101887,82.35877327155323]",
+        "dimensionUpperScreen": "[128.03427489101887,82.03462243498298]",
+        "strokeMm": "0.205057",
+        "gapMm": "0.044943",
+        "view": "mechanism",
+        "playing": "true",
+        "yaw": "2.094395",
+        "pitch": "0.349066",
+        "zoom": "1.200000",
+        "activePointers": "0",
+        "speed": "2",
+        "cycleTime": "2665.000000",
+        "phase": "release",
+        "transparentShell": "true"
+      },
+      "canvas": {
+        "width": 288,
+        "height": 300
+      },
+      "matrix": [
+        -0.02665056101977825,
+        -0.015156184323132038,
+        -0.005443462636321783,
+        0,
+        0.046160124242305756,
+        -0.008750427514314651,
+        -0.003142784582450986,
+        0,
+        0,
+        0.04808320105075836,
+        -0.002287760144099593,
+        0,
+        0.7129368782043457,
+        0.16941502690315247,
+        0.15214741230010986,
+        1
+      ],
+      "forceDisplay": "none",
+      "forceVisibility": "hidden",
+      "arrows": [
+        {
+          "id": "left_flange_on_cup",
+          "data": {
+            "forceId": "left_flange_on_cup",
+            "worldStart": "[46.5,9,22.15]",
+            "worldEnd": "[46.5,9,20.049999999999997]",
+            "screenStart": "[107.2417012900114,112.23879960249178]",
+            "screenEnd": "[107.2417012900114,125.2122151188087]",
+            "inView": "true"
+          },
+          "path": "M107.242,112.239 L107.242,125.212 M104.517,119.763 L107.242,125.212 L109.966,119.763",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_cup_on_nut",
+          "data": {
+            "forceId": "left_cup_on_nut",
+            "worldStart": "[40.4,9,20.15]",
+            "worldEnd": "[40.4,9,18.049999999999997]",
+            "screenStart": "[69.8707474976778,121.6902927076444]",
+            "screenEnd": "[69.8707474976778,134.66370822396132]",
+            "inView": "true"
+          },
+          "path": "M69.871,121.690 L69.871,134.664 M67.146,129.215 L69.871,134.664 L72.595,129.215",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_nut_on_screw",
+          "data": {
+            "forceId": "left_nut_on_screw",
+            "worldStart": "[42,9,19.35]",
+            "worldEnd": "[42,9,17.25]",
+            "screenStart": "[79.67296488583088,127.39428806584328]",
+            "screenEnd": "[79.67296488583088,140.36770358216017]",
+            "inView": "true"
+          },
+          "path": "M79.673,127.394 L79.673,140.368 M76.949,134.919 L79.673,140.368 L82.397,134.919",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_head_on_lid",
+          "data": {
+            "forceId": "left_head_on_lid",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,25.5]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,88.63897222559898]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,88.639 M67.146,83.190 L69.871,88.639 L72.595,83.190",
+          "visibility": "visible"
+        },
+        {
+          "id": "left_lid_on_screw",
+          "data": {
+            "forceId": "left_lid_on_screw",
+            "worldStart": "[40.4,9,27.6]",
+            "worldEnd": "[40.4,9,29.700000000000003]",
+            "screenStart": "[69.8707474976778,75.66555670928207]",
+            "screenEnd": "[69.8707474976778,62.69214119296519]",
+            "inView": "true"
+          },
+          "path": "M69.871,75.666 L69.871,62.692 M72.595,68.141 L69.871,62.692 L67.146,68.141",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_flange_on_cup",
+          "data": {
+            "forceId": "right_flange_on_cup",
+            "worldStart": "[55.5,9,22.15]",
+            "worldEnd": "[55.5,9,20.049999999999997]",
+            "screenStart": "[162.37917409837246,116.52359738596715]",
+            "screenEnd": "[162.37917409837246,129.49701290228407]",
+            "inView": "true"
+          },
+          "path": "M162.379,116.524 L162.379,129.497 M159.655,124.048 L162.379,129.497 L165.104,124.048",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_cup_on_nut",
+          "data": {
+            "forceId": "right_cup_on_nut",
+            "worldStart": "[61.6,9,20.15]",
+            "worldEnd": "[61.6,9,18.049999999999997]",
+            "screenStart": "[199.75012789070607,131.78337193094194]",
+            "screenEnd": "[199.75012789070607,144.75678744725886]",
+            "inView": "true"
+          },
+          "path": "M199.750,131.783 L199.750,144.757 M197.026,139.308 L199.750,144.757 L202.475,139.308",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_nut_on_screw",
+          "data": {
+            "forceId": "right_nut_on_screw",
+            "worldStart": "[60,9,19.35]",
+            "worldEnd": "[60,9,17.25]",
+            "screenStart": "[189.947910502553,135.96388363279402]",
+            "screenEnd": "[189.947910502553,148.9372991491109]",
+            "inView": "true"
+          },
+          "path": "M189.948,135.964 L189.948,148.937 M187.223,143.488 L189.948,148.937 L192.672,143.488",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_head_on_lid",
+          "data": {
+            "forceId": "right_head_on_lid",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,25.5]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,98.73205144889653]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,98.732 M197.026,93.283 L199.750,98.732 L202.475,93.283",
+          "visibility": "visible"
+        },
+        {
+          "id": "right_lid_on_screw",
+          "data": {
+            "forceId": "right_lid_on_screw",
+            "worldStart": "[61.6,9,27.6]",
+            "worldEnd": "[61.6,9,29.700000000000003]",
+            "screenStart": "[199.75012789070607,85.75863593257964]",
+            "screenEnd": "[199.75012789070607,72.78522041626275]",
+            "inView": "true"
+          },
+          "path": "M199.750,85.759 L199.750,72.785 M202.475,78.234 L199.750,72.785 L197.026,78.234",
+          "visibility": "visible"
+        }
+      ],
+      "routes": [
+        {
+          "id": "left",
+          "path": "M107.242,112.239 L69.871,121.690 L79.673,127.394 L79.673,76.427 L69.871,75.666",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        },
+        {
+          "id": "right",
+          "path": "M162.379,116.524 L199.750,131.783 L189.948,135.964 L189.948,84.997 L199.750,85.759",
+          "dash": "4px, 3px",
+          "markerStart": null,
+          "markerEnd": null
+        }
+      ],
+      "texts": [
+        {
+          "text": "Lid load / reaction",
+          "data": {
+            "forceLabel": "Lid load / reaction"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Screws in tension",
+          "data": {
+            "forceLabel": "Screws in tension"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Flange → cup",
+          "data": {
+            "forceLabel": "Flange → cup"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "Cup → nuts",
+          "data": {
+            "forceLabel": "Cup → nuts"
+          },
+          "visible": false,
+          "rect": {
+            "x": 0,
+            "y": -82.796875,
+            "width": 0,
+            "height": 0
+          },
+          "fontSize": "16px"
+        },
+        {
+          "text": "0.045 mm gap",
+          "data": {
+            "dimensionLabel": ""
+          },
+          "visible": true,
+          "rect": {
+            "x": 10,
+            "y": 44.19670104980469,
+            "width": 101.265625,
+            "height": 21
+          },
+          "fontSize": "16px"
+        }
+      ],
+      "overflow": false,
+      "webglError": 0
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\force-preview\\forces-contact-736-light.png",
+    "C:\\Users\\Homar\\Documents\\ChatGPT\\LoRa-Walkie-Talkies\\output\\enclosure-c5\\fit-checked\\ptt-motion\\force-preview\\forces-contact-320-dark.png"
+  ]
+}

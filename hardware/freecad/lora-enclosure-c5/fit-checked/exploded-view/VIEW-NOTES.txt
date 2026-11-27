@@ -1,0 +1,30 @@
+Updated exploded enclosure view — 2026-11-24
+
+exploded-updated-actual-kicad.png is rendered directly by KiCad 10 from the
+actual project's six assigned PCB/component model attachments and original
+materials. The source electronics and board were not modified. The four case
+parts use the exact triangles of the fit-checked STL exports.
+
+The green part is the new PTT stop cup. The orange part is the captive plunger.
+Two M2 x 10 pan-head screws are shown above the lid, pointing inward. Two M2
+hex nuts are below the cup. Their dimensions follow the reviewed hardware;
+their cross-drive/bevel geometry is illustrative standard geometry, not a
+manufacturer-supplied model. Thread helices are not modeled.
+
+Explosion offsets from assembled positions, in mm:
+base0; actual PCB/electronics55; nuts115; cup130; plunger150; lid185; screws225.
+These are presentation separations, not operating clearances. Fastener and
+button axes are retained. All manufacturing CAD and STL files are unchanged.
+
+The presentation-only board is
+../../detailed-import/source-project/fit-checked-exploded-view.kicad_pcb
+It must not be used as a fabrication board.
+
+Reproduction and provenance:
+build_updated_exploded.py builds the CAD-derived presentation models and board.
+exploded-view-manifest.json records geometry hashes, source model hashes,
+explosion transforms, and final render settings.
+
+Hardware dimensional references used in the fit review:
+https://www.accu.co.uk/pozi-pan-head-screws/9373-SPP-M2-10-A4
+https://www.harrisonsilverdale.com/products/details/standard-thread-full-nuts.html
