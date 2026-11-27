@@ -11,7 +11,17 @@ unavailable and no RF execution profile. The matching source tree predates
 the radio driver. The Bench overview and RF preflight now surface the
 reason for an unavailable radio. Firmware distinguishes an unselected
 profile, driver startup failures and an absent driver. Explicit build
-defaults select the confirmed V4.2 or V4.3 R2 profile.
+defaults select the V4.2 or V4.3 R2 profile. Both bench boards electrically matched
+V4.3. Measuring Node A exposed a second blocker. Its SX1262 reported RC standby
+with status 1, which the startup check rejected. Build `9910695` accepts the
+measured response and reports the failed step on future startup errors.
+
+Both physical devices run the corrected build. The testbed preflight passed, both
+returned the applied 915 MHz configuration from standby, and the dashboard
+showed two ready radios with the correct USB ports. The V4.3 build supports speaker
+playback. Microphone capture needs the WS wiring moved off RF control GPIO5.
+The [radio bring-up notes](radio_driver.md#review-and-verification) record the
+test settings and remaining antenna and RF verification.
 
 ## November 27 — Shared-session packet matrix
 

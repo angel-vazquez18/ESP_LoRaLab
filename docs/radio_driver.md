@@ -18,7 +18,6 @@ matching the actual standard board. This selection is recorded as a configured
 variant in `hello` and health, with a generated reference-file hash; it is not an
 automatically detected or independently verified PCB revision. Initialization
 success is based on real SPI status; a disconnected/faulty radio stays unavailable.
-No execution command is advertised by this initialization-only change.
 
 | Signal | Both variants | Standard V4.2 GC1109 | Standard V4.3 R2 KCT8103L |
 | --- | --- | --- | --- |
@@ -42,7 +41,9 @@ The Bench overview shows USB connection and radio readiness separately. An
 older audio image can answer USB control while lacking an RF execution profile.
 The radio readiness message distinguishes an older image, an unselected board,
 a driver error and an incompatible execution schema. A ready radio has reported
-successful initialization and can accept configuration.
+successful initialization and can accept configuration. When startup fails, the
+node details show the failed step, and `radio_limits` provides the last chip mode
+and command status if an SPI status reply was available.
 
 Use a fresh SDK configuration for the chosen revision. From the repository root
 with ESP-IDF active, the following example builds the standard V4.2 image with
@@ -75,13 +76,21 @@ make check
 idf.py -C firmware/lora_node build
 ```
 
-Expected native cases cover standby initialization, both variants, absent/status
-failure, stuck BUSY, SPI/GPIO failures and repeated stop/reinitialization. Full
-host checks must report no skipped native cases. ESP-IDF builds prove integration,
-not the clock, RF output or physical path. Later physical tests need matching
-board/antenna identification, reset/BUSY/DIO1 traces and repeated stop/recovery.
-Measure RF power before treating configured SX1262 dBm as antenna output: the
-board has an external amplifier. No radio or audio hardware was accessed here.
+Expected native cases cover standby initialization, absent/status failure, stuck
+BUSY, SPI/GPIO failures and repeated stop/reinitialization. The regression
+reproduces chip mode 2 (RC standby) and command status 1, the response measured
+after the standby command on Node A. Valid standby responses with status 1 are
+accepted. SPI errors, invalid modes, timeouts and rejected commands still fail.
+Full host checks must report no skipped native cases.
+
+On November 27, both boards matched the V4.3 front end electrically. With the
+SX1262 held in reset and the front-end supply on, each board's GPIO2 followed the
+powered pull-up shown in the V4.3 schematic. Both boards then booted build
+`9910695`, enrolled over USB and passed testbed preflight. Each accepted 915 MHz,
+125 kHz, SF7, CR4/5 and a 2 dBm modem setting. `status.get` returned the same
+configuration at revision 1 with the radio idle. Speaker playback is enabled in
+this build. Microphone capture requires moving WS off GPIO5 and building the
+matching capture profile. Over-the-air validation requires the matched antennas.
 
 ## Primary references and reuse
 
