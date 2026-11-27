@@ -1,0 +1,1364 @@
+{
+  "status": "AXIAL_R8_PROTOTYPE_FIT_PENDING",
+  "revision": "C5",
+  "coordinate_transform": "KiCad X=100+x; Y=190-y (mm), user origin lower-left",
+  "board_mm": [
+    70,
+    90
+  ],
+  "layers": [
+    "F.Cu",
+    "In1.Cu",
+    "In2.Cu",
+    "B.Cu"
+  ],
+  "components": [
+    {
+      "reference": "U1",
+      "symbol": "Carrier:Heltec_V4_R2",
+      "value": "Heltec WiFi LoRa 32 V4.3 / ESP32-S3R2",
+      "footprint": "Carrier:Heltec_V4_R2_2x18_PROVISIONAL",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Standard R2 header identities; rotate whole footprint for USB at top. No carrier pads/connections for auxiliary GPIO15-18.",
+      "datasheet": "https://resource.heltec.cn/download/WiFi_LoRa_32_V4/datasheet/WiFi_LoRa_32_V4.3.1_Datasheet.pdf",
+      "uuid": "70179980-84e5-5d91-a22d-cefb4fea3e25",
+      "pins": {
+        "J3_01": "GND",
+        "J3_02": "+3V3_MIC",
+        "J3_03": null,
+        "J3_04": null,
+        "J3_05": null,
+        "J3_06": null,
+        "J3_07": null,
+        "J3_08": "AMP_WS",
+        "J3_09": "AMP_BCLK",
+        "J3_10": "PTT_N",
+        "J3_11": "MIC_DATA",
+        "J3_12": null,
+        "J3_13": null,
+        "J3_14": null,
+        "J3_15": "MIC_BCLK",
+        "J3_16": null,
+        "J3_17": "MIC_WS",
+        "J3_18": null,
+        "J2_01": "GND",
+        "J2_02": "+5V_AMP",
+        "J2_03": null,
+        "J2_04": null,
+        "J2_05": null,
+        "J2_06": null,
+        "J2_07": null,
+        "J2_08": null,
+        "J2_09": null,
+        "J2_10": null,
+        "J2_11": null,
+        "J2_12": null,
+        "J2_13": "AMP_DATA",
+        "J2_14": "AMP_SD",
+        "J2_15": null,
+        "J2_16": null,
+        "J2_17": null,
+        "J2_18": null
+      },
+      "pin_names": {
+        "J3_01": "GND",
+        "J3_02": "3V3",
+        "J3_03": "3V3",
+        "J3_04": "GPIO37_ADC_CTRL",
+        "J3_05": "GPIO46",
+        "J3_06": "GPIO45",
+        "J3_07": "GPIO42_GNSS_RST",
+        "J3_08": "GPIO41",
+        "J3_09": "GPIO40",
+        "J3_10": "GPIO39",
+        "J3_11": "GPIO38",
+        "J3_12": "GPIO1_VBAT_READ",
+        "J3_13": "GPIO2_FEM_EN",
+        "J3_14": "GPIO3",
+        "J3_15": "GPIO4",
+        "J3_16": "GPIO5_FEM",
+        "J3_17": "GPIO6",
+        "J3_18": "GPIO7_FEM_CTRL",
+        "J2_01": "GND",
+        "J2_02": "5V_USB",
+        "J2_03": "Ve",
+        "J2_04": "Ve",
+        "J2_05": "GPIO44_UART_RX",
+        "J2_06": "GPIO43_UART_TX",
+        "J2_07": "RST_CHIP_PU",
+        "J2_08": "GPIO0_BOOT",
+        "J2_09": "GPIO36_VEXT_CTRL",
+        "J2_10": "GPIO35_LED",
+        "J2_11": "GPIO34",
+        "J2_12": "GPIO33",
+        "J2_13": "GPIO47",
+        "J2_14": "GPIO48",
+        "J2_15": "GPIO26",
+        "J2_16": "GPIO21_OLED_RST",
+        "J2_17": "GPIO20_USB_D+",
+        "J2_18": "GPIO19_USB_D-"
+      },
+      "placement_user_mm": [
+        23.0,
+        64.41,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "J2_01",
+          "net": "/GND",
+          "x_mm": 11.57,
+          "y_mm": 86.0,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_02",
+          "net": "/+5V_AMP",
+          "x_mm": 11.57,
+          "y_mm": 83.46,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_03",
+          "net": "unconnected-(U1-Ve-PadJ2_03)",
+          "x_mm": 11.57,
+          "y_mm": 80.92,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_04",
+          "net": "unconnected-(U1-Ve-PadJ2_04)",
+          "x_mm": 11.57,
+          "y_mm": 78.38,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_05",
+          "net": "unconnected-(U1-GPIO44_UART_RX-PadJ2_05)",
+          "x_mm": 11.57,
+          "y_mm": 75.84,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_06",
+          "net": "unconnected-(U1-GPIO43_UART_TX-PadJ2_06)",
+          "x_mm": 11.57,
+          "y_mm": 73.3,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_07",
+          "net": "unconnected-(U1-RST_CHIP_PU-PadJ2_07)",
+          "x_mm": 11.57,
+          "y_mm": 70.76,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_08",
+          "net": "unconnected-(U1-GPIO0_BOOT-PadJ2_08)",
+          "x_mm": 11.57,
+          "y_mm": 68.22,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_09",
+          "net": "unconnected-(U1-GPIO36_VEXT_CTRL-PadJ2_09)",
+          "x_mm": 11.57,
+          "y_mm": 65.68,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_10",
+          "net": "unconnected-(U1-GPIO35_LED-PadJ2_10)",
+          "x_mm": 11.57,
+          "y_mm": 63.14,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_11",
+          "net": "unconnected-(U1-GPIO34-PadJ2_11)",
+          "x_mm": 11.57,
+          "y_mm": 60.6,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_12",
+          "net": "unconnected-(U1-GPIO33-PadJ2_12)",
+          "x_mm": 11.57,
+          "y_mm": 58.06,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_13",
+          "net": "/AMP_DATA",
+          "x_mm": 11.57,
+          "y_mm": 55.52,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_14",
+          "net": "/AMP_SD",
+          "x_mm": 11.57,
+          "y_mm": 52.98,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_15",
+          "net": "unconnected-(U1-GPIO26-PadJ2_15)",
+          "x_mm": 11.57,
+          "y_mm": 50.44,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_16",
+          "net": "unconnected-(U1-GPIO21_OLED_RST-PadJ2_16)",
+          "x_mm": 11.57,
+          "y_mm": 47.9,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_17",
+          "net": "unconnected-(U1-GPIO20_USB_D+-PadJ2_17)",
+          "x_mm": 11.57,
+          "y_mm": 45.36,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J2_18",
+          "net": "unconnected-(U1-GPIO19_USB_D--PadJ2_18)",
+          "x_mm": 11.57,
+          "y_mm": 42.82,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_01",
+          "net": "/GND",
+          "x_mm": 34.43,
+          "y_mm": 86.0,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_02",
+          "net": "/+3V3_MIC",
+          "x_mm": 34.43,
+          "y_mm": 83.46,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_03",
+          "net": "unconnected-(U1-3V3-PadJ3_03)",
+          "x_mm": 34.43,
+          "y_mm": 80.92,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_04",
+          "net": "unconnected-(U1-GPIO37_ADC_CTRL-PadJ3_04)",
+          "x_mm": 34.43,
+          "y_mm": 78.38,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_05",
+          "net": "unconnected-(U1-GPIO46-PadJ3_05)",
+          "x_mm": 34.43,
+          "y_mm": 75.84,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_06",
+          "net": "unconnected-(U1-GPIO45-PadJ3_06)",
+          "x_mm": 34.43,
+          "y_mm": 73.3,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_07",
+          "net": "unconnected-(U1-GPIO42_GNSS_RST-PadJ3_07)",
+          "x_mm": 34.43,
+          "y_mm": 70.76,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_08",
+          "net": "/AMP_WS",
+          "x_mm": 34.43,
+          "y_mm": 68.22,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_09",
+          "net": "/AMP_BCLK",
+          "x_mm": 34.43,
+          "y_mm": 65.68,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_10",
+          "net": "/PTT_N",
+          "x_mm": 34.43,
+          "y_mm": 63.14,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_11",
+          "net": "/MIC_DATA",
+          "x_mm": 34.43,
+          "y_mm": 60.6,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_12",
+          "net": "unconnected-(U1-GPIO1_VBAT_READ-PadJ3_12)",
+          "x_mm": 34.43,
+          "y_mm": 58.06,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_13",
+          "net": "unconnected-(U1-GPIO2_FEM_EN-PadJ3_13)",
+          "x_mm": 34.43,
+          "y_mm": 55.52,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_14",
+          "net": "unconnected-(U1-GPIO3-PadJ3_14)",
+          "x_mm": 34.43,
+          "y_mm": 52.98,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_15",
+          "net": "/MIC_BCLK",
+          "x_mm": 34.43,
+          "y_mm": 50.44,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_16",
+          "net": "unconnected-(U1-GPIO5_FEM-PadJ3_16)",
+          "x_mm": 34.43,
+          "y_mm": 47.9,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_17",
+          "net": "/MIC_WS",
+          "x_mm": 34.43,
+          "y_mm": 45.36,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "J3_18",
+          "net": "unconnected-(U1-GPIO7_FEM_CTRL-PadJ3_18)",
+          "x_mm": 34.43,
+          "y_mm": 42.82,
+          "drill_mm": 1.1
+        }
+      ]
+    },
+    {
+      "reference": "U2",
+      "symbol": "Carrier:INMP441_ROUND_MODULE",
+      "value": "Round INMP441 breakout",
+      "footprint": "Carrier:INMP441_ROUND_2p54x7p62_REFERENCE",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "14mm round module. Authored community KiCad reference supplies 2.54mm column pitch and 7.62mm row spacing; not validation of the owned module. Proposed acoustic/solder face UP matches user image: top SCK/WS/LR at x=-2.54/0/+2.54,y=-3.81mm; bottom SD/VDD/GND at y=+3.81mm. Provisional centered 3mm carrier opening and 3mm mounting standoff require actual acoustic-path, underside-component and contact fit verification.",
+      "datasheet": "https://product.tdk.com/system/files/dam/doc/product/sw_piezo/mic/mems-mic/data_sheet/inmp441.pdf",
+      "uuid": "882909f3-4af4-5ae8-8a37-475823d98f4a",
+      "pins": {
+        "VDD": "+3V3_MIC",
+        "SCK": "MIC_BCLK",
+        "WS": "MIC_WS",
+        "SD": "MIC_DATA",
+        "LR": "GND",
+        "GND": "GND"
+      },
+      "pin_names": {
+        "VDD": "VDD",
+        "SCK": "SCK",
+        "WS": "WS",
+        "SD": "SD",
+        "LR": "L/R = LEFT",
+        "GND": "GND"
+      },
+      "placement_user_mm": [
+        54.5,
+        30.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "",
+          "net": "",
+          "x_mm": 54.5,
+          "y_mm": 30.5,
+          "drill_mm": 3.0
+        },
+        {
+          "number": "GND",
+          "net": "/GND",
+          "x_mm": 57.04,
+          "y_mm": 26.69,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "LR",
+          "net": "/GND",
+          "x_mm": 57.04,
+          "y_mm": 34.31,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "SCK",
+          "net": "/MIC_BCLK",
+          "x_mm": 51.96,
+          "y_mm": 34.31,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "SD",
+          "net": "/MIC_DATA",
+          "x_mm": 51.96,
+          "y_mm": 26.69,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "VDD",
+          "net": "/+3V3_MIC",
+          "x_mm": 54.5,
+          "y_mm": 26.69,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "WS",
+          "net": "/MIC_WS",
+          "x_mm": 54.5,
+          "y_mm": 34.31,
+          "drill_mm": 1.1
+        }
+      ]
+    },
+    {
+      "reference": "JAMP1",
+      "symbol": "Carrier:AMP_Soldered_1x07",
+      "value": "AMP 1x07 solder pins",
+      "footprint": "Carrier:MAX98357A_H7_2p54_PROVISIONAL",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER TO U3: SEVEN SOLDERED PINS",
+      "population": "FIT / SOLDERED MODULE PINS",
+      "rating": "2.54mm pitch soldered pin strip; supplied pin dimensions and current rating require verification",
+      "note": "Soldered pin interconnect between carrier and existing U3, not a wire cable or speaker connector. User drawing: 17.7x19mm body and 2.54mm pitch. Numeric pin1 VIN,2 GND,3 SD_MODE,4 GAIN,5 DIN,6 BCLK,7 LRC. Header-to-body datum and drill remain provisional.",
+      "datasheet": "",
+      "uuid": "6b58dba2-0871-5585-80e4-142c2752e82c",
+      "pins": {
+        "1": "+5V_AMP",
+        "2": "GND",
+        "3": "AMP_SD",
+        "4": "GND",
+        "5": "AMP_DATA",
+        "6": "AMP_BCLK",
+        "7": "AMP_WS"
+      },
+      "pin_names": {
+        "1": "VIN",
+        "2": "GND",
+        "3": "SD_MODE",
+        "4": "GAIN",
+        "5": "DIN",
+        "6": "BCLK",
+        "7": "LRC"
+      },
+      "placement_user_mm": [
+        54.5,
+        66.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/+5V_AMP",
+          "x_mm": 62.12,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "2",
+          "net": "/GND",
+          "x_mm": 59.58,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "3",
+          "net": "/AMP_SD",
+          "x_mm": 57.04,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "4",
+          "net": "/GND",
+          "x_mm": 54.5,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "5",
+          "net": "/AMP_DATA",
+          "x_mm": 51.96,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "6",
+          "net": "/AMP_BCLK",
+          "x_mm": 49.42,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "7",
+          "net": "/AMP_WS",
+          "x_mm": 46.88,
+          "y_mm": 58.5,
+          "drill_mm": 1.1
+        }
+      ]
+    },
+    {
+      "reference": "U3",
+      "symbol": "Carrier:MAX98357A_PURPLE_MODULE",
+      "value": "Purple MAX98357A daughterboard",
+      "footprint": "",
+      "dnp": false,
+      "on_board": false,
+      "in_bom": true,
+      "connection": "DAUGHTERBOARD: SOLDERED TO CARRIER THROUGH JAMP1",
+      "population": "EXISTING / MOUNT VIA JAMP1",
+      "rating": "",
+      "note": "U3 is mechanically mounted on the carrier through soldered JAMP1. CAD off-board flag means daughterboard circuitry is not a separate carrier footprint. GAIN to GND retains RevB +12dB. Inspect actual module SD pull-up/straps and bypass; generic example R1 population is unverified. One external R8 pulldown only. Speaker wires attach directly to U3 terminals.",
+      "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf",
+      "uuid": "aa9ee4ab-bb6b-5622-864c-2cec85679b14",
+      "pins": {
+        "VIN": "+5V_AMP",
+        "BCLK": "AMP_BCLK",
+        "LRC": "AMP_WS",
+        "DIN": "AMP_DATA",
+        "SD_MODE": "AMP_SD",
+        "GAIN": "GND",
+        "GND": "GND",
+        "SPK_P": "SPK_P",
+        "SPK_N": "SPK_N"
+      },
+      "pin_names": {
+        "VIN": "VIN",
+        "BCLK": "BCLK",
+        "LRC": "LRC",
+        "DIN": "DIN",
+        "SD_MODE": "SD_MODE",
+        "GAIN": "GAIN",
+        "GND": "GND",
+        "SPK_P": "SPK+",
+        "SPK_N": "SPK-"
+      },
+      "placement_user_mm": null,
+      "physical_pads": []
+    },
+    {
+      "reference": "LS1",
+      "symbol": "Carrier:Speaker_External",
+      "value": "Existing speaker",
+      "footprint": "",
+      "dnp": false,
+      "on_board": false,
+      "in_bom": true,
+      "connection": "OFF-BOARD: DIRECT WIRES TO U3 SPEAKER TERMINALS",
+      "population": "EXISTING / EXTERNAL WIRES",
+      "rating": "8 ohm nominal; verify actual speaker power rating",
+      "note": "Existing off-board speaker. Direct insulated wires from U3 SPK+/SPK- terminals to LS1; no carrier connector, copper route or mounting reservation. Neither terminal is GND.",
+      "datasheet": "",
+      "uuid": "d63df815-ed35-54f4-a705-1ec959af15bf",
+      "pins": {
+        "1": "SPK_P",
+        "2": "SPK_N"
+      },
+      "pin_names": {
+        "1": "+",
+        "2": "-"
+      },
+      "placement_user_mm": null,
+      "physical_pads": []
+    },
+    {
+      "reference": "R8",
+      "symbol": "Carrier:R",
+      "value": "1k",
+      "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "EEEEE carbon axial; 0.5W; 5%",
+      "note": "EEEEE 1k 0.5W 5% carbon axial SD_MODE pulldown. Form leads to15.24mm pitch; representative10x3.6mm body,1.0mm drills. Verify actual fit.",
+      "datasheet": "",
+      "uuid": "9cd31427-2900-5f1f-892b-e01fbbe8ad49",
+      "pins": {
+        "1": "AMP_SD",
+        "2": "GND"
+      },
+      "pin_names": {
+        "1": "~",
+        "2": "~"
+      },
+      "placement_user_mm": [
+        47.0,
+        45.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/AMP_SD",
+          "x_mm": 47.0,
+          "y_mm": 45.0,
+          "drill_mm": 1.0
+        },
+        {
+          "number": "2",
+          "net": "/GND",
+          "x_mm": 62.24,
+          "y_mm": 45.0,
+          "drill_mm": 1.0
+        }
+      ]
+    },
+    {
+      "reference": "SW1",
+      "symbol": "Carrier:SW_NO_Logical",
+      "value": "PTT 6x6x8mm",
+      "footprint": "Carrier:SW_TACTILE_6x6x8_REFERENCE_FIT_PENDING",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "Exact switch contact rating pending verification",
+      "note": "Normally-open 6x6x8mm PTT switch. GPIO39/PTT_N to GND; use INPUT_PULLUP. Reference contact grid 6.5x4.5mm; verify actual fit and contact pairing.",
+      "datasheet": "https://www.amazon.com/dp/B01MRP025V",
+      "uuid": "e1e9c26a-7696-5f15-a5ef-3298fed16b17",
+      "pins": {
+        "1": "PTT_N",
+        "2": "GND"
+      },
+      "pin_names": {
+        "1": "~",
+        "2": "~"
+      },
+      "placement_user_mm": [
+        51.0,
+        9.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/PTT_N",
+          "x_mm": 47.75,
+          "y_mm": 11.25,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "1",
+          "net": "/PTT_N",
+          "x_mm": 54.25,
+          "y_mm": 11.25,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "2",
+          "net": "/GND",
+          "x_mm": 47.75,
+          "y_mm": 6.75,
+          "drill_mm": 1.1
+        },
+        {
+          "number": "2",
+          "net": "/GND",
+          "x_mm": 54.25,
+          "y_mm": 6.75,
+          "drill_mm": 1.1
+        }
+      ]
+    },
+    {
+      "reference": "TP1",
+      "symbol": "Carrier:TestPoint",
+      "value": "GND",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "5a719132-add0-5873-844f-73f6c6aa5f52",
+      "pins": {
+        "1": "GND"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        59.0,
+        19.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/GND",
+          "x_mm": 59.0,
+          "y_mm": 19.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP2",
+      "symbol": "Carrier:TestPoint",
+      "value": "+3V3_MIC",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "15e2a1b5-94f2-5cec-9081-272df03814dd",
+      "pins": {
+        "1": "+3V3_MIC"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        56.5,
+        18.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/+3V3_MIC",
+          "x_mm": 56.5,
+          "y_mm": 18.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP3",
+      "symbol": "Carrier:TestPoint",
+      "value": "+5V_AMP",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "5d5d6c05-e207-5a22-8fde-c1c02b22c195",
+      "pins": {
+        "1": "+5V_AMP"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        59.0,
+        49.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/+5V_AMP",
+          "x_mm": 59.0,
+          "y_mm": 49.0,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP4",
+      "symbol": "Carrier:TestPoint",
+      "value": "MIC_BCLK",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "94ecc67c-b694-5010-8050-b8df0c8aa02e",
+      "pins": {
+        "1": "MIC_BCLK"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        43.0,
+        43.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/MIC_BCLK",
+          "x_mm": 43.0,
+          "y_mm": 43.0,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP5",
+      "symbol": "Carrier:TestPoint",
+      "value": "MIC_WS",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "1aacbb8d-830a-5827-ae5f-3b21dd96351d",
+      "pins": {
+        "1": "MIC_WS"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        43.0,
+        39.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/MIC_WS",
+          "x_mm": 43.0,
+          "y_mm": 39.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP6",
+      "symbol": "Carrier:TestPoint",
+      "value": "MIC_DATA",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "bc736539-110f-5c6d-b625-6b807fc925cd",
+      "pins": {
+        "1": "MIC_DATA"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        45.5,
+        23.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/MIC_DATA",
+          "x_mm": 45.5,
+          "y_mm": 23.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP7",
+      "symbol": "Carrier:TestPoint",
+      "value": "AMP_BCLK",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "7bf26419-a9df-5d85-9453-99dc9abeba93",
+      "pins": {
+        "1": "AMP_BCLK"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        43.3,
+        61.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/AMP_BCLK",
+          "x_mm": 43.3,
+          "y_mm": 61.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP8",
+      "symbol": "Carrier:TestPoint",
+      "value": "AMP_WS",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "395b38b1-f388-5895-88be-3e6abf79703e",
+      "pins": {
+        "1": "AMP_WS"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        41.0,
+        65.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/AMP_WS",
+          "x_mm": 41.0,
+          "y_mm": 65.0,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP9",
+      "symbol": "Carrier:TestPoint",
+      "value": "AMP_DATA",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "dd493471-1deb-56c8-adff-028ff9d9c9b6",
+      "pins": {
+        "1": "AMP_DATA"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        43.0,
+        58.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/AMP_DATA",
+          "x_mm": 43.0,
+          "y_mm": 58.0,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP10",
+      "symbol": "Carrier:TestPoint",
+      "value": "AMP_SD",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "085c9f76-b916-5485-a08a-b775d6951870",
+      "pins": {
+        "1": "AMP_SD"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        52.0,
+        53.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/AMP_SD",
+          "x_mm": 52.0,
+          "y_mm": 53.5,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP11",
+      "symbol": "Carrier:TestPoint",
+      "value": "PTT_N",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "f9afd82b-69c7-5c15-b9f3-83abfc3a9892",
+      "pins": {
+        "1": "PTT_N"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        57.0,
+        9.0,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/PTT_N",
+          "x_mm": 57.0,
+          "y_mm": 9.0,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP12",
+      "symbol": "Carrier:TestPoint",
+      "value": "GND",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "34034cc9-98ef-5b5c-9d6a-e44e7842bd2e",
+      "pins": {
+        "1": "GND"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        45.5,
+        41.25,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/GND",
+          "x_mm": 45.5,
+          "y_mm": 41.25,
+          "drill_mm": 0.0
+        }
+      ]
+    },
+    {
+      "reference": "TP13",
+      "symbol": "Carrier:TestPoint",
+      "value": "GND",
+      "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+      "dnp": false,
+      "on_board": true,
+      "in_bom": true,
+      "connection": "CARRIER",
+      "population": "FIT",
+      "rating": "",
+      "note": "Place ground pads near clock/data pads; use short probe ground",
+      "datasheet": "",
+      "uuid": "1232d2f8-7494-56d7-aed7-fab62570f2cb",
+      "pins": {
+        "1": "GND"
+      },
+      "pin_names": {
+        "1": "~"
+      },
+      "placement_user_mm": [
+        40.5,
+        60.5,
+        0.0
+      ],
+      "physical_pads": [
+        {
+          "number": "1",
+          "net": "/GND",
+          "x_mm": 40.5,
+          "y_mm": 60.5,
+          "drill_mm": 0.0
+        }
+      ]
+    }
+  ],
+  "temporary_copper_holds": [
+    [
+      "PROVISIONAL_HELTEC_RF_PROJECTION",
+      [
+        13,
+        54,
+        33,
+        85
+      ]
+    ]
+  ],
+  "track_count": 115,
+  "routes": "Direct copper connections; SW1 fitted. ERC/DRC zero violations, zero unconnected and zero parity issues.",
+  "manufacturing_export": "WITHHELD: reference footprint fit, acoustic/RF/mechanical and power/hardware acceptance gates remain open.",
+  "external_only_nets": [
+    "SPK_N",
+    "SPK_P"
+  ],
+  "speaker": "LS1 wired directly at amplifier U3; no speaker carrier connector, output copper or reserved body area",
+  "user_supplied_dimensions": {
+    "U2": {
+      "outer_diameter_mm": 14,
+      "source": "User-provided INMP441 dimension screenshot, 2026-11-24",
+      "status": "REFERENCE_FOOTPRINT_ADOPTED_ACTUAL_FIT_UNVERIFIED",
+      "not_defined": [
+        "Actual owned-module pad fit and face match",
+        "Actual acoustic port and opening clearance",
+        "Actual underside component/solder clearance and installed height"
+      ],
+      "image_12mm_dimension": "Not established as pin-row spacing; not used for hole placement",
+      "reference_grid_mm": {
+        "column_pitch": 2.54,
+        "row_spacing": 7.62
+      },
+      "proposed_face": "Acoustic/solder face UP; top SCK/WS/LR, bottom SD/VDD/GND",
+      "provisional_choices": {
+        "carrier_opening_diameter_mm": 3,
+        "standoff_mm": 3,
+        "drill_mm": 1.1,
+        "pad_diameter_mm": 1.8
+      }
+    },
+    "U3": {
+      "pcb_body_mm": [
+        17.7,
+        19
+      ],
+      "header_pitch_mm": 2.54,
+      "mounting_hole_spacing_mm": 12.6,
+      "mounting_hole_center_to_bottom_mm": 16.7,
+      "speaker_to_header_row_mm": 15.4,
+      "image_depth_annotation_mm": 3,
+      "depth_source": "Earlier approximate image, not the newer dimensional drawing; not assembled height",
+      "source": "User supplied newer MAX98357A dimension image, 2026-11-24",
+      "status": "IMAGE_DOCUMENTED_NOT_PHYSICALLY_MEASURED",
+      "header_order_image_left_to_right": [
+        "7 LRC",
+        "6 BCLK",
+        "5 DIN",
+        "4 GAIN",
+        "3 SD",
+        "2 GND",
+        "1 VIN"
+      ],
+      "carrier_reference": "JAMP1",
+      "provisional_choices": {
+        "header_center_above_bottom_mm": 2,
+        "horizontal_centering": true,
+        "finished_drill_mm": 1.1,
+        "pad_diameter_mm": 1.8
+      },
+      "not_defined": [
+        "header-to-outline datum",
+        "mounting hole diameter",
+        "actual fitted interconnect pin size",
+        "drill requirement",
+        "connector overhang",
+        "mounted height"
+      ]
+    },
+    "SW1": {
+      "body_mm": [
+        6,
+        6
+      ],
+      "height_mm": 8,
+      "source": "User selected6x6x8variant fromOCR TPBS02 AmazonB01MRP025V and supplied image",
+      "status": "REFERENCE_FOOTPRINT_ADOPTED_ACTUAL_FIT_UNVERIFIED",
+      "population": "FIT",
+      "not_defined": [
+        "Actual owned-switch contact pairing",
+        "Actual pin grid and lead/drill fit",
+        "Actual installed height and actuator clearance",
+        "Contact rating"
+      ],
+      "reference_grid_mm": [
+        6.5,
+        4.5
+      ],
+      "reference_pairing": "Top-view logical1 = upper pair, logical2 = lower pair; each pair spans 6.5mm. Verify actual OCR switch.",
+      "provisional_drill_mm": 1.1,
+      "pad_diameter_mm": 2.0
+    }
+  },
+  "segment_count": 115,
+  "via_count": 39,
+  "track_items_including_vias": 154,
+  "i2s_conductor_lengths_mm": {
+    "MIC_BCLK": 27.95,
+    "MIC_WS": 27.225,
+    "MIC_DATA": 46.42,
+    "AMP_BCLK": 17.964,
+    "AMP_WS": 18.557,
+    "AMP_DATA": 63.922
+  },
+  "route_length_definition": "Shortest continuous planar copper path, excluding via barrel height and testpoint branches.",
+  "route_length_exception": "AMP_DATA 63.922mm exceeds preferred50mm target due existing RF reservation detour; no serpentine.",
+  "native_checks": {
+    "pcb_drc_violations": 0,
+    "unconnected_items": 0,
+    "schematic_parity": 0,
+    "schematic_erc_violations": 0,
+    "pcb_drc_report": "reports/pcb-drc.json",
+    "schematic_erc_report": "reports/schematic-erc.json"
+  },
+  "native_board_sha256": "9ef59b8ef6a1937503a51312633e34348a537de5761d74d0506117e61386f553",
+  "native_schematic_sha256": "221021ce94e51d4ce6a826606c6a65f4d4664fdf0d2b3e172846919db74757e6",
+  "initial_dnp": [],
+  "assembly_visualization": {
+    "notes": "models/3D_MODEL_NOTES.txt",
+    "configuration": "models/detailed-models.json",
+    "report": "reports/current-assembly.json",
+    "Heltec_PCB_underside_gap_mm": 5,
+    "amplifier_PCB_underside_gap_mm": 3,
+    "microphone_PCB_underside_gap_mm": 3,
+    "status": "Detailed reference rendering; actual physical fit unverified",
+    "switch_model": "models/SW_PUSH_6mm_H8mm.step",
+    "resistor_model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+    "views": [
+      "review/pcb-3d-top.png",
+      "review/pcb-3d-bottom.png",
+      "review/pcb-3d-isometric.png",
+      "review/pcb-3d-all-views.png"
+    ]
+  },
+  "assembly": {
+    "carrier_passives": [
+      "R8"
+    ],
+    "carrier_capacitors": 0,
+    "dnp": [],
+    "ptt": "SW1 fitted, GPIO39/PTT_N to GND",
+    "power_and_signals": "Direct copper",
+    "module_circuitry": "Existing bypassing retained; actual population unverified."
+  },
+  "resistor_prototype": {
+    "revision": "C5",
+    "component": "R8",
+    "value": "1k",
+    "brand": "EEEEE",
+    "rating_w": 0.5,
+    "tolerance_percent": 5,
+    "construction": "carbon axial through-hole",
+    "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+    "body_reference_mm": [
+      10,
+      3.6
+    ],
+    "pitch_mm": 15.24,
+    "drill_mm": 1,
+    "pad_diameter_mm": 2,
+    "native_position_mm": [
+      147,
+      145
+    ],
+    "native_pad_positions_mm": [
+      [
+        147,
+        145
+      ],
+      [
+        162.24,
+        145
+      ]
+    ],
+    "model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+    "model_status": "Representative geometry; actual EEEEE dimensions unverified",
+    "band_colors": [
+      "brown",
+      "black",
+      "red",
+      "gold"
+    ],
+    "electrical_topology_changed": false,
+    "pcb_routing_changed": "Added two AMP_SD segments to new R8.1. Removed old SMD ground track/via; THT R8.2 connects directly to GND planes.",
+    "sources": [
+      "https://www.amazon.com/dp/B0G4LVC5RY",
+      "https://www.tme.eu/Document/29f58ab8e2ccd3fbcb10a82637aa83de/cfr.pdf"
+    ]
+  }
+}

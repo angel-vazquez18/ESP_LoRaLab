@@ -1,0 +1,134 @@
+{
+  "source": "User-supplied dimension image; no physical measurements performed",
+  "source_image": "sources/user-max98357a-layout-drawing.png",
+  "status": "USER IMAGE DIMENSIONS; NOT PHYSICALLY MEASURED BY CAD AGENT",
+  "module": "Owned purple MAX98357A breakout",
+  "pcb_body_width_mm": 17.7,
+  "pcb_body_length_mm": 19,
+  "header_pitch_mm": 2.54,
+  "mounting_hole_center_spacing_mm": 12.6,
+  "mounting_hole_center_height_from_bottom_mm": 16.7,
+  "speaker_row_to_header_row_spacing_mm": 15.4,
+  "interpretation": "17.7x19mm body,2.54mm header pitch. Header-to-body datum, pin size, drill, PCB thickness, terminal overhang and mounted height require physical verification.",
+  "image_header_left_to_right": [
+    "7:LRC",
+    "6:BCLK",
+    "5:DIN",
+    "4:GAIN",
+    "3:SD",
+    "2:GND",
+    "1:VIN"
+  ],
+  "image_speaker_pads_left_to_right": [
+    "SPK-",
+    "SPK+"
+  ],
+  "remaining_fabrication_holds": [
+    "Exact vendor and revision",
+    "Header datum relative to body and confirmation of pictured pitch/terminal order on owned module",
+    "Amplifier terminal-block and speaker-wire insertion overhang for clearance only; no carrier speaker pads",
+    "Hole and interconnect pin requirements",
+    "Mounted height and underside protrusions",
+    "Existing bypass, GAIN and SD/MODE population"
+  ],
+  "ptt_switch": {
+    "selection": "Amazon B01MRP025V, nominal6x6x8mm normally-open tactile",
+    "carrier_reference": "SW1",
+    "population": "FIT",
+    "unverified": [
+      "Owned OCR four-leg contact pairing and actual dimensions",
+      "Pin cross section and finished-hole fit",
+      "Exact actuator and body datums",
+      "Contact rating"
+    ],
+    "reference_geometry": {
+      "source": "https://www.littelfuse.com/assetdocs/littelfuse-c-k-tactile-pts645-series-datasheet?assetguid=d58fc8a8-f6e1-4527-ab68-27635e632e39",
+      "leg_center_spacing_mm": [
+        6.5,
+        4.5
+      ],
+      "manufacturer_contact_pairing": "PTS645 terminals1/2 form one internally joined pair,3/4 the other; carrier uses duplicated logical1 and2, not these physical leg numbers.",
+      "owned_switch_identity": "OCR/Amazon B01MRP025V is not established to be C&K PTS645."
+    }
+  },
+  "speaker_placement": "External speaker wires directly to amplifier terminals; no carrier speaker connector or area.",
+  "microphone_image": {
+    "module": "User-supplied round INMP441 breakout image",
+    "source_status": "User-provided image; exact vendor/revision not established",
+    "outer_diameter_mm": 14,
+    "secondary_dimension_mm": 12,
+    "secondary_dimension_interpretation": "Dimension arrows point to copper arc ends; not verified pin-row spacing.",
+    "image_upper_row_labels": [
+      "SCK",
+      "WS",
+      "LR"
+    ],
+    "image_lower_row_labels": [
+      "SD",
+      "VDD",
+      "GND"
+    ],
+    "remaining_fabrication_holds": [
+      "Verify owned module matches reference2.54pitch/7.62rows",
+      "Finished drill and actual interconnect pin geometry",
+      "Top/bottom mating orientation and actual terminal identity",
+      "Microphone sound-port alignment with central3mm carrier aperture",
+      "Mounted height and underside protrusions;3mm standoff provisional",
+      "Existing data pulldown and bypass population"
+    ],
+    "adopted_reference_geometry": {
+      "footprint": "Carrier:INMP441_ROUND_2p54x7p62_REFERENCE",
+      "source": "https://github.com/barafael/inmp441-breakout-kicad/blob/816ee4424e4765e0214c96a88f26b3a16a51b17a/inmp441.pretty/inmp441.kicad_mod",
+      "source_kind": "Community-authored CAD, not a manufacturer drawing for the owned SKU",
+      "adopted_geometry_mm": {
+        "outer_diameter": 14,
+        "column_pitch": 2.54,
+        "row_spacing": 7.62,
+        "center_NPTH": 3
+      },
+      "orientation": "Acoustic/solder face up; upper row SCK/WS/LR, lower row SD/VDD/GND. Community reference rotated180degrees, not mirrored.",
+      "carrier_interconnect_choices": "1.1mm drill and1.8mm pad are engineering choices, changed from reference0.762/1.524 for pin-fit margin; actual pins still require verification.",
+      "mechanical_assumption": "3mm module standoff is a planning assumption; check underside can and solder protrusions.",
+      "physical_fit_status": "Reference geometry is routed; exact owned module pitch, terminal identities, face orientation and acoustic alignment must be checked at1:1."
+    }
+  },
+  "active_amplifier_body_mm": [
+    17.7,
+    19
+  ],
+  "revision": "C5",
+  "resistor_selection": {
+    "reference": "R8",
+    "brand": "EEEEE",
+    "resistance_ohm": 1000,
+    "rated_power_W": 0.5,
+    "tolerance_percent": 5,
+    "construction": "Carbon axial through-hole",
+    "population": "FIT",
+    "function": "Single AMP_SD / SD_MODE to GND pulldown",
+    "footprint": "Carrier:R_Axial_Carbon_0p5W_P15p24_Horizontal",
+    "reference_geometry_mm": {
+      "body_length": 10.0,
+      "body_diameter": 3.6,
+      "formed_lead_pitch": 15.24,
+      "carrier_drill": 1.0,
+      "carrier_pad": 2.0
+    },
+    "geometry_basis": "Conservative horizontal reference; Royal Ohm half-watt carbon-film drawing is not an exact EEEEE specification.",
+    "physical_fit_status": "Actual owned body length/diameter, lead diameter and formed-pitch fit remain unmeasured.",
+    "color_bands": [
+      "brown",
+      "black",
+      "red",
+      "gold"
+    ],
+    "model": "models/R_Axial_Carbon_1k_0p5W_P15p24.wrl",
+    "model_status": "Authored representative geometry, not EEEEE manufacturer CAD",
+    "selection_source_id": "user_resistor_selection",
+    "reference_source_ids": [
+      "eeee_resistor_listing",
+      "carbon_resistor_reference"
+    ],
+    "source_status": "User electrical/package selection; reference mounting geometry is not a physical measurement of the owned EEEEE resistor."
+  }
+}

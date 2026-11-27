@@ -1,0 +1,7 @@
+signal,from,to,total_planar_trace_mm,exceeds50mm_preference
+MIC_BCLK,U1.J3_15,U2.SCK,27.95,False
+MIC_WS,U1.J3_17,U2.WS,27.225,False
+MIC_DATA,U1.J3_11,U2.SD,46.42,False
+AMP_BCLK,U1.J3_09,JAMP1.6,17.964,False
+AMP_WS,U1.J3_08,JAMP1.7,18.557,False
+AMP_DATA,U1.J2_13,JAMP1.5,63.922,True

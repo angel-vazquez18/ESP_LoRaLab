@@ -1,0 +1,67 @@
+HELTEC V4.3 R2 AUDIO CARRIER - C5 ASSEMBLY NOTES
+
+This is a CAD assembly plan. Physical fit and hardware tests remain pending.
+
+Before fabrication
+  Compare the 1:1 sheet with the owned Heltec V4.3 R2, round INMP441,
+  MAX98357A, 6 x 6 x 8 mm tactile switch and axial R8 resistor. Verify pin identity, hole fit,
+  body registration, underside components, acoustic path and solder access.
+  Check USB/coax access and antenna/enclosure clearance. The RF reservation
+  is an engineering allowance. Preview gaps are Heltec 5 mm and audio modules
+  3 mm; confirm the actual assembly. Rerun CAD checks after geometry changes.
+
+Fitted components
+  U1: Heltec WiFi LoRa 32 V4.3 R2, USB-up.
+  U2: round INMP441, acoustic/solder face up and L/R to GND.
+  U3/JAMP1: MAX98357A and seven-pin interconnect.
+      Pins 1..7: VIN, GND, SD_MODE, GAIN, DIN, BCLK, LRC.
+  R8: EEEEE 1 kohm, 1/2 W, 5% carbon axial through-hole resistor.
+      This is the single SD_MODE-to-GND pulldown; no other carrier passives.
+      Form the leads to 15.24 mm pitch for horizontal mounting without
+      forcing the body. The reference body envelope is 10.0 x 3.6 mm;
+      carrier drills are 1.0 mm and pads are 2.0 mm.
+      Check body, lead and hole fit; trim protruding leads after soldering.
+  SW1: normally-open 6 x 6 x 8 mm PTT switch, FIT.
+      Contact1 is GPIO39/PTT_N; contact2 is GND. Each contact has two pads
+      across 6.5 mm; contacts are separated by 4.5 mm. Check the actual
+      switch's permanent pairs and normally-open action before soldering.
+  LS1: external speaker wired directly to amplifier SPK+ and SPK-.
+      Neither output is ground. Use paired insulated wires and strain relief.
+  Existing module passives remain; inspect bypassing and straps.
+  TP1-TP13 are copper test pads requiring no fitted posts.
+
+Assembly
+  1. Inspect the bare board and drill registration.
+  2. Fit R8 and SW1; inspect joints, resistor value and switch operation.
+     R8 is non-polarized. Its 1 kohm / 5% bands are brown-black-red-gold.
+  3. Fit independent mounting hardware and measured module standoffs.
+  4. Align module headers without forcing them; preserve solder access.
+  5. Keep solder, flux, adhesive and cleaning fluid out of the microphone port.
+  6. Inspect joints, underside clearance, USB/OLED access and antenna wiring.
+  7. Attach speaker wires at the amplifier terminals and add the node identity.
+
+Power and acceptance
+  Modules share Heltec USB power and power up together. Disconnect power
+  before altering wiring. If a module is disconnected for troubleshooting,
+  prevent GPIOs from driving it while unpowered.
+
+  Unpowered: check shorts, polarity and every module pin/net assignment.
+  Powered: verify boot, USB communication and 3V3/5V rails under load.
+  Check the source, cable and Heltec power path. Amplifier 5V is VUSB before
+  Heltec fuse F1; wider carrier traces do not raise upstream current limits.
+  Measure amplifier SD_MODE at reset (target below 0.08 V) and during playback.
+  Confirm breakout bypassing and actual speaker impedance/rating.
+
+  PTT firmware must configure GPIO39 as an input with pullup and debounce;
+  pressed reads LOW. Verify released/pressed readings before PTT actions.
+  Do not drive GPIO39 as an output. Firmware remains ENABLE_PTT=false;
+  the enabled path uses INPUT_PULLUP.
+
+  With compatible audio firmware, verify microphone capture and a low-level
+  speaker tone. Expected audio clocks are 8 kHz WS and nominal 512 kHz BCLK,
+  with 32-bit stereo wire slots and 16-bit mono stored PCM. Verify audible
+  playback directly. Connect probe ground only to GND, never a speaker output.
+  Run audio/radio integration tests with compatible firmware and verified
+  simultaneous supply capacity. Preserve both matched antennas.
+
+Record CAD checks, physical fit, power measurements, audio and RF tests separately.

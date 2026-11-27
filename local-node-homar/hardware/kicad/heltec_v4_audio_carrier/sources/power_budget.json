@@ -1,0 +1,92 @@
+{
+  "checked_on": "2026-11-24",
+  "status": "PLANNING ESTIMATE; USB SOURCE/CABLE/ASSEMBLY LOAD NOT VERIFIED",
+  "speaker": {
+    "nominal_load_ohm": 8,
+    "local_bench_nominal_power_W": 1,
+    "maximum_planned_continuous_sine_W": 1,
+    "voltage_rms_V": 2.8284271247461903,
+    "current_rms_A": 0.3535533905932738,
+    "current_peak_A": 0.5,
+    "limitations": "Nominal impedance varies with frequency.1W is a ceiling, not proof of acoustic/thermal capability. Begin at low amplitude; no device tests performed."
+  },
+  "amp_branch": {
+    "supply_V": 5,
+    "assumed_efficiency": 0.8,
+    "efficiency_status": "engineering assumption, below published92% typical at1W8ohm",
+    "additional_overhead_allowance_mA": 10,
+    "planning_current_mA": 260.0,
+    "header_5V_maximum_mA": 500,
+    "header_margin_mA": 240.0,
+    "IC_quiescent_5V_25C_typ_mA": 2.75,
+    "IC_quiescent_5V_25C_max_mA": 3.35
+  },
+  "external_3V3_load": {
+    "mic_max_mA": 2.5,
+    "SD_1kohm_pulldown_high_mA": 3.3,
+    "total_mA": 5.8,
+    "note": "Module load plus AMP_SD pulldown estimate; PTT internal pullup current not included and depends on MCU configuration."
+  },
+  "board_current_method": "Whole-board USB current includes MCU/radio and baseline peripherals. Do not add separate ESP32 or SX1262 current again.30mA extra OLED/config/transient reserve is an unverified engineering allowance, not a measured OLED current or peak bound.",
+  "whole_board_typical_reference_cases_mA": {
+    "WiFi_scan": 119,
+    "WiFi_AP": 170,
+    "BT": 115,
+    "TX_868MHz_14dBm": 290,
+    "TX_868MHz_17dBm": 330,
+    "TX_868MHz_22dBm": 400,
+    "TX_868MHz_27dBm": 750,
+    "RX": 75
+  },
+  "additional_OLED_configuration_reserve_mA": 30,
+  "planning_total_cases_mA": {
+    "14dBm_datasheet_TX_case_plus_audio": 585.8,
+    "17dBm_datasheet_TX_case_plus_audio": 625.8,
+    "22dBm_datasheet_TX_case_plus_audio": 695.8,
+    "27dBm_datasheet_TX_case_plus_audio": 1045.8
+  },
+  "actual_firmware": {
+    "source_files": [
+      "src/lora_bench.cpp:29",
+      "src/lora_crypto_bench.cpp:32"
+    ],
+    "chip_power_dbm": -9,
+    "frequency_MHz": 915,
+    "qualification": "SX1262 setting before external FEM, not measured radiated power. Cannot map to868MHz whole-board table. Audio and radio bench configurations run separately; simultaneous system current unknown."
+  },
+  "upstream_path": {
+    "source": "Heltec USB-C only; no battery, solar or independent amp source",
+    "header_schematic_net": "VUSB, upstream ofF1; boardVDD_5V afterF1",
+    "carrier_fuse_protected_by_F1": false,
+    "source_selection_target": "Regulated5V source capable of at least1.5A with appropriate USB-C current advertisement, subject to verifying connector/header/power path. This is a planning target, not proof of available current or approval for any PC port.",
+    "unverified": [
+      "Actual cable/plug resistance and USB available current",
+      "Heltec USB connector/pins and copper temperature rise",
+      "Actual concurrent audio/radio peak current",
+      "3V3 regulator margin with owned board and OLED",
+      "Breakout capacitor population and USB inrush",
+      "Output amplitude/calibration and acoustic acceptance"
+    ]
+  },
+  "revision": "C5",
+  "carrier_population": "R8: EEEEE 1k, 1/2 W, 5% carbon axial through-hole, and SW1 fitted. Nominal resistance and load estimate unchanged. No carrier capacitors or removable links; existing breakout bypassing retained.",
+  "extracted_positive_trace": {
+    "usb_header_to_amp_header_direct": true,
+    "total_shortest_planar_trace_mm": 103.21,
+    "actual_segment_widths_mm": [
+      1.0
+    ],
+    "actual_segment_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "via_count": 2,
+    "nominal_outer_copper_um": 43.2,
+    "copper_resistivity_at20C_ohm_m": 1.724e-08,
+    "approximate_positive_trace_resistance_ohm_at20C": 0.04118862463924704,
+    "positive_trace_drop_at260mA_V": 0.01070904240620423,
+    "positive_trace_drop_at500mA_V": 0.02059431231962352,
+    "limitations": "Approximation using extracted shortest positive trace length,1mm width and nominal43.2um outer copper. Does not solve current splitting or include return plane, pads, interconnects, vias, USB cable/source, Heltec upstream copper, temperature rise or transients. No current-capacity certification. Actual USB and amplifier-terminal measurements are still required; 500mA header rating remains the cited branch limit.",
+    "evidence": "reports/routing_audit.json"
+  }
+}
